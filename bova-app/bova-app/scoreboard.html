@@ -141,7 +141,7 @@ body{background:var(--bg);color:var(--ink);font-family:'Barlow',sans-serif;font-
 <body>
 
 <nav class="nav">
-  <div class="nav-logo"><svg width="14" height="18" viewBox="0 0 14 18" style="flex-shrink:0;display:block" fill="none"><line x1="2" y1="1" x2="2" y2="17" stroke="#c09030" stroke-width="1.5" stroke-linecap="round"/><path d="M2 2L12 5.5L2 9.5Z" fill="#c09030"/></svg>The Bova <em>Invitational</em></div>
+  <div class="nav-logo"><img id="navLogoImg" style="display:none;height:32px;max-width:120px;object-fit:contain;object-position:left"><svg id="navLogoSvg" width="14" height="18" viewBox="0 0 14 18" style="flex-shrink:0;display:block" fill="none"><line x1="2" y1="1" x2="2" y2="17" stroke="#c09030" stroke-width="1.5" stroke-linecap="round"/><path d="M2 2L12 5.5L2 9.5Z" fill="#c09030"/></svg>The Bova <em>Invitational</em></div>
   <div class="nav-right">
     <div class="live-dot"><span></span>Live</div>
     <div class="nav-round" id="currentRoundLabel">—</div>
@@ -653,11 +653,22 @@ function updateTimestamp() {
   document.getElementById('lastUpdated').textContent = `Last updated ${now.toLocaleTimeString([], {hour:'numeric',minute:'2-digit',hour12:true})}`;
 }
 
+async function loadNavLogo() {
+  const { data } = await sb.from('settings').select('value').eq('key','logo_url').maybeSingle();
+  if (data?.value) {
+    const img = document.getElementById('navLogoImg');
+    const svg = document.getElementById('navLogoSvg');
+    if (img) { img.src = data.value; img.style.display = 'block'; }
+    if (svg) svg.style.display = 'none';
+  }
+}
+
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => { navigator.serviceWorker.register('/sw.js').catch(() => {}); });
 }
 
 init();
+loadNavLogo();
 </script>
 </body>
 </html>

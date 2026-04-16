@@ -162,6 +162,13 @@ td.email a:hover{color:var(--gold);}
 .save-pars-btn{margin-top:1.2rem;padding:0.65rem 1.8rem;background:var(--gold);color:var(--ink);border:none;font-family:'Barlow Condensed',sans-serif;font-size:0.68rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;cursor:pointer;transition:background 0.2s;}
 .save-pars-btn:hover{background:var(--gold-l);}
 
+/* LOGO UPLOAD */
+.logo-upload-wrap{display:flex;align-items:center;gap:1.2rem;flex-wrap:wrap;padding:1.2rem;background:var(--card);border:1px solid var(--border);}
+.logo-file-label{display:inline-block;padding:0.55rem 1.2rem;border:1px solid var(--gold);color:var(--gold);font-family:'Barlow Condensed',sans-serif;font-size:0.65rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;cursor:pointer;transition:all 0.2s;}
+.logo-file-label:hover{background:var(--gold);color:var(--ink);}
+.logo-clear-btn{padding:0.55rem 1.2rem;border:1px solid var(--red);color:var(--red);font-family:'Barlow Condensed',sans-serif;font-size:0.65rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;cursor:pointer;background:none;transition:all 0.2s;}
+.logo-clear-btn:hover{background:var(--red);color:var(--cream);}
+
 /* LOADING */
 .loading{text-align:center;padding:3rem;font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--muted);}
 
@@ -212,6 +219,20 @@ td.email a:hover{color:var(--gold);}
       <div>
         <div class="page-title">Command <em>Center</em></div>
         <div class="page-sub">Bova Invitational &nbsp;&middot;&nbsp; 2026</div>
+      </div>
+    </div>
+
+    <!-- BRANDING -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-title">Tournament Branding</div>
+        <div class="section-count">Logo appears in nav on all pages</div>
+      </div>
+      <div class="logo-upload-wrap">
+        <div id="logoPreview" style="height:44px;display:flex;align-items:center;color:var(--muted);font-family:'DM Mono',monospace;font-size:0.48rem;letter-spacing:0.1em;">No logo uploaded</div>
+        <label for="logoFileInput" class="logo-file-label">Upload Logo</label>
+        <input type="file" id="logoFileInput" accept="image/*" style="display:none" onchange="uploadLogo(this)">
+        <button class="logo-clear-btn" onclick="clearLogo()">Clear Logo</button>
       </div>
     </div>
 
@@ -434,7 +455,7 @@ function showAdmin(email) {
 
 // ── DATA ──────────────────────────────────────────────────────────
 async function loadAll() {
-  await Promise.all([loadPlayers(), loadRoundStates(), loadTeams(), loadPars(), loadFormats(), loadChallengersCaptain()]);
+  await Promise.all([loadPlayers(), loadRoundStates(), loadTeams(), loadPars(), loadFormats(), loadChallengersCaptain(), loadLogoUrl()]);
   buildParEditor();
 }
 
@@ -824,6 +845,41 @@ function showToast(msg) {
   el.style.transform = 'translateX(0)'; el.style.opacity = '1';
   clearTimeout(el._t);
   el._t = setTimeout(() => { el.style.transform = 'translateX(120%)'; el.style.opacity = '0'; }, 3800);
+}
+
+// ── LOGO ──────────────────────────────────────────────────────────
+async function loadLogoUrl() {
+  const { data } = await sb.from('settings').select('value').eq('key','logo_url').maybeSingle();
+  if (data?.value) renderLogoPreview(data.value);
+}
+
+function renderLogoPreview(url) {
+  const el = document.getElementById('logoPreview');
+  if (el) el.innerHTML = `<img src="${url}" style="height:44px;max-width:200px;object-fit:contain;object-position:left center;" onerror="this.parentElement.textContent='Error loading'">`;
+  // Also update nav logo img if present
+  const navImg = document.getElementById('navLogoImg');
+  if (navImg) { navImg.src = url; navImg.style.display = 'block'; }
+}
+
+async function uploadLogo(input) {
+  const file = input.files[0];
+  if (!file) return;
+  showToast('Uploading...');
+  const ext = file.name.split('.').pop().toLowerCase();
+  const { error } = await sb.storage.from('brand').upload(`logo.${ext}`, file, { upsert: true });
+  if (error) { showToast('Upload failed: ' + error.message); return; }
+  const { data } = sb.storage.from('brand').getPublicUrl(`logo.${ext}`);
+  const url = data.publicUrl + '?t=' + Date.now();
+  await sb.from('settings').upsert({ key: 'logo_url', value: url, updated_at: new Date().toISOString() }, { onConflict: 'key' });
+  renderLogoPreview(url);
+  showToast('Logo saved.');
+}
+
+async function clearLogo() {
+  await sb.from('settings').delete().eq('key','logo_url');
+  const el = document.getElementById('logoPreview');
+  if (el) el.textContent = 'No logo uploaded';
+  showToast('Logo cleared.');
 }
 
 // ── INIT ──────────────────────────────────────────────────────────

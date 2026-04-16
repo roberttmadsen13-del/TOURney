@@ -177,7 +177,7 @@ body{background:var(--bg);color:var(--ink);font-family:'Barlow',sans-serif;font-
 <body>
 
 <nav class="nav">
-  <div class="nav-logo"><svg width="12" height="16" viewBox="0 0 12 16" style="flex-shrink:0;display:block" fill="none"><line x1="2" y1="1" x2="2" y2="15" stroke="#c09030" stroke-width="1.5" stroke-linecap="round"/><path d="M2 2L10 5L2 8Z" fill="#c09030"/></svg>Bova <em>Invitational</em></div>
+  <div class="nav-logo"><img id="navLogoImg" style="display:none;height:28px;max-width:100px;object-fit:contain;object-position:left"><svg id="navLogoSvg" width="12" height="16" viewBox="0 0 12 16" style="flex-shrink:0;display:block" fill="none"><line x1="2" y1="1" x2="2" y2="15" stroke="#c09030" stroke-width="1.5" stroke-linecap="round"/><path d="M2 2L10 5L2 8Z" fill="#c09030"/></svg>Bova <em>Invitational</em></div>
   <div class="nav-right">
     <a href="/scoreboard" class="nav-link">Leaderboard</a>
     <a href="/directory" class="nav-link">Directory</a>
@@ -1053,11 +1053,22 @@ function showToast(msg) {
   el._t = setTimeout(() => { el.style.transform = 'translateX(120%)'; el.style.opacity = '0'; }, 3800);
 }
 
+async function loadNavLogo() {
+  const { data } = await sb.from('settings').select('value').eq('key','logo_url').maybeSingle();
+  if (data?.value) {
+    const img = document.getElementById('navLogoImg');
+    const svg = document.getElementById('navLogoSvg');
+    if (img) { img.src = data.value; img.style.display = 'block'; }
+    if (svg) svg.style.display = 'none';
+  }
+}
+
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => { navigator.serviceWorker.register('/sw.js').catch(() => {}); });
 }
 
 init();
+loadNavLogo();
 </script>
 </body>
 </html>
