@@ -448,6 +448,20 @@ html { scroll-behavior: smooth; }
   </div>
 </section>
 
+<!-- LIVE STANDINGS -->
+<section id="live-scores" style="background:#0e0b06;border-top:1px solid rgba(192,144,48,0.08);">
+  <div class="s-inner">
+    <div class="s-label">Live Tournament</div>
+    <div class="s-title">Current <em>Standings</em></div>
+    <div class="s-sub">Leaderboard &mdash; updates as scores come in</div>
+    <div id="heroTeamBanners" style="display:grid;grid-template-columns:1fr 1fr;gap:1px;background:rgba(192,144,48,0.1);margin-bottom:2rem;"></div>
+    <div id="heroLeaderboard"></div>
+    <div style="margin-top:2.5rem;text-align:center;">
+      <a href="/scoreboard" class="btn-gold">Full Leaderboard &rarr;</a>
+    </div>
+  </div>
+</section>
+
 <!-- ABOUT — golfer silhouette at sunrise, long fairway shadows -->
 <section id="about">
   <div class="s-inner">
@@ -838,6 +852,100 @@ window.addEventListener('scroll', () => {
     if (data?.value) el.textContent = data.value;
   } catch {}
 })();
+
+// ── Feature 11: Hero Scoreboard ──────────────────────────────────────────────
+async function loadHeroScoreboard() {
+  const [pRes, sRes, taRes, p1Res, p2Res, p3Res, capRes] = await Promise.all([
+    sb.from('players').select('id,first_name,last_name,handicap'),
+    sb.from('scores').select('player_id,round,hole,gross_score'),
+    sb.from('settings').select('value').eq('key','team_assignments').maybeSingle(),
+    sb.from('settings').select('value').eq('key','pars_day1').maybeSingle(),
+    sb.from('settings').select('value').eq('key','pars_day2').maybeSingle(),
+    sb.from('settings').select('value').eq('key','pars_day3').maybeSingle(),
+    sb.from('settings').select('value').eq('key','challengers_captain').maybeSingle(),
+  ]);
+
+  const players = pRes.data || [];
+  const scores = sRes.data || [];
+  let teamAssignments = {};
+  try { teamAssignments = JSON.parse(taRes.data?.value || '{}'); } catch {}
+  const parsDay = [p1Res,p2Res,p3Res].map(r => { try { return JSON.parse(r.data?.value||'[]'); } catch { return []; } });
+  const challengersCaptain = capRes.data?.value || 'TBD';
+
+  const HANDICAP_STROKES = {scratch:0,eagle:4,birdie:8,bogey:12,pretender:16,hacker:20};
+
+  const scoreMap = {};
+  for (const s of scores) scoreMap[`${s.player_id}:${s.round}:${s.hole}`] = s.gross_score;
+
+  function playerNet(player) {
+    let total = 0; let holes = 0;
+    for (let r = 1; r <= 3; r++) {
+      const pars = parsDay[r-1];
+      if (!pars.length) continue;
+      for (let h = 1; h <= 18; h++) {
+        const g = scoreMap[`${player.id}:${r}:${h}`];
+        if (g == null) continue;
+        const par = pars[h-1] || 4;
+        total += g - par - (HANDICAP_STROKES[player.handicap]||0)/18;
+        holes++;
+      }
+    }
+    return { net: total, holes };
+  }
+
+  function fmtNet(n) {
+    if (Math.abs(n) < 0.05) return 'E';
+    return (n > 0 ? '+' : '') + n.toFixed(1).replace(/\.0$/,'');
+  }
+
+  const teamA = players.filter(p => teamAssignments[p.id] === 'A');
+  const teamB = players.filter(p => teamAssignments[p.id] === 'B');
+  const totA = teamA.reduce((s,p) => s + playerNet(p).net, 0);
+  const totB = teamB.reduce((s,p) => s + playerNet(p).net, 0);
+
+  const bannersEl = document.getElementById('heroTeamBanners');
+  const lbEl = document.getElementById('heroLeaderboard');
+  if (!bannersEl || !lbEl) return;
+
+  bannersEl.innerHTML = `
+    <div style="background:#0e0b06;padding:1.5rem;border-right:1px solid rgba(192,144,48,0.1);">
+      <div style="font-family:'DM Mono',monospace;font-size:0.45rem;letter-spacing:0.3em;text-transform:uppercase;color:rgba(192,144,48,0.5);margin-bottom:0.3rem;">Team One</div>
+      <div style="font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:900;color:#f0e6cc;">Team <em style="color:#c09030;">Bova</em></div>
+      <div style="font-family:'Playfair Display',serif;font-size:2.2rem;font-weight:900;color:${totA<=totB?'#c09030':'rgba(240,230,204,0.4)'};margin-top:0.5rem;">${fmtNet(totA)}</div>
+      <div style="font-family:'DM Mono',monospace;font-size:0.42rem;letter-spacing:0.15em;text-transform:uppercase;color:rgba(240,230,204,0.3);margin-top:0.2rem;">${teamA.length} players</div>
+    </div>
+    <div style="background:#0e0b06;padding:1.5rem;">
+      <div style="font-family:'DM Mono',monospace;font-size:0.45rem;letter-spacing:0.3em;text-transform:uppercase;color:rgba(74,106,138,0.7);margin-bottom:0.3rem;">Team Two</div>
+      <div style="font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:900;color:#f0e6cc;">The <em style="color:#4a6a8a;">Challengers</em></div>
+      <div style="font-family:'Playfair Display',serif;font-size:2.2rem;font-weight:900;color:${totB<totA?'#c09030':'rgba(240,230,204,0.4)'};margin-top:0.5rem;">${fmtNet(totB)}</div>
+      <div style="font-family:'DM Mono',monospace;font-size:0.42rem;letter-spacing:0.15em;text-transform:uppercase;color:rgba(240,230,204,0.3);margin-top:0.2rem;">${teamB.length} players · Capt. ${challengersCaptain}</div>
+    </div>`;
+
+  const ranked = players
+    .map(p => ({ ...p, ...playerNet(p) }))
+    .filter(p => p.holes > 0)
+    .sort((a,b) => a.net - b.net)
+    .slice(0, 5);
+
+  if (!ranked.length) {
+    lbEl.innerHTML = `<div style="text-align:center;padding:2rem;font-family:'Playfair Display',serif;font-style:italic;color:rgba(240,230,204,0.25);">Scores will appear once play begins.</div>`;
+    return;
+  }
+
+  lbEl.innerHTML = `<div style="border-top:1px solid rgba(192,144,48,0.15);">${ranked.map((p,i) => {
+    const team = teamAssignments[p.id]==='A'?'Bova':teamAssignments[p.id]==='B'?'Challengers':'—';
+    return `<div style="display:flex;align-items:center;gap:1rem;padding:0.75rem 0;border-bottom:1px solid rgba(192,144,48,0.08);">
+      <div style="font-family:'DM Mono',monospace;font-size:0.55rem;color:rgba(240,230,204,0.25);width:1.4rem;text-align:right;">${i+1}</div>
+      <div style="flex:1;">
+        <div style="font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:#f0e6cc;">${p.first_name} ${p.last_name}</div>
+        <div style="font-family:'DM Mono',monospace;font-size:0.42rem;letter-spacing:0.1em;text-transform:uppercase;color:rgba(240,230,204,0.3);">${team}</div>
+      </div>
+      <div style="font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:900;color:${i===0?'#c09030':'#f0e6cc'};">${fmtNet(p.net)}</div>
+    </div>`;
+  }).join('')}</div>`;
+}
+
+loadHeroScoreboard();
 
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => { navigator.serviceWorker.register('/sw.js').catch(() => {}); });
