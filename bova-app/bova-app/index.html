@@ -832,6 +832,10 @@ if (cap2) {
   try { const s = localStorage.getItem('bova_cap2'); if (s) cap2.value = s; } catch(e) {}
   cap2.addEventListener('input', () => { try { localStorage.setItem('bova_cap2', cap2.value); } catch(e) {} });
 }
+
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => { navigator.serviceWorker.register('/sw.js').catch(() => {}); });
+}
 </script>
 </body>
 </html>

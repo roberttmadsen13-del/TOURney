@@ -3,6 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#0a0702">
+<link rel="manifest" href="/manifest.json">
 <title>Enter Scores — Bova Invitational</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Mono:wght@300;400;500&family=Barlow+Condensed:wght@300;400;600;700;800&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
@@ -112,6 +114,19 @@ body{background:var(--bg);color:var(--cream);font-family:'Barlow',sans-serif;fon
 .ms-empty{background:rgba(240,230,204,0.03);color:rgba(240,230,204,0.1);}
 .ms-current{outline:1px solid var(--gold);}
 
+/* Conflict guard */
+.conflict-banner{display:none;flex-direction:column;gap:0.6rem;padding:0.85rem 1.2rem;background:rgba(138,30,16,0.18);border-left:3px solid var(--red);margin:0;}
+.conflict-msg{font-size:0.8rem;line-height:1.55;color:var(--cream);}
+.conflict-actions{display:flex;gap:0.5rem;}
+.conflict-btn{padding:0.4rem 1rem;font-family:'Barlow Condensed',sans-serif;font-size:0.65rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;border:none;cursor:pointer;}
+.conflict-btn.keep{background:var(--gold);color:var(--ink);}
+.conflict-btn.use-existing{background:transparent;border:1px solid rgba(240,230,204,0.22);color:rgba(240,230,204,0.5);}
+
+/* Undo button */
+.undo-btn{display:none;width:100%;padding:0.7rem 1.2rem;background:rgba(192,144,48,0.05);border:none;border-top:1px solid var(--border);font-family:'DM Mono',monospace;font-size:0.42rem;letter-spacing:0.12em;text-transform:uppercase;color:rgba(240,230,204,0.3);cursor:pointer;transition:all 0.15s;text-align:center;}
+.undo-btn:hover{color:var(--gold);background:rgba(192,144,48,0.09);}
+.undo-btn.visible{display:block;}
+
 /* Submit */
 .submit-section{padding:1.5rem 1.2rem;}
 .submit-btn{width:100%;padding:1rem;background:var(--gold);color:var(--ink);border:none;font-family:'Barlow Condensed',sans-serif;font-size:0.8rem;font-weight:700;letter-spacing:0.25em;text-transform:uppercase;cursor:pointer;transition:background 0.2s;}
@@ -127,8 +142,10 @@ body{background:var(--bg);color:var(--cream);font-family:'Barlow',sans-serif;fon
 .summary-score.even{color:var(--cream);}
 
 /* Saving indicator */
-.saving{position:fixed;top:60px;right:1rem;font-family:'DM Mono',monospace;font-size:0.45rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);opacity:0;transition:opacity 0.3s;}
+.saving{position:fixed;top:60px;right:1rem;font-family:'DM Mono',monospace;font-size:0.45rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);opacity:0;transition:opacity 0.3s;pointer-events:none;}
 .saving.show{opacity:1;}
+.saving.offline{color:var(--gold-p);}
+.saving.error{color:var(--red);}
 
 /* Loading */
 .loading{text-align:center;padding:3rem;font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.3em;text-transform:uppercase;color:rgba(240,230,204,0.25);}
@@ -144,7 +161,7 @@ body{background:var(--bg);color:var(--cream);font-family:'Barlow',sans-serif;fon
   </div>
 </nav>
 
-<div class="saving" id="savingIndicator">Saving...</div>
+<div class="saving" id="savingIndicator"></div>
 
 <!-- SETUP SCREEN -->
 <div id="setupScreen" class="setup">
@@ -197,6 +214,14 @@ body{background:var(--bg);color:var(--cream);font-family:'Barlow',sans-serif;fon
 
   <div class="mini-strip" id="miniStrip"></div>
 
+  <div id="conflictBanner" class="conflict-banner">
+    <div class="conflict-msg" id="conflictMsg"></div>
+    <div class="conflict-actions">
+      <button class="conflict-btn keep" onclick="resolveConflict(true)">Keep mine</button>
+      <button class="conflict-btn use-existing" onclick="resolveConflict(false)">Use existing</button>
+    </div>
+  </div>
+
   <div class="hole-card">
     <div class="hole-label">Hole</div>
     <div class="hole-num" id="holeNum">1</div>
@@ -207,6 +232,7 @@ body{background:var(--bg);color:var(--cream);font-family:'Barlow',sans-serif;fon
       <button class="nav-btn" id="prevBtn" onclick="prevHole()" disabled>&larr; Previous</button>
       <button class="nav-btn next" id="nextBtn" onclick="nextHole()">Next &rarr;</button>
     </div>
+    <button class="undo-btn" id="undoBtn" onclick="undoLast()"></button>
   </div>
 
   <div class="round-summary">
@@ -242,6 +268,7 @@ let scorerTeam = null;
 let currentHole = 1;
 // enteredScores[playerId][hole] = grossScore
 let enteredScores = {};
+let scoreHistory = []; // [{playerId, hole, round, prevGross}]
 
 async function init() {
   const [pRes, tRes, rRes, parRes] = await Promise.all([
@@ -281,6 +308,9 @@ async function init() {
   // Restore saved scores
   const saved = localStorage.getItem(`bova_scores_${currentRound}`);
   if (saved) try { enteredScores = JSON.parse(saved); } catch {}
+
+  // Flush any scores queued while offline
+  flushOfflineQueue();
 }
 
 document.getElementById('scorerSelect').addEventListener('change', updatePartnerList);
@@ -459,9 +489,15 @@ function getBestBallNote(par) {
 
 function adjustScore(playerId, par, delta) {
   if (!enteredScores[playerId]) enteredScores[playerId] = {};
+  const prevGross = enteredScores[playerId][currentHole] ?? null;
   const current = enteredScores[playerId][currentHole] || par;
   const next = Math.max(1, Math.min(12, current + delta));
   enteredScores[playerId][currentHole] = next;
+
+  // Track history for undo (cap at 20)
+  scoreHistory.push({ playerId, hole: currentHole, round: currentRound, prevGross });
+  if (scoreHistory.length > 20) scoreHistory.shift();
+  updateUndoBtn();
 
   // Day 2 scramble: mirror score to partner
   if (isScrambleHole(currentHole) && playerId === scorerPlayer.id && partnerPlayer) {
@@ -562,19 +598,149 @@ async function autoSaveToDb(playerId, hole, gross) {
   const key = `${playerId}_${hole}`;
   clearTimeout(_saveTimer[key]);
   _saveTimer[key] = setTimeout(async () => {
-    const saving = document.getElementById('savingIndicator');
-    saving.classList.add('show');
+    if (!navigator.onLine) {
+      queueOffline(playerId, hole, gross);
+      showSavingState('offline');
+      return;
+    }
+    showSavingState('saving');
     try {
-      await sb.from('scores').upsert({
+      // Conflict guard: check what's already in the DB
+      const { data: existing } = await sb.from('scores')
+        .select('gross_score')
+        .eq('player_id', playerId)
+        .eq('round', currentRound)
+        .eq('hole', hole)
+        .maybeSingle();
+
+      if (existing && existing.gross_score !== gross) {
+        const player = players.find(p => p.id === playerId);
+        const name = player ? player.first_name : 'Another scorer';
+        const keepMine = await showConflictBanner(name, hole, existing.gross_score, gross);
+        if (!keepMine) {
+          // Revert local score to the DB value
+          if (!enteredScores[playerId]) enteredScores[playerId] = {};
+          enteredScores[playerId][hole] = existing.gross_score;
+          saveLocal();
+          renderHole();
+          showSavingState('saved');
+          return;
+        }
+      }
+
+      const { error } = await sb.from('scores').upsert({
         player_id: playerId,
         round: currentRound,
         hole: hole,
         gross_score: gross,
       }, { onConflict: 'player_id,round,hole' });
-    } catch (e) {}
-    setTimeout(() => saving.classList.remove('show'), 800);
+      if (error) throw error;
+      showSavingState('saved');
+    } catch (e) {
+      queueOffline(playerId, hole, gross);
+      showSavingState('offline');
+    }
   }, 600);
 }
+
+// ── CONFLICT GUARD ────────────────────────────────────────────────
+let _conflictResolve = null;
+function showConflictBanner(playerName, hole, existingScore, myScore) {
+  return new Promise(resolve => {
+    _conflictResolve = resolve;
+    const banner = document.getElementById('conflictBanner');
+    document.getElementById('conflictMsg').innerHTML =
+      `<strong>${playerName}</strong> already has <strong>${existingScore}</strong> on hole #${hole} — you entered <strong>${myScore}</strong>. Keep yours?`;
+    banner.style.display = 'flex';
+    banner.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  });
+}
+function resolveConflict(keepMine) {
+  document.getElementById('conflictBanner').style.display = 'none';
+  if (_conflictResolve) { _conflictResolve(keepMine); _conflictResolve = null; }
+}
+
+// ── UNDO ──────────────────────────────────────────────────────────
+function updateUndoBtn() {
+  const btn = document.getElementById('undoBtn');
+  if (!btn) return;
+  if (!scoreHistory.length) { btn.classList.remove('visible'); return; }
+  const last = scoreHistory[scoreHistory.length - 1];
+  const player = players.find(p => p.id === last.playerId);
+  const name = player ? player.first_name : '?';
+  const from = last.prevGross ?? '—';
+  const to = enteredScores[last.playerId]?.[last.hole] ?? '—';
+  btn.textContent = `↩ Undo: ${name} hole ${last.hole} (${from} → ${to})`;
+  btn.classList.add('visible');
+}
+
+async function undoLast() {
+  if (!scoreHistory.length) return;
+  const last = scoreHistory.pop();
+  if (!enteredScores[last.playerId]) enteredScores[last.playerId] = {};
+  if (last.prevGross === null) {
+    delete enteredScores[last.playerId][last.hole];
+    await sb.from('scores')
+      .delete()
+      .eq('player_id', last.playerId)
+      .eq('round', last.round)
+      .eq('hole', last.hole);
+  } else {
+    enteredScores[last.playerId][last.hole] = last.prevGross;
+    await sb.from('scores').upsert({
+      player_id: last.playerId,
+      round: last.round,
+      hole: last.hole,
+      gross_score: last.prevGross,
+    }, { onConflict: 'player_id,round,hole' });
+  }
+  currentHole = last.hole;
+  saveLocal();
+  renderHole();
+  updateUndoBtn();
+  showToast('Undone.');
+}
+
+function showSavingState(state) {
+  const ind = document.getElementById('savingIndicator');
+  ind.classList.remove('show', 'offline', 'error');
+  clearTimeout(ind._fadeTimer);
+  if (state === 'saving') {
+    ind.textContent = 'Saving...';
+    ind.classList.add('show');
+  } else if (state === 'saved') {
+    ind.textContent = 'Saved';
+    ind.classList.add('show');
+    ind._fadeTimer = setTimeout(() => ind.classList.remove('show'), 1800);
+  } else if (state === 'offline') {
+    ind.textContent = 'Saved offline';
+    ind.classList.add('show', 'offline');
+    ind._fadeTimer = setTimeout(() => ind.classList.remove('show'), 3000);
+  }
+}
+
+function queueOffline(playerId, hole, gross) {
+  const queue = JSON.parse(localStorage.getItem('bova_offline_queue') || '[]');
+  const idx = queue.findIndex(e => e.player_id === playerId && e.hole === hole && e.round === currentRound);
+  const entry = { player_id: playerId, round: currentRound, hole, gross_score: gross };
+  if (idx >= 0) queue[idx] = entry;
+  else queue.push(entry);
+  localStorage.setItem('bova_offline_queue', JSON.stringify(queue));
+}
+
+async function flushOfflineQueue() {
+  const queue = JSON.parse(localStorage.getItem('bova_offline_queue') || '[]');
+  if (!queue.length) return;
+  try {
+    const { error } = await sb.from('scores').upsert(queue, { onConflict: 'player_id,round,hole' });
+    if (!error) {
+      localStorage.removeItem('bova_offline_queue');
+      showToast(`${queue.length} offline score${queue.length > 1 ? 's' : ''} synced.`);
+    }
+  } catch (e) {}
+}
+
+window.addEventListener('online', flushOfflineQueue);
 
 async function submitRound() {
   const btn = document.getElementById('submitBtn');
@@ -611,6 +777,10 @@ function showToast(msg) {
   el.style.transform = 'translateX(0)'; el.style.opacity = '1';
   clearTimeout(el._t);
   el._t = setTimeout(() => { el.style.transform = 'translateX(120%)'; el.style.opacity = '0'; }, 3800);
+}
+
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => { navigator.serviceWorker.register('/sw.js').catch(() => {}); });
 }
 
 init();
