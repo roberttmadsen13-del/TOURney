@@ -242,23 +242,30 @@ const DEFAULT_PARS = {
   day2:[4,4,5,3,4,4,3,5,4,4,4,3,5,4,4,3,5,4],
   day3:[4,4,5,3,4,4,3,5,4,4,4,3,5,4,4,3,5,4],
 };
+const DEFAULT_FORMATS = {
+  day1: { front: 'stroke',    back: 'stroke'    },
+  day2: { front: 'scramble',  back: 'shamble'   },
+  day3: { front: 'best_ball', back: 'stroke'    },
+};
 
 let players = [];
 let scores = [];
 let teamAssignments = {};
 let roundStates = {};
 let coursePars = JSON.parse(JSON.stringify(DEFAULT_PARS));
+let roundFormats = JSON.parse(JSON.stringify(DEFAULT_FORMATS));
 let activeTab = 'team';
 let currentRound = null;
 
 // ── INIT ──────────────────────────────────────────────────────────
 async function init() {
-  const [pRes, sRes, tRes, rRes, parRes] = await Promise.all([
+  const [pRes, sRes, tRes, rRes, parRes, fmtRes] = await Promise.all([
     sb.from('players').select('*'),
     sb.from('scores').select('*'),
     sb.from('settings').select('*').eq('key','team_assignments'),
     sb.from('settings').select('*').in('key',['round_day1','round_day2','round_day3']),
     sb.from('settings').select('*').in('key',['pars_day1','pars_day2','pars_day3']),
+    sb.from('settings').select('*').eq('key','round_formats'),
   ]);
 
   players = pRes.data || [];
@@ -274,6 +281,8 @@ async function init() {
     const day = r.key.replace('pars_','');
     try { coursePars[day] = JSON.parse(r.value); } catch {}
   });
+
+  if (fmtRes.data?.[0]) try { roundFormats = { ...DEFAULT_FORMATS, ...JSON.parse(fmtRes.data[0].value) }; } catch {}
 
   currentRound = Object.entries(roundStates).find(([,v]) => v === 'open')?.[0] || null;
 
@@ -318,51 +327,41 @@ function getPlayerScores(playerId, round) {
   return scores.filter(s => s.player_id === playerId && s.round === round);
 }
 
+// Config-driven format helper
+function getHoleFormat(round, hole) {
+  const nine = hole <= 9 ? 'front' : 'back';
+  return (roundFormats[round] || DEFAULT_FORMATS[round] || {})[nine] || 'stroke';
+}
+
 // Format-aware relative-to-par calculation
 function calcPlayerRound(playerId, round) {
   const pars = coursePars[round] || DEFAULT_PARS[round];
   const team = teamAssignments[playerId];
+  const hs   = getPlayerScores(playerId, round);
+  const teamMateIds = Object.keys(teamAssignments).filter(id => teamAssignments[id] === team && id !== playerId);
 
-  if (round === 'day1') {
-    // Pure individual stroke play
-    const hs = getPlayerScores(playerId, round);
-    const rel = hs.reduce((sum, s) => sum + (s.gross_score - (pars[s.hole-1] || 4)), 0);
-    return { rel, thru: hs.length, scores: hs };
-  }
+  let rel = 0, thru = 0;
 
-  if (round === 'day2') {
-    // Front 9: scramble — scorecard already mirrors identical scores to both players
-    // Back 9: individual
-    // Since DB already has mirrored scores for front 9, plain sum is correct
-    const hs = getPlayerScores(playerId, round);
-    const rel = hs.reduce((sum, s) => sum + (s.gross_score - (pars[s.hole-1] || 4)), 0);
-    return { rel, thru: hs.length, scores: hs };
-  }
+  for (let h = 1; h <= 18; h++) {
+    const par    = pars[h-1] || 4;
+    const format = getHoleFormat(round, h);
 
-  if (round === 'day3') {
-    // Front 9: best ball (lower of player and any same-team member per hole)
-    // Back 9: individual
-    const teamMateIds = Object.keys(teamAssignments).filter(id => teamAssignments[id] === team && id !== playerId);
-    let rel = 0, thru = 0;
-    const hs = getPlayerScores(playerId, round);
-
-    for (let h = 1; h <= 9; h++) {
-      const par = pars[h-1] || 4;
+    if (format === 'best_ball') {
+      // Lower of player + any same-team partner for this hole
       const myS = hs.find(s => s.hole === h);
-      const partnerScores = teamMateIds.map(pid => scores.find(s => s.player_id === pid && s.round === round && s.hole === h)).filter(Boolean);
-      const allScores = [myS, ...partnerScores].filter(Boolean).map(s => s.gross_score);
-      if (allScores.length > 0) {
-        rel += Math.min(...allScores) - par;
-        thru++;
-      }
+      const partnerScores = teamMateIds
+        .map(pid => scores.find(s => s.player_id === pid && s.round === round && s.hole === h))
+        .filter(Boolean);
+      const all = [myS, ...partnerScores].filter(Boolean).map(s => s.gross_score);
+      if (all.length) { rel += Math.min(...all) - par; thru++; }
+    } else {
+      // stroke / scramble / shamble — DB already mirrors scramble scores to both players
+      const myS = hs.find(s => s.hole === h);
+      if (myS) { rel += myS.gross_score - par; thru++; }
     }
-    // Back 9 individual
-    const backHs = hs.filter(s => s.hole >= 10);
-    backHs.forEach(s => { rel += s.gross_score - (pars[s.hole-1] || 4); thru++; });
-    return { rel, thru, scores: hs };
   }
 
-  return { rel: 0, thru: 0, scores: [] };
+  return { rel, thru, scores: hs };
 }
 
 function formatScore(n, thru) {

@@ -276,11 +276,17 @@ const DEFAULT_PARS = {
   day2:[4,4,5,3,4,4,3,5,4,4,4,3,5,4,4,3,5,4],
   day3:[4,4,5,3,4,4,3,5,4,4,4,3,5,4,4,3,5,4],
 };
+const DEFAULT_FORMATS = {
+  day1: { front: 'stroke',    back: 'stroke'    },
+  day2: { front: 'scramble',  back: 'shamble'   },
+  day3: { front: 'best_ball', back: 'stroke'    },
+};
 
 let players = [];
 let teamAssignments = {};
 let currentRound = null;
 let coursePars = [];
+let roundFormats = JSON.parse(JSON.stringify(DEFAULT_FORMATS));
 
 // Foursome state
 let scorerPlayer  = null;
@@ -298,11 +304,12 @@ let _foursomeChannel = null;
 
 // ── INIT ──────────────────────────────────────────────────────────
 async function init() {
-  const [pRes, tRes, rRes, parRes] = await Promise.all([
+  const [pRes, tRes, rRes, parRes, fmtRes] = await Promise.all([
     sb.from('players').select('*').order('first_name'),
     sb.from('settings').select('*').eq('key','team_assignments'),
     sb.from('settings').select('*').in('key',['round_day1','round_day2','round_day3']),
     sb.from('settings').select('*').in('key',['pars_day1','pars_day2','pars_day3']),
+    sb.from('settings').select('*').eq('key','round_formats'),
   ]);
 
   players = pRes.data || [];
@@ -316,6 +323,8 @@ async function init() {
   const parOverrides = {};
   (parRes.data || []).forEach(r => { try { parOverrides[r.key.replace('pars_','')] = JSON.parse(r.value); } catch {} });
   coursePars = parOverrides[currentRound] || DEFAULT_PARS[currentRound] || DEFAULT_PARS.day2;
+
+  if (fmtRes.data?.[0]) try { roundFormats = { ...DEFAULT_FORMATS, ...JSON.parse(fmtRes.data[0].value) }; } catch {}
 
   if (!currentRound) {
     document.getElementById('noRoundMsg').style.display = 'block';
@@ -492,19 +501,22 @@ function subscribeToFoursome() {
     .subscribe();
 }
 
-// ── FORMAT DETECTION ──────────────────────────────────────────────
-function isScrambleHole(hole) {
-  return currentRound === 'day2' && hole <= 9;
+// ── FORMAT DETECTION (config-driven) ─────────────────────────────
+function getHoleFormat(hole) {
+  if (!currentRound) return 'stroke';
+  const nine = hole <= 9 ? 'front' : 'back';
+  return (roundFormats[currentRound] || DEFAULT_FORMATS[currentRound] || {})[nine] || 'stroke';
 }
-function isBestBallHole(hole) {
-  return currentRound === 'day3' && hole <= 9;
-}
-function formatLabel(hole) {
-  if (isScrambleHole(hole))  return 'Scramble';
-  if (isBestBallHole(hole))  return 'Best Ball';
-  if (currentRound === 'day2' && hole >= 10) return 'Shambles';
-  return 'Stroke Play';
-}
+function isScrambleHole(hole)  { return getHoleFormat(hole) === 'scramble';  }
+function isBestBallHole(hole)  { return getHoleFormat(hole) === 'best_ball'; }
+
+const FORMAT_DISPLAY = {
+  stroke:    'Stroke Play',
+  scramble:  'Scramble',
+  shamble:   'Shambles',
+  best_ball: 'Best Ball',
+};
+function formatLabel(hole) { return FORMAT_DISPLAY[getHoleFormat(hole)] || 'Stroke Play'; }
 
 // ── SCORE HELPERS ─────────────────────────────────────────────────
 function scoreLabel(gross, par) {
