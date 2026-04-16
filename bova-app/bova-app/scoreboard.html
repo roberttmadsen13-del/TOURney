@@ -3,23 +3,23 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#0a0702">
+<meta name="theme-color" content="#f5ede0">
 <link rel="manifest" href="/manifest.json">
 <title>Scoreboard — Bova Invitational</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Mono:wght@300;400;500&family=Barlow+Condensed:wght@300;400;600;700;800&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
-:root{--ink:#1a1008;--gold:#c09030;--gold-l:#d4aa50;--gold-p:#e8cc80;--cream:#f0e6cc;--red:#8a1e10;--green:#1a4010;--border:rgba(192,144,48,0.18);--bg:#0a0702;}
+:root{--ink:#1a1008;--gold:#c09030;--gold-l:#d4aa50;--gold-p:#e8cc80;--cream:#f0e6cc;--red:#8a1e10;--green:#1a4010;--border:rgba(192,144,48,0.28);--bg:#f5ede0;--card:#fdf8f0;--muted:rgba(26,16,8,0.4);}
 *{margin:0;padding:0;box-sizing:border-box;}
 html{scroll-behavior:smooth;}
-body{background:var(--bg);color:var(--cream);font-family:'Barlow',sans-serif;font-weight:300;min-height:100vh;}
+body{background:var(--bg);color:var(--ink);font-family:'Barlow',sans-serif;font-weight:300;min-height:100vh;}
 
 /* NAV */
 .nav{position:sticky;top:0;z-index:100;height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;background:rgba(10,7,2,0.97);border-bottom:1px solid var(--border);}
 .nav-logo{font-family:'Playfair Display',serif;font-size:0.9rem;font-weight:700;}
 .nav-logo em{font-style:italic;color:var(--gold);}
 .nav-right{display:flex;align-items:center;gap:1.5rem;}
-.live-dot{display:flex;align-items:center;gap:0.4rem;font-family:'DM Mono',monospace;font-size:0.48rem;letter-spacing:0.2em;text-transform:uppercase;color:rgba(240,230,204,0.35);}
-.live-dot span{width:6px;height:6px;border-radius:50%;background:#4a9a40;animation:pulse 1.8s ease-in-out infinite;}
+.live-dot{display:flex;align-items:center;gap:0.4rem;font-family:'DM Mono',monospace;font-size:0.48rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);}
+.live-dot span{width:6px;height:6px;border-radius:50%;background:#2a7a20;animation:pulse 1.8s ease-in-out infinite;}
 @keyframes pulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:0.5;transform:scale(0.8);}}
 .nav-round{font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);}
 .score-btn{font-family:'Barlow Condensed',sans-serif;font-size:0.65rem;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;padding:0.4rem 1.1rem;border:1px solid var(--gold);color:var(--gold);background:transparent;cursor:pointer;text-decoration:none;transition:all 0.2s;}
@@ -31,13 +31,13 @@ body{background:var(--bg);color:var(--cream);font-family:'Barlow',sans-serif;fon
 .event-eyebrow{font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.5em;text-transform:uppercase;color:rgba(192,144,48,0.5);margin-bottom:0.5rem;}
 .event-title{font-family:'Playfair Display',serif;font-size:clamp(2rem,5vw,3.2rem);font-weight:900;line-height:1;margin-bottom:0.3rem;}
 .event-title em{font-style:italic;color:var(--gold-p);}
-.event-sub{font-family:'Barlow Condensed',sans-serif;font-size:0.78rem;letter-spacing:0.2em;text-transform:uppercase;color:rgba(240,230,204,0.3);}
+.event-sub{font-family:'Barlow Condensed',sans-serif;font-size:0.78rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);}
 
 /* TAB BAR */
 .tab-bar{border-bottom:1px solid var(--border);padding:0 2rem;max-width:1100px;margin:0 auto;display:flex;gap:0;}
-.tab{font-family:'Barlow Condensed',sans-serif;font-size:0.65rem;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;padding:0.9rem 1.5rem;cursor:pointer;border-bottom:2px solid transparent;color:rgba(240,230,204,0.4);transition:all 0.2s;background:none;border-top:none;border-left:none;border-right:none;}
+.tab{font-family:'Barlow Condensed',sans-serif;font-size:0.65rem;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;padding:0.9rem 1.5rem;cursor:pointer;border-bottom:2px solid transparent;color:var(--muted);transition:all 0.2s;background:none;border-top:none;border-left:none;border-right:none;}
 .tab.active{color:var(--gold);border-bottom-color:var(--gold);}
-.tab:hover{color:var(--cream);}
+.tab:hover{color:var(--ink);}
 
 /* MAIN */
 .main{max-width:1100px;margin:0 auto;padding:2rem;}
@@ -46,96 +46,96 @@ body{background:var(--bg);color:var(--cream);font-family:'Barlow',sans-serif;fon
 /* TEAM BANNER */
 .team-banners{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);margin-bottom:2rem;}
 @media(max-width:500px){.team-banners{grid-template-columns:1fr;}}
-.team-banner{padding:1.5rem 2rem;background:var(--bg);}
+.team-banner{padding:1.5rem 2rem;background:var(--card);}
 .tb-label{font-family:'DM Mono',monospace;font-size:0.48rem;letter-spacing:0.35em;text-transform:uppercase;margin-bottom:0.4rem;}
 .tb-label.team-a{color:var(--gold);}
-.tb-label.team-b{color:#6a8aaa;}
+.tb-label.team-b{color:#4a6a8a;}
 .tb-name{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:900;line-height:1;margin-bottom:0.3rem;}
-.tb-name em{font-style:italic;color:var(--gold-p);}
+.tb-name em{font-style:italic;color:var(--gold);}
 .tb-score{font-family:'Playfair Display',serif;font-size:2.5rem;font-weight:900;line-height:1;}
-.tb-score.under{color:#4a9a40;}
+.tb-score.under{color:#2a7a20;}
 .tb-score.over{color:var(--red);}
-.tb-score.even{color:var(--cream);}
-.tb-score-label{font-family:'DM Mono',monospace;font-size:0.45rem;letter-spacing:0.2em;text-transform:uppercase;color:rgba(240,230,204,0.3);margin-top:0.3rem;}
+.tb-score.even{color:var(--ink);}
+.tb-score-label{font-family:'DM Mono',monospace;font-size:0.45rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-top:0.3rem;}
 
 /* LEADERBOARD TABLE */
 .lb-table{width:100%;border-collapse:collapse;}
 .lb-table thead tr{border-bottom:2px solid var(--border);}
-.lb-table th{padding:0.6rem 0.8rem;text-align:left;font-family:'DM Mono',monospace;font-size:0.45rem;letter-spacing:0.25em;text-transform:uppercase;color:rgba(240,230,204,0.3);font-weight:400;}
+.lb-table th{padding:0.6rem 0.8rem;text-align:left;font-family:'DM Mono',monospace;font-size:0.45rem;letter-spacing:0.25em;text-transform:uppercase;color:var(--muted);font-weight:400;}
 .lb-table th.right{text-align:right;}
 .lb-table th.center{text-align:center;}
-.lb-table tbody tr{border-bottom:1px solid rgba(192,144,48,0.06);transition:background 0.15s;}
-.lb-table tbody tr:hover{background:rgba(192,144,48,0.03);}
+.lb-table tbody tr{border-bottom:1px solid rgba(26,16,8,0.08);transition:background 0.15s;}
+.lb-table tbody tr:hover{background:rgba(192,144,48,0.06);}
 .lb-table td{padding:0.85rem 0.8rem;vertical-align:middle;}
 @media(max-width:600px){.lb-table th,.lb-table td{padding:0.6rem 0.4rem;font-size:0.75rem;}}
 
 /* Position */
-.pos{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;color:rgba(240,230,204,0.3);width:2.5rem;}
+.pos{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;color:var(--muted);width:2.5rem;}
 .pos.gold{color:var(--gold);}
-.pos.silver{color:rgba(200,200,200,0.7);}
+.pos.silver{color:rgba(100,80,50,0.6);}
 .pos.bronze{color:#8a5a30;}
 
 /* Player name */
-.lb-name{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--cream);}
+.lb-name{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--ink);}
 .lb-team-dot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:0.5rem;vertical-align:middle;position:relative;top:-1px;}
 .dot-a{background:var(--gold);}
-.dot-b{background:#6a8aaa;}
-.lb-tier{font-family:'DM Mono',monospace;font-size:0.42rem;letter-spacing:0.1em;text-transform:uppercase;color:rgba(240,230,204,0.25);margin-top:0.15rem;}
+.dot-b{background:#4a6a8a;}
+.lb-tier{font-family:'DM Mono',monospace;font-size:0.42rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-top:0.15rem;}
 
 /* Score columns */
 .score-cell{text-align:center;font-family:'DM Mono',monospace;font-size:0.8rem;}
-.score-cell.thru{color:rgba(240,230,204,0.35);font-size:0.72rem;}
+.score-cell.thru{color:var(--muted);font-size:0.72rem;}
 .score-tally{font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:700;text-align:right;}
-.score-tally.under{color:#4a9a40;}
+.score-tally.under{color:#2a7a20;}
 .score-tally.over{color:var(--red);}
-.score-tally.even{color:var(--cream);}
+.score-tally.even{color:var(--ink);}
 .flash-gold{animation:flashGold 0.8s ease forwards;}
 @keyframes flashGold{0%{background:rgba(192,144,48,0.3);}100%{background:transparent;}}
 
 /* Hole strip */
 .hole-strip{display:flex;gap:2px;margin-top:0.3rem;}
 .hole-score{width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:0.5rem;border-radius:2px;}
-.hs-birdie{background:rgba(74,154,64,0.3);color:#4a9a40;}
-.hs-eagle{background:rgba(74,154,64,0.5);color:#4a9a40;border:1px solid #4a9a40;}
-.hs-bogey{background:rgba(138,30,16,0.25);color:var(--red);}
-.hs-double{background:rgba(138,30,16,0.45);color:var(--red);border:1px solid var(--red);}
-.hs-par{background:rgba(240,230,204,0.06);color:rgba(240,230,204,0.35);}
-.hs-empty{background:rgba(240,230,204,0.04);color:rgba(240,230,204,0.15);}
+.hs-birdie{background:rgba(42,122,32,0.18);color:#2a7a20;}
+.hs-eagle{background:rgba(42,122,32,0.32);color:#2a7a20;border:1px solid #2a7a20;}
+.hs-bogey{background:rgba(138,30,16,0.14);color:var(--red);}
+.hs-double{background:rgba(138,30,16,0.28);color:var(--red);border:1px solid var(--red);}
+.hs-par{background:rgba(26,16,8,0.06);color:var(--muted);}
+.hs-empty{background:rgba(26,16,8,0.03);color:rgba(26,16,8,0.18);}
 
 /* Scorecard view */
 .hole-grid{display:grid;grid-template-columns:repeat(9,1fr);gap:1px;background:var(--border);margin-bottom:1px;}
-.hole-cell{background:var(--bg);padding:0.5rem 0.3rem;text-align:center;font-family:'DM Mono',monospace;font-size:0.55rem;}
-.hole-cell.header{font-size:0.42rem;letter-spacing:0.15em;text-transform:uppercase;color:rgba(240,230,204,0.3);}
-.hole-cell.par{color:rgba(240,230,204,0.45);}
-.hole-cell.ms-eagle{background:rgba(74,154,64,0.35);color:#4a9a40;}
-.hole-cell.ms-birdie{background:rgba(74,154,64,0.2);color:#4a9a40;}
-.hole-cell.ms-par{background:rgba(240,230,204,0.04);color:rgba(240,230,204,0.5);}
-.hole-cell.ms-bogey{background:rgba(138,30,16,0.2);color:var(--red);}
-.hole-cell.ms-double{background:rgba(138,30,16,0.35);color:var(--red);}
-.hole-cell.ms-empty{color:rgba(240,230,204,0.2);}
+.hole-cell{background:var(--card);padding:0.5rem 0.3rem;text-align:center;font-family:'DM Mono',monospace;font-size:0.55rem;}
+.hole-cell.header{font-size:0.42rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);}
+.hole-cell.par{color:var(--muted);}
+.hole-cell.ms-eagle{background:rgba(42,122,32,0.25);color:#2a7a20;}
+.hole-cell.ms-birdie{background:rgba(42,122,32,0.14);color:#2a7a20;}
+.hole-cell.ms-par{background:rgba(26,16,8,0.04);color:var(--muted);}
+.hole-cell.ms-bogey{background:rgba(138,30,16,0.12);color:var(--red);}
+.hole-cell.ms-double{background:rgba(138,30,16,0.24);color:var(--red);}
+.hole-cell.ms-empty{color:rgba(26,16,8,0.2);}
 
 /* Holding state */
 .holding-state{display:none;text-align:center;padding:5rem 2rem;}
 .holding-state.show{display:block;}
 .holding-clock{font-family:'Playfair Display',serif;font-size:clamp(3rem,10vw,6rem);font-weight:900;color:var(--gold);line-height:1;margin-bottom:0.5rem;}
-.holding-label{font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.4em;text-transform:uppercase;color:rgba(240,230,204,0.25);}
+.holding-label{font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.4em;text-transform:uppercase;color:var(--muted);}
 
 /* Empty state */
-.empty-state{text-align:center;padding:5rem 2rem;font-family:'Playfair Display',serif;font-style:italic;font-size:1rem;color:rgba(240,230,204,0.2);}
+.empty-state{text-align:center;padding:5rem 2rem;font-family:'Playfair Display',serif;font-style:italic;font-size:1rem;color:var(--muted);}
 
 /* Loading */
-.loading{text-align:center;padding:3rem;font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.3em;text-transform:uppercase;color:rgba(240,230,204,0.25);}
+.loading{text-align:center;padding:3rem;font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--muted);}
 
 /* Round selector (scorecard tab) */
 .round-sel-bar{display:flex;gap:1px;background:var(--border);margin-bottom:1.5rem;}
-.round-sel-btn{flex:1;padding:0.65rem 0.5rem;background:var(--bg);border:none;font-family:'Barlow Condensed',sans-serif;font-size:0.65rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:rgba(240,230,204,0.4);cursor:pointer;transition:all 0.2s;text-align:center;}
-.round-sel-btn:hover{background:rgba(192,144,48,0.06);color:var(--cream);}
-.round-sel-btn.active{background:rgba(192,144,48,0.1);color:var(--gold);}
-.round-sel-btn .live-tag{font-size:0.42rem;color:#4a9a40;display:block;letter-spacing:0.1em;margin-top:1px;}
-.round-sel-btn .closed-tag{font-size:0.42rem;color:rgba(240,230,204,0.25);display:block;letter-spacing:0.1em;margin-top:1px;}
+.round-sel-btn{flex:1;padding:0.65rem 0.5rem;background:var(--card);border:none;font-family:'Barlow Condensed',sans-serif;font-size:0.65rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);cursor:pointer;transition:all 0.2s;text-align:center;}
+.round-sel-btn:hover{background:rgba(192,144,48,0.1);color:var(--ink);}
+.round-sel-btn.active{background:rgba(192,144,48,0.12);color:var(--gold);}
+.round-sel-btn .live-tag{font-size:0.42rem;color:#2a7a20;display:block;letter-spacing:0.1em;margin-top:1px;}
+.round-sel-btn .closed-tag{font-size:0.42rem;color:var(--muted);display:block;letter-spacing:0.1em;margin-top:1px;}
 
 /* Last updated */
-.last-updated{text-align:right;font-family:'DM Mono',monospace;font-size:0.45rem;letter-spacing:0.15em;text-transform:uppercase;color:rgba(240,230,204,0.2);padding-top:1.5rem;}
+.last-updated{text-align:right;font-family:'DM Mono',monospace;font-size:0.45rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);padding-top:1.5rem;}
 </style>
 </head>
 <body>
