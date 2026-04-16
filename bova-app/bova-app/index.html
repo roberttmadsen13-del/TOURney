@@ -613,6 +613,9 @@ html { scroll-behavior: smooth; }
             <div class="fg"><label>Email Address</label><input type="email" id="rsvpEmail" placeholder="your@email.com"><div class="err" id="errEmail">Valid email required</div></div>
           </div>
           <div class="form-row one">
+            <div class="fg"><label>Phone Number <span style="font-weight:300;opacity:0.6;">(optional)</span></label><input type="tel" id="rsvpPhone" placeholder="(555) 555-5555"></div>
+          </div>
+          <div class="form-row one">
             <div class="fg">
               <label>Handicap Index</label>
               <select id="rsvpHandicap">
@@ -744,6 +747,7 @@ async function submitRsvp() {
   const first = document.getElementById('rsvpFirst').value.trim();
   const last  = document.getElementById('rsvpLast').value.trim();
   const email = document.getElementById('rsvpEmail').value.trim();
+  const phone = document.getElementById('rsvpPhone').value.trim();
   const hcap  = document.getElementById('rsvpHandicap').value;
   if (!first) { setErr('rsvpFirst','errFirst',true); ok=false; } else setErr('rsvpFirst','errFirst',false);
   if (!last)  { setErr('rsvpLast','errLast',true);  ok=false; } else setErr('rsvpLast','errLast',false);
@@ -756,6 +760,7 @@ async function submitRsvp() {
     first_name: first,
     last_name:  last,
     email:      email.toLowerCase(),
+    phone_number: phone || null,
     handicap:   hcap,
     available_dates: [...selectedDates],
     why_me:     document.getElementById('rsvpWhyMe').value.trim(),

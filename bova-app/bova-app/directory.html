@@ -205,6 +205,7 @@ function renderTeamSection(team, name, captain, players) {
           <div class="player-info">
             <div class="player-name">${p.first_name} ${p.last_name}</div>
             <div class="player-email"><a href="mailto:${p.email}">${p.email}</a></div>
+            ${p.phone_number ? `<div class="player-email"><a href="tel:${p.phone_number}">${p.phone_number}</a></div>` : ''}
           </div>
           <span class="tier-pill ${TIER_MAP[p.handicap]||''}">${TIER_LABELS[p.handicap]||p.handicap||'—'}</span>
         </div>`).join('')

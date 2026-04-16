@@ -335,6 +335,7 @@ td.email a:hover{color:var(--gold);}
               <th>#</th>
               <th>Name</th>
               <th>Email</th>
+              <th>Phone</th>
               <th>Tier</th>
               <th>Available Dates</th>
               <th>Why Me</th>
@@ -345,7 +346,7 @@ td.email a:hover{color:var(--gold);}
             </tr>
           </thead>
           <tbody id="playerTableBody">
-            <tr><td colspan="10" class="loading">Loading players...</td></tr>
+            <tr><td colspan="11" class="loading">Loading players...</td></tr>
           </tbody>
         </table>
       </div>
@@ -675,6 +676,7 @@ function renderTable() {
       <td style="color:rgba(240,230,204,0.3)">${origPos}</td>
       <td class="name">${p.first_name} ${p.last_name}</td>
       <td class="email"><a href="mailto:${p.email}">${p.email}</a></td>
+      <td style="font-size:0.7rem;color:rgba(240,230,204,0.5)">${p.phone_number ? `<a href="tel:${p.phone_number}" style="color:inherit;text-decoration:none">${p.phone_number}</a>` : '—'}</td>
       <td><span class="tier-pill ${TIER_MAP[p.handicap] || ''}">${TIER_LABELS[p.handicap] || p.handicap}</span></td>
       <td style="font-size:0.7rem;color:rgba(240,230,204,0.4)">${dates || '—'}</td>
       <td style="font-size:0.72rem;color:rgba(240,230,204,0.45);max-width:160px">${p.why_me || '—'}</td>
@@ -696,12 +698,12 @@ async function removePlayer(id, name) {
 
 // ── CSV EXPORT ────────────────────────────────────────────────────
 function exportCSV() {
-  const headers = ['Number','First Name','Last Name','Email','Handicap','Available Dates','Why Me','Trash Talk','Hat','Team'];
+  const headers = ['Number','First Name','Last Name','Email','Phone','Handicap','Available Dates','Why Me','Trash Talk','Hat','Team'];
   const rows = players.map((p, i) => {
     const team = teamAssignments[p.id] === 'A' ? 'Team Bova' : teamAssignments[p.id] === 'B' ? 'The Challengers' : '';
     const dates = (p.available_dates || []).map(d => DATE_LABELS[d] || d).join('; ');
     const esc = v => `"${String(v || '').replace(/"/g, '""')}"`;
-    return [i+1, esc(p.first_name), esc(p.last_name), esc(p.email), esc(p.handicap), esc(dates), esc(p.why_me), esc(p.trash_talk), p.hat ? 'Yes' : 'No', esc(team)].join(',');
+    return [i+1, esc(p.first_name), esc(p.last_name), esc(p.email), esc(p.phone_number), esc(p.handicap), esc(dates), esc(p.why_me), esc(p.trash_talk), p.hat ? 'Yes' : 'No', esc(team)].join(',');
   });
   const csv = [headers.join(','), ...rows].join('\n');
   const blob = new Blob([csv], { type: 'text/csv' });
@@ -851,6 +853,7 @@ function subscribeRealtime() {
         <td style="color:rgba(240,230,204,0.3)">${i+1}</td>
         <td class="name">${p.first_name} ${p.last_name}</td>
         <td class="email"><a href="mailto:${p.email}">${p.email}</a></td>
+        <td style="font-size:0.7rem;color:rgba(240,230,204,0.5)">${p.phone_number ? `<a href="tel:${p.phone_number}" style="color:inherit;text-decoration:none">${p.phone_number}</a>` : '—'}</td>
         <td><span class="tier-pill ${TIER_MAP[p.handicap] || ''}">${TIER_LABELS[p.handicap] || p.handicap}</span></td>
         <td style="font-size:0.7rem;color:rgba(240,230,204,0.4)">${dates || '—'}</td>
         <td style="font-size:0.72rem;color:rgba(240,230,204,0.45)">${p.why_me || '—'}</td>
