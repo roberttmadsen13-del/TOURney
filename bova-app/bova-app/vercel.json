@@ -5,6 +5,7 @@
     { "source": "/scorecard", "destination": "/scorecard.html" },
     { "source": "/profile", "destination": "/profile.html" },
     { "source": "/directory", "destination": "/directory.html" },
-    { "source": "/course", "destination": "/course.html" }
+    { "source": "/course", "destination": "/course.html" },
+    { "source": "/champions", "destination": "/champions.html" }
   ]
 }
