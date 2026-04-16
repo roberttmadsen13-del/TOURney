@@ -275,7 +275,14 @@ td.email a:hover{color:var(--gold);}
         </div>
         <div class="team-col">
           <div class="team-col-title">The <em>Challengers</em></div>
-          <div class="team-col-cap">Captain &mdash; TBD</div>
+          <div class="team-col-cap" style="display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap;">
+            <span style="flex-shrink:0;">Captain &mdash;</span>
+            <input type="text" id="challengersCaptainInput"
+              style="background:rgba(10,6,2,0.7);border:1px solid var(--border);padding:0.25rem 0.5rem;color:var(--cream);font-family:'Barlow Condensed',sans-serif;font-size:0.78rem;outline:none;flex:1;min-width:100px;"
+              placeholder="Enter captain name"
+              onkeydown="if(event.key==='Enter')saveChallengersCaptain()">
+            <button onclick="saveChallengersCaptain()" style="font-family:'DM Mono',monospace;font-size:0.42rem;letter-spacing:0.1em;text-transform:uppercase;padding:0.25rem 0.6rem;border:1px solid var(--gold);color:var(--gold);background:transparent;cursor:pointer;">Save</button>
+          </div>
           <div class="team-player-list" id="teamBList"></div>
         </div>
       </div>
@@ -425,8 +432,25 @@ function showAdmin(email) {
 
 // ── DATA ──────────────────────────────────────────────────────────
 async function loadAll() {
-  await Promise.all([loadPlayers(), loadRoundStates(), loadTeams(), loadPars(), loadFormats()]);
+  await Promise.all([loadPlayers(), loadRoundStates(), loadTeams(), loadPars(), loadFormats(), loadChallengersCaptain()]);
   buildParEditor();
+}
+
+async function loadChallengersCaptain() {
+  const { data } = await sb.from('settings').select('value').eq('key','challengers_captain').single();
+  const el = document.getElementById('challengersCaptainInput');
+  if (el && data?.value) el.value = data.value;
+}
+
+async function saveChallengersCaptain() {
+  const el = document.getElementById('challengersCaptainInput');
+  const name = el?.value?.trim();
+  if (!name) return;
+  await sb.from('settings').upsert(
+    { key: 'challengers_captain', value: name, updated_at: new Date().toISOString() },
+    { onConflict: 'key' }
+  );
+  showToast(`Challengers captain set to ${name}.`);
 }
 
 async function loadFormats() {

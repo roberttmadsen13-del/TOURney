@@ -558,7 +558,7 @@ html { scroll-behavior: smooth; }
         <div class="tb-label">Team Two &mdash; Captain</div>
         <div class="tb-name">The <em>Challengers</em></div>
         <div class="tb-captain-label">Captain</div>
-        <input class="tb-captain-input" id="captain2Input" placeholder="Captain name TBD" maxlength="40">
+        <div class="tb-captain-name" id="captain2Name">TBD</div>
       </div>
     </div>
     <div class="teams-note">
@@ -826,12 +826,15 @@ window.addEventListener('scroll', () => {
   if (heroImg) { heroImg.style.transform = `scale(1.08) translateY(${scrolled * 0.18}px)`; }
 }, { passive: true });
 
-// Captain 2 — editable, persisted
-const cap2 = document.getElementById('captain2Input');
-if (cap2) {
-  try { const s = localStorage.getItem('bova_cap2'); if (s) cap2.value = s; } catch(e) {}
-  cap2.addEventListener('input', () => { try { localStorage.setItem('bova_cap2', cap2.value); } catch(e) {} });
-}
+// Challengers captain — read-only from Supabase (admin-only write)
+(async () => {
+  const el = document.getElementById('captain2Name');
+  if (!el) return;
+  try {
+    const { data } = await sb.from('settings').select('value').eq('key','challengers_captain').single();
+    if (data?.value) el.textContent = data.value;
+  } catch {}
+})();
 </script>
 </body>
 </html>
