@@ -381,6 +381,32 @@ td.email a:hover{color:var(--gold);}
       </div>
     </div>
 
+    <!-- SCORE EDITOR -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-title">Edit Historic Scores</div>
+        <div class="section-count">Correct any player's score for any hole</div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.2rem;">
+        <div>
+          <div class="par-nine-label" style="margin-top:0;">Player</div>
+          <select id="editPlayerSelect" class="format-select" onchange="loadScoreEditor()">
+            <option value="">Select player...</option>
+          </select>
+        </div>
+        <div>
+          <div class="par-nine-label" style="margin-top:0;">Round</div>
+          <select id="editRoundSelect" class="format-select" onchange="loadScoreEditor()">
+            <option value="">Select round...</option>
+            <option value="day1">Day One</option>
+            <option value="day2">Day Two</option>
+            <option value="day3">Day Three</option>
+          </select>
+        </div>
+      </div>
+      <div id="scoreEditorGrid"></div>
+    </div>
+
   </div><!-- /main -->
 </div><!-- /adminUI -->
 
@@ -533,6 +559,13 @@ async function loadPlayers() {
   renderStats();
   renderTable();
   renderTeamUI();
+  const editSel = document.getElementById('editPlayerSelect');
+  if (editSel) {
+    const prev = editSel.value;
+    editSel.innerHTML = '<option value="">Select player...</option>' +
+      players.map(p => `<option value="${p.id}"${p.id===prev?' selected':''}>${p.first_name} ${p.last_name}</option>`).join('');
+    if (prev && editSel.value === prev) loadScoreEditor();
+  }
 }
 
 async function loadRoundStates() {
@@ -845,6 +878,71 @@ function showToast(msg) {
   el.style.transform = 'translateX(0)'; el.style.opacity = '1';
   clearTimeout(el._t);
   el._t = setTimeout(() => { el.style.transform = 'translateX(120%)'; el.style.opacity = '0'; }, 3800);
+}
+
+// ── SCORE EDITOR ─────────────────────────────────────────────────
+let _editScores = {};
+
+async function loadScoreEditor() {
+  const playerId = document.getElementById('editPlayerSelect')?.value;
+  const round    = document.getElementById('editRoundSelect')?.value;
+  const grid     = document.getElementById('scoreEditorGrid');
+  if (!grid) return;
+  if (!playerId || !round) { grid.innerHTML = ''; return; }
+
+  const { data } = await sb.from('scores').select('*').eq('player_id', playerId).eq('round', round);
+  _editScores = {};
+  (data || []).forEach(s => { _editScores[s.hole] = s.gross_score; });
+
+  const pars   = coursePars[round] || DEFAULT_PARS[round];
+  const player = players.find(p => p.id === playerId);
+  const hInput = h => {
+    const v = _editScores[h] ?? '';
+    return `<div class="par-input-wrap"><div class="par-hole-num">${h}</div><input type="number" class="par-input" id="escore-${h}" value="${v}" min="1" max="15" placeholder="${pars[h-1]}"></div>`;
+  };
+
+  grid.innerHTML = `
+    <div class="par-nine-label" style="margin-top:0">Front Nine (Holes 1–9)</div>
+    <div class="par-inputs">${Array.from({length:9},(_,i)=>hInput(i+1)).join('')}</div>
+    <div class="par-nine-label">Back Nine (Holes 10–18)</div>
+    <div class="par-inputs">${Array.from({length:9},(_,i)=>hInput(i+10)).join('')}</div>
+    <div style="margin-top:0.75rem;display:flex;gap:0.75rem;align-items:center;">
+      <button class="save-pars-btn" onclick="saveScoreEdit()">Save Scores</button>
+      <button class="save-pars-btn" onclick="clearRoundScores()" style="background:transparent;color:var(--red);border:1px solid var(--red);">Clear Round</button>
+    </div>`;
+}
+
+async function saveScoreEdit() {
+  const playerId = document.getElementById('editPlayerSelect')?.value;
+  const round    = document.getElementById('editRoundSelect')?.value;
+  if (!playerId || !round) return;
+
+  const upserts = [];
+  for (let h = 1; h <= 18; h++) {
+    const v = parseInt(document.getElementById(`escore-${h}`)?.value);
+    if (!isNaN(v) && v >= 1 && v <= 15) upserts.push({ player_id: playerId, round, hole: h, gross_score: v });
+  }
+  if (upserts.length) {
+    const { error } = await sb.from('scores').upsert(upserts, { onConflict: 'player_id,round,hole' });
+    if (error) { showToast('Error: ' + error.message); return; }
+  }
+  for (let h = 1; h <= 18; h++) {
+    const v = document.getElementById(`escore-${h}`)?.value;
+    if (!v && _editScores[h]) await sb.from('scores').delete().eq('player_id', playerId).eq('round', round).eq('hole', h);
+  }
+  showToast(`${upserts.length} score${upserts.length!==1?'s':''} saved.`);
+  loadScoreEditor();
+}
+
+async function clearRoundScores() {
+  const playerId = document.getElementById('editPlayerSelect')?.value;
+  const round    = document.getElementById('editRoundSelect')?.value;
+  if (!playerId || !round) return;
+  const player = players.find(p => p.id === playerId);
+  if (!confirm(`Delete all ${round} scores for ${player?.first_name} ${player?.last_name}?`)) return;
+  await sb.from('scores').delete().eq('player_id', playerId).eq('round', round);
+  showToast('Scores cleared.');
+  loadScoreEditor();
 }
 
 // ── LOGO ──────────────────────────────────────────────────────────
