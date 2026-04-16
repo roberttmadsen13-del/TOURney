@@ -124,6 +124,14 @@ body{background:var(--bg);color:var(--cream);font-family:'Barlow',sans-serif;fon
 /* Loading */
 .loading{text-align:center;padding:3rem;font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.3em;text-transform:uppercase;color:rgba(240,230,204,0.25);}
 
+/* Round selector (scorecard tab) */
+.round-sel-bar{display:flex;gap:1px;background:var(--border);margin-bottom:1.5rem;}
+.round-sel-btn{flex:1;padding:0.65rem 0.5rem;background:var(--bg);border:none;font-family:'Barlow Condensed',sans-serif;font-size:0.65rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:rgba(240,230,204,0.4);cursor:pointer;transition:all 0.2s;text-align:center;}
+.round-sel-btn:hover{background:rgba(192,144,48,0.06);color:var(--cream);}
+.round-sel-btn.active{background:rgba(192,144,48,0.1);color:var(--gold);}
+.round-sel-btn .live-tag{font-size:0.42rem;color:#4a9a40;display:block;letter-spacing:0.1em;margin-top:1px;}
+.round-sel-btn .closed-tag{font-size:0.42rem;color:rgba(240,230,204,0.25);display:block;letter-spacing:0.1em;margin-top:1px;}
+
 /* Last updated */
 .last-updated{text-align:right;font-family:'DM Mono',monospace;font-size:0.45rem;letter-spacing:0.15em;text-transform:uppercase;color:rgba(240,230,204,0.2);padding-top:1.5rem;}
 </style>
@@ -222,8 +230,9 @@ body{background:var(--bg);color:var(--cream);font-family:'Barlow',sans-serif;fon
 
     <!-- SCORECARD VIEW -->
     <div id="view-scorecard" style="display:none;">
+      <div class="round-sel-bar" id="roundSelBar" style="display:none;"></div>
       <div id="scorecardContent">
-        <div class="empty-state">Select a round above to view hole-by-hole scorecards.</div>
+        <div class="empty-state">No scores recorded yet.</div>
       </div>
     </div>
 
@@ -257,6 +266,7 @@ let coursePars = JSON.parse(JSON.stringify(DEFAULT_PARS));
 let roundFormats = JSON.parse(JSON.stringify(DEFAULT_FORMATS));
 let activeTab = 'team';
 let currentRound = null;
+let selectedScorecardRound = null;
 
 // ── INIT ──────────────────────────────────────────────────────────
 async function init() {
@@ -471,16 +481,49 @@ function render() {
   }).join('');
   document.getElementById('indLeaderboardBody').innerHTML = indRows;
 
+  renderRoundSelector();
   renderScorecards(lb);
 }
 
+function renderRoundSelector() {
+  const roundLabels = { day1: 'Day 1', day2: 'Day 2', day3: 'Day 3' };
+  const roundsWithScores = ['day1','day2','day3'].filter(r => scores.some(s => s.round === r));
+  if (currentRound && !roundsWithScores.includes(currentRound)) roundsWithScores.push(currentRound);
+
+  const bar = document.getElementById('roundSelBar');
+  if (roundsWithScores.length <= 1) { bar.style.display = 'none'; }
+  else {
+    bar.style.display = 'flex';
+    if (!selectedScorecardRound || !roundsWithScores.includes(selectedScorecardRound)) {
+      selectedScorecardRound = currentRound || roundsWithScores[roundsWithScores.length - 1];
+    }
+    bar.innerHTML = roundsWithScores.map(r => {
+      const isLive = r === currentRound;
+      const tag = isLive ? `<span class="live-tag">&#9679; Live</span>` : `<span class="closed-tag">Completed</span>`;
+      return `<button class="round-sel-btn${r === selectedScorecardRound ? ' active' : ''}" onclick="selectScorecardRound('${r}')">${roundLabels[r]}${tag}</button>`;
+    }).join('');
+  }
+
+  // Default selected round
+  if (!selectedScorecardRound || !roundsWithScores.includes(selectedScorecardRound)) {
+    selectedScorecardRound = currentRound || (roundsWithScores.length ? roundsWithScores[roundsWithScores.length - 1] : null);
+  }
+}
+
+function selectScorecardRound(round) {
+  selectedScorecardRound = round;
+  renderRoundSelector();
+  renderScorecards(buildLeaderboard());
+}
+
 function renderScorecards(lb) {
-  if (!currentRound) {
-    document.getElementById('scorecardContent').innerHTML = '<div class="empty-state">No active round. Scorecards will appear when a round is opened.</div>';
+  const viewRound = selectedScorecardRound || currentRound;
+  if (!viewRound) {
+    document.getElementById('scorecardContent').innerHTML = '<div class="empty-state">No scores recorded yet. Scorecards appear once a round has scores.</div>';
     return;
   }
-  const roundIdx = parseInt(currentRound.replace('day','')) - 1;
-  const pars = coursePars[currentRound] || DEFAULT_PARS[currentRound];
+  const roundIdx = parseInt(viewRound.replace('day','')) - 1;
+  const pars = coursePars[viewRound] || DEFAULT_PARS[viewRound];
   const totalPar = pars.reduce((a,b) => a+b, 0);
   const frontPar = pars.slice(0,9).reduce((a,b) => a+b, 0);
   const backPar  = pars.slice(9).reduce((a,b) => a+b, 0);
@@ -495,7 +538,9 @@ function renderScorecards(lb) {
   const frontH = holeNums.slice(0,9);
   const backH  = holeNums.slice(9);
 
-  let html = `<div style="margin-bottom:1rem;font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.25em;text-transform:uppercase;color:var(--gold)">Day ${currentRound.replace('day','')} &mdash; Hole by Hole</div>`;
+  const isLive = viewRound === currentRound;
+  const roundTag = isLive ? ' <span style="color:#4a9a40">&#9679; Live</span>' : ' <span style="color:rgba(240,230,204,0.25)">Completed</span>';
+  let html = `<div style="margin-bottom:1rem;font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.25em;text-transform:uppercase;color:var(--gold)">Day ${viewRound.replace('day','')} &mdash; Hole by Hole${roundTag}</div>`;
 
   playersWithScores.forEach(p => {
     const hs = p.days[roundIdx].scores;
