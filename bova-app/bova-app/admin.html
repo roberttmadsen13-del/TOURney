@@ -126,6 +126,20 @@ td.email a:hover{color:var(--gold);}
 .teams-warn{font-family:'DM Mono',monospace;font-size:0.52rem;color:var(--gold);margin-top:0.75rem;display:none;}
 .teams-warn.show{display:block;}
 
+/* FORMAT CONFIG */
+.format-grid{display:grid;grid-template-columns:1fr;gap:1px;background:var(--border);}
+.format-row{background:var(--bg);padding:1.2rem;display:grid;grid-template-columns:120px 1fr 1fr;gap:1rem;align-items:start;}
+@media(max-width:600px){.format-row{grid-template-columns:1fr;}}
+.format-day-label{font-family:'Playfair Display',serif;font-size:0.9rem;font-weight:700;padding-top:1.5rem;}
+.format-day-label em{font-style:italic;color:var(--gold-p);}
+.format-nine-wrap{display:flex;flex-direction:column;gap:0.3rem;}
+.format-nine-label{font-family:'DM Mono',monospace;font-size:0.45rem;letter-spacing:0.22em;text-transform:uppercase;color:rgba(240,230,204,0.3);}
+.format-select{background:rgba(10,6,2,0.7);border:1px solid var(--border);padding:0.5rem 0.75rem;color:var(--cream);font-family:'Barlow',sans-serif;font-size:0.82rem;outline:none;width:100%;-webkit-appearance:none;cursor:pointer;border-radius:0;}
+.format-select:focus{border-color:var(--gold);}
+.format-select option{background:#1a1008;}
+.save-formats-btn{margin-top:1.2rem;padding:0.75rem 2rem;background:var(--gold);color:var(--ink);border:none;font-family:'Barlow Condensed',sans-serif;font-size:0.72rem;font-weight:700;letter-spacing:0.22em;text-transform:uppercase;cursor:pointer;transition:background 0.2s;}
+.save-formats-btn:hover{background:var(--gold-l);}
+
 /* PAR EDITOR */
 .par-day{border:1px solid var(--border);margin-bottom:1px;}
 .par-day-header{display:flex;align-items:center;justify-content:space-between;padding:0.85rem 1.2rem;cursor:pointer;background:rgba(192,144,48,0.03);user-select:none;}
@@ -237,6 +251,18 @@ td.email a:hover{color:var(--gold);}
       </div>
     </div>
 
+    <!-- FORMAT CONFIG -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-title">Round Formats</div>
+        <div class="section-count">Per 9-hole segment</div>
+      </div>
+      <div class="format-grid" id="formatGrid">
+        <div class="loading">Loading formats...</div>
+      </div>
+      <button class="save-formats-btn" onclick="saveFormats()">Save Formats</button>
+    </div>
+
     <!-- TEAM ASSIGNMENT -->
     <div class="section">
       <div class="section-header">
@@ -251,7 +277,14 @@ td.email a:hover{color:var(--gold);}
         </div>
         <div class="team-col">
           <div class="team-col-title">The <em>Challengers</em></div>
-          <div class="team-col-cap">Captain &mdash; TBD</div>
+          <div class="team-col-cap" style="display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap;">
+            <span style="flex-shrink:0;">Captain &mdash;</span>
+            <input type="text" id="challengersCaptainInput"
+              style="background:rgba(10,6,2,0.7);border:1px solid var(--border);padding:0.25rem 0.5rem;color:var(--cream);font-family:'Barlow Condensed',sans-serif;font-size:0.78rem;outline:none;flex:1;min-width:100px;"
+              placeholder="Enter captain name"
+              onkeydown="if(event.key==='Enter')saveChallengersCaptain()">
+            <button onclick="saveChallengersCaptain()" style="font-family:'DM Mono',monospace;font-size:0.42rem;letter-spacing:0.1em;text-transform:uppercase;padding:0.25rem 0.6rem;border:1px solid var(--gold);color:var(--gold);background:transparent;cursor:pointer;">Save</button>
+          </div>
           <div class="team-player-list" id="teamBList"></div>
         </div>
       </div>
@@ -347,10 +380,23 @@ const DEFAULT_PARS = {
   day3:[4,4,5,3,4,4,3,5,4,4,4,3,5,4,4,3,5,4],
 };
 
+const DEFAULT_FORMATS = {
+  day1: { front: 'stroke',    back: 'stroke'    },
+  day2: { front: 'scramble',  back: 'shamble'   },
+  day3: { front: 'best_ball', back: 'stroke'    },
+};
+const FORMAT_OPTIONS = [
+  { value: 'stroke',    label: 'Stroke Play'              },
+  { value: 'scramble',  label: 'Scramble (team score)'    },
+  { value: 'shamble',   label: 'Shambles (best drive, ind.)' },
+  { value: 'best_ball', label: 'Best Ball'                },
+];
+
 let players = [];
 let roundStates = {day1:'pending',day2:'pending',day3:'pending'};
 let teamAssignments = {};
 let coursePars = JSON.parse(JSON.stringify(DEFAULT_PARS));
+let roundFormats = JSON.parse(JSON.stringify(DEFAULT_FORMATS));
 let sortMode = 'name';
 
 // ── AUTH ──────────────────────────────────────────────────────────
@@ -388,8 +434,76 @@ function showAdmin(email) {
 
 // ── DATA ──────────────────────────────────────────────────────────
 async function loadAll() {
-  await Promise.all([loadPlayers(), loadRoundStates(), loadTeams(), loadPars()]);
+  await Promise.all([loadPlayers(), loadRoundStates(), loadTeams(), loadPars(), loadFormats(), loadChallengersCaptain()]);
   buildParEditor();
+}
+
+async function loadChallengersCaptain() {
+  const { data } = await sb.from('settings').select('value').eq('key','challengers_captain').single();
+  const el = document.getElementById('challengersCaptainInput');
+  if (el && data?.value) el.value = data.value;
+}
+
+async function saveChallengersCaptain() {
+  const el = document.getElementById('challengersCaptainInput');
+  const name = el?.value?.trim();
+  if (!name) return;
+  await sb.from('settings').upsert(
+    { key: 'challengers_captain', value: name, updated_at: new Date().toISOString() },
+    { onConflict: 'key' }
+  );
+  showToast(`Challengers captain set to ${name}.`);
+}
+
+async function loadFormats() {
+  const { data } = await sb.from('settings').select('*').eq('key','round_formats');
+  if (data?.[0]) try { roundFormats = { ...DEFAULT_FORMATS, ...JSON.parse(data[0].value) }; } catch {}
+  renderFormatSection();
+}
+
+function renderFormatSection() {
+  const days = [
+    { key: 'day1', label: 'Day <em>One</em>'   },
+    { key: 'day2', label: 'Day <em>Two</em>'   },
+    { key: 'day3', label: 'Day <em>Three</em>' },
+  ];
+  const selOpts = FORMAT_OPTIONS.map(o => `<option value="${o.value}">${o.label}</option>`).join('');
+  const html = days.map(d => {
+    const front = roundFormats[d.key]?.front || DEFAULT_FORMATS[d.key].front;
+    const back  = roundFormats[d.key]?.back  || DEFAULT_FORMATS[d.key].back;
+    const sel = (val, cur) => selOpts.replace(`value="${cur}"`, `value="${cur}" selected`);
+    return `<div class="format-row">
+      <div class="format-day-label">${d.label}</div>
+      <div class="format-nine-wrap">
+        <div class="format-nine-label">Front 9 (Holes 1–9)</div>
+        <select class="format-select" id="fmt-${d.key}-front">
+          ${FORMAT_OPTIONS.map(o => `<option value="${o.value}"${front===o.value?' selected':''}>${o.label}</option>`).join('')}
+        </select>
+      </div>
+      <div class="format-nine-wrap">
+        <div class="format-nine-label">Back 9 (Holes 10–18)</div>
+        <select class="format-select" id="fmt-${d.key}-back">
+          ${FORMAT_OPTIONS.map(o => `<option value="${o.value}"${back===o.value?' selected':''}>${o.label}</option>`).join('')}
+        </select>
+      </div>
+    </div>`;
+  }).join('');
+  document.getElementById('formatGrid').innerHTML = html;
+}
+
+async function saveFormats() {
+  const days = ['day1','day2','day3'];
+  days.forEach(d => {
+    roundFormats[d] = {
+      front: document.getElementById(`fmt-${d}-front`)?.value || DEFAULT_FORMATS[d].front,
+      back:  document.getElementById(`fmt-${d}-back`)?.value  || DEFAULT_FORMATS[d].back,
+    };
+  });
+  await sb.from('settings').upsert(
+    { key: 'round_formats', value: JSON.stringify(roundFormats), updated_at: new Date().toISOString() },
+    { onConflict: 'key' }
+  );
+  showToast('Round formats saved.');
 }
 
 async function loadPlayers() {
