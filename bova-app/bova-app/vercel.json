@@ -3,6 +3,7 @@
     { "source": "/admin", "destination": "/admin.html" },
     { "source": "/scoreboard", "destination": "/scoreboard.html" },
     { "source": "/scorecard", "destination": "/scorecard.html" },
-    { "source": "/profile", "destination": "/profile.html" }
+    { "source": "/profile", "destination": "/profile.html" },
+    { "source": "/directory", "destination": "/directory.html" }
   ]
 }
