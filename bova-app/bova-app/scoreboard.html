@@ -702,12 +702,9 @@ async function loadNavLogo() {
   }
 }
 
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => { navigator.serviceWorker.register('/sw.js').catch(() => {}); });
-}
-
 init();
 loadNavLogo();
 </script>
+<script src="/pwa.js"></script>
 </body>
 </html>

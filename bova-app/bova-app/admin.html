@@ -986,10 +986,7 @@ async function clearLogo() {
 // ── INIT ──────────────────────────────────────────────────────────
 checkSession();
 document.getElementById('loginPassword')?.addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
-
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => { navigator.serviceWorker.register('/sw.js').catch(() => {}); });
-}
 </script>
+<script src="/pwa.js"></script>
 </body>
 </html>

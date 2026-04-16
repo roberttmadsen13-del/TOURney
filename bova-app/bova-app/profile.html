@@ -364,10 +364,7 @@ function showToast(msg) {
 }
 
 document.getElementById('lookupEmail')?.addEventListener('keydown', e => { if (e.key === 'Enter') lookupPlayer(); });
-
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => { navigator.serviceWorker.register('/sw.js').catch(() => {}); });
-}
 </script>
+<script src="/pwa.js"></script>
 </body>
 </html>
