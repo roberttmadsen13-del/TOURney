@@ -591,16 +591,44 @@ function getHoleFormat(hole) {
   const nine = hole <= 9 ? 'front' : 'back';
   return (roundFormats[currentRound] || DEFAULT_FORMATS[currentRound] || {})[nine] || 'stroke';
 }
-function isScrambleHole(hole)  { return getHoleFormat(hole) === 'scramble';  }
+const PAIR_TEAM_FMTS = ['scramble','alt_shot','chapman','greensomes'];
+function isScrambleHole(hole)  { return PAIR_TEAM_FMTS.includes(getHoleFormat(hole)); }
 function isBestBallHole(hole)  { return getHoleFormat(hole) === 'best_ball'; }
+function isStablefordHole(hole){ const f = getHoleFormat(hole); return f === 'stableford' || f === 'mod_stableford'; }
+function isMatchHole(hole)     { return getHoleFormat(hole) === 'match'; }
 
 const FORMAT_DISPLAY = {
-  stroke:    'Stroke Play',
-  scramble:  'Scramble',
-  shamble:   'Shambles',
-  best_ball: 'Best Ball',
+  stroke:         'Stroke Play',
+  scramble:       'Scramble',
+  shamble:        'Shambles',
+  best_ball:      'Best Ball',
+  alt_shot:       'Alternate Shot',
+  chapman:        'Chapman / Pinehurst',
+  greensomes:     'Greensomes',
+  match:          'Match Play',
+  stableford:     'Stableford',
+  mod_stableford: 'Mod. Stableford',
 };
 function formatLabel(hole) { return FORMAT_DISPLAY[getHoleFormat(hole)] || 'Stroke Play'; }
+
+// Stableford point tables
+function stablefordPts(gross, par, format) {
+  const d = gross - par;
+  if (format === 'mod_stableford') {
+    if (d <= -3) return 8;
+    if (d === -2) return 5;
+    if (d === -1) return 2;
+    if (d === 0)  return 0;
+    if (d === 1)  return -1;
+    return -3;
+  }
+  if (d <= -3) return 5;
+  if (d === -2) return 4;
+  if (d === -1) return 3;
+  if (d === 0)  return 2;
+  if (d === 1)  return 1;
+  return 0;
+}
 
 // ── SCORE HELPERS ─────────────────────────────────────────────────
 function scoreLabel(gross, par) {
@@ -898,43 +926,80 @@ function renderProgress() {
 }
 
 // ── SUMMARY ───────────────────────────────────────────────────────
+function computePlayerTotals(scoresMap, playerId) {
+  let total = 0, par = 0, thru = 0, points = 0, anyStableford = false;
+  for (let h = 1; h <= 18; h++) {
+    const g = scoresMap[playerId]?.[h];
+    if (g) {
+      const p = coursePars[h-1] || 4;
+      total += g; par += p; thru++;
+      const fmt = getHoleFormat(h);
+      if (fmt === 'stableford' || fmt === 'mod_stableford') {
+        points += stablefordPts(g, p, fmt);
+        anyStableford = true;
+      }
+    }
+  }
+  return { total, par, thru, rel: total - par, points, anyStableford };
+}
+
+function computeMatchStatus() {
+  let diff = 0, matchThru = 0;
+  for (let h = 1; h <= 18; h++) {
+    if (getHoleFormat(h) !== 'match') continue;
+    const my = [scorerPlayer, partnerPlayer].filter(Boolean)
+      .map(p => enteredScores[p.id]?.[h]).filter(Boolean);
+    const op = [opp1Player, opp2Player].filter(Boolean)
+      .map(p => opponentScores[p.id]?.[h]).filter(Boolean);
+    if (my.length && op.length) {
+      const m = Math.min(...my), o = Math.min(...op);
+      if (m < o) diff++;
+      else if (m > o) diff--;
+      matchThru++;
+    }
+  }
+  return { diff, matchThru };
+}
+
+function fmtRel(rel, thru) {
+  if (thru === 0) return '—';
+  if (rel === 0) return 'E';
+  return rel > 0 ? `+${rel}` : `${rel}`;
+}
+
 function renderSummary() {
   let html = '';
 
-  // My team
+  const anyMatch = [1,10].some(h => getHoleFormat(h) === 'match');
+  if (anyMatch && (opp1Player || opp2Player)) {
+    const m = computeMatchStatus();
+    const label = m.matchThru === 0 ? '—' : m.diff === 0 ? `AS thru ${m.matchThru}` : m.diff > 0 ? `${m.diff} UP thru ${m.matchThru}` : `${-m.diff} DN thru ${m.matchThru}`;
+    const cls = m.diff > 0 ? 'under' : m.diff < 0 ? 'over' : 'even';
+    html += `<div class="summary-row"><span>Match Status</span><span class="summary-score ${cls}">${label}</span></div>`;
+  }
+
   [scorerPlayer, partnerPlayer].forEach(p => {
     if (!p) return;
-    let total = 0, par = 0, thru = 0;
-    for (let h = 1; h <= 18; h++) {
-      const g = enteredScores[p.id]?.[h];
-      if (g) { total += g; par += coursePars[h-1] || 4; thru++; }
-    }
-    const rel = total - par;
-    const cls = rel < 0 ? 'under' : rel > 0 ? 'over' : 'even';
-    const relStr = thru === 0 ? '—' : rel === 0 ? 'E' : rel > 0 ? `+${rel}` : `${rel}`;
+    const t = computePlayerTotals(enteredScores, p.id);
+    const cls = t.rel < 0 ? 'under' : t.rel > 0 ? 'over' : 'even';
+    const extra = t.anyStableford ? ` <span style="color:var(--gold);font-size:0.72rem">· ${t.points}pt</span>` : '';
     html += `<div class="summary-row">
-      <span>${p.first_name} ${p.last_name}${thru > 0 ? ` <span style="color:rgba(240,230,204,0.3);font-size:0.72rem">(${thru === 18 ? 'F' : thru})</span>` : ''}</span>
-      <span class="summary-score ${cls}">${relStr}</span>
+      <span>${p.first_name} ${p.last_name}${t.thru > 0 ? ` <span style="color:rgba(240,230,204,0.3);font-size:0.72rem">(${t.thru === 18 ? 'F' : t.thru})</span>` : ''}</span>
+      <span class="summary-score ${cls}">${fmtRel(t.rel, t.thru)}${extra}</span>
     </div>`;
   });
 
-  // Opponents
   const hasOpps = opp1Player || opp2Player;
   if (hasOpps) {
     html += `<div class="summary-divider"></div>`;
     [opp1Player, opp2Player].forEach(opp => {
       if (!opp) return;
-      let total = 0, par = 0, thru = 0;
-      for (let h = 1; h <= 18; h++) {
-        const g = opponentScores[opp.id]?.[h];
-        if (g) { total += g; par += coursePars[h-1] || 4; thru++; }
-      }
-      const rel = total - par;
-      const cls = rel < 0 ? 'under' : rel > 0 ? 'over' : 'even';
-      const relStr = thru === 0 ? '—' : rel === 0 ? 'E' : rel > 0 ? `+${rel}` : `${rel}`;
+      const t = computePlayerTotals(opponentScores, opp.id);
+      const cls = t.rel < 0 ? 'under' : t.rel > 0 ? 'over' : 'even';
+      const extra = t.anyStableford ? ` <span style="color:var(--gold);font-size:0.72rem;opacity:0.7">· ${t.points}pt</span>` : '';
       html += `<div class="summary-row">
-        <span class="summary-name-opp">${opp.first_name} ${opp.last_name}${thru > 0 ? ` <span style="color:rgba(240,230,204,0.2);font-size:0.72rem">(${thru === 18 ? 'F' : thru})</span>` : ''}</span>
-        <span class="summary-score ${cls}" style="opacity:0.75">${relStr}</span>
+        <span class="summary-name-opp">${opp.first_name} ${opp.last_name}${t.thru > 0 ? ` <span style="color:rgba(240,230,204,0.2);font-size:0.72rem">(${t.thru === 18 ? 'F' : t.thru})</span>` : ''}</span>
+        <span class="summary-score ${cls}" style="opacity:0.75">${fmtRel(t.rel, t.thru)}${extra}</span>
       </div>`;
     });
   }
