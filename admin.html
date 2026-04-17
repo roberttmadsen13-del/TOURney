@@ -410,6 +410,26 @@ td.email a:hover{color:var(--gold);}
       <div id="scoreEditorGrid"></div>
     </div>
 
+    <!-- DANGER ZONE -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-title" style="color:var(--red)">Danger Zone</div>
+        <div class="section-count">Destructive operations &mdash; cannot be undone</div>
+      </div>
+      <div style="padding:1.2rem;background:var(--card);border:1px solid rgba(138,30,16,0.35);display:flex;flex-direction:column;gap:0.9rem;">
+        <div style="font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.18em;color:var(--muted);text-transform:uppercase;">Clear scores for a single round</div>
+        <div style="display:flex;gap:0.6rem;flex-wrap:wrap;">
+          <button class="action-btn" style="padding:0.5rem 1rem;font-size:0.6rem;letter-spacing:0.15em;" onclick="clearRoundAll('day1')">Clear Day 1 Scores</button>
+          <button class="action-btn" style="padding:0.5rem 1rem;font-size:0.6rem;letter-spacing:0.15em;" onclick="clearRoundAll('day2')">Clear Day 2 Scores</button>
+          <button class="action-btn" style="padding:0.5rem 1rem;font-size:0.6rem;letter-spacing:0.15em;" onclick="clearRoundAll('day3')">Clear Day 3 Scores</button>
+        </div>
+        <div style="font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.18em;color:var(--muted);text-transform:uppercase;margin-top:0.4rem;">Wipe everything</div>
+        <div>
+          <button class="action-btn" style="padding:0.6rem 1.4rem;font-size:0.65rem;letter-spacing:0.2em;background:var(--red);color:var(--cream);border-color:var(--red);" onclick="clearAllTournamentScores()">Clear All Tournament Scores</button>
+        </div>
+      </div>
+    </div>
+
   </div><!-- /main -->
 </div><!-- /adminUI -->
 
@@ -436,10 +456,10 @@ const DEFAULT_FORMATS = {
   day3: { front: 'best_ball', back: 'stroke'    },
 };
 const FORMAT_OPTIONS = [
-  { value: 'stroke',    label: 'Stroke Play'              },
-  { value: 'scramble',  label: 'Scramble (team score)'    },
-  { value: 'shamble',   label: 'Shambles (best drive, ind.)' },
-  { value: 'best_ball', label: 'Best Ball'                },
+  { value: 'stroke',    label: 'Stroke Play' },
+  { value: 'scramble',  label: 'Scramble'    },
+  { value: 'shamble',   label: 'Shambles'    },
+  { value: 'best_ball', label: 'Best Ball'   },
 ];
 
 let players = [];
@@ -728,9 +748,9 @@ function renderTeamUI() {
 
   const chip = (p, team) => `<div class="team-player-chip">
     <span class="pname">${p.first_name} ${p.last_name}</span>
-    <span>
+    <span style="display:flex;gap:0.5rem;align-items:center;">
       <button class="move-btn" onclick="movePlayer('${p.id}','${team === 'A' ? 'B' : 'A'}')">&#8594; ${team === 'A' ? 'Challengers' : 'Bova'}</button>
-      <button class="move-btn" onclick="movePlayer('${p.id}',null)" style="color:rgba(240,230,204,0.25)">&#10005;</button>
+      <button class="move-btn" onclick="movePlayer('${p.id}',null)" title="Move to unassigned" style="color:var(--red);border:1px solid rgba(138,30,16,0.4);padding:0.12rem 0.45rem;">Unassign</button>
     </span>
   </div>`;
 
@@ -947,6 +967,31 @@ async function clearRoundScores() {
   if (!confirm(`Delete all ${round} scores for ${player?.first_name} ${player?.last_name}?`)) return;
   await sb.from('scores').delete().eq('player_id', playerId).eq('round', round);
   showToast('Scores cleared.');
+  loadScoreEditor();
+}
+
+// ── DANGER ZONE ──────────────────────────────────────────────────
+async function clearRoundAll(round) {
+  const label = round.replace('day','Day ');
+  const { count } = await sb.from('scores').select('*', { count: 'exact', head: true }).eq('round', round);
+  if (!count) { showToast(`${label} has no scores to clear.`); return; }
+  if (!confirm(`Delete ALL ${count} score${count!==1?'s':''} for ${label}? This cannot be undone.`)) return;
+  if (!confirm(`Really delete ALL ${label} scores for every player?`)) return;
+  const { error } = await sb.from('scores').delete().eq('round', round);
+  if (error) { showToast('Error: ' + error.message); return; }
+  showToast(`${label} scores cleared.`);
+  loadScoreEditor();
+}
+
+async function clearAllTournamentScores() {
+  const { count } = await sb.from('scores').select('*', { count: 'exact', head: true });
+  if (!count) { showToast('No scores to clear.'); return; }
+  if (!confirm(`Delete ALL ${count} tournament scores across every round and player? This cannot be undone.`)) return;
+  const phrase = prompt('Type CLEAR ALL to confirm.');
+  if (phrase !== 'CLEAR ALL') { showToast('Cancelled.'); return; }
+  const { error } = await sb.from('scores').delete().not('id', 'is', null);
+  if (error) { showToast('Error: ' + error.message); return; }
+  showToast('All tournament scores cleared.');
   loadScoreEditor();
 }
 
