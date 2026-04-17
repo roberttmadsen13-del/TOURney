@@ -391,6 +391,41 @@ async function init() {
 
   // Flush any scores queued while offline
   flushOfflineQueue();
+
+  // Restore session (selected players, opponents, current hole)
+  await restoreSessionIfAny();
+}
+
+async function restoreSessionIfAny() {
+  const raw = localStorage.getItem('bova_scorecard_session');
+  if (!raw) return;
+  let s;
+  try { s = JSON.parse(raw); } catch { return; }
+  if (!s || s.round !== currentRound || !s.scorerId) { clearSessionState(); return; }
+
+  const scorer = players.find(p => p.id === s.scorerId);
+  const partner = s.partnerId ? players.find(p => p.id === s.partnerId) : null;
+  const opp1 = s.opp1Id ? players.find(p => p.id === s.opp1Id) : null;
+  const opp2 = s.opp2Id ? players.find(p => p.id === s.opp2Id) : null;
+  if (!scorer || !s.team || !partner) return;
+
+  scorerPlayer = scorer;
+  partnerPlayer = partner;
+  opp1Player = opp1;
+  opp2Player = opp2;
+  scorerTeam = s.team;
+  currentHole = Math.min(Math.max(parseInt(s.currentHole) || 1, 1), 18);
+
+  if (!enteredScores[scorerPlayer.id])  enteredScores[scorerPlayer.id]  = {};
+  if (!enteredScores[partnerPlayer.id]) enteredScores[partnerPlayer.id] = {};
+
+  await loadOpponentScores();
+  await loadMyTeamScoresFromDb();
+  subscribeToFoursome();
+
+  document.getElementById('setupScreen').style.display = 'none';
+  document.getElementById('scorecardScreen').style.display = 'block';
+  renderHole();
 }
 
 // ── SETUP DROPDOWNS ───────────────────────────────────────────────
@@ -488,6 +523,7 @@ async function startScoring() {
 
   document.getElementById('setupScreen').style.display = 'none';
   document.getElementById('scorecardScreen').style.display = 'block';
+  saveSessionState();
   renderHole();
 }
 
@@ -617,29 +653,33 @@ function renderPlayers() {
   let leftHtml = '';
 
   if (isScramble) {
-    const gross = enteredScores[scorerPlayer.id]?.[currentHole] || null;
-    const cls   = scoreValClass(gross, par);
-    const lbl   = scoreLabel(gross, par);
+    const rawGross = enteredScores[scorerPlayer.id]?.[currentHole];
+    const hasScore = rawGross != null;
+    const displayGross = hasScore ? rawGross : par;
+    const cls   = hasScore ? scoreValClass(rawGross, par) : 'empty';
+    const lbl   = hasScore ? scoreLabel(rawGross, par) : 'Par (default)';
     leftHtml = `
       <div class="scramble-label">Team Score</div>
       <div class="score-stepper">
         <button class="stepper-btn" ontouchstart="" onclick="adjustScore('${scorerPlayer.id}',${par},-1)">−</button>
-        <div class="stepper-val ${cls}" id="val-${scorerPlayer.id}">${gross || '—'}</div>
+        <div class="stepper-val ${cls}" id="val-${scorerPlayer.id}">${displayGross}</div>
         <button class="stepper-btn" ontouchstart="" onclick="adjustScore('${scorerPlayer.id}',${par},1)">+</button>
       </div>
       <div class="score-label ${cls}" id="lbl-${scorerPlayer.id}">${lbl}</div>`;
   } else {
     [scorerPlayer, partnerPlayer].forEach(player => {
       if (!player) return;
-      const gross = enteredScores[player.id]?.[currentHole] || null;
-      const cls   = scoreValClass(gross, par);
-      const lbl   = scoreLabel(gross, par);
+      const rawGross = enteredScores[player.id]?.[currentHole];
+      const hasScore = rawGross != null;
+      const displayGross = hasScore ? rawGross : par;
+      const cls   = hasScore ? scoreValClass(rawGross, par) : 'empty';
+      const lbl   = hasScore ? scoreLabel(rawGross, par) : 'Par (default)';
       leftHtml += `
         <div class="col-player">
           <div class="col-player-name">${player.first_name} ${player.last_name}</div>
           <div class="score-stepper">
             <button class="stepper-btn" ontouchstart="" onclick="adjustScore('${player.id}',${par},-1)">−</button>
-            <div class="stepper-val ${cls}" id="val-${player.id}">${gross || '—'}</div>
+            <div class="stepper-val ${cls}" id="val-${player.id}">${displayGross}</div>
             <button class="stepper-btn" ontouchstart="" onclick="adjustScore('${player.id}',${par},1)">+</button>
           </div>
           <div class="score-label ${cls}" id="lbl-${player.id}">${lbl}</div>
@@ -783,8 +823,32 @@ function adjustScore(playerId, par, delta) {
   autoSaveToDb(playerId, currentHole, next);
 }
 
-function prevHole() { if (currentHole > 1)  { currentHole--; renderHole(); } }
-function nextHole() { if (currentHole < 18) { currentHole++; renderHole(); } else { renderHole(); } }
+function autoLogParIfEmpty(hole) {
+  const par = coursePars[hole - 1] || 4;
+  [scorerPlayer, partnerPlayer].forEach(p => {
+    if (!p) return;
+    if (!enteredScores[p.id]) enteredScores[p.id] = {};
+    if (enteredScores[p.id][hole] == null) {
+      enteredScores[p.id][hole] = par;
+      autoSaveToDb(p.id, hole, par);
+    }
+  });
+  saveLocal();
+}
+function prevHole() {
+  if (currentHole > 1) { currentHole--; saveSessionState(); renderHole(); }
+}
+function nextHole() {
+  if (currentHole < 18) {
+    autoLogParIfEmpty(currentHole);
+    currentHole++;
+    saveSessionState();
+    renderHole();
+  } else {
+    autoLogParIfEmpty(currentHole);
+    renderHole();
+  }
+}
 
 // ── MINI STRIP ────────────────────────────────────────────────────
 function renderMiniStrip() {
@@ -808,7 +872,7 @@ function renderMiniStrip() {
       })() : 'ms-empty';
       chipsHtml += `<div class="mini-score ${cls}">${gross != null ? gross : ''}</div>`;
     });
-    html += `<div class="mini-hole${isCur?' current':''}" onclick="currentHole=${h};renderHole()">
+    html += `<div class="mini-hole${isCur?' current':''}" onclick="currentHole=${h};saveSessionState();renderHole()">
       <div class="mini-num">${h}</div>
       ${chipsHtml}
     </div>`;
@@ -880,6 +944,24 @@ function renderSummary() {
 // ── PERSISTENCE ───────────────────────────────────────────────────
 function saveLocal() {
   localStorage.setItem(`bova_scores_${currentRound}`, JSON.stringify(enteredScores));
+}
+
+function saveSessionState() {
+  if (!currentRound || !scorerPlayer) return;
+  const state = {
+    round: currentRound,
+    scorerId: scorerPlayer.id,
+    team: scorerTeam,
+    partnerId: partnerPlayer?.id || null,
+    opp1Id: opp1Player?.id || null,
+    opp2Id: opp2Player?.id || null,
+    currentHole
+  };
+  try { localStorage.setItem('bova_scorecard_session', JSON.stringify(state)); } catch {}
+}
+
+function clearSessionState() {
+  try { localStorage.removeItem('bova_scorecard_session'); } catch {}
 }
 
 let _saveTimer = {};
@@ -1050,6 +1132,7 @@ async function submitRound() {
     catch {}
   }
 
+  clearSessionState();
   showToast('Scores submitted.');
   setTimeout(() => { window.location.href = '/scoreboard'; }, 1800);
 }
