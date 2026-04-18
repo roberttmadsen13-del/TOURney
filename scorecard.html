@@ -10,7 +10,7 @@
 <style>
 :root{--ink:#1a1008;--gold:#c09030;--gold-l:#d4aa50;--gold-p:#e8cc80;--cream:#f0e6cc;--red:#8a1e10;--green:#1a4010;--border:rgba(192,144,48,0.28);--bg:#f5ede0;--card:#fdf8f0;--muted:rgba(26,16,8,0.4);}
 *{margin:0;padding:0;box-sizing:border-box;}
-body{background:var(--bg);color:var(--ink);font-family:'Barlow',sans-serif;font-weight:300;min-height:100vh;-webkit-user-select:none;user-select:none;}
+body{background:var(--bg);color:var(--ink);font-family:'Barlow',sans-serif;font-weight:400;min-height:100vh;-webkit-user-select:none;user-select:none;}
 
 /* NAV */
 .nav{position:sticky;top:0;z-index:100;height:52px;display:flex;align-items:center;justify-content:space-between;padding:0 1.2rem;background:rgba(10,7,2,0.98);border-bottom:1px solid var(--border);}
@@ -76,20 +76,23 @@ body{background:var(--bg);color:var(--ink);font-family:'Barlow',sans-serif;font-
 /* Player block within column */
 .col-player{margin-bottom:0.9rem;}
 .col-player:last-of-type{margin-bottom:0;}
-.col-player-name{font-family:'Playfair Display',serif;font-size:0.75rem;font-weight:700;margin-bottom:0.3rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.col-player-name{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;margin-bottom:0.4rem;display:flex;align-items:center;gap:0.45rem;}
+.player-badge{display:inline-flex;align-items:center;justify-content:center;width:2.2rem;height:2.2rem;border-radius:50%;font-family:'Barlow Condensed',sans-serif;font-size:1rem;font-weight:800;letter-spacing:0.03em;flex-shrink:0;}
+.player-badge.team-a{background:rgba(192,144,48,0.18);color:#c09030;border:2px solid rgba(192,144,48,0.5);}
+.player-badge.team-b{background:rgba(106,138,170,0.18);color:#6a8aaa;border:2px solid rgba(106,138,170,0.5);}
 
 /* Score stepper (editable) */
 .score-stepper{display:flex;align-items:center;justify-content:center;}
-.stepper-btn{width:40px;height:40px;background:none;border:1px solid var(--border);color:var(--ink);font-size:1.3rem;cursor:pointer;transition:all 0.15s;display:flex;align-items:center;justify-content:center;-webkit-tap-highlight-color:transparent;flex-shrink:0;}
+.stepper-btn{width:52px;height:52px;background:none;border:1px solid var(--border);color:var(--ink);font-size:1.8rem;cursor:pointer;transition:all 0.15s;display:flex;align-items:center;justify-content:center;-webkit-tap-highlight-color:transparent;flex-shrink:0;}
 .stepper-btn:active{background:var(--gold);color:var(--ink);border-color:var(--gold);}
-.stepper-val{min-width:42px;height:40px;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:1.7rem;font-weight:900;border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:0 3px;}
+.stepper-val{min-width:52px;height:52px;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:2.4rem;font-weight:900;border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:0 3px;}
 .stepper-val.birdie,.opp-num.birdie{color:#4a9a40;}
 .stepper-val.eagle,.opp-num.eagle{color:#4a9a40;}
 .stepper-val.bogey,.opp-num.bogey{color:var(--red);}
 .stepper-val.double,.opp-num.double{color:var(--red);}
 .stepper-val.par,.opp-num.par{color:var(--ink);}
 .stepper-val.empty,.opp-num.empty{color:rgba(26,16,8,0.2);}
-.score-label{text-align:center;margin-top:0.28rem;font-family:'DM Mono',monospace;font-size:0.42rem;letter-spacing:0.14em;text-transform:uppercase;height:0.85rem;}
+.score-label{text-align:center;margin-top:0.3rem;font-family:'DM Mono',monospace;font-size:0.62rem;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;height:1rem;}
 .score-label.birdie,.opp-rel.birdie{color:#2a7a20;}
 .score-label.eagle,.opp-rel.eagle{color:#2a7a20;}
 .score-label.bogey,.opp-rel.bogey{color:var(--red);}
@@ -98,8 +101,8 @@ body{background:var(--bg);color:var(--ink);font-family:'Barlow',sans-serif;font-
 
 /* Opponent read-only display */
 .opp-score-box{display:flex;align-items:center;gap:0.45rem;}
-.opp-num{font-family:'Playfair Display',serif;font-size:1.7rem;font-weight:900;line-height:1;}
-.opp-rel{font-family:'DM Mono',monospace;font-size:0.4rem;letter-spacing:0.12em;text-transform:uppercase;margin-top:2px;}
+.opp-num{font-family:'Playfair Display',serif;font-size:2.4rem;font-weight:900;line-height:1;}
+.opp-rel{font-family:'DM Mono',monospace;font-size:0.62rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;margin-top:2px;}
 .opp-waiting{font-family:'DM Mono',monospace;font-size:0.4rem;letter-spacing:0.12em;text-transform:uppercase;color:rgba(26,16,8,0.25);padding:0.4rem 0;}
 @keyframes scoreFlash{0%{background:rgba(74,154,64,0.18);}100%{background:transparent;}}
 .score-flash{animation:scoreFlash 0.7s ease forwards;}
@@ -151,6 +154,17 @@ body{background:var(--bg);color:var(--ink);font-family:'Barlow',sans-serif;font-
 .submit-btn{width:100%;padding:1rem;background:var(--gold);color:var(--ink);border:none;font-family:'Barlow Condensed',sans-serif;font-size:0.8rem;font-weight:700;letter-spacing:0.25em;text-transform:uppercase;cursor:pointer;transition:background 0.2s;}
 .submit-btn:hover{background:var(--gold-l);}
 .submit-btn:disabled{background:rgba(192,144,48,0.3);cursor:not-allowed;}
+.confirm-overlay{position:fixed;inset:0;z-index:500;background:rgba(10,7,2,0.88);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity 0.2s;}
+.confirm-overlay.show{opacity:1;pointer-events:auto;}
+.confirm-box{background:var(--card);border:1px solid var(--border);padding:2rem 1.75rem;max-width:320px;width:90%;text-align:center;}
+.confirm-title{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:900;margin-bottom:0.5rem;}
+.confirm-sub{font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-bottom:1.5rem;line-height:1.8;}
+.confirm-actions{display:flex;gap:0.75rem;}
+.confirm-cancel{flex:1;padding:0.85rem;background:transparent;border:1px solid var(--border);font-family:'Barlow Condensed',sans-serif;font-size:0.72rem;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;cursor:pointer;color:rgba(26,16,8,0.5);}
+.confirm-cancel:hover{border-color:var(--ink);color:var(--ink);}
+.confirm-go{flex:2;padding:0.85rem;background:var(--gold);border:none;font-family:'Barlow Condensed',sans-serif;font-size:0.72rem;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;cursor:pointer;color:var(--ink);}
+.confirm-go:hover{background:var(--gold-l);}
+.locked-banner{display:none;text-align:center;padding:0.85rem;font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--gold);background:rgba(192,144,48,0.08);border-top:1px solid var(--border);}
 
 /* Running totals */
 .round-summary{padding:1.5rem 1.2rem;border-top:1px solid var(--border);}
@@ -229,7 +243,7 @@ body{background:var(--bg);color:var(--ink);font-family:'Barlow',sans-serif;font-
         <option value="B">The Challengers</option>
       </select>
     </div>
-    <div class="fg" id="partnerWrap">
+    <div class="fg" id="partnerWrap" hidden>
       <label>Teammate in your foursome</label>
       <select id="partnerSelect">
         <option value="">Select teammate...</option>
@@ -237,14 +251,14 @@ body{background:var(--bg);color:var(--ink);font-family:'Barlow',sans-serif;font-
     </div>
 
     <!-- Opponents -->
-    <div class="setup-divider">Opponents in your group</div>
-    <div class="fg">
+    <div class="setup-divider" hidden>Opponents in your group</div>
+    <div class="fg" hidden>
       <label>Opponent 1 <span class="opt-tag">optional — shows their scores live</span></label>
       <select id="opp1Select">
         <option value="">Select opponent...</option>
       </select>
     </div>
-    <div class="fg">
+    <div class="fg" hidden>
       <label>Opponent 2 <span class="opt-tag">optional</span></label>
       <select id="opp2Select">
         <option value="">Select opponent...</option>
@@ -303,8 +317,20 @@ body{background:var(--bg);color:var(--ink);font-family:'Barlow',sans-serif;font-
     <div id="summaryRows"></div>
   </div>
 
-  <div class="submit-section">
-    <button class="submit-btn" id="submitBtn" onclick="submitRound()">Submit Round Scores</button>
+  <div class="submit-section" id="submitSection" style="display:none;">
+    <button class="submit-btn" id="submitBtn" onclick="confirmSubmit()">Submit Round</button>
+  </div>
+  <div class="locked-banner" id="lockedBanner">Scores submitted — redirecting to scoreboard...</div>
+
+  <div class="confirm-overlay" id="confirmOverlay" onclick="if(event.target===this)hideConfirm()">
+    <div class="confirm-box">
+      <div class="confirm-title">Submit Round?</div>
+      <div class="confirm-sub">All 18 holes will be locked.<br>Cannot be undone.</div>
+      <div class="confirm-actions">
+        <button class="confirm-cancel" onclick="hideConfirm()">Cancel</button>
+        <button class="confirm-go" onclick="submitRound()">Submit</button>
+      </div>
+    </div>
   </div>
 
 </div>
@@ -345,6 +371,7 @@ let enteredScores  = {}; // { [playerId]: { [hole]: grossScore } }
 let opponentScores = {}; // { [playerId]: { [hole]: grossScore } }
 
 let _foursomeChannel = null;
+let scoreHistory = [];
 
 // ── INIT ──────────────────────────────────────────────────────────
 async function init() {
@@ -500,17 +527,17 @@ async function startScoring() {
   const opp2Id    = document.getElementById('opp2Select').value;
   const err = document.getElementById('setupErr');
 
-  if (!scorerId || !team || !partnerId) { err.classList.add('show'); return; }
+  if (!scorerId || !team) { err.classList.add('show'); return; }
   err.classList.remove('show');
 
   scorerPlayer  = players.find(p => p.id === scorerId);
-  partnerPlayer = players.find(p => p.id === partnerId);
+  partnerPlayer = partnerId ? players.find(p => p.id === partnerId) : null;
   opp1Player    = opp1Id ? players.find(p => p.id === opp1Id) : null;
   opp2Player    = opp2Id ? players.find(p => p.id === opp2Id) : null;
   scorerTeam    = team;
 
-  if (!enteredScores[scorerId])  enteredScores[scorerId]  = {};
-  if (!enteredScores[partnerId]) enteredScores[partnerId] = {};
+  if (!enteredScores[scorerId]) enteredScores[scorerId] = {};
+  if (partnerId && !enteredScores[partnerId]) enteredScores[partnerId] = {};
 
   // Load existing opponent scores from DB
   await loadOpponentScores();
@@ -590,26 +617,51 @@ function getHoleFormat(hole) {
   const nine = hole <= 9 ? 'front' : 'back';
   return (roundFormats[currentRound] || DEFAULT_FORMATS[currentRound] || {})[nine] || 'stroke';
 }
-function isScrambleHole(hole)  { return getHoleFormat(hole) === 'scramble';  }
+const PAIR_TEAM_FMTS = ['scramble','alt_shot','chapman','greensomes'];
+function isScrambleHole(hole)  { return PAIR_TEAM_FMTS.includes(getHoleFormat(hole)); }
 function isBestBallHole(hole)  { return getHoleFormat(hole) === 'best_ball'; }
+function isStablefordHole(hole){ const f = getHoleFormat(hole); return f === 'stableford' || f === 'mod_stableford'; }
+function isMatchHole(hole)     { return getHoleFormat(hole) === 'match'; }
 
 const FORMAT_DISPLAY = {
-  stroke:    'Stroke Play',
-  scramble:  'Scramble',
-  shamble:   'Shambles',
-  best_ball: 'Best Ball',
+  stroke:         'Stroke Play',
+  scramble:       'Scramble',
+  shamble:        'Shambles',
+  best_ball:      'Best Ball',
+  alt_shot:       'Alternate Shot',
+  chapman:        'Chapman / Pinehurst',
+  greensomes:     'Greensomes',
+  match:          'Match Play',
+  stableford:     'Stableford',
+  mod_stableford: 'Mod. Stableford',
 };
 function formatLabel(hole) { return FORMAT_DISPLAY[getHoleFormat(hole)] || 'Stroke Play'; }
+
+// Stableford point tables
+function stablefordPts(gross, par, format) {
+  const d = gross - par;
+  if (format === 'mod_stableford') {
+    if (d <= -3) return 8;
+    if (d === -2) return 5;
+    if (d === -1) return 2;
+    if (d === 0)  return 0;
+    if (d === 1)  return -1;
+    return -3;
+  }
+  if (d <= -3) return 5;
+  if (d === -2) return 4;
+  if (d === -1) return 3;
+  if (d === 0)  return 2;
+  if (d === 1)  return 1;
+  return 0;
+}
 
 // ── SCORE HELPERS ─────────────────────────────────────────────────
 function scoreLabel(gross, par) {
   if (!gross) return '';
   const d = gross - par;
-  if (d <= -2) return 'Eagle';
-  if (d === -1) return 'Birdie';
-  if (d === 0)  return 'Par';
-  if (d === 1)  return 'Bogey';
-  return 'Double+';
+  if (d === 0) return 'E';
+  return d > 0 ? `+${d}` : `${d}`;
 }
 function scoreValClass(gross, par) {
   if (!gross) return 'empty';
@@ -630,6 +682,7 @@ function renderHole() {
   document.getElementById('progressFill').style.width = `${((currentHole - 1) / 18) * 100}%`;
   document.getElementById('prevBtn').disabled = currentHole === 1;
   document.getElementById('nextBtn').textContent = currentHole === 18 ? 'Review' : 'Next →';
+  document.getElementById('submitSection').style.display = currentHole === 18 ? 'block' : 'none';
   document.getElementById('formatBadge').textContent = formatLabel(currentHole);
 
   renderPlayers();
@@ -673,10 +726,11 @@ function renderPlayers() {
       const hasScore = rawGross != null;
       const displayGross = hasScore ? rawGross : par;
       const cls   = hasScore ? scoreValClass(rawGross, par) : 'empty';
-      const lbl   = hasScore ? scoreLabel(rawGross, par) : 'Par (default)';
+      const lbl   = hasScore ? scoreLabel(rawGross, par) : 'E';
+      const initials = (player.first_name[0] + (player.last_name?.[0] || '')).toUpperCase();
       leftHtml += `
         <div class="col-player">
-          <div class="col-player-name">${player.first_name} ${player.last_name}</div>
+          <div class="col-player-name"><span class="player-badge ${myColCls}">${initials}</span>${player.first_name}</div>
           <div class="score-stepper">
             <button class="stepper-btn" ontouchstart="" onclick="adjustScore('${player.id}',${par},-1)">−</button>
             <div class="stepper-val ${cls}" id="val-${player.id}">${displayGross}</div>
@@ -719,9 +773,10 @@ function renderPlayers() {
       const gross = opponentScores[opp.id]?.[currentHole] || null;
       const cls   = scoreValClass(gross, par);
       const lbl   = scoreLabel(gross, par);
+      const initials = (opp.first_name[0] + (opp.last_name?.[0] || '')).toUpperCase();
       rightHtml += `
         <div class="col-player">
-          <div class="col-player-name">${opp.first_name} ${opp.last_name}</div>
+          <div class="col-player-name"><span class="player-badge ${oppColCls}">${initials}</span>${opp.first_name}</div>
           <div id="opp-box-${opp.id}">
             ${gross
               ? `<div class="opp-score-box">
@@ -897,43 +952,80 @@ function renderProgress() {
 }
 
 // ── SUMMARY ───────────────────────────────────────────────────────
+function computePlayerTotals(scoresMap, playerId) {
+  let total = 0, par = 0, thru = 0, points = 0, anyStableford = false;
+  for (let h = 1; h <= 18; h++) {
+    const g = scoresMap[playerId]?.[h];
+    if (g) {
+      const p = coursePars[h-1] || 4;
+      total += g; par += p; thru++;
+      const fmt = getHoleFormat(h);
+      if (fmt === 'stableford' || fmt === 'mod_stableford') {
+        points += stablefordPts(g, p, fmt);
+        anyStableford = true;
+      }
+    }
+  }
+  return { total, par, thru, rel: total - par, points, anyStableford };
+}
+
+function computeMatchStatus() {
+  let diff = 0, matchThru = 0;
+  for (let h = 1; h <= 18; h++) {
+    if (getHoleFormat(h) !== 'match') continue;
+    const my = [scorerPlayer, partnerPlayer].filter(Boolean)
+      .map(p => enteredScores[p.id]?.[h]).filter(Boolean);
+    const op = [opp1Player, opp2Player].filter(Boolean)
+      .map(p => opponentScores[p.id]?.[h]).filter(Boolean);
+    if (my.length && op.length) {
+      const m = Math.min(...my), o = Math.min(...op);
+      if (m < o) diff++;
+      else if (m > o) diff--;
+      matchThru++;
+    }
+  }
+  return { diff, matchThru };
+}
+
+function fmtRel(rel, thru) {
+  if (thru === 0) return '—';
+  if (rel === 0) return 'E';
+  return rel > 0 ? `+${rel}` : `${rel}`;
+}
+
 function renderSummary() {
   let html = '';
 
-  // My team
+  const anyMatch = [1,10].some(h => getHoleFormat(h) === 'match');
+  if (anyMatch && (opp1Player || opp2Player)) {
+    const m = computeMatchStatus();
+    const label = m.matchThru === 0 ? '—' : m.diff === 0 ? `AS thru ${m.matchThru}` : m.diff > 0 ? `${m.diff} UP thru ${m.matchThru}` : `${-m.diff} DN thru ${m.matchThru}`;
+    const cls = m.diff > 0 ? 'under' : m.diff < 0 ? 'over' : 'even';
+    html += `<div class="summary-row"><span>Match Status</span><span class="summary-score ${cls}">${label}</span></div>`;
+  }
+
   [scorerPlayer, partnerPlayer].forEach(p => {
     if (!p) return;
-    let total = 0, par = 0, thru = 0;
-    for (let h = 1; h <= 18; h++) {
-      const g = enteredScores[p.id]?.[h];
-      if (g) { total += g; par += coursePars[h-1] || 4; thru++; }
-    }
-    const rel = total - par;
-    const cls = rel < 0 ? 'under' : rel > 0 ? 'over' : 'even';
-    const relStr = thru === 0 ? '—' : rel === 0 ? 'E' : rel > 0 ? `+${rel}` : `${rel}`;
+    const t = computePlayerTotals(enteredScores, p.id);
+    const cls = t.rel < 0 ? 'under' : t.rel > 0 ? 'over' : 'even';
+    const extra = t.anyStableford ? ` <span style="color:var(--gold);font-size:0.72rem">· ${t.points}pt</span>` : '';
     html += `<div class="summary-row">
-      <span>${p.first_name} ${p.last_name}${thru > 0 ? ` <span style="color:rgba(240,230,204,0.3);font-size:0.72rem">(${thru === 18 ? 'F' : thru})</span>` : ''}</span>
-      <span class="summary-score ${cls}">${relStr}</span>
+      <span>${p.first_name} ${p.last_name}${t.thru > 0 ? ` <span style="color:rgba(240,230,204,0.3);font-size:0.72rem">(${t.thru === 18 ? 'F' : t.thru})</span>` : ''}</span>
+      <span class="summary-score ${cls}">${fmtRel(t.rel, t.thru)}${extra}</span>
     </div>`;
   });
 
-  // Opponents
   const hasOpps = opp1Player || opp2Player;
   if (hasOpps) {
     html += `<div class="summary-divider"></div>`;
     [opp1Player, opp2Player].forEach(opp => {
       if (!opp) return;
-      let total = 0, par = 0, thru = 0;
-      for (let h = 1; h <= 18; h++) {
-        const g = opponentScores[opp.id]?.[h];
-        if (g) { total += g; par += coursePars[h-1] || 4; thru++; }
-      }
-      const rel = total - par;
-      const cls = rel < 0 ? 'under' : rel > 0 ? 'over' : 'even';
-      const relStr = thru === 0 ? '—' : rel === 0 ? 'E' : rel > 0 ? `+${rel}` : `${rel}`;
+      const t = computePlayerTotals(opponentScores, opp.id);
+      const cls = t.rel < 0 ? 'under' : t.rel > 0 ? 'over' : 'even';
+      const extra = t.anyStableford ? ` <span style="color:var(--gold);font-size:0.72rem;opacity:0.7">· ${t.points}pt</span>` : '';
       html += `<div class="summary-row">
-        <span class="summary-name-opp">${opp.first_name} ${opp.last_name}${thru > 0 ? ` <span style="color:rgba(240,230,204,0.2);font-size:0.72rem">(${thru === 18 ? 'F' : thru})</span>` : ''}</span>
-        <span class="summary-score ${cls}" style="opacity:0.75">${relStr}</span>
+        <span class="summary-name-opp">${opp.first_name} ${opp.last_name}${t.thru > 0 ? ` <span style="color:rgba(240,230,204,0.2);font-size:0.72rem">(${t.thru === 18 ? 'F' : t.thru})</span>` : ''}</span>
+        <span class="summary-score ${cls}" style="opacity:0.75">${fmtRel(t.rel, t.thru)}${extra}</span>
       </div>`;
     });
   }
@@ -1114,7 +1206,21 @@ async function flushOfflineQueue() {
 window.addEventListener('online', flushOfflineQueue);
 
 // ── SUBMIT ────────────────────────────────────────────────────────
+function confirmSubmit() {
+  document.getElementById('confirmOverlay').classList.add('show');
+}
+function hideConfirm() {
+  document.getElementById('confirmOverlay').classList.remove('show');
+}
+function lockScorecard() {
+  document.querySelectorAll('.stepper-btn').forEach(b => { b.disabled = true; b.style.opacity = '0.3'; });
+  document.getElementById('submitSection').style.display = 'none';
+  const lb = document.getElementById('lockedBanner');
+  if (lb) lb.style.display = 'block';
+}
+
 async function submitRound() {
+  hideConfirm();
   const btn = document.getElementById('submitBtn');
   btn.disabled = true;
   btn.textContent = 'Submitting...';
@@ -1133,8 +1239,9 @@ async function submitRound() {
   }
 
   clearSessionState();
-  showToast('Scores submitted.');
-  setTimeout(() => { window.location.href = '/scoreboard'; }, 1800);
+  lockScorecard();
+  showToast('Scores submitted!');
+  setTimeout(() => { window.location.href = '/scoreboard'; }, 2500);
 }
 
 // ── TOAST ─────────────────────────────────────────────────────────

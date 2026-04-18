@@ -387,41 +387,121 @@ function getHoleFormat(round, hole) {
   return (roundFormats[round] || DEFAULT_FORMATS[round] || {})[nine] || 'stroke';
 }
 
+// Stableford point tables
+function stablefordPoints(gross, par, format) {
+  const d = gross - par;
+  if (format === 'mod_stableford') {
+    if (d <= -3) return 8;   // double eagle+
+    if (d === -2) return 5;  // eagle
+    if (d === -1) return 2;  // birdie
+    if (d === 0)  return 0;  // par
+    if (d === 1)  return -1; // bogey
+    return -3;               // double+
+  }
+  if (d <= -3) return 5;     // albatross+
+  if (d === -2) return 4;    // eagle
+  if (d === -1) return 3;    // birdie
+  if (d === 0)  return 2;    // par
+  if (d === 1)  return 1;    // bogey
+  return 0;                  // double+
+}
+
+const STABLEFORD_FMTS = ['stableford','mod_stableford'];
+const PAIR_STROKE_FMTS = ['scramble','shamble','alt_shot','chapman','greensomes']; // DB mirrors
+
 // Format-aware relative-to-par calculation
 function calcPlayerRound(playerId, round) {
   const pars = coursePars[round] || DEFAULT_PARS[round];
   const team = teamAssignments[playerId];
   const hs   = getPlayerScores(playerId, round);
   const teamMateIds = Object.keys(teamAssignments).filter(id => teamAssignments[id] === team && id !== playerId);
+  const oppIds = Object.keys(teamAssignments).filter(id => teamAssignments[id] && teamAssignments[id] !== team);
 
-  let rel = 0, thru = 0;
+  let rel = 0, thru = 0, points = 0, matchDiff = 0;
+  const fmts = { front: getHoleFormat(round, 1), back: getHoleFormat(round, 10) };
+  const roundIsStableford = STABLEFORD_FMTS.includes(fmts.front) && STABLEFORD_FMTS.includes(fmts.back);
+  const roundIsMatch = fmts.front === 'match' && fmts.back === 'match';
 
   for (let h = 1; h <= 18; h++) {
     const par    = pars[h-1] || 4;
     const format = getHoleFormat(round, h);
+    let holeScore = null;
 
     if (format === 'best_ball') {
-      // Lower of player + any same-team partner for this hole
       const myS = hs.find(s => s.hole === h);
       const partnerScores = teamMateIds
         .map(pid => scores.find(s => s.player_id === pid && s.round === round && s.hole === h))
         .filter(Boolean);
       const all = [myS, ...partnerScores].filter(Boolean).map(s => s.gross_score);
-      if (all.length) { rel += Math.min(...all) - par; thru++; }
+      if (all.length) holeScore = Math.min(...all);
     } else {
-      // stroke / scramble / shamble — DB already mirrors scramble scores to both players
       const myS = hs.find(s => s.hole === h);
-      if (myS) { rel += myS.gross_score - par; thru++; }
+      if (myS) holeScore = myS.gross_score;
+    }
+
+    if (holeScore != null) {
+      thru++;
+      rel += holeScore - par;
+      if (STABLEFORD_FMTS.includes(format)) {
+        points += stablefordPoints(holeScore, par, format);
+      }
+      if (format === 'match') {
+        const myTeamScores = [holeScore];
+        teamMateIds.forEach(pid => {
+          const s = scores.find(ss => ss.player_id === pid && ss.round === round && ss.hole === h);
+          if (s) myTeamScores.push(s.gross_score);
+        });
+        const oppTeamScores = [];
+        oppIds.forEach(pid => {
+          const s = scores.find(ss => ss.player_id === pid && ss.round === round && ss.hole === h);
+          if (s) oppTeamScores.push(s.gross_score);
+        });
+        if (myTeamScores.length && oppTeamScores.length) {
+          const my = Math.min(...myTeamScores);
+          const op = Math.min(...oppTeamScores);
+          if (my < op) matchDiff++;
+          else if (my > op) matchDiff--;
+        }
+      }
     }
   }
 
-  return { rel, thru, scores: hs };
+  return { rel, thru, points, matchDiff, roundIsStableford, roundIsMatch, scores: hs };
 }
 
 function formatScore(n, thru) {
   if (thru === 0 || n === null || n === undefined) return '—';
   if (n === 0) return 'E';
   return n > 0 ? `+${n}` : `${n}`;
+}
+
+// Format-adaptive per-round display
+function formatRoundScore(day) {
+  if (!day || day.thru === 0) return '—';
+  if (day.roundIsMatch) {
+    if (day.matchDiff === 0) return `AS·${day.thru}`;
+    if (day.matchDiff > 0)   return `${day.matchDiff}UP·${day.thru}`;
+    return `${-day.matchDiff}DN·${day.thru}`;
+  }
+  if (day.roundIsStableford) {
+    return `${day.points}pt`;
+  }
+  return formatScore(day.rel, day.thru);
+}
+
+function roundScoreClass(day) {
+  if (!day || day.thru === 0) return 'even';
+  if (day.roundIsMatch) {
+    if (day.matchDiff > 0) return 'under';
+    if (day.matchDiff < 0) return 'over';
+    return 'even';
+  }
+  if (day.roundIsStableford) {
+    if (day.points > 0) return 'under';
+    if (day.points < 0) return 'over';
+    return 'even';
+  }
+  return scoreClass(day.rel);
 }
 
 function scoreClass(n) {
@@ -493,9 +573,9 @@ function render() {
         <div class="lb-tier">${TIER_LABELS[p.handicap] || ''}</div>
       </td>
       <td class="score-cell thru">${p.totalThru > 0 ? (p.totalThru >= 54 ? 'F' : p.totalThru) : '—'}</td>
-      <td class="score-cell">${formatScore(p.days[0].rel, p.days[0].thru)}</td>
-      <td class="score-cell">${formatScore(p.days[1].rel, p.days[1].thru)}</td>
-      <td class="score-cell">${formatScore(p.days[2].rel, p.days[2].thru)}</td>
+      <td class="score-cell ${roundScoreClass(p.days[0])}">${formatRoundScore(p.days[0])}</td>
+      <td class="score-cell ${roundScoreClass(p.days[1])}">${formatRoundScore(p.days[1])}</td>
+      <td class="score-cell ${roundScoreClass(p.days[2])}">${formatRoundScore(p.days[2])}</td>
       <td class="score-tally ${scoreClass(p.totalRel)}">${formatScore(p.totalRel, p.totalThru)}</td>
     </tr>`;
   }).join('');
@@ -515,10 +595,10 @@ function render() {
         <div class="lb-tier">${TIER_LABELS[p.handicap] || ''}</div>
       </td>
       <td class="score-cell thru">${p.totalThru > 0 ? (p.totalThru >= 54 ? 'F' : p.totalThru) : '—'}</td>
-      <td class="score-cell">${todayScore ? formatScore(todayScore.rel, todayScore.thru) : '—'}</td>
-      <td class="score-cell">${formatScore(p.days[0].rel, p.days[0].thru)}</td>
-      <td class="score-cell">${formatScore(p.days[1].rel, p.days[1].thru)}</td>
-      <td class="score-cell">${formatScore(p.days[2].rel, p.days[2].thru)}</td>
+      <td class="score-cell ${todayScore ? roundScoreClass(todayScore) : ''}">${todayScore ? formatRoundScore(todayScore) : '—'}</td>
+      <td class="score-cell ${roundScoreClass(p.days[0])}">${formatRoundScore(p.days[0])}</td>
+      <td class="score-cell ${roundScoreClass(p.days[1])}">${formatRoundScore(p.days[1])}</td>
+      <td class="score-cell ${roundScoreClass(p.days[2])}">${formatRoundScore(p.days[2])}</td>
       <td class="score-tally ${scoreClass(p.totalRel)}">${formatScore(p.totalRel, p.totalThru)}</td>
     </tr>`;
   }).join('');

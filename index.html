@@ -416,18 +416,7 @@ html { scroll-behavior: smooth; }
     <li><a href="/scoreboard">Scoreboard</a></li>
   </ul>
   <a href="#rsvp" class="nav-register">Register</a>
-  <button class="nav-ham" id="hamBtn" aria-label="Menu"><span></span><span></span><span></span></button>
 </nav>
-<div class="nav-drawer" id="navDrawer">
-  <a href="#about" onclick="closeDrawer()">About</a>
-  <a href="#schedule" onclick="closeDrawer()">Schedule</a>
-  <a href="#format" onclick="closeDrawer()">Format</a>
-  <a href="#teams" onclick="closeDrawer()">Teams</a>
-  <a href="#rsvp" onclick="closeDrawer()">Register</a>
-  <a href="/profile" onclick="closeDrawer()">My Card</a>
-  <a href="/scoreboard" onclick="closeDrawer()">Scoreboard</a>
-  <a href="#rsvp" class="drawer-register" onclick="closeDrawer()">Confirm Registration</a>
-</div>
 
 <!-- HERO — aerial coastal course, late afternoon golden light -->
 <section class="hero">
@@ -723,17 +712,6 @@ const SUPABASE_ANON_KEY = 'sb_publishable_DnBMNLaSu61ykJ6P_fI2fw_D9DdAScn';
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 window.addEventListener('scroll', () => { document.getElementById('mainNav').classList.toggle('scrolled', window.scrollY > 40); });
-const hamBtn = document.getElementById('hamBtn');
-const drawer = document.getElementById('navDrawer');
-let drawerOpen = false;
-hamBtn.addEventListener('click', () => {
-  drawerOpen = !drawerOpen;
-  drawer.classList.toggle('open', drawerOpen);
-  const s = hamBtn.querySelectorAll('span');
-  if (drawerOpen) { s[0].style.transform='rotate(45deg) translate(5px,5px)'; s[1].style.opacity='0'; s[2].style.transform='rotate(-45deg) translate(5px,-5px)'; }
-  else { s[0].style.transform=''; s[1].style.opacity=''; s[2].style.transform=''; }
-});
-function closeDrawer() { drawerOpen=false; drawer.classList.remove('open'); const s=hamBtn.querySelectorAll('span'); s[0].style.transform=''; s[1].style.opacity=''; s[2].style.transform=''; }
 
 const MAX = 24;
 const TIER_MAP = { scratch:{label:'Scratch',cls:'pc-scratch'}, eagle:{label:'Eagle',cls:'pc-eagle'}, birdie:{label:'Birdie',cls:'pc-birdie'}, bogey:{label:'Bogey',cls:'pc-bogey'}, pretender:{label:'The Pretenders',cls:'pc-pretender'}, hacker:{label:'The Dreamers',cls:'pc-hacker'} };
