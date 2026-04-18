@@ -979,6 +979,9 @@ async function clearRoundAll(round) {
   if (!confirm(`Really delete ALL ${label} scores for every player?`)) return;
   const { error } = await sb.from('scores').delete().eq('round', round);
   if (error) { showToast('Error: ' + error.message); return; }
+  // Clear localStorage scorecard data for this round (all players)
+  try { localStorage.removeItem(`bova_scores_${round}`); } catch {}
+  try { localStorage.removeItem('bova_scorecard_session'); } catch {}
   showToast(`${label} scores cleared.`);
   loadScoreEditor();
 }
@@ -991,6 +994,11 @@ async function clearAllTournamentScores() {
   if (phrase !== 'CLEAR ALL') { showToast('Cancelled.'); return; }
   const { error } = await sb.from('scores').delete().not('id', 'is', null);
   if (error) { showToast('Error: ' + error.message); return; }
+  // Clear ALL localStorage scorecard data (all rounds, all players)
+  try { localStorage.removeItem('bova_scores_day1'); } catch {}
+  try { localStorage.removeItem('bova_scores_day2'); } catch {}
+  try { localStorage.removeItem('bova_scores_day3'); } catch {}
+  try { localStorage.removeItem('bova_scorecard_session'); } catch {}
   showToast('All tournament scores cleared.');
   loadScoreEditor();
 }
