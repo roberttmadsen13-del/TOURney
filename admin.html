@@ -966,6 +966,15 @@ async function clearRoundScores() {
   const player = players.find(p => p.id === playerId);
   if (!confirm(`Delete all ${round} scores for ${player?.first_name} ${player?.last_name}?`)) return;
   await sb.from('scores').delete().eq('player_id', playerId).eq('round', round);
+  // Clear localStorage for this round and offline queue entries for this player/round
+  try { localStorage.removeItem(`bova_scores_${round}`); } catch {}
+  try { localStorage.removeItem('bova_scorecard_session'); } catch {}
+  try {
+    const queue = JSON.parse(localStorage.getItem('bova_offline_queue') || '[]');
+    const filtered = queue.filter(e => !(e.player_id === playerId && e.round === round));
+    if (filtered.length) localStorage.setItem('bova_offline_queue', JSON.stringify(filtered));
+    else localStorage.removeItem('bova_offline_queue');
+  } catch {}
   showToast('Scores cleared.');
   loadScoreEditor();
 }
@@ -982,6 +991,13 @@ async function clearRoundAll(round) {
   // Clear localStorage scorecard data for this round (all players)
   try { localStorage.removeItem(`bova_scores_${round}`); } catch {}
   try { localStorage.removeItem('bova_scorecard_session'); } catch {}
+  // Remove offline queue entries for this round
+  try {
+    const queue = JSON.parse(localStorage.getItem('bova_offline_queue') || '[]');
+    const filtered = queue.filter(e => e.round !== round);
+    if (filtered.length) localStorage.setItem('bova_offline_queue', JSON.stringify(filtered));
+    else localStorage.removeItem('bova_offline_queue');
+  } catch {}
   showToast(`${label} scores cleared.`);
   loadScoreEditor();
 }
@@ -999,6 +1015,7 @@ async function clearAllTournamentScores() {
   try { localStorage.removeItem('bova_scores_day2'); } catch {}
   try { localStorage.removeItem('bova_scores_day3'); } catch {}
   try { localStorage.removeItem('bova_scorecard_session'); } catch {}
+  try { localStorage.removeItem('bova_offline_queue'); } catch {}
   showToast('All tournament scores cleared.');
   loadScoreEditor();
 }
