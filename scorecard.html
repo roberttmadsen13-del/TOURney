@@ -154,6 +154,17 @@ body{background:var(--bg);color:var(--ink);font-family:'Barlow',sans-serif;font-
 .submit-btn{width:100%;padding:1rem;background:var(--gold);color:var(--ink);border:none;font-family:'Barlow Condensed',sans-serif;font-size:0.8rem;font-weight:700;letter-spacing:0.25em;text-transform:uppercase;cursor:pointer;transition:background 0.2s;}
 .submit-btn:hover{background:var(--gold-l);}
 .submit-btn:disabled{background:rgba(192,144,48,0.3);cursor:not-allowed;}
+.confirm-overlay{position:fixed;inset:0;z-index:500;background:rgba(10,7,2,0.88);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity 0.2s;}
+.confirm-overlay.show{opacity:1;pointer-events:auto;}
+.confirm-box{background:var(--card);border:1px solid var(--border);padding:2rem 1.75rem;max-width:320px;width:90%;text-align:center;}
+.confirm-title{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:900;margin-bottom:0.5rem;}
+.confirm-sub{font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-bottom:1.5rem;line-height:1.8;}
+.confirm-actions{display:flex;gap:0.75rem;}
+.confirm-cancel{flex:1;padding:0.85rem;background:transparent;border:1px solid var(--border);font-family:'Barlow Condensed',sans-serif;font-size:0.72rem;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;cursor:pointer;color:rgba(26,16,8,0.5);}
+.confirm-cancel:hover{border-color:var(--ink);color:var(--ink);}
+.confirm-go{flex:2;padding:0.85rem;background:var(--gold);border:none;font-family:'Barlow Condensed',sans-serif;font-size:0.72rem;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;cursor:pointer;color:var(--ink);}
+.confirm-go:hover{background:var(--gold-l);}
+.locked-banner{display:none;text-align:center;padding:0.85rem;font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--gold);background:rgba(192,144,48,0.08);border-top:1px solid var(--border);}
 
 /* Running totals */
 .round-summary{padding:1.5rem 1.2rem;border-top:1px solid var(--border);}
@@ -232,7 +243,7 @@ body{background:var(--bg);color:var(--ink);font-family:'Barlow',sans-serif;font-
         <option value="B">The Challengers</option>
       </select>
     </div>
-    <div class="fg" id="partnerWrap">
+    <div class="fg" id="partnerWrap" hidden>
       <label>Teammate in your foursome</label>
       <select id="partnerSelect">
         <option value="">Select teammate...</option>
@@ -240,14 +251,14 @@ body{background:var(--bg);color:var(--ink);font-family:'Barlow',sans-serif;font-
     </div>
 
     <!-- Opponents -->
-    <div class="setup-divider">Opponents in your group</div>
-    <div class="fg">
+    <div class="setup-divider" hidden>Opponents in your group</div>
+    <div class="fg" hidden>
       <label>Opponent 1 <span class="opt-tag">optional — shows their scores live</span></label>
       <select id="opp1Select">
         <option value="">Select opponent...</option>
       </select>
     </div>
-    <div class="fg">
+    <div class="fg" hidden>
       <label>Opponent 2 <span class="opt-tag">optional</span></label>
       <select id="opp2Select">
         <option value="">Select opponent...</option>
@@ -306,8 +317,20 @@ body{background:var(--bg);color:var(--ink);font-family:'Barlow',sans-serif;font-
     <div id="summaryRows"></div>
   </div>
 
-  <div class="submit-section">
-    <button class="submit-btn" id="submitBtn" onclick="submitRound()">Submit Round Scores</button>
+  <div class="submit-section" id="submitSection" style="display:none;">
+    <button class="submit-btn" id="submitBtn" onclick="confirmSubmit()">Submit Round</button>
+  </div>
+  <div class="locked-banner" id="lockedBanner">Scores submitted — redirecting to scoreboard...</div>
+
+  <div class="confirm-overlay" id="confirmOverlay" onclick="if(event.target===this)hideConfirm()">
+    <div class="confirm-box">
+      <div class="confirm-title">Submit Round?</div>
+      <div class="confirm-sub">All 18 holes will be locked.<br>Cannot be undone.</div>
+      <div class="confirm-actions">
+        <button class="confirm-cancel" onclick="hideConfirm()">Cancel</button>
+        <button class="confirm-go" onclick="submitRound()">Submit</button>
+      </div>
+    </div>
   </div>
 
 </div>
@@ -504,17 +527,17 @@ async function startScoring() {
   const opp2Id    = document.getElementById('opp2Select').value;
   const err = document.getElementById('setupErr');
 
-  if (!scorerId || !team || !partnerId) { err.classList.add('show'); return; }
+  if (!scorerId || !team) { err.classList.add('show'); return; }
   err.classList.remove('show');
 
   scorerPlayer  = players.find(p => p.id === scorerId);
-  partnerPlayer = players.find(p => p.id === partnerId);
+  partnerPlayer = partnerId ? players.find(p => p.id === partnerId) : null;
   opp1Player    = opp1Id ? players.find(p => p.id === opp1Id) : null;
   opp2Player    = opp2Id ? players.find(p => p.id === opp2Id) : null;
   scorerTeam    = team;
 
-  if (!enteredScores[scorerId])  enteredScores[scorerId]  = {};
-  if (!enteredScores[partnerId]) enteredScores[partnerId] = {};
+  if (!enteredScores[scorerId]) enteredScores[scorerId] = {};
+  if (partnerId && !enteredScores[partnerId]) enteredScores[partnerId] = {};
 
   // Load existing opponent scores from DB
   await loadOpponentScores();
@@ -659,6 +682,7 @@ function renderHole() {
   document.getElementById('progressFill').style.width = `${((currentHole - 1) / 18) * 100}%`;
   document.getElementById('prevBtn').disabled = currentHole === 1;
   document.getElementById('nextBtn').textContent = currentHole === 18 ? 'Review' : 'Next →';
+  document.getElementById('submitSection').style.display = currentHole === 18 ? 'block' : 'none';
   document.getElementById('formatBadge').textContent = formatLabel(currentHole);
 
   renderPlayers();
@@ -1182,7 +1206,21 @@ async function flushOfflineQueue() {
 window.addEventListener('online', flushOfflineQueue);
 
 // ── SUBMIT ────────────────────────────────────────────────────────
+function confirmSubmit() {
+  document.getElementById('confirmOverlay').classList.add('show');
+}
+function hideConfirm() {
+  document.getElementById('confirmOverlay').classList.remove('show');
+}
+function lockScorecard() {
+  document.querySelectorAll('.stepper-btn').forEach(b => { b.disabled = true; b.style.opacity = '0.3'; });
+  document.getElementById('submitSection').style.display = 'none';
+  const lb = document.getElementById('lockedBanner');
+  if (lb) lb.style.display = 'block';
+}
+
 async function submitRound() {
+  hideConfirm();
   const btn = document.getElementById('submitBtn');
   btn.disabled = true;
   btn.textContent = 'Submitting...';
@@ -1201,8 +1239,9 @@ async function submitRound() {
   }
 
   clearSessionState();
-  showToast('Scores submitted.');
-  setTimeout(() => { window.location.href = '/scoreboard'; }, 1800);
+  lockScorecard();
+  showToast('Scores submitted!');
+  setTimeout(() => { window.location.href = '/scoreboard'; }, 2500);
 }
 
 // ── TOAST ─────────────────────────────────────────────────────────
