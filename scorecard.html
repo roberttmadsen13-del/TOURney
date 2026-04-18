@@ -227,40 +227,46 @@ body{background:var(--bg);color:var(--ink);font-family:'Barlow',sans-serif;font-
     </div>
   </details>
 
-  <div id="setupForm">
-    <!-- Your side -->
+  <!-- Not-logged-in prompt (hidden when player detected) -->
+  <div id="loginPrompt" style="display:none;text-align:center;padding:2rem 1rem;">
+    <div style="font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:700;margin-bottom:0.8rem;">Welcome back</div>
+    <div style="font-size:0.85rem;color:var(--muted);margin-bottom:1.5rem;line-height:1.6;">
+      To auto-fill your info, log in on the <a href="profile.html" style="color:var(--gold);text-decoration:underline;">Profile</a> page first.<br>
+      Or select your name below.
+    </div>
     <div class="fg">
       <label>Your Name</label>
-      <select id="scorerSelect">
+      <select id="scorerSelectFallback">
         <option value="">Select your name...</option>
       </select>
     </div>
+  </div>
+
+  <div id="setupForm">
+    <!-- Your Name & Team (read-only, auto-detected from profile) -->
+    <div class="fg">
+      <label>Your Name</label>
+      <input type="text" id="scorerDisplay" readonly style="background:rgba(192,144,48,0.06);cursor:default;" />
+      <input type="hidden" id="scorerSelect" />
+    </div>
     <div class="fg">
       <label>Your Team</label>
-      <select id="teamSelect">
-        <option value="">Select your team...</option>
-        <option value="A">Team Bova</option>
-        <option value="B">The Challengers</option>
-      </select>
+      <input type="text" id="teamDisplay" readonly style="background:rgba(192,144,48,0.06);cursor:default;" />
+      <input type="hidden" id="teamSelect" />
     </div>
-    <div class="fg" id="partnerWrap" hidden>
+
+    <!-- Teammate (only same-team players) -->
+    <div class="fg" id="partnerWrap">
       <label>Teammate in your foursome</label>
       <select id="partnerSelect">
         <option value="">Select teammate...</option>
       </select>
     </div>
 
-    <!-- Opponents -->
-    <div class="setup-divider" hidden>Opponents in your group</div>
-    <div class="fg" hidden>
-      <label>Opponent 1 <span class="opt-tag">optional — shows their scores live</span></label>
+    <!-- Single opponent -->
+    <div class="fg" id="oppWrap">
+      <label>Opponent <span class="opt-tag">shows their scores live</span></label>
       <select id="opp1Select">
-        <option value="">Select opponent...</option>
-      </select>
-    </div>
-    <div class="fg" hidden>
-      <label>Opponent 2 <span class="opt-tag">optional</span></label>
-      <select id="opp2Select">
         <option value="">Select opponent...</option>
       </select>
     </div>
@@ -403,14 +409,44 @@ async function init() {
     return;
   }
 
-  // Populate scorer dropdown
-  const scorerSel = document.getElementById('scorerSelect');
-  players.forEach(p => {
-    const o = document.createElement('option');
-    o.value = p.id;
-    o.textContent = `${p.first_name} ${p.last_name}`;
-    scorerSel.appendChild(o);
-  });
+  // Auto-detect player from profile login (bova_profile_email in localStorage)
+  const profileEmail = localStorage.getItem('bova_profile_email');
+  const detectedPlayer = profileEmail ? players.find(p => p.email && p.email.toLowerCase() === profileEmail.toLowerCase()) : null;
+
+  if (detectedPlayer) {
+    // Auto-fill player info
+    const detectedTeam = teamAssignments[detectedPlayer.id] || '';
+    document.getElementById('scorerSelect').value = detectedPlayer.id;
+    document.getElementById('scorerDisplay').value = `${detectedPlayer.first_name} ${detectedPlayer.last_name}`;
+    document.getElementById('teamSelect').value = detectedTeam;
+    document.getElementById('teamDisplay').value = detectedTeam === 'A' ? 'Team Bova' : detectedTeam === 'B' ? 'The Challengers' : 'Unassigned';
+    document.getElementById('loginPrompt').style.display = 'none';
+    document.getElementById('setupForm').style.display = 'block';
+    refreshSetupLists();
+  } else {
+    // No profile — show fallback name picker, hide main form
+    document.getElementById('loginPrompt').style.display = 'block';
+    document.getElementById('setupForm').style.display = 'none';
+    const fallbackSel = document.getElementById('scorerSelectFallback');
+    players.forEach(p => {
+      const o = document.createElement('option');
+      o.value = p.id;
+      o.textContent = `${p.first_name} ${p.last_name}`;
+      fallbackSel.appendChild(o);
+    });
+    fallbackSel.addEventListener('change', function() {
+      const p = players.find(x => x.id === this.value);
+      if (!p) return;
+      const team = teamAssignments[p.id] || '';
+      document.getElementById('scorerSelect').value = p.id;
+      document.getElementById('scorerDisplay').value = `${p.first_name} ${p.last_name}`;
+      document.getElementById('teamSelect').value = team;
+      document.getElementById('teamDisplay').value = team === 'A' ? 'Team Bova' : team === 'B' ? 'The Challengers' : 'Unassigned';
+      document.getElementById('loginPrompt').style.display = 'none';
+      document.getElementById('setupForm').style.display = 'block';
+      refreshSetupLists();
+    });
+  }
 
   // Restore saved scores
   const saved = localStorage.getItem(`bova_scores_${currentRound}`);
@@ -456,16 +492,11 @@ async function restoreSessionIfAny() {
 }
 
 // ── SETUP DROPDOWNS ───────────────────────────────────────────────
-document.getElementById('scorerSelect').addEventListener('change', refreshSetupLists);
-document.getElementById('teamSelect').addEventListener('change', refreshSetupLists);
 document.getElementById('opp1Select').addEventListener('change', refreshSetupLists);
-document.getElementById('opp2Select').addEventListener('change', refreshSetupLists);
 
 function refreshSetupLists() {
   const scorerId = document.getElementById('scorerSelect').value;
   const team     = document.getElementById('teamSelect').value;
-  const opp1Id   = document.getElementById('opp1Select').value;
-  const opp2Id   = document.getElementById('opp2Select').value;
   const oppTeam  = team === 'A' ? 'B' : 'A';
 
   // Teammate list: same team, not scorer
@@ -484,37 +515,22 @@ function refreshSetupLists() {
       });
   }
 
-  // Opponent lists: opposite team, not already selected
+  // Opponent list: opposite team only
   const opp1Sel = document.getElementById('opp1Select');
-  const opp2Sel = document.getElementById('opp2Select');
   const prevOpp1 = opp1Sel.value;
-  const prevOpp2 = opp2Sel.value;
-
   opp1Sel.innerHTML = '<option value="">Select opponent...</option>';
-  opp2Sel.innerHTML = '<option value="">Select opponent...</option>';
 
-  // Determine opponent pool — if oppTeam has assigned players use those, else all others
   const oppPool = players.filter(p => {
     if (!team) return p.id !== scorerId;
     return teamAssignments[p.id] === oppTeam;
   });
 
   oppPool.forEach(p => {
-    if (p.id === opp2Id) return; // skip if selected in opp2
     const o = document.createElement('option');
     o.value = p.id;
     o.textContent = `${p.first_name} ${p.last_name}`;
     if (p.id === prevOpp1) o.selected = true;
     opp1Sel.appendChild(o);
-  });
-
-  oppPool.forEach(p => {
-    if (p.id === opp1Id) return; // skip if selected in opp1
-    const o = document.createElement('option');
-    o.value = p.id;
-    o.textContent = `${p.first_name} ${p.last_name}`;
-    if (p.id === prevOpp2) o.selected = true;
-    opp2Sel.appendChild(o);
   });
 }
 
@@ -524,7 +540,6 @@ async function startScoring() {
   const team      = document.getElementById('teamSelect').value;
   const partnerId = document.getElementById('partnerSelect').value;
   const opp1Id    = document.getElementById('opp1Select').value;
-  const opp2Id    = document.getElementById('opp2Select').value;
   const err = document.getElementById('setupErr');
 
   if (!scorerId || !team) { err.classList.add('show'); return; }
@@ -533,7 +548,10 @@ async function startScoring() {
   scorerPlayer  = players.find(p => p.id === scorerId);
   partnerPlayer = partnerId ? players.find(p => p.id === partnerId) : null;
   opp1Player    = opp1Id ? players.find(p => p.id === opp1Id) : null;
-  opp2Player    = opp2Id ? players.find(p => p.id === opp2Id) : null;
+
+  // Opponent's partner (opp2) is discovered automatically via realtime
+  // when they start scoring on their device — no manual selection needed
+  opp2Player = null;
   scorerTeam    = team;
 
   if (!enteredScores[scorerId]) enteredScores[scorerId] = {};
@@ -585,12 +603,28 @@ async function loadMyTeamScoresFromDb() {
 // ── REALTIME OPPONENT SCORES ──────────────────────────────────────
 function subscribeToFoursome() {
   if (_foursomeChannel) { sb.removeChannel(_foursomeChannel); }
+  const oppTeam = scorerTeam === 'A' ? 'B' : 'A';
   _foursomeChannel = sb.channel('foursome-live')
     .on('postgres_changes', { event: '*', schema: 'public', table: 'scores' }, payload => {
       const s = (payload.eventType === 'DELETE') ? payload.old : payload.new;
       if (!s || s.round !== currentRound) return;
+
+      // Known opponent IDs
       const oppIds = [opp1Player?.id, opp2Player?.id].filter(Boolean);
-      if (!oppIds.includes(s.player_id)) return;
+
+      // Auto-discover opponent's partner: if a score comes in from an
+      // opponent-team player we don't know yet, adopt them as opp2
+      if (!oppIds.includes(s.player_id) && teamAssignments[s.player_id] === oppTeam) {
+        const newOpp = players.find(p => p.id === s.player_id);
+        if (newOpp && !opp2Player) {
+          opp2Player = newOpp;
+          saveSessionState();
+        }
+      }
+
+      // Only process scores for known opponents
+      const allOppIds = [opp1Player?.id, opp2Player?.id].filter(Boolean);
+      if (!allOppIds.includes(s.player_id)) return;
 
       if (!opponentScores[s.player_id]) opponentScores[s.player_id] = {};
       if (payload.eventType === 'DELETE') {
