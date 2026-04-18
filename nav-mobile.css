@@ -107,6 +107,34 @@ nav.nav { flex-wrap: nowrap; gap: 0.9rem; min-width: 0; }
   .nav-hamburger { display: inline-flex; }
 }
 
+/* FAB: Enter Scores floating action button */
+.fab-enter-scores {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.25rem;
+  z-index: 300;
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  background: #c09030;
+  color: #1a1008;
+  text-decoration: none;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 0.75rem 1.2rem 0.75rem 1rem;
+  border-radius: 50px;
+  box-shadow: 0 4px 18px rgba(0,0,0,0.5);
+  transition: background 0.18s, transform 0.15s, box-shadow 0.15s;
+}
+.fab-enter-scores:hover { background: #d4aa50; transform: translateY(-2px); box-shadow: 0 6px 24px rgba(0,0,0,0.55); }
+.fab-enter-scores:active { transform: translateY(0); }
+@media (max-width: 760px) {
+  .fab-enter-scores { bottom: 1.1rem; right: 1rem; font-size: 0.72rem; padding: 0.7rem 1.1rem 0.7rem 0.9rem; }
+}
+
 /* Very narrow phones: tighten further */
 @media (max-width: 380px) {
   .nav-logo { font-size: 0.7rem !important; gap: 0.35rem !important; }

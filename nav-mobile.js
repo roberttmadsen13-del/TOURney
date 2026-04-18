@@ -34,8 +34,27 @@
       inner.appendChild(clone);
     });
 
+    // Admin link always present in drawer
+    var adminLink = document.createElement('a');
+    adminLink.href = '/admin';
+    adminLink.textContent = 'Admin';
+    inner.appendChild(adminLink);
+
     drawer.appendChild(inner);
     if (nav.parentNode) nav.parentNode.insertBefore(drawer, nav.nextSibling);
+
+    // FAB: floating "Enter Scores" button on all pages except scorecard + admin
+    var path = window.location.pathname.replace(/\/$/, '');
+    var skipFab = path === '/scorecard' || path === '/admin' ||
+                  path.endsWith('/scorecard.html') || path.endsWith('/admin.html');
+    if (!skipFab) {
+      var fab = document.createElement('a');
+      fab.href = '/scorecard';
+      fab.className = 'fab-enter-scores';
+      fab.setAttribute('aria-label', 'Enter Scores');
+      fab.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true" style="flex-shrink:0"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg><span>Enter Scores</span>';
+      document.body.appendChild(fab);
+    }
 
     // Build hamburger button
     var btn = document.createElement('button');
