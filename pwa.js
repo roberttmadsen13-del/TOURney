@@ -12,7 +12,7 @@
     '.pwa-offline-banner .dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:#c09030;margin-right:0.55rem;vertical-align:middle;animation:pwaPulse 1.6s ease-in-out infinite;}' +
     '.pwa-offline-banner.online .dot{background:#4a9a40;animation:none;}' +
     '@keyframes pwaPulse{0%,100%{opacity:1;}50%{opacity:0.3;}}' +
-    '.pwa-install-btn{position:fixed;right:14px;bottom:5rem;background:#c09030;color:#1a1008;border:none;padding:0.7rem 1rem;font-family:"Barlow Condensed",sans-serif;font-size:0.64rem;font-weight:700;letter-spacing:0.22em;text-transform:uppercase;cursor:pointer;z-index:9998;box-shadow:0 6px 18px rgba(0,0,0,0.25);display:none;}' +
+    '.pwa-install-btn{position:fixed;right:14px;bottom:14px;background:#c09030;color:#1a1008;border:none;padding:0.7rem 1rem;font-family:"Barlow Condensed",sans-serif;font-size:0.64rem;font-weight:700;letter-spacing:0.22em;text-transform:uppercase;cursor:pointer;z-index:9998;box-shadow:0 6px 18px rgba(0,0,0,0.25);display:none;border-radius:50px;}' +
     '.pwa-install-btn.show{display:inline-flex;align-items:center;gap:0.5rem;}' +
     '.pwa-install-btn .x{opacity:0.55;font-weight:400;margin-left:0.3rem;}';
   document.head.appendChild(style);
@@ -30,6 +30,14 @@
     if (!document.body) return;
     document.body.appendChild(banner);
     document.body.appendChild(installBtn);
+    // Push install button above Enter Scores FAB if present
+    function nudgeForFab() {
+      if (document.querySelector('.fab-enter-scores')) {
+        installBtn.style.bottom = '5.5rem';
+      }
+    }
+    nudgeForFab();
+    setTimeout(nudgeForFab, 500);
     if (!navigator.onLine) showOffline();
   }
   if (document.body) onReady();
