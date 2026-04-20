@@ -328,6 +328,23 @@ const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
     };
     drawer.appendChild(mobileSignOut);
   }
+  // Show Admin link if user is admin
+  const { data: adminCheck } = await sb.from('players').select('is_admin').eq('email', email.toLowerCase()).single();
+  if (adminCheck?.is_admin) {
+    if (navRight) {
+      const adminLink = document.createElement('a');
+      adminLink.href = '/admin';
+      adminLink.textContent = 'Admin';
+      adminLink.className = 'score-btn';
+      navRight.insertBefore(adminLink, navRight.firstChild);
+    }
+    if (drawer) {
+      const mobileAdmin = document.createElement('a');
+      mobileAdmin.href = '/admin';
+      mobileAdmin.textContent = 'Admin';
+      drawer.appendChild(mobileAdmin);
+    }
+  }
 })();
 
 const TIER_LABELS = {scratch:'Scratch',eagle:'Eagle',birdie:'Birdie',bogey:'Bogey',pretender:'Pretenders',hacker:'Dreamers'};

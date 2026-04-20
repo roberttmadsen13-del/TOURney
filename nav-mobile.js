@@ -34,12 +34,6 @@
       inner.appendChild(clone);
     });
 
-    // Admin link always present in drawer
-    var adminLink = document.createElement('a');
-    adminLink.href = '/admin';
-    adminLink.textContent = 'Admin';
-    inner.appendChild(adminLink);
-
     drawer.appendChild(inner);
     if (nav.parentNode) nav.parentNode.insertBefore(drawer, nav.nextSibling);
 

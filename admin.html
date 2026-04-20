@@ -241,7 +241,7 @@ td.email a:hover{color:var(--gold);}
     <!-- STATS -->
     <div class="stats-row" id="statsRow">
       <div class="stat-card"><div class="stat-val" id="sTotal">—</div><div class="stat-label">Registered</div></div>
-      <div class="stat-card"><div class="stat-val" id="sNeeded">—</div><div class="stat-label">Still Needed</div></div>
+      <div class="stat-card"><div class="stat-val" id="sAccounts">—</div><div class="stat-label">Accounts</div></div>
       <div class="stat-card"><div class="stat-val" id="sHats">—</div><div class="stat-label">Hat Orders</div></div>
       <div class="stat-card"><div class="stat-val" id="sTeamA">—</div><div class="stat-label">Team Bova</div></div>
       <div class="stat-card"><div class="stat-val" id="sTeamB">—</div><div class="stat-label">Challengers</div></div>
@@ -344,11 +344,13 @@ td.email a:hover{color:var(--gold);}
               <th>Trash Talk</th>
               <th>Hat</th>
               <th>Team</th>
+              <th>Account</th>
+              <th>Admin</th>
               <th></th>
             </tr>
           </thead>
           <tbody id="playerTableBody">
-            <tr><td colspan="11" class="loading">Loading players...</td></tr>
+            <tr><td colspan="13" class="loading">Loading players...</td></tr>
           </tbody>
         </table>
       </div>
@@ -437,7 +439,6 @@ td.email a:hover{color:var(--gold);}
 <script>
 const SUPABASE_URL = 'https://jllugkiojeoopitdvzsa.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_DnBMNLaSu61ykJ6P_fI2fw_D9DdAScn';
-const ADMIN_EMAILS = ['robert.t.madsen13@gmail.com'];
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 const DATE_LABELS = {aug21:'Aug 21-24',aug28:'Aug 28-31',sep4:'Sep 4-7',sep11:'Sep 11-14',sep18:'Sep 18-21',sep25:'Sep 25-28',oct2:'Oct 2-5',oct9:'Oct 9-12'};
@@ -477,15 +478,17 @@ async function doLogin() {
   err.classList.remove('show');
   const { data, error } = await sb.auth.signInWithPassword({ email, password: pass });
   if (error || !data.user) { err.classList.add('show'); return; }
-  if (!ADMIN_EMAILS.includes(email.toLowerCase())) { await sb.auth.signOut(); err.classList.add('show'); return; }
+  const { data: player } = await sb.from('players').select('is_admin').eq('email', email.toLowerCase()).single();
+  if (!player?.is_admin) { await sb.auth.signOut(); err.classList.add('show'); return; }
   showAdmin(email);
 }
 
 async function checkSession() {
   const { data } = await sb.auth.getSession();
-  if (data?.session?.user && ADMIN_EMAILS.includes(data.session.user.email?.toLowerCase())) {
-    showAdmin(data.session.user.email);
-  }
+  if (!data?.session?.user) return;
+  const email = data.session.user.email?.toLowerCase();
+  const { data: player } = await sb.from('players').select('is_admin').eq('email', email).single();
+  if (player?.is_admin) showAdmin(email);
 }
 
 async function doLogout() {
@@ -614,7 +617,7 @@ async function loadPars() {
 function renderStats() {
   const n = players.length;
   document.getElementById('sTotal').textContent = n;
-  document.getElementById('sNeeded').textContent = Math.max(0, 16 - n);
+  document.getElementById('sAccounts').textContent = players.filter(p => p.has_account).length;
   document.getElementById('sHats').textContent = players.filter(p => p.hat).length;
   document.getElementById('sTeamA').textContent = Object.values(teamAssignments).filter(t => t === 'A').length;
   document.getElementById('sTeamB').textContent = Object.values(teamAssignments).filter(t => t === 'B').length;
@@ -677,7 +680,7 @@ function renderTable() {
   const tbody = document.getElementById('playerTableBody');
   document.getElementById('playerCount').textContent = `${players.length} / 24`;
   if (!players.length) {
-    tbody.innerHTML = '<tr><td colspan="10" class="loading">No players registered yet.</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="13" class="loading">No players registered yet.</td></tr>';
     return;
   }
 
@@ -705,6 +708,8 @@ function renderTable() {
       <td style="font-size:0.72rem;font-style:italic;color:rgba(192,144,48,0.5);max-width:160px">${p.trash_talk || '—'}</td>
       <td>${p.hat ? '<span class="hat-yes">Yes</span>' : '<span class="hat-no">No</span>'}</td>
       <td>${teamLabel}</td>
+      <td>${p.has_account ? '<span style="color:#2a6a28;">&#10003;</span>' : '<span style="color:rgba(26,16,8,0.2);">—</span>'}</td>
+      <td><button class="action-btn" style="color:${p.is_admin ? 'var(--gold)' : 'var(--muted)'};border-color:${p.is_admin ? 'var(--gold)' : 'rgba(26,16,8,0.2)'};" onclick="toggleAdmin('${p.id}',${!p.is_admin})">${p.is_admin ? 'Admin' : 'Grant'}</button></td>
       <td><button class="action-btn" onclick="removePlayer('${p.id}','${p.first_name} ${p.last_name}')">Remove</button></td>
     </tr>`;
   }).join('');
@@ -716,6 +721,19 @@ async function removePlayer(id, name) {
   delete teamAssignments[id];
   showToast(`${name} removed.`);
   loadPlayers();
+}
+
+async function toggleAdmin(id, makeAdmin) {
+  const player = players.find(p => p.id === id);
+  if (!player) return;
+  const name = `${player.first_name} ${player.last_name}`;
+  const action = makeAdmin ? `Grant admin access to ${name}?` : `Revoke admin access from ${name}?`;
+  if (!confirm(action)) return;
+  const { error } = await sb.from('players').update({ is_admin: makeAdmin }).eq('id', id);
+  if (error) { showToast('Error: ' + error.message); return; }
+  player.is_admin = makeAdmin;
+  renderTable();
+  showToast(`${name} ${makeAdmin ? 'granted' : 'revoked'} admin access.`);
 }
 
 // ── CSV EXPORT ────────────────────────────────────────────────────
@@ -882,6 +900,8 @@ function subscribeRealtime() {
         <td style="font-size:0.72rem;font-style:italic;color:rgba(192,144,48,0.5)">${p.trash_talk || '—'}</td>
         <td>${p.hat ? '<span class="hat-yes">Yes</span>' : '<span class="hat-no">No</span>'}</td>
         <td><span style="color:rgba(240,230,204,0.2)">—</span></td>
+        <td>${p.has_account ? '<span style="color:#2a6a28;">&#10003;</span>' : '<span style="color:rgba(26,16,8,0.2);">—</span>'}</td>
+        <td><button class="action-btn" style="color:var(--muted);border-color:rgba(26,16,8,0.2);" onclick="toggleAdmin('${p.id}',true)">Grant</button></td>
         <td><button class="action-btn" onclick="removePlayer('${p.id}','${p.first_name} ${p.last_name}')">Remove</button></td>
       `;
       tbody.appendChild(tr);

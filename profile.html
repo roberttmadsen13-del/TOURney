@@ -226,6 +226,24 @@ document.getElementById('editTrash').addEventListener('keyup', () => updateCount
   }
   const email = data.session.user.email;
   localStorage.setItem('bova_profile_email', email);
+  // Show Admin link if user is admin
+  const { data: adminCheck } = await sb.from('players').select('is_admin').eq('email', email.toLowerCase()).single();
+  if (adminCheck?.is_admin) {
+    const navLinks = document.querySelector('.nav-links');
+    if (navLinks) {
+      const adminLink = document.createElement('a');
+      adminLink.href = '/admin';
+      adminLink.textContent = 'Admin';
+      navLinks.appendChild(adminLink);
+    }
+    const drawer = document.querySelector('.nav-drawer-inner');
+    if (drawer) {
+      const mobileAdmin = document.createElement('a');
+      mobileAdmin.href = '/admin';
+      mobileAdmin.textContent = 'Admin';
+      drawer.appendChild(mobileAdmin);
+    }
+  }
   await loadProfileByEmail(email);
 })();
 
