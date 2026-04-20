@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#f5ede0">
+<link rel="manifest" href="/manifest.json">
+<title>Sign In — Bova Invitational</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Mono:wght@300;400;500&family=Barlow+Condensed:wght@300;400;600;700;800&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#1a1008;--gold:#c09030;--gold-l:#d4aa50;--gold-p:#e8cc80;--cream:#f0e6cc;--red:#8a1e10;--border:rgba(192,144,48,0.28);--bg:#f5ede0;--card:#fdf8f0;--muted:rgba(26,16,8,0.4);}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--bg);color:var(--ink);font-family:'Barlow',sans-serif;font-weight:300;min-height:100vh;}
+a{color:inherit;text-decoration:none;}
+
+/* NAV */
+.nav{position:sticky;top:0;z-index:100;height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;background:rgba(10,7,2,0.98);border-bottom:1px solid var(--border);}
+.nav-logo{font-family:'Playfair Display',serif;font-size:0.9rem;font-weight:700;display:flex;align-items:center;gap:0.6rem;}
+.nav-logo em{font-style:italic;color:var(--gold);}
+.nav-links{display:flex;gap:1.2rem;}
+.nav-links a{font-family:'DM Mono',monospace;font-size:0.48rem;letter-spacing:0.15em;text-transform:uppercase;color:rgba(240,230,204,0.4);}
+.nav-links a:hover{color:var(--gold);}
+
+/* LOGIN GATE */
+.login-gate{display:flex;align-items:center;justify-content:center;min-height:calc(100vh - 56px);padding:2rem;}
+.login-card{width:100%;max-width:400px;border:1px solid var(--border);padding:2.5rem;background:rgba(192,144,48,0.02);}
+.login-title{font-family:'Playfair Display',serif;font-size:1.8rem;font-weight:900;margin-bottom:0.3rem;}
+.login-title em{font-style:italic;color:var(--gold-p);}
+.login-sub{font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.35em;text-transform:uppercase;color:var(--muted);margin-bottom:2rem;}
+.fg{display:flex;flex-direction:column;gap:0.3rem;margin-bottom:1rem;}
+.fg label{font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.28em;text-transform:uppercase;color:var(--gold);}
+.fg input{background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;outline:none;width:100%;-webkit-appearance:none;}
+.fg input:focus{border-color:var(--gold);}
+.btn-primary{width:100%;padding:0.9rem;background:var(--gold);color:var(--ink);border:none;font-family:'Barlow Condensed',sans-serif;font-size:0.75rem;font-weight:700;letter-spacing:0.25em;text-transform:uppercase;cursor:pointer;transition:background 0.2s;}
+.btn-primary:hover{background:var(--gold-l);}
+.btn-primary:disabled{background:rgba(192,144,48,0.3);cursor:not-allowed;}
+.login-err{font-family:'DM Mono',monospace;font-size:0.52rem;color:var(--red);margin-top:0.5rem;display:none;line-height:1.6;}
+.login-err.show{display:block;}
+.login-success{font-family:'DM Mono',monospace;font-size:0.52rem;color:#2a6a28;margin-top:0.5rem;display:none;line-height:1.6;}
+.login-success.show{display:block;}
+.mode-toggle{font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.12em;color:var(--muted);margin-top:1.5rem;text-align:center;}
+.mode-toggle a{color:var(--gold);cursor:pointer;text-decoration:underline;text-decoration-color:rgba(192,144,48,0.3);transition:text-decoration-color 0.2s;}
+.mode-toggle a:hover{text-decoration-color:var(--gold);}
+
+@media(max-width:380px){
+  .login-gate{padding:1.5rem 1rem;}
+  .login-card{padding:2rem 1.5rem;}
+  .nav{padding:0 1rem;}
+}
+</style>
+<link rel="stylesheet" href="/nav-mobile.css">
+<script defer src="/nav-mobile.js"></script>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="/" class="nav-logo"><svg width="14" height="18" viewBox="0 0 14 18" style="flex-shrink:0;display:block" fill="none"><line x1="2" y1="1" x2="2" y2="17" stroke="#c09030" stroke-width="1.5" stroke-linecap="round"/><path d="M2 2L12 5.5L2 9.5Z" fill="#c09030"/></svg>The Bova <em>Invitational</em></a>
+  <div class="nav-links">
+    <a href="/">Home</a>
+    <a href="/scoreboard">Scoreboard</a>
+    <a href="/directory">Directory</a>
+  </div>
+</nav>
+
+<div class="login-gate">
+  <div class="login-card">
+    <!-- SIGN IN MODE -->
+    <div id="signInMode">
+      <div class="login-title">Sign <em>In</em></div>
+      <div class="login-sub">Player Access</div>
+      <div class="fg">
+        <label>Email Address</label>
+        <input type="email" id="signInEmail" placeholder="your@email.com" autocomplete="email">
+      </div>
+      <div class="fg">
+        <label>Password</label>
+        <input type="password" id="signInPassword" placeholder="Enter your password" autocomplete="current-password">
+      </div>
+      <div class="login-err" id="signInErr"></div>
+      <button class="btn-primary" id="signInBtn" onclick="doSignIn()">Sign In</button>
+      <div class="mode-toggle">
+        No account yet? <a onclick="showMode('signup')">Create Account</a>
+      </div>
+    </div>
+
+    <!-- CREATE ACCOUNT MODE -->
+    <div id="signUpMode" style="display:none;">
+      <div class="login-title">Create <em>Account</em></div>
+      <div class="login-sub">Registered Players Only</div>
+      <div class="fg">
+        <label>Email Address</label>
+        <input type="email" id="signUpEmail" placeholder="your@email.com" autocomplete="email">
+      </div>
+      <div class="fg">
+        <label>Password</label>
+        <input type="password" id="signUpPassword" placeholder="Choose a password (6+ chars)" autocomplete="new-password">
+      </div>
+      <div class="fg">
+        <label>Confirm Password</label>
+        <input type="password" id="signUpConfirm" placeholder="Confirm your password" autocomplete="new-password">
+      </div>
+      <div class="login-err" id="signUpErr"></div>
+      <div class="login-success" id="signUpSuccess"></div>
+      <button class="btn-primary" id="signUpBtn" onclick="doSignUp()">Create Account</button>
+      <div class="mode-toggle">
+        Already have an account? <a onclick="showMode('signin')">Sign In</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script>
+const SUPABASE_URL = 'https://jllugkiojeoopitdvzsa.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_DnBMNLaSu61ykJ6P_fI2fw_D9DdAScn';
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+// Get redirect target from URL params
+const params = new URLSearchParams(window.location.search);
+const redirectTo = params.get('redirect') || '/';
+
+// If already logged in, redirect immediately
+(async function checkExisting() {
+  const { data } = await sb.auth.getSession();
+  if (data?.session?.user) {
+    window.location.href = redirectTo;
+  }
+})();
+
+function showMode(mode) {
+  document.getElementById('signInMode').style.display = mode === 'signin' ? 'block' : 'none';
+  document.getElementById('signUpMode').style.display = mode === 'signup' ? 'block' : 'none';
+  // Clear errors
+  document.querySelectorAll('.login-err, .login-success').forEach(el => el.classList.remove('show'));
+}
+
+async function doSignIn() {
+  const email = document.getElementById('signInEmail').value.trim().toLowerCase();
+  const password = document.getElementById('signInPassword').value;
+  const err = document.getElementById('signInErr');
+  const btn = document.getElementById('signInBtn');
+  err.classList.remove('show');
+
+  if (!email || !password) {
+    err.textContent = 'Please enter your email and password.';
+    err.classList.add('show');
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = 'Signing in...';
+
+  const { data, error } = await sb.auth.signInWithPassword({ email, password });
+
+  if (error || !data.user) {
+    err.textContent = error?.message || 'Invalid email or password.';
+    err.classList.add('show');
+    btn.disabled = false;
+    btn.textContent = 'SIGN IN';
+    return;
+  }
+
+  // Store email for backward compat with scorecard auto-detect
+  localStorage.setItem('bova_profile_email', email);
+  window.location.href = redirectTo;
+}
+
+async function doSignUp() {
+  const email = document.getElementById('signUpEmail').value.trim().toLowerCase();
+  const password = document.getElementById('signUpPassword').value;
+  const confirm = document.getElementById('signUpConfirm').value;
+  const err = document.getElementById('signUpErr');
+  const success = document.getElementById('signUpSuccess');
+  const btn = document.getElementById('signUpBtn');
+  err.classList.remove('show');
+  success.classList.remove('show');
+
+  if (!email || !password || !confirm) {
+    err.textContent = 'Please fill in all fields.';
+    err.classList.add('show');
+    return;
+  }
+
+  if (password.length < 6) {
+    err.textContent = 'Password must be at least 6 characters.';
+    err.classList.add('show');
+    return;
+  }
+
+  if (password !== confirm) {
+    err.textContent = 'Passwords do not match.';
+    err.classList.add('show');
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = 'Creating account...';
+
+  // Check if email exists in players table
+  const { data: player, error: lookupErr } = await sb.from('players').select('id').eq('email', email).single();
+
+  if (!player) {
+    err.textContent = "This email isn't registered as a player. Only signed-up players can create accounts.";
+    err.classList.add('show');
+    btn.disabled = false;
+    btn.textContent = 'CREATE ACCOUNT';
+    return;
+  }
+
+  // Create the auth account
+  const { data, error } = await sb.auth.signUp({ email, password });
+
+  if (error) {
+    err.textContent = error.message;
+    err.classList.add('show');
+    btn.disabled = false;
+    btn.textContent = 'CREATE ACCOUNT';
+    return;
+  }
+
+  // Check if email confirmation is required
+  if (data.user && !data.session) {
+    // Email confirmation required
+    success.textContent = 'Account created! Check your email to confirm, then sign in.';
+    success.classList.add('show');
+    btn.disabled = false;
+    btn.textContent = 'CREATE ACCOUNT';
+  } else if (data.session) {
+    // Auto-confirmed — redirect
+    localStorage.setItem('bova_profile_email', email);
+    window.location.href = redirectTo;
+  }
+}
+
+// Enter key support
+document.getElementById('signInPassword')?.addEventListener('keydown', e => { if (e.key === 'Enter') doSignIn(); });
+document.getElementById('signInEmail')?.addEventListener('keydown', e => { if (e.key === 'Enter') doSignIn(); });
+document.getElementById('signUpConfirm')?.addEventListener('keydown', e => { if (e.key === 'Enter') doSignUp(); });
+</script>
+<script src="/pwa.js"></script>
+</body>
+</html>

@@ -289,6 +289,35 @@ const SUPABASE_URL = 'https://jllugkiojeoopitdvzsa.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_DnBMNLaSu61ykJ6P_fI2fw_D9DdAScn';
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+// ── AUTH GUARD ───────────────────────────────────────────────────
+(async function authGuard() {
+  const { data } = await sb.auth.getSession();
+  if (!data?.session?.user) {
+    window.location.href = '/login?redirect=/scoreboard';
+    return;
+  }
+  // Show user indicator in nav
+  const email = data.session.user.email;
+  const navRight = document.querySelector('.nav-right');
+  if (navRight) {
+    const userEl = document.createElement('span');
+    userEl.style.cssText = "font-family:'DM Mono',monospace;font-size:0.45rem;letter-spacing:0.12em;color:rgba(240,230,204,0.5);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:120px;";
+    userEl.textContent = email;
+    const signOutBtn = document.createElement('button');
+    signOutBtn.textContent = 'Sign Out';
+    signOutBtn.style.cssText = "font-family:'Barlow Condensed',sans-serif;font-size:0.62rem;letter-spacing:0.18em;text-transform:uppercase;color:rgba(240,230,204,0.45);cursor:pointer;background:none;border:none;white-space:nowrap;";
+    signOutBtn.onmouseover = function(){ this.style.color='#8a1e10'; };
+    signOutBtn.onmouseout = function(){ this.style.color='rgba(240,230,204,0.45)'; };
+    signOutBtn.onclick = async function() {
+      await sb.auth.signOut();
+      localStorage.removeItem('bova_profile_email');
+      window.location.href = '/login?redirect=/scoreboard';
+    };
+    navRight.appendChild(userEl);
+    navRight.appendChild(signOutBtn);
+  }
+})();
+
 const TIER_LABELS = {scratch:'Scratch',eagle:'Eagle',birdie:'Birdie',bogey:'Bogey',pretender:'Pretenders',hacker:'Dreamers'};
 const DEFAULT_PARS = {
   day1:[3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3],

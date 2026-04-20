@@ -347,6 +347,33 @@ const SUPABASE_URL = 'https://jllugkiojeoopitdvzsa.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_DnBMNLaSu61ykJ6P_fI2fw_D9DdAScn';
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+// ── AUTH GUARD ───────────────────────────────────────────────────
+(async function authGuard() {
+  const { data } = await sb.auth.getSession();
+  if (!data?.session?.user) {
+    window.location.href = '/login?redirect=/scorecard';
+    return;
+  }
+  // Store email for backward compat with auto-detect
+  const email = data.session.user.email;
+  if (email) localStorage.setItem('bova_profile_email', email);
+  // Add sign out to nav
+  const navRight = document.querySelector('.nav-right');
+  if (navRight) {
+    const signOutBtn = document.createElement('a');
+    signOutBtn.textContent = 'Sign Out';
+    signOutBtn.className = 'nav-link';
+    signOutBtn.style.cursor = 'pointer';
+    signOutBtn.onclick = async function(e) {
+      e.preventDefault();
+      await sb.auth.signOut();
+      localStorage.removeItem('bova_profile_email');
+      window.location.href = '/login?redirect=/scorecard';
+    };
+    navRight.appendChild(signOutBtn);
+  }
+})();
+
 const DEFAULT_PARS = {
   day1:[3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3],
   day2:[4,4,5,3,4,4,3,5,4,4,4,3,5,4,4,3,5,4],
