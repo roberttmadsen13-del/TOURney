@@ -252,10 +252,45 @@ async function doSignUp() {
   }
 }
 
+async function doForgot() {
+  const email = document.getElementById('forgotEmail').value.trim().toLowerCase();
+  const err = document.getElementById('forgotErr');
+  const success = document.getElementById('forgotSuccess');
+  const btn = document.getElementById('forgotBtn');
+  err.classList.remove('show');
+  success.classList.remove('show');
+
+  if (!email) {
+    err.textContent = 'Please enter your email address.';
+    err.classList.add('show');
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = 'Sending...';
+
+  const { error } = await sb.auth.resetPasswordForEmail(email, {
+    redirectTo: window.location.origin + '/login?redirect=' + encodeURIComponent(redirectTo)
+  });
+
+  btn.disabled = false;
+  btn.textContent = 'SEND RESET LINK';
+
+  if (error) {
+    err.textContent = error.message;
+    err.classList.add('show');
+    return;
+  }
+
+  success.textContent = 'Reset link sent! Check your email inbox.';
+  success.classList.add('show');
+}
+
 // Enter key support
 document.getElementById('signInPassword')?.addEventListener('keydown', e => { if (e.key === 'Enter') doSignIn(); });
 document.getElementById('signInEmail')?.addEventListener('keydown', e => { if (e.key === 'Enter') doSignIn(); });
 document.getElementById('signUpConfirm')?.addEventListener('keydown', e => { if (e.key === 'Enter') doSignUp(); });
+document.getElementById('forgotEmail')?.addEventListener('keydown', e => { if (e.key === 'Enter') doForgot(); });
 </script>
 <script src="/pwa.js"></script>
 </body>
