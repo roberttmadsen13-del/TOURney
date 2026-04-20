@@ -316,6 +316,18 @@ const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
     navRight.appendChild(userEl);
     navRight.appendChild(signOutBtn);
   }
+  // Also add Sign Out to mobile drawer
+  const drawer = document.querySelector('.nav-drawer-inner');
+  if (drawer) {
+    const mobileSignOut = document.createElement('button');
+    mobileSignOut.textContent = 'Sign Out';
+    mobileSignOut.onclick = async function() {
+      await sb.auth.signOut();
+      localStorage.removeItem('bova_profile_email');
+      window.location.href = '/login?redirect=/scoreboard';
+    };
+    drawer.appendChild(mobileSignOut);
+  }
 })();
 
 const TIER_LABELS = {scratch:'Scratch',eagle:'Eagle',birdie:'Birdie',bogey:'Bogey',pretender:'Pretenders',hacker:'Dreamers'};

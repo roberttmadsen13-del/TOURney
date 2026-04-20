@@ -79,7 +79,26 @@ a{color:inherit;text-decoration:none;}
       <div class="login-err" id="signInErr"></div>
       <button class="btn-primary" id="signInBtn" onclick="doSignIn()">Sign In</button>
       <div class="mode-toggle">
+        <a onclick="showMode('forgot')" style="font-size:0.48rem;">Forgot password?</a>
+      </div>
+      <div class="mode-toggle">
         No account yet? <a onclick="showMode('signup')">Create Account</a>
+      </div>
+    </div>
+
+    <!-- FORGOT PASSWORD MODE -->
+    <div id="forgotMode" style="display:none;">
+      <div class="login-title">Reset <em>Password</em></div>
+      <div class="login-sub">Enter your email to receive a reset link</div>
+      <div class="fg">
+        <label>Email Address</label>
+        <input type="email" id="forgotEmail" placeholder="your@email.com" autocomplete="email">
+      </div>
+      <div class="login-err" id="forgotErr"></div>
+      <div class="login-success" id="forgotSuccess"></div>
+      <button class="btn-primary" id="forgotBtn" onclick="doForgot()">Send Reset Link</button>
+      <div class="mode-toggle">
+        Back to <a onclick="showMode('signin')">Sign In</a>
       </div>
     </div>
 
@@ -130,6 +149,7 @@ const redirectTo = params.get('redirect') || '/';
 function showMode(mode) {
   document.getElementById('signInMode').style.display = mode === 'signin' ? 'block' : 'none';
   document.getElementById('signUpMode').style.display = mode === 'signup' ? 'block' : 'none';
+  document.getElementById('forgotMode').style.display = mode === 'forgot' ? 'block' : 'none';
   // Clear errors
   document.querySelectorAll('.login-err, .login-success').forEach(el => el.classList.remove('show'));
 }
