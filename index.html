@@ -713,6 +713,52 @@ const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 window.addEventListener('scroll', () => { document.getElementById('mainNav').classList.toggle('scrolled', window.scrollY > 40); });
 
+// Load admin-configured homepage content
+(async function loadHomepageContent() {
+  const keys = ['homepage_subtitle','homepage_details','homepage_about','logo_url'];
+  const { data } = await sb.from('settings').select('key,value').in('key', keys);
+  if (!data) return;
+  const map = {};
+  data.forEach(r => { map[r.key] = r.value; });
+  if (map.homepage_subtitle) {
+    const el = document.querySelector('.hero-eyebrow');
+    if (el) el.innerHTML = map.homepage_subtitle;
+  }
+  if (map.homepage_details) {
+    const el = document.querySelector('.hero-meta');
+    if (el) el.innerHTML = map.homepage_details;
+  }
+  if (map.homepage_about) {
+    const els = document.querySelectorAll('.about-body');
+    if (els.length) {
+      const paras = map.homepage_about.split('\n\n').filter(Boolean);
+      els.forEach((el, i) => { if (paras[i]) el.innerHTML = paras[i]; });
+    }
+  }
+  // Dynamic PWA manifest with uploaded logo as app icon
+  if (map.logo_url) {
+    const manifest = {
+      name: 'Bova Invitational',
+      short_name: 'Bova',
+      description: map.homepage_subtitle || 'Inaugural Edition — Myrtle Beach, SC — 2026',
+      start_url: '/',
+      scope: '/',
+      display: 'standalone',
+      background_color: '#f5ede0',
+      theme_color: '#1a1008',
+      orientation: 'any',
+      icons: [
+        { src: map.logo_url, sizes: '192x192', type: 'image/png', purpose: 'any' },
+        { src: map.logo_url, sizes: '512x512', type: 'image/png', purpose: 'any' }
+      ]
+    };
+    const blob = new Blob([JSON.stringify(manifest)], { type: 'application/json' });
+    const manifestUrl = URL.createObjectURL(blob);
+    const link = document.querySelector('link[rel="manifest"]');
+    if (link) link.href = manifestUrl;
+  }
+})();
+
 const MAX = 24;
 const TIER_MAP = { scratch:{label:'Scratch',cls:'pc-scratch'}, eagle:{label:'Eagle',cls:'pc-eagle'}, birdie:{label:'Birdie',cls:'pc-birdie'}, bogey:{label:'Bogey',cls:'pc-bogey'}, pretender:{label:'The Pretenders',cls:'pc-pretender'}, hacker:{label:'The Dreamers',cls:'pc-hacker'} };
 const DATE_LABELS = { aug21:'Aug 21-24',aug28:'Aug 28-31',sep4:'Sep 4-7',sep11:'Sep 11-14',sep18:'Sep 18-21',sep25:'Sep 25-28',oct2:'Oct 2-5',oct9:'Oct 9-12' };
