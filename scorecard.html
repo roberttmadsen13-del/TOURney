@@ -1063,34 +1063,75 @@ function renderMiniStrip() {
   const myPlayers = [scorerPlayer, partnerPlayer].filter(Boolean);
   const totalPar = coursePars.reduce((a,b) => a+b, 0);
 
-  // Labels column — blank row for hole numbers, then initials per player
+  // Build row definitions — figure out which rows we need
+  // For each hole, scramble holes share one row; others get individual rows
+  // We need a consistent set of rows across all 18, so build based on nines
+  const frontFmt = getHoleFormat(1);
+  const backFmt  = getHoleFormat(10);
+  const frontScramble = PAIR_TEAM_FMTS.includes(frontFmt);
+  const backScramble  = PAIR_TEAM_FMTS.includes(backFmt);
+
+  // Row config: each entry = { label, getScore(hole) }
+  const rows = [];
+  if (frontScramble && backScramble) {
+    // Both nines are team formats — single row
+    rows.push({ label: 'TM', getScore: (h) => enteredScores[scorerPlayer.id]?.[h] });
+  } else if (!frontScramble && !backScramble) {
+    // Both nines are individual — one row per player
+    myPlayers.forEach(p => {
+      const init = (p.first_name[0] + (p.last_name?.[0] || '')).toUpperCase();
+      rows.push({ label: init, getScore: (h) => enteredScores[p.id]?.[h] });
+    });
+  } else {
+    // Mixed: one nine is team, other is individual
+    // Show one row per player; on scramble holes both get the same team score
+    myPlayers.forEach(p => {
+      const init = (p.first_name[0] + (p.last_name?.[0] || '')).toUpperCase();
+      rows.push({ label: init, getScore: (h) => {
+        if (isScrambleHole(h)) return enteredScores[scorerPlayer.id]?.[h];
+        return enteredScores[p.id]?.[h];
+      }});
+    });
+  }
+
+  // Labels column
   let labelsHtml = '<div class="ml-hole">&nbsp;</div>';
-  myPlayers.forEach(p => {
-    const init = (p.first_name[0] + (p.last_name?.[0] || '')).toUpperCase();
-    labelsHtml += `<div class="ml-init">${init}</div>`;
-  });
+  rows.forEach(r => { labelsHtml += `<div class="ml-init">${r.label}</div>`; });
   document.getElementById('miniLabels').innerHTML = labelsHtml;
 
   // Holes
   let html = '';
-  const playerTotals = myPlayers.map(() => 0);
+  const rowTotals = rows.map(() => 0);
   for (let h = 1; h <= 18; h++) {
     const par = coursePars[h-1] || 4;
     const isCur = h === currentHole;
+    const scrambleHole = isScrambleHole(h);
     let chipsHtml = '';
-    myPlayers.forEach((p, idx) => {
-      const gross = enteredScores[p.id]?.[h];
-      if (gross != null) playerTotals[idx] += gross;
-      const cls = gross != null ? (() => {
-        const d = gross - par;
-        if (d <= -2) return 'ms-eagle';
-        if (d === -1) return 'ms-birdie';
-        if (d === 0)  return 'ms-par';
-        if (d === 1)  return 'ms-bogey';
-        return 'ms-double';
-      })() : 'ms-empty';
-      chipsHtml += `<div class="mini-score ${cls}">${gross != null ? gross : ''}</div>`;
-    });
+
+    if (frontScramble && backScramble) {
+      // Single team row
+      const gross = rows[0].getScore(h);
+      if (gross != null) rowTotals[0] += gross;
+      const cls = gross != null ? msClass(gross, par) : 'ms-empty';
+      chipsHtml = `<div class="mini-score ${cls}">${gross != null ? gross : ''}</div>`;
+    } else if (scrambleHole && !frontScramble !== !backScramble) {
+      // Mixed: scramble hole — show same score in both rows but merge visually
+      const gross = enteredScores[scorerPlayer.id]?.[h];
+      rows.forEach((r, idx) => {
+        if (gross != null) rowTotals[idx] += gross;
+        const cls = gross != null ? msClass(gross, par) : 'ms-empty';
+        chipsHtml += `<div class="mini-score ${cls}">${gross != null ? gross : ''}</div>`;
+      });
+    } else {
+      // Individual rows
+      rows.forEach((r, idx) => {
+        const gross = r.getScore(h);
+        if (gross != null) rowTotals[idx] += gross;
+        const cls = gross != null ? msClass(gross, par) : 'ms-empty';
+        chipsHtml += `<div class="mini-score ${cls}">${gross != null ? gross : ''}</div>`;
+      });
+    }
+
     html += `<div class="mini-hole${isCur?' current':''}" onclick="goToHole(${h})">
       <div class="mini-num">${h}</div>
       ${chipsHtml}
@@ -1098,10 +1139,10 @@ function renderMiniStrip() {
   }
   document.getElementById('miniStrip').innerHTML = html;
 
-  // Totals column — par label + each player total
+  // Totals column
   let totalsHtml = `<div class="mt-label">${totalPar}</div>`;
-  myPlayers.forEach((p, idx) => {
-    const t = playerTotals[idx];
+  rows.forEach((r, idx) => {
+    const t = rowTotals[idx];
     const diff = t - totalPar;
     const cls = t === 0 ? '' : diff < 0 ? 'ms-birdie' : diff > 0 ? 'ms-bogey' : 'ms-par';
     totalsHtml += `<div class="mt-val ${cls}">${t || '—'}</div>`;
@@ -1111,6 +1152,15 @@ function renderMiniStrip() {
   const strip = document.getElementById('miniStrip');
   const chipW = 26;
   strip.scrollLeft = (currentHole - 1) * chipW - strip.clientWidth / 2 + chipW / 2;
+}
+
+function msClass(gross, par) {
+  const d = gross - par;
+  if (d <= -2) return 'ms-eagle';
+  if (d === -1) return 'ms-birdie';
+  if (d === 0)  return 'ms-par';
+  if (d === 1)  return 'ms-bogey';
+  return 'ms-double';
 }
 
 // ── PROGRESS ──────────────────────────────────────────────────────
