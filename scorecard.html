@@ -769,7 +769,7 @@ function renderHole() {
   if (currentHole === 18) {
     nextBtn.textContent = 'End Round';
     nextBtn.classList.add('end-round');
-    nextBtn.onclick = function() { autoLogParIfEmpty(currentHole); saveCurrentHoleScores(currentHole); renderHole(); confirmSubmit(); };
+    nextBtn.onclick = function() { autoLogParIfEmpty(currentHole); saveCurrentHoleScores(currentHole); fillAllBlanksWithPar(); renderHole(); confirmSubmit(); };
   } else {
     nextBtn.textContent = 'Next →';
     nextBtn.classList.remove('end-round');
@@ -986,6 +986,20 @@ function saveCurrentHoleScores(hole) {
     const gross = enteredScores[p.id]?.[hole];
     if (gross != null) autoSaveToDb(p.id, hole, gross);
   });
+}
+function fillAllBlanksWithPar() {
+  [scorerPlayer, partnerPlayer].forEach(p => {
+    if (!p) return;
+    if (!enteredScores[p.id]) enteredScores[p.id] = {};
+    for (let h = 1; h <= 18; h++) {
+      if (enteredScores[p.id][h] == null) {
+        const par = coursePars[h - 1] || 4;
+        enteredScores[p.id][h] = par;
+        autoSaveToDb(p.id, h, par);
+      }
+    }
+  });
+  saveLocal();
 }
 function prevHole() {
   if (currentHole > 1) {
