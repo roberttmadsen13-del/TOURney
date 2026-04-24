@@ -349,10 +349,9 @@ body{background:var(--bg);color:var(--ink);font-family:'Barlow',sans-serif;font-
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="/tourney-init.js"></script>
 <script>
-const SUPABASE_URL = 'https://jllugkiojeoopitdvzsa.supabase.co';
-const SUPABASE_ANON_KEY = 'sb_publishable_DnBMNLaSu61ykJ6P_fI2fw_D9DdAScn';
-const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const sb = window.tourney.db;
 
 // ── AUTH GUARD ───────────────────────────────────────────────────
 (async function authGuard() {
@@ -392,7 +391,8 @@ const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
     drawer.appendChild(mobileSignOut);
   }
   // Show Admin link if user is admin
-  const { data: adminCheck } = await sb.from('players').select('is_admin').eq('email', email.toLowerCase()).single();
+  const { tournament } = await window.tourney.ready;
+  const { data: adminCheck } = await sb.from('players').select('is_admin').eq('tournament_id', tournament.id).eq('email', email.toLowerCase()).single();
   if (adminCheck?.is_admin) {
     if (navRight) {
       const adminLink = document.createElement('a');
@@ -444,12 +444,13 @@ let scoreHistory = [];
 
 // ── INIT ──────────────────────────────────────────────────────────
 async function init() {
+  const { tournament } = await window.tourney.ready;
   const [pRes, tRes, rRes, parRes, fmtRes] = await Promise.all([
-    sb.from('players').select('*').order('first_name'),
-    sb.from('settings').select('*').eq('key','team_assignments'),
-    sb.from('settings').select('*').in('key',['round_day1','round_day2','round_day3']),
-    sb.from('settings').select('*').in('key',['pars_day1','pars_day2','pars_day3']),
-    sb.from('settings').select('*').eq('key','round_formats'),
+    sb.from('players').select('*').eq('tournament_id', tournament.id).order('first_name'),
+    sb.from('settings').select('*').eq('tournament_id', tournament.id).eq('key','team_assignments'),
+    sb.from('settings').select('*').eq('tournament_id', tournament.id).in('key',['round_day1','round_day2','round_day3']),
+    sb.from('settings').select('*').eq('tournament_id', tournament.id).in('key',['pars_day1','pars_day2','pars_day3']),
+    sb.from('settings').select('*').eq('tournament_id', tournament.id).eq('key','round_formats'),
   ]);
 
   players = pRes.data || [];
@@ -636,9 +637,11 @@ async function startScoring() {
 }
 
 async function loadOpponentScores() {
+  const { tournament } = await window.tourney.ready;
   const oppIds = [opp1Player?.id, opp2Player?.id].filter(Boolean);
   if (!oppIds.length) return;
   const { data } = await sb.from('scores').select('*')
+    .eq('tournament_id', tournament.id)
     .in('player_id', oppIds)
     .eq('round', currentRound);
   (data || []).forEach(s => {
@@ -648,9 +651,11 @@ async function loadOpponentScores() {
 }
 
 async function loadMyTeamScoresFromDb() {
+  const { tournament } = await window.tourney.ready;
   const myIds = [scorerPlayer?.id, partnerPlayer?.id].filter(Boolean);
   if (!myIds.length) return;
   const { data } = await sb.from('scores').select('*')
+    .eq('tournament_id', tournament.id)
     .in('player_id', myIds)
     .eq('round', currentRound);
   (data || []).forEach(s => {
@@ -1297,8 +1302,10 @@ async function autoSaveToDb(playerId, hole, gross) {
     showSavingState('saving');
     try {
       // Conflict guard: check what's already in the DB
+      const { tournament } = await window.tourney.ready;
       const { data: existing } = await sb.from('scores')
         .select('gross_score')
+        .eq('tournament_id', tournament.id)
         .eq('player_id', playerId)
         .eq('round', currentRound)
         .eq('hole', hole)
@@ -1324,6 +1331,7 @@ async function autoSaveToDb(playerId, hole, gross) {
         round: currentRound,
         hole: hole,
         gross_score: gross,
+        tournament_id: tournament.id,
       }, { onConflict: 'player_id,round,hole' });
       if (error) throw error;
       showSavingState('saved');
@@ -1380,10 +1388,12 @@ async function undoLast() {
   if (!scoreHistory.length) return;
   const last = scoreHistory.pop();
   if (!enteredScores[last.playerId]) enteredScores[last.playerId] = {};
+  const { tournament: t } = await window.tourney.ready;
   if (last.prevGross === null) {
     delete enteredScores[last.playerId][last.hole];
     await sb.from('scores')
       .delete()
+      .eq('tournament_id', t.id)
       .eq('player_id', last.playerId)
       .eq('round', last.round)
       .eq('hole', last.hole);
@@ -1394,6 +1404,7 @@ async function undoLast() {
       round: last.round,
       hole: last.hole,
       gross_score: last.prevGross,
+      tournament_id: t.id,
     }, { onConflict: 'player_id,round,hole' });
   }
   currentHole = last.hole;
@@ -1433,8 +1444,10 @@ function queueOffline(playerId, hole, gross) {
 async function flushOfflineQueue() {
   const queue = JSON.parse(localStorage.getItem('bova_offline_queue') || '[]');
   if (!queue.length) return;
+  const { tournament } = await window.tourney.ready;
+  const queueWithTid = queue.map(e => ({ ...e, tournament_id: tournament.id }));
   try {
-    const { error } = await sb.from('scores').upsert(queue, { onConflict: 'player_id,round,hole' });
+    const { error } = await sb.from('scores').upsert(queueWithTid, { onConflict: 'player_id,round,hole' });
     if (!error) {
       localStorage.removeItem('bova_offline_queue');
       showToast(`${queue.length} offline score${queue.length > 1 ? 's' : ''} synced.`);
@@ -1479,11 +1492,12 @@ async function submitRound() {
   btn.disabled = true;
   btn.textContent = 'Submitting...';
 
+  const { tournament } = await window.tourney.ready;
   const both = [scorerPlayer, partnerPlayer].filter(Boolean);
   const upserts = [];
   both.forEach(p => {
     Object.entries(enteredScores[p.id] || {}).forEach(([hole, gross]) => {
-      if (gross != null) upserts.push({ player_id: p.id, round: currentRound, hole: parseInt(hole), gross_score: gross });
+      if (gross != null) upserts.push({ player_id: p.id, round: currentRound, hole: parseInt(hole), gross_score: gross, tournament_id: tournament.id });
     });
   });
 
@@ -1514,7 +1528,8 @@ function showToast(msg) {
 }
 
 async function loadNavLogo() {
-  const { data } = await sb.from('settings').select('value').eq('key','logo_url').maybeSingle();
+  const { tournament } = await window.tourney.ready;
+  const { data } = await sb.from('settings').select('value').eq('tournament_id', tournament.id).eq('key','logo_url').maybeSingle();
   if (data?.value) {
     const img = document.getElementById('navLogoImg');
     const svg = document.getElementById('navLogoSvg');

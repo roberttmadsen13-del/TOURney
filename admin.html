@@ -583,10 +583,10 @@ td.email a:hover{color:var(--gold);}
 </div><!-- /adminUI -->
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="/tourney-init.js"></script>
 <script>
-const SUPABASE_URL = 'https://jllugkiojeoopitdvzsa.supabase.co';
-const SUPABASE_ANON_KEY = 'sb_publishable_DnBMNLaSu61ykJ6P_fI2fw_D9DdAScn';
-const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const sb = window.tourney.db;
+let _tid = null; // set at auth time — used by all admin query functions
 
 const DATE_LABELS = {aug21:'Aug 21-24',aug28:'Aug 28-31',sep4:'Sep 4-7',sep11:'Sep 11-14',sep18:'Sep 18-21',sep25:'Sep 25-28',oct2:'Oct 2-5',oct9:'Oct 9-12'};
 const TIER_MAP = {scratch:'t-scratch',eagle:'t-eagle',birdie:'t-birdie',bogey:'t-bogey',pretender:'t-pretender',hacker:'t-hacker'};
@@ -625,8 +625,10 @@ async function doLogin() {
   err.classList.remove('show');
   const { data, error } = await sb.auth.signInWithPassword({ email, password: pass });
   if (error || !data.user) { err.classList.add('show'); return; }
-  const { data: player } = await sb.from('players').select('is_admin').eq('email', email.toLowerCase()).single();
+  const { tournament } = await window.tourney.ready;
+  const { data: player } = await sb.from('players').select('is_admin').eq('tournament_id', tournament.id).eq('email', email.toLowerCase()).single();
   if (!player?.is_admin) { await sb.auth.signOut(); err.classList.add('show'); return; }
+  _tid = tournament.id;
   showAdmin(email);
 }
 
@@ -634,8 +636,9 @@ async function checkSession() {
   const { data } = await sb.auth.getSession();
   if (!data?.session?.user) return;
   const email = data.session.user.email?.toLowerCase();
-  const { data: player } = await sb.from('players').select('is_admin').eq('email', email).single();
-  if (player?.is_admin) showAdmin(email);
+  const { tournament } = await window.tourney.ready;
+  const { data: player } = await sb.from('players').select('is_admin').eq('tournament_id', tournament.id).eq('email', email).single();
+  if (player?.is_admin) { _tid = tournament.id; showAdmin(email); }
 }
 
 async function doLogout() {
@@ -659,7 +662,7 @@ async function loadAll() {
 }
 
 async function loadChallengersCaptain() {
-  const { data } = await sb.from('settings').select('value').eq('key','challengers_captain').single();
+  const { data } = await sb.from('settings').select('value').eq('tournament_id', _tid).eq('key','challengers_captain').single();
   const el = document.getElementById('challengersCaptainInput');
   if (el && data?.value) el.value = data.value;
 }
@@ -669,14 +672,14 @@ async function saveChallengersCaptain() {
   const name = el?.value?.trim();
   if (!name) return;
   await sb.from('settings').upsert(
-    { key: 'challengers_captain', value: name, updated_at: new Date().toISOString() },
-    { onConflict: 'key' }
+    { key: 'challengers_captain', value: name, updated_at: new Date().toISOString(), tournament_id: _tid },
+    { onConflict: 'tournament_id,key' }
   );
   showToast(`Challengers captain set to ${name}.`);
 }
 
 async function loadFormats() {
-  const { data } = await sb.from('settings').select('*').eq('key','round_formats');
+  const { data } = await sb.from('settings').select('*').eq('tournament_id', _tid).eq('key','round_formats');
   if (data?.[0]) try { roundFormats = { ...DEFAULT_FORMATS, ...JSON.parse(data[0].value) }; } catch {}
   renderFormatSection();
 }
@@ -720,14 +723,14 @@ async function saveFormats() {
     };
   });
   await sb.from('settings').upsert(
-    { key: 'round_formats', value: JSON.stringify(roundFormats), updated_at: new Date().toISOString() },
-    { onConflict: 'key' }
+    { key: 'round_formats', value: JSON.stringify(roundFormats), updated_at: new Date().toISOString(), tournament_id: _tid },
+    { onConflict: 'tournament_id,key' }
   );
   showToast('Round formats saved.');
 }
 
 async function loadPlayers() {
-  const { data } = await sb.from('players').select('*').order('created_at', { ascending: true });
+  const { data } = await sb.from('players').select('*').eq('tournament_id', _tid).order('created_at', { ascending: true });
   players = data || [];
   renderStats();
   renderTable();
@@ -742,18 +745,18 @@ async function loadPlayers() {
 }
 
 async function loadRoundStates() {
-  const { data } = await sb.from('settings').select('*').in('key',['round_day1','round_day2','round_day3']);
+  const { data } = await sb.from('settings').select('*').eq('tournament_id', _tid).in('key',['round_day1','round_day2','round_day3']);
   (data || []).forEach(row => { roundStates[row.key.replace('round_','')] = row.value; });
   renderRounds();
 }
 
 async function loadTeams() {
-  const { data } = await sb.from('settings').select('*').eq('key','team_assignments');
+  const { data } = await sb.from('settings').select('*').eq('tournament_id', _tid).eq('key','team_assignments');
   if (data?.[0]) try { teamAssignments = JSON.parse(data[0].value); } catch {}
 }
 
 async function loadPars() {
-  const { data } = await sb.from('settings').select('*').in('key',['pars_day1','pars_day2','pars_day3']);
+  const { data } = await sb.from('settings').select('*').eq('tournament_id', _tid).in('key',['pars_day1','pars_day2','pars_day3']);
   (data || []).forEach(row => {
     const day = row.key.replace('pars_','');
     try { coursePars[day] = JSON.parse(row.value); } catch {}
@@ -790,7 +793,7 @@ async function toggleRound(day) {
 
   if (next === 'closed') {
     // Check if there are scores for this round
-    const { count } = await sb.from('scores').select('*', { count: 'exact', head: true }).eq('round', day);
+    const { count } = await sb.from('scores').select('*', { count: 'exact', head: true }).eq('tournament_id', _tid).eq('round', day);
     if (count > 0) {
       if (!confirm(`This round has ${count} score${count !== 1 ? 's' : ''}. Close scoring anyway?`)) return;
     }
@@ -798,16 +801,16 @@ async function toggleRound(day) {
 
   if (next === 'open') {
     // Auto-close any other open round
-    const upserts = [{ key: `round_${day}`, value: 'open', updated_at: new Date().toISOString() }];
+    const upserts = [{ key: `round_${day}`, value: 'open', updated_at: new Date().toISOString(), tournament_id: _tid }];
     for (const d of ['day1','day2','day3']) {
       if (d !== day && roundStates[d] === 'open') {
         roundStates[d] = 'closed';
-        upserts.push({ key: `round_${d}`, value: 'closed', updated_at: new Date().toISOString() });
+        upserts.push({ key: `round_${d}`, value: 'closed', updated_at: new Date().toISOString(), tournament_id: _tid });
       }
     }
-    await sb.from('settings').upsert(upserts, { onConflict: 'key' });
+    await sb.from('settings').upsert(upserts, { onConflict: 'tournament_id,key' });
   } else {
-    await sb.from('settings').upsert({ key: `round_${day}`, value: next, updated_at: new Date().toISOString() }, { onConflict: 'key' });
+    await sb.from('settings').upsert({ key: `round_${day}`, value: next, updated_at: new Date().toISOString(), tournament_id: _tid }, { onConflict: 'tournament_id,key' });
   }
 
   roundStates[day] = next;
@@ -967,7 +970,7 @@ async function saveTeams() {
   if (Math.abs(teamA - teamB) > 1) {
     warn.classList.add('show');
   }
-  await sb.from('settings').upsert({ key: 'team_assignments', value: JSON.stringify(teamAssignments), updated_at: new Date().toISOString() }, { onConflict: 'key' });
+  await sb.from('settings').upsert({ key: 'team_assignments', tournament_id: _tid, value: JSON.stringify(teamAssignments), updated_at: new Date().toISOString() }, { onConflict: 'tournament_id,key' });
   showToast('Team assignments saved.');
 }
 
@@ -1043,7 +1046,7 @@ async function savePars(day) {
   }
   if (!valid) { showToast('Fix invalid par values (must be 2–6) before saving.'); return; }
   coursePars[day] = pars;
-  await sb.from('settings').upsert({ key: `pars_${day}`, value: JSON.stringify(pars), updated_at: new Date().toISOString() }, { onConflict: 'key' });
+  await sb.from('settings').upsert({ key: `pars_${day}`, tournament_id: _tid, value: JSON.stringify(pars), updated_at: new Date().toISOString() }, { onConflict: 'tournament_id,key' });
   showToast(`Day ${day.replace('day','')} pars saved.`);
 }
 
@@ -1065,15 +1068,15 @@ async function saveCourseNameAndPars(day) {
   if (!window._courseNames) window._courseNames = {};
   window._courseNames[day] = name;
   const upserts = [
-    { key: `pars_${day}`, value: JSON.stringify(pars), updated_at: new Date().toISOString() },
-    { key: `course_name_${day}`, value: name, updated_at: new Date().toISOString() },
+    { key: `pars_${day}`, tournament_id: _tid, value: JSON.stringify(pars), updated_at: new Date().toISOString() },
+    { key: `course_name_${day}`, tournament_id: _tid, value: name, updated_at: new Date().toISOString() },
   ];
-  await sb.from('settings').upsert(upserts, { onConflict: 'key' });
+  await sb.from('settings').upsert(upserts, { onConflict: 'tournament_id,key' });
   showToast(`Day ${day.replace('day','')} course details saved.`);
 }
 
 async function loadCourseNames() {
-  const { data } = await sb.from('settings').select('*').in('key',['course_name_day1','course_name_day2','course_name_day3']);
+  const { data } = await sb.from('settings').select('*').eq('tournament_id', _tid).in('key',['course_name_day1','course_name_day2','course_name_day3']);
   if (!window._courseNames) window._courseNames = {};
   (data || []).forEach(row => {
     const day = row.key.replace('course_name_','');
@@ -1189,7 +1192,7 @@ async function loadScoreEditor() {
   if (!grid) return;
   if (!playerId || !round) { grid.innerHTML = ''; return; }
 
-  const { data } = await sb.from('scores').select('*').eq('player_id', playerId).eq('round', round);
+  const { data } = await sb.from('scores').select('*').eq('tournament_id', _tid).eq('player_id', playerId).eq('round', round);
   _editScores = {};
   (data || []).forEach(s => { _editScores[s.hole] = s.gross_score; });
 
@@ -1219,7 +1222,7 @@ async function saveScoreEdit() {
   const upserts = [];
   for (let h = 1; h <= 18; h++) {
     const v = parseInt(document.getElementById(`escore-${h}`)?.value);
-    if (!isNaN(v) && v >= 1 && v <= 15) upserts.push({ player_id: playerId, round, hole: h, gross_score: v });
+    if (!isNaN(v) && v >= 1 && v <= 15) upserts.push({ player_id: playerId, round, hole: h, gross_score: v, tournament_id: _tid });
   }
   if (upserts.length) {
     const { error } = await sb.from('scores').upsert(upserts, { onConflict: 'player_id,round,hole' });
@@ -1227,7 +1230,7 @@ async function saveScoreEdit() {
   }
   for (let h = 1; h <= 18; h++) {
     const v = document.getElementById(`escore-${h}`)?.value;
-    if (!v && _editScores[h]) await sb.from('scores').delete().eq('player_id', playerId).eq('round', round).eq('hole', h);
+    if (!v && _editScores[h]) await sb.from('scores').delete().eq('tournament_id', _tid).eq('player_id', playerId).eq('round', round).eq('hole', h);
   }
   showToast(`${upserts.length} score${upserts.length!==1?'s':''} saved.`);
   loadScoreEditor();
@@ -1239,7 +1242,7 @@ async function clearRoundScores() {
   if (!playerId || !round) return;
   const player = players.find(p => p.id === playerId);
   if (!confirm(`Delete all ${round} scores for ${player?.first_name} ${player?.last_name}?`)) return;
-  await sb.from('scores').delete().eq('player_id', playerId).eq('round', round);
+  await sb.from('scores').delete().eq('tournament_id', _tid).eq('player_id', playerId).eq('round', round);
   // Clear localStorage for this round and offline queue entries for this player/round
   try { localStorage.removeItem(`bova_scores_${round}`); } catch {}
   try { localStorage.removeItem('bova_scorecard_session'); } catch {}
@@ -1256,11 +1259,11 @@ async function clearRoundScores() {
 // ── DANGER ZONE ──────────────────────────────────────────────────
 async function clearRoundAll(round) {
   const label = round.replace('day','Day ');
-  const { count } = await sb.from('scores').select('*', { count: 'exact', head: true }).eq('round', round);
+  const { count } = await sb.from('scores').select('*', { count: 'exact', head: true }).eq('tournament_id', _tid).eq('round', round);
   if (!count) { showToast(`${label} has no scores to clear.`); return; }
   if (!confirm(`Delete ALL ${count} score${count!==1?'s':''} for ${label}? This cannot be undone.`)) return;
   if (!confirm(`Really delete ALL ${label} scores for every player?`)) return;
-  const { error } = await sb.from('scores').delete().eq('round', round);
+  const { error } = await sb.from('scores').delete().eq('tournament_id', _tid).eq('round', round);
   if (error) { showToast('Error: ' + error.message); return; }
   // Clear localStorage scorecard data for this round (all players)
   try { localStorage.removeItem(`bova_scores_${round}`); } catch {}
@@ -1277,12 +1280,12 @@ async function clearRoundAll(round) {
 }
 
 async function clearAllTournamentScores() {
-  const { count } = await sb.from('scores').select('*', { count: 'exact', head: true });
+  const { count } = await sb.from('scores').select('*', { count: 'exact', head: true }).eq('tournament_id', _tid);
   if (!count) { showToast('No scores to clear.'); return; }
   if (!confirm(`Delete ALL ${count} tournament scores across every round and player? This cannot be undone.`)) return;
   const phrase = prompt('Type CLEAR ALL to confirm.');
   if (phrase !== 'CLEAR ALL') { showToast('Cancelled.'); return; }
-  const { error } = await sb.from('scores').delete().not('id', 'is', null);
+  const { error } = await sb.from('scores').delete().eq('tournament_id', _tid);
   if (error) { showToast('Error: ' + error.message); return; }
   // Clear ALL localStorage scorecard data (all rounds, all players)
   try { localStorage.removeItem('bova_scores_day1'); } catch {}
@@ -1296,7 +1299,7 @@ async function clearAllTournamentScores() {
 
 // ── LOGO ──────────────────────────────────────────────────────────
 async function loadLogoUrl() {
-  const { data } = await sb.from('settings').select('value').eq('key','logo_url').maybeSingle();
+  const { data } = await sb.from('settings').select('value').eq('tournament_id', _tid).eq('key','logo_url').maybeSingle();
   if (data?.value) renderLogoPreview(data.value);
 }
 
@@ -1317,13 +1320,13 @@ async function uploadLogo(input) {
   if (error) { showToast('Upload failed: ' + error.message); return; }
   const { data } = sb.storage.from('brand').getPublicUrl(`logo.${ext}`);
   const url = data.publicUrl + '?t=' + Date.now();
-  await sb.from('settings').upsert({ key: 'logo_url', value: url, updated_at: new Date().toISOString() }, { onConflict: 'key' });
+  await sb.from('settings').upsert({ key: 'logo_url', tournament_id: _tid, value: url, updated_at: new Date().toISOString() }, { onConflict: 'tournament_id,key' });
   renderLogoPreview(url);
   showToast('Logo saved.');
 }
 
 async function clearLogo() {
-  await sb.from('settings').delete().eq('key','logo_url');
+  await sb.from('settings').delete().eq('tournament_id', _tid).eq('key','logo_url');
   const el = document.getElementById('logoPreview');
   if (el) el.textContent = 'No logo uploaded';
   showToast('Logo cleared.');
@@ -1372,7 +1375,7 @@ const DS_FIELD_MAP = {
 };
 
 async function loadDesignSettings() {
-  const { data } = await sb.from('settings').select('key,value').in('key', DS_ALL_KEYS);
+  const { data } = await sb.from('settings').select('key,value').eq('tournament_id', _tid).in('key', DS_ALL_KEYS);
   const map = {};
   (data || []).forEach(r => { map[r.key] = r.value; });
   Object.entries(DS_FIELD_MAP).forEach(([key, id]) => {
@@ -1400,8 +1403,8 @@ async function saveIdentity() {
     { key:'hero_cta_primary',  value: document.getElementById('dsCtaPrimary')?.value || '' },
     { key:'homepage_subtitle', value: document.getElementById('lpTourneyName')?.value || '' },
     { key:'homepage_details',  value: document.getElementById('lpHeroMeta')?.value || '' },
-  ].map(r => ({ ...r, updated_at: new Date().toISOString() }));
-  const { error } = await sb.from('settings').upsert(rows, { onConflict: 'key' });
+  ].map(r => ({ ...r, tournament_id: _tid, updated_at: new Date().toISOString() }));
+  const { error } = await sb.from('settings').upsert(rows, { onConflict: 'tournament_id,key' });
   if (error) { showToast('Error: ' + error.message); return; }
   showToast('Identity saved.');
 }
@@ -1411,8 +1414,8 @@ async function saveColors() {
     { key:'color_primary', value: document.getElementById('dsColorGold')?.value || '#c09030' },
     { key:'color_ink',     value: document.getElementById('dsColorInk')?.value || '#1a1008' },
     { key:'color_bg',      value: document.getElementById('dsColorBg')?.value || '#f5ede0' },
-  ].map(r => ({ ...r, updated_at: new Date().toISOString() }));
-  await sb.from('settings').upsert(rows, { onConflict: 'key' });
+  ].map(r => ({ ...r, tournament_id: _tid, updated_at: new Date().toISOString() }));
+  await sb.from('settings').upsert(rows, { onConflict: 'tournament_id,key' });
   showToast('Colors saved. Refresh site to apply.');
 }
 
@@ -1422,8 +1425,8 @@ async function saveAbout() {
     { key:'about_stat_days',  value: document.getElementById('dsStatDays')?.value || '' },
     { key:'about_stat_teams', value: document.getElementById('dsStatTeams')?.value || '' },
     { key:'about_stat_holes', value: document.getElementById('dsStatHoles')?.value || '' },
-  ].map(r => ({ ...r, updated_at: new Date().toISOString() }));
-  await sb.from('settings').upsert(rows, { onConflict: 'key' });
+  ].map(r => ({ ...r, tournament_id: _tid, updated_at: new Date().toISOString() }));
+  await sb.from('settings').upsert(rows, { onConflict: 'tournament_id,key' });
   showToast('About section saved.');
 }
 
@@ -1434,8 +1437,8 @@ async function saveRegistration() {
     { key:'reg_bullet_1',    value: document.getElementById('dsRegBullet1')?.value || '' },
     { key:'reg_bullet_2',    value: document.getElementById('dsRegBullet2')?.value || '' },
     { key:'reg_bullet_3',    value: document.getElementById('dsRegBullet3')?.value || '' },
-  ].map(r => ({ ...r, updated_at: new Date().toISOString() }));
-  await sb.from('settings').upsert(rows, { onConflict: 'key' });
+  ].map(r => ({ ...r, tournament_id: _tid, updated_at: new Date().toISOString() }));
+  await sb.from('settings').upsert(rows, { onConflict: 'tournament_id,key' });
   showToast('Registration saved.');
 }
 
@@ -1448,13 +1451,13 @@ async function uploadPhoto(input, storageKey, previewId, settingKey) {
   if (error) { showToast('Upload failed: ' + error.message); return; }
   const { data } = sb.storage.from('brand').getPublicUrl(`${storageKey}.${ext}`);
   const url = data.publicUrl + '?t=' + Date.now();
-  await sb.from('settings').upsert({ key: settingKey, value: url, updated_at: new Date().toISOString() }, { onConflict: 'key' });
+  await sb.from('settings').upsert({ key: settingKey, tournament_id: _tid, value: url, updated_at: new Date().toISOString() }, { onConflict: 'tournament_id,key' });
   renderPhotoPreview(previewId, url);
   showToast('Photo saved.');
 }
 
 async function clearPhoto(previewId, settingKey) {
-  await sb.from('settings').delete().eq('key', settingKey);
+  await sb.from('settings').delete().eq('tournament_id', _tid).eq('key', settingKey);
   const el = document.getElementById(previewId);
   if (el) el.textContent = 'No photo';
   showToast('Photo cleared.');

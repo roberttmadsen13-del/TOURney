@@ -130,10 +130,9 @@ a{color:inherit;text-decoration:none;}
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="/tourney-init.js"></script>
 <script>
-const SUPABASE_URL = 'https://jllugkiojeoopitdvzsa.supabase.co';
-const SUPABASE_ANON_KEY = 'sb_publishable_DnBMNLaSu61ykJ6P_fI2fw_D9DdAScn';
-const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const sb = window.tourney.db;
 
 function formatPhone(raw) {
   if (!raw) return '';
@@ -148,10 +147,11 @@ const TIER_LABELS = {scratch:'Scratch',eagle:'Eagle',birdie:'Birdie',bogey:'Boge
 const TIER_ORDER  = ['scratch','eagle','birdie','bogey','pretender','hacker'];
 
 async function init() {
+  const { tournament } = await window.tourney.ready;
   const [pRes, tRes, capRes] = await Promise.all([
-    sb.from('players').select('*').order('last_name'),
-    sb.from('settings').select('*').eq('key','team_assignments'),
-    sb.from('settings').select('value').eq('key','challengers_captain'),
+    sb.from('players').select('*').eq('tournament_id', tournament.id).order('last_name'),
+    sb.from('settings').select('*').eq('tournament_id', tournament.id).eq('key','team_assignments'),
+    sb.from('settings').select('value').eq('tournament_id', tournament.id).eq('key','challengers_captain'),
   ]);
 
   const players = pRes.data || [];

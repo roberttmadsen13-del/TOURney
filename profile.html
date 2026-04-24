@@ -191,10 +191,9 @@ a{color:inherit;text-decoration:none;}
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="/tourney-init.js"></script>
 <script>
-const SUPABASE_URL = 'https://jllugkiojeoopitdvzsa.supabase.co';
-const SUPABASE_ANON_KEY = 'sb_publishable_DnBMNLaSu61ykJ6P_fI2fw_D9DdAScn';
-const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const sb = window.tourney.db;
 
 const TIER_MAP = {scratch:'t-scratch',eagle:'t-eagle',birdie:'t-birdie',bogey:'t-bogey',pretender:'t-pretender',hacker:'t-hacker'};
 const TIER_LABELS = {scratch:'Scratch',eagle:'Eagle',birdie:'Birdie',bogey:'Bogey',pretender:'The Pretenders',hacker:'The Dreamers'};
@@ -228,7 +227,8 @@ document.getElementById('editTrash').addEventListener('keyup', () => updateCount
   const email = data.session.user.email;
   localStorage.setItem('bova_profile_email', email);
   // Show Admin link if user is admin
-  const { data: adminCheck } = await sb.from('players').select('is_admin').eq('email', email.toLowerCase()).single();
+  const { tournament } = await window.tourney.ready;
+  const { data: adminCheck } = await sb.from('players').select('is_admin').eq('tournament_id', tournament.id).eq('email', email.toLowerCase()).single();
   if (adminCheck?.is_admin) {
     const navLinks = document.querySelector('.nav-links');
     if (navLinks) {
@@ -249,7 +249,8 @@ document.getElementById('editTrash').addEventListener('keyup', () => updateCount
 })();
 
 async function loadProfileByEmail(email) {
-  const { data: p } = await sb.from('players').select('*').eq('email', email.toLowerCase()).single();
+  const { tournament } = await window.tourney.ready;
+  const { data: p } = await sb.from('players').select('*').eq('tournament_id', tournament.id).eq('email', email.toLowerCase()).single();
   if (!p) {
     // User has auth account but no player record — edge case
     document.getElementById('loadingGate').innerHTML = '<div style="text-align:center;padding:2rem;"><div style="font-family:\'Playfair Display\',serif;font-size:1.3rem;font-weight:700;margin-bottom:0.5rem;">No Player Found</div><div style="font-size:0.85rem;color:var(--muted);margin-bottom:1.5rem;">No player record found for ' + email + '.</div><button class="btn-primary" style="max-width:200px;" onclick="doLogout()">Sign Out</button></div>';
@@ -258,7 +259,7 @@ async function loadProfileByEmail(email) {
   currentPlayer = p;
 
   // Fetch team assignments from settings
-  const { data: setting } = await sb.from('settings').select('value').eq('key','team_assignments').single();
+  const { data: setting } = await sb.from('settings').select('value').eq('tournament_id', tournament.id).eq('key','team_assignments').single();
   if (setting && setting.value) {
     try { teamAssignments = JSON.parse(setting.value); } catch(e) { teamAssignments = {}; }
   }

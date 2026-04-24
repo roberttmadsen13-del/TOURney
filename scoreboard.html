@@ -251,10 +251,9 @@ details[open] .explainer summary::after,.explainer details[open]>summary::after{
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="/tourney-init.js"></script>
 <script>
-const SUPABASE_URL = 'https://jllugkiojeoopitdvzsa.supabase.co';
-const SUPABASE_ANON_KEY = 'sb_publishable_DnBMNLaSu61ykJ6P_fI2fw_D9DdAScn';
-const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const sb = window.tourney.db;
 
 // ── AUTH GUARD ───────────────────────────────────────────────────
 (async function authGuard() {
@@ -296,7 +295,8 @@ const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
     drawer.appendChild(mobileSignOut);
   }
   // Show Admin link if user is admin
-  const { data: adminCheck } = await sb.from('players').select('is_admin').eq('email', email.toLowerCase()).single();
+  const { tournament } = await window.tourney.ready;
+  const { data: adminCheck } = await sb.from('players').select('is_admin').eq('tournament_id', tournament.id).eq('email', email.toLowerCase()).single();
   if (adminCheck?.is_admin) {
     if (navRight) {
       const adminLink = document.createElement('a');
@@ -338,13 +338,14 @@ let selectedScorecardRound = null;
 
 // ── INIT ──────────────────────────────────────────────────────────
 async function init() {
+  const { tournament } = await window.tourney.ready;
   const [pRes, sRes, tRes, rRes, parRes, fmtRes] = await Promise.all([
-    sb.from('players').select('*'),
-    sb.from('scores').select('*'),
-    sb.from('settings').select('*').eq('key','team_assignments'),
-    sb.from('settings').select('*').in('key',['round_day1','round_day2','round_day3']),
-    sb.from('settings').select('*').in('key',['pars_day1','pars_day2','pars_day3']),
-    sb.from('settings').select('*').eq('key','round_formats'),
+    sb.from('players').select('*').eq('tournament_id', tournament.id),
+    sb.from('scores').select('*').eq('tournament_id', tournament.id),
+    sb.from('settings').select('*').eq('tournament_id', tournament.id).eq('key','team_assignments'),
+    sb.from('settings').select('*').eq('tournament_id', tournament.id).in('key',['round_day1','round_day2','round_day3']),
+    sb.from('settings').select('*').eq('tournament_id', tournament.id).in('key',['pars_day1','pars_day2','pars_day3']),
+    sb.from('settings').select('*').eq('tournament_id', tournament.id).eq('key','round_formats'),
   ]);
 
   players = pRes.data || [];
@@ -765,7 +766,8 @@ function updateTimestamp() {
 }
 
 async function loadNavLogo() {
-  const { data } = await sb.from('settings').select('value').eq('key','logo_url').maybeSingle();
+  const { tournament } = await window.tourney.ready;
+  const { data } = await sb.from('settings').select('value').eq('tournament_id', tournament.id).eq('key','logo_url').maybeSingle();
   if (data?.value) {
     const img = document.getElementById('navLogoImg');
     const svg = document.getElementById('navLogoSvg');
