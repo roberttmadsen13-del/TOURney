@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#f5ede0">
+<link rel="manifest" href="/manifest.json">
+<title>Course Info — Bova Invitational</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Mono:wght@300;400;500&family=Barlow+Condensed:wght@300;400;600;700;800&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#1a1008;--gold:#c09030;--gold-l:#d4aa50;--gold-p:#e8cc80;--cream:#f0e6cc;--border:rgba(192,144,48,0.28);--bg:#f5ede0;--card:#fdf8f0;--muted:rgba(26,16,8,0.4);}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--ink);font-family:'Barlow',sans-serif;font-weight:300;min-height:100vh;}
+a{color:inherit;text-decoration:none;}
+
+/* NAV */
+.nav{position:sticky;top:0;z-index:100;height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;background:rgba(14,11,6,0.97);border-bottom:1px solid var(--border);}
+.nav-logo{font-family:'Playfair Display',serif;font-size:0.9rem;font-weight:700;display:flex;align-items:center;gap:0.45rem;color:var(--cream);}
+.nav-logo em{font-style:italic;color:var(--gold);}
+.nav-links{display:flex;gap:1.2rem;align-items:center;}
+.nav-links a{font-family:'DM Mono',monospace;font-size:0.48rem;letter-spacing:0.15em;text-transform:uppercase;color:rgba(240,230,204,0.4);transition:color 0.2s;}
+.nav-links a:hover{color:var(--gold);}
+@media(max-width:520px){.nav{padding:0 1rem;}.nav-links a:not(:last-child){display:none;}}
+
+/* PAGE HEADER */
+.page-header{max-width:1000px;margin:0 auto;padding:2.5rem 2rem 1.5rem;border-bottom:1px solid var(--border);}
+.page-eyebrow{font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.5em;text-transform:uppercase;color:rgba(192,144,48,0.5);margin-bottom:0.5rem;}
+.page-title{font-family:'Playfair Display',serif;font-size:clamp(1.8rem,4vw,2.8rem);font-weight:900;line-height:1;margin-bottom:0.3rem;}
+.page-title em{font-style:italic;color:var(--gold);}
+.page-sub{font-family:'Barlow Condensed',sans-serif;font-size:0.75rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--muted);}
+
+/* MAIN */
+.main{max-width:1000px;margin:0 auto;padding:2rem;}
+@media(max-width:520px){.main{padding:1.5rem 1rem;}}
+
+/* SECTION LABEL */
+.section-label{font-family:'DM Mono',monospace;font-size:0.48rem;letter-spacing:0.38em;text-transform:uppercase;color:rgba(192,144,48,0.6);margin-bottom:0.9rem;display:flex;align-items:center;gap:0.8rem;}
+.section-label::after{content:'';flex:1;height:1px;background:var(--border);}
+
+/* INFO CARD */
+.info-card{background:var(--card);border:1px solid var(--border);padding:1.75rem 2rem;margin-bottom:2rem;}
+.info-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1.5rem;}
+.info-field{}
+.info-field-label{font-family:'DM Mono',monospace;font-size:0.44rem;letter-spacing:0.28em;text-transform:uppercase;color:var(--muted);margin-bottom:0.3rem;}
+.info-field-val{font-family:'Barlow Condensed',sans-serif;font-size:1.05rem;font-weight:600;letter-spacing:0.04em;color:var(--ink);}
+.info-field-val.tbd{color:var(--muted);font-style:italic;font-weight:400;}
+
+/* RATING ROW */
+.rating-row{display:flex;gap:0;border-top:1px solid var(--border);margin-top:1.5rem;padding-top:1.5rem;}
+.rating-item{flex:1;padding-right:1.5rem;border-right:1px solid var(--border);margin-right:1.5rem;}
+.rating-item:last-child{border-right:none;padding-right:0;margin-right:0;}
+.rating-val{font-family:'Playfair Display',serif;font-size:2rem;font-weight:900;color:var(--gold);line-height:1;}
+.rating-val.tbd{color:var(--muted);font-size:1.4rem;font-style:italic;font-weight:400;}
+.rating-label{font-family:'DM Mono',monospace;font-size:0.42rem;letter-spacing:0.25em;text-transform:uppercase;color:var(--muted);margin-top:0.25rem;}
+@media(max-width:500px){.rating-row{flex-direction:column;gap:1rem;}.rating-item{border-right:none;border-bottom:1px solid var(--border);padding-right:0;margin-right:0;padding-bottom:1rem;}.rating-item:last-child{border-bottom:none;padding-bottom:0;}}
+
+/* SCORECARD TABLE */
+.scorecard-wrap{background:var(--card);border:1px solid var(--border);overflow-x:auto;margin-bottom:2rem;}
+.scorecard-table{width:100%;border-collapse:collapse;min-width:560px;}
+.scorecard-table thead tr{border-bottom:2px solid var(--border);}
+.scorecard-table th{padding:0.55rem 0.7rem;text-align:center;font-family:'DM Mono',monospace;font-size:0.42rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--muted);font-weight:400;background:var(--card);}
+.scorecard-table th.left{text-align:left;}
+.scorecard-table td{padding:0.6rem 0.7rem;text-align:center;font-family:'Barlow Condensed',sans-serif;font-size:0.88rem;font-weight:400;border-bottom:1px solid rgba(26,16,8,0.07);}
+.scorecard-table td.hole-num{font-family:'Playfair Display',serif;font-size:0.95rem;font-weight:700;color:var(--gold);}
+.scorecard-table td.par-cell{font-family:'Playfair Display',serif;font-size:1rem;font-weight:900;color:var(--ink);}
+.scorecard-table td.yds-cell{color:var(--muted);}
+.scorecard-table tr.nine-total{background:rgba(192,144,48,0.06);border-top:2px solid var(--border);border-bottom:2px solid var(--border);}
+.scorecard-table tr.nine-total td{font-family:'Playfair Display',serif;font-weight:900;font-size:1rem;}
+.scorecard-table tr.nine-total td.total-label{font-family:'DM Mono',monospace;font-size:0.48rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--gold);text-align:left;padding-left:0.7rem;}
+.scorecard-table tr.grand-total{background:rgba(192,144,48,0.1);border-top:2px solid var(--gold);border-bottom:none;}
+.scorecard-table tr.grand-total td{font-family:'Playfair Display',serif;font-weight:900;font-size:1.1rem;}
+.scorecard-table tr.grand-total td.total-label{font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--gold);text-align:left;padding-left:0.7rem;}
+.scorecard-divider{background:rgba(192,144,48,0.12);border-top:2px solid var(--border);}
+.scorecard-divider td{font-family:'DM Mono',monospace;font-size:0.45rem;letter-spacing:0.35em;text-transform:uppercase;color:var(--gold);padding:0.4rem 0.7rem;text-align:left;}
+
+/* LOCAL RULES */
+.local-rules-card{background:var(--card);border:1px solid var(--border);padding:1.75rem 2rem;margin-bottom:2rem;}
+.local-rules-placeholder{font-family:'Barlow',sans-serif;font-size:0.88rem;line-height:1.7;color:var(--muted);font-style:italic;}
+.rule-list{list-style:none;display:flex;flex-direction:column;gap:0.75rem;margin-top:0.5rem;}
+.rule-item{display:flex;gap:0.75rem;align-items:flex-start;padding-bottom:0.75rem;border-bottom:1px solid rgba(26,16,8,0.07);}
+.rule-item:last-child{border-bottom:none;padding-bottom:0;}
+.rule-num{font-family:'Playfair Display',serif;font-size:1rem;font-weight:900;color:var(--gold);flex-shrink:0;width:1.4rem;}
+.rule-text{font-family:'Barlow',sans-serif;font-size:0.88rem;line-height:1.6;color:var(--muted);font-style:italic;}
+
+/* MAP PLACEHOLDER */
+.map-card{background:var(--card);border:1px solid var(--border);margin-bottom:2rem;overflow:hidden;}
+.map-placeholder{height:260px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0.8rem;background:repeating-linear-gradient(45deg,rgba(192,144,48,0.04),rgba(192,144,48,0.04) 10px,transparent 10px,transparent 20px);}
+.map-icon{width:40px;height:40px;opacity:0.25;}
+.map-placeholder-text{font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.35em;text-transform:uppercase;color:var(--muted);}
+
+/* LINKS GRID */
+.links-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1px;background:var(--border);margin-bottom:2rem;}
+.link-card{background:var(--card);padding:1.5rem;display:flex;flex-direction:column;gap:0.5rem;}
+.link-card-label{font-family:'DM Mono',monospace;font-size:0.44rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--muted);}
+.link-card-val{font-family:'Barlow Condensed',sans-serif;font-size:0.95rem;font-weight:600;color:var(--gold);transition:color 0.2s;}
+.link-card:hover .link-card-val{color:var(--gold-l);}
+.link-card-val.tbd{color:var(--muted);font-style:italic;font-weight:400;font-size:0.82rem;}
+
+/* LOADING */
+.loading{text-align:center;padding:3rem;font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--muted);}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-logo">
+    <img id="navLogoImg" style="display:none;height:32px;max-width:120px;object-fit:contain;object-position:left">
+    <svg id="navLogoSvg" width="14" height="18" viewBox="0 0 14 18" style="flex-shrink:0;display:block" fill="none"><line x1="2" y1="1" x2="2" y2="17" stroke="#c09030" stroke-width="1.5" stroke-linecap="round"/><path d="M2 2L12 5.5L2 9.5Z" fill="#c09030"/></svg>
+    The Bova <em>Invitational</em>
+  </div>
+  <div class="nav-links">
+    <a href="/scoreboard">Scoreboard</a>
+    <a href="/directory">Directory</a>
+    <a href="/">Home</a>
+  </div>
+</nav>
+
+<div class="page-header">
+  <div class="page-eyebrow">Myrtle Beach, SC &middot; 2026</div>
+  <div class="page-title">The <em>Course</em></div>
+  <div class="page-sub">Course Info &middot; Scorecard &middot; Local Rules</div>
+</div>
+
+<div class="main" id="pageContent">
+  <div id="loadingState" class="loading">Loading course info...</div>
+  <div id="courseContent" style="display:none;">
+
+    <!-- COURSE INFO -->
+    <div class="section-label">Course Details</div>
+    <div class="info-card">
+      <div class="info-grid">
+        <div class="info-field">
+          <div class="info-field-label">Course Name</div>
+          <div class="info-field-val" id="courseName">TBD</div>
+        </div>
+        <div class="info-field">
+          <div class="info-field-label">Address</div>
+          <div class="info-field-val" id="courseAddress">TBD</div>
+        </div>
+        <div class="info-field">
+          <div class="info-field-label">Phone</div>
+          <div class="info-field-val" id="coursePhone">TBD</div>
+        </div>
+        <div class="info-field">
+          <div class="info-field-label">Website</div>
+          <div class="info-field-val" id="courseWebsite">TBD</div>
+        </div>
+      </div>
+      <div class="rating-row">
+        <div class="rating-item">
+          <div class="rating-val" id="courseRating">—</div>
+          <div class="rating-label">Course Rating</div>
+        </div>
+        <div class="rating-item">
+          <div class="rating-val" id="courseSlope">—</div>
+          <div class="rating-label">Slope Rating</div>
+        </div>
+        <div class="rating-item">
+          <div class="rating-val" id="coursePar">72</div>
+          <div class="rating-label">Par</div>
+        </div>
+        <div class="rating-item">
+          <div class="rating-val" id="courseYardage">—</div>
+          <div class="rating-label">Total Yards</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCORECARD -->
+    <div class="section-label">Scorecard</div>
+    <div class="scorecard-wrap">
+      <table class="scorecard-table" id="scorecardTable">
+        <thead>
+          <tr>
+            <th class="left" style="width:3rem">Hole</th>
+            <th>Par</th>
+            <th>Yards</th>
+            <th>HCP</th>
+          </tr>
+        </thead>
+        <tbody id="scorecardBody"></tbody>
+      </table>
+    </div>
+
+    <!-- LOCAL RULES -->
+    <div class="section-label">Local Rules</div>
+    <div class="local-rules-card">
+      <div id="localRulesContent">
+        <ul class="rule-list">
+          <li class="rule-item"><span class="rule-num">1</span><span class="rule-text">TBD — local rules will be posted once the course is confirmed.</span></li>
+          <li class="rule-item"><span class="rule-num">2</span><span class="rule-text">TBD — out of bounds and drop zone rules apply per course signage.</span></li>
+          <li class="rule-item"><span class="rule-num">3</span><span class="rule-text">TBD — pace of play guidelines will be provided at registration.</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- COURSE MAP -->
+    <div class="section-label">Course Map</div>
+    <div class="map-card">
+      <div class="map-placeholder" id="mapArea">
+        <svg class="map-icon" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M20 4C13.4 4 8 9.4 8 16c0 9 12 20 12 20s12-11 12-20c0-6.6-5.4-12-12-12z" stroke="#c09030" stroke-width="2" fill="none"/>
+          <circle cx="20" cy="16" r="4" stroke="#c09030" stroke-width="2" fill="none"/>
+        </svg>
+        <div class="map-placeholder-text">Course map coming soon</div>
+      </div>
+    </div>
+
+    <!-- QUICK LINKS -->
+    <div class="section-label">Quick Links</div>
+    <div class="links-grid">
+      <a class="link-card" id="teeTimesLink" href="#">
+        <div class="link-card-label">Tee Times</div>
+        <div class="link-card-val tbd" id="teeTimesVal">TBD</div>
+      </a>
+      <a class="link-card" id="proShopLink" href="#">
+        <div class="link-card-label">Pro Shop</div>
+        <div class="link-card-val tbd" id="proShopVal">TBD</div>
+      </a>
+      <a class="link-card" id="drivingRangeLink" href="#">
+        <div class="link-card-label">Practice / Range</div>
+        <div class="link-card-val tbd" id="drivingRangeVal">TBD</div>
+      </a>
+      <a class="link-card" id="restaurantLink" href="#">
+        <div class="link-card-label">Clubhouse / Restaurant</div>
+        <div class="link-card-val tbd" id="restaurantVal">TBD</div>
+      </a>
+    </div>
+
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script>
+const SUPABASE_URL = 'https://jllugkiojeoopitdvzsa.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_DnBMNLaSu61ykJ6P_fI2fw_D9DdAScn';
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+const DEFAULT_HOLES = [
+  {hole:1,par:4,yards:380,hcp:7},{hole:2,par:4,yards:395,hcp:11},{hole:3,par:3,yards:170,hcp:17},
+  {hole:4,par:4,yards:410,hcp:3},{hole:5,par:5,yards:530,hcp:1},{hole:6,par:3,yards:155,hcp:15},
+  {hole:7,par:4,yards:375,hcp:9},{hole:8,par:4,yards:400,hcp:5},{hole:9,par:5,yards:510,hcp:13},
+  {hole:10,par:4,yards:390,hcp:8},{hole:11,par:3,yards:175,hcp:16},{hole:12,par:5,yards:525,hcp:2},
+  {hole:13,par:4,yards:385,hcp:6},{hole:14,par:4,yards:405,hcp:4},{hole:15,par:3,yards:160,hcp:18},
+  {hole:16,par:5,yards:540,hcp:10},{hole:17,par:4,yards:380,hcp:12},{hole:18,par:4,yards:420,hcp:14}
+];
+
+async function init() {
+  const [courseRes, logoRes] = await Promise.all([
+    sb.from('settings').select('value').eq('key','course_info').maybeSingle(),
+    sb.from('settings').select('value').eq('key','logo_url').maybeSingle(),
+  ]);
+
+  loadNavLogo(logoRes.data?.value);
+
+  const info = parseJson(courseRes.data?.value, {});
+  renderCourseInfo(info);
+
+  document.getElementById('loadingState').style.display = 'none';
+  document.getElementById('courseContent').style.display = 'block';
+}
+
+function parseJson(str, fallback) {
+  if (!str) return fallback;
+  try { return JSON.parse(str); } catch { return fallback; }
+}
+
+function loadNavLogo(url) {
+  if (!url) return;
+  const img = document.getElementById('navLogoImg');
+  const svg = document.getElementById('navLogoSvg');
+  if (img) { img.src = url; img.style.display = 'block'; }
+  if (svg) svg.style.display = 'none';
+}
+
+function setField(id, val, fallback='TBD') {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const v = val || fallback;
+  el.textContent = v;
+  if (v === 'TBD' || v === fallback) el.classList.add('tbd');
+  else el.classList.remove('tbd');
+}
+
+function renderCourseInfo(info) {
+  setField('courseName', info.name);
+  setField('courseAddress', info.address);
+  setField('coursePhone', info.phone);
+
+  const webEl = document.getElementById('courseWebsite');
+  if (info.website) {
+    webEl.textContent = info.website;
+    webEl.classList.remove('tbd');
+    const wrap = webEl.parentElement;
+    const link = document.createElement('a');
+    link.href = info.website;
+    link.target = '_blank';
+    link.rel = 'noopener';
+    link.appendChild(webEl);
+    wrap.appendChild(link);
+  } else {
+    webEl.textContent = 'TBD';
+    webEl.classList.add('tbd');
+  }
+
+  setField('courseRating', info.rating, '—');
+  setField('courseSlope', info.slope, '—');
+
+  const holes = info.holes && info.holes.length === 18 ? info.holes : DEFAULT_HOLES;
+  const front = holes.slice(0, 9);
+  const back  = holes.slice(9, 18);
+  const frontPar = front.reduce((s,h)=>s+h.par,0);
+  const backPar  = back.reduce((s,h)=>s+h.par,0);
+  const frontYds = front.reduce((s,h)=>s+(h.yards||0),0);
+  const backYds  = back.reduce((s,h)=>s+(h.yards||0),0);
+
+  setField('coursePar', String(frontPar + backPar));
+  setField('courseYardage', (frontYds + backYds) > 0 ? (frontYds + backYds).toLocaleString() : '—', '—');
+
+  const tbody = document.getElementById('scorecardBody');
+  let html = '';
+
+  html += `<tr class="scorecard-divider"><td colspan="4">Front Nine</td></tr>`;
+  front.forEach(h => {
+    html += `<tr>
+      <td class="hole-num">${h.hole}</td>
+      <td class="par-cell">${h.par}</td>
+      <td class="yds-cell">${h.yards ? h.yards.toLocaleString() : '—'}</td>
+      <td class="yds-cell">${h.hcp || '—'}</td>
+    </tr>`;
+  });
+  html += `<tr class="nine-total">
+    <td class="total-label" colspan="1">Out</td>
+    <td class="par-cell">${frontPar}</td>
+    <td class="yds-cell">${frontYds > 0 ? frontYds.toLocaleString() : '—'}</td>
+    <td class="yds-cell">—</td>
+  </tr>`;
+
+  html += `<tr class="scorecard-divider"><td colspan="4">Back Nine</td></tr>`;
+  back.forEach(h => {
+    html += `<tr>
+      <td class="hole-num">${h.hole}</td>
+      <td class="par-cell">${h.par}</td>
+      <td class="yds-cell">${h.yards ? h.yards.toLocaleString() : '—'}</td>
+      <td class="yds-cell">${h.hcp || '—'}</td>
+    </tr>`;
+  });
+  html += `<tr class="nine-total">
+    <td class="total-label" colspan="1">In</td>
+    <td class="par-cell">${backPar}</td>
+    <td class="yds-cell">${backYds > 0 ? backYds.toLocaleString() : '—'}</td>
+    <td class="yds-cell">—</td>
+  </tr>`;
+
+  html += `<tr class="grand-total">
+    <td class="total-label" colspan="1">Total</td>
+    <td class="par-cell">${frontPar + backPar}</td>
+    <td class="yds-cell">${(frontYds + backYds) > 0 ? (frontYds + backYds).toLocaleString() : '—'}</td>
+    <td class="yds-cell">—</td>
+  </tr>`;
+
+  tbody.innerHTML = html;
+
+  if (info.local_rules && info.local_rules.length) {
+    const list = info.local_rules.map((r,i) =>
+      `<li class="rule-item"><span class="rule-num">${i+1}</span><span class="rule-text">${r}</span></li>`
+    ).join('');
+    document.getElementById('localRulesContent').innerHTML = `<ul class="rule-list">${list}</ul>`;
+  }
+
+  if (info.map_url) {
+    document.getElementById('mapArea').innerHTML =
+      `<img src="${info.map_url}" alt="Course map" style="width:100%;height:100%;object-fit:cover;">`;
+  }
+
+  setLink('teeTimesLink', 'teeTimesVal', info.tee_times_url, 'Book Tee Times');
+  setLink('proShopLink', 'proShopVal', info.pro_shop_url, 'Pro Shop');
+  setLink('drivingRangeLink', 'drivingRangeVal', info.driving_range_url, 'Practice Facility');
+  setLink('restaurantLink', 'restaurantVal', info.restaurant_url, 'Clubhouse / Dining');
+}
+
+function setLink(linkId, valId, url, label) {
+  const link = document.getElementById(linkId);
+  const val  = document.getElementById(valId);
+  if (!link || !val) return;
+  if (url) {
+    link.href = url;
+    link.target = '_blank';
+    link.rel = 'noopener';
+    val.textContent = label;
+    val.classList.remove('tbd');
+  }
+}
+
+init();
+</script>
+</body>
+</html>

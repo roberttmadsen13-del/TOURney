@@ -1,0 +1,149 @@
+#!/usr/bin/env bash
+#
+# raptor — launch RAPTOR via Claude Code
+#
+# Install: add this directory to PATH, or symlink to a directory already on PATH.
+#
+
+set -euo pipefail
+
+# Resolve symlinks to find the real script location
+SCRIPT="$0"
+while [ -L "$SCRIPT" ]; do
+    DIR="$(cd "$(dirname "$SCRIPT")" && pwd)"
+    SCRIPT="$(readlink "$SCRIPT")"
+    [[ "$SCRIPT" != /* ]] && SCRIPT="$DIR/$SCRIPT"
+done
+RAPTOR_DIR="$(cd "$(dirname "$SCRIPT")/.." && pwd)"
+
+if [ ! -d "$RAPTOR_DIR/core" ]; then
+    echo "raptor: cannot find RAPTOR installation at $RAPTOR_DIR" >&2
+    exit 1
+fi
+
+if ! command -v python3 >/dev/null 2>&1; then
+    echo "raptor: python3 not found" >&2
+    exit 1
+fi
+
+# Help
+if [[ "${1:-}" == "-h" || "${1:-}" == "--help" || "${1:-}" == "help" ]]; then
+    cat <<'USAGE'
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣠⣤⣤⣀⣀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣾⣿⣿⠿⠿⠟
+⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⣀⣀⣀⣀⣀⣤⣴⣶⣶⣶⣤⣿⡿⠁
+⣀⠤⠴⠒⠒⠛⠛⠛⠛⠛⠿⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠟⠁
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠛⣿⣿⣿⡟⠻⢿⡀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣾⢿⣿⠟⠀⠸⣊⡽
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⡇⣿⡁⠀⠀⠀⠉⠁
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠻⠿⣿⣧
+
+Usage: raptor [options] [target]
+       raptor project <subcommand> [args]
+
+Arguments:
+  target             Path or URL to scan (optional)
+
+Options:
+  -c, --continue     Resume last RAPTOR session
+  -m, --model MODEL  Choose model (opus, sonnet, haiku)
+  -p, --project NAME Set the active project
+  -v, --verbose      Verbose output
+  -h, --help         Show this help
+
+Projects:
+  raptor project create <name>         Create a new project
+  raptor project list                  Show all projects
+  raptor project status [<name>]       Show project summary
+  raptor project findings [<name>]     Show merged findings
+  raptor project findings --detailed   Per-finding detail
+  raptor project coverage [<name>]     Show coverage summary
+  raptor project coverage --detailed   Per-file breakdown
+  raptor project diff <n> <a> <b>      Compare two runs
+  raptor project use [<name>]          Set/show active project
+  raptor project none                  Clear the active project
+  raptor project help                  Full subcommand list
+
+Any additional flags are passed through to Claude Code.
+USAGE
+    exit 0
+fi
+
+# Route project subcommands directly (no Claude needed)
+if [[ "${1:-}" == "project" ]]; then
+    shift
+    cd "$RAPTOR_DIR" || exit 1
+    exec "$RAPTOR_DIR/libexec/raptor-project-manager" "$@"
+fi
+
+# Claude required for everything else
+if ! command -v claude >/dev/null 2>&1; then
+    echo "raptor: claude not found. Install Claude Code:" >&2
+    echo "  https://docs.anthropic.com/en/docs/claude-code/overview" >&2
+    exit 1
+fi
+
+# Export static env vars
+export RAPTOR_CALLER_DIR="$(pwd)"
+export RAPTOR_DIR
+
+# Parse RAPTOR-specific args, collect Claude args
+STARTUP_ARGS=("--caller-dir" "$RAPTOR_CALLER_DIR")
+CLAUDE_ARGS=("-n" "RAPTOR")
+INITIAL_PROMPT="/raptor"
+TARGET=""
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        -p|--project)
+            [[ $# -ge 2 ]] || { echo "raptor: $1 requires a value" >&2; exit 1; }
+            STARTUP_ARGS+=("-p" "$2")
+            shift 2
+            ;;
+        -c|--continue)
+            CLAUDE_ARGS+=("--continue")
+            INITIAL_PROMPT=""
+            shift
+            ;;
+        -m|--model)
+            [[ $# -ge 2 ]] || { echo "raptor: $1 requires a value" >&2; exit 1; }
+            CLAUDE_ARGS+=("--model" "$2")
+            shift 2
+            ;;
+        -v|--verbose)
+            CLAUDE_ARGS+=("--verbose")
+            shift
+            ;;
+        -*)
+            CLAUDE_ARGS+=("$1")
+            shift
+            ;;
+        *)
+            # Positional arg = target path
+            TARGET="$1"
+            shift
+            ;;
+    esac
+done
+
+# Build initial prompt: /raptor [target]
+if [[ -n "$TARGET" && -n "$INITIAL_PROMPT" ]]; then
+    INITIAL_PROMPT="/raptor $TARGET"
+fi
+
+cd "$RAPTOR_DIR" || { echo "raptor: cannot cd to $RAPTOR_DIR" >&2; exit 1; }
+
+# Pre-flight: auto-detect project, -p flag, mismatch prompt
+"$RAPTOR_DIR/libexec/raptor-startup-check" "${STARTUP_ARGS[@]}"
+
+# Load coverage tracking plugin if available
+PLUGIN_ARGS=()
+if [ -d "$RAPTOR_DIR/plugins/coverage" ]; then
+    PLUGIN_ARGS+=(--plugin-dir "$RAPTOR_DIR/plugins/coverage")
+fi
+
+clear
+if [[ -n "$INITIAL_PROMPT" ]]; then
+    exec claude "${PLUGIN_ARGS[@]}" "${CLAUDE_ARGS[@]}" "$INITIAL_PROMPT"
+else
+    exec claude "${PLUGIN_ARGS[@]}" "${CLAUDE_ARGS[@]}"
+fi

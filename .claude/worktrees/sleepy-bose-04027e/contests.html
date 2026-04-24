@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#f5ede0">
+<link rel="manifest" href="/manifest.json">
+<title>Contests — Bova Invitational</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Mono:wght@300;400;500&family=Barlow+Condensed:wght@300;400;600;700;800&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#1a1008;--gold:#c09030;--gold-l:#d4aa50;--gold-p:#e8cc80;--cream:#f0e6cc;--red:#8a1e10;--green:#1a4010;--border:rgba(192,144,48,0.28);--bg:#f5ede0;--card:#fdf8f0;--muted:rgba(26,16,8,0.4);}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--ink);font-family:'Barlow',sans-serif;font-weight:300;min-height:100vh;}
+a{color:inherit;text-decoration:none;}
+
+.nav{position:sticky;top:0;z-index:100;height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;background:rgba(10,7,2,0.97);border-bottom:1px solid var(--border);}
+.nav-logo{font-family:'Playfair Display',serif;font-size:0.9rem;font-weight:700;display:flex;align-items:center;gap:0.45rem;color:var(--cream);}
+.nav-logo em{font-style:italic;color:var(--gold);}
+.nav-right{display:flex;align-items:center;gap:1.5rem;}
+.score-btn{font-family:'Barlow Condensed',sans-serif;font-size:0.65rem;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;padding:0.4rem 1.1rem;border:1px solid var(--gold);color:var(--gold);background:transparent;cursor:pointer;text-decoration:none;transition:all 0.2s;}
+.score-btn:hover{background:var(--gold);color:var(--ink);}
+@media(max-width:520px){.nav-right .score-btn:last-child{display:none;}.nav{padding:0 1rem;}}
+
+.header-band{padding:2.5rem 2rem 2rem;max-width:1100px;margin:0 auto;}
+.event-eyebrow{font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.5em;text-transform:uppercase;color:rgba(192,144,48,0.6);margin-bottom:0.5rem;}
+.event-title{font-family:'Playfair Display',serif;font-size:clamp(2rem,5vw,3.2rem);font-weight:900;line-height:1;margin-bottom:0.3rem;}
+.event-title em{font-style:italic;color:var(--gold);}
+.event-sub{font-family:'Barlow Condensed',sans-serif;font-size:0.78rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);}
+
+.main{max-width:1100px;margin:0 auto;padding:2rem;}
+@media(max-width:520px){.main{padding:1.2rem 1rem;}.header-band{padding:1.5rem 1rem 1rem;}}
+
+/* ADMIN BAR */
+.admin-bar{display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-bottom:1.5rem;padding:0.8rem 1.2rem;background:var(--card);border:1px solid var(--border);}
+.admin-status{font-family:'DM Mono',monospace;font-size:0.48rem;letter-spacing:0.25em;text-transform:uppercase;color:var(--muted);}
+.admin-status.locked{color:var(--muted);}
+.admin-status.unlocked{color:var(--gold);}
+.admin-btn{font-family:'Barlow Condensed',sans-serif;font-size:0.65rem;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;padding:0.4rem 1.1rem;border:1px solid var(--gold);color:var(--gold);background:transparent;cursor:pointer;}
+.admin-btn:hover{background:var(--gold);color:var(--ink);}
+
+/* FORM */
+.entry-card{background:var(--card);border:1px solid var(--border);padding:1.4rem;margin-bottom:2rem;display:none;}
+.entry-card.show{display:block;}
+.entry-title{font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--gold);margin-bottom:1rem;}
+.entry-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:0.8rem;margin-bottom:1rem;}
+.entry-field{display:flex;flex-direction:column;gap:0.25rem;}
+.entry-field label{font-family:'DM Mono',monospace;font-size:0.42rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);}
+.entry-field select,.entry-field input{font-family:'Barlow',sans-serif;font-size:0.88rem;padding:0.5rem 0.7rem;background:var(--bg);border:1px solid var(--border);color:var(--ink);outline:none;}
+.entry-field select:focus,.entry-field input:focus{border-color:var(--gold);}
+.entry-submit{font-family:'Barlow Condensed',sans-serif;font-size:0.7rem;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;padding:0.55rem 1.6rem;border:1px solid var(--gold);background:var(--gold);color:var(--ink);cursor:pointer;}
+.entry-submit:hover{background:var(--gold-l);}
+.entry-msg{margin-top:0.6rem;font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.1em;color:var(--muted);}
+.entry-msg.ok{color:#2a7a20;}
+.entry-msg.err{color:var(--red);}
+
+/* ROUND BLOCK */
+.round-block{background:var(--card);border:1px solid var(--border);margin-bottom:1.5rem;}
+.round-head{padding:0.9rem 1.2rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:rgba(192,144,48,0.04);}
+.round-title{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;}
+.round-tag{font-family:'DM Mono',monospace;font-size:0.45rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);}
+.round-tag .live{color:#2a7a20;}
+
+.contest-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);}
+@media(max-width:600px){.contest-grid{grid-template-columns:1fr;}}
+.contest-col{background:var(--card);padding:1rem 1.2rem;}
+.contest-header{font-family:'DM Mono',monospace;font-size:0.45rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--gold);margin-bottom:0.7rem;}
+.contest-list{display:flex;flex-direction:column;gap:0.5rem;}
+.contest-row{display:flex;align-items:center;justify-content:space-between;gap:0.8rem;padding:0.5rem 0.7rem;background:rgba(192,144,48,0.03);border-left:3px solid var(--border);}
+.contest-row.won{border-left-color:var(--gold);background:rgba(192,144,48,0.08);}
+.contest-hole{font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.15em;color:var(--muted);min-width:70px;}
+.contest-winner{font-family:'Playfair Display',serif;font-weight:700;font-size:0.88rem;flex:1;}
+.contest-winner.open{font-style:italic;color:var(--muted);font-weight:400;}
+.contest-par{font-family:'DM Mono',monospace;font-size:0.45rem;letter-spacing:0.15em;color:var(--muted);}
+.contest-del{font-family:'DM Mono',monospace;font-size:0.42rem;letter-spacing:0.1em;color:var(--red);cursor:pointer;background:none;border:none;padding:0.2rem 0.4rem;text-transform:uppercase;}
+.contest-del:hover{background:rgba(138,30,16,0.1);}
+.contest-del[hidden]{display:none;}
+.no-holes{font-family:'Playfair Display',serif;font-style:italic;color:var(--muted);font-size:0.82rem;padding:0.5rem 0;}
+
+.empty-state{text-align:center;padding:4rem 2rem;font-family:'Playfair Display',serif;font-style:italic;font-size:1rem;color:var(--muted);}
+.loading{text-align:center;padding:3rem;font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--muted);}
+
+.last-updated{text-align:right;font-family:'DM Mono',monospace;font-size:0.45rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);padding-top:1.5rem;}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-logo"><img id="navLogoImg" style="display:none;height:32px;max-width:120px;object-fit:contain;object-position:left"><svg id="navLogoSvg" width="14" height="18" viewBox="0 0 14 18" style="flex-shrink:0;display:block" fill="none"><line x1="2" y1="1" x2="2" y2="17" stroke="#c09030" stroke-width="1.5" stroke-linecap="round"/><path d="M2 2L12 5.5L2 9.5Z" fill="#c09030"/></svg>The Bova <em>Invitational</em></div>
+  <div class="nav-right">
+    <a href="/scoreboard" class="score-btn" style="border-color:rgba(192,144,48,0.3);color:rgba(240,230,204,0.4);">Scoreboard</a>
+    <a href="/skins" class="score-btn" style="border-color:rgba(192,144,48,0.3);color:rgba(240,230,204,0.4);">Skins</a>
+    <a href="/" class="score-btn" style="border-color:rgba(192,144,48,0.3);color:rgba(240,230,204,0.4);">Home</a>
+  </div>
+</nav>
+
+<div class="header-band">
+  <div class="event-eyebrow">Side Games &nbsp;&middot;&nbsp; CTP &amp; Long Drive</div>
+  <div class="event-title">On-Course <em>Contests</em></div>
+  <div class="event-sub">Closest to Pin &nbsp;&middot;&nbsp; Longest Drive</div>
+</div>
+
+<div class="main">
+  <div class="admin-bar">
+    <div class="admin-status locked" id="adminStatus">&#128274; View only &mdash; Admin PIN required to enter results</div>
+    <button class="admin-btn" id="adminBtn" onclick="toggleAdmin()">Unlock Admin</button>
+  </div>
+
+  <div class="entry-card" id="entryCard">
+    <div class="entry-title">Enter Contest Result</div>
+    <div class="entry-grid">
+      <div class="entry-field">
+        <label>Round</label>
+        <select id="fRound"></select>
+      </div>
+      <div class="entry-field">
+        <label>Contest</label>
+        <select id="fContest">
+          <option value="ctp">Closest to Pin</option>
+          <option value="ld">Longest Drive</option>
+        </select>
+      </div>
+      <div class="entry-field">
+        <label>Hole</label>
+        <select id="fHole"></select>
+      </div>
+      <div class="entry-field">
+        <label>Winner</label>
+        <select id="fWinner"></select>
+      </div>
+    </div>
+    <button class="entry-submit" onclick="saveResult()">Save Winner</button>
+    <div class="entry-msg" id="entryMsg"></div>
+  </div>
+
+  <div id="content">
+    <div class="loading">Loading contests...</div>
+  </div>
+  <div class="last-updated" id="lastUpdated"></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script>
+const SUPABASE_URL = 'https://jllugkiojeoopitdvzsa.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_DnBMNLaSu61ykJ6P_fI2fw_D9DdAScn';
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+const DEFAULT_PARS = {
+  day1:[4,4,5,3,4,4,3,5,4,4,4,3,5,4,4,3,5,4],
+  day2:[4,4,5,3,4,4,3,5,4,4,4,3,5,4,4,3,5,4],
+  day3:[4,4,5,3,4,4,3,5,4,4,4,3,5,4,4,3,5,4],
+};
+const ROUNDS = ['day1','day2','day3'];
+const ROUND_LABEL = { day1:'Day 1', day2:'Day 2', day3:'Day 3' };
+const DEFAULT_ADMIN_PIN = 'bova';
+
+let players = [];
+let roundStates = {};
+let coursePars = JSON.parse(JSON.stringify(DEFAULT_PARS));
+let ctpHoles = {}; // { day1: { ctp:[3,7,...], ld:[5,14] } }
+let contestResults = {}; // { day1: { ctp: { "3": player_id }, ld: { "5": player_id } } }
+let adminPin = DEFAULT_ADMIN_PIN;
+let currentRound = null;
+let isAdmin = sessionStorage.getItem('bova_contests_admin') === '1';
+
+async function init() {
+  const [pRes, rRes, parRes, ctpRes, resRes, pinRes] = await Promise.all([
+    sb.from('players').select('*'),
+    sb.from('settings').select('*').in('key',['round_day1','round_day2','round_day3']),
+    sb.from('settings').select('*').in('key',['pars_day1','pars_day2','pars_day3']),
+    sb.from('settings').select('*').eq('key','ctp_holes'),
+    sb.from('settings').select('*').eq('key','contest_results'),
+    sb.from('settings').select('*').eq('key','admin_pin'),
+  ]);
+  players = (pRes.data || []).sort((a,b) => `${a.first_name} ${a.last_name}`.localeCompare(`${b.first_name} ${b.last_name}`));
+  (rRes.data || []).forEach(r => { roundStates[r.key.replace('round_','')] = r.value; });
+  (parRes.data || []).forEach(r => {
+    const day = r.key.replace('pars_','');
+    try { coursePars[day] = JSON.parse(r.value); } catch {}
+  });
+  if (ctpRes.data?.[0]) try { ctpHoles = JSON.parse(ctpRes.data[0].value); } catch {}
+  if (resRes.data?.[0]) try { contestResults = JSON.parse(resRes.data[0].value); } catch {}
+  if (pinRes.data?.[0]?.value) adminPin = pinRes.data[0].value;
+  currentRound = Object.entries(roundStates).find(([,v]) => v === 'open')?.[0] || null;
+
+  populateForm();
+  updateAdminUI();
+  render();
+  updateTimestamp();
+  subscribeRealtime();
+}
+
+function holesForContest(round, type) {
+  if (ctpHoles[round]?.[type]) return ctpHoles[round][type];
+  const pars = coursePars[round] || DEFAULT_PARS[round];
+  const out = [];
+  for (let h = 1; h <= 18; h++) {
+    const p = pars[h-1] || 4;
+    if (type === 'ctp' && p === 3) out.push(h);
+    if (type === 'ld' && (p === 4 || p === 5)) out.push(h);
+  }
+  return out;
+}
+
+function nameOf(pid) {
+  const p = players.find(pp => pp.id === pid);
+  return p ? `${p.first_name} ${p.last_name}` : 'Unknown';
+}
+
+function populateForm() {
+  const fRound = document.getElementById('fRound');
+  fRound.innerHTML = ROUNDS.map(r => `<option value="${r}">${ROUND_LABEL[r]}</option>`).join('');
+  if (currentRound) fRound.value = currentRound;
+  const fWinner = document.getElementById('fWinner');
+  fWinner.innerHTML = players.map(p => `<option value="${p.id}">${p.first_name} ${p.last_name}</option>`).join('');
+  refreshHoleOptions();
+  fRound.onchange = refreshHoleOptions;
+  document.getElementById('fContest').onchange = refreshHoleOptions;
+}
+
+function refreshHoleOptions() {
+  const round = document.getElementById('fRound').value;
+  const type = document.getElementById('fContest').value;
+  const holes = holesForContest(round, type);
+  const fHole = document.getElementById('fHole');
+  const pars = coursePars[round] || DEFAULT_PARS[round];
+  fHole.innerHTML = holes.length
+    ? holes.map(h => `<option value="${h}">Hole ${h} &middot; Par ${pars[h-1] || 4}</option>`).join('')
+    : `<option disabled>No eligible holes</option>`;
+}
+
+async function saveResult() {
+  const msg = document.getElementById('entryMsg');
+  msg.className = 'entry-msg';
+  msg.textContent = '';
+  const round = document.getElementById('fRound').value;
+  const type = document.getElementById('fContest').value;
+  const hole = document.getElementById('fHole').value;
+  const winner = document.getElementById('fWinner').value;
+  if (!round || !type || !hole || !winner) {
+    msg.textContent = 'Fill all fields.'; msg.classList.add('err'); return;
+  }
+  if (!contestResults[round]) contestResults[round] = {};
+  if (!contestResults[round][type]) contestResults[round][type] = {};
+  contestResults[round][type][hole] = winner;
+  const { error } = await sb.from('settings').upsert({ key: 'contest_results', value: JSON.stringify(contestResults) }, { onConflict: 'key' });
+  if (error) { msg.textContent = `Error: ${error.message}`; msg.classList.add('err'); return; }
+  msg.textContent = 'Saved.'; msg.classList.add('ok');
+  render();
+  updateTimestamp();
+}
+
+async function deleteResult(round, type, hole) {
+  if (!isAdmin) return;
+  if (!confirm(`Clear ${type === 'ctp' ? 'CTP' : 'Longest Drive'} result for ${ROUND_LABEL[round]} hole ${hole}?`)) return;
+  if (contestResults[round]?.[type]) {
+    delete contestResults[round][type][hole];
+    const { error } = await sb.from('settings').upsert({ key: 'contest_results', value: JSON.stringify(contestResults) }, { onConflict: 'key' });
+    if (error) { alert(`Error: ${error.message}`); return; }
+    render();
+    updateTimestamp();
+  }
+}
+
+function toggleAdmin() {
+  if (isAdmin) {
+    isAdmin = false;
+    sessionStorage.removeItem('bova_contests_admin');
+  } else {
+    const pin = prompt('Enter admin PIN:');
+    if (pin === null) return;
+    if (pin !== adminPin) { alert('Wrong PIN.'); return; }
+    isAdmin = true;
+    sessionStorage.setItem('bova_contests_admin', '1');
+  }
+  updateAdminUI();
+  render();
+}
+
+function updateAdminUI() {
+  const status = document.getElementById('adminStatus');
+  const btn = document.getElementById('adminBtn');
+  const card = document.getElementById('entryCard');
+  if (isAdmin) {
+    status.className = 'admin-status unlocked';
+    status.innerHTML = '&#128275; Admin mode &mdash; you can enter results';
+    btn.textContent = 'Lock';
+    card.classList.add('show');
+  } else {
+    status.className = 'admin-status locked';
+    status.innerHTML = '&#128274; View only &mdash; Admin PIN required to enter results';
+    btn.textContent = 'Unlock Admin';
+    card.classList.remove('show');
+  }
+}
+
+function render() {
+  const host = document.getElementById('content');
+  const roundsWithActivity = ROUNDS.filter(r => roundStates[r] || contestResults[r]);
+  const rounds = roundsWithActivity.length ? roundsWithActivity : ROUNDS;
+
+  let html = '';
+  rounds.forEach(round => {
+    const isLive = round === currentRound;
+    const ctpList = holesForContest(round, 'ctp');
+    const ldList = holesForContest(round, 'ld');
+    const ctpRes = contestResults[round]?.ctp || {};
+    const ldRes = contestResults[round]?.ld || {};
+    const pars = coursePars[round] || DEFAULT_PARS[round];
+
+    const buildRow = (h, type, resMap) => {
+      const pid = resMap[h];
+      const par = pars[h-1] || 4;
+      return `<div class="contest-row ${pid ? 'won' : ''}">
+        <div class="contest-hole">Hole ${h}</div>
+        <div class="contest-winner ${pid ? '' : 'open'}">${pid ? nameOf(pid) : 'Open'}</div>
+        <div class="contest-par">Par ${par}</div>
+        <button class="contest-del" ${!isAdmin || !pid ? 'hidden' : ''} onclick="deleteResult('${round}','${type}',${h})">Clear</button>
+      </div>`;
+    };
+
+    html += `<div class="round-block">
+      <div class="round-head">
+        <div class="round-title">${ROUND_LABEL[round]}</div>
+        <div class="round-tag">${isLive ? '<span class="live">&#9679; Live</span>' : (roundStates[round] === 'closed' ? 'Completed' : 'Upcoming')}</div>
+      </div>
+      <div class="contest-grid">
+        <div class="contest-col">
+          <div class="contest-header">Closest to Pin &middot; Par 3s</div>
+          <div class="contest-list">
+            ${ctpList.length ? ctpList.map(h => buildRow(h, 'ctp', ctpRes)).join('') : '<div class="no-holes">No par 3 holes configured.</div>'}
+          </div>
+        </div>
+        <div class="contest-col">
+          <div class="contest-header">Longest Drive &middot; Par 4/5s</div>
+          <div class="contest-list">
+            ${ldList.length ? ldList.map(h => buildRow(h, 'ld', ldRes)).join('') : '<div class="no-holes">No eligible holes configured.</div>'}
+          </div>
+        </div>
+      </div>
+    </div>`;
+  });
+
+  host.innerHTML = html || '<div class="empty-state">No rounds configured yet.</div>';
+}
+
+function subscribeRealtime() {
+  sb.channel('contest-settings')
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'settings' }, payload => {
+      const row = payload.new || payload.old;
+      if (!row) return;
+      if (row.key === 'contest_results' && payload.new) {
+        try { contestResults = JSON.parse(payload.new.value); } catch {}
+        render();
+        updateTimestamp();
+      } else if (row.key === 'ctp_holes' && payload.new) {
+        try { ctpHoles = JSON.parse(payload.new.value); } catch {}
+        refreshHoleOptions();
+        render();
+      } else if (row.key?.startsWith('round_')) {
+        if (payload.new) roundStates[row.key.replace('round_','')] = payload.new.value;
+        currentRound = Object.entries(roundStates).find(([,v]) => v === 'open')?.[0] || null;
+        render();
+      }
+    })
+    .subscribe();
+}
+
+function updateTimestamp() {
+  const now = new Date();
+  document.getElementById('lastUpdated').textContent = `Last updated ${now.toLocaleTimeString([], {hour:'numeric',minute:'2-digit',hour12:true})}`;
+}
+
+async function loadNavLogo() {
+  const { data } = await sb.from('settings').select('value').eq('key','logo_url').maybeSingle();
+  if (data?.value) {
+    const img = document.getElementById('navLogoImg');
+    const svg = document.getElementById('navLogoSvg');
+    if (img) { img.src = data.value; img.style.display = 'block'; }
+    if (svg) svg.style.display = 'none';
+  }
+}
+
+init();
+loadNavLogo();
+</script>
+<script src="/pwa.js"></script>
+</body>
+</html>

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#1a1008">
+<title>Install — Bova Invitational</title>
+<link rel="manifest" href="/manifest.json">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Mono:wght@300;400;500&family=Barlow+Condensed:wght@300;400;600;700;800&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#1a1008;--gold:#c09030;--gold-l:#d4aa50;--gold-p:#e8cc80;--cream:#f0e6cc;--border:rgba(192,144,48,0.28);--muted:rgba(26,16,8,0.4);}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--ink);color:var(--cream);font-family:'Barlow',sans-serif;font-weight:300;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:2rem;}
+.card{max-width:400px;width:100%;text-align:center;padding:3rem 2rem;}
+.logo-wrap{margin-bottom:2rem;}
+.logo-wrap img{width:120px;height:120px;object-fit:contain;}
+.title{font-family:'Playfair Display',serif;font-size:2rem;font-weight:900;margin-bottom:0.3rem;}
+.title em{font-style:italic;color:var(--gold-p);}
+.sub{font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.35em;text-transform:uppercase;color:var(--muted);margin-bottom:2.5rem;}
+.install-btn{width:100%;padding:1rem;background:var(--gold);color:var(--ink);border:none;font-family:'Barlow Condensed',sans-serif;font-size:0.85rem;font-weight:700;letter-spacing:0.25em;text-transform:uppercase;cursor:pointer;transition:background 0.2s,transform 0.15s;margin-bottom:1rem;}
+.install-btn:hover{background:var(--gold-l);transform:translateY(-2px);}
+.install-btn:disabled{opacity:0.4;cursor:default;transform:none;}
+.manual{display:none;padding:1.5rem;border:1px solid var(--border);background:rgba(192,144,48,0.03);text-align:left;margin-top:1rem;}
+.manual.show{display:block;}
+.manual-title{font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.25em;text-transform:uppercase;color:var(--gold);margin-bottom:0.8rem;}
+.manual-step{font-size:0.85rem;color:rgba(240,230,204,0.6);line-height:1.8;margin-bottom:0.3rem;}
+.manual-step strong{color:var(--cream);font-weight:500;}
+.skip{display:inline-block;margin-top:1.5rem;font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);text-decoration:none;transition:color 0.2s;}
+.skip:hover{color:var(--gold);}
+.installed{display:none;font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.25em;text-transform:uppercase;color:#2a7a20;margin-bottom:1rem;}
+.installed.show{display:block;}
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="logo-wrap" id="logoWrap"></div>
+  <div class="title">The Bova<br><em>Invitational</em></div>
+  <div class="sub">Install the App</div>
+
+  <div class="installed" id="installedMsg">App installed — you're all set</div>
+
+  <button class="install-btn" id="installBtn" disabled onclick="doInstall()">Install App</button>
+
+  <div class="manual" id="manualInstructions">
+    <div class="manual-title" id="manualTitle">To install manually</div>
+    <div id="manualSteps"></div>
+  </div>
+
+  <a href="/" class="skip">Continue to site &rarr;</a>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script>
+// Load logo
+(async function() {
+  try {
+    var _sb = supabase.createClient('https://jllugkiojeoopitdvzsa.supabase.co','sb_publishable_DnBMNLaSu61ykJ6P_fI2fw_D9DdAScn');
+    var { data } = await _sb.from('settings').select('value').eq('key','logo_url').maybeSingle();
+    if (data && data.value) {
+      document.getElementById('logoWrap').innerHTML = '<img src="' + data.value + '" alt="Logo">';
+    }
+  } catch(e) {}
+})();
+
+// Already installed?
+if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone) {
+  document.getElementById('installedMsg').classList.add('show');
+  document.getElementById('installBtn').style.display = 'none';
+}
+
+// Capture install prompt
+var deferredPrompt = null;
+window.addEventListener('beforeinstallprompt', function(e) {
+  e.preventDefault();
+  deferredPrompt = e;
+  document.getElementById('installBtn').disabled = false;
+  document.getElementById('manualInstructions').classList.remove('show');
+});
+
+function doInstall() {
+  if (!deferredPrompt) return;
+  deferredPrompt.prompt();
+  deferredPrompt.userChoice.then(function() {
+    deferredPrompt = null;
+    document.getElementById('installBtn').disabled = true;
+  }).catch(function() {});
+}
+
+window.addEventListener('appinstalled', function() {
+  document.getElementById('installBtn').style.display = 'none';
+  document.getElementById('installedMsg').classList.add('show');
+  document.getElementById('manualInstructions').classList.remove('show');
+});
+
+// Show manual instructions after a delay if no prompt fires
+setTimeout(function() {
+  if (deferredPrompt) return;
+  if (window.matchMedia('(display-mode: standalone)').matches) return;
+
+  var manual = document.getElementById('manualInstructions');
+  var steps = document.getElementById('manualSteps');
+  var ua = navigator.userAgent;
+
+  if (/iPhone|iPad|iPod/.test(ua)) {
+    document.getElementById('manualTitle').textContent = 'Install on iPhone / iPad';
+    steps.innerHTML =
+      '<div class="manual-step">1. Tap the <strong>Share</strong> button (square with arrow)</div>' +
+      '<div class="manual-step">2. Scroll down and tap <strong>Add to Home Screen</strong></div>' +
+      '<div class="manual-step">3. Tap <strong>Add</strong></div>';
+    manual.classList.add('show');
+    document.getElementById('installBtn').style.display = 'none';
+  } else if (/Android/.test(ua)) {
+    document.getElementById('manualTitle').textContent = 'Install on Android';
+    steps.innerHTML =
+      '<div class="manual-step">1. Tap the <strong>three-dot menu</strong> (top right)</div>' +
+      '<div class="manual-step">2. Tap <strong>Add to Home Screen</strong> or <strong>Install App</strong></div>' +
+      '<div class="manual-step">3. Tap <strong>Install</strong></div>';
+    manual.classList.add('show');
+  } else {
+    document.getElementById('manualTitle').textContent = 'Install on Desktop';
+    steps.innerHTML =
+      '<div class="manual-step">1. Click the <strong>install icon</strong> in the address bar</div>' +
+      '<div class="manual-step">2. Click <strong>Install</strong></div>';
+    manual.classList.add('show');
+  }
+}, 1500);
+</script>
+<script src="/pwa.js"></script>
+</body>
+</html>

@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git -C \"C:/Users/Rob/OneDrive/Desktop/Bova Invitational\" branch -a)",
+      "Bash(git -C \"C:/Users/Rob/OneDrive/Desktop/Bova Invitational\" worktree list)",
+      "Bash(git -C \"C:/Users/Rob/OneDrive/Desktop/Bova Invitational\" remote -v)",
+      "mcp__plugin_context-mode_context-mode__ctx_execute"
+    ]
+  }
+}

@@ -241,25 +241,11 @@ td.email a:hover{color:var(--gold);}
     <!-- TAB BAR -->
     <div style="display:flex;gap:0;border-bottom:1px solid var(--border);margin-bottom:2rem;">
       <button class="admin-tab active" data-tab="command" onclick="switchAdminTab('command')">Command Center</button>
-      <button class="admin-tab" data-tab="homepage" onclick="switchAdminTab('homepage')">Home Page</button>
+      <button class="admin-tab" data-tab="homepage" onclick="switchAdminTab('homepage')">Design</button>
     </div>
 
     <!-- ═══ TAB: COMMAND CENTER ═══ -->
     <div id="tabCommand">
-
-    <!-- BRANDING -->
-    <div class="section">
-      <div class="section-header">
-        <div class="section-title">Tournament Branding</div>
-        <div class="section-count">Logo appears in nav on all pages</div>
-      </div>
-      <div class="logo-upload-wrap">
-        <div id="logoPreview" style="height:44px;display:flex;align-items:center;color:var(--muted);font-family:'DM Mono',monospace;font-size:0.48rem;letter-spacing:0.1em;">No logo uploaded</div>
-        <label for="logoFileInput" class="logo-file-label">Upload Logo</label>
-        <input type="file" id="logoFileInput" accept="image/*" style="display:none" onchange="uploadLogo(this)">
-        <button class="logo-clear-btn" onclick="clearLogo()">Clear Logo</button>
-      </div>
-    </div>
 
     <!-- STATS -->
     <div class="stats-row" id="statsRow">
@@ -460,8 +446,24 @@ td.email a:hover{color:var(--gold);}
 
     </div><!-- /tabCommand -->
 
-    <!-- ═══ TAB: HOME PAGE ═══ -->
+    <!-- ═══ TAB: DESIGN ═══ -->
     <div id="tabHomepage" style="display:none;">
+
+    <!-- BRANDING -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-title">Tournament Branding</div>
+        <div class="section-count">Logo appears in nav and app icon</div>
+      </div>
+      <div class="logo-upload-wrap">
+        <div id="logoPreview" style="height:44px;display:flex;align-items:center;color:var(--muted);font-family:'DM Mono',monospace;font-size:0.48rem;letter-spacing:0.1em;">No logo uploaded</div>
+        <label for="logoFileInput" class="logo-file-label">Upload Logo</label>
+        <input type="file" id="logoFileInput" accept="image/*" style="display:none" onchange="uploadLogo(this)">
+        <button class="logo-clear-btn" onclick="clearLogo()">Clear Logo</button>
+      </div>
+    </div>
+
+    <!-- LANDING PAGE CONTENT -->
     <div class="section">
       <div class="section-header">
         <div class="section-title">Landing Page Content</div>
@@ -1257,7 +1259,7 @@ function switchAdminTab(tab) {
     b.classList.toggle('active', b.dataset.tab === tab);
   });
   const title = document.getElementById('adminPageTitle');
-  if (title) title.innerHTML = tab === 'command' ? 'Command <em>Center</em>' : 'Home <em>Page</em>';
+  if (title) title.innerHTML = tab === 'command' ? 'Command <em>Center</em>' : '<em>Design</em>';
 }
 
 // ── LANDING PAGE CONTENT ─────────────────────────────────────────

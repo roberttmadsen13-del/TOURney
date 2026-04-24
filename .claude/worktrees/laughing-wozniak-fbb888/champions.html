@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hall of Champions — Bova Invitational</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Mono:wght@300;400;500&family=Barlow+Condensed:wght@300;400;600;700;800&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#1a1008;--gold:#c09030;--gold-l:#d4aa50;--gold-p:#e8cc80;--cream:#f0e6cc;--border:rgba(192,144,48,0.28);--bg:#f5ede0;--card:#fdf8f0;--muted:rgba(26,16,8,0.4);}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--bg);color:var(--ink);font-family:'Barlow',sans-serif;font-weight:300;min-height:100vh;}
+a{color:inherit;text-decoration:none;}
+
+/* NAV */
+.nav{position:sticky;top:0;z-index:100;height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;background:rgba(14,11,6,0.97);border-bottom:1px solid var(--border);}
+.nav-logo{font-family:'Playfair Display',serif;font-size:0.9rem;font-weight:700;display:flex;align-items:center;gap:0.45rem;color:var(--cream);}
+.nav-logo em{font-style:italic;color:var(--gold);}
+#navLogoImg{height:32px;max-width:120px;object-fit:contain;object-position:left;display:none;}
+.nav-links{display:flex;gap:1.2rem;align-items:center;}
+.nav-links a{font-family:'DM Mono',monospace;font-size:0.48rem;letter-spacing:0.15em;text-transform:uppercase;color:rgba(240,230,204,0.4);}
+.nav-links a:hover{color:var(--gold);}
+@media(max-width:520px){.nav{padding:0 1rem;}.nav-links a:not(:last-child){display:none;}}
+
+/* PAGE HEADER */
+.page-header{background:#0e0b06;padding:3.5rem 2rem 2.8rem;border-bottom:1px solid rgba(192,144,48,0.2);text-align:center;}
+.page-eyebrow{font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.5em;text-transform:uppercase;color:rgba(192,144,48,0.6);margin-bottom:1rem;}
+
+/* CSS Trophy */
+.trophy-wrap{margin:0 auto 1.4rem;width:60px;height:60px;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:0;}
+.trophy-cup{
+  width:38px;height:28px;
+  background:linear-gradient(160deg,var(--gold-l) 0%,var(--gold) 60%,#a07820 100%);
+  border-radius:50% 50% 10px 10px / 35% 35% 10px 10px;
+  position:relative;
+  box-shadow:0 2px 8px rgba(192,144,48,0.35);
+}
+.trophy-cup::before,.trophy-cup::after{
+  content:'';position:absolute;top:7px;
+  width:12px;height:16px;
+  background:linear-gradient(160deg,var(--gold-l),var(--gold));
+  box-shadow:0 2px 4px rgba(192,144,48,0.2);
+}
+.trophy-cup::before{left:-11px;border-radius:10px 0 0 10px;}
+.trophy-cup::after{right:-11px;border-radius:0 10px 10px 0;}
+.trophy-stem{width:7px;height:11px;background:linear-gradient(to bottom,var(--gold),#a07820);}
+.trophy-base{width:32px;height:6px;background:linear-gradient(160deg,var(--gold-l),var(--gold));border-radius:3px;box-shadow:0 2px 6px rgba(192,144,48,0.25);}
+
+.page-title{font-family:'Playfair Display',serif;font-size:clamp(2rem,5vw,3.2rem);font-weight:900;line-height:1;color:var(--cream);margin-bottom:0.45rem;}
+.page-title em{font-style:italic;color:var(--gold-p);}
+.page-sub{font-family:'Barlow Condensed',sans-serif;font-size:0.75rem;letter-spacing:0.22em;text-transform:uppercase;color:rgba(240,230,204,0.3);margin-top:0.4rem;}
+
+/* MAIN */
+.main{max-width:960px;margin:0 auto;padding:3rem 2rem;}
+@media(max-width:520px){.main{padding:2rem 1rem;}}
+
+/* SECTION HEADER */
+.section-header{margin-bottom:2rem;padding-bottom:1.2rem;border-bottom:1px solid var(--border);display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:0.5rem;}
+.section-header-left{}
+.section-eyebrow{font-family:'DM Mono',monospace;font-size:0.46rem;letter-spacing:0.4em;text-transform:uppercase;color:rgba(192,144,48,0.55);margin-bottom:0.35rem;}
+.section-title{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:900;color:var(--ink);}
+.section-title em{font-style:italic;color:var(--gold);}
+.section-count{font-family:'DM Mono',monospace;font-size:0.46rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);}
+
+/* CHAMPIONS GRID */
+.champions-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1px;background:var(--border);}
+
+/* CHAMPION CARD */
+.champion-card{
+  background:var(--card);
+  padding:2rem 1.8rem;
+  position:relative;
+  overflow:hidden;
+  transition:background 0.2s;
+}
+.champion-card:hover{background:#fff;}
+.champion-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,var(--gold),var(--gold-l),var(--gold));
+}
+.card-year-ghost{
+  position:absolute;top:-0.5rem;right:0.6rem;
+  font-family:'Playfair Display',serif;font-size:5.5rem;font-weight:900;
+  color:rgba(192,144,48,0.055);line-height:1;
+  pointer-events:none;user-select:none;
+}
+.card-year{
+  font-family:'DM Mono',monospace;font-size:0.5rem;
+  letter-spacing:0.4em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:0.9rem;
+  display:flex;align-items:center;gap:0.5rem;
+}
+.card-year::before{content:'';width:18px;height:1px;background:var(--gold);opacity:0.5;}
+
+/* Star shape for individual champion */
+.star-icon{
+  display:inline-block;width:10px;height:10px;
+  background:var(--gold);
+  clip-path:polygon(50% 0%,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%);
+  margin-right:0.4rem;vertical-align:middle;flex-shrink:0;
+}
+
+.indiv-label{font-family:'DM Mono',monospace;font-size:0.42rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--muted);margin-bottom:0.3rem;display:flex;align-items:center;gap:0.4rem;}
+.indiv-name{font-family:'Playfair Display',serif;font-size:1.45rem;font-weight:900;color:var(--ink);line-height:1.1;margin-bottom:0.25rem;}
+.indiv-score{font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.18em;color:var(--gold);margin-bottom:1.3rem;}
+
+.team-divider{border:none;border-top:1px solid var(--border);margin-bottom:1rem;}
+
+.team-label{font-family:'DM Mono',monospace;font-size:0.42rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--muted);margin-bottom:0.25rem;}
+.team-name-val{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--ink);line-height:1.15;margin-bottom:0.15rem;}
+.team-score{font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.15em;color:var(--muted);}
+
+.card-notes{margin-top:1rem;font-size:0.78rem;font-style:italic;color:var(--muted);line-height:1.55;padding-top:0.8rem;border-top:1px solid rgba(192,144,48,0.1);}
+
+/* EMPTY STATE */
+.empty-wrap{text-align:center;padding:5rem 2rem;}
+.empty-trophy-wrap{margin:0 auto 1.8rem;width:70px;height:70px;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:0;}
+.empty-cup{
+  width:42px;height:32px;
+  background:linear-gradient(160deg,rgba(192,144,48,0.22),rgba(192,144,48,0.1));
+  border:1px solid rgba(192,144,48,0.3);
+  border-radius:50% 50% 10px 10px / 35% 35% 10px 10px;
+  position:relative;
+}
+.empty-cup::before,.empty-cup::after{
+  content:'';position:absolute;top:8px;
+  width:13px;height:18px;
+  background:rgba(192,144,48,0.12);
+  border:1px solid rgba(192,144,48,0.22);
+}
+.empty-cup::before{left:-12px;border-radius:10px 0 0 10px;}
+.empty-cup::after{right:-12px;border-radius:0 10px 10px 0;}
+.empty-stem{width:7px;height:12px;background:rgba(192,144,48,0.18);border-left:1px solid rgba(192,144,48,0.22);border-right:1px solid rgba(192,144,48,0.22);}
+.empty-base{width:36px;height:7px;background:rgba(192,144,48,0.15);border:1px solid rgba(192,144,48,0.22);border-radius:3px;}
+
+.empty-rule{display:flex;align-items:center;gap:1rem;justify-content:center;margin-bottom:1.2rem;}
+.empty-rule-line{width:40px;height:1px;background:rgba(192,144,48,0.25);}
+.empty-rule-diamond{width:5px;height:5px;background:rgba(192,144,48,0.4);transform:rotate(45deg);}
+
+.empty-title{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:900;color:var(--ink);margin-bottom:0.7rem;line-height:1.15;}
+.empty-title em{font-style:italic;color:var(--gold);}
+.empty-body{font-family:'Barlow',sans-serif;font-size:0.88rem;color:var(--muted);line-height:1.7;max-width:380px;margin:0 auto;}
+
+/* LOADING */
+.loading{text-align:center;padding:3rem;font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--muted);}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-logo">
+    <img id="navLogoImg">
+    <svg id="navLogoSvg" width="14" height="18" viewBox="0 0 14 18" style="flex-shrink:0;display:block" fill="none">
+      <line x1="2" y1="1" x2="2" y2="17" stroke="#c09030" stroke-width="1.5" stroke-linecap="round"/>
+      <path d="M2 2L12 5.5L2 9.5Z" fill="#c09030"/>
+    </svg>
+    The Bova <em>Invitational</em>
+  </div>
+  <div class="nav-links">
+    <a href="/scoreboard">Scoreboard</a>
+    <a href="/directory">Directory</a>
+    <a href="/">Home</a>
+  </div>
+</nav>
+
+<div class="page-header">
+  <div class="page-eyebrow">Myrtle Beach, SC &middot; Tournament History</div>
+  <div class="trophy-wrap">
+    <div class="trophy-cup"></div>
+    <div class="trophy-stem"></div>
+    <div class="trophy-base"></div>
+  </div>
+  <div class="page-title">Hall of <em>Champions</em></div>
+  <div class="page-sub">Individual Bova Trophy &middot; Winning Team &middot; All Years</div>
+</div>
+
+<div class="main">
+  <div id="loadingState" class="loading">Loading champions&hellip;</div>
+
+  <div id="championsContent" style="display:none;">
+    <div class="section-header">
+      <div class="section-header-left">
+        <div class="section-eyebrow">Roll of Honor</div>
+        <div class="section-title">Past <em>Winners</em></div>
+      </div>
+      <div class="section-count" id="sectionCount"></div>
+    </div>
+    <div class="champions-grid" id="championsGrid"></div>
+  </div>
+
+  <div id="emptyState" style="display:none;">
+    <div class="empty-wrap">
+      <div class="empty-trophy-wrap">
+        <div class="empty-cup"></div>
+        <div class="empty-stem"></div>
+        <div class="empty-base"></div>
+      </div>
+      <div class="empty-rule">
+        <div class="empty-rule-line"></div>
+        <div class="empty-rule-diamond"></div>
+        <div class="empty-rule-line"></div>
+      </div>
+      <div class="empty-title">First Year of the Bova <em>Invitational</em></div>
+      <div class="empty-body">History starts now. The 2026 champion will be the first name etched into this hall — the inaugural holder of the Bova Trophy.</div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script>
+const SUPABASE_URL = 'https://jllugkiojeoopitdvzsa.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_DnBMNLaSu61ykJ6P_fI2fw_D9DdAScn';
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+async function init() {
+  const { data } = await sb.from('settings').select('value').eq('key','past_champions').maybeSingle();
+  document.getElementById('loadingState').style.display = 'none';
+
+  let champions = [];
+  if (data?.value) {
+    try { champions = JSON.parse(data.value); } catch {}
+  }
+
+  champions.sort((a, b) => b.year - a.year);
+
+  if (!champions.length) {
+    document.getElementById('emptyState').style.display = 'block';
+    return;
+  }
+
+  document.getElementById('championsContent').style.display = 'block';
+  document.getElementById('sectionCount').textContent =
+    `${champions.length} year${champions.length !== 1 ? 's' : ''} of history`;
+
+  document.getElementById('championsGrid').innerHTML = champions.map(c => `
+    <div class="champion-card">
+      <div class="card-year-ghost">${esc(c.year)}</div>
+      <div class="card-year">${esc(c.year)}</div>
+
+      <div class="indiv-label">
+        <span class="star-icon"></span>Individual Champion
+      </div>
+      <div class="indiv-name">${esc(c.individual_name || '—')}</div>
+      ${c.individual_score ? `<div class="indiv-score">${esc(c.individual_score)}</div>` : ''}
+
+      <hr class="team-divider">
+
+      <div class="team-label">Winning Team</div>
+      <div class="team-name-val">${esc(c.team_name || '—')}</div>
+      ${c.team_score ? `<div class="team-score">${esc(c.team_score)}</div>` : ''}
+
+      ${c.notes ? `<div class="card-notes">${esc(c.notes)}</div>` : ''}
+    </div>
+  `).join('');
+}
+
+function esc(str) {
+  if (str == null) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+async function loadNavLogo() {
+  const { data } = await sb.from('settings').select('value').eq('key','logo_url').maybeSingle();
+  if (data?.value) {
+    const img = document.getElementById('navLogoImg');
+    const svg = document.getElementById('navLogoSvg');
+    if (img) { img.src = data.value; img.style.display = 'block'; }
+    if (svg) svg.style.display = 'none';
+  }
+}
+
+init();
+loadNavLogo();
+</script>
+</body>
+</html>

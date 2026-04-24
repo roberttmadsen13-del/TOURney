@@ -164,6 +164,12 @@ body{background:var(--bg);color:var(--ink);font-family:'Barlow',sans-serif;font-
 .confirm-cancel:hover{border-color:var(--ink);color:var(--ink);}
 .confirm-go{flex:2;padding:0.85rem;background:var(--gold);border:none;font-family:'Barlow Condensed',sans-serif;font-size:0.72rem;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;cursor:pointer;color:var(--ink);}
 .confirm-go:hover{background:var(--gold-l);}
+.nav-btn.end-round{background:var(--gold);color:var(--ink);font-weight:700;}
+.nav-btn.end-round:hover{background:var(--gold-l);}
+.confirm-totals-row{display:flex;justify-content:space-between;padding:0.35rem 0;font-size:0.78rem;border-bottom:1px solid var(--border);}
+.confirm-totals-row:last-child{border-bottom:none;}
+.confirm-totals-name{color:var(--muted);}
+.confirm-totals-score{font-weight:600;color:var(--ink);}
 .locked-banner{display:none;text-align:center;padding:0.85rem;font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--gold);background:rgba(192,144,48,0.08);border-top:1px solid var(--border);}
 
 /* Running totals */
@@ -213,19 +219,6 @@ body{background:var(--bg);color:var(--ink);font-family:'Barlow',sans-serif;font-
     Scoring opens when the admin starts a round. Check back soon.
   </div>
 
-  <details style="border:1px solid var(--border);background:rgba(192,144,48,0.02);margin-bottom:1.2rem;">
-    <summary style="padding:0.65rem 0.85rem;font-family:'DM Mono',monospace;font-size:0.48rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--muted);cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;">Scoring &amp; Format Guide <span style="color:var(--gold);font-size:0.42rem;">▼</span></summary>
-    <div style="padding:0.85rem;border-top:1px solid var(--border);display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
-      <div>
-        <div style="font-family:'DM Mono',monospace;font-size:0.42rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--gold);margin-bottom:0.4rem;">Scoring</div>
-        <div style="font-size:0.74rem;color:var(--muted);line-height:1.8;"><strong style="color:var(--ink)">Eagle</strong> −2 &nbsp;<strong style="color:var(--ink)">Birdie</strong> −1 &nbsp;<strong style="color:var(--ink)">Par</strong> E<br><strong style="color:var(--ink)">Bogey</strong> +1 &nbsp;<strong style="color:var(--ink)">Double+</strong> +2 or more</div>
-      </div>
-      <div>
-        <div style="font-family:'DM Mono',monospace;font-size:0.42rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--gold);margin-bottom:0.4rem;">Formats</div>
-        <div style="font-size:0.74rem;color:var(--muted);line-height:1.8;"><strong style="color:var(--ink)">Stroke</strong> own ball<br><strong style="color:var(--ink)">Scramble</strong> team picks best shot<br><strong style="color:var(--ink)">Shambles</strong> best drive, own ball<br><strong style="color:var(--ink)">Best Ball</strong> lower of two scores</div>
-      </div>
-    </div>
-  </details>
 
   <!-- Not-logged-in prompt (hidden when player detected) -->
   <div id="loginPrompt" style="display:none;text-align:center;padding:2rem 1rem;">
@@ -330,11 +323,12 @@ body{background:var(--bg);color:var(--ink);font-family:'Barlow',sans-serif;font-
 
   <div class="confirm-overlay" id="confirmOverlay" onclick="if(event.target===this)hideConfirm()">
     <div class="confirm-box">
-      <div class="confirm-title">Submit Round?</div>
-      <div class="confirm-sub">All 18 holes will be locked.<br>Cannot be undone.</div>
+      <div class="confirm-title">Sign Your Card</div>
+      <div class="confirm-sub">By signing, you confirm your scores<br>are accurate. This cannot be undone.</div>
+      <div id="confirmTotals" style="margin-bottom:1.2rem;"></div>
       <div class="confirm-actions">
-        <button class="confirm-cancel" onclick="hideConfirm()">Cancel</button>
-        <button class="confirm-go" onclick="submitRound()">Submit</button>
+        <button class="confirm-cancel" onclick="hideConfirm()">Go Back</button>
+        <button class="confirm-go" onclick="submitRound()">Sign &amp; Submit</button>
       </div>
     </div>
   </div>
@@ -771,8 +765,17 @@ function renderHole() {
   document.getElementById('progressHoleLabel').textContent = `Hole ${currentHole} of 18`;
   document.getElementById('progressFill').style.width = `${((currentHole - 1) / 18) * 100}%`;
   document.getElementById('prevBtn').disabled = currentHole === 1;
-  document.getElementById('nextBtn').textContent = currentHole === 18 ? 'Review' : 'Next →';
-  document.getElementById('submitSection').style.display = currentHole === 18 ? 'block' : 'none';
+  const nextBtn = document.getElementById('nextBtn');
+  if (currentHole === 18) {
+    nextBtn.textContent = 'End Round';
+    nextBtn.classList.add('end-round');
+    nextBtn.onclick = function() { autoLogParIfEmpty(currentHole); saveCurrentHoleScores(currentHole); renderHole(); confirmSubmit(); };
+  } else {
+    nextBtn.textContent = 'Next →';
+    nextBtn.classList.remove('end-round');
+    nextBtn.onclick = nextHole;
+  }
+  document.getElementById('submitSection').style.display = 'none';
   document.getElementById('formatBadge').textContent = formatLabel(currentHole);
 
   renderPlayers();
@@ -944,7 +947,6 @@ function adjustScore(playerId, par, delta) {
   if (isScrambleHole(currentHole) && playerId === scorerPlayer.id && partnerPlayer) {
     if (!enteredScores[partnerPlayer.id]) enteredScores[partnerPlayer.id] = {};
     enteredScores[partnerPlayer.id][currentHole] = next;
-    autoSaveToDb(partnerPlayer.id, currentHole, next);
   }
 
   // Update DOM inline
@@ -965,7 +967,6 @@ function adjustScore(playerId, par, delta) {
   renderMiniStrip();
   renderProgress();
   renderSummary();
-  autoSaveToDb(playerId, currentHole, next);
 }
 
 function autoLogParIfEmpty(hole) {
@@ -975,22 +976,35 @@ function autoLogParIfEmpty(hole) {
     if (!enteredScores[p.id]) enteredScores[p.id] = {};
     if (enteredScores[p.id][hole] == null) {
       enteredScores[p.id][hole] = par;
-      autoSaveToDb(p.id, hole, par);
     }
   });
   saveLocal();
 }
+function saveCurrentHoleScores(hole) {
+  [scorerPlayer, partnerPlayer].forEach(p => {
+    if (!p) return;
+    const gross = enteredScores[p.id]?.[hole];
+    if (gross != null) autoSaveToDb(p.id, hole, gross);
+  });
+}
 function prevHole() {
-  if (currentHole > 1) { currentHole--; saveSessionState(); renderHole(); }
+  if (currentHole > 1) {
+    saveCurrentHoleScores(currentHole);
+    currentHole--;
+    saveSessionState();
+    renderHole();
+  }
 }
 function nextHole() {
   if (currentHole < 18) {
     autoLogParIfEmpty(currentHole);
+    saveCurrentHoleScores(currentHole);
     currentHole++;
     saveSessionState();
     renderHole();
   } else {
     autoLogParIfEmpty(currentHole);
+    saveCurrentHoleScores(currentHole);
     renderHole();
   }
 }
@@ -1308,6 +1322,21 @@ window.addEventListener('online', flushOfflineQueue);
 
 // ── SUBMIT ────────────────────────────────────────────────────────
 function confirmSubmit() {
+  // Build totals summary for sign-your-card modal
+  const totalsEl = document.getElementById('confirmTotals');
+  let html = '';
+  [scorerPlayer, partnerPlayer].filter(Boolean).forEach(p => {
+    let total = 0, holes = 0;
+    for (let h = 1; h <= 18; h++) {
+      const s = enteredScores[p.id]?.[h];
+      if (s != null) { total += s; holes++; }
+    }
+    const totalPar = coursePars.reduce((a,b) => a+b, 0);
+    const diff = total - totalPar;
+    const diffStr = diff > 0 ? '+' + diff : diff === 0 ? 'E' : '' + diff;
+    html += '<div class="confirm-totals-row"><span class="confirm-totals-name">' + p.first_name + ' ' + (p.last_name||'') + '</span><span class="confirm-totals-score">' + total + ' (' + diffStr + ')</span></div>';
+  });
+  totalsEl.innerHTML = html;
   document.getElementById('confirmOverlay').classList.add('show');
 }
 function hideConfirm() {

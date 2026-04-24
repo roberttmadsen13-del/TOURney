@@ -1,0 +1,215 @@
+[build-system]
+requires = ["setuptools>=70", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "carl-bench"
+version = "1.1.1"
+description = "Benchmark for contextual RL"
+readme = "README.md"
+license = { file = "LICENSE" }
+keywords = ["RL", "Generalization"]
+authors = [
+    { name = "Carolin Benjamins"},
+    { name = "Theresa Eimer", email = "t.eimer@ai.uni-hannover.de" },
+    { name = "Frederik Schubert"},
+    { name = "André Biedenkapp"},
+    { name = "Aditya Mohan", email = "a.mohan@ai.uni-hannover.de" },
+    { name = "Sebastian Döhler"}
+]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Natural Language :: English",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Education",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: Apache Software License",
+    "Operating System :: POSIX :: Linux",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Scientific/Engineering",
+    "Topic :: Software Development",
+]
+requires-python = ">=3.9"
+dependencies = ["gym",
+        "gymnasium<1.0.0",
+        "pygame",
+        "scipy>=1.7.0",
+        "ConfigArgParse>=1.5.1",
+        "numpy>=1.19.5",
+        "pandas>=1.3.0",
+        "matplotlib>=3.4.2",
+        "dataclasses>=0.6",
+        "numpyencoder>=0.3.0",
+        "pyglet>=1.5.15",
+        "pytablewriter>=0.62.0",
+        "PyYAML>=5.4.1",
+        "tabulate>=0.8.9",
+        "bs4>=0.0.1",
+        "configspace>=1.2.1",
+        "omegaconf>=2.3.0"]
+
+[project.urls]
+Homepage = "https://github.com/automl/CARL"
+Documentation = "https://automl.github.io/CARL/main/"
+Repository = "https://github.com/automl/CARL"
+Issues = "https://github.com/automl/CARL/issues"
+
+[project.optional-dependencies]
+box2d = [
+        "gymnasium[box2d]<1.0.0",
+    ]
+brax = [
+        "brax==0.12.1",
+        "protobuf>=3.17.3",
+    ]
+dm_control = [
+        "dm_control>=1.0.3",
+    ]
+mario = [
+        "opencv-python>=4.8.0",
+        "torch~=2.4.1",
+        "Pillow>=8.3.1",
+        "py4j>=0.10.9.2",
+        "pyvirtualdisplay>=3.0",
+        "jdk4py>=17.0.7.0"
+    ]
+all-envs = [
+        "opencv-python>=4.8.0",
+        "torch~=2.4.1",
+        "Pillow>=8.3.1",
+        "py4j>=0.10.9.2",
+        "pyvirtualdisplay>=3.0",
+        "jdk4py>=17.0.7.0",
+        "gymnasium[box2d]>=0.27.1",
+        "brax==0.12.1",
+        "protobuf>=3.17.3",
+        "dm_control>=1.0.3",
+    ]
+dev = [
+        "pytest>=6.1.1",
+        "pytest-cov",
+        "mypy",
+        "ruff",
+        "isort",
+        "pydocstyle",
+        "pre-commit",
+    ]
+docs = [
+        "sphinx>=4.2.0",
+        "sphinx-gallery>=0.10.0",
+        "image>=1.5.33",
+        "sphinx-autoapi>=1.8.4",
+        "automl-sphinx-theme>=0.1.9",
+    ]
+examples = [
+        "stable-baselines3",
+    ]
+all = [
+  "ioh==0.3.17", 
+  "modcma==1.0.8",
+  "torchvision==0.19.1",
+  "torch==2.4.1",
+  "uuid"
+]
+
+[tool.pytest.ini_options]
+testpaths = ["test"]
+minversion = "3.9"
+addopts="--cov=carl"
+
+[tool.coverage.run]
+branch = true
+include = ["carl/*"]
+omit = [
+    "*/mario/pcg_smb_env/*",
+    "*/rna/*",
+    "*/utils/doc_building/*",
+    "*/mario/models/*",
+    "__init__.py"
+]
+
+[tool.coverage.report]
+show_missing = true
+skip_covered = true
+exclude_lines = [
+    "pragma: no cover",
+    '\.\.\.',
+    "raise NotImplementedError",
+    "if TYPE_CHECKING"
+]
+omit = [
+    "*/mario/pcg_smb_env/*",
+    "*/rna/*",
+    "*/utils/doc_building/*",
+    "*/mario/models/*",
+    "__init__.py"
+]
+
+[tool.black]
+target-version = ['py39']
+
+[tool.isort]
+py_version = "39"
+profile = "black" # Play nicely with black
+src_paths = ["carl", "test"]
+known_types = ["typing", "abc"] # We put these in their own section "types"
+sections = ["FUTURE", "TYPES", "STDLIB", "THIRDPARTY", "FIRSTPARTY", "LOCALFOLDER"] # section ordering
+known_first_party = ["CARL"]
+multi_line_output = 3 # https://pycqa.github.io/isort/docs/configuration/multi_line_output_modes.html
+
+[tool.pydocstyle]
+convention = "numpy"
+add-ignore = [ # http://www.pydocstyle.org/en/stable/error_codes.html
+    "D100", # Missing docstring in public module
+    "D101", # Missing docstring in public class
+    "D104", # Missing docstring in public package
+    "D105", # Missing docstring in magic method
+
+    "D203", # 1 blank line required before class docstring
+    "D205", # 1 blank line required between summary and description
+    "D210", # No whitespaces allowed surrounding docstring text
+    "D212", # Multi-line docstring summary should start at the first line
+    "D213", # Multi-line docstring summary should start at the second line
+
+    "D400", # First line should end with a period
+    "D401", # First line should be in imperative mood
+    "D413", # Missing blank line after last section
+    "D415"  # First line should end with a period, question mark, or exclamation point
+]
+
+[tool.mypy]
+python_version = "3.9"
+
+show_error_codes = true
+
+warn_unused_configs = true  # warn about unused [tool.mypy] lines
+
+follow_imports = "normal" # Type check top level api code we use from imports
+ignore_missing_imports = false # prefer explicit ignores
+
+disallow_untyped_defs = true # All functions must have types
+disallow_untyped_decorators = true # ... even decorators
+disallow_incomplete_defs = true # ...all types
+
+[[tool.mypy.overrides]]
+module = [
+    "torch.*",
+    "Box2D.*",
+    "configargparse.*",
+    "brax.*",
+    "jax.*",
+    "IPython.*",
+    "py4j.*",
+    "cv2.*",
+    "seaborn.*",
+    "gym.*",
+    "google.protobuf.*",
+    "numpyencoder.*",
+    "pyglet.*",
+    "matplotlib.*",
+    "pandas.*",
+    "PIL.*",
+    "scipy.*",
+]
+ignore_missing_imports = true
