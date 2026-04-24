@@ -398,7 +398,7 @@ async function init() {
 
   currentRound = Object.entries(roundStates).find(([,v]) => v === 'open')?.[0] || null;
 
-  const roundLabel = currentRound ? `Day ${currentRound.replace('day','')} — Open` : 'No active round';
+  const roundLabel = currentRound ? `Day ${currentRound.replace('day','')} — Live` : (scores.length ? 'Between Rounds' : 'No active round');
   document.getElementById('currentRoundLabel').textContent = roundLabel;
 
   checkHoldingState();
@@ -409,8 +409,7 @@ async function init() {
 
 function checkHoldingState() {
   const hasScores = scores.length > 0;
-  const hasOpenRound = currentRound !== null;
-  const show = !hasScores && !hasOpenRound;
+  const show = !hasScores;
 
   document.getElementById('holdingState').classList.toggle('show', show);
   document.getElementById('scoreboardContent').style.display = show ? 'none' : 'block';
@@ -844,6 +843,12 @@ async function loadNavLogo() {
 
 init();
 loadNavLogo();
+
+// ── HOLE-IN-ONE LISTENER ─────────────────────────────────────────
+sb.channel('hole-in-one').on('broadcast', { event: 'ace' }, function(msg) {
+  var d = msg.payload || {};
+  showToast('ACE! ' + (d.player || 'Someone') + ' holed out on #' + (d.hole || '?') + '!', 'info');
+}).subscribe();
 </script>
 <script src="/pwa.js"></script>
 </body>

@@ -81,3 +81,38 @@
     deferredPrompt = null;
   });
 })();
+
+// ── DYNAMIC MANIFEST (reads uploaded logo from settings) ─────────
+(function () {
+  if (typeof supabase === 'undefined') return;
+  try {
+    var _sb = supabase.createClient(
+      'https://jllugkiojeoopitdvzsa.supabase.co',
+      'sb_publishable_DnBMNLaSu61ykJ6P_fI2fw_D9DdAScn'
+    );
+    _sb.from('settings').select('key,value').in('key', ['logo_url','tournament_name','short_name']).then(function (res) {
+      var rows = res.data || [];
+      var cfg = {};
+      rows.forEach(function (r) { cfg[r.key] = r.value; });
+      var iconUrl = cfg.logo_url || '/icon.svg';
+      var iconType = iconUrl.endsWith('.svg') ? 'image/svg+xml' : 'image/png';
+      var m = {
+        name: cfg.tournament_name || 'Bova Invitational',
+        short_name: cfg.short_name || 'Bova',
+        start_url: '/',
+        scope: '/',
+        display: 'standalone',
+        background_color: '#f5ede0',
+        theme_color: '#1a1008',
+        orientation: 'any',
+        icons: [
+          { src: iconUrl, sizes: '192x192', type: iconType, purpose: 'any maskable' },
+          { src: iconUrl, sizes: '512x512', type: iconType, purpose: 'any maskable' }
+        ]
+      };
+      var blob = new Blob([JSON.stringify(m)], { type: 'application/json' });
+      var link = document.querySelector('link[rel="manifest"]');
+      if (link) link.href = URL.createObjectURL(blob);
+    }).catch(function () {});
+  } catch (e) {}
+})();

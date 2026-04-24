@@ -1189,6 +1189,17 @@ async function autoSaveToDb(playerId, hole, gross) {
       }, { onConflict: 'player_id,round,hole' });
       if (error) throw error;
       showSavingState('saved');
+
+      // ── HOLE-IN-ONE BROADCAST ──
+      if (gross === 1) {
+        var p = players.find(function(x) { return x.id === playerId; });
+        var pName = p ? (p.first_name + ' ' + p.last_name) : 'Someone';
+        sb.channel('hole-in-one').send({
+          type: 'broadcast',
+          event: 'ace',
+          payload: { player: pName, hole: hole, round: currentRound }
+        }).catch(function() {});
+      }
     } catch (e) {
       queueOffline(playerId, hole, gross);
       showSavingState('offline');
@@ -1361,6 +1372,12 @@ async function loadNavLogo() {
 
 init();
 loadNavLogo();
+
+// ── HOLE-IN-ONE LISTENER ─────────────────────────────────────────
+sb.channel('hole-in-one').on('broadcast', { event: 'ace' }, function(msg) {
+  var d = msg.payload || {};
+  showToast('ACE! ' + (d.player || 'Someone') + ' holed out on #' + (d.hole || '?') + '!', 'info');
+}).subscribe();
 </script>
 <script src="/pwa.js"></script>
 </body>

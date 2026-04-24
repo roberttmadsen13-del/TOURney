@@ -24,6 +24,9 @@ a{color:inherit;text-decoration:none;}
 .nav-right{display:flex;align-items:center;gap:1rem;}
 .logout-btn{font-family:'Barlow Condensed',sans-serif;font-size:0.62rem;letter-spacing:0.18em;text-transform:uppercase;color:rgba(240,230,204,0.45);cursor:pointer;background:none;border:none;}
 .logout-btn:hover{color:var(--red);}
+.admin-tab{font-family:'Barlow Condensed',sans-serif;font-size:0.72rem;font-weight:600;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);background:none;border:none;border-bottom:2px solid transparent;padding:0.75rem 1.5rem;cursor:pointer;transition:all 0.2s;}
+.admin-tab:hover{color:var(--gold);}
+.admin-tab.active{color:var(--gold);border-bottom-color:var(--gold);}
 
 /* LOGIN GATE */
 .login-gate{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:2rem;}
@@ -230,10 +233,19 @@ td.email a:hover{color:var(--gold);}
   <div class="main">
     <div class="page-header">
       <div>
-        <div class="page-title">Command <em>Center</em></div>
+        <div class="page-title" id="adminPageTitle">Command <em>Center</em></div>
         <div class="page-sub">Bova Invitational &nbsp;&middot;&nbsp; 2026</div>
       </div>
     </div>
+
+    <!-- TAB BAR -->
+    <div style="display:flex;gap:0;border-bottom:1px solid var(--border);margin-bottom:2rem;">
+      <button class="admin-tab active" data-tab="command" onclick="switchAdminTab('command')">Command Center</button>
+      <button class="admin-tab" data-tab="homepage" onclick="switchAdminTab('homepage')">Home Page</button>
+    </div>
+
+    <!-- ═══ TAB: COMMAND CENTER ═══ -->
+    <div id="tabCommand">
 
     <!-- BRANDING -->
     <div class="section">
@@ -394,7 +406,10 @@ td.email a:hover{color:var(--gold);}
         <div class="pool-chips" id="unassignedPool"></div>
       </div>
       <div class="teams-warn" id="teamsWarn">Teams are uneven &mdash; consider balancing before the round.</div>
-      <button class="save-teams-btn" onclick="saveTeams()">Save Team Assignments</button>
+      <div style="display:flex;gap:0.6rem;flex-wrap:wrap;">
+        <button class="save-teams-btn" onclick="saveTeams()">Save Team Assignments</button>
+        <button class="save-teams-btn" onclick="autoBalanceTeams()" style="background:transparent;color:var(--gold);border:1px solid var(--gold);">Auto Balance</button>
+      </div>
     </div>
 
     <!-- SCORE EDITOR -->
@@ -423,31 +438,6 @@ td.email a:hover{color:var(--gold);}
       <div id="scoreEditorGrid"></div>
     </div>
 
-    <!-- HOME PAGE CONTENT -->
-    <div class="section">
-      <div class="section-header">
-        <div class="section-title">Home Page Content</div>
-        <div class="section-count">Edit text shown on the public homepage</div>
-      </div>
-      <div style="display:flex;flex-direction:column;gap:0;">
-        <div class="fg">
-          <label>Event Subtitle</label>
-          <input type="text" id="homepageSubtitle" placeholder="Inaugural Edition · Myrtle Beach, SC">
-        </div>
-        <div class="fg">
-          <label>Event Details</label>
-          <input type="text" id="homepageDetails" placeholder="3 Days · 2 Teams · 54 Holes · 2026">
-        </div>
-        <div class="fg">
-          <label>About Text</label>
-          <textarea id="homepageAbout" rows="6" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.85rem;outline:none;width:100%;resize:vertical;" onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='var(--border)'"></textarea>
-        </div>
-        <div>
-          <button class="save-formats-btn" onclick="saveHomepageContent()">Save Homepage Content</button>
-        </div>
-      </div>
-    </div>
-
     <!-- DANGER ZONE -->
     <div class="section">
       <div class="section-header">
@@ -467,6 +457,27 @@ td.email a:hover{color:var(--gold);}
         </div>
       </div>
     </div>
+
+    </div><!-- /tabCommand -->
+
+    <!-- ═══ TAB: HOME PAGE ═══ -->
+    <div id="tabHomepage" style="display:none;">
+    <div class="section">
+      <div class="section-header">
+        <div class="section-title">Landing Page Content</div>
+        <div class="section-count">Edit text shown on the home page</div>
+      </div>
+      <div style="display:grid;gap:1rem;background:var(--card);border:1px solid var(--border);padding:1.5rem;">
+        <div class="fg"><label>Event Subtitle</label><input type="text" id="lpTourneyName" placeholder="Inaugural Edition · Myrtle Beach, SC" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;"></div>
+        <div class="fg"><label>Event Details</label><input type="text" id="lpHeroMeta" placeholder="3 Days · 2 Teams · 54 Holes · 2026" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;"></div>
+        <div class="fg"><label>About Text</label><textarea id="lpAboutText" rows="6" placeholder="Tell the story of your tournament..." style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;resize:vertical;"></textarea></div>
+        <div style="display:flex;gap:0.6rem;flex-wrap:wrap;margin-top:0.4rem;">
+          <button class="action-btn" style="padding:0.55rem 1.4rem;font-size:0.6rem;letter-spacing:0.15em;background:var(--gold);color:var(--ink);border-color:var(--gold);font-weight:700;" onclick="saveLandingPage()">Save Landing Page</button>
+          <a href="/" target="_blank" class="action-btn" style="padding:0.55rem 1.4rem;font-size:0.6rem;letter-spacing:0.15em;text-decoration:none;text-align:center;">Preview Site &rarr;</a>
+        </div>
+      </div>
+    </div>
+    </div><!-- /tabHomepage -->
 
   </div><!-- /main -->
 </div><!-- /adminUI -->
@@ -543,7 +554,7 @@ function showAdmin(email) {
 
 // ── DATA ──────────────────────────────────────────────────────────
 async function loadAll() {
-  await Promise.all([loadPlayers(), loadRoundStates(), loadTeams(), loadPars(), loadFormats(), loadChallengersCaptain(), loadLogoUrl(), loadCourseNames(), loadHomepageContent()]);
+  await Promise.all([loadPlayers(), loadRoundStates(), loadTeams(), loadPars(), loadFormats(), loadChallengersCaptain(), loadLogoUrl(), loadCourseNames(), loadHomepageContent(), loadLandingPage()]);
   buildParEditor();
 }
 
@@ -831,6 +842,22 @@ function assignFromPool(id) {
 function movePlayer(id, team) {
   if (team) teamAssignments[id] = team; else delete teamAssignments[id];
   renderTeamUI();
+}
+
+function autoBalanceTeams() {
+  const unassigned = players.filter(p => !teamAssignments[p.id]);
+  if (!unassigned.length) { showToast('All players already assigned.'); return; }
+  const teamACount = Object.values(teamAssignments).filter(t => t === 'A').length;
+  const teamBCount = Object.values(teamAssignments).filter(t => t === 'B').length;
+  // Shuffle unassigned for random distribution
+  const shuffled = [...unassigned].sort(() => Math.random() - 0.5);
+  let aCount = teamACount, bCount = teamBCount;
+  shuffled.forEach(p => {
+    if (aCount <= bCount) { teamAssignments[p.id] = 'A'; aCount++; }
+    else { teamAssignments[p.id] = 'B'; bCount++; }
+  });
+  renderTeamUI();
+  showToast(`${shuffled.length} player${shuffled.length > 1 ? 's' : ''} auto-assigned. Hit Save to confirm.`);
 }
 
 async function saveTeams() {
@@ -1220,6 +1247,40 @@ async function clearLogo() {
   const el = document.getElementById('logoPreview');
   if (el) el.textContent = 'No logo uploaded';
   showToast('Logo cleared.');
+}
+
+// ── ADMIN TABS ───────────────────────────────────────────────────
+function switchAdminTab(tab) {
+  document.getElementById('tabCommand').style.display = tab === 'command' ? 'block' : 'none';
+  document.getElementById('tabHomepage').style.display = tab === 'homepage' ? 'block' : 'none';
+  document.querySelectorAll('.admin-tab').forEach(b => {
+    b.classList.toggle('active', b.dataset.tab === tab);
+  });
+  const title = document.getElementById('adminPageTitle');
+  if (title) title.innerHTML = tab === 'command' ? 'Command <em>Center</em>' : 'Home <em>Page</em>';
+}
+
+// ── LANDING PAGE CONTENT ─────────────────────────────────────────
+const LP_KEYS = ['homepage_subtitle','homepage_details','homepage_about'];
+const LP_FIELDS = { homepage_subtitle:'lpTourneyName', homepage_details:'lpHeroMeta', homepage_about:'lpAboutText' };
+
+async function loadLandingPage() {
+  const { data } = await sb.from('settings').select('key,value').in('key', LP_KEYS);
+  (data || []).forEach(r => {
+    const el = document.getElementById(LP_FIELDS[r.key]);
+    if (el) el.value = r.value || '';
+  });
+}
+
+async function saveLandingPage() {
+  const rows = LP_KEYS.map(key => ({
+    key,
+    value: document.getElementById(LP_FIELDS[key])?.value || '',
+    updated_at: new Date().toISOString()
+  }));
+  const { error } = await sb.from('settings').upsert(rows, { onConflict: 'key' });
+  if (error) { showToast('Error: ' + error.message); return; }
+  showToast('Landing page saved.');
 }
 
 // ── INIT ──────────────────────────────────────────────────────────
