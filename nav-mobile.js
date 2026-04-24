@@ -22,6 +22,8 @@
     inner.className = 'nav-drawer-inner';
 
     items.forEach(function (src) {
+      // Skip scoring link — the FAB handles this
+      if (src.tagName === 'A' && (src.getAttribute('href') || '').replace(/\/$/, '') === '/scorecard') return;
       var clone = src.cloneNode(true);
       // Preserve inline onclick handlers on cloned buttons
       if (src.tagName === 'BUTTON') {

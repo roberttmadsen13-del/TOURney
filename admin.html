@@ -449,11 +449,56 @@ td.email a:hover{color:var(--gold);}
     <!-- ═══ TAB: DESIGN ═══ -->
     <div id="tabHomepage" style="display:none;">
 
-    <!-- BRANDING -->
+    <!-- TOURNAMENT IDENTITY -->
     <div class="section">
       <div class="section-header">
-        <div class="section-title">Tournament Branding</div>
-        <div class="section-count">Logo appears in nav and app icon</div>
+        <div class="section-title">Tournament Identity</div>
+        <div class="section-count">Name, year, location — shown across the site</div>
+      </div>
+      <div style="display:grid;gap:1rem;background:var(--card);border:1px solid var(--border);padding:1.5rem;">
+        <div class="fg"><label>Tournament Name</label><input type="text" id="dsName" placeholder="The Bova Invitational" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;"></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+          <div class="fg"><label>Year</label><input type="text" id="dsYear" placeholder="2026" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;"></div>
+          <div class="fg"><label>Location</label><input type="text" id="dsLocation" placeholder="Myrtle Beach, SC" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;"></div>
+        </div>
+        <div class="fg"><label>Hero Eyebrow Line</label><input type="text" id="lpTourneyName" placeholder="Inaugural Edition · Myrtle Beach, SC" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;"></div>
+        <div class="fg"><label>Hero Meta Line</label><input type="text" id="lpHeroMeta" placeholder="3 Days · 2 Teams · 54 Holes · 2026" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;"></div>
+        <div class="fg"><label>Primary CTA Button</label><input type="text" id="dsCtaPrimary" placeholder="Register Interest" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;"></div>
+        <div style="display:flex;gap:0.6rem;flex-wrap:wrap;margin-top:0.4rem;">
+          <button class="action-btn" style="padding:0.55rem 1.4rem;font-size:0.6rem;letter-spacing:0.15em;background:var(--gold);color:var(--ink);border-color:var(--gold);font-weight:700;" onclick="saveIdentity()">Save Identity</button>
+          <a href="/" target="_blank" class="action-btn" style="padding:0.55rem 1.4rem;font-size:0.6rem;letter-spacing:0.15em;text-decoration:none;text-align:center;">Preview Site &rarr;</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- SITE COLORS -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-title">Site Colors</div>
+        <div class="section-count">Gold, dark, and background theme colors</div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;background:var(--card);border:1px solid var(--border);padding:1.5rem;">
+        <div class="fg">
+          <label>Gold / Primary</label>
+          <input type="color" id="dsColorGold" value="#c09030" style="height:44px;width:100%;padding:0.15rem;cursor:pointer;border:1px solid var(--border);background:var(--card);">
+        </div>
+        <div class="fg">
+          <label>Ink / Dark</label>
+          <input type="color" id="dsColorInk" value="#1a1008" style="height:44px;width:100%;padding:0.15rem;cursor:pointer;border:1px solid var(--border);background:var(--card);">
+        </div>
+        <div class="fg">
+          <label>Background</label>
+          <input type="color" id="dsColorBg" value="#f5ede0" style="height:44px;width:100%;padding:0.15rem;cursor:pointer;border:1px solid var(--border);background:var(--card);">
+        </div>
+      </div>
+      <button class="save-formats-btn" style="margin-top:0.75rem;" onclick="saveColors()">Save Colors</button>
+    </div>
+
+    <!-- LOGO -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-title">Logo</div>
+        <div class="section-count">Appears in nav and as PWA app icon</div>
       </div>
       <div class="logo-upload-wrap">
         <div id="logoPreview" style="height:44px;display:flex;align-items:center;color:var(--muted);font-family:'DM Mono',monospace;font-size:0.48rem;letter-spacing:0.1em;">No logo uploaded</div>
@@ -463,22 +508,75 @@ td.email a:hover{color:var(--gold);}
       </div>
     </div>
 
-    <!-- LANDING PAGE CONTENT -->
+    <!-- PHOTOS -->
     <div class="section">
       <div class="section-header">
-        <div class="section-title">Landing Page Content</div>
-        <div class="section-count">Edit text shown on the home page</div>
+        <div class="section-title">Site Photos</div>
+        <div class="section-count">Hero background and About section image</div>
       </div>
-      <div style="display:grid;gap:1rem;background:var(--card);border:1px solid var(--border);padding:1.5rem;">
-        <div class="fg"><label>Event Subtitle</label><input type="text" id="lpTourneyName" placeholder="Inaugural Edition · Myrtle Beach, SC" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;"></div>
-        <div class="fg"><label>Event Details</label><input type="text" id="lpHeroMeta" placeholder="3 Days · 2 Teams · 54 Holes · 2026" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;"></div>
-        <div class="fg"><label>About Text</label><textarea id="lpAboutText" rows="6" placeholder="Tell the story of your tournament..." style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;resize:vertical;"></textarea></div>
-        <div style="display:flex;gap:0.6rem;flex-wrap:wrap;margin-top:0.4rem;">
-          <button class="action-btn" style="padding:0.55rem 1.4rem;font-size:0.6rem;letter-spacing:0.15em;background:var(--gold);color:var(--ink);border-color:var(--gold);font-weight:700;" onclick="saveLandingPage()">Save Landing Page</button>
-          <a href="/" target="_blank" class="action-btn" style="padding:0.55rem 1.4rem;font-size:0.6rem;letter-spacing:0.15em;text-decoration:none;text-align:center;">Preview Site &rarr;</a>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);">
+        <div style="background:var(--card);padding:1.5rem;">
+          <div style="font-family:'Barlow Condensed',sans-serif;font-size:0.62rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);margin-bottom:1rem;">Hero Background</div>
+          <div id="heroPhotoPreview" style="min-height:40px;margin-bottom:0.75rem;font-family:'DM Mono',monospace;font-size:0.48rem;color:var(--muted);">No photo</div>
+          <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
+            <label for="heroPhotoInput" class="logo-file-label" style="font-size:0.6rem;padding:0.4rem 1rem;">Upload Photo</label>
+            <input type="file" id="heroPhotoInput" accept="image/*" style="display:none" onchange="uploadPhoto(this,'hero_bg','heroPhotoPreview','hero_photo_url')">
+            <button class="logo-clear-btn" style="font-size:0.6rem;padding:0.4rem 1rem;" onclick="clearPhoto('heroPhotoPreview','hero_photo_url')">Clear</button>
+          </div>
+        </div>
+        <div style="background:var(--card);padding:1.5rem;">
+          <div style="font-family:'Barlow Condensed',sans-serif;font-size:0.62rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);margin-bottom:1rem;">About Section Photo</div>
+          <div id="aboutPhotoPreview" style="min-height:40px;margin-bottom:0.75rem;font-family:'DM Mono',monospace;font-size:0.48rem;color:var(--muted);">No photo</div>
+          <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
+            <label for="aboutPhotoInput" class="logo-file-label" style="font-size:0.6rem;padding:0.4rem 1rem;">Upload Photo</label>
+            <input type="file" id="aboutPhotoInput" accept="image/*" style="display:none" onchange="uploadPhoto(this,'about_img','aboutPhotoPreview','about_photo_url')">
+            <button class="logo-clear-btn" style="font-size:0.6rem;padding:0.4rem 1rem;" onclick="clearPhoto('aboutPhotoPreview','about_photo_url')">Clear</button>
+          </div>
         </div>
       </div>
     </div>
+
+    <!-- ABOUT SECTION -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-title">About Section</div>
+        <div class="section-count">Story text and stat numbers</div>
+      </div>
+      <div style="display:grid;gap:1rem;background:var(--card);border:1px solid var(--border);padding:1.5rem;">
+        <div class="fg"><label>About Text</label><textarea id="lpAboutText" rows="6" placeholder="Tell the story of your tournament..." style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;resize:vertical;"></textarea></div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;">
+          <div class="fg"><label>Days Stat</label><input type="text" id="dsStatDays" placeholder="3" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;"></div>
+          <div class="fg"><label>Teams Stat</label><input type="text" id="dsStatTeams" placeholder="2" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;"></div>
+          <div class="fg"><label>Holes Stat</label><input type="text" id="dsStatHoles" placeholder="54" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;"></div>
+        </div>
+        <button class="action-btn" style="padding:0.55rem 1.4rem;font-size:0.6rem;letter-spacing:0.15em;background:var(--gold);color:var(--ink);border-color:var(--gold);font-weight:700;margin-top:0.4rem;" onclick="saveAbout()">Save About</button>
+      </div>
+    </div>
+
+    <!-- REGISTRATION -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-title">Registration</div>
+        <div class="section-count">Status, capacity, and info bullets on the home page</div>
+      </div>
+      <div style="display:grid;gap:1rem;background:var(--card);border:1px solid var(--border);padding:1.5rem;">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+          <div class="fg">
+            <label>Registration Status</label>
+            <select id="dsRegOpen" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;width:100%;-webkit-appearance:none;">
+              <option value="true">Open</option>
+              <option value="false">Closed</option>
+            </select>
+          </div>
+          <div class="fg"><label>Max Players</label><input type="number" id="dsMaxPlayers" value="24" min="1" max="200" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;"></div>
+        </div>
+        <div class="fg"><label>Info Bullet 1</label><input type="text" id="dsRegBullet1" placeholder="Covers greens fees, cart, and meals" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;"></div>
+        <div class="fg"><label>Info Bullet 2</label><input type="text" id="dsRegBullet2" placeholder="Limited field — final selection by invite" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;"></div>
+        <div class="fg"><label>Info Bullet 3</label><input type="text" id="dsRegBullet3" placeholder="Handicap tiers used for team balance" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;"></div>
+        <button class="action-btn" style="padding:0.55rem 1.4rem;font-size:0.6rem;letter-spacing:0.15em;background:var(--gold);color:var(--ink);border-color:var(--gold);font-weight:700;margin-top:0.4rem;" onclick="saveRegistration()">Save Registration</button>
+      </div>
+    </div>
+
     </div><!-- /tabHomepage -->
 
   </div><!-- /main -->
@@ -556,7 +654,7 @@ function showAdmin(email) {
 
 // ── DATA ──────────────────────────────────────────────────────────
 async function loadAll() {
-  await Promise.all([loadPlayers(), loadRoundStates(), loadTeams(), loadPars(), loadFormats(), loadChallengersCaptain(), loadLogoUrl(), loadCourseNames(), loadHomepageContent(), loadLandingPage()]);
+  await Promise.all([loadPlayers(), loadRoundStates(), loadTeams(), loadPars(), loadFormats(), loadChallengersCaptain(), loadCourseNames(), loadDesignSettings()]);
   buildParEditor();
 }
 
@@ -985,26 +1083,6 @@ async function loadCourseNames() {
   });
 }
 
-async function loadHomepageContent() {
-  const { data } = await sb.from('settings').select('*').in('key',['homepage_subtitle','homepage_details','homepage_about']);
-  (data || []).forEach(row => {
-    if (row.key === 'homepage_subtitle') { const el = document.getElementById('homepageSubtitle'); if (el) el.value = row.value; }
-    if (row.key === 'homepage_details')  { const el = document.getElementById('homepageDetails');  if (el) el.value = row.value; }
-    if (row.key === 'homepage_about')    { const el = document.getElementById('homepageAbout');    if (el) el.value = row.value; }
-  });
-}
-
-async function saveHomepageContent() {
-  const subtitle = document.getElementById('homepageSubtitle')?.value?.trim() || '';
-  const details  = document.getElementById('homepageDetails')?.value?.trim()  || '';
-  const about    = document.getElementById('homepageAbout')?.value?.trim()    || '';
-  await sb.from('settings').upsert([
-    { key: 'homepage_subtitle', value: subtitle, updated_at: new Date().toISOString() },
-    { key: 'homepage_details',  value: details,  updated_at: new Date().toISOString() },
-    { key: 'homepage_about',    value: about,    updated_at: new Date().toISOString() },
-  ], { onConflict: 'key' });
-  showToast('Homepage content saved.');
-}
 
 function editPlayer(id) {
   const p = players.find(pl => pl.id === id);
@@ -1262,27 +1340,124 @@ function switchAdminTab(tab) {
   if (title) title.innerHTML = tab === 'command' ? 'Command <em>Center</em>' : '<em>Design</em>';
 }
 
-// ── LANDING PAGE CONTENT ─────────────────────────────────────────
-const LP_KEYS = ['homepage_subtitle','homepage_details','homepage_about'];
-const LP_FIELDS = { homepage_subtitle:'lpTourneyName', homepage_details:'lpHeroMeta', homepage_about:'lpAboutText' };
+// ── DESIGN TAB ───────────────────────────────────────────────────
+// Settings keys → Supabase `settings` table (key/value/updated_at)
+// Wired to index.html: homepage_subtitle→.hero-eyebrow, homepage_details→.hero-meta,
+//   homepage_about→.about-body, logo_url→nav img + PWA manifest icon
+// Pending wire-up in index.html: all other keys below
+const DS_ALL_KEYS = [
+  'homepage_subtitle','homepage_details','homepage_about',
+  'logo_url','hero_photo_url','about_photo_url',
+  'tourney_name','tourney_year','tourney_location',
+  'hero_cta_primary','color_primary','color_ink','color_bg',
+  'about_stat_days','about_stat_teams','about_stat_holes',
+  'reg_open','reg_max_players','reg_bullet_1','reg_bullet_2','reg_bullet_3',
+];
 
-async function loadLandingPage() {
-  const { data } = await sb.from('settings').select('key,value').in('key', LP_KEYS);
-  (data || []).forEach(r => {
-    const el = document.getElementById(LP_FIELDS[r.key]);
-    if (el) el.value = r.value || '';
+const DS_FIELD_MAP = {
+  homepage_subtitle: 'lpTourneyName',
+  homepage_details:  'lpHeroMeta',
+  homepage_about:    'lpAboutText',
+  tourney_name:      'dsName',
+  tourney_year:      'dsYear',
+  tourney_location:  'dsLocation',
+  hero_cta_primary:  'dsCtaPrimary',
+  color_primary:     'dsColorGold',
+  color_ink:         'dsColorInk',
+  color_bg:          'dsColorBg',
+  about_stat_days:   'dsStatDays',
+  about_stat_teams:  'dsStatTeams',
+  about_stat_holes:  'dsStatHoles',
+  reg_max_players:   'dsMaxPlayers',
+};
+
+async function loadDesignSettings() {
+  const { data } = await sb.from('settings').select('key,value').in('key', DS_ALL_KEYS);
+  const map = {};
+  (data || []).forEach(r => { map[r.key] = r.value; });
+  Object.entries(DS_FIELD_MAP).forEach(([key, id]) => {
+    if (map[key] != null) { const el = document.getElementById(id); if (el) el.value = map[key]; }
   });
+  if (map.reg_open != null) { const el = document.getElementById('dsRegOpen'); if (el) el.value = map.reg_open; }
+  ['reg_bullet_1','reg_bullet_2','reg_bullet_3'].forEach((key, i) => {
+    if (map[key]) { const el = document.getElementById(`dsRegBullet${i+1}`); if (el) el.value = map[key]; }
+  });
+  if (map.logo_url) renderLogoPreview(map.logo_url);
+  if (map.hero_photo_url) renderPhotoPreview('heroPhotoPreview', map.hero_photo_url);
+  if (map.about_photo_url) renderPhotoPreview('aboutPhotoPreview', map.about_photo_url);
 }
 
-async function saveLandingPage() {
-  const rows = LP_KEYS.map(key => ({
-    key,
-    value: document.getElementById(LP_FIELDS[key])?.value || '',
-    updated_at: new Date().toISOString()
-  }));
+function renderPhotoPreview(id, url) {
+  const el = document.getElementById(id);
+  if (el) el.innerHTML = `<img src="${url}" style="height:80px;max-width:220px;object-fit:cover;object-position:center;border:1px solid var(--border);" onerror="this.parentElement.textContent='Error loading'">`;
+}
+
+async function saveIdentity() {
+  const rows = [
+    { key:'tourney_name',      value: document.getElementById('dsName')?.value || '' },
+    { key:'tourney_year',      value: document.getElementById('dsYear')?.value || '' },
+    { key:'tourney_location',  value: document.getElementById('dsLocation')?.value || '' },
+    { key:'hero_cta_primary',  value: document.getElementById('dsCtaPrimary')?.value || '' },
+    { key:'homepage_subtitle', value: document.getElementById('lpTourneyName')?.value || '' },
+    { key:'homepage_details',  value: document.getElementById('lpHeroMeta')?.value || '' },
+  ].map(r => ({ ...r, updated_at: new Date().toISOString() }));
   const { error } = await sb.from('settings').upsert(rows, { onConflict: 'key' });
   if (error) { showToast('Error: ' + error.message); return; }
-  showToast('Landing page saved.');
+  showToast('Identity saved.');
+}
+
+async function saveColors() {
+  const rows = [
+    { key:'color_primary', value: document.getElementById('dsColorGold')?.value || '#c09030' },
+    { key:'color_ink',     value: document.getElementById('dsColorInk')?.value || '#1a1008' },
+    { key:'color_bg',      value: document.getElementById('dsColorBg')?.value || '#f5ede0' },
+  ].map(r => ({ ...r, updated_at: new Date().toISOString() }));
+  await sb.from('settings').upsert(rows, { onConflict: 'key' });
+  showToast('Colors saved. Refresh site to apply.');
+}
+
+async function saveAbout() {
+  const rows = [
+    { key:'homepage_about',   value: document.getElementById('lpAboutText')?.value || '' },
+    { key:'about_stat_days',  value: document.getElementById('dsStatDays')?.value || '' },
+    { key:'about_stat_teams', value: document.getElementById('dsStatTeams')?.value || '' },
+    { key:'about_stat_holes', value: document.getElementById('dsStatHoles')?.value || '' },
+  ].map(r => ({ ...r, updated_at: new Date().toISOString() }));
+  await sb.from('settings').upsert(rows, { onConflict: 'key' });
+  showToast('About section saved.');
+}
+
+async function saveRegistration() {
+  const rows = [
+    { key:'reg_open',        value: document.getElementById('dsRegOpen')?.value || 'true' },
+    { key:'reg_max_players', value: document.getElementById('dsMaxPlayers')?.value || '24' },
+    { key:'reg_bullet_1',    value: document.getElementById('dsRegBullet1')?.value || '' },
+    { key:'reg_bullet_2',    value: document.getElementById('dsRegBullet2')?.value || '' },
+    { key:'reg_bullet_3',    value: document.getElementById('dsRegBullet3')?.value || '' },
+  ].map(r => ({ ...r, updated_at: new Date().toISOString() }));
+  await sb.from('settings').upsert(rows, { onConflict: 'key' });
+  showToast('Registration saved.');
+}
+
+async function uploadPhoto(input, storageKey, previewId, settingKey) {
+  const file = input.files[0];
+  if (!file) return;
+  showToast('Uploading...');
+  const ext = file.name.split('.').pop().toLowerCase();
+  const { error } = await sb.storage.from('brand').upload(`${storageKey}.${ext}`, file, { upsert: true });
+  if (error) { showToast('Upload failed: ' + error.message); return; }
+  const { data } = sb.storage.from('brand').getPublicUrl(`${storageKey}.${ext}`);
+  const url = data.publicUrl + '?t=' + Date.now();
+  await sb.from('settings').upsert({ key: settingKey, value: url, updated_at: new Date().toISOString() }, { onConflict: 'key' });
+  renderPhotoPreview(previewId, url);
+  showToast('Photo saved.');
+}
+
+async function clearPhoto(previewId, settingKey) {
+  await sb.from('settings').delete().eq('key', settingKey);
+  const el = document.getElementById(previewId);
+  if (el) el.textContent = 'No photo';
+  showToast('Photo cleared.');
 }
 
 // ── INIT ──────────────────────────────────────────────────────────
