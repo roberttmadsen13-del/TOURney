@@ -814,7 +814,7 @@ function renderPlayers() {
     const hasScore = rawGross != null;
     const displayGross = hasScore ? rawGross : par;
     const cls   = hasScore ? scoreValClass(rawGross, par) : 'empty';
-    const lbl   = hasScore ? scoreLabel(rawGross, par) : 'Par (default)';
+    const lbl   = hasScore ? scoreLabel(rawGross, par) : 'E';
     leftHtml = `
       <div class="scramble-label">Team Score</div>
       <div class="score-stepper">
