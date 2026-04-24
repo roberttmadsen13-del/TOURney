@@ -115,10 +115,6 @@ body{background:var(--bg);color:var(--ink);font-family:'Barlow',sans-serif;font-
 .hole-cell.ms-empty{color:rgba(26,16,8,0.2);}
 
 /* Holding state */
-.holding-state{display:none;text-align:center;padding:5rem 2rem;}
-.holding-state.show{display:block;}
-.holding-clock{font-family:'Playfair Display',serif;font-size:clamp(3rem,10vw,6rem);font-weight:900;color:var(--gold);line-height:1;margin-bottom:0.5rem;}
-.holding-label{font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.4em;text-transform:uppercase;color:var(--muted);}
 
 /* Empty state */
 .empty-state{text-align:center;padding:5rem 2rem;font-family:'Playfair Display',serif;font-style:italic;font-size:1rem;color:var(--muted);}
@@ -175,35 +171,6 @@ details[open] .explainer summary::after,.explainer details[open]>summary::after{
 </div>
 
 <!-- SCORING EXPLAINER -->
-<div class="explainer">
-  <details>
-    <summary>Scoring &amp; Format Guide</summary>
-    <div class="explainer-body">
-      <div>
-        <div class="ex-group-title">Scoring Terms</div>
-        <div class="ex-row"><span class="ex-term">Eagle</span><span class="ex-def">2 under par on a hole</span></div>
-        <div class="ex-row"><span class="ex-term">Birdie</span><span class="ex-def">1 under par on a hole</span></div>
-        <div class="ex-row"><span class="ex-term">Par</span><span class="ex-def">Expected score on the hole</span></div>
-        <div class="ex-row"><span class="ex-term">Bogey</span><span class="ex-def">1 over par</span></div>
-        <div class="ex-row"><span class="ex-term">Double+</span><span class="ex-def">2 or more over par</span></div>
-      </div>
-      <div>
-        <div class="ex-group-title">Round Formats</div>
-        <div class="ex-row"><span class="ex-term">Stroke</span><span class="ex-def">Every player counts their own ball</span></div>
-        <div class="ex-row"><span class="ex-term">Scramble</span><span class="ex-def">Team picks best shot each time — one team score</span></div>
-        <div class="ex-row"><span class="ex-term">Shambles</span><span class="ex-def">Best drive selected, then each plays their own ball</span></div>
-        <div class="ex-row"><span class="ex-term">Best Ball</span><span class="ex-def">Team counts the lower of two individual scores per hole</span></div>
-      </div>
-    </div>
-  </details>
-</div>
-
-<!-- HOLDING STATE (no open round, no scores) -->
-<div class="holding-state" id="holdingState">
-  <div class="holding-clock" id="holdingClock">--:-- --</div>
-  <div class="holding-label">Scoring opens when the admin starts a round</div>
-</div>
-
 <div id="scoreboardContent">
   <div style="max-width:1100px;margin:0 auto;padding:0 2rem;">
     <div class="tab-bar" style="padding:0;max-width:none;">
@@ -401,37 +368,11 @@ async function init() {
   const roundLabel = currentRound ? `Day ${currentRound.replace('day','')} — Live` : (scores.length ? 'Between Rounds' : 'No active round');
   document.getElementById('currentRoundLabel').textContent = roundLabel;
 
-  checkHoldingState();
   render();
   updateTimestamp();
   subscribeRealtime();
 }
 
-function checkHoldingState() {
-  const hasScores = scores.length > 0;
-  const show = !hasScores;
-
-  document.getElementById('holdingState').classList.toggle('show', show);
-  document.getElementById('scoreboardContent').style.display = show ? 'none' : 'block';
-
-  if (show) startClock();
-}
-
-// 12-hour AM/PM clock
-let _clockInterval = null;
-function startClock() {
-  const tick = () => {
-    const now = new Date();
-    let h = now.getHours();
-    const m = now.getMinutes().toString().padStart(2,'0');
-    const ampm = h >= 12 ? 'PM' : 'AM';
-    h = h % 12 || 12;
-    document.getElementById('holdingClock').textContent = `${h}:${m} ${ampm}`;
-  };
-  tick();
-  clearInterval(_clockInterval);
-  _clockInterval = setInterval(tick, 1000);
-}
 
 // ── SCORE HELPERS ─────────────────────────────────────────────────
 function getPlayerScores(playerId, round) {
@@ -790,14 +731,6 @@ function subscribeRealtime() {
         flashPlayerRow(payload.new.player_id);
       } else if (payload.eventType === 'DELETE') {
         scores = scores.filter(s => s.id !== payload.old.id);
-      }
-
-      // Re-check holding state
-      const hasScores = scores.length > 0;
-      if (hasScores) {
-        document.getElementById('holdingState').classList.remove('show');
-        document.getElementById('scoreboardContent').style.display = 'block';
-        clearInterval(_clockInterval);
       }
 
       render();
