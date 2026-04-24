@@ -126,7 +126,9 @@ body{background:var(--bg);color:var(--ink);font-family:'Barlow',sans-serif;font-
 .mini-strip-wrap{display:flex;border-top:1px solid var(--border);}
 .mini-labels{display:flex;flex-direction:column;align-items:flex-end;gap:2px;padding:0.55rem 0 0.55rem 0.6rem;flex-shrink:0;}
 .mini-labels .ml-hole{height:13px;display:flex;align-items:center;font-family:'DM Mono',monospace;font-size:0.32rem;color:transparent;margin-bottom:1px;}
-.mini-labels .ml-init{height:13px;display:flex;align-items:center;font-family:'DM Mono',monospace;font-size:0.34rem;letter-spacing:0.05em;color:var(--muted);white-space:nowrap;}
+.mini-labels .ml-init{height:13px;display:flex;align-items:center;justify-content:center;width:18px;font-family:'Barlow Condensed',sans-serif;font-size:0.34rem;font-weight:700;letter-spacing:0.02em;border-radius:50%;white-space:nowrap;}
+.mini-labels .ml-init.team-a{background:rgba(192,144,48,0.18);color:#c09030;}
+.mini-labels .ml-init.team-b{background:rgba(106,138,170,0.18);color:#6a8aaa;}
 .mini-totals{display:flex;flex-direction:column;align-items:center;gap:2px;padding:0.55rem 0.6rem 0.55rem 0;flex-shrink:0;border-left:1px solid var(--border);}
 .mini-totals .mt-label{height:13px;display:flex;align-items:center;font-family:'DM Mono',monospace;font-size:0.34rem;color:var(--muted);margin-bottom:1px;}
 .mini-totals .mt-val{height:13px;min-width:28px;display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:0.38rem;font-weight:500;}
@@ -1071,23 +1073,24 @@ function renderMiniStrip() {
   const frontScramble = PAIR_TEAM_FMTS.includes(frontFmt);
   const backScramble  = PAIR_TEAM_FMTS.includes(backFmt);
 
-  // Row config: each entry = { label, getScore(hole) }
+  // Row config: each entry = { label, teamCls, getScore(hole) }
+  const myColCls = scorerTeam === 'A' ? 'team-a' : 'team-b';
   const rows = [];
   if (frontScramble && backScramble) {
     // Both nines are team formats — single row
-    rows.push({ label: 'TM', getScore: (h) => enteredScores[scorerPlayer.id]?.[h] });
+    rows.push({ label: 'TM', teamCls: myColCls, getScore: (h) => enteredScores[scorerPlayer.id]?.[h] });
   } else if (!frontScramble && !backScramble) {
     // Both nines are individual — one row per player
     myPlayers.forEach(p => {
       const init = (p.first_name[0] + (p.last_name?.[0] || '')).toUpperCase();
-      rows.push({ label: init, getScore: (h) => enteredScores[p.id]?.[h] });
+      rows.push({ label: init, teamCls: myColCls, getScore: (h) => enteredScores[p.id]?.[h] });
     });
   } else {
     // Mixed: one nine is team, other is individual
     // Show one row per player; on scramble holes both get the same team score
     myPlayers.forEach(p => {
       const init = (p.first_name[0] + (p.last_name?.[0] || '')).toUpperCase();
-      rows.push({ label: init, getScore: (h) => {
+      rows.push({ label: init, teamCls: myColCls, getScore: (h) => {
         if (isScrambleHole(h)) return enteredScores[scorerPlayer.id]?.[h];
         return enteredScores[p.id]?.[h];
       }});
@@ -1096,7 +1099,7 @@ function renderMiniStrip() {
 
   // Labels column
   let labelsHtml = '<div class="ml-hole">&nbsp;</div>';
-  rows.forEach(r => { labelsHtml += `<div class="ml-init">${r.label}</div>`; });
+  rows.forEach(r => { labelsHtml += `<div class="ml-init ${r.teamCls}">${r.label}</div>`; });
   document.getElementById('miniLabels').innerHTML = labelsHtml;
 
   // Holes
