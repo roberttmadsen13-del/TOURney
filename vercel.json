@@ -1,14 +1,25 @@
 {
   "rewrites": [
-    { "source": "/admin", "destination": "/admin.html" },
+    { "source": "/t/:slug/admin",      "destination": "/admin.html" },
+    { "source": "/t/:slug/scoreboard", "destination": "/scoreboard.html" },
+    { "source": "/t/:slug/scorecard",  "destination": "/scorecard.html" },
+    { "source": "/t/:slug/profile",    "destination": "/profile.html" },
+    { "source": "/t/:slug/directory",  "destination": "/directory.html" },
+    { "source": "/t/:slug/course",     "destination": "/course.html" },
+    { "source": "/t/:slug/champions",  "destination": "/champions.html" },
+    { "source": "/t/:slug/feed",       "destination": "/feed.html" },
+    { "source": "/t/:slug/login",      "destination": "/login.html" },
+    { "source": "/t/:slug/install",    "destination": "/install.html" },
+    { "source": "/t/:slug",            "destination": "/index.html" },
+    { "source": "/admin",      "destination": "/admin.html" },
     { "source": "/scoreboard", "destination": "/scoreboard.html" },
-    { "source": "/scorecard", "destination": "/scorecard.html" },
-    { "source": "/profile", "destination": "/profile.html" },
-    { "source": "/directory", "destination": "/directory.html" },
-    { "source": "/course", "destination": "/course.html" },
-    { "source": "/champions", "destination": "/champions.html" },
-    { "source": "/feed", "destination": "/feed.html" },
-    { "source": "/login", "destination": "/login.html" },
-    { "source": "/install", "destination": "/install.html" }
+    { "source": "/scorecard",  "destination": "/scorecard.html" },
+    { "source": "/profile",    "destination": "/profile.html" },
+    { "source": "/directory",  "destination": "/directory.html" },
+    { "source": "/course",     "destination": "/course.html" },
+    { "source": "/champions",  "destination": "/champions.html" },
+    { "source": "/feed",       "destination": "/feed.html" },
+    { "source": "/login",      "destination": "/login.html" },
+    { "source": "/install",    "destination": "/install.html" }
   ]
 }
