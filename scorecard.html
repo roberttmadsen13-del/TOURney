@@ -123,7 +123,14 @@ body{background:var(--bg);color:var(--ink);font-family:'Barlow',sans-serif;font-
 .nav-btn:disabled{opacity:0.25;cursor:not-allowed;}
 
 /* Mini scorecard strip — 4-player grid */
-.mini-strip{padding:0.55rem 1.2rem;border-top:1px solid var(--border);display:flex;gap:4px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;}
+.mini-strip-wrap{display:flex;border-top:1px solid var(--border);}
+.mini-labels{display:flex;flex-direction:column;align-items:flex-end;gap:2px;padding:0.55rem 0 0.55rem 0.6rem;flex-shrink:0;}
+.mini-labels .ml-hole{height:13px;display:flex;align-items:center;font-family:'DM Mono',monospace;font-size:0.32rem;color:transparent;margin-bottom:1px;}
+.mini-labels .ml-init{height:13px;display:flex;align-items:center;font-family:'DM Mono',monospace;font-size:0.34rem;letter-spacing:0.05em;color:var(--muted);white-space:nowrap;}
+.mini-totals{display:flex;flex-direction:column;align-items:center;gap:2px;padding:0.55rem 0.6rem 0.55rem 0;flex-shrink:0;border-left:1px solid var(--border);}
+.mini-totals .mt-label{height:13px;display:flex;align-items:center;font-family:'DM Mono',monospace;font-size:0.34rem;color:var(--muted);margin-bottom:1px;}
+.mini-totals .mt-val{height:13px;min-width:28px;display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:0.38rem;font-weight:500;}
+.mini-strip{padding:0.55rem 4px;display:flex;gap:4px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;flex:1;}
 .mini-strip::-webkit-scrollbar{display:none;}
 .mini-hole{display:flex;flex-direction:column;align-items:center;gap:2px;flex-shrink:0;padding:3px 2px;border-radius:3px;cursor:pointer;}
 .mini-hole.current{background:rgba(192,144,48,0.14);outline:1px solid var(--gold);}
@@ -282,7 +289,11 @@ body{background:var(--bg);color:var(--ink);font-family:'Barlow',sans-serif;font-
     </div>
   </div>
 
-  <div class="mini-strip" id="miniStrip"></div>
+  <div class="mini-strip-wrap">
+    <div class="mini-labels" id="miniLabels"></div>
+    <div class="mini-strip" id="miniStrip"></div>
+    <div class="mini-totals" id="miniTotals"></div>
+  </div>
 
   <div id="conflictBanner" class="conflict-banner">
     <div class="conflict-msg" id="conflictMsg"></div>
@@ -1049,16 +1060,27 @@ function nextHole() {
 
 // ── MINI STRIP ────────────────────────────────────────────────────
 function renderMiniStrip() {
-  const allPlayers = [scorerPlayer, partnerPlayer, opp1Player, opp2Player];
+  const myPlayers = [scorerPlayer, partnerPlayer].filter(Boolean);
+  const totalPar = coursePars.reduce((a,b) => a+b, 0);
+
+  // Labels column — blank row for hole numbers, then initials per player
+  let labelsHtml = '<div class="ml-hole">&nbsp;</div>';
+  myPlayers.forEach(p => {
+    const init = (p.first_name[0] + (p.last_name?.[0] || '')).toUpperCase();
+    labelsHtml += `<div class="ml-init">${init}</div>`;
+  });
+  document.getElementById('miniLabels').innerHTML = labelsHtml;
+
+  // Holes
   let html = '';
+  const playerTotals = myPlayers.map(() => 0);
   for (let h = 1; h <= 18; h++) {
     const par = coursePars[h-1] || 4;
     const isCur = h === currentHole;
     let chipsHtml = '';
-    allPlayers.forEach(p => {
-      if (!p) { chipsHtml += `<div class="mini-score ms-empty"></div>`; return; }
-      const scores = (p === scorerPlayer || p === partnerPlayer) ? enteredScores : opponentScores;
-      const gross = scores[p.id]?.[h];
+    myPlayers.forEach((p, idx) => {
+      const gross = enteredScores[p.id]?.[h];
+      if (gross != null) playerTotals[idx] += gross;
       const cls = gross != null ? (() => {
         const d = gross - par;
         if (d <= -2) return 'ms-eagle';
@@ -1075,6 +1097,17 @@ function renderMiniStrip() {
     </div>`;
   }
   document.getElementById('miniStrip').innerHTML = html;
+
+  // Totals column — par label + each player total
+  let totalsHtml = `<div class="mt-label">${totalPar}</div>`;
+  myPlayers.forEach((p, idx) => {
+    const t = playerTotals[idx];
+    const diff = t - totalPar;
+    const cls = t === 0 ? '' : diff < 0 ? 'ms-birdie' : diff > 0 ? 'ms-bogey' : 'ms-par';
+    totalsHtml += `<div class="mt-val ${cls}">${t || '—'}</div>`;
+  });
+  document.getElementById('miniTotals').innerHTML = totalsHtml;
+
   const strip = document.getElementById('miniStrip');
   const chipW = 26;
   strip.scrollLeft = (currentHole - 1) * chipW - strip.clientWidth / 2 + chipW / 2;
