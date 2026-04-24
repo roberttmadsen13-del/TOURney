@@ -1001,6 +1001,30 @@ function fillAllBlanksWithPar() {
   });
   saveLocal();
 }
+function fillBlanksInRange(fromHole, toHole) {
+  [scorerPlayer, partnerPlayer].forEach(p => {
+    if (!p) return;
+    if (!enteredScores[p.id]) enteredScores[p.id] = {};
+    for (let h = fromHole; h <= toHole; h++) {
+      if (enteredScores[p.id][h] == null) {
+        const par = coursePars[h - 1] || 4;
+        enteredScores[p.id][h] = par;
+        autoSaveToDb(p.id, h, par);
+      }
+    }
+  });
+  saveLocal();
+}
+function goToHole(target) {
+  autoLogParIfEmpty(currentHole);
+  saveCurrentHoleScores(currentHole);
+  if (target > currentHole) {
+    fillBlanksInRange(currentHole, target - 1);
+  }
+  currentHole = target;
+  saveSessionState();
+  renderHole();
+}
 function prevHole() {
   if (currentHole > 1) {
     saveCurrentHoleScores(currentHole);
@@ -1045,7 +1069,7 @@ function renderMiniStrip() {
       })() : 'ms-empty';
       chipsHtml += `<div class="mini-score ${cls}">${gross != null ? gross : ''}</div>`;
     });
-    html += `<div class="mini-hole${isCur?' current':''}" onclick="currentHole=${h};saveSessionState();renderHole()">
+    html += `<div class="mini-hole${isCur?' current':''}" onclick="goToHole(${h})">
       <div class="mini-num">${h}</div>
       ${chipsHtml}
     </div>`;
