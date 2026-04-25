@@ -147,6 +147,41 @@ details[open] .explainer summary::after,.explainer details[open]>summary::after{
 
 /* Last updated */
 .last-updated{text-align:right;font-family:'DM Mono',monospace;font-size:0.45rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);padding-top:1.5rem;}
+
+/* TRASH TALK */
+.trash-section{max-width:1100px;margin:0 auto;padding:0 2rem 4rem;}
+@media(max-width:520px){.trash-section{padding:0 1rem 3rem;}}
+.trash-heading{border-top:1px solid var(--border);padding:2rem 0 1.2rem;display:flex;align-items:baseline;gap:1rem;flex-wrap:wrap;}
+.trash-heading-title{font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:900;}
+.trash-heading-title em{font-style:italic;color:var(--gold);}
+.trash-heading-sub{font-family:'DM Mono',monospace;font-size:0.42rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-left:auto;}
+.trash-compose{background:var(--card);border:1px solid var(--border);padding:1.2rem;margin-bottom:1.5rem;}
+.trash-compose-label{font-family:'DM Mono',monospace;font-size:0.42rem;letter-spacing:0.25em;text-transform:uppercase;color:var(--gold);margin-bottom:0.6rem;}
+.trash-tags{display:flex;flex-wrap:wrap;gap:0.4rem;margin-bottom:0.75rem;}
+.trash-tag-btn{font-family:'DM Mono',monospace;font-size:0.42rem;letter-spacing:0.1em;padding:0.25rem 0.65rem;border:1px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;transition:all 0.15s;}
+.trash-tag-btn:hover{border-color:var(--gold);color:var(--gold);}
+.trash-tag-btn.t-a{border-color:rgba(192,144,48,0.35);color:rgba(192,144,48,0.6);}
+.trash-tag-btn.t-b{border-color:rgba(74,106,138,0.35);color:rgba(74,106,138,0.7);}
+.trash-textarea{width:100%;font-family:'Barlow',sans-serif;font-size:0.92rem;padding:0.75rem 0.9rem;background:var(--bg);border:1px solid var(--border);color:var(--ink);resize:vertical;min-height:72px;max-height:160px;outline:none;line-height:1.55;}
+.trash-textarea:focus{border-color:var(--gold);}
+.trash-textarea::placeholder{color:var(--muted);font-style:italic;}
+.trash-footer{display:flex;align-items:center;justify-content:space-between;margin-top:0.65rem;}
+.trash-char{font-family:'DM Mono',monospace;font-size:0.45rem;letter-spacing:0.1em;color:var(--muted);}
+.trash-char.warn{color:var(--gold);}
+.trash-char.over{color:var(--red);}
+.trash-send{font-family:'Barlow Condensed',sans-serif;font-size:0.65rem;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;padding:0.55rem 1.6rem;border:1px solid var(--gold);background:var(--gold);color:var(--ink);cursor:pointer;transition:all 0.18s;}
+.trash-send:hover:not(:disabled){background:var(--gold-l);border-color:var(--gold-l);}
+.trash-send:disabled{opacity:0.38;cursor:not-allowed;}
+.trash-list{display:flex;flex-direction:column;gap:0.75rem;}
+.trash-post{background:var(--card);border:1px solid var(--border);border-left-width:3px;padding:1rem 1.2rem;}
+.trash-post.t-a{border-left-color:var(--gold);background:linear-gradient(to right,rgba(192,144,48,0.04),var(--card));}
+.trash-post.t-b{border-left-color:#4a6a8a;background:linear-gradient(to right,rgba(74,106,138,0.05),var(--card));}
+.trash-post-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:0.45rem;}
+.trash-post-name{font-family:'Playfair Display',serif;font-size:0.88rem;font-weight:700;}
+.trash-post-time{font-family:'DM Mono',monospace;font-size:0.42rem;letter-spacing:0.08em;color:var(--muted);}
+.trash-post-body{font-family:'Barlow',sans-serif;font-size:0.92rem;line-height:1.55;color:var(--ink);}
+.trash-mention{color:var(--gold);font-weight:600;}
+.trash-empty{text-align:center;padding:2.5rem;font-family:'Playfair Display',serif;font-style:italic;color:var(--muted);}
 </style>
 <link rel="stylesheet" href="/nav-mobile.css">
 <script defer src="/nav-mobile.js"></script>
@@ -158,7 +193,6 @@ details[open] .explainer summary::after,.explainer details[open]>summary::after{
   <div class="nav-right">
     <div class="live-dot"><span></span>Live</div>
     <div class="nav-round" id="currentRoundLabel">—</div>
-    <a href="/feed" class="score-btn" style="border-color:rgba(192,144,48,0.3);color:rgba(240,230,204,0.4);">Feed</a>
     <a href="/directory" class="score-btn" style="border-color:rgba(192,144,48,0.3);color:rgba(240,230,204,0.4);">Directory</a>
     <a href="/" class="score-btn" style="border-color:rgba(192,144,48,0.3);color:rgba(240,230,204,0.4);">Home</a>
   </div>
@@ -247,6 +281,27 @@ details[open] .explainer summary::after,.explainer details[open]>summary::after{
     </div>
 
     <div class="last-updated" id="lastUpdated"></div>
+  </div>
+</div>
+
+<!-- SHIT TALK BOARD -->
+<div class="trash-section">
+  <div class="trash-heading">
+    <div class="trash-heading-title">Shit <em>Talk</em></div>
+    <div class="live-dot" style="margin-left:0.5rem"><span></span>Live</div>
+    <div class="trash-heading-sub">Tag someone — they get notified</div>
+  </div>
+  <div class="trash-compose">
+    <div class="trash-compose-label">Tag a player</div>
+    <div class="trash-tags" id="trashTagBtns"></div>
+    <textarea class="trash-textarea" id="trashInput" placeholder="Talk your shit..." maxlength="280"></textarea>
+    <div class="trash-footer">
+      <span class="trash-char" id="trashCharCount">0 / 280</span>
+      <button class="trash-send" id="trashSendBtn" onclick="postTrashTalk()">Send It</button>
+    </div>
+  </div>
+  <div class="trash-list" id="trashList">
+    <div class="trash-empty">No shit talk yet. Don't be shy.</div>
   </div>
 </div>
 
@@ -372,6 +427,7 @@ async function init() {
   render();
   updateTimestamp();
   subscribeRealtime();
+  initTrashTalk();
 }
 
 
@@ -776,13 +832,156 @@ async function loadNavLogo() {
   }
 }
 
+// ── TOAST ─────────────────────────────────────────────────────────
+function showToast(msg) {
+  let el = document.getElementById('_toast');
+  if (!el) {
+    el = document.createElement('div');
+    el.id = '_toast';
+    el.style.cssText = 'position:fixed;bottom:1.5rem;right:1.5rem;z-index:9999;padding:0.9rem 1.4rem;font-family:"Barlow Condensed",sans-serif;font-size:0.78rem;letter-spacing:0.1em;color:#f0e6cc;border-left:3px solid #c09030;background:#0a0802;box-shadow:0 8px 32px rgba(0,0,0,0.5);transform:translateX(120%);opacity:0;transition:all 0.35s cubic-bezier(0.34,1.2,0.64,1);max-width:300px;';
+    document.body.appendChild(el);
+  }
+  el.textContent = msg;
+  el.style.transform = 'translateX(0)';
+  el.style.opacity = '1';
+  clearTimeout(el._t);
+  el._t = setTimeout(() => { el.style.transform = 'translateX(120%)'; el.style.opacity = '0'; }, 4500);
+}
+
+// ── TRASH TALK ────────────────────────────────────────────────────
+let _trashPosts = [];
+let _trashPlayer = null;
+
+function _esc(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function _parseMentions(text) {
+  return _esc(text).replace(/@([\w]+)/g, '<span class="trash-mention">@$1</span>');
+}
+
+function _relTime(ts) {
+  const d = Date.now() - new Date(ts).getTime();
+  if (d < 60000) return 'just now';
+  if (d < 3600000) return Math.floor(d / 60000) + 'm ago';
+  if (d < 86400000) return Math.floor(d / 3600000) + 'h ago';
+  return Math.floor(d / 86400000) + 'd ago';
+}
+
+function _renderTrash() {
+  const el = document.getElementById('trashList');
+  if (!el) return;
+  if (!_trashPosts.length) {
+    el.innerHTML = '<div class="trash-empty">No shit talk yet. Don\'t be shy.</div>';
+    return;
+  }
+  el.innerHTML = _trashPosts.map(p => {
+    const team = p.team === 'A' ? 't-a' : p.team === 'B' ? 't-b' : '';
+    return `<div class="trash-post ${team}">
+      <div class="trash-post-hdr">
+        <div class="trash-post-name">${_esc(p.player_name)}</div>
+        <div class="trash-post-time">${_relTime(p.created_at)}</div>
+      </div>
+      <div class="trash-post-body">${_parseMentions(p.message)}</div>
+    </div>`;
+  }).join('');
+}
+
+function _buildTagBtns() {
+  const el = document.getElementById('trashTagBtns');
+  if (!el || !players.length) return;
+  el.innerHTML = players.map(p => {
+    const t = teamAssignments[p.id];
+    const cls = t === 'A' ? 't-a' : t === 'B' ? 't-b' : '';
+    return `<button class="trash-tag-btn ${cls}" onclick="_insertTag('@${p.first_name}')">@${_esc(p.first_name)}</button>`;
+  }).join('');
+}
+
+function _insertTag(tag) {
+  const ta = document.getElementById('trashInput');
+  if (!ta) return;
+  const pos = ta.selectionStart ?? ta.value.length;
+  const before = ta.value.slice(0, pos);
+  const after = ta.value.slice(pos);
+  const space = before.length && !before.endsWith(' ') ? ' ' : '';
+  ta.value = before + space + tag + ' ' + after;
+  ta.focus();
+  _updateChar();
+}
+
+function _updateChar() {
+  const ta = document.getElementById('trashInput');
+  const cc = document.getElementById('trashCharCount');
+  if (!ta || !cc) return;
+  const n = ta.value.length;
+  cc.textContent = `${n} / 280`;
+  cc.className = 'trash-char' + (n > 250 ? ' warn' : '') + (n >= 280 ? ' over' : '');
+}
+
+async function postTrashTalk() {
+  const ta = document.getElementById('trashInput');
+  const btn = document.getElementById('trashSendBtn');
+  const msg = (ta?.value || '').trim();
+  if (!msg || msg.length > 280) return;
+  if (!_trashPlayer) { showToast('Log in on Profile page first to post.'); return; }
+  btn.disabled = true;
+  const { error } = await sb.from('trash_talk').insert({
+    player_name: `${_trashPlayer.first_name} ${_trashPlayer.last_name}`,
+    team: teamAssignments[_trashPlayer.id] || null,
+    message: msg,
+  });
+  if (!error) {
+    ta.value = '';
+    _updateChar();
+  } else {
+    showToast('Post failed — try again.');
+  }
+  btn.disabled = false;
+}
+
+function _subscribeTrash() {
+  sb.channel('trash-talk-realtime')
+    .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'trash_talk' }, payload => {
+      const post = payload.new;
+      _trashPosts.unshift(post);
+      if (_trashPosts.length > 50) _trashPosts.pop();
+      _renderTrash();
+      if (_trashPlayer) {
+        const re = new RegExp('@' + _trashPlayer.first_name + '\\b', 'i');
+        if (re.test(post.message)) {
+          const who = post.player_name.split(' ')[0];
+          showToast(`${who} is talking to you 👀`);
+          if (typeof Notification !== 'undefined' && Notification.permission === 'granted') {
+            try { new Notification('Bova Invitational', { body: `${post.player_name}: ${post.message}`, icon: '/icon.svg' }); } catch(e) {}
+          }
+        }
+      }
+    })
+    .subscribe();
+}
+
+async function initTrashTalk() {
+  const email = localStorage.getItem('bova_profile_email');
+  if (email) _trashPlayer = players.find(p => p.email && p.email.toLowerCase() === email.toLowerCase()) || null;
+  _buildTagBtns();
+  const ta = document.getElementById('trashInput');
+  if (ta) ta.addEventListener('input', _updateChar);
+  const { data } = await sb.from('trash_talk').select('*').order('created_at', { ascending: false }).limit(50);
+  _trashPosts = data || [];
+  _renderTrash();
+  _subscribeTrash();
+  if (typeof Notification !== 'undefined' && Notification.permission === 'default') {
+    Notification.requestPermission().catch(() => {});
+  }
+}
+
 init();
 loadNavLogo();
 
 // ── HOLE-IN-ONE LISTENER ─────────────────────────────────────────
 sb.channel('hole-in-one').on('broadcast', { event: 'ace' }, function(msg) {
   var d = msg.payload || {};
-  showToast('ACE! ' + (d.player || 'Someone') + ' holed out on #' + (d.hole || '?') + '!', 'info');
+  showToast('ACE! ' + (d.player || 'Someone') + ' holed out on #' + (d.hole || '?') + '!');
 }).subscribe();
 </script>
 <script src="/pwa.js"></script>

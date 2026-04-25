@@ -11,9 +11,11 @@
     auth: { persistSession: true, autoRefreshToken: true }
   });
 
+  const FALLBACK_SLUG = 'bova-2026';
+
   function getSlug() {
     const m = location.pathname.match(/\/t\/([^/?#]+)/);
-    return m ? m[1] : null;
+    return m ? m[1] : FALLBACK_SLUG;
   }
 
   // Prefix all in-app hrefs with /t/{slug}/ so relative nav works under tenanted URLs.

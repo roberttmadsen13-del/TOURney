@@ -1,4 +1,4 @@
-const CACHE = 'bova-v1';
+const CACHE = 'bova-v3';
 const PRECACHE = [
   '/',
   '/index.html',
@@ -10,6 +10,9 @@ const PRECACHE = [
   '/manifest.json',
   '/icon.svg',
   '/pwa.js',
+  '/nav-mobile.css',
+  '/nav-mobile.js',
+  '/tourney-init.js',
 ];
 
 self.addEventListener('install', (event) => {
