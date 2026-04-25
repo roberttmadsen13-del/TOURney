@@ -1070,29 +1070,24 @@ function renderMiniStrip() {
   const myPlayers = [scorerPlayer, partnerPlayer].filter(Boolean);
   const totalPar = coursePars.reduce((a,b) => a+b, 0);
 
-  // Build row definitions — figure out which rows we need
-  // For each hole, scramble holes share one row; others get individual rows
-  // We need a consistent set of rows across all 18, so build based on nines
   const frontFmt = getHoleFormat(1);
   const backFmt  = getHoleFormat(10);
   const frontScramble = PAIR_TEAM_FMTS.includes(frontFmt);
   const backScramble  = PAIR_TEAM_FMTS.includes(backFmt);
 
-  // Row config: each entry = { label, teamCls, getScore(hole) }
-  const myColCls = scorerTeam === 'A' ? 'team-a' : 'team-b';
+  const myColCls  = scorerTeam === 'A' ? 'team-a' : 'team-b';
+  const oppColCls = scorerTeam === 'A' ? 'team-b' : 'team-a';
+
+  // ── My team rows ──
   const rows = [];
   if (frontScramble && backScramble) {
-    // Both nines are team formats — single row
     rows.push({ label: 'TM', teamCls: myColCls, getScore: (h) => enteredScores[scorerPlayer.id]?.[h] });
   } else if (!frontScramble && !backScramble) {
-    // Both nines are individual — one row per player
     myPlayers.forEach(p => {
       const init = (p.first_name[0] + (p.last_name?.[0] || '')).toUpperCase();
       rows.push({ label: init, teamCls: myColCls, getScore: (h) => enteredScores[p.id]?.[h] });
     });
   } else {
-    // Mixed: one nine is team, other is individual
-    // Show one row per player; on scramble holes both get the same team score
     myPlayers.forEach(p => {
       const init = (p.first_name[0] + (p.last_name?.[0] || '')).toUpperCase();
       rows.push({ label: init, teamCls: myColCls, getScore: (h) => {
@@ -1102,28 +1097,53 @@ function renderMiniStrip() {
     });
   }
 
+  // ── Opponent rows ──
+  const oppPlayers = [opp1Player, opp2Player].filter(Boolean);
+  const oppRows = [];
+  if (oppPlayers.length > 0) {
+    if (frontScramble && backScramble) {
+      const refOpp = opp1Player;
+      oppRows.push({ label: 'TM', teamCls: oppColCls, getScore: (h) => opponentScores[refOpp.id]?.[h] });
+    } else if (!frontScramble && !backScramble) {
+      oppPlayers.forEach(p => {
+        const init = (p.first_name[0] + (p.last_name?.[0] || '')).toUpperCase();
+        oppRows.push({ label: init, teamCls: oppColCls, getScore: (h) => opponentScores[p.id]?.[h] });
+      });
+    } else {
+      oppPlayers.forEach(p => {
+        const init = (p.first_name[0] + (p.last_name?.[0] || '')).toUpperCase();
+        oppRows.push({ label: init, teamCls: oppColCls, getScore: (h) => {
+          if (isScrambleHole(h)) return opponentScores[(opp1Player || opp2Player).id]?.[h];
+          return opponentScores[p.id]?.[h];
+        }});
+      });
+    }
+  }
+
   // Labels column
   let labelsHtml = '<div class="ml-hole">&nbsp;</div>';
   rows.forEach(r => { labelsHtml += `<div class="ml-init ${r.teamCls}">${r.label}</div>`; });
+  oppRows.forEach(r => { labelsHtml += `<div class="ml-init ${r.teamCls}" style="opacity:0.6">${r.label}</div>`; });
   document.getElementById('miniLabels').innerHTML = labelsHtml;
 
   // Holes
   let html = '';
   const rowTotals = rows.map(() => 0);
+  const oppTotals = oppRows.map(() => 0);
+
   for (let h = 1; h <= 18; h++) {
     const par = coursePars[h-1] || 4;
     const isCur = h === currentHole;
     const scrambleHole = isScrambleHole(h);
     let chipsHtml = '';
 
+    // My team chips
     if (frontScramble && backScramble) {
-      // Single team row
       const gross = rows[0].getScore(h);
       if (gross != null) rowTotals[0] += gross;
       const cls = gross != null ? msClass(gross, par) : 'ms-empty';
-      chipsHtml = `<div class="mini-score ${cls}">${gross != null ? gross : ''}</div>`;
+      chipsHtml += `<div class="mini-score ${cls}">${gross != null ? gross : ''}</div>`;
     } else if (scrambleHole && !frontScramble !== !backScramble) {
-      // Mixed: scramble hole — show same score in both rows but merge visually
       const gross = enteredScores[scorerPlayer.id]?.[h];
       rows.forEach((r, idx) => {
         if (gross != null) rowTotals[idx] += gross;
@@ -1131,7 +1151,6 @@ function renderMiniStrip() {
         chipsHtml += `<div class="mini-score ${cls}">${gross != null ? gross : ''}</div>`;
       });
     } else {
-      // Individual rows
       rows.forEach((r, idx) => {
         const gross = r.getScore(h);
         if (gross != null) rowTotals[idx] += gross;
@@ -1139,6 +1158,14 @@ function renderMiniStrip() {
         chipsHtml += `<div class="mini-score ${cls}">${gross != null ? gross : ''}</div>`;
       });
     }
+
+    // Opponent chips
+    oppRows.forEach((r, idx) => {
+      const gross = r.getScore(h);
+      if (gross != null) oppTotals[idx] += gross;
+      const cls = gross != null ? msClass(gross, par) : 'ms-empty';
+      chipsHtml += `<div class="mini-score ${cls}" style="opacity:0.6">${gross != null ? gross : ''}</div>`;
+    });
 
     html += `<div class="mini-hole${isCur?' current':''}" onclick="goToHole(${h})">
       <div class="mini-num">${h}</div>
@@ -1154,6 +1181,12 @@ function renderMiniStrip() {
     const diff = t - totalPar;
     const cls = t === 0 ? '' : diff < 0 ? 'ms-birdie' : diff > 0 ? 'ms-bogey' : 'ms-par';
     totalsHtml += `<div class="mt-val ${cls}">${t || '—'}</div>`;
+  });
+  oppRows.forEach((r, idx) => {
+    const t = oppTotals[idx];
+    const diff = t - totalPar;
+    const cls = t === 0 ? '' : diff < 0 ? 'ms-birdie' : diff > 0 ? 'ms-bogey' : 'ms-par';
+    totalsHtml += `<div class="mt-val ${cls}" style="opacity:0.6">${t || '—'}</div>`;
   });
   document.getElementById('miniTotals').innerHTML = totalsHtml;
 
