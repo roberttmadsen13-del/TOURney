@@ -359,6 +359,10 @@ body{background:var(--bg);color:var(--ink);font-family:'Barlow',sans-serif;font-
 <script>
 const sb = window.tourney.db;
 
+function esc(s) {
+  return String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+
 // ── AUTH GUARD ───────────────────────────────────────────────────
 (async function authGuard() {
   const { data } = await sb.auth.getSession();
@@ -893,7 +897,7 @@ function renderPlayers() {
       const initials = (opp.first_name[0] + (opp.last_name?.[0] || '')).toUpperCase();
       rightHtml += `
         <div class="col-player">
-          <div class="col-player-name"><span class="player-badge ${oppColCls}">${initials}</span>${opp.first_name}</div>
+          <div class="col-player-name"><span class="player-badge ${oppColCls}">${initials}</span>${esc(opp.first_name)}</div>
           <div id="opp-box-${opp.id}">
             ${gross
               ? `<div class="opp-score-box">
@@ -947,11 +951,11 @@ function getOppBestBallNote(par) {
   if (!s1 && !s2) return '';
   if (s1 && s2) {
     const lower = Math.min(s1, s2);
-    const who = lower === s1 ? opp1Player.first_name : opp2Player.first_name;
+    const who = lower === s1 ? esc(opp1Player.first_name) : esc(opp2Player.first_name);
     return `Counting: <strong style="color:#6a8aaa">${lower}</strong> (${who})`;
   }
-  if (s1) return `Counting: <strong style="color:#6a8aaa">${s1}</strong> (${opp1Player.first_name})`;
-  return `Counting: <strong style="color:#6a8aaa">${s2}</strong> (${opp2Player.first_name})`;
+  if (s1) return `Counting: <strong style="color:#6a8aaa">${s1}</strong> (${esc(opp1Player.first_name)})`;
+  return `Counting: <strong style="color:#6a8aaa">${s2}</strong> (${esc(opp2Player.first_name)})`;
 }
 
 // ── SCORE ADJUSTMENT ──────────────────────────────────────────────
@@ -1282,7 +1286,7 @@ function renderSummary() {
     const cls = t.rel < 0 ? 'under' : t.rel > 0 ? 'over' : 'even';
     const extra = t.anyStableford ? ` <span style="color:var(--gold);font-size:0.72rem">· ${t.points}pt</span>` : '';
     html += `<div class="summary-row">
-      <span>${p.first_name} ${p.last_name}${t.thru > 0 ? ` <span style="color:rgba(240,230,204,0.3);font-size:0.72rem">(${t.thru === 18 ? 'F' : t.thru})</span>` : ''}</span>
+      <span>${esc(p.first_name)} ${esc(p.last_name)}${t.thru > 0 ? ` <span style="color:rgba(240,230,204,0.3);font-size:0.72rem">(${t.thru === 18 ? 'F' : t.thru})</span>` : ''}</span>
       <span class="summary-score ${cls}">${fmtRel(t.rel, t.thru)}${extra}</span>
     </div>`;
   });
@@ -1296,7 +1300,7 @@ function renderSummary() {
       const cls = t.rel < 0 ? 'under' : t.rel > 0 ? 'over' : 'even';
       const extra = t.anyStableford ? ` <span style="color:var(--gold);font-size:0.72rem;opacity:0.7">· ${t.points}pt</span>` : '';
       html += `<div class="summary-row">
-        <span class="summary-name-opp">${opp.first_name} ${opp.last_name}${t.thru > 0 ? ` <span style="color:rgba(240,230,204,0.2);font-size:0.72rem">(${t.thru === 18 ? 'F' : t.thru})</span>` : ''}</span>
+        <span class="summary-name-opp">${esc(opp.first_name)} ${esc(opp.last_name)}${t.thru > 0 ? ` <span style="color:rgba(240,230,204,0.2);font-size:0.72rem">(${t.thru === 18 ? 'F' : t.thru})</span>` : ''}</span>
         <span class="summary-score ${cls}" style="opacity:0.75">${fmtRel(t.rel, t.thru)}${extra}</span>
       </div>`;
     });
