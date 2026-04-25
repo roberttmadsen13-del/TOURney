@@ -557,6 +557,15 @@ async function restoreSessionIfAny() {
   if (!enteredScores[scorerPlayer.id])  enteredScores[scorerPlayer.id]  = {};
   if (!enteredScores[partnerPlayer.id]) enteredScores[partnerPlayer.id] = {};
 
+  // Re-persist pairing so opponents can discover our partner on fresh load
+  window.tourney.ready.then(({ tournament }) => {
+    sb.from('settings').upsert({
+      tournament_id: tournament.id,
+      key: `pairing_${currentRound}_${scorerPlayer.id}`,
+      value: partnerPlayer?.id || ''
+    }, { onConflict: 'tournament_id,key' }).catch(() => {});
+  });
+
   await loadOpponentScores();
   await loadMyTeamScoresFromDb();
   subscribeToFoursome();
@@ -624,13 +633,20 @@ async function startScoring() {
   partnerPlayer = partnerId ? players.find(p => p.id === partnerId) : null;
   opp1Player    = opp1Id ? players.find(p => p.id === opp1Id) : null;
 
-  // Opponent's partner (opp2) is discovered automatically via realtime
-  // when they start scoring on their device — no manual selection needed
   opp2Player = null;
   scorerTeam    = team;
 
   if (!enteredScores[scorerId]) enteredScores[scorerId] = {};
   if (partnerId && !enteredScores[partnerId]) enteredScores[partnerId] = {};
+
+  // Persist our pairing to Supabase so our opponents can auto-discover our partner
+  window.tourney.ready.then(({ tournament }) => {
+    sb.from('settings').upsert({
+      tournament_id: tournament.id,
+      key: `pairing_${currentRound}_${scorerPlayer.id}`,
+      value: partnerPlayer?.id || ''
+    }, { onConflict: 'tournament_id,key' }).catch(() => {});
+  });
 
   // Load existing opponent scores from DB
   await loadOpponentScores();
@@ -649,6 +665,20 @@ async function startScoring() {
 
 async function loadOpponentScores() {
   const { tournament } = await window.tourney.ready;
+
+  // Discover opp2 from opp1's saved pairing record (written when they start scoring)
+  if (opp1Player && !opp2Player) {
+    const { data: pr } = await sb.from('settings')
+      .select('value')
+      .eq('tournament_id', tournament.id)
+      .eq('key', `pairing_${currentRound}_${opp1Player.id}`)
+      .maybeSingle();
+    if (pr?.value) {
+      const p2 = players.find(p => p.id === pr.value);
+      if (p2) { opp2Player = p2; saveSessionState(); }
+    }
+  }
+
   const oppIds = [opp1Player?.id, opp2Player?.id].filter(Boolean);
   if (!oppIds.length) return;
   const { data } = await sb.from('scores').select('*')
