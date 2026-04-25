@@ -1,4 +1,4 @@
-const CACHE = 'bova-v3';
+const CACHE = 'bova-v4';
 const PRECACHE = [
   '/',
   '/index.html',

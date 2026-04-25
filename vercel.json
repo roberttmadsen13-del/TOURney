@@ -10,6 +10,7 @@
     { "source": "/t/:slug/feed",       "destination": "/feed.html" },
     { "source": "/t/:slug/login",      "destination": "/login.html" },
     { "source": "/t/:slug/install",    "destination": "/install.html" },
+    { "source": "/t/:slug/",           "destination": "/index.html" },
     { "source": "/t/:slug",            "destination": "/index.html" },
     { "source": "/admin",      "destination": "/admin.html" },
     { "source": "/scoreboard", "destination": "/scoreboard.html" },

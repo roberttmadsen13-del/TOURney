@@ -23,7 +23,8 @@
     document.querySelectorAll('a[href^="/"]').forEach(a => {
       const href = a.getAttribute('href');
       if (!href.startsWith('/t/')) {
-        a.setAttribute('href', `/t/${slug}${href}`);
+        // href="/" → /t/slug (no trailing slash — Vercel route is /t/:slug not /t/:slug/)
+        a.setAttribute('href', href === '/' ? `/t/${slug}` : `/t/${slug}${href}`);
       }
     });
   }
