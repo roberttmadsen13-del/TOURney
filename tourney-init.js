@@ -15,10 +15,10 @@
 
   function getSlug() {
     const m = location.pathname.match(/\/t\/([^/?#]+)/);
-    return m ? m[1] : FALLBACK_SLUG;
+    return m ? m[1] : null;
   }
 
-  // Prefix all in-app hrefs with /t/{slug}/ so relative nav works under tenanted URLs.
+  // Only rebase links when actually on a /t/:slug/ URL — root URL pages stay on root paths.
   function rebaseNavLinks(slug) {
     document.querySelectorAll('a[href^="/"]').forEach(a => {
       const href = a.getAttribute('href');
@@ -29,8 +29,8 @@
   }
 
   async function init() {
-    const slug = getSlug();
-    if (!slug) return { db, tournament: null };
+    const slug = getSlug() || FALLBACK_SLUG;
+    const onTenantUrl = !!location.pathname.match(/\/t\/([^/?#]+)/);
 
     const { data, error } = await db
       .from('tournaments')
@@ -47,11 +47,13 @@
       throw new Error('Tournament not found: ' + slug);
     }
 
-    // Patch nav links after DOM ready
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', () => rebaseNavLinks(slug));
-    } else {
-      rebaseNavLinks(slug);
+    // Only rebase nav links when on tenant URL — root URL pages stay on root paths.
+    if (onTenantUrl) {
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', () => rebaseNavLinks(slug));
+      } else {
+        rebaseNavLinks(slug);
+      }
     }
 
     return { db, tournament: data };
