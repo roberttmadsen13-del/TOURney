@@ -187,6 +187,10 @@ a{color:inherit;text-decoration:none;}
     <div style="margin-top:2rem;">
       <button class="save-btn" id="saveBtn" onclick="saveProfile()">Save Changes</button>
     </div>
+
+    <div class="section-label" style="margin-top:2.5rem;">Notifications</div>
+    <div style="margin-bottom:0.75rem;font-size:0.82rem;color:var(--muted);line-height:1.6;">Get notified for hole-in-ones, score updates, and trash talk.</div>
+    <button class="save-btn" id="notifBtn" onclick="toggleNotifications()" style="background:transparent;border:1px solid rgba(26,16,8,0.2);color:rgba(26,16,8,0.5);">Loading...</button>
   </div>
 </div>
 
@@ -328,6 +332,7 @@ function showProfile() {
   // Hat
   wantsHat = !!p.hat;
   updateHatUI();
+  checkNotifState();
 }
 
 function toggleHat() {
@@ -366,6 +371,68 @@ async function logout() {
 }
 // Alias for inline HTML onclick
 const doLogout = logout;
+
+// ── PUSH NOTIFICATIONS ────────────────────────────────────────────
+const VAPID_PUBLIC_KEY = '91GZ9avRvyBYVzt50UR04IpN6ncxGY-L5Z9BCXi36wrgqGlcsTzbvmmquxFYk--nf9lVO2I_-9kN2IXgbtldag';
+
+function urlBase64ToUint8Array(b64) {
+  const pad = '='.repeat((4 - b64.length % 4) % 4);
+  const raw = atob((b64 + pad).replace(/-/g, '+').replace(/_/g, '/'));
+  return Uint8Array.from([...raw].map(c => c.charCodeAt(0)));
+}
+
+async function checkNotifState() {
+  const btn = document.getElementById('notifBtn');
+  if (!btn) return;
+  if (!('Notification' in window) || !('serviceWorker' in navigator) || !('PushManager' in window)) {
+    btn.style.display = 'none'; return;
+  }
+  const reg = await navigator.serviceWorker.ready;
+  const sub = await reg.pushManager.getSubscription();
+  if (sub) {
+    btn.textContent = 'Notifications On — Turn Off';
+    btn.style.cssText = 'background:transparent;border:1px solid rgba(26,16,8,0.2);color:rgba(26,16,8,0.45);';
+  } else {
+    btn.textContent = 'Enable Notifications';
+    btn.style.cssText = 'background:var(--gold);border:1px solid var(--gold);color:var(--ink);';
+  }
+}
+
+async function toggleNotifications() {
+  const btn = document.getElementById('notifBtn');
+  const reg = await navigator.serviceWorker.ready;
+  const existing = await reg.pushManager.getSubscription();
+  if (existing) {
+    await existing.unsubscribe();
+    await sb.from('push_subscriptions').delete().eq('endpoint', existing.endpoint);
+    showToast('Notifications disabled.');
+    checkNotifState();
+    return;
+  }
+  const permission = await Notification.requestPermission();
+  if (permission !== 'granted') { showToast('Permission denied.'); return; }
+  btn.disabled = true; btn.textContent = 'Subscribing...';
+  try {
+    const sub = await reg.pushManager.subscribe({
+      userVisibleOnly: true,
+      applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY),
+    });
+    const json = sub.toJSON();
+    const { tournament } = await window.tourney.ready;
+    const { error } = await sb.from('push_subscriptions').upsert({
+      tournament_id: tournament.id,
+      player_id: currentPlayer?.id || null,
+      endpoint: json.endpoint,
+      p256dh: json.keys.p256dh,
+      auth: json.keys.auth,
+    }, { onConflict: 'tournament_id,endpoint' });
+    showToast(error ? 'Subscribed locally — save failed.' : 'Notifications enabled.');
+  } catch {
+    showToast('Could not enable notifications.');
+  }
+  btn.disabled = false;
+  checkNotifState();
+}
 
 function showToast(msg) {
   let el = document.getElementById('_toast');

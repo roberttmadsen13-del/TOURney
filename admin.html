@@ -445,6 +445,23 @@ td.email a:hover{color:var(--gold);}
       </div>
     </div>
 
+    <!-- ═══ PUSH NOTIFICATIONS ═══ -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-title">Push Notification</div>
+        <div class="section-count">Blast to all subscribed players</div>
+      </div>
+      <div style="display:grid;gap:0.75rem;background:var(--card);border:1px solid var(--border);padding:1.5rem;">
+        <div class="fg"><label>Title</label><input type="text" id="pushTitle" placeholder="Hole in One — Rob Madsen, Hole 7!" maxlength="60" style="background:var(--bg);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;width:100%;outline:none;"></div>
+        <div class="fg"><label>Body <span style="font-weight:300;letter-spacing:0;text-transform:none;font-family:'Barlow',sans-serif;font-size:0.75rem;color:var(--muted);">(optional)</span></label><input type="text" id="pushBody" placeholder="Tap to see the chaos." maxlength="120" style="background:var(--bg);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;width:100%;outline:none;"></div>
+        <div class="fg"><label>Deep Link URL <span style="font-weight:300;letter-spacing:0;text-transform:none;font-family:'Barlow',sans-serif;font-size:0.75rem;color:var(--muted);">(optional, e.g. /feed?post=id)</span></label><input type="text" id="pushUrl" placeholder="/feed" style="background:var(--bg);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;width:100%;outline:none;"></div>
+        <div style="display:flex;align-items:center;gap:1rem;flex-wrap:wrap;">
+          <button class="action-btn" style="padding:0.6rem 1.6rem;font-size:0.65rem;letter-spacing:0.2em;background:var(--gold);color:var(--ink);border-color:var(--gold);font-weight:700;" id="pushBtn" onclick="sendPushNotification()">Send to All Players</button>
+          <span id="pushStatus" style="font-family:'DM Mono',monospace;font-size:0.48rem;letter-spacing:0.12em;color:var(--muted);"></span>
+        </div>
+      </div>
+    </div>
+
     </div><!-- /tabCommand -->
 
     <!-- ═══ TAB: DESIGN ═══ -->
@@ -1278,6 +1295,40 @@ async function clearRoundAll(round) {
   } catch {}
   showToast(`${label} scores cleared.`);
   loadScoreEditor();
+}
+
+async function sendPushNotification() {
+  const title = document.getElementById('pushTitle').value.trim();
+  const body  = document.getElementById('pushBody').value.trim();
+  const url   = document.getElementById('pushUrl').value.trim() || '/feed';
+  const btn   = document.getElementById('pushBtn');
+  const status = document.getElementById('pushStatus');
+  if (!title) { showToast('Title required.'); return; }
+
+  btn.disabled = true; btn.textContent = 'Sending...'; status.textContent = '';
+
+  const { data: { session } } = await sb.auth.getSession();
+  const res = await fetch(`https://jllugkiojeoopitdvzsa.supabase.co/functions/v1/send-push`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${session.access_token}`,
+    },
+    body: JSON.stringify({ title, body, url, tournament_id: _tid }),
+  });
+
+  const json = await res.json().catch(() => ({}));
+  btn.disabled = false; btn.textContent = 'Send to All Players';
+  if (!res.ok) {
+    showToast('Error: ' + (json.error || res.status), 'error');
+    status.textContent = 'Failed';
+  } else {
+    showToast(`Sent to ${json.sent} of ${json.total} subscribers.`);
+    status.textContent = `✓ ${json.sent}/${json.total} delivered`;
+    document.getElementById('pushTitle').value = '';
+    document.getElementById('pushBody').value = '';
+    document.getElementById('pushUrl').value = '';
+  }
 }
 
 async function clearAllTournamentScores() {
