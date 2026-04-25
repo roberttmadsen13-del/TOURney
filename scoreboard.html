@@ -630,7 +630,7 @@ function render() {
     return `<tr id="lb-row-${p.id}">
       <td class="${cls}" style="${p.totalThru===0?'color:rgba(240,230,204,0.15)':''}">${posLabel}</td>
       <td>
-        <div class="lb-name"><span class="${dotClass(p.team)}"></span>${p.first_name} ${p.last_name}</div>
+        <div class="lb-name"><span class="${dotClass(p.team)}"></span>${_esc(p.first_name)} ${_esc(p.last_name)}</div>
         <div class="lb-tier">${TIER_LABELS[p.handicap] || ''}</div>
       </td>
       <td class="score-cell thru">${p.totalThru > 0 ? (p.totalThru >= 54 ? 'F' : p.totalThru) : '—'}</td>
@@ -652,7 +652,7 @@ function render() {
     return `<tr id="ind-row-${p.id}">
       <td class="${cls}" style="${p.totalThru===0?'color:rgba(240,230,204,0.15)':''}">${posLabel}</td>
       <td>
-        <div class="lb-name"><span class="${dotClass(p.team)}"></span>${p.first_name} ${p.last_name}</div>
+        <div class="lb-name"><span class="${dotClass(p.team)}"></span>${_esc(p.first_name)} ${_esc(p.last_name)}</div>
         <div class="lb-tier">${TIER_LABELS[p.handicap] || ''}</div>
       </td>
       <td class="score-cell thru">${p.totalThru > 0 ? (p.totalThru >= 54 ? 'F' : p.totalThru) : '—'}</td>
@@ -742,7 +742,7 @@ function renderScorecards(lb) {
 
     html += `<div style="border:1px solid var(--border);margin-bottom:1rem;overflow:hidden;">
       <div style="padding:0.75rem 1rem;background:rgba(192,144,48,0.04);display:flex;align-items:center;justify-content:space-between;">
-        <span style="font-family:'Playfair Display',serif;font-weight:700;">${p.first_name} ${p.last_name}</span>
+        <span style="font-family:'Playfair Display',serif;font-weight:700;">${_esc(p.first_name)} ${_esc(p.last_name)}</span>
         <span style="font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.15em;color:rgba(240,230,204,0.35);">${TIER_LABELS[p.handicap]||''}</span>
       </div>
       <div style="overflow-x:auto;">
