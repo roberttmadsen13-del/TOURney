@@ -7,18 +7,30 @@
 <link rel="manifest" href="/manifest.json">
 <title>Trash Talk — Bova Invitational</title>
 <!--
-  REQUIRED SQL MIGRATION (run in Supabase SQL editor before using this page):
+  REQUIRED SQL MIGRATION (run in Supabase SQL editor):
 
-  CREATE TABLE public.trash_talk (
-    id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
-    created_at timestamptz DEFAULT now() NOT NULL,
-    player_name text NOT NULL,
-    team text,
-    message text NOT NULL
-  );
-  ALTER TABLE public.trash_talk ENABLE ROW LEVEL SECURITY;
-  CREATE POLICY "public read"   ON public.trash_talk FOR SELECT USING (true);
-  CREATE POLICY "public insert" ON public.trash_talk FOR INSERT WITH CHECK (true);
+  ALTER TABLE public.trash_talk
+    ADD COLUMN IF NOT EXISTS tournament_id uuid REFERENCES public.tournaments(id),
+    ADD COLUMN IF NOT EXISTS parent_id uuid REFERENCES public.trash_talk(id),
+    ADD COLUMN IF NOT EXISTS player_id uuid REFERENCES public.players(id);
+
+  CREATE INDEX IF NOT EXISTS idx_trash_talk_tournament ON public.trash_talk(tournament_id);
+  CREATE INDEX IF NOT EXISTS idx_trash_talk_parent ON public.trash_talk(parent_id);
+
+  -- Original table schema (if creating fresh):
+  -- CREATE TABLE public.trash_talk (
+  --   id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
+  --   created_at timestamptz DEFAULT now() NOT NULL,
+  --   tournament_id uuid REFERENCES public.tournaments(id),
+  --   parent_id uuid REFERENCES public.trash_talk(id),
+  --   player_id uuid REFERENCES public.players(id),
+  --   player_name text NOT NULL,
+  --   team text,
+  --   message text NOT NULL
+  -- );
+  -- ALTER TABLE public.trash_talk ENABLE ROW LEVEL SECURITY;
+  -- CREATE POLICY "public read"   ON public.trash_talk FOR SELECT USING (true);
+  -- CREATE POLICY "public insert" ON public.trash_talk FOR INSERT WITH CHECK (true);
 -->
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Mono:wght@300;400;500&family=Barlow+Condensed:wght@300;400;600;700;800&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
@@ -51,12 +63,28 @@ a{color:inherit;text-decoration:none;}
 
 /* COMPOSE */
 .compose-card{background:var(--card);border:1px solid var(--border);padding:1.5rem;margin-bottom:2rem;}
-.compose-label{font-family:'DM Mono',monospace;font-size:0.45rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--gold);margin-bottom:0.8rem;display:block;}
-.compose-select{width:100%;margin-bottom:0.75rem;font-family:'Barlow',sans-serif;font-size:0.88rem;padding:0.6rem 0.8rem;background:var(--bg);border:1px solid var(--border);color:var(--ink);appearance:none;-webkit-appearance:none;cursor:pointer;outline:none;}
-.compose-select:focus{border-color:var(--gold);}
+.compose-id{display:flex;align-items:baseline;gap:0.5rem;margin-bottom:0.8rem;}
+.compose-label{font-family:'DM Mono',monospace;font-size:0.45rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--gold);flex-shrink:0;}
+.compose-player-name{font-family:'Playfair Display',serif;font-size:0.95rem;font-weight:700;color:var(--ink);}
+.compose-textarea-wrap{position:relative;}
 .compose-textarea{width:100%;font-family:'Barlow',sans-serif;font-size:0.92rem;padding:0.75rem 0.9rem;background:var(--bg);border:1px solid var(--border);color:var(--ink);resize:vertical;min-height:72px;max-height:160px;outline:none;line-height:1.55;}
 .compose-textarea:focus{border-color:var(--gold);}
 .compose-textarea::placeholder{color:var(--muted);font-style:italic;}
+
+/* @MENTION DROPDOWN */
+.mention-dropdown{display:none;position:absolute;top:calc(100% + 2px);left:0;right:0;z-index:50;background:rgba(14,11,6,0.97);border:1px solid var(--border);max-height:180px;overflow-y:auto;}
+.mention-dropdown.open{display:block;}
+.mention-item{font-family:'Barlow',sans-serif;font-size:0.88rem;padding:0.6rem 0.9rem;color:var(--cream);cursor:pointer;transition:background 0.12s;}
+.mention-item:hover{background:rgba(192,144,48,0.15);}
+.mention-item:active{background:rgba(192,144,48,0.25);}
+
+/* REPLY BANNER */
+.reply-banner{display:flex;align-items:center;gap:0.5rem;margin-top:0.5rem;padding:0.45rem 0.75rem;background:rgba(192,144,48,0.07);border-left:2px solid var(--gold);}
+.reply-label{font-family:'DM Mono',monospace;font-size:0.42rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);}
+.reply-target{font-family:'Barlow',sans-serif;font-size:0.82rem;font-weight:500;color:var(--ink);flex:1;}
+.reply-cancel{font-family:'DM Mono',monospace;font-size:0.55rem;color:var(--muted);background:none;border:none;cursor:pointer;padding:0 0.2rem;line-height:1;transition:color 0.15s;}
+.reply-cancel:hover{color:var(--red);}
+
 .compose-footer{display:flex;align-items:center;justify-content:space-between;margin-top:0.65rem;}
 .compose-char{font-family:'DM Mono',monospace;font-size:0.45rem;letter-spacing:0.1em;color:var(--muted);}
 .compose-char.warn{color:var(--gold);}
@@ -65,28 +93,40 @@ a{color:inherit;text-decoration:none;}
 .compose-submit:hover:not(:disabled){background:var(--gold-l);border-color:var(--gold-l);}
 .compose-submit:disabled{opacity:0.38;cursor:not-allowed;}
 
-/* FEED */
+/* FEED HEADER */
 .feed-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;}
 .feed-title{font-family:'DM Mono',monospace;font-size:0.48rem;letter-spacing:0.35em;text-transform:uppercase;color:var(--muted);}
 .live-badge{display:flex;align-items:center;gap:0.35rem;font-family:'DM Mono',monospace;font-size:0.45rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);}
 .live-badge .dot{width:6px;height:6px;border-radius:50%;background:#2a7a20;animation:pulse 1.8s ease-in-out infinite;}
 @keyframes pulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:0.5;transform:scale(0.8);}}
 
+/* THREADS */
 .feed-list{display:flex;flex-direction:column;gap:0.75rem;}
+.thread{display:flex;flex-direction:column;}
+.reply-list{display:flex;flex-direction:column;margin-left:1.25rem;border-left:1px solid var(--border);}
 
 /* POST CARD */
 .post-card{background:var(--card);border:1px solid var(--border);border-left-width:3px;padding:1rem 1.2rem;animation:slideIn 0.22s ease;}
-@keyframes slideIn{from{opacity:0;transform:translateY(-10px);}to{opacity:1;transform:translateY(0);}}
+.post-card.reply{border-left-width:2px;padding:0.7rem 1rem;border-top:none;animation:none;}
+@keyframes slideIn{from{opacity:0;transform:translateY(-8px);}to{opacity:1;transform:translateY(0);}}
 .post-card.team-a{border-left-color:var(--gold);background:linear-gradient(to right,rgba(192,144,48,0.04),var(--card));}
 .post-card.team-b{border-left-color:var(--blue);background:linear-gradient(to right,rgba(74,106,138,0.06),var(--card));}
 .post-card.team-none{border-left-color:rgba(26,16,8,0.18);}
-.post-meta{display:flex;align-items:center;gap:0.5rem;margin-bottom:0.5rem;flex-wrap:wrap;}
+.post-meta{display:flex;align-items:center;gap:0.5rem;margin-bottom:0.4rem;flex-wrap:wrap;}
 .post-name{font-family:'Playfair Display',serif;font-size:0.95rem;font-weight:700;color:var(--ink);}
+.post-card.reply .post-name{font-size:0.85rem;}
 .post-team-badge{font-family:'DM Mono',monospace;font-size:0.4rem;letter-spacing:0.2em;text-transform:uppercase;padding:0.15rem 0.45rem;}
 .post-team-badge.team-a{background:rgba(192,144,48,0.14);color:var(--gold);}
 .post-team-badge.team-b{background:rgba(74,106,138,0.14);color:var(--blue);}
 .post-time{font-family:'DM Mono',monospace;font-size:0.42rem;letter-spacing:0.08em;color:var(--muted);margin-left:auto;}
 .post-message{font-family:'Barlow',sans-serif;font-size:0.95rem;font-weight:400;color:var(--ink);line-height:1.55;}
+.post-card.reply .post-message{font-size:0.88rem;}
+.mention{color:var(--gold);font-weight:500;}
+
+/* REPLY ACTION */
+.post-actions{margin-top:0.45rem;}
+.reply-btn{font-family:'DM Mono',monospace;font-size:0.42rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);background:none;border:none;cursor:pointer;padding:0;transition:color 0.15s;}
+.reply-btn:hover{color:var(--gold);}
 
 /* EMPTY / LOADING */
 .empty-state{text-align:center;padding:4rem 2rem;border:1px solid var(--border);background:var(--card);}
@@ -99,6 +139,22 @@ a{color:inherit;text-decoration:none;}
 .toast.show{transform:translateY(0);opacity:1;}
 .toast.success{color:var(--gold);}
 .toast.error{color:var(--red);}
+
+/* HOLE-IN-ONE OVERLAY */
+.hio-overlay{position:fixed;inset:0;z-index:9999;background:rgba(10,7,2,0.97);display:flex;align-items:center;justify-content:center;cursor:pointer;animation:hioIn 0.4s ease;}
+@keyframes hioIn{from{opacity:0;}to{opacity:1;}}
+.hio-confetti{position:absolute;inset:0;overflow:hidden;pointer-events:none;}
+.confetti-piece{position:absolute;top:-20px;border-radius:2px;animation:confettiFall linear forwards;}
+@keyframes confettiFall{
+  0%{transform:translateY(0) rotate(0deg) scaleX(1);opacity:1;}
+  70%{opacity:1;}
+  100%{transform:translateY(110vh) rotate(720deg) scaleX(-1);opacity:0;}
+}
+.hio-content{position:relative;z-index:1;text-align:center;padding:2rem;pointer-events:none;}
+.hio-eyebrow{font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.5em;text-transform:uppercase;color:var(--gold);margin-bottom:1.2rem;}
+.hio-name{font-family:'Playfair Display',serif;font-size:clamp(2.8rem,12vw,5.5rem);font-weight:900;color:var(--cream);line-height:1;margin-bottom:0.5rem;}
+.hio-detail{font-family:'Barlow Condensed',sans-serif;font-size:clamp(1rem,4vw,1.4rem);letter-spacing:0.35em;text-transform:uppercase;color:var(--gold-p);margin-bottom:2rem;}
+.hio-sub{font-family:'DM Mono',monospace;font-size:0.45rem;letter-spacing:0.3em;text-transform:uppercase;color:rgba(240,230,204,0.25);}
 </style>
 <link rel="stylesheet" href="/nav-mobile.css">
 <script defer src="/nav-mobile.js"></script>
@@ -127,17 +183,25 @@ a{color:inherit;text-decoration:none;}
 
 <div class="main">
 
-  <div class="compose-card">
-    <span class="compose-label">Post to the feed</span>
-    <select class="compose-select" id="playerSelect">
-      <option value="">Select your name...</option>
-    </select>
-    <textarea
-      class="compose-textarea"
-      id="messageInput"
-      placeholder="Talk your game... or someone else's."
-      maxlength="280"
-    ></textarea>
+  <div class="compose-card" id="composeCard">
+    <div class="compose-id">
+      <span class="compose-label">Posting as</span>
+      <span class="compose-player-name" id="composeName">—</span>
+    </div>
+    <div class="compose-textarea-wrap">
+      <textarea
+        class="compose-textarea"
+        id="messageInput"
+        placeholder="Talk your game... or someone else's."
+        maxlength="280"
+      ></textarea>
+      <div class="mention-dropdown" id="mentionDropdown"></div>
+    </div>
+    <div class="reply-banner" id="replyBanner" style="display:none">
+      <span class="reply-label">Replying to</span>
+      <span class="reply-target" id="replyTarget"></span>
+      <button class="reply-cancel" onclick="cancelReply()">✕</button>
+    </div>
     <div class="compose-footer">
       <span class="compose-char" id="charCount">280</span>
       <button class="compose-submit" id="submitBtn" onclick="postMessage()" disabled>Post It</button>
@@ -155,6 +219,8 @@ a{color:inherit;text-decoration:none;}
 
 </div>
 
+<!-- Hole-in-one overlay (injected via JS) -->
+
 <div class="toast" id="toast"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
@@ -163,57 +229,81 @@ a{color:inherit;text-decoration:none;}
 const sb = window.tourney.db;
 
 const MAX_CHARS = 280;
+let me = null;
 let players = [];
 let teamAssignments = {};
 let posts = [];
 let posting = false;
+let replyingTo = null;
+let mentionState = null;
 
+// ── AUTH + INIT ──────────────────────────────────────────────────
 async function init() {
+  const { data: sess } = await sb.auth.getSession();
+  if (!sess?.session?.user) {
+    window.location.href = '/login?redirect=/feed';
+    return;
+  }
+  const email = sess.session.user.email;
+
   const { tournament } = await window.tourney.ready;
-  const [pRes, taRes, feedRes] = await Promise.all([
+
+  const [pRes, taRes, meRes, feedRes] = await Promise.all([
     sb.from('players').select('id,first_name,last_name').eq('tournament_id', tournament.id).order('last_name'),
-    sb.from('settings').select('value').eq('tournament_id', tournament.id).eq('key','team_assignments').maybeSingle(),
-    sb.from('trash_talk').select('*').order('created_at', { ascending: false }),
+    sb.from('settings').select('value').eq('tournament_id', tournament.id).eq('key', 'team_assignments').maybeSingle(),
+    sb.from('players').select('id,first_name,last_name').eq('tournament_id', tournament.id).eq('email', email.toLowerCase()).maybeSingle(),
+    sb.from('trash_talk').select('*').eq('tournament_id', tournament.id).order('created_at', { ascending: false }),
   ]);
 
   players = pRes.data || [];
   if (taRes.data?.value) try { teamAssignments = JSON.parse(taRes.data.value); } catch {}
+  me = meRes.data;
 
-  populatePlayerSelect();
+  if (me) {
+    document.getElementById('composeName').textContent = `${me.first_name} ${me.last_name}`;
+  } else {
+    document.getElementById('composeCard').innerHTML =
+      `<div style="text-align:center;padding:1.5rem;font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);">No player record found for this account.</div>`;
+  }
 
-  posts = (feedRes.data || []);
+  posts = feedRes.data || [];
   renderFeed();
-  subscribeRealtime();
+  subscribeRealtime(tournament.id);
+  subscribeHoleInOne(tournament.id);
+
+  // Deep link: scroll to specific post
+  const targetId = new URLSearchParams(window.location.search).get('post');
+  if (targetId) {
+    setTimeout(() => {
+      const el = document.getElementById(`post-${targetId}`);
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, 400);
+  }
+
+  // Event delegation for reply buttons
+  document.getElementById('feedList').addEventListener('click', e => {
+    const btn = e.target.closest('.reply-btn');
+    if (btn) startReply(btn.dataset.postId, btn.dataset.playerName);
+  });
 }
 
-function populatePlayerSelect() {
-  const sel = document.getElementById('playerSelect');
-  const teamA = players.filter(p => teamAssignments[p.id] === 'A');
-  const teamB = players.filter(p => teamAssignments[p.id] === 'B');
-  const unassigned = players.filter(p => !teamAssignments[p.id]);
-
-  const makeOption = (p) => {
-    const o = document.createElement('option');
-    o.value = p.id;
-    o.textContent = `${p.first_name} ${p.last_name}`;
-    return o;
-  };
-
-  if (teamA.length) {
-    const grp = document.createElement('optgroup');
-    grp.label = 'Team Bova';
-    teamA.forEach(p => grp.appendChild(makeOption(p)));
-    sel.appendChild(grp);
-  }
-  if (teamB.length) {
-    const grp = document.createElement('optgroup');
-    grp.label = 'The Challengers';
-    teamB.forEach(p => grp.appendChild(makeOption(p)));
-    sel.appendChild(grp);
-  }
-  unassigned.forEach(p => sel.appendChild(makeOption(p)));
+// ── THREAD BUILDING ───────────────────────────────────────────────
+function buildThreads() {
+  const byId = {};
+  const roots = [];
+  // posts are DESC — iterate to build map
+  posts.forEach(p => { byId[p.id] = { ...p, replies: [] }; });
+  posts.forEach(p => {
+    if (p.parent_id && byId[p.parent_id]) {
+      byId[p.parent_id].replies.unshift(byId[p.id]); // unshift → replies end up ASC
+    } else if (!p.parent_id) {
+      roots.push(byId[p.id]);
+    }
+  });
+  return roots;
 }
 
+// ── RENDER ───────────────────────────────────────────────────────
 function renderFeed() {
   const list = document.getElementById('feedList');
   updateFeedTitle();
@@ -226,67 +316,110 @@ function renderFeed() {
     return;
   }
 
-  list.innerHTML = posts.map(buildPostHTML).join('');
+  const threads = buildThreads();
+  list.innerHTML = threads.map(buildThreadHTML).join('');
 }
 
-function buildPostHTML(post) {
+function buildThreadHTML(node) {
+  const replies = node.replies || [];
+  const replyHTML = replies.length
+    ? `<div class="reply-list">${replies.map(r => buildPostHTML(r, true)).join('')}</div>`
+    : '';
+  return `<div class="thread" id="thread-${node.id}">${buildPostHTML(node, false)}${replyHTML}</div>`;
+}
+
+function buildPostHTML(post, isReply) {
   const teamClass = post.team === 'A' ? 'team-a' : post.team === 'B' ? 'team-b' : 'team-none';
   const teamBadge = post.team === 'A'
     ? `<span class="post-team-badge team-a">Team Bova</span>`
     : post.team === 'B'
     ? `<span class="post-team-badge team-b">Challengers</span>`
     : '';
-  return `<div class="post-card ${teamClass}">
+  const replyBtn = !isReply && me
+    ? `<div class="post-actions"><button class="reply-btn" data-post-id="${post.id}" data-player-name="${esc(post.player_name)}">Reply</button></div>`
+    : '';
+  return `<div class="post-card ${teamClass}${isReply ? ' reply' : ''}" id="post-${post.id}">
     <div class="post-meta">
       <span class="post-name">${esc(post.player_name)}</span>
       ${teamBadge}
       <span class="post-time">${formatTime(post.created_at)}</span>
     </div>
-    <div class="post-message">${esc(post.message)}</div>
+    <div class="post-message">${buildPostMessage(post.message)}</div>
+    ${replyBtn}
   </div>`;
 }
 
-function prependPost(post) {
-  posts.unshift(post);
-  updateFeedTitle();
+function buildPostMessage(text) {
+  const d = document.createElement('div');
+  d.textContent = text;
+  return d.innerHTML.replace(/@([A-Za-z][A-Za-z '.'-]*[A-Za-z])/g, '<span class="mention">@$1</span>');
+}
 
+// ── OPTIMISTIC UPDATES ────────────────────────────────────────────
+function prependThread(post) {
   const list = document.getElementById('feedList');
   const empty = list.querySelector('.empty-state,.loading-state');
   if (empty) list.innerHTML = '';
 
   const wrapper = document.createElement('div');
-  wrapper.innerHTML = buildPostHTML(post);
-  const card = wrapper.firstElementChild;
-  list.insertBefore(card, list.firstChild);
-  card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  wrapper.innerHTML = buildThreadHTML({ ...post, replies: [] });
+  list.insertBefore(wrapper.firstElementChild, list.firstChild);
 }
 
-function updateFeedTitle() {
-  const n = posts.length;
-  document.getElementById('feedTitle').textContent = n ? `Feed — ${n} post${n !== 1 ? 's' : ''}` : 'Feed';
+function insertReply(post) {
+  const thread = document.getElementById(`thread-${post.parent_id}`);
+  if (!thread) { renderFeed(); return; }
+  let replyList = thread.querySelector('.reply-list');
+  if (!replyList) {
+    replyList = document.createElement('div');
+    replyList.className = 'reply-list';
+    thread.appendChild(replyList);
+  }
+  replyList.insertAdjacentHTML('beforeend', buildPostHTML(post, true));
 }
 
+// ── REPLY UX ─────────────────────────────────────────────────────
+function startReply(postId, playerName) {
+  replyingTo = { id: postId, player_name: playerName };
+  document.getElementById('replyTarget').textContent = playerName;
+  document.getElementById('replyBanner').style.display = '';
+
+  const ta = document.getElementById('messageInput');
+  const prefix = `@${playerName} `;
+  if (!ta.value.startsWith(prefix)) ta.value = prefix + ta.value;
+  ta.focus();
+  ta.setSelectionRange(ta.value.length, ta.value.length);
+  updateCharCount();
+  document.querySelector('.compose-card').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function cancelReply() {
+  replyingTo = null;
+  document.getElementById('replyBanner').style.display = 'none';
+  document.getElementById('replyTarget').textContent = '';
+}
+
+// ── POST ─────────────────────────────────────────────────────────
 async function postMessage() {
-  if (posting) return;
-  const sel = document.getElementById('playerSelect');
+  if (posting || !me) return;
   const msgEl = document.getElementById('messageInput');
   const btn = document.getElementById('submitBtn');
-
-  const playerId = sel.value;
   const message = msgEl.value.trim();
-  if (!playerId || !message) return;
+  if (!message) return;
 
-  const player = players.find(p => p.id === playerId);
-  if (!player) return;
+  const { tournament } = await window.tourney.ready;
 
   posting = true;
   btn.disabled = true;
   btn.textContent = 'Posting...';
 
   const { error } = await sb.from('trash_talk').insert({
-    player_name: `${player.first_name} ${player.last_name}`,
-    team: teamAssignments[playerId] || null,
+    tournament_id: tournament.id,
+    player_id: me.id,
+    player_name: `${me.first_name} ${me.last_name}`,
+    team: teamAssignments[me.id] || null,
     message,
+    parent_id: replyingTo?.id || null,
   });
 
   posting = false;
@@ -299,18 +432,192 @@ async function postMessage() {
   }
 
   msgEl.value = '';
+  cancelReply();
+  hideMentionDropdown();
   updateCharCount();
 }
 
-function subscribeRealtime() {
+// ── REALTIME ─────────────────────────────────────────────────────
+function subscribeRealtime(tournamentId) {
   sb.channel('trash-talk-channel')
-    .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'trash_talk' }, payload => {
-      // Avoid duplicate if it came from our own post (already shown optimistically)
-      if (!posts.find(p => p.id === payload.new.id)) {
-        prependPost(payload.new);
+    .on('postgres_changes', {
+      event: 'INSERT',
+      schema: 'public',
+      table: 'trash_talk',
+      filter: `tournament_id=eq.${tournamentId}`,
+    }, payload => {
+      const post = payload.new;
+      if (posts.find(p => p.id === post.id)) return;
+      posts.push(post);
+      if (post.parent_id) {
+        insertReply(post);
+      } else {
+        prependThread(post);
       }
+      updateFeedTitle();
     })
     .subscribe();
+}
+
+// ── HOLE-IN-ONE ──────────────────────────────────────────────────
+function subscribeHoleInOne(tournamentId) {
+  sb.channel('hio-watch')
+    .on('postgres_changes', {
+      event: 'INSERT',
+      schema: 'public',
+      table: 'scores',
+      filter: `tournament_id=eq.${tournamentId}`,
+    }, async payload => {
+      const score = payload.new;
+      const strokes = score.gross_score ?? score.strokes ?? score.score;
+      if (strokes !== 1) return;
+
+      let playerName = score.player_name || '';
+      if (!playerName && score.player_id) {
+        const { data } = await sb.from('players')
+          .select('first_name,last_name')
+          .eq('id', score.player_id)
+          .single();
+        if (data) playerName = `${data.first_name} ${data.last_name}`;
+      }
+      showHoleInOne(playerName, score.hole ?? score.hole_number ?? '');
+    })
+    .subscribe();
+}
+
+function showHoleInOne(playerName, hole) {
+  let overlay = document.getElementById('hioOverlay');
+  if (!overlay) {
+    overlay = document.createElement('div');
+    overlay.className = 'hio-overlay';
+    overlay.id = 'hioOverlay';
+    overlay.innerHTML = `
+      <div class="hio-confetti" id="hioConfetti"></div>
+      <div class="hio-content">
+        <div class="hio-eyebrow">Hole in One</div>
+        <div class="hio-name" id="hioName"></div>
+        <div class="hio-detail" id="hioDetail"></div>
+        <div class="hio-sub">tap anywhere to dismiss</div>
+      </div>`;
+    overlay.addEventListener('click', dismissHoleInOne);
+    document.body.appendChild(overlay);
+  }
+
+  document.getElementById('hioName').textContent = playerName || 'Incredible shot';
+  document.getElementById('hioDetail').textContent = hole ? `Hole ${hole} · Ace` : 'Ace';
+  overlay.style.display = 'flex';
+  spawnConfetti();
+
+  // Auto-dismiss after 12 seconds
+  clearTimeout(overlay._t);
+  overlay._t = setTimeout(dismissHoleInOne, 12000);
+}
+
+function dismissHoleInOne() {
+  const overlay = document.getElementById('hioOverlay');
+  if (overlay) overlay.style.display = 'none';
+}
+
+function spawnConfetti() {
+  const container = document.getElementById('hioConfetti');
+  if (!container) return;
+  container.innerHTML = '';
+  const colors = ['#c09030','#d4aa50','#e8cc80','#2a7a20','#8a1e10','#f0e6cc','#4a8a60'];
+  for (let i = 0; i < 70; i++) {
+    const el = document.createElement('div');
+    el.className = 'confetti-piece';
+    const size = 5 + Math.random() * 9;
+    el.style.cssText = `left:${Math.random()*100}%;width:${size}px;height:${size * (0.4 + Math.random()*0.8)}px;background:${colors[Math.floor(Math.random()*colors.length)]};animation-duration:${2.5+Math.random()*3}s;animation-delay:${Math.random()*1.8}s;`;
+    container.appendChild(el);
+  }
+}
+
+// ── @MENTION AUTOCOMPLETE ─────────────────────────────────────────
+function handleMessageInput() {
+  updateCharCount();
+
+  const ta = document.getElementById('messageInput');
+  const before = ta.value.slice(0, ta.selectionStart);
+  const match = before.match(/@([A-Za-z]*)$/);
+
+  if (match) {
+    mentionState = { atPos: before.lastIndexOf('@'), query: match[1].toLowerCase() };
+    showMentionDropdown(mentionState.query);
+  } else {
+    mentionState = null;
+    hideMentionDropdown();
+  }
+}
+
+function showMentionDropdown(query) {
+  const matches = players
+    .filter(p => {
+      const full = `${p.first_name} ${p.last_name}`.toLowerCase();
+      return full.includes(query) || p.first_name.toLowerCase().startsWith(query) || p.last_name.toLowerCase().startsWith(query);
+    })
+    .slice(0, 6);
+
+  const dd = document.getElementById('mentionDropdown');
+  if (!matches.length) { hideMentionDropdown(); return; }
+
+  dd.innerHTML = matches.map(p =>
+    `<div class="mention-item" data-name="${esc(p.first_name)} ${esc(p.last_name)}">${esc(p.first_name)} ${esc(p.last_name)}</div>`
+  ).join('');
+  dd.classList.add('open');
+}
+
+function hideMentionDropdown() {
+  const dd = document.getElementById('mentionDropdown');
+  dd.innerHTML = '';
+  dd.classList.remove('open');
+}
+
+function insertMention(name) {
+  const ta = document.getElementById('messageInput');
+  const cursor = ta.selectionStart;
+  const before = ta.value.slice(0, mentionState.atPos);
+  const after = ta.value.slice(cursor);
+  const inserted = `@${name} `;
+  ta.value = before + inserted + after;
+  const newPos = before.length + inserted.length;
+  ta.focus();
+  ta.setSelectionRange(newPos, newPos);
+  mentionState = null;
+  hideMentionDropdown();
+  updateCharCount();
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('messageInput').addEventListener('input', handleMessageInput);
+  document.getElementById('messageInput').addEventListener('keydown', e => {
+    const dd = document.getElementById('mentionDropdown');
+    if (!dd.classList.contains('open')) return;
+    if (e.key === 'Escape') { hideMentionDropdown(); e.preventDefault(); }
+    if (e.key === 'Enter' && dd.firstElementChild) {
+      insertMention(dd.firstElementChild.dataset.name);
+      e.preventDefault();
+    }
+  });
+  document.getElementById('mentionDropdown').addEventListener('mousedown', e => {
+    const item = e.target.closest('.mention-item');
+    if (item) { e.preventDefault(); insertMention(item.dataset.name); }
+  });
+});
+
+// ── HELPERS ───────────────────────────────────────────────────────
+function updateFeedTitle() {
+  const n = posts.filter(p => !p.parent_id).length;
+  document.getElementById('feedTitle').textContent = n ? `Feed — ${n} post${n !== 1 ? 's' : ''}` : 'Feed';
+}
+
+function updateCharCount() {
+  const msg = document.getElementById('messageInput').value;
+  const remaining = MAX_CHARS - msg.length;
+  const countEl = document.getElementById('charCount');
+  const btn = document.getElementById('submitBtn');
+  countEl.textContent = remaining;
+  countEl.className = 'compose-char' + (remaining < 20 ? ' warn' : '') + (remaining < 0 ? ' over' : '');
+  btn.disabled = posting || !me || msg.trim().length === 0 || remaining < 0;
 }
 
 function formatTime(ts) {
@@ -336,21 +643,6 @@ function showToast(msg, type = 'success') {
   clearTimeout(_toastTimer);
   _toastTimer = setTimeout(() => t.classList.remove('show'), 3000);
 }
-
-function updateCharCount() {
-  const msg = document.getElementById('messageInput').value;
-  const remaining = MAX_CHARS - msg.length;
-  const countEl = document.getElementById('charCount');
-  const sel = document.getElementById('playerSelect');
-  const btn = document.getElementById('submitBtn');
-
-  countEl.textContent = remaining;
-  countEl.className = 'compose-char' + (remaining < 20 ? ' warn' : '') + (remaining < 0 ? ' over' : '');
-  btn.disabled = posting || !sel.value || msg.trim().length === 0 || remaining < 0;
-}
-
-document.getElementById('messageInput').addEventListener('input', updateCharCount);
-document.getElementById('playerSelect').addEventListener('change', updateCharCount);
 
 async function loadNavLogo() {
   const { data } = await sb.from('settings').select('value').eq('key', 'logo_url').maybeSingle();

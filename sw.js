@@ -1,10 +1,11 @@
-const CACHE = 'bova-v4';
+const CACHE = 'bova-v5';
 const PRECACHE = [
   '/',
   '/index.html',
   '/admin.html',
   '/scoreboard.html',
   '/scorecard.html',
+  '/feed.html',
   '/profile.html',
   '/directory.html',
   '/manifest.json',
@@ -14,6 +15,18 @@ const PRECACHE = [
   '/nav-mobile.js',
   '/tourney-init.js',
 ];
+
+self.addEventListener('notificationclick', (event) => {
+  event.notification.close();
+  const url = event.notification.data?.url || '/feed';
+  event.waitUntil(
+    clients.matchAll({ type: 'window', includeUncontrolled: true }).then(windowClients => {
+      const existing = windowClients.find(c => c.url.includes('/feed'));
+      if (existing) return existing.focus().then(c => c.navigate(url));
+      return clients.openWindow(url);
+    })
+  );
+});
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
