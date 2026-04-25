@@ -1,4 +1,4 @@
-const CACHE = 'bova-v5';
+const CACHE = 'bova-v6';
 const PRECACHE = [
   '/',
   '/index.html',
@@ -8,6 +8,10 @@ const PRECACHE = [
   '/feed.html',
   '/profile.html',
   '/directory.html',
+  '/login.html',
+  '/champions.html',
+  '/course.html',
+  '/install.html',
   '/manifest.json',
   '/icon.svg',
   '/pwa.js',
