@@ -37,12 +37,23 @@
     });
 
     drawer.appendChild(inner);
+
+    // Mark the active page link in the drawer
+    var currentPath = window.location.pathname.replace(/\/$/, '') || '/';
+    inner.querySelectorAll('a').forEach(function (a) {
+      var href = (a.getAttribute('href') || '').replace(/\/$/, '') || '/';
+      if (href === currentPath || (href !== '/' && currentPath.endsWith(href))) {
+        a.classList.add('active');
+      }
+    });
+
     if (nav.parentNode) nav.parentNode.insertBefore(drawer, nav.nextSibling);
 
     // FAB: floating "Enter Scores" button on all pages except scorecard + admin
     var path = window.location.pathname.replace(/\/$/, '');
     var skipFab = path === '/scorecard' || path === '/admin' ||
-                  path.endsWith('/scorecard.html') || path.endsWith('/admin.html');
+                  path.endsWith('/scorecard.html') || path.endsWith('/admin.html') ||
+                  path.endsWith('/scorecard') || path.endsWith('/admin');
     if (!skipFab) {
       var fab = document.createElement('a');
       fab.href = '/scorecard';
