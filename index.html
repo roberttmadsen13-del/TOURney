@@ -713,7 +713,7 @@ window.addEventListener('scroll', () => { document.getElementById('mainNav').cla
 // Load admin-configured homepage content
 (async function loadHomepageContent() {
   const { tournament } = await window.tourney.ready;
-  const keys = ['homepage_subtitle','homepage_details','homepage_about','logo_url'];
+  const keys = ['homepage_subtitle','homepage_details','homepage_about','logo_url','hero_photo_url','about_photo_url','about_stat_days','about_stat_holes','reg_bullet_1','reg_bullet_2','reg_bullet_3','reg_max_players','color_primary','color_ink','color_bg'];
   const { data } = await sb.from('settings').select('key,value').eq('tournament_id', tournament.id).in('key', keys);
   if (!data) return;
   const map = {};
@@ -755,6 +755,30 @@ window.addEventListener('scroll', () => { document.getElementById('mainNav').cla
     const link = document.querySelector('link[rel="manifest"]');
     if (link) link.href = manifestUrl;
   }
+  // Hero background photo
+  if (map.hero_photo_url) {
+    const img = document.querySelector('.hero-img');
+    if (img) img.src = map.hero_photo_url;
+  }
+  // About section photo
+  if (map.about_photo_url) {
+    const img = document.querySelector('.about-photo-wrap img');
+    if (img) img.src = map.about_photo_url;
+  }
+  // About stats: .as-val[0]=MaxPlayers [1]=Days [2]=Holes
+  const statVals = document.querySelectorAll('.as-val');
+  if (map.reg_max_players && statVals[0]) statVals[0].textContent = map.reg_max_players;
+  if (map.about_stat_days && statVals[1]) statVals[1].textContent = map.about_stat_days;
+  if (map.about_stat_holes && statVals[2]) statVals[2].textContent = map.about_stat_holes;
+  // Registration bullets
+  const bullets = document.querySelectorAll('.rsvp-bullet');
+  if (map.reg_bullet_1 && bullets[0]) bullets[0].innerHTML = map.reg_bullet_1;
+  if (map.reg_bullet_2 && bullets[1]) bullets[1].innerHTML = map.reg_bullet_2;
+  if (map.reg_bullet_3 && bullets[2]) bullets[2].innerHTML = map.reg_bullet_3;
+  // CSS color vars
+  if (map.color_primary) document.documentElement.style.setProperty('--gold', map.color_primary);
+  if (map.color_ink) document.documentElement.style.setProperty('--ink', map.color_ink);
+  if (map.color_bg) document.documentElement.style.setProperty('--bg', map.color_bg);
 })();
 
 const MAX = 24;
