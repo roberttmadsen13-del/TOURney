@@ -406,7 +406,6 @@ html { scroll-behavior: smooth; }
     <li><a href="/feed">Feed</a></li>
     <li><a href="/directory">Directory</a></li>
     <li><a href="/profile">My Card</a></li>
-    <li><a href="/scoreboard">Leaderboard</a></li>
   </ul>
   <a href="#rsvp" class="nav-register">Register</a>
 </nav>
@@ -630,12 +629,6 @@ html { scroll-behavior: smooth; }
               <input type="text" id="rsvpWhyMe" placeholder="Make your case for the draft...">
             </div>
           </div>
-          <div class="form-row one">
-            <div class="fg">
-              <label>Trash Talk</label>
-              <input type="text" id="rsvpTrash" placeholder="Say something you'll have to back up on the course...">
-            </div>
-          </div>
 
           <div class="hat-section">
             <div class="hat-header">
@@ -796,7 +789,6 @@ async function submitRsvp() {
     handicap:   hcap,
     available_dates: [...selectedDates],
     why_me:     document.getElementById('rsvpWhyMe').value.trim(),
-    trash_talk: document.getElementById('rsvpTrash').value.trim(),
     hat:        wantsHat,
     tournament_id: tournament.id,
   });
