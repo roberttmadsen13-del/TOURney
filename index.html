@@ -461,7 +461,7 @@ html { scroll-behavior: smooth; }
         <p class="about-body">The Bova Invitational is a private, invitation-only golf tournament held in Myrtle Beach, South Carolina. <strong>Two teams compete across all three days</strong> on three of the best tracks on the Grand Strand.</p>
         <p class="about-body">Every format — scramble, shambles, best ball, stroke play — feeds the team score. Individual glory exists, but the weekend is decided by which team wins. The field is limited to <strong>24 players</strong> and does not run without 16 confirmed.</p>
         <div class="about-stats">
-          <div class="about-stat"><div class="as-val">24</div><div class="as-label">Max Players</div></div>
+          <div class="about-stat"><div class="as-val">2</div><div class="as-label">Teams</div></div>
           <div class="about-stat"><div class="as-val">3</div><div class="as-label">Days</div></div>
           <div class="about-stat"><div class="as-val">54</div><div class="as-label">Holes</div></div>
         </div>
@@ -713,7 +713,7 @@ window.addEventListener('scroll', () => { document.getElementById('mainNav').cla
 // Load admin-configured homepage content
 (async function loadHomepageContent() {
   const { tournament } = await window.tourney.ready;
-  const keys = ['homepage_subtitle','homepage_details','homepage_about','logo_url','hero_photo_url','about_photo_url','about_stat_days','about_stat_holes','reg_bullet_1','reg_bullet_2','reg_bullet_3','reg_max_players','color_primary','color_ink','color_bg'];
+  const keys = ['homepage_subtitle','homepage_details','homepage_about','logo_url','hero_photo_url','about_photo_url','about_stat_teams','about_stat_days','about_stat_holes','reg_bullet_1','reg_bullet_2','reg_bullet_3','reg_max_players','color_primary','color_ink','color_bg','hero_cta_primary'];
   const { data } = await sb.from('settings').select('key,value').eq('tournament_id', tournament.id).in('key', keys);
   if (!data) return;
   const map = {};
@@ -767,7 +767,7 @@ window.addEventListener('scroll', () => { document.getElementById('mainNav').cla
   }
   // About stats: .as-val[0]=MaxPlayers [1]=Days [2]=Holes
   const statVals = document.querySelectorAll('.as-val');
-  if (map.reg_max_players && statVals[0]) statVals[0].textContent = map.reg_max_players;
+  if (map.about_stat_teams && statVals[0]) statVals[0].textContent = map.about_stat_teams;
   if (map.about_stat_days && statVals[1]) statVals[1].textContent = map.about_stat_days;
   if (map.about_stat_holes && statVals[2]) statVals[2].textContent = map.about_stat_holes;
   // Registration bullets
@@ -779,6 +779,10 @@ window.addEventListener('scroll', () => { document.getElementById('mainNav').cla
   if (map.color_primary) document.documentElement.style.setProperty('--gold', map.color_primary);
   if (map.color_ink) document.documentElement.style.setProperty('--ink', map.color_ink);
   if (map.color_bg) document.documentElement.style.setProperty('--bg', map.color_bg);
+  // Hero primary CTA button text
+  if (map.hero_cta_primary) { const btn = document.querySelector('.hero-cta .btn-gold'); if (btn) btn.textContent = map.hero_cta_primary; }
+  // Registration counter denom
+  if (map.reg_max_players) { const d = document.querySelector('.rc-denom'); if (d) d.innerHTML = '&thinsp;/ ' + map.reg_max_players; }
 })();
 
 const MAX = 24;
