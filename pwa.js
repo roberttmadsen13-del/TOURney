@@ -90,14 +90,20 @@
       'https://jllugkiojeoopitdvzsa.supabase.co',
       'sb_publishable_DnBMNLaSu61ykJ6P_fI2fw_D9DdAScn'
     );
-    _sb.from('settings').select('key,value').in('key', ['logo_url','tournament_name','short_name']).then(function (res) {
+    Promise.resolve(window.tourney && window.tourney.ready ? window.tourney.ready : { tournament: null })
+      .then(function (ctx) {
+        var tid = ctx && ctx.tournament ? ctx.tournament.id : null;
+        var q = _sb.from('settings').select('key,value').in('key', ['logo_url','tourney_name','short_name']);
+        if (tid) q = q.eq('tournament_id', tid);
+        return q;
+      }).then(function (res) {
       var rows = res.data || [];
       var cfg = {};
       rows.forEach(function (r) { cfg[r.key] = r.value; });
       var iconUrl = cfg.logo_url || '/icon.svg';
       var iconType = iconUrl.endsWith('.svg') ? 'image/svg+xml' : 'image/png';
       var m = {
-        name: cfg.tournament_name || 'Bova Invitational',
+        name: cfg.tourney_name || 'Bova Invitational',
         short_name: cfg.short_name || 'Bova',
         start_url: '/',
         scope: '/',
