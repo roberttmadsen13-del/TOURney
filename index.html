@@ -712,7 +712,7 @@ window.addEventListener('scroll', () => { document.getElementById('mainNav').cla
 // Load admin-configured homepage content
 (async function loadHomepageContent() {
   const { tournament } = await window.tourney.ready;
-  const keys = ['homepage_subtitle','homepage_details','homepage_about','logo_url','hero_photo_url','about_photo_url','about_stat_teams','about_stat_days','about_stat_holes','reg_bullet_1','reg_bullet_2','reg_bullet_3','reg_max_players','color_primary','color_ink','color_bg','hero_cta_primary'];
+  const keys = ['tourney_name','homepage_subtitle','homepage_details','homepage_about','logo_url','hero_photo_url','about_photo_url','about_stat_teams','about_stat_days','about_stat_holes','reg_bullet_1','reg_bullet_2','reg_bullet_3','reg_max_players','color_primary','color_ink','color_bg','hero_cta_primary'];
   const { data } = await sb.from('settings').select('key,value').eq('tournament_id', tournament.id).in('key', keys);
   if (!data) return;
   const map = {};
@@ -782,6 +782,12 @@ window.addEventListener('scroll', () => { document.getElementById('mainNav').cla
   if (map.hero_cta_primary) { const btn = document.querySelector('.hero-cta .btn-gold'); if (btn) btn.textContent = map.hero_cta_primary; }
   // Registration counter denom
   if (map.reg_max_players) { const d = document.querySelector('.rc-denom'); if (d) d.innerHTML = '&thinsp;/ ' + map.reg_max_players; }
+  // Tournament name → hero title + page title (admin can include <br><em>…</em> for styling)
+  if (map.tourney_name) {
+    const el = document.querySelector('.hero-title');
+    if (el) el.innerHTML = map.tourney_name;
+    document.title = map.tourney_name.replace(/<[^>]*>/g, '') + ' — Myrtle Beach';
+  }
 })();
 
 const MAX = 24;
