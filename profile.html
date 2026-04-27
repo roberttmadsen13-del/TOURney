@@ -200,6 +200,10 @@ a{color:inherit;text-decoration:none;}
 <script>
 const sb = window.tourney.db;
 
+function esc(s) {
+  return String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+
 const TIER_MAP = {scratch:'t-scratch',eagle:'t-eagle',birdie:'t-birdie',bogey:'t-bogey',pretender:'t-pretender',hacker:'t-hacker'};
 const TIER_LABELS = {scratch:'Scratch',eagle:'Eagle',birdie:'Birdie',bogey:'Bogey',pretender:'The Pretenders',hacker:'The Dreamers'};
 const TIER_ORDER = ['scratch','eagle','birdie','bogey','pretender','hacker'];
@@ -258,7 +262,7 @@ async function loadProfileByEmail(email) {
   const { data: p } = await sb.from('players').select('*').eq('tournament_id', tournament.id).eq('email', email.toLowerCase()).single();
   if (!p) {
     // User has auth account but no player record — edge case
-    document.getElementById('loadingGate').innerHTML = '<div style="text-align:center;padding:2rem;"><div style="font-family:\'Playfair Display\',serif;font-size:1.3rem;font-weight:700;margin-bottom:0.5rem;">No Player Found</div><div style="font-size:0.85rem;color:var(--muted);margin-bottom:1.5rem;">No player record found for ' + email + '.</div><button class="btn-primary" style="max-width:200px;" onclick="doLogout()">Sign Out</button></div>';
+    document.getElementById('loadingGate').innerHTML = '<div style="text-align:center;padding:2rem;"><div style="font-family:\'Playfair Display\',serif;font-size:1.3rem;font-weight:700;margin-bottom:0.5rem;">No Player Found</div><div style="font-size:0.85rem;color:var(--muted);margin-bottom:1.5rem;">No player record found for ' + esc(email) + '.</div><button class="btn-primary" style="max-width:200px;" onclick="doLogout()">Sign Out</button></div>';
     return;
   }
   currentPlayer = p;
