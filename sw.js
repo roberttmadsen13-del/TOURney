@@ -1,7 +1,7 @@
-const CACHE = 'bova-v6';
+const CACHE = 'tourney-v7';
 const PRECACHE = [
   '/',
-  '/index.html',
+  '/home.html',
   '/admin.html',
   '/scoreboard.html',
   '/scorecard.html',
@@ -80,7 +80,7 @@ self.addEventListener('fetch', (event) => {
           caches.open(CACHE).then((c) => c.put(req, copy)).catch(() => {});
           return res;
         })
-        .catch(() => caches.match(req).then((r) => r || caches.match('/index.html')))
+        .catch(() => caches.match(req).then((r) => r || caches.match('/home.html')))
     );
     return;
   }
