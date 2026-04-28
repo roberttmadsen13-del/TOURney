@@ -604,7 +604,8 @@ td.email a:hover{color:var(--gold);}
 <script src="/tourney-init.js"></script>
 <script>
 const sb = window.tourney.db;
-let _tid = null; // set at auth time — used by all admin query functions
+let _tid = null;   // set at auth time — used by all admin query functions
+let _slug = null;  // tournament slug — used for storage namespacing
 
 const DATE_LABELS = {aug21:'Aug 21-24',aug28:'Aug 28-31',sep4:'Sep 4-7',sep11:'Sep 11-14',sep18:'Sep 18-21',sep25:'Sep 25-28',oct2:'Oct 2-5',oct9:'Oct 9-12'};
 const TIER_MAP = {scratch:'t-scratch',eagle:'t-eagle',birdie:'t-birdie',bogey:'t-bogey',pretender:'t-pretender',hacker:'t-hacker'};
@@ -644,9 +645,10 @@ async function doLogin() {
   const { data, error } = await sb.auth.signInWithPassword({ email, password: pass });
   if (error || !data.user) { err.classList.add('show'); return; }
   const { tournament } = await window.tourney.ready;
-  const { data: player } = await sb.from('players').select('is_admin').eq('tournament_id', tournament.id).eq('email', email.toLowerCase()).single();
-  if (!player?.is_admin) { await sb.auth.signOut(); err.classList.add('show'); return; }
-  _tid = tournament.id;
+  const isOwner = tournament.owner_email?.toLowerCase() === email.toLowerCase();
+  const { data: player } = await sb.from('players').select('is_admin').eq('tournament_id', tournament.id).eq('email', email.toLowerCase()).maybeSingle();
+  if (!isOwner && !player?.is_admin) { await sb.auth.signOut(); err.classList.add('show'); return; }
+  _tid = tournament.id; _slug = tournament.slug;
   showAdmin(email);
 }
 
@@ -655,8 +657,9 @@ async function checkSession() {
   if (!data?.session?.user) return;
   const email = data.session.user.email?.toLowerCase();
   const { tournament } = await window.tourney.ready;
-  const { data: player } = await sb.from('players').select('is_admin').eq('tournament_id', tournament.id).eq('email', email).single();
-  if (player?.is_admin) { _tid = tournament.id; showAdmin(email); }
+  const isOwner = tournament.owner_email?.toLowerCase() === email;
+  const { data: player } = await sb.from('players').select('is_admin').eq('tournament_id', tournament.id).eq('email', email).maybeSingle();
+  if (isOwner || player?.is_admin) { _tid = tournament.id; _slug = tournament.slug; showAdmin(email); }
 }
 
 async function doLogout() {
@@ -1381,9 +1384,10 @@ async function uploadLogo(input) {
   if (!file) return;
   showToast('Uploading...');
   const ext = file.name.split('.').pop().toLowerCase();
-  const { error } = await sb.storage.from('brand').upload(`logo.${ext}`, file, { upsert: true });
+  const path = `${_slug}/logo.${ext}`;
+  const { error } = await sb.storage.from('brand').upload(path, file, { upsert: true });
   if (error) { showToast('Upload failed: ' + error.message); return; }
-  const { data } = sb.storage.from('brand').getPublicUrl(`logo.${ext}`);
+  const { data } = sb.storage.from('brand').getPublicUrl(path);
   const url = data.publicUrl + '?t=' + Date.now();
   await sb.from('settings').upsert({ key: 'logo_url', tournament_id: _tid, value: url, updated_at: new Date().toISOString() }, { onConflict: 'tournament_id,key' });
   renderLogoPreview(url);

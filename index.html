@@ -730,6 +730,13 @@ window.addEventListener('scroll', () => { document.getElementById('mainNav').cla
     const paras = (map.homepage_about || '').split('\n\n').filter(Boolean);
     els.forEach(el => { el.innerHTML = paras.shift() || ''; });
   }
+  // Swap nav + hero logo to tenant's uploaded image
+  if (map.logo_url) {
+    const navImg = document.querySelector('#mainNav img');
+    if (navImg) navImg.src = map.logo_url;
+    const heroImg = document.querySelector('.hero-logo-wrap img');
+    if (heroImg) heroImg.src = map.logo_url;
+  }
   // Dynamic PWA manifest with uploaded logo as app icon
   if (map.logo_url) {
     const manifest = {

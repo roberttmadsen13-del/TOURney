@@ -534,7 +534,7 @@
       ['Accent Color', accent],
       ['Days', S.days],
       ['Format', fmtStr],
-      ['Logo', S.logoUrl ? '✓ Uploaded' : 'None (add in admin)'],
+      ['Logo', S.logoFile ? `✓ ${S.logoFile.name}` : 'None (add in admin)'],
       ['Account', S.user?.email],
     ];
 
@@ -609,7 +609,7 @@
         { key:'reg_show_hat',      value: 'false' },
       ];
 
-      for (let i = 1; i <= Math.max(S.days, 3); i++) {
+      for (let i = 1; i <= S.days; i++) {
         settings.push({ key:`round_day${i}`,    value:'pending' });
         settings.push({ key:`course_name_day${i}`, value:'' });
         settings.push({ key:`pars_day${i}`,     value: JSON.stringify(Array(18).fill(4)) });
