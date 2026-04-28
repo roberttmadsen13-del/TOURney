@@ -276,7 +276,7 @@
 
   const S = {
     step: 1, user: null, slugOk: false,
-    logoUrl: '', days: 3,
+    logoUrl: '', logoFile: null, days: 3,
     formats: mkFormats(3),
   };
 
@@ -455,18 +455,13 @@
   async function uploadLogo(inp) {
     const file = inp.files[0];
     if (!file) return;
-    const slug = document.getElementById('tSlug').value || 'tmp';
-    const ext  = file.name.split('.').pop();
-    const path = `${slug}/logo.${ext}`;
+    S.logoFile = file;
     const lbl  = document.getElementById('logoLbl');
     const prev = document.getElementById('logoPrev');
-    lbl.textContent = 'Uploading…';
-    const { error } = await db.storage.from('brand').upload(path, file, { upsert: true });
-    if (error) { lbl.textContent = 'Upload failed — try again.'; return; }
-    const { data: { publicUrl } } = db.storage.from('brand').getPublicUrl(path);
-    S.logoUrl = publicUrl;
-    prev.src = publicUrl; prev.style.display = 'block';
-    lbl.textContent = '✓ Logo uploaded';
+    const reader = new FileReader();
+    reader.onload = e => { prev.src = e.target.result; prev.style.display = 'block'; };
+    reader.readAsDataURL(file);
+    lbl.textContent = '✓ Ready — uploads on create';
   }
 
   function next3() { go(4); }
@@ -577,7 +572,18 @@
       const tid = tourney.id;
       const now = new Date().toISOString();
 
-      // 2. Seed settings
+      // 2. Upload logo now that slug is finalized
+      if (S.logoFile) {
+        const ext  = S.logoFile.name.split('.').pop();
+        const path = `${slug}/logo.${ext}`;
+        const { error: lErr } = await db.storage.from('brand').upload(path, S.logoFile, { upsert: true });
+        if (!lErr) {
+          const { data: { publicUrl } } = db.storage.from('brand').getPublicUrl(path);
+          S.logoUrl = publicUrl;
+        }
+      }
+
+      // 3. Seed settings
       const settings = [
         { key:'tourney_name',      value: name },
         { key:'tourney_year',      value: year },

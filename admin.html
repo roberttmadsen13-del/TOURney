@@ -262,25 +262,8 @@ td.email a:hover{color:var(--gold);}
       <div class="section-header">
         <div class="section-title">Round Control</div>
       </div>
-      <div class="round-grid">
-        <div class="round-card">
-          <div class="round-name">Day <em>One</em></div>
-          <div class="round-format">Par 3 &mdash; Stroke Play</div>
-          <div class="round-status status-pending" id="r1status">Pending</div>
-          <button class="round-btn open-btn" id="r1btn" onclick="toggleRound('day1')">Open Scoring</button>
-        </div>
-        <div class="round-card">
-          <div class="round-name">Day <em>Two</em></div>
-          <div class="round-format">Scramble / Shambles</div>
-          <div class="round-status status-pending" id="r2status">Pending</div>
-          <button class="round-btn open-btn" id="r2btn" onclick="toggleRound('day2')">Open Scoring</button>
-        </div>
-        <div class="round-card">
-          <div class="round-name">Day <em>Three</em></div>
-          <div class="round-format">Best Ball / Stroke Play</div>
-          <div class="round-status status-pending" id="r3status">Pending</div>
-          <button class="round-btn open-btn" id="r3btn" onclick="toggleRound('day3')">Open Scoring</button>
-        </div>
+      <div class="round-grid" id="roundGrid">
+        <div class="loading">Loading rounds…</div>
       </div>
     </div>
 
@@ -700,6 +683,7 @@ async function loadFormats() {
   const { data } = await sb.from('settings').select('*').eq('tournament_id', _tid).eq('key','round_formats');
   if (data?.[0]) try { roundFormats = { ...DEFAULT_FORMATS, ...JSON.parse(data[0].value) }; } catch {}
   renderFormatSection();
+  renderRounds();
 }
 
 function renderFormatSection() {
@@ -763,7 +747,7 @@ async function loadPlayers() {
 }
 
 async function loadRoundStates() {
-  const { data } = await sb.from('settings').select('*').eq('tournament_id', _tid).in('key',['round_day1','round_day2','round_day3']);
+  const { data } = await sb.from('settings').select('*').eq('tournament_id', _tid).like('key','round_day%');
   (data || []).forEach(row => { roundStates[row.key.replace('round_','')] = row.value; });
   renderRounds();
 }
@@ -792,17 +776,29 @@ function renderStats() {
 }
 
 // ── ROUNDS ────────────────────────────────────────────────────────
+const FMT_LABELS = { stroke:'Stroke Play', scramble:'Scramble', bestball:'Best Ball', stableford:'Stableford', match:'Match Play' };
+const DAY_WORDS  = ['One','Two','Three','Four','Five','Six','Seven'];
+
 function renderRounds() {
-  ['day1','day2','day3'].forEach((day, i) => {
-    const n = i + 1;
+  const days = Object.keys(roundStates).filter(k => /^day\d+$/.test(k)).sort();
+  if (!days.length) { ['day1','day2','day3'].forEach(d => { roundStates[d] = roundStates[d] || 'pending'; }); days.push('day1','day2','day3'); }
+  const html = days.map((day, i) => {
     const state = roundStates[day] || 'pending';
-    const statusEl = document.getElementById(`r${n}status`);
-    const btnEl    = document.getElementById(`r${n}btn`);
-    statusEl.className = 'round-status ' + (state === 'open' ? 'status-open' : state === 'closed' ? 'status-closed' : 'status-pending');
-    statusEl.textContent = state.charAt(0).toUpperCase() + state.slice(1);
-    btnEl.className = 'round-btn ' + (state === 'open' ? 'close-btn' : 'open-btn');
-    btnEl.textContent = state === 'open' ? 'Close Scoring' : 'Open Scoring';
-  });
+    const fmt   = roundFormats?.[day];
+    const fmtLabel = fmt
+      ? [FMT_LABELS[fmt.front] || fmt.front, FMT_LABELS[fmt.back] || fmt.back].filter((v,i,a) => a.indexOf(v)===i).join(' / ')
+      : `Day ${i + 1}`;
+    const sc = state === 'open' ? 'status-open' : state === 'closed' ? 'status-closed' : 'status-pending';
+    return `<div class="round-card">
+      <div class="round-name">Day <em>${DAY_WORDS[i] || i+1}</em></div>
+      <div class="round-format">${fmtLabel}</div>
+      <div class="round-status ${sc}" id="r${i+1}status">${state.charAt(0).toUpperCase()+state.slice(1)}</div>
+      <button class="round-btn ${state==='open'?'close-btn':'open-btn'}" id="r${i+1}btn" onclick="toggleRound('${day}')">
+        ${state === 'open' ? 'Close Scoring' : 'Open Scoring'}
+      </button>
+    </div>`;
+  }).join('');
+  document.getElementById('roundGrid').innerHTML = html;
 }
 
 async function toggleRound(day) {
@@ -820,7 +816,7 @@ async function toggleRound(day) {
   if (next === 'open') {
     // Auto-close any other open round
     const upserts = [{ key: `round_${day}`, value: 'open', updated_at: new Date().toISOString(), tournament_id: _tid }];
-    for (const d of ['day1','day2','day3']) {
+    for (const d of Object.keys(roundStates)) {
       if (d !== day && roundStates[d] === 'open') {
         roundStates[d] = 'closed';
         upserts.push({ key: `round_${d}`, value: 'closed', updated_at: new Date().toISOString(), tournament_id: _tid });
