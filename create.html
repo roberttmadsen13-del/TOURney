@@ -623,14 +623,12 @@
 
     let tid = null;
     try {
-      // 1. Insert tournament (pending payment — activated by Stripe webhook)
+      // 1. Insert tournament
       const { data: tourney, error: tErr } = await db.from('tournaments').insert({
         name,
         slug,
         short_name: name.split(/\s+/).slice(0,3).join(' '),
         owner_email: S.user.email,
-        status: 'pending_payment',
-        tier: S.tier,
       }).select().single();
       if (tErr) throw tErr;
       tid = tourney.id;
