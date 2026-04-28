@@ -57,7 +57,23 @@
       }
     }
 
+    // Non-blocking brand color injection — all pages get the tournament's colors.
+    injectBrandColors(data.id);
+
     return { db, tournament: data };
+  }
+
+  async function injectBrandColors(tournamentId) {
+    const { data } = await db.from('settings')
+      .select('key,value')
+      .eq('tournament_id', tournamentId)
+      .in('key', ['color_primary', 'color_ink', 'color_bg']);
+    if (!data) return;
+    data.forEach(({ key, value }) => {
+      if (key === 'color_primary') document.documentElement.style.setProperty('--gold', value);
+      if (key === 'color_ink')     document.documentElement.style.setProperty('--ink',  value);
+      if (key === 'color_bg')      document.documentElement.style.setProperty('--bg',   value);
+    });
   }
 
   window.tourney = { db, ready: init() };

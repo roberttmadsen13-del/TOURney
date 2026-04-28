@@ -712,7 +712,7 @@ window.addEventListener('scroll', () => { document.getElementById('mainNav').cla
 // Load admin-configured homepage content
 (async function loadHomepageContent() {
   const { tournament } = await window.tourney.ready;
-  const keys = ['tourney_name','homepage_subtitle','homepage_details','homepage_about','logo_url','hero_photo_url','about_photo_url','about_stat_teams','about_stat_days','about_stat_holes','reg_bullet_1','reg_bullet_2','reg_bullet_3','reg_max_players','color_primary','color_ink','color_bg','hero_cta_primary'];
+  const keys = ['tourney_name','tourney_year','tourney_location','reg_open','homepage_subtitle','homepage_details','homepage_about','logo_url','hero_photo_url','about_photo_url','about_stat_teams','about_stat_days','about_stat_holes','reg_bullet_1','reg_bullet_2','reg_bullet_3','reg_max_players','color_primary','color_ink','color_bg','hero_cta_primary'];
   const { data } = await sb.from('settings').select('key,value').eq('tournament_id', tournament.id).in('key', keys);
   if (!data) return;
   const map = {};
@@ -786,7 +786,11 @@ window.addEventListener('scroll', () => { document.getElementById('mainNav').cla
   if (map.tourney_name) {
     const el = document.querySelector('.hero-title');
     if (el) el.innerHTML = map.tourney_name;
-    document.title = map.tourney_name.replace(/<[^>]*>/g, '') + ' — Myrtle Beach';
+    document.title = map.tourney_name.replace(/<[^>]*>/g, '') + (map.tourney_location ? ' — ' + map.tourney_location : '');
+  }
+  if (map.reg_open === 'false') {
+    const rsvp = document.getElementById('rsvp');
+    if (rsvp) rsvp.style.display = 'none';
   }
 })();
 

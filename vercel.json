@@ -1,5 +1,6 @@
 {
   "rewrites": [
+    { "source": "/create", "destination": "/create.html" },
     { "source": "/t/:slug/admin",      "destination": "/admin.html" },
     { "source": "/t/:slug/scoreboard", "destination": "/scoreboard.html" },
     { "source": "/t/:slug/scorecard",  "destination": "/scorecard.html" },

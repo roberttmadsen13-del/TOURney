@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Create Your TOURney</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,400;0,600;0,700;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --gold:#c09030;--ink:#0f0a05;--cream:#f5ede0;
+      --muted:rgba(245,237,224,0.5);--border:rgba(245,237,224,0.13);
+      --red:#c0392b;--green:#27ae60;--surface:rgba(245,237,224,0.05);
+    }
+    html,body{min-height:100vh;background:var(--ink);color:var(--cream);font-family:'Barlow Condensed',sans-serif}
+    a{color:var(--gold);cursor:pointer;text-decoration:none}
+
+    /* ─── Header ─── */
+    .hdr{padding:1.25rem 2rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+    .wordmark{font-weight:700;font-size:1rem;letter-spacing:0.28em;text-transform:uppercase;color:var(--gold)}
+    .byline{font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.18em;color:var(--muted)}
+
+    /* ─── Step indicator ─── */
+    .steps{display:flex;align-items:center;justify-content:center;padding:2rem 1rem 1rem;gap:0}
+    .dot{width:1.9rem;height:1.9rem;border-radius:50%;border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:0.6rem;color:var(--muted);background:var(--ink);transition:all .2s;position:relative;z-index:1}
+    .dot.active{border-color:var(--gold);color:var(--gold)}
+    .dot.done{background:var(--gold);border-color:var(--gold);color:var(--ink);font-weight:700}
+    .line{height:1px;width:2.5rem;background:var(--border);transition:background .2s}
+    .line.done{background:var(--gold)}
+    @media(max-width:480px){.line{width:1.2rem}}
+
+    /* ─── Layout ─── */
+    .main{max-width:540px;margin:0 auto;padding:1.5rem 1.5rem 5rem}
+    .panel{display:none}
+    .panel.active{display:block}
+
+    /* ─── Typography ─── */
+    .step-title{font-size:1.9rem;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;margin-bottom:.2rem}
+    .step-sub{font-family:'DM Mono',monospace;font-size:0.65rem;color:var(--muted);letter-spacing:0.08em;margin-bottom:2rem}
+
+    /* ─── Form ─── */
+    .field{margin-bottom:1.4rem}
+    .field label,.fl{display:block;font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-bottom:.45rem}
+    input[type=text],input[type=email],input[type=password],input[type=number],select,textarea{
+      width:100%;background:var(--surface);border:1px solid var(--border);border-radius:4px;
+      padding:.7rem 1rem;color:var(--cream);font-family:'DM Mono',monospace;font-size:0.78rem;
+      outline:none;transition:border-color .15s;appearance:none;-webkit-appearance:none
+    }
+    input:focus,select:focus,textarea:focus{border-color:var(--gold)}
+    input.bad,select.bad{border-color:var(--red)}
+    input.good{border-color:var(--green)}
+    select option{background:#1a1008;color:var(--cream)}
+    textarea{resize:vertical;min-height:5rem}
+    .hint{font-family:'DM Mono',monospace;font-size:0.56rem;color:var(--muted);margin-top:.3rem}
+    .hint.err{color:#e74c3c}.hint.ok{color:var(--green)}
+    .row2{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+    @media(max-width:420px){.row2{grid-template-columns:1fr}}
+
+    /* ─── Slug field ─── */
+    .slug-wrap{display:flex;align-items:center;gap:.4rem;background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:.7rem 1rem;transition:border-color .15s}
+    .slug-wrap:focus-within{border-color:var(--gold)}
+    .slug-pre{font-family:'DM Mono',monospace;font-size:.72rem;color:var(--muted);white-space:nowrap;flex-shrink:0}
+    .slug-in{background:none!important;border:none!important;padding:0!important;flex:1;color:var(--gold);font-family:'DM Mono',monospace;font-size:.78rem;outline:none;min-width:0}
+    .slug-status{font-size:.8rem;flex-shrink:0}
+
+    /* ─── Color pickers ─── */
+    .color-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.75rem;margin-bottom:1rem}
+    @media(max-width:420px){.color-grid{grid-template-columns:1fr 1fr}}
+    .cp-wrap{display:flex;align-items:center;gap:.5rem;background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:.45rem .75rem}
+    input[type=color]{width:1.4rem;height:1.4rem;border:none;background:none;cursor:pointer;padding:0;border-radius:3px;flex-shrink:0}
+    .cp-hex{font-family:'DM Mono',monospace;font-size:.62rem;color:var(--cream)}
+    .color-preview{height:2.75rem;border-radius:6px;display:flex;align-items:center;padding:0 1rem;gap:.75rem;margin-bottom:1.5rem;transition:background .15s}
+    .cp-dot{width:.6rem;height:.6rem;border-radius:50%;flex-shrink:0}
+    .cp-label{font-size:.75rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase}
+
+    /* ─── Upload zone ─── */
+    .upload-zone{border:1px dashed var(--border);border-radius:6px;padding:1.5rem;text-align:center;cursor:pointer;transition:border-color .15s}
+    .upload-zone:hover{border-color:var(--gold)}
+    .upload-lbl{font-family:'DM Mono',monospace;font-size:.62rem;color:var(--muted);letter-spacing:.08em}
+    .upload-preview{max-height:3.5rem;max-width:10rem;margin:0 auto .5rem;display:block;object-fit:contain}
+
+    /* ─── Format ─── */
+    .days-row{display:flex;gap:.5rem;margin-bottom:1.5rem;flex-wrap:wrap}
+    .day-btn{width:2.4rem;height:2.4rem;border:1px solid var(--border);border-radius:4px;background:var(--surface);color:var(--muted);font-family:'DM Mono',monospace;font-size:.7rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s}
+    .day-btn.on{border-color:var(--gold);color:var(--gold);background:rgba(192,144,48,.1)}
+    .fmt-row{background:rgba(245,237,224,.03);border:1px solid var(--border);border-radius:6px;padding:.9rem 1.1rem;margin-bottom:.65rem}
+    .fmt-day{font-size:.62rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:.65rem}
+    .fmt-nines{display:grid;grid-template-columns:1fr 1fr;gap:.65rem}
+    @media(max-width:420px){.fmt-nines{grid-template-columns:1fr}}
+    .fmt-nine-lbl{font-family:'DM Mono',monospace;font-size:.55rem;color:var(--muted);letter-spacing:.08em;margin-bottom:.3rem}
+    .fmt-select{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:.45rem .6rem;color:var(--cream);font-family:'DM Mono',monospace;font-size:.68rem;outline:none;appearance:none}
+    .fmt-select option{background:#1a1008}
+
+    /* ─── Review ─── */
+    .review-item{display:flex;justify-content:space-between;align-items:flex-start;padding:.65rem 0;border-bottom:1px solid var(--border);gap:1rem}
+    .rv-k{font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);flex-shrink:0}
+    .rv-v{font-family:'DM Mono',monospace;font-size:.7rem;color:var(--cream);text-align:right;word-break:break-all}
+
+    /* ─── Nav buttons ─── */
+    .nav{display:flex;gap:1rem;margin-top:2.5rem}
+    .btn-back{flex:0 0 auto;padding:.7rem 1.4rem;background:none;border:1px solid var(--border);border-radius:4px;color:var(--muted);font-family:'Barlow Condensed',sans-serif;font-size:.7rem;font-weight:600;letter-spacing:.2em;text-transform:uppercase;cursor:pointer;transition:all .15s}
+    .btn-back:hover{border-color:var(--cream);color:var(--cream)}
+    .btn-next{flex:1;padding:.8rem 2rem;background:var(--gold);border:1px solid var(--gold);border-radius:4px;color:var(--ink);font-family:'Barlow Condensed',sans-serif;font-size:.72rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;cursor:pointer;transition:all .15s}
+    .btn-next:hover{background:#d4a035}.btn-next:disabled{opacity:.4;cursor:not-allowed}
+
+    /* ─── Alert ─── */
+    .alert{padding:.7rem 1rem;border-radius:4px;font-family:'DM Mono',monospace;font-size:.68rem;margin-bottom:1rem}
+    .ae{background:rgba(231,76,60,.13);border:1px solid rgba(231,76,60,.35);color:#e74c3c}
+    .ao{background:rgba(39,174,96,.13);border:1px solid rgba(39,174,96,.35);color:#27ae60}
+
+    /* ─── Auth toggle ─── */
+    .auth-foot{text-align:center;font-family:'DM Mono',monospace;font-size:.62rem;color:var(--muted);margin-top:1.25rem}
+    .or{display:flex;align-items:center;gap:1rem;margin:1.25rem 0;color:var(--muted);font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.12em}
+    .or::before,.or::after{content:'';flex:1;height:1px;background:var(--border)}
+
+    /* ─── Spinner ─── */
+    .spin{display:inline-block;width:.85em;height:.85em;border:2px solid rgba(255,255,255,.25);border-top-color:currentColor;border-radius:50%;animation:sp .55s linear infinite;vertical-align:middle;margin-right:.35em}
+    @keyframes sp{to{transform:rotate(360deg)}}
+  </style>
+</head>
+<body>
+  <header class="hdr">
+    <div class="wordmark">TOURney</div>
+    <div class="byline">By Greenskeeper Studios</div>
+  </header>
+
+  <!-- Step dots -->
+  <div class="steps" id="steps">
+    <div class="dot active" id="dot-1">1</div>
+    <div class="line" id="line-1"></div>
+    <div class="dot" id="dot-2">2</div>
+    <div class="line" id="line-2"></div>
+    <div class="dot" id="dot-3">3</div>
+    <div class="line" id="line-3"></div>
+    <div class="dot" id="dot-4">4</div>
+    <div class="line" id="line-4"></div>
+    <div class="dot" id="dot-5">5</div>
+  </div>
+
+  <main class="main">
+
+    <!-- Step 1: Account -->
+    <div class="panel active" id="s1">
+      <div class="step-title">Your Account</div>
+      <div class="step-sub">Sign up or sign in to create your tournament</div>
+      <div id="authAlert" class="alert ae" style="display:none"></div>
+      <div class="field"><label>Email</label><input type="email" id="aEmail" autocomplete="email" placeholder="you@example.com"></div>
+      <div class="field"><label>Password</label><input type="password" id="aPass" autocomplete="new-password" placeholder="Min. 8 characters"></div>
+      <div class="nav" style="margin-top:1rem">
+        <button class="btn-next" id="btnAuth" onclick="doAuth()">Create Account →</button>
+      </div>
+      <div class="or">or</div>
+      <div class="auth-foot" id="authFoot">Already have an account? <a onclick="toggleMode()">Sign in</a></div>
+    </div>
+
+    <!-- Step 2: Identity -->
+    <div class="panel" id="s2">
+      <div class="step-title">Your Tournament</div>
+      <div class="step-sub">The name and place your players will see everywhere</div>
+      <div class="field">
+        <label>Tournament Name *</label>
+        <input type="text" id="tName" placeholder="e.g. Myrtle Beach Invitational" oninput="onName(this.value)">
+      </div>
+      <div class="field">
+        <label>URL Slug *</label>
+        <div class="slug-wrap" id="slugWrap">
+          <span class="slug-pre">tourney.app/t/</span>
+          <input class="slug-in" id="tSlug" placeholder="my-tourney-2026" oninput="onSlug(this.value)">
+          <span class="slug-status" id="slugSt"></span>
+        </div>
+        <div class="hint" id="slugHint">Auto-generated from name — edit to customize.</div>
+      </div>
+      <div class="row2">
+        <div class="field"><label>Year</label><input type="text" id="tYear" maxlength="4" placeholder="2026"></div>
+        <div class="field"><label>Location</label><input type="text" id="tLoc" placeholder="Myrtle Beach, SC"></div>
+      </div>
+      <div class="field">
+        <label>Tagline</label>
+        <input type="text" id="tSub" placeholder="Inaugural Edition — An annual tradition begins">
+      </div>
+      <div class="nav">
+        <button class="btn-back" onclick="back()">← Back</button>
+        <button class="btn-next" onclick="next2()">Brand & Colors →</button>
+      </div>
+    </div>
+
+    <!-- Step 3: Brand -->
+    <div class="panel" id="s3">
+      <div class="step-title">Brand & Design</div>
+      <div class="step-sub">Colors and logo — applied automatically on every page</div>
+      <div class="fl" style="margin-bottom:.75rem">Site Colors</div>
+      <div class="color-grid">
+        <div>
+          <div class="fl">Accent</div>
+          <div class="cp-wrap"><input type="color" id="cPrimary" value="#c09030" oninput="onColor()"><span class="cp-hex" id="hPrimary">#c09030</span></div>
+        </div>
+        <div>
+          <div class="fl">Text</div>
+          <div class="cp-wrap"><input type="color" id="cInk" value="#1a1008" oninput="onColor()"><span class="cp-hex" id="hInk">#1a1008</span></div>
+        </div>
+        <div>
+          <div class="fl">Background</div>
+          <div class="cp-wrap"><input type="color" id="cBg" value="#f5ede0" oninput="onColor()"><span class="cp-hex" id="hBg">#f5ede0</span></div>
+        </div>
+      </div>
+      <div class="color-preview" id="colorPrev" style="background:#f5ede0">
+        <div class="cp-dot" id="prevDot" style="background:#c09030"></div>
+        <span class="cp-label" id="prevName" style="color:#1a1008">Tournament Name</span>
+      </div>
+      <div class="field">
+        <label>Logo <span style="font-weight:400;opacity:.6">(optional)</span></label>
+        <div class="upload-zone" id="logoZone" onclick="document.getElementById('logoFile').click()">
+          <img id="logoPrev" class="upload-preview" style="display:none">
+          <div class="upload-lbl" id="logoLbl">Click to upload · PNG or SVG recommended</div>
+        </div>
+        <input type="file" id="logoFile" accept="image/*" style="display:none" onchange="uploadLogo(this)">
+      </div>
+      <div class="nav">
+        <button class="btn-back" onclick="back()">← Back</button>
+        <button class="btn-next" onclick="next3()">Format →</button>
+      </div>
+    </div>
+
+    <!-- Step 4: Format -->
+    <div class="panel" id="s4">
+      <div class="step-title">Tournament Format</div>
+      <div class="step-sub">How many days and what scoring type per round</div>
+      <div class="fl" style="margin-bottom:.75rem">Number of Days</div>
+      <div class="days-row" id="daysBtns"></div>
+      <div id="fmtRows"></div>
+      <div class="nav">
+        <button class="btn-back" onclick="back()">← Back</button>
+        <button class="btn-next" onclick="next4()">Review →</button>
+      </div>
+    </div>
+
+    <!-- Step 5: Launch -->
+    <div class="panel" id="s5">
+      <div class="step-title">Go Live</div>
+      <div class="step-sub">Confirm your setup — everything is editable in your admin panel</div>
+      <div id="launchAlert" class="alert ae" style="display:none"></div>
+      <div id="reviewRows" style="margin-bottom:1.5rem"></div>
+      <div class="nav">
+        <button class="btn-back" onclick="back()">← Back</button>
+        <button class="btn-next" id="btnLaunch" onclick="launch()">🚀 Create Tournament</button>
+      </div>
+    </div>
+
+  </main>
+
+  <script>
+  const SB_URL = 'https://jllugkiojeoopitdvzsa.supabase.co';
+  const SB_KEY = 'sb_publishable_DnBMNLaSu61ykJ6P_fI2fw_D9DdAScn';
+  const db = supabase.createClient(SB_URL, SB_KEY, { auth: { persistSession: true, autoRefreshToken: true } });
+
+  const FMT = [
+    { value:'stroke',    label:'Stroke Play' },
+    { value:'scramble',  label:'Scramble' },
+    { value:'bestball',  label:'Best Ball' },
+    { value:'stableford',label:'Stableford' },
+    { value:'match',     label:'Match Play' },
+  ];
+
+  const DAY_DEFAULTS = [
+    { front:'stroke',   back:'stroke'   },
+    { front:'scramble', back:'scramble' },
+    { front:'bestball', back:'bestball' },
+    { front:'stroke',   back:'stroke'   },
+    { front:'scramble', back:'scramble' },
+    { front:'bestball', back:'bestball' },
+    { front:'stroke',   back:'stroke'   },
+  ];
+
+  const S = {
+    step: 1, user: null, slugOk: false,
+    logoUrl: '', days: 3,
+    formats: mkFormats(3),
+  };
+
+  function mkFormats(n) {
+    const f = {};
+    for (let i = 0; i < n; i++) f[`day${i+1}`] = { ...DAY_DEFAULTS[i] };
+    return f;
+  }
+
+  // ─── Init ───
+  (async () => {
+    document.getElementById('tYear').value = new Date().getFullYear();
+    const { data: { session } } = await db.auth.getSession();
+    if (session?.user) { S.user = session.user; go(2); }
+  })();
+
+  // ─── Step indicator ───
+  function updateDots() {
+    for (let i = 1; i <= 5; i++) {
+      const d = document.getElementById(`dot-${i}`);
+      d.className = 'dot' + (i < S.step ? ' done' : i === S.step ? ' active' : '');
+    }
+    for (let i = 1; i <= 4; i++) {
+      document.getElementById(`line-${i}`).className = 'line' + (i < S.step ? ' done' : '');
+    }
+  }
+
+  function go(n) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.getElementById(`s${n}`).classList.add('active');
+    S.step = n;
+    updateDots();
+    window.scrollTo(0, 0);
+    if (n === 4) renderFormat();
+    if (n === 5) renderReview();
+  }
+
+  function back() {
+    if (S.step <= 1) return;
+    if (S.user && S.step === 2) return;
+    go(S.step - 1);
+  }
+
+  // ─── Step 1: Auth ───
+  let signupMode = true;
+
+  function toggleMode() {
+    signupMode = !signupMode;
+    const btn = document.getElementById('btnAuth');
+    const foot = document.getElementById('authFoot');
+    if (signupMode) {
+      btn.textContent = 'Create Account →';
+      foot.innerHTML = 'Already have an account? <a onclick="toggleMode()">Sign in</a>';
+    } else {
+      btn.textContent = 'Sign In →';
+      foot.innerHTML = 'Need an account? <a onclick="toggleMode()">Create one</a>';
+    }
+  }
+
+  async function doAuth() {
+    const email = document.getElementById('aEmail').value.trim();
+    const pw    = document.getElementById('aPass').value;
+    const alrt  = document.getElementById('authAlert');
+    const btn   = document.getElementById('btnAuth');
+    if (!email || !pw) { showAlert(alrt, 'Email and password required.'); return; }
+    if (signupMode && pw.length < 8) { showAlert(alrt, 'Password must be at least 8 characters.'); return; }
+    btn.innerHTML = '<span class="spin"></span>Working…';
+    btn.disabled = true;
+    alrt.style.display = 'none';
+    try {
+      let res;
+      if (signupMode) {
+        res = await db.auth.signUp({ email, password: pw });
+        if (res.error) throw res.error;
+        if (!res.data?.session) {
+          showAlert(alrt, 'Check your email to confirm, then come back to sign in.', true);
+          toggleMode();
+          btn.textContent = 'Sign In →';
+          btn.disabled = false;
+          return;
+        }
+      } else {
+        res = await db.auth.signInWithPassword({ email, password: pw });
+        if (res.error) throw res.error;
+      }
+      S.user = res.data.user;
+      go(2);
+    } catch(e) {
+      showAlert(alrt, e.message || 'Authentication failed. Try again.');
+    } finally {
+      btn.innerHTML = signupMode ? 'Create Account →' : 'Sign In →';
+      btn.disabled = false;
+    }
+  }
+
+  function showAlert(el, msg, info = false) {
+    el.textContent = msg;
+    el.className = 'alert ' + (info ? 'ao' : 'ae');
+    el.style.display = 'block';
+  }
+
+  // ─── Step 2: Identity ───
+  let slugTimer;
+
+  function onName(val) {
+    const slug = toSlug(val);
+    document.getElementById('tSlug').value = slug;
+    debounceSlug(slug);
+    const el = document.getElementById('prevName');
+    if (el) el.textContent = val || 'Tournament Name';
+  }
+
+  function onSlug(val) {
+    const clean = val.toLowerCase().replace(/[^a-z0-9-]/g,'').replace(/-+/g,'-');
+    document.getElementById('tSlug').value = clean;
+    debounceSlug(clean);
+  }
+
+  function toSlug(name) {
+    const yr = document.getElementById('tYear')?.value || new Date().getFullYear();
+    return name.toLowerCase().replace(/[^a-z0-9\s]/g,'').trim()
+      .replace(/\s+/g,'-').replace(/-+/g,'-').substring(0,38) + '-' + yr;
+  }
+
+  function debounceSlug(slug) {
+    clearTimeout(slugTimer);
+    const st = document.getElementById('slugSt');
+    const ht = document.getElementById('slugHint');
+    S.slugOk = false;
+    if (!slug || slug.length < 3) {
+      st.textContent = ''; ht.textContent = 'Min. 3 characters.'; ht.className = 'hint'; return;
+    }
+    st.textContent = '⋯'; st.style.color = 'var(--muted)';
+    slugTimer = setTimeout(() => checkSlug(slug), 500);
+  }
+
+  async function checkSlug(slug) {
+    const st = document.getElementById('slugSt');
+    const ht = document.getElementById('slugHint');
+    try {
+      const { data } = await db.from('tournaments').select('id').eq('slug', slug).maybeSingle();
+      if (data) {
+        st.textContent = '✗'; st.style.color = '#e74c3c';
+        ht.textContent = 'Already taken — try a different slug.'; ht.className = 'hint err';
+        S.slugOk = false;
+      } else {
+        st.textContent = '✓'; st.style.color = 'var(--green)';
+        ht.textContent = 'Available!'; ht.className = 'hint ok';
+        S.slugOk = true;
+      }
+    } catch { st.textContent = ''; S.slugOk = true; }
+  }
+
+  function next2() {
+    const name = document.getElementById('tName').value.trim();
+    const slug = document.getElementById('tSlug').value.trim();
+    if (!name) { alert('Tournament name is required.'); return; }
+    if (!slug || slug.length < 3) { alert('A valid URL slug is required.'); return; }
+    if (!S.slugOk) { alert('Please wait for slug availability check, or try a different slug.'); return; }
+    go(3);
+  }
+
+  // ─── Step 3: Brand ───
+  function onColor() {
+    const p = document.getElementById('cPrimary').value;
+    const i = document.getElementById('cInk').value;
+    const b = document.getElementById('cBg').value;
+    document.getElementById('hPrimary').textContent = p;
+    document.getElementById('hInk').textContent = i;
+    document.getElementById('hBg').textContent = b;
+    document.getElementById('colorPrev').style.background = b;
+    document.getElementById('prevDot').style.background = p;
+    document.getElementById('prevName').style.color = i;
+  }
+
+  async function uploadLogo(inp) {
+    const file = inp.files[0];
+    if (!file) return;
+    const slug = document.getElementById('tSlug').value || 'tmp';
+    const ext  = file.name.split('.').pop();
+    const path = `${slug}/logo.${ext}`;
+    const lbl  = document.getElementById('logoLbl');
+    const prev = document.getElementById('logoPrev');
+    lbl.textContent = 'Uploading…';
+    const { error } = await db.storage.from('brand').upload(path, file, { upsert: true });
+    if (error) { lbl.textContent = 'Upload failed — try again.'; return; }
+    const { data: { publicUrl } } = db.storage.from('brand').getPublicUrl(path);
+    S.logoUrl = publicUrl;
+    prev.src = publicUrl; prev.style.display = 'block';
+    lbl.textContent = '✓ Logo uploaded';
+  }
+
+  function next3() { go(4); }
+
+  // ─── Step 4: Format ───
+  function renderFormat() {
+    const row = document.getElementById('daysBtns');
+    row.innerHTML = '';
+    for (let i = 1; i <= 7; i++) {
+      const b = document.createElement('button');
+      b.className = 'day-btn' + (i === S.days ? ' on' : '');
+      b.textContent = i;
+      b.onclick = () => { S.days = i; S.formats = mkFormats(i); renderFormat(); };
+      row.appendChild(b);
+    }
+
+    const makeOpts = (sel) => FMT.map(o =>
+      `<option value="${o.value}"${o.value===sel?' selected':''}>${o.label}</option>`
+    ).join('');
+    const DAY_WORDS = ['One','Two','Three','Four','Five','Six','Seven'];
+
+    const cont = document.getElementById('fmtRows');
+    cont.innerHTML = '';
+    for (let i = 1; i <= S.days; i++) {
+      const key = `day${i}`;
+      const fmt = S.formats[key] || { front:'stroke', back:'stroke' };
+      const div = document.createElement('div');
+      div.className = 'fmt-row';
+      div.innerHTML = `
+        <div class="fmt-day">Day ${DAY_WORDS[i-1]}</div>
+        <div class="fmt-nines">
+          <div><div class="fmt-nine-lbl">Front 9 (Holes 1–9)</div>
+            <select class="fmt-select" id="ff-${key}">${makeOpts(fmt.front)}</select></div>
+          <div><div class="fmt-nine-lbl">Back 9 (Holes 10–18)</div>
+            <select class="fmt-select" id="fb-${key}">${makeOpts(fmt.back)}</select></div>
+        </div>`;
+      cont.appendChild(div);
+    }
+  }
+
+  function next4() {
+    for (let i = 1; i <= S.days; i++) {
+      const key = `day${i}`;
+      S.formats[key] = {
+        front: document.getElementById(`ff-${key}`)?.value || 'stroke',
+        back:  document.getElementById(`fb-${key}`)?.value || 'stroke',
+      };
+    }
+    go(5);
+  }
+
+  // ─── Step 5: Review & Launch ───
+  function renderReview() {
+    const name   = document.getElementById('tName').value.trim();
+    const slug   = document.getElementById('tSlug').value.trim();
+    const year   = document.getElementById('tYear').value.trim();
+    const loc    = document.getElementById('tLoc').value.trim();
+    const sub    = document.getElementById('tSub').value.trim();
+    const accent = document.getElementById('cPrimary').value;
+
+    const fmtStr = Object.entries(S.formats)
+      .map(([k,v]) => `${k}:${v.front}/${v.back}`).join(' · ');
+
+    const rows = [
+      ['Tournament', name],
+      ['URL', `tourney.app/t/${slug}/`],
+      ['Year', year || '—'],
+      ['Location', loc || '—'],
+      ['Tagline', sub || '—'],
+      ['Accent Color', accent],
+      ['Days', S.days],
+      ['Format', fmtStr],
+      ['Logo', S.logoUrl ? '✓ Uploaded' : 'None (add in admin)'],
+      ['Account', S.user?.email],
+    ];
+
+    document.getElementById('reviewRows').innerHTML = rows.map(([k,v]) =>
+      `<div class="review-item"><span class="rv-k">${k}</span><span class="rv-v">${v}</span></div>`
+    ).join('');
+  }
+
+  async function launch() {
+    const btn  = document.getElementById('btnLaunch');
+    const alrt = document.getElementById('launchAlert');
+    const name   = document.getElementById('tName').value.trim();
+    const slug   = document.getElementById('tSlug').value.trim();
+    const year   = document.getElementById('tYear').value.trim() || String(new Date().getFullYear());
+    const loc    = document.getElementById('tLoc').value.trim();
+    const sub    = document.getElementById('tSub').value.trim();
+    const accent = document.getElementById('cPrimary').value;
+    const ink    = document.getElementById('cInk').value;
+    const bg     = document.getElementById('cBg').value;
+
+    btn.innerHTML = '<span class="spin"></span>Creating…';
+    btn.disabled = true;
+    alrt.style.display = 'none';
+
+    try {
+      // 1. Insert tournament row
+      const { data: tourney, error: tErr } = await db.from('tournaments').insert({
+        name,
+        slug,
+        short_name: name.split(/\s+/).slice(0,3).join(' '),
+        owner_email: S.user.email,
+      }).select().single();
+      if (tErr) throw tErr;
+
+      const tid = tourney.id;
+      const now = new Date().toISOString();
+
+      // 2. Seed settings
+      const settings = [
+        { key:'tourney_name',      value: name },
+        { key:'tourney_year',      value: year },
+        { key:'tourney_location',  value: loc },
+        { key:'homepage_subtitle', value: sub || [year, loc].filter(Boolean).join(' · ') },
+        { key:'homepage_details',  value: '' },
+        { key:'homepage_about',    value: '' },
+        { key:'hero_cta_primary',  value: 'Request Your Spot' },
+        { key:'color_primary',     value: accent },
+        { key:'color_ink',         value: ink },
+        { key:'color_bg',          value: bg },
+        { key:'about_stat_days',   value: String(S.days) },
+        { key:'about_stat_teams',  value: '2' },
+        { key:'about_stat_holes',  value: String(S.days * 18) },
+        { key:'reg_open',          value: 'true' },
+        { key:'reg_max_players',   value: '24' },
+        { key:'reg_bullet_1',      value: 'Open to all skill levels' },
+        { key:'reg_bullet_2',      value: `${S.days}-day tournament` },
+        { key:'reg_bullet_3',      value: loc || 'Location TBD' },
+        { key:'round_formats',     value: JSON.stringify(S.formats) },
+      ];
+
+      for (let i = 1; i <= Math.max(S.days, 3); i++) {
+        settings.push({ key:`round_day${i}`,    value:'pending' });
+        settings.push({ key:`course_name_day${i}`, value:'' });
+        settings.push({ key:`pars_day${i}`,     value: JSON.stringify(Array(18).fill(4)) });
+      }
+
+      if (S.logoUrl) {
+        settings.push({ key:'logo_url', value: S.logoUrl });
+        settings.push({ key:'logo_url_nav', value: S.logoUrl });
+      }
+
+      const { error: sErr } = await db.from('settings').insert(
+        settings.map(s => ({ ...s, tournament_id: tid, updated_at: now }))
+      );
+      if (sErr) throw sErr;
+
+      // 3. Go to admin
+      window.location.href = `/t/${slug}/admin`;
+
+    } catch(e) {
+      showAlert(alrt, e.message || 'Creation failed — please try again.');
+      btn.innerHTML = '🚀 Create Tournament';
+      btn.disabled = false;
+    }
+  }
+  </script>
+</body>
+</html>
