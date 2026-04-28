@@ -364,7 +364,14 @@ body{background:var(--bg);color:var(--ink);font-family:'Barlow',sans-serif;font-
 <script>
 const sb = window.tourney.db;
 
-// Populate nav logo text and load tournament logo
+let _teamAName = 'Team A';
+let _teamBName = 'Team B';
+
+function _teamLabel(side) {
+  return side === 'A' ? _teamAName : side === 'B' ? _teamBName : 'Unassigned';
+}
+
+// Populate nav logo, team names, and tournament logo
 window.tourney.ready.then(async ({ tournament }) => {
   const logoText = document.getElementById('navLogoText');
   if (logoText) {
@@ -372,12 +379,17 @@ window.tourney.ready.then(async ({ tournament }) => {
     const last = words.pop();
     logoText.innerHTML = words.length ? `${words.join(' ')} <em>${last}</em>` : `<em>${tournament.name}</em>`;
   }
-  const { data } = await sb.from('settings').select('value')
-    .eq('tournament_id', tournament.id).eq('key','logo_url').maybeSingle();
-  if (data?.value) {
+  const { data: sData } = await sb.from('settings').select('key,value')
+    .eq('tournament_id', tournament.id)
+    .in('key', ['logo_url','team_a_name','team_b_name']);
+  const sMap = {};
+  (sData || []).forEach(r => { sMap[r.key] = r.value; });
+  if (sMap.team_a_name) _teamAName = sMap.team_a_name;
+  if (sMap.team_b_name) _teamBName = sMap.team_b_name;
+  if (sMap.logo_url) {
     const img = document.getElementById('navLogoImg');
     const svg = document.getElementById('navLogoSvg');
-    if (img) { img.src = data.value; img.style.display = 'block'; }
+    if (img) { img.src = sMap.logo_url; img.style.display = 'block'; }
     if (svg) svg.style.display = 'none';
     if (logoText) logoText.style.display = 'none';
   }
@@ -517,7 +529,7 @@ async function init() {
     document.getElementById('scorerSelect').value = detectedPlayer.id;
     document.getElementById('scorerDisplay').value = `${detectedPlayer.first_name} ${detectedPlayer.last_name}`;
     document.getElementById('teamSelect').value = detectedTeam;
-    document.getElementById('teamDisplay').value = detectedTeam === 'A' ? 'Team Bova' : detectedTeam === 'B' ? 'The Challengers' : 'Unassigned';
+    document.getElementById('teamDisplay').value = _teamLabel(detectedTeam);
     document.getElementById('loginPrompt').style.display = 'none';
     document.getElementById('setupForm').style.display = 'block';
     refreshSetupLists();
@@ -539,7 +551,7 @@ async function init() {
       document.getElementById('scorerSelect').value = p.id;
       document.getElementById('scorerDisplay').value = `${p.first_name} ${p.last_name}`;
       document.getElementById('teamSelect').value = team;
-      document.getElementById('teamDisplay').value = team === 'A' ? 'Team Bova' : team === 'B' ? 'The Challengers' : 'Unassigned';
+      document.getElementById('teamDisplay').value = _teamLabel(team);
       document.getElementById('loginPrompt').style.display = 'none';
       document.getElementById('setupForm').style.display = 'block';
       refreshSetupLists();
@@ -872,8 +884,8 @@ function renderPlayers() {
   const isScramble = isScrambleHole(currentHole);
   const isBestBall = isBestBallHole(currentHole);
 
-  const myTeamLabel  = scorerTeam === 'A' ? 'Team Bova' : 'The Challengers';
-  const oppTeamLabel = scorerTeam === 'A' ? 'The Challengers' : 'Team Bova';
+  const myTeamLabel  = _teamLabel(scorerTeam);
+  const oppTeamLabel = scorerTeam === 'A' ? _teamBName : _teamAName;
   const myColCls     = scorerTeam === 'A' ? 'team-a' : 'team-b';
   const oppColCls    = scorerTeam === 'A' ? 'team-b' : 'team-a';
 
