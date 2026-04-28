@@ -119,6 +119,22 @@
     /* ─── Spinner ─── */
     .spin{display:inline-block;width:.85em;height:.85em;border:2px solid rgba(255,255,255,.25);border-top-color:currentColor;border-radius:50%;animation:sp .55s linear infinite;vertical-align:middle;margin-right:.35em}
     @keyframes sp{to{transform:rotate(360deg)}}
+
+    /* ─── Tier cards ─── */
+    .tier-cards{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.65rem;margin-bottom:1.75rem}
+    @media(max-width:520px){.tier-cards{grid-template-columns:1fr}}
+    .tier-card{border:1.5px solid var(--border);border-radius:6px;padding:1rem .9rem;cursor:pointer;transition:all .18s;background:var(--surface)}
+    .tier-card.active{border-color:var(--gold);background:rgba(192,144,48,.07)}
+    .tier-card:hover{border-color:rgba(192,144,48,.5)}
+    .tc-name{font-size:.55rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);margin-bottom:.35rem}
+    .tier-card.active .tc-name{color:var(--gold)}
+    .tc-price{font-size:1.55rem;font-weight:700;letter-spacing:-.01em;margin-bottom:.7rem;line-height:1}
+    .tc-price span{font-size:.58rem;font-family:'DM Mono',monospace;color:var(--muted);font-weight:400;margin-left:.1rem}
+    .tc-features{list-style:none;display:flex;flex-direction:column;gap:.3rem}
+    .tc-features li{font-family:'DM Mono',monospace;font-size:.57rem;color:var(--muted);padding-left:.85rem;position:relative}
+    .tc-features li::before{content:'·';position:absolute;left:0;color:var(--gold)}
+    .tier-card.active .tc-features li{color:rgba(245,237,224,.75)}
+    .tc-carry{font-family:'DM Mono',monospace;font-size:.53rem;color:var(--gold);margin-top:.6rem;padding-top:.5rem;border-top:1px solid var(--border)}
   </style>
 </head>
 <body>
@@ -240,12 +256,47 @@
     <!-- Step 5: Launch -->
     <div class="panel" id="s5">
       <div class="step-title">Go Live</div>
-      <div class="step-sub">Confirm your setup — everything is editable in your admin panel</div>
+      <div class="step-sub">Choose your plan — billed monthly, cancel anytime</div>
       <div id="launchAlert" class="alert ae" style="display:none"></div>
+
+      <div class="tier-cards">
+        <div class="tier-card active" id="tc-starter" onclick="pickTier('starter')">
+          <div class="tc-name">Starter</div>
+          <div class="tc-price">$3<span>/mo</span></div>
+          <ul class="tc-features">
+            <li>1 round per tournament</li>
+            <li>5 tournaments / month</li>
+            <li>Custom subdomain</li>
+            <li>All scoring formats</li>
+          </ul>
+        </div>
+        <div class="tier-card" id="tc-pro" onclick="pickTier('pro')">
+          <div class="tc-name">Pro</div>
+          <div class="tc-price">$19<span>/mo</span></div>
+          <ul class="tc-features">
+            <li>3 rounds per tournament</li>
+            <li>15 tournaments / month</li>
+            <li>Everything in Starter</li>
+            <li>Analytics dashboard</li>
+          </ul>
+        </div>
+        <div class="tier-card" id="tc-club" onclick="pickTier('club')">
+          <div class="tc-name">Club</div>
+          <div class="tc-price">$49<span>/mo</span></div>
+          <ul class="tc-features">
+            <li>Unlimited rounds</li>
+            <li>Unlimited tournaments</li>
+            <li>Priority support</li>
+            <li>Custom domain</li>
+          </ul>
+          <div class="tc-carry">★ Historical data carry-forward</div>
+        </div>
+      </div>
+
       <div id="reviewRows" style="margin-bottom:1.5rem"></div>
       <div class="nav">
         <button class="btn-back" onclick="back()">← Back</button>
-        <button class="btn-next" id="btnLaunch" onclick="launch()">🚀 Create Tournament</button>
+        <button class="btn-next" id="btnLaunch" onclick="launch()">🚀 Choose Plan & Pay →</button>
       </div>
     </div>
 
@@ -278,6 +329,7 @@
     step: 1, user: null, slugOk: false,
     logoUrl: '', logoFile: null, days: 3,
     formats: mkFormats(3),
+    tier: 'starter',
   };
 
   function mkFormats(n) {
@@ -466,6 +518,14 @@
 
   function next3() { go(4); }
 
+  // ─── Tier picker ───
+  function pickTier(t) {
+    S.tier = t;
+    ['starter', 'pro', 'club'].forEach(k => {
+      document.getElementById(`tc-${k}`).classList.toggle('active', k === t);
+    });
+  }
+
   // ─── Step 4: Format ───
   function renderFormat() {
     const row = document.getElementById('daysBtns');
@@ -525,7 +585,9 @@
     const fmtStr = Object.entries(S.formats)
       .map(([k,v]) => `${k}:${v.front}/${v.back}`).join(' · ');
 
+    const tierLabel = { starter: 'Starter — $3/mo', pro: 'Pro — $19/mo', club: 'Club — $49/mo' };
     const rows = [
+      ['Plan', tierLabel[S.tier]],
       ['Tournament', name],
       ['URL', `tourney.app/t/${slug}/`],
       ['Year', year || '—'],
@@ -559,17 +621,20 @@
     btn.disabled = true;
     alrt.style.display = 'none';
 
+    let tid = null;
     try {
-      // 1. Insert tournament row
+      // 1. Insert tournament (pending payment — activated by Stripe webhook)
       const { data: tourney, error: tErr } = await db.from('tournaments').insert({
         name,
         slug,
         short_name: name.split(/\s+/).slice(0,3).join(' '),
         owner_email: S.user.email,
+        status: 'pending_payment',
+        tier: S.tier,
       }).select().single();
       if (tErr) throw tErr;
+      tid = tourney.id;
 
-      const tid = tourney.id;
       const now = new Date().toISOString();
 
       // 2. Upload logo now that slug is finalized
@@ -608,28 +673,48 @@
         { key:'reg_show_why_me',   value: 'false' },
         { key:'reg_show_hat',      value: 'false' },
       ];
-
       for (let i = 1; i <= S.days; i++) {
-        settings.push({ key:`round_day${i}`,    value:'pending' });
-        settings.push({ key:`course_name_day${i}`, value:'' });
-        settings.push({ key:`pars_day${i}`,     value: JSON.stringify(Array(18).fill(4)) });
+        settings.push({ key:`round_day${i}`,       value: 'pending' });
+        settings.push({ key:`course_name_day${i}`, value: '' });
+        settings.push({ key:`pars_day${i}`,        value: JSON.stringify(Array(18).fill(4)) });
       }
-
-      if (S.logoUrl) {
-        settings.push({ key:'logo_url', value: S.logoUrl });
-      }
+      if (S.logoUrl) settings.push({ key:'logo_url', value: S.logoUrl });
 
       const { error: sErr } = await db.from('settings').insert(
         settings.map(s => ({ ...s, tournament_id: tid, updated_at: now }))
       );
       if (sErr) throw sErr;
 
-      // 3. Go to admin
-      window.location.href = `/t/${slug}/admin`;
+      // 4. Create Stripe Checkout session via edge function
+      const { data: { session: authSession } } = await db.auth.getSession();
+      const res = await fetch(`${SB_URL}/functions/v1/create-checkout`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${authSession.access_token}`,
+          'apikey': SB_KEY,
+        },
+        body: JSON.stringify({
+          tournament_id:   tid,
+          tournament_slug: slug,
+          tier:            S.tier,
+          user_email:      S.user.email,
+        }),
+      });
+      const payload = await res.json();
+      if (payload.error) throw new Error(payload.error);
+
+      // Redirect to Stripe — webhook activates the tournament on success
+      window.location.href = payload.url;
 
     } catch(e) {
+      // Roll back pending tournament so slug is freed and user can retry
+      if (tid) {
+        await db.from('settings').delete().eq('tournament_id', tid);
+        await db.from('tournaments').delete().eq('id', tid);
+      }
       showAlert(alrt, e.message || 'Creation failed — please try again.');
-      btn.innerHTML = '🚀 Create Tournament';
+      btn.innerHTML = '🚀 Choose Plan & Pay →';
       btn.disabled = false;
     }
   }

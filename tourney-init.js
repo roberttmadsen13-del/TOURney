@@ -44,8 +44,9 @@
 
     const { data, error } = await db
       .from('tournaments')
-      .select('id, slug, name, short_name, logo_url')
+      .select('id, slug, name, short_name, logo_url, tier, carry_forward_enabled')
       .eq('slug', slug)
+      .eq('status', 'active')
       .single();
 
     if (error || !data) {
