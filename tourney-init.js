@@ -12,10 +12,19 @@
   });
 
   const FALLBACK_SLUG = 'bova-2026';
+  const PLATFORM_SUFFIX = '.greenskeeper.studio';
+  const PLATFORM_HOST   = 'tourney.greenskeeper.studio';
 
   function getSlug() {
+    // 1. Path-based: /t/{slug}/
     const m = location.pathname.match(/\/t\/([^/?#]+)/);
-    return m ? m[1] : null;
+    if (m) return m[1];
+    // 2. Subdomain-based: {slug}.greenskeeper.studio (not the platform host itself)
+    const h = location.hostname;
+    if (h.endsWith(PLATFORM_SUFFIX) && h !== PLATFORM_HOST) {
+      return h.slice(0, h.length - PLATFORM_SUFFIX.length);
+    }
+    return null;
   }
 
   // Only rebase links when actually on a /t/:slug/ URL — root URL pages stay on root paths.
