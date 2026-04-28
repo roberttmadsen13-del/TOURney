@@ -35,7 +35,7 @@
 
     const { data, error } = await db
       .from('tournaments')
-      .select('id, slug, name, short_name, logo_url, owner_email')
+      .select('id, slug, name, short_name, logo_url')
       .eq('slug', slug)
       .single();
 

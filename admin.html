@@ -645,7 +645,8 @@ async function doLogin() {
   const { data, error } = await sb.auth.signInWithPassword({ email, password: pass });
   if (error || !data.user) { err.classList.add('show'); return; }
   const { tournament } = await window.tourney.ready;
-  const isOwner = tournament.owner_email?.toLowerCase() === email.toLowerCase();
+  const { data: tRow } = await sb.from('tournaments').select('owner_email').eq('id', tournament.id).maybeSingle();
+  const isOwner = tRow?.owner_email?.toLowerCase() === email.toLowerCase();
   const { data: player } = await sb.from('players').select('is_admin').eq('tournament_id', tournament.id).eq('email', email.toLowerCase()).maybeSingle();
   if (!isOwner && !player?.is_admin) { await sb.auth.signOut(); err.classList.add('show'); return; }
   _tid = tournament.id; _slug = tournament.slug;
@@ -657,7 +658,8 @@ async function checkSession() {
   if (!data?.session?.user) return;
   const email = data.session.user.email?.toLowerCase();
   const { tournament } = await window.tourney.ready;
-  const isOwner = tournament.owner_email?.toLowerCase() === email;
+  const { data: tRow } = await sb.from('tournaments').select('owner_email').eq('id', tournament.id).maybeSingle();
+  const isOwner = tRow?.owner_email?.toLowerCase() === email;
   const { data: player } = await sb.from('players').select('is_admin').eq('tournament_id', tournament.id).eq('email', email).maybeSingle();
   if (isOwner || player?.is_admin) { _tid = tournament.id; _slug = tournament.slug; showAdmin(email); }
 }

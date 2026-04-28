@@ -617,7 +617,6 @@
 
       if (S.logoUrl) {
         settings.push({ key:'logo_url', value: S.logoUrl });
-        settings.push({ key:'logo_url_nav', value: S.logoUrl });
       }
 
       const { error: sErr } = await db.from('settings').insert(
