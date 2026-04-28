@@ -712,7 +712,7 @@ window.addEventListener('scroll', () => { document.getElementById('mainNav').cla
 // Load admin-configured homepage content
 (async function loadHomepageContent() {
   const { tournament } = await window.tourney.ready;
-  const keys = ['tourney_name','tourney_year','tourney_location','reg_open','homepage_subtitle','homepage_details','homepage_about','logo_url','hero_photo_url','about_photo_url','about_stat_teams','about_stat_days','about_stat_holes','reg_bullet_1','reg_bullet_2','reg_bullet_3','reg_max_players','color_primary','color_ink','color_bg','hero_cta_primary'];
+  const keys = ['tourney_name','tourney_year','tourney_location','reg_open','reg_show_dates','reg_show_why_me','reg_show_hat','homepage_subtitle','homepage_details','homepage_about','logo_url','hero_photo_url','about_photo_url','about_stat_teams','about_stat_days','about_stat_holes','reg_bullet_1','reg_bullet_2','reg_bullet_3','reg_max_players','color_primary','color_ink','color_bg','hero_cta_primary'];
   const { data } = await sb.from('settings').select('key,value').eq('tournament_id', tournament.id).in('key', keys);
   if (!data) return;
   const map = {};
@@ -725,24 +725,22 @@ window.addEventListener('scroll', () => { document.getElementById('mainNav').cla
     const el = document.querySelector('.hero-meta');
     if (el) el.innerHTML = map.homepage_details;
   }
-  if (map.homepage_about) {
+  if ('homepage_about' in map) {
     const els = document.querySelectorAll('.about-body');
-    if (els.length) {
-      const paras = map.homepage_about.split('\n\n').filter(Boolean);
-      els.forEach((el, i) => { if (paras[i]) el.innerHTML = paras[i]; });
-    }
+    const paras = (map.homepage_about || '').split('\n\n').filter(Boolean);
+    els.forEach(el => { el.innerHTML = paras.shift() || ''; });
   }
   // Dynamic PWA manifest with uploaded logo as app icon
   if (map.logo_url) {
     const manifest = {
-      name: 'Bova Invitational',
-      short_name: 'Bova',
-      description: map.homepage_subtitle || 'Inaugural Edition — Myrtle Beach, SC — 2026',
+      name: map.tourney_name ? map.tourney_name.replace(/<[^>]*>/g, '') : 'TOURney',
+      short_name: map.tourney_name ? map.tourney_name.replace(/<[^>]*>/g, '').split(' ').slice(0,2).join(' ') : 'TOURney',
+      description: map.homepage_subtitle || map.tourney_name?.replace(/<[^>]*>/g, '') || 'TOURney',
       start_url: '/',
       scope: '/',
       display: 'standalone',
-      background_color: '#f5ede0',
-      theme_color: '#1a1008',
+      background_color: map.color_bg || '#f5ede0',
+      theme_color: map.color_ink || '#1a1008',
       orientation: 'any',
       icons: [
         { src: map.logo_url, sizes: '192x192', type: 'image/png', purpose: 'any' },
@@ -792,6 +790,18 @@ window.addEventListener('scroll', () => { document.getElementById('mainNav').cla
     const rsvp = document.getElementById('rsvp');
     if (rsvp) rsvp.style.display = 'none';
   }
+  if (map.reg_show_dates === 'false') {
+    const el = document.getElementById('errDates')?.closest('.fg');
+    if (el) el.style.display = 'none';
+  }
+  if (map.reg_show_why_me === 'false') {
+    const el = document.getElementById('rsvpWhyMe')?.closest('.form-row');
+    if (el) el.style.display = 'none';
+  }
+  if (map.reg_show_hat === 'false') {
+    const el = document.querySelector('.hat-section');
+    if (el) el.style.display = 'none';
+  }
 })();
 
 const MAX = 24;
@@ -814,7 +824,10 @@ async function submitRsvp() {
   if (!last)  { setErr('rsvpLast','errLast',true);  ok=false; } else setErr('rsvpLast','errLast',false);
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { setErr('rsvpEmail','errEmail',true); ok=false; } else setErr('rsvpEmail','errEmail',false);
   if (!hcap)  { setErr('rsvpHandicap','errHandicap',true); ok=false; } else setErr('rsvpHandicap','errHandicap',false);
-  if (!selectedDates.size) { document.getElementById('errDates').classList.add('show'); ok=false; } else document.getElementById('errDates').classList.remove('show');
+  const datesSection = document.getElementById('errDates')?.closest('.fg');
+  if (datesSection?.style.display !== 'none') {
+    if (!selectedDates.size) { document.getElementById('errDates').classList.add('show'); ok=false; } else document.getElementById('errDates').classList.remove('show');
+  }
   if (!ok) return;
 
   const { tournament } = await window.tourney.ready;
