@@ -210,8 +210,8 @@ details[open] .explainer summary::after,.explainer details[open]>summary::after{
 </nav>
 
 <div class="header-band">
-  <div class="event-eyebrow">Myrtle Beach, SC &nbsp;&middot;&nbsp; 2026</div>
-  <div class="event-title">The Bova <em>Invitational</em></div>
+  <div class="event-eyebrow" id="sbEyebrow">&nbsp;</div>
+  <div class="event-title" id="sbTitle">&nbsp;</div>
   <div class="event-sub">Live Leaderboard &nbsp;&middot;&nbsp; All Formats, All Rounds</div>
 </div>
 
@@ -232,13 +232,13 @@ details[open] .explainer summary::after,.explainer details[open]>summary::after{
       <div class="team-banners" id="teamBanners">
         <div class="team-banner">
           <div class="tb-label team-a">Team One</div>
-          <div class="tb-name">Team <em>Bova</em></div>
+          <div class="tb-name" id="teamAName">Team One</div>
           <div class="tb-score even" id="teamAScore">—</div>
           <div class="tb-score-label">Cumulative To Par</div>
         </div>
         <div class="team-banner">
           <div class="tb-label team-b">Team Two</div>
-          <div class="tb-name">The <em>Challengers</em></div>
+          <div class="tb-name" id="teamBName">Team Two</div>
           <div class="tb-score even" id="teamBScore">—</div>
           <div class="tb-score-label">Cumulative To Par</div>
         </div>
@@ -320,6 +320,35 @@ details[open] .explainer summary::after,.explainer details[open]>summary::after{
 <script src="/tourney-init.js"></script>
 <script>
 const sb = window.tourney.db;
+let _tournamentName = 'TOURney';
+
+// Populate event header, team names, and notification title from settings
+(async function loadIdentity() {
+  const { tournament } = await window.tourney.ready;
+  _tournamentName = tournament.name;
+  const { data } = await sb.from('settings').select('key,value')
+    .eq('tournament_id', tournament.id)
+    .in('key', ['tourney_name','tourney_year','tourney_location','team_a_name','team_b_name']);
+  const map = {};
+  (data || []).forEach(r => { map[r.key] = r.value; });
+
+  const eyebrow = document.getElementById('sbEyebrow');
+  if (eyebrow) {
+    const parts = [map.tourney_location, map.tourney_year].filter(Boolean);
+    eyebrow.textContent = parts.join(' · ') || '';
+  }
+  const titleEl = document.getElementById('sbTitle');
+  if (titleEl) {
+    const raw = map.tourney_name || tournament.name;
+    const words = raw.trim().split(/\s+/);
+    const last = words.pop();
+    titleEl.innerHTML = words.length ? `${words.join(' ')} <em>${last}</em>` : `<em>${raw}</em>`;
+  }
+  const aEl = document.getElementById('teamAName');
+  if (aEl) aEl.textContent = map.team_a_name || 'Team One';
+  const bEl = document.getElementById('teamBName');
+  if (bEl) bEl.textContent = map.team_b_name || 'Team Two';
+})();
 
 // ── AUTH GUARD ───────────────────────────────────────────────────
 (async function authGuard() {
@@ -963,7 +992,7 @@ function _subscribeTrash() {
           const who = post.player_name.split(' ')[0];
           showToast(`${who} is talking to you 👀`);
           if (typeof Notification !== 'undefined' && Notification.permission === 'granted') {
-            try { new Notification('Bova Invitational', { body: `${post.player_name}: ${post.message}`, icon: '/icon.svg' }); } catch(e) {}
+            try { new Notification(_tournamentName, { body: `${post.player_name}: ${post.message}`, icon: '/icon.svg' }); } catch(e) {}
           }
         }
       }

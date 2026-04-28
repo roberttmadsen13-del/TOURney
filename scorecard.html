@@ -212,7 +212,7 @@ body{background:var(--bg);color:var(--ink);font-family:'Barlow',sans-serif;font-
 <body>
 
 <nav class="nav">
-  <div class="nav-logo"><img id="navLogoImg" style="display:none;height:28px;max-width:100px;object-fit:contain;object-position:left"><svg id="navLogoSvg" width="12" height="16" viewBox="0 0 12 16" style="flex-shrink:0;display:block" fill="none"><line x1="2" y1="1" x2="2" y2="15" stroke="#c09030" stroke-width="1.5" stroke-linecap="round"/><path d="M2 2L10 5L2 8Z" fill="#c09030"/></svg>Bova <em>Invitational</em></div>
+  <div class="nav-logo"><img id="navLogoImg" style="display:none;height:28px;max-width:100px;object-fit:contain;object-position:left"><svg id="navLogoSvg" width="12" height="16" viewBox="0 0 12 16" style="flex-shrink:0;display:block" fill="none"><line x1="2" y1="1" x2="2" y2="15" stroke="#c09030" stroke-width="1.5" stroke-linecap="round"/><path d="M2 2L10 5L2 8Z" fill="#c09030"/></svg><span id="navLogoText"></span></div>
   <div class="nav-links">
     <a href="/">Home</a>
     <a href="/scoreboard">Leaderboard</a>
@@ -363,6 +363,25 @@ body{background:var(--bg);color:var(--ink);font-family:'Barlow',sans-serif;font-
 <script src="/tourney-init.js"></script>
 <script>
 const sb = window.tourney.db;
+
+// Populate nav logo text and load tournament logo
+window.tourney.ready.then(async ({ tournament }) => {
+  const logoText = document.getElementById('navLogoText');
+  if (logoText) {
+    const words = tournament.name.trim().split(/\s+/);
+    const last = words.pop();
+    logoText.innerHTML = words.length ? `${words.join(' ')} <em>${last}</em>` : `<em>${tournament.name}</em>`;
+  }
+  const { data } = await sb.from('settings').select('value')
+    .eq('tournament_id', tournament.id).eq('key','logo_url').maybeSingle();
+  if (data?.value) {
+    const img = document.getElementById('navLogoImg');
+    const svg = document.getElementById('navLogoSvg');
+    if (img) { img.src = data.value; img.style.display = 'block'; }
+    if (svg) svg.style.display = 'none';
+    if (logoText) logoText.style.display = 'none';
+  }
+});
 
 function esc(s) {
   return String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');

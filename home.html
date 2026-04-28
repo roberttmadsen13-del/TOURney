@@ -783,10 +783,14 @@ window.addEventListener('scroll', () => { document.getElementById('mainNav').cla
   if (map.reg_bullet_1 && bullets[0]) bullets[0].innerHTML = map.reg_bullet_1;
   if (map.reg_bullet_2 && bullets[1]) bullets[1].innerHTML = map.reg_bullet_2;
   if (map.reg_bullet_3 && bullets[2]) bullets[2].innerHTML = map.reg_bullet_3;
-  // CSS color vars
-  if (map.color_primary) document.documentElement.style.setProperty('--gold', map.color_primary);
-  if (map.color_ink) document.documentElement.style.setProperty('--ink', map.color_ink);
-  if (map.color_bg) document.documentElement.style.setProperty('--bg', map.color_bg);
+  // CSS color vars — full derivation including gold-l, gold-p, border, muted, card, cream
+  if (map.color_primary || map.color_ink || map.color_bg) {
+    window.tourney.applyBrandColors(
+      map.color_primary || '#c09030',
+      map.color_ink     || '#1a1008',
+      map.color_bg      || '#f5ede0'
+    );
+  }
   // Hero primary CTA button text
   if (map.hero_cta_primary) { const btn = document.querySelector('.hero-cta .btn-gold'); if (btn) btn.textContent = map.hero_cta_primary; }
   // Registration counter denom

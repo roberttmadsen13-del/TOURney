@@ -595,6 +595,10 @@ td.email a:hover{color:var(--gold);}
             </select>
           </div>
         </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;padding-top:0.75rem;border-top:1px solid var(--border);">
+          <div class="fg"><label>Team A Name</label><input type="text" id="dsTeamAName" placeholder="Team One" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;"></div>
+          <div class="fg"><label>Team B Name</label><input type="text" id="dsTeamBName" placeholder="Team Two" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;"></div>
+        </div>
         <button class="action-btn" style="padding:0.55rem 1.4rem;font-size:0.6rem;letter-spacing:0.15em;background:var(--gold);color:var(--ink);border-color:var(--gold);font-weight:700;margin-top:0.4rem;" onclick="saveRegistration()">Save Registration</button>
       </div>
     </div>
@@ -1431,6 +1435,7 @@ const DS_ALL_KEYS = [
   'about_stat_days','about_stat_teams','about_stat_holes',
   'reg_open','reg_max_players','reg_bullet_1','reg_bullet_2','reg_bullet_3',
   'reg_show_dates','reg_show_why_me','reg_show_hat',
+  'team_a_name','team_b_name',
 ];
 
 const DS_FIELD_MAP = {
@@ -1451,6 +1456,8 @@ const DS_FIELD_MAP = {
   reg_show_dates:    'dsShowDates',
   reg_show_why_me:   'dsShowWhyMe',
   reg_show_hat:      'dsShowHat',
+  team_a_name:       'dsTeamAName',
+  team_b_name:       'dsTeamBName',
 };
 
 async function loadDesignSettings() {
@@ -1519,6 +1526,8 @@ async function saveRegistration() {
     { key:'reg_show_dates',  value: document.getElementById('dsShowDates')?.value || 'true' },
     { key:'reg_show_why_me', value: document.getElementById('dsShowWhyMe')?.value || 'true' },
     { key:'reg_show_hat',    value: document.getElementById('dsShowHat')?.value || 'true' },
+    { key:'team_a_name',     value: document.getElementById('dsTeamAName')?.value || '' },
+    { key:'team_b_name',     value: document.getElementById('dsTeamBName')?.value || '' },
   ].map(r => ({ ...r, tournament_id: _tid, updated_at: new Date().toISOString() }));
   await sb.from('settings').upsert(rows, { onConflict: 'tournament_id,key' });
   showToast('Registration saved.');
