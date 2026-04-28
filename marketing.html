@@ -2,6 +2,12 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <script>
+    (function(){
+      var h=location.hostname,s='.greenskeeper.studio',p='tourney.greenskeeper.studio';
+      if(h!==p&&h.endsWith(s)){location.replace('/t/'+h.slice(0,h.length-s.length)+'/');}
+    })();
+  </script>
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>TOURney — Run Your Golf Tournament Like a Pro</title>
   <meta name="description" content="Live scoring, player registration, team management, and a branded PWA — for any golf tournament.">

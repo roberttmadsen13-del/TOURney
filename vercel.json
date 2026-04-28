@@ -1,4 +1,7 @@
 {
+  "redirects": [
+    { "source": "/t/bova-2026/:path*", "destination": "/t/bova/:path*", "permanent": true }
+  ],
   "rewrites": [
     { "source": "/",       "destination": "/marketing.html" },
     { "source": "/create", "destination": "/create.html" },

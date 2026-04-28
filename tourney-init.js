@@ -11,7 +11,7 @@
     auth: { persistSession: true, autoRefreshToken: true }
   });
 
-  const FALLBACK_SLUG = 'bova-2026';
+  const FALLBACK_SLUG = 'bova';
   const PLATFORM_SUFFIX = '.greenskeeper.studio';
   const PLATFORM_HOST   = 'tourney.greenskeeper.studio';
 
