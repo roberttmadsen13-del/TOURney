@@ -574,6 +574,23 @@ td.email a:hover{color:var(--gold);}
         <div class="fg"><label>Info Bullet 1</label><input type="text" id="dsRegBullet1" placeholder="Covers greens fees, cart, and meals" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;"></div>
         <div class="fg"><label>Info Bullet 2</label><input type="text" id="dsRegBullet2" placeholder="Limited field — final selection by invite" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;"></div>
         <div class="fg"><label>Info Bullet 3</label><input type="text" id="dsRegBullet3" placeholder="Handicap tiers used for team balance" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;"></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;padding-top:0.75rem;border-top:1px solid var(--border);">
+          <div class="fg"><label>Date Picker</label>
+            <select id="dsShowDates" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;width:100%;-webkit-appearance:none;">
+              <option value="true">Show</option><option value="false">Hide</option>
+            </select>
+          </div>
+          <div class="fg"><label>"Why Pick Me"</label>
+            <select id="dsShowWhyMe" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;width:100%;-webkit-appearance:none;">
+              <option value="true">Show</option><option value="false">Hide</option>
+            </select>
+          </div>
+          <div class="fg"><label>Hat Merch</label>
+            <select id="dsShowHat" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;width:100%;-webkit-appearance:none;">
+              <option value="true">Show</option><option value="false">Hide</option>
+            </select>
+          </div>
+        </div>
         <button class="action-btn" style="padding:0.55rem 1.4rem;font-size:0.6rem;letter-spacing:0.15em;background:var(--gold);color:var(--ink);border-color:var(--gold);font-weight:700;margin-top:0.4rem;" onclick="saveRegistration()">Save Registration</button>
       </div>
     </div>
@@ -1403,6 +1420,7 @@ const DS_ALL_KEYS = [
   'hero_cta_primary','color_primary','color_ink','color_bg',
   'about_stat_days','about_stat_teams','about_stat_holes',
   'reg_open','reg_max_players','reg_bullet_1','reg_bullet_2','reg_bullet_3',
+  'reg_show_dates','reg_show_why_me','reg_show_hat',
 ];
 
 const DS_FIELD_MAP = {
@@ -1420,6 +1438,9 @@ const DS_FIELD_MAP = {
   about_stat_teams:  'dsStatTeams',
   about_stat_holes:  'dsStatHoles',
   reg_max_players:   'dsMaxPlayers',
+  reg_show_dates:    'dsShowDates',
+  reg_show_why_me:   'dsShowWhyMe',
+  reg_show_hat:      'dsShowHat',
 };
 
 async function loadDesignSettings() {
@@ -1485,6 +1506,9 @@ async function saveRegistration() {
     { key:'reg_bullet_1',    value: document.getElementById('dsRegBullet1')?.value || '' },
     { key:'reg_bullet_2',    value: document.getElementById('dsRegBullet2')?.value || '' },
     { key:'reg_bullet_3',    value: document.getElementById('dsRegBullet3')?.value || '' },
+    { key:'reg_show_dates',  value: document.getElementById('dsShowDates')?.value || 'true' },
+    { key:'reg_show_why_me', value: document.getElementById('dsShowWhyMe')?.value || 'true' },
+    { key:'reg_show_hat',    value: document.getElementById('dsShowHat')?.value || 'true' },
   ].map(r => ({ ...r, tournament_id: _tid, updated_at: new Date().toISOString() }));
   await sb.from('settings').upsert(rows, { onConflict: 'tournament_id,key' });
   showToast('Registration saved.');
