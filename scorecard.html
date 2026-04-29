@@ -367,6 +367,7 @@ const sb = window.tourney.db;
 
 let _teamAName = 'Team A';
 let _teamBName = 'Team B';
+let _slug = 'default';
 
 function _teamLabel(side) {
   return side === 'A' ? _teamAName : side === 'B' ? _teamBName : 'Unassigned';
@@ -374,6 +375,7 @@ function _teamLabel(side) {
 
 // Populate nav logo, team names, and tournament logo
 window.tourney.ready.then(async ({ tournament }) => {
+  _slug = tournament.slug;
   const logoText = document.getElementById('navLogoText');
   if (logoText) {
     const words = tournament.name.trim().split(/\s+/);
@@ -405,7 +407,7 @@ function esc(s) {
   const { data } = await sb.auth.getSession();
   if (!data?.session?.user) return;
   const email = data.session.user.email;
-  if (email) localStorage.setItem('bova_profile_email', email);
+  if (email) localStorage.setItem(`${_slug}_profile_email`, email);
   // Add sign out to nav
   const navRight = document.querySelector('.nav-right');
   if (navRight) {
@@ -416,7 +418,7 @@ function esc(s) {
     signOutBtn.onclick = async function(e) {
       e.preventDefault();
       await sb.auth.signOut();
-      localStorage.removeItem('bova_profile_email');
+      localStorage.removeItem(`${_slug}_profile_email`);
       window.location.href = '/login?redirect=/scorecard';
     };
     navRight.appendChild(signOutBtn);
@@ -428,7 +430,7 @@ function esc(s) {
     mobileSignOut.textContent = 'Sign Out';
     mobileSignOut.onclick = async function() {
       await sb.auth.signOut();
-      localStorage.removeItem('bova_profile_email');
+      localStorage.removeItem(`${_slug}_profile_email`);
       window.location.href = '/login?redirect=/scorecard';
     };
     drawer.appendChild(mobileSignOut);
@@ -517,7 +519,7 @@ async function init() {
   }
 
   // Auto-detect player from profile login (bova_profile_email in localStorage)
-  const profileEmail = localStorage.getItem('bova_profile_email');
+  const profileEmail = localStorage.getItem(`${_slug}_profile_email`);
   const detectedPlayer = profileEmail ? players.find(p => p.email && p.email.toLowerCase() === profileEmail.toLowerCase()) : null;
 
   if (detectedPlayer) {
@@ -556,7 +558,7 @@ async function init() {
   }
 
   // Restore saved scores
-  const saved = localStorage.getItem(`bova_scores_${currentRound}`);
+  const saved = localStorage.getItem(`${_slug}_scores_${currentRound}`);
   if (saved) try { enteredScores = JSON.parse(saved); } catch {}
 
   // Flush any scores queued while offline
@@ -567,7 +569,7 @@ async function init() {
 }
 
 async function restoreSessionIfAny() {
-  const raw = localStorage.getItem('bova_scorecard_session');
+  const raw = localStorage.getItem(`${_slug}_scorecard_session`);
   if (!raw) return;
   let s;
   try { s = JSON.parse(raw); } catch { return; }
@@ -1374,7 +1376,7 @@ function renderSummary() {
 
 // ── PERSISTENCE ───────────────────────────────────────────────────
 function saveLocal() {
-  localStorage.setItem(`bova_scores_${currentRound}`, JSON.stringify(enteredScores));
+  localStorage.setItem(`${_slug}_scores_${currentRound}`, JSON.stringify(enteredScores));
 }
 
 function saveSessionState() {
@@ -1388,11 +1390,11 @@ function saveSessionState() {
     opp2Id: opp2Player?.id || null,
     currentHole
   };
-  try { localStorage.setItem('bova_scorecard_session', JSON.stringify(state)); } catch {}
+  try { localStorage.setItem(`${_slug}_scorecard_session`, JSON.stringify(state)); } catch {}
 }
 
 function clearSessionState() {
-  try { localStorage.removeItem('bova_scorecard_session'); } catch {}
+  try { localStorage.removeItem(`${_slug}_scorecard_session`); } catch {}
 }
 
 let _saveTimer = {};
@@ -1539,23 +1541,23 @@ function showSavingState(state) {
 }
 
 function queueOffline(playerId, hole, gross) {
-  const queue = JSON.parse(localStorage.getItem('bova_offline_queue') || '[]');
+  const queue = JSON.parse(localStorage.getItem(`${_slug}_offline_queue`) || '[]');
   const idx = queue.findIndex(e => e.player_id === playerId && e.hole === hole && e.round === currentRound);
   const entry = { player_id: playerId, round: currentRound, hole, gross_score: gross };
   if (idx >= 0) queue[idx] = entry;
   else queue.push(entry);
-  localStorage.setItem('bova_offline_queue', JSON.stringify(queue));
+  localStorage.setItem(`${_slug}_offline_queue`, JSON.stringify(queue));
 }
 
 async function flushOfflineQueue() {
-  const queue = JSON.parse(localStorage.getItem('bova_offline_queue') || '[]');
+  const queue = JSON.parse(localStorage.getItem(`${_slug}_offline_queue`) || '[]');
   if (!queue.length) return;
   const { tournament } = await window.tourney.ready;
   const queueWithTid = queue.map(e => ({ ...e, tournament_id: tournament.id }));
   try {
     const { error } = await sb.from('scores').upsert(queueWithTid, { onConflict: 'player_id,round,hole' });
     if (!error) {
-      localStorage.removeItem('bova_offline_queue');
+      localStorage.removeItem(`${_slug}_offline_queue`);
       showToast(`${queue.length} offline score${queue.length > 1 ? 's' : ''} synced.`);
     }
   } catch (e) {}

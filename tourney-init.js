@@ -11,7 +11,6 @@
     auth: { persistSession: true, autoRefreshToken: true }
   });
 
-  const FALLBACK_SLUG = 'bova';
   const PLATFORM_SUFFIX = '.greenskeeper.studio';
   const PLATFORM_HOST   = 'tourney.greenskeeper.studio';
 
@@ -39,8 +38,12 @@
   }
 
   async function init() {
-    const slug = getSlug() || FALLBACK_SLUG;
+    const slug = getSlug();
     const onTenantUrl = !!location.pathname.match(/\/t\/([^/?#]+)/);
+    if (!slug) {
+      document.body.innerHTML = '<div style="padding:2rem;font-family:sans-serif;color:#fff;background:#1a1a1a;min-height:100vh"><h2>No tournament</h2><p>Visit a tournament URL to continue.</p><p><a href="/" style="color:#c09030">← TOURney Home</a></p></div>';
+      throw new Error('No tournament slug in URL');
+    }
 
     const { data, error } = await db
       .from('tournaments')
@@ -74,6 +77,8 @@
       document.title = document.title.replace(/Bova Invitational/gi, data.name);
       const metaTitle = document.querySelector('meta[name="apple-mobile-web-app-title"]');
       if (metaTitle) metaTitle.content = data.short_name || data.name.split(' ')[0];
+      const loginSub = document.getElementById('loginSubtitle');
+      if (loginSub) loginSub.textContent = `${data.name} · Restricted`;
     }
 
     return { db, tournament: data };

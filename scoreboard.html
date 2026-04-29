@@ -368,7 +368,7 @@ let _tournamentName = 'TOURney';
     signOutBtn.onmouseout = function(){ this.style.color='rgba(240,230,204,0.45)'; };
     signOutBtn.onclick = async function() {
       await sb.auth.signOut();
-      localStorage.removeItem('bova_profile_email');
+      localStorage.removeItem(`${_slug}_profile_email`);
       window.location.href = '/login?redirect=/scoreboard';
     };
     navRight.appendChild(userEl);
@@ -381,7 +381,7 @@ let _tournamentName = 'TOURney';
     mobileSignOut.textContent = 'Sign Out';
     mobileSignOut.onclick = async function() {
       await sb.auth.signOut();
-      localStorage.removeItem('bova_profile_email');
+      localStorage.removeItem(`${_slug}_profile_email`);
       window.location.href = '/login?redirect=/scoreboard';
     };
     drawer.appendChild(mobileSignOut);
@@ -431,6 +431,7 @@ let selectedScorecardRound = null;
 // ── INIT ──────────────────────────────────────────────────────────
 async function init() {
   const { tournament } = await window.tourney.ready;
+  _slug = tournament.slug;
   const [pRes, sRes, tRes, rRes, parRes, fmtRes] = await Promise.all([
     sb.from('players').select('*').eq('tournament_id', tournament.id),
     sb.from('scores').select('*').eq('tournament_id', tournament.id),
@@ -889,6 +890,7 @@ function showToast(msg) {
 let _trashPosts = [];
 let _trashPlayer = null;
 let _tournamentId = null;
+let _slug = 'default';
 
 function _esc(s) {
   return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
@@ -1001,7 +1003,7 @@ function _subscribeTrash() {
 
 async function initTrashTalk(tournamentId) {
   _tournamentId = tournamentId;
-  const email = localStorage.getItem('bova_profile_email');
+  const email = localStorage.getItem(`${_slug}_profile_email`);
   if (email) _trashPlayer = players.find(p => p.email && p.email.toLowerCase() === email.toLowerCase()) || null;
   _buildTagBtns();
   const ta = document.getElementById('trashInput');
