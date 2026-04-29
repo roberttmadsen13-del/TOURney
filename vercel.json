@@ -32,6 +32,7 @@
     { "source": "/champions",  "destination": "/champions.html" },
     { "source": "/feed",       "destination": "/feed.html" },
     { "source": "/login",      "destination": "/login.html" },
-    { "source": "/install",    "destination": "/install.html" }
+    { "source": "/install",    "destination": "/install.html" },
+    { "source": "/platform",   "destination": "/platform.html" }
   ]
 }
