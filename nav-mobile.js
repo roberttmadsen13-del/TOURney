@@ -49,6 +49,15 @@
 
     if (nav.parentNode) nav.parentNode.insertBefore(drawer, nav.nextSibling);
 
+    // Allow post-init injection (e.g. platform link for owner, admin link per page)
+    window._navInjectLink = function(href, label, style) {
+      var a = document.createElement('a');
+      a.href = href;
+      a.textContent = label;
+      a.style.cssText = style || '';
+      inner.appendChild(a);
+    };
+
     // FAB: floating "Enter Scores" button on all pages except scorecard + admin
     var path = window.location.pathname.replace(/\/$/, '');
     var skipFab = path === '/scorecard' || path === '/admin' ||
