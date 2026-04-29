@@ -33,6 +33,7 @@
     { "source": "/feed",       "destination": "/feed.html" },
     { "source": "/login",      "destination": "/login.html" },
     { "source": "/install",    "destination": "/install.html" },
-    { "source": "/platform",   "destination": "/platform.html" }
+    { "source": "/platform",          "destination": "/platform.html" },
+    { "source": "/platform-manifest.json", "destination": "/platform-manifest.json" }
   ]
 }

@@ -3,6 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <link rel="icon" href="/icon-192.png" type="image/png">
+<link rel="apple-touch-icon" href="/icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="TOURney">
+<link rel="manifest" href="/platform-manifest.json">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Platform — TOURney</title>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,400;0,600;0,700;1,400&family=DM+Mono:wght@400;500&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet">
@@ -38,6 +43,10 @@ td{padding:1rem;font-size:0.88rem;vertical-align:middle;}
 .btn-admin:hover{background:rgba(192,144,48,0.1);}
 .btn-delete{color:rgba(200,80,60,0.7);border-color:rgba(200,80,60,0.2);}
 .btn-delete:hover{background:rgba(200,80,60,0.08);color:#c8503c;border-color:rgba(200,80,60,0.5);}
+.badge{display:inline-block;font-family:'DM Mono',monospace;font-size:0.44rem;letter-spacing:0.15em;text-transform:uppercase;padding:0.25rem 0.6rem;border:1px solid;}
+.badge-live{color:#3a9e5f;border-color:rgba(58,158,95,0.4);background:rgba(58,158,95,0.08);}
+.badge-notlive{color:rgba(240,230,204,0.25);border-color:rgba(240,230,204,0.08);}
+.badge-complete{color:#c09030;border-color:rgba(192,144,48,0.4);background:rgba(192,144,48,0.06);}
 .empty{text-align:center;padding:4rem;font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.15em;text-transform:uppercase;color:rgba(240,230,204,0.2);}
 #loginWrap{max-width:400px;margin:8rem auto;padding:2.5rem;background:#1a1008;border:1px solid rgba(192,144,48,0.15);}
 #loginWrap h2{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:1.2rem;letter-spacing:0.12em;text-transform:uppercase;color:#c09030;margin-bottom:1.5rem;}
@@ -85,6 +94,7 @@ td{padding:1rem;font-size:0.88rem;vertical-align:middle;}
         <tr>
           <th>Tournament</th>
           <th>Owner</th>
+          <th>Status</th>
           <th>Players</th>
           <th>Created</th>
           <th></th>
@@ -127,13 +137,37 @@ async function showDashboard(email) {
   loadTournaments();
 }
 
+function deriveStatus(roundSettings) {
+  if (!roundSettings.length) return 'notlive';
+  const vals = roundSettings.map(r => (r.value || '').toLowerCase());
+  if (vals.every(v => v === 'complete' || v === 'done')) return 'complete';
+  if (vals.some(v => v === 'active' || v === 'live')) return 'live';
+  return 'notlive';
+}
+
+function statusBadge(status) {
+  if (status === 'live')     return '<span class="badge badge-live">Live</span>';
+  if (status === 'complete') return '<span class="badge badge-complete">Complete</span>';
+  return '<span class="badge badge-notlive">Not Live</span>';
+}
+
 async function loadTournaments() {
-  const { data: tourneys } = await sb.from('tournaments').select('*').order('created_at', { ascending: false });
+  const [{ data: tourneys }, { data: players }, { data: rounds }] = await Promise.all([
+    sb.from('tournaments').select('*').order('created_at', { ascending: false }),
+    sb.from('players').select('tournament_id'),
+    sb.from('settings').select('tournament_id,value').like('key', 'round_day%'),
+  ]);
+
   if (!tourneys || !tourneys.length) { document.getElementById('emptyMsg').style.display = 'block'; return; }
 
-  const { data: players } = await sb.from('players').select('tournament_id');
   const counts = {};
   (players || []).forEach(p => { counts[p.tournament_id] = (counts[p.tournament_id] || 0) + 1; });
+
+  const roundsByTourney = {};
+  (rounds || []).forEach(r => {
+    if (!roundsByTourney[r.tournament_id]) roundsByTourney[r.tournament_id] = [];
+    roundsByTourney[r.tournament_id].push(r);
+  });
 
   document.getElementById('statTotal').textContent = tourneys.length;
   document.getElementById('statPlayers').textContent = (players || []).length;
@@ -143,6 +177,7 @@ async function loadTournaments() {
   tbody.innerHTML = tourneys.map(t => {
     const count = counts[t.id] || 0;
     const created = new Date(t.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    const status = deriveStatus(roundsByTourney[t.id] || []);
     const adminUrl = `/t/${t.slug}/admin`;
     return `<tr>
       <td>
@@ -150,6 +185,7 @@ async function loadTournaments() {
         <div class="t-slug">${esc(t.slug)}</div>
       </td>
       <td><div class="t-owner">${esc(t.owner_email || '—')}</div></td>
+      <td>${statusBadge(status)}</td>
       <td><div class="t-count">${count}</div></td>
       <td><div class="t-date">${created}</div></td>
       <td>
@@ -174,7 +210,6 @@ function esc(s) {
   return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
-// Check existing session on load
 (async () => {
   const { data: { session } } = await sb.auth.getSession();
   if (session?.user?.email === PLATFORM_EMAIL) showDashboard(session.user.email);
