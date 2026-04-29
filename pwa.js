@@ -95,7 +95,7 @@
       var rows = res.data || [];
       var cfg = {};
       rows.forEach(function (r) { cfg[r.key] = r.value; });
-      var iconUrl = cfg.logo_url || '/icon.svg';
+      var iconUrl = cfg.logo_url || '/icon-192.png';
       var iconType = iconUrl.endsWith('.svg') ? 'image/svg+xml' : 'image/png';
       var origin = location.origin;
       var m = {
