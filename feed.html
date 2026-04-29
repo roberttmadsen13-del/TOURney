@@ -240,6 +240,7 @@ let me = null;
 let players = [];
 let teamAssignments = {};
 let posts = [];
+let _celebStyle = 'full';
 let posting = false;
 let replyingTo = null;
 let mentionState = null;
@@ -255,12 +256,14 @@ async function init() {
 
   const { tournament } = await window.tourney.ready;
 
-  const [pRes, taRes, meRes, feedRes] = await Promise.all([
+  const [pRes, taRes, meRes, feedRes, celebRes] = await Promise.all([
     sb.from('players').select('id,first_name,last_name').eq('tournament_id', tournament.id).order('last_name'),
     sb.from('settings').select('value').eq('tournament_id', tournament.id).eq('key', 'team_assignments').maybeSingle(),
     sb.from('players').select('id,first_name,last_name').eq('tournament_id', tournament.id).eq('email', email.toLowerCase()).maybeSingle(),
     sb.from('trash_talk').select('*').eq('tournament_id', tournament.id).order('created_at', { ascending: false }),
+    sb.from('settings').select('value').eq('tournament_id', tournament.id).eq('key', 'celebration_style').maybeSingle(),
   ]);
+  if (celebRes.data?.value) _celebStyle = celebRes.data.value;
 
   players = pRes.data || [];
   if (taRes.data?.value) try { teamAssignments = JSON.parse(taRes.data.value); } catch {}
@@ -280,8 +283,8 @@ async function init() {
 
   // HIO celebration from push notification click
   const _sp = new URLSearchParams(window.location.search);
-  if (_sp.get('hio') === '1' && window.celebrate) {
-    window.celebrate.show({ name: _sp.get('player') || '', hole: _sp.get('hole') || '' });
+  if (_sp.get('hio') === '1' && window.celebrate && _celebStyle !== 'off') {
+    window.celebrate.show({ name: _sp.get('player') || '', hole: _sp.get('hole') || '', style: _celebStyle });
   }
 
   // Deep link: scroll to specific post
@@ -493,9 +496,9 @@ function subscribeHoleInOne(tournamentId) {
           .single();
         if (data) playerName = `${data.first_name} ${data.last_name}`;
       }
-      if (window.celebrate) {
-        window.celebrate.show({ name: playerName, hole: score.hole ?? score.hole_number ?? '' });
-      } else {
+      if (window.celebrate && _celebStyle !== 'off') {
+        window.celebrate.show({ name: playerName, hole: score.hole ?? score.hole_number ?? '', style: _celebStyle });
+      } else if (_celebStyle !== 'off') {
         showHoleInOne(playerName, score.hole ?? score.hole_number ?? '');
       }
     })

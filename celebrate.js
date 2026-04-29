@@ -1,11 +1,12 @@
 // celebrate.js — HIO celebration: canvas confetti + rotating lasers + shockwave rings + sound
-// Usage: window.celebrate.show({ name: 'John Doe', hole: 7 })
+// Usage: window.celebrate.show({ name: 'John Doe', hole: 7, style: 'full'|'confetti' })
 //        window.celebrate.hide()
 // Colors read from tournament CSS vars (--gold, --gold-l, --gold-p) automatically.
 (function () {
   var _raf = null, _overlay = null, _cCtx = null, _lCtx = null;
   var _particles = [], _lasers = [], _rings = [];
   var _t0 = 0, _colors = [];
+  var _style = 'full';
 
   function _css(v) {
     return getComputedStyle(document.documentElement).getPropertyValue(v).trim() || null;
@@ -126,37 +127,39 @@
     var cx = w / 2, cy = h / 2;
     var diag = Math.max(w, h) * 1.6;
 
-    // ── Lasers + rings on _lCtx
+    // ── Lasers + rings on _lCtx (full show only)
     _lCtx.clearRect(0, 0, w, h);
-    var laserA = Math.max(0, (1 - elapsed / 9000) * 0.55);
+    if (_style === 'full') {
+      var laserA = Math.max(0, (1 - elapsed / 9000) * 0.55);
 
-    _lasers.forEach(function (l) {
-      l.a += l.spd * 0.018;
-      var ex = cx + Math.cos(l.a) * diag;
-      var ey = cy + Math.sin(l.a) * diag;
-      _lCtx.beginPath();
-      _lCtx.moveTo(cx, cy);
-      _lCtx.lineTo(ex, ey);
-      _lCtx.strokeStyle = l.col;
-      _lCtx.globalAlpha = laserA;
-      _lCtx.lineWidth = l.w;
-      _lCtx.stroke();
-    });
+      _lasers.forEach(function (l) {
+        l.a += l.spd * 0.018;
+        var ex = cx + Math.cos(l.a) * diag;
+        var ey = cy + Math.sin(l.a) * diag;
+        _lCtx.beginPath();
+        _lCtx.moveTo(cx, cy);
+        _lCtx.lineTo(ex, ey);
+        _lCtx.strokeStyle = l.col;
+        _lCtx.globalAlpha = laserA;
+        _lCtx.lineWidth = l.w;
+        _lCtx.stroke();
+      });
 
-    _rings.forEach(function (ring) {
-      if (elapsed < ring.delay) return;
-      ring.r += (ring.maxR - ring.r) * 0.055 + 3;
-      var ra = ring.a * Math.max(0, 1 - ring.r / ring.maxR);
-      if (ra <= 0.01) return;
-      _lCtx.beginPath();
-      _lCtx.arc(cx, cy, ring.r, 0, Math.PI * 2);
-      _lCtx.strokeStyle = ring.col;
-      _lCtx.globalAlpha = ra * 0.75;
-      _lCtx.lineWidth = 2.5;
-      _lCtx.stroke();
-    });
+      _rings.forEach(function (ring) {
+        if (elapsed < ring.delay) return;
+        ring.r += (ring.maxR - ring.r) * 0.055 + 3;
+        var ra = ring.a * Math.max(0, 1 - ring.r / ring.maxR);
+        if (ra <= 0.01) return;
+        _lCtx.beginPath();
+        _lCtx.arc(cx, cy, ring.r, 0, Math.PI * 2);
+        _lCtx.strokeStyle = ring.col;
+        _lCtx.globalAlpha = ra * 0.75;
+        _lCtx.lineWidth = 2.5;
+        _lCtx.stroke();
+      });
 
-    _lCtx.globalAlpha = 1;
+      _lCtx.globalAlpha = 1;
+    }
 
     // ── Confetti on _cCtx
     var confA = Math.min(1, Math.max(0, 1 - (elapsed - 9000) / 3000));
@@ -188,6 +191,7 @@
 
   function show(opts) {
     opts = opts || {};
+    _style = opts.style || 'full';
     _build();
     _resize();
 
@@ -204,9 +208,11 @@
     if (detEl) { detEl.textContent = opts.hole ? 'Hole ' + opts.hole + ' · Ace' : 'Ace'; }
 
     _initParticles();
-    _initLasers();
-    _initRings();
-    _sound();
+    if (_style === 'full') {
+      _initLasers();
+      _initRings();
+      _sound();
+    }
 
     _overlay.style.display = 'flex';
     _overlay.style.alignItems = 'center';

@@ -368,6 +368,7 @@ const sb = window.tourney.db;
 let _teamAName = 'Team A';
 let _teamBName = 'Team B';
 let _slug = 'default';
+let _notifyHio = true;
 
 function _teamLabel(side) {
   return side === 'A' ? _teamAName : side === 'B' ? _teamBName : 'Unassigned';
@@ -490,13 +491,15 @@ let scoreHistory = [];
 // ── INIT ──────────────────────────────────────────────────────────
 async function init() {
   const { tournament } = await window.tourney.ready;
-  const [pRes, tRes, rRes, parRes, fmtRes] = await Promise.all([
+  const [pRes, tRes, rRes, parRes, fmtRes, notifyRes] = await Promise.all([
     sb.from('players').select('*').eq('tournament_id', tournament.id).order('first_name'),
     sb.from('settings').select('*').eq('tournament_id', tournament.id).eq('key','team_assignments'),
     sb.from('settings').select('*').eq('tournament_id', tournament.id).in('key',['round_day1','round_day2','round_day3']),
     sb.from('settings').select('*').eq('tournament_id', tournament.id).in('key',['pars_day1','pars_day2','pars_day3']),
     sb.from('settings').select('*').eq('tournament_id', tournament.id).eq('key','round_formats'),
+    sb.from('settings').select('value').eq('tournament_id', tournament.id).eq('key','notify_hole_in_one').maybeSingle(),
   ]);
+  if (notifyRes.data) _notifyHio = notifyRes.data.value !== 'false';
 
   players = pRes.data || [];
 
@@ -1453,18 +1456,20 @@ async function autoSaveToDb(playerId, hole, gross) {
           event: 'ace',
           payload: { player: pName, hole: hole, round: currentRound }
         }).catch(function() {});
-        // Fire push notification to all subscribers for this tournament
-        sb.functions.invoke('send-push', {
-          body: {
-            tournament_id: tournament.id,
-            type: 'hio',
-            player_name: pName,
-            hole: hole,
-            tournament_name: tournament.name,
-            icon_url: tournament.logo_url || '/icon-192.png',
-            slug: tournament.slug,
-          }
-        }).catch(function() {});
+        // Fire push notification (respects admin notify_hole_in_one setting)
+        if (_notifyHio) {
+          sb.functions.invoke('send-push', {
+            body: {
+              tournament_id: tournament.id,
+              type: 'hio',
+              player_name: pName,
+              hole: hole,
+              tournament_name: tournament.name,
+              icon_url: tournament.logo_url || '/icon-192.png',
+              slug: tournament.slug,
+            }
+          }).catch(function() {});
+        }
       }
     } catch (e) {
       queueOffline(playerId, hole, gross);

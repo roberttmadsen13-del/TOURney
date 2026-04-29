@@ -630,6 +630,34 @@ td.email a:hover{color:var(--gold);}
       </div>
     </div>
 
+    <div class="section" style="margin-top:2rem;">
+      <div class="section-header">
+        <div class="section-title">Notifications</div>
+        <div class="section-count">Push alerts sent to players' devices</div>
+      </div>
+      <div style="background:var(--card);border:1px solid var(--border);padding:1.5rem;display:flex;flex-direction:column;gap:1.25rem;">
+        <div style="display:flex;align-items:center;justify-content:space-between;">
+          <div>
+            <div style="font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.28em;text-transform:uppercase;color:var(--gold);">Hole-in-One Alert</div>
+            <div style="font-family:'Barlow',sans-serif;font-size:0.78rem;color:var(--muted);margin-top:0.25rem;">Send push notification + trigger celebration when an ace is scored</div>
+          </div>
+          <input type="checkbox" id="notifyHio" style="width:20px;height:20px;accent-color:var(--gold);cursor:pointer;flex-shrink:0;">
+        </div>
+        <div>
+          <div style="font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.28em;text-transform:uppercase;color:var(--gold);margin-bottom:0.5rem;">Celebration Style</div>
+          <select id="celebrationStyle" class="format-select">
+            <option value="full">Full Show — Confetti + Lasers + Sound</option>
+            <option value="confetti">Confetti Only</option>
+            <option value="off">Off</option>
+          </select>
+        </div>
+        <div style="display:flex;align-items:center;gap:1rem;">
+          <button class="save-formats-btn" style="margin-top:0;" onclick="saveNotifySettings()">Save Notification Settings</button>
+          <div id="notifySaveMsg" style="font-family:'DM Mono',monospace;font-size:0.48rem;letter-spacing:0.2em;text-transform:uppercase;color:#2a7a20;display:none;">Saved</div>
+        </div>
+      </div>
+    </div>
+
     </div><!-- /tabHomepage -->
 
   </div><!-- /main -->
@@ -716,7 +744,7 @@ function showAdmin(email) {
 
 // ── DATA ──────────────────────────────────────────────────────────
 async function loadAll() {
-  await Promise.all([loadPlayers(), loadRoundStates(), loadTeams(), loadPars(), loadFormats(), loadChallengersCaptain(), loadCourseNames(), loadDesignSettings(), loadChampions()]);
+  await Promise.all([loadPlayers(), loadRoundStates(), loadTeams(), loadPars(), loadFormats(), loadChallengersCaptain(), loadCourseNames(), loadDesignSettings(), loadChampions(), loadNotifySettings()]);
   buildParEditor();
 }
 
@@ -1598,6 +1626,30 @@ async function saveColors() {
   ].map(r => ({ ...r, tournament_id: _tid, updated_at: new Date().toISOString() }));
   await sb.from('settings').upsert(rows, { onConflict: 'tournament_id,key' });
   showToast('Colors saved. Refresh site to apply.');
+}
+
+async function loadNotifySettings() {
+  const { data } = await sb.from('settings').select('key,value').eq('tournament_id', _tid).in('key', ['notify_hole_in_one', 'celebration_style']);
+  const map = {};
+  (data || []).forEach(r => { map[r.key] = r.value; });
+  const cb = document.getElementById('notifyHio');
+  if (cb) cb.checked = map.notify_hole_in_one !== 'false';
+  const sel = document.getElementById('celebrationStyle');
+  if (sel && map.celebration_style) sel.value = map.celebration_style;
+}
+
+async function saveNotifySettings() {
+  const hio = document.getElementById('notifyHio')?.checked !== false;
+  const style = document.getElementById('celebrationStyle')?.value || 'full';
+  const rows = [
+    { key: 'notify_hole_in_one', value: String(hio), tournament_id: _tid, updated_at: new Date().toISOString() },
+    { key: 'celebration_style',  value: style,        tournament_id: _tid, updated_at: new Date().toISOString() },
+  ];
+  const { error } = await sb.from('settings').upsert(rows, { onConflict: 'tournament_id,key' });
+  if (error) { showToast('Error: ' + error.message); return; }
+  const msg = document.getElementById('notifySaveMsg');
+  if (msg) { msg.style.display = 'block'; setTimeout(() => msg.style.display = 'none', 2200); }
+  showToast('Notification settings saved.');
 }
 
 async function saveAbout() {
