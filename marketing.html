@@ -6,6 +6,7 @@
   <script>
     (function(){
       var h=location.hostname,s='.greenskeeper.studio',p='tourney.greenskeeper.studio';
+      if(h==='bova-app.vercel.app'){location.replace('https://bova.greenskeeper.studio/t/bova/');return;}
       if(h!==p&&h.endsWith(s)){location.replace('/t/'+h.slice(0,h.length-s.length)+'/');}
     })();
   </script>
@@ -109,7 +110,7 @@
     <p class="hero-sub">Give your players a real app — live leaderboard, push notifications, offline scoring, player directory. Fully branded with your colors and logo. Up in 15 minutes.</p>
     <div class="hero-actions">
       <a href="/create" class="btn-primary">Build Your Tournament →</a>
-      <a href="/t/bova/" class="btn-ghost">See a Live Demo</a>
+      <a href="/t/test-2026/" class="btn-ghost">See a Live Demo</a>
     </div>
     <div class="hero-note" style="font-size:.62rem;color:var(--gold);letter-spacing:.1em">your-tournament.greenskeeper.studio</div>
   </section>
