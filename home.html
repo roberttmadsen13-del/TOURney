@@ -748,8 +748,8 @@ window.addEventListener('scroll', () => { document.getElementById('mainNav').cla
       name: map.tourney_name ? map.tourney_name.replace(/<[^>]*>/g, '') : 'TOURney',
       short_name: map.tourney_name ? map.tourney_name.replace(/<[^>]*>/g, '').split(' ').slice(0,2).join(' ') : 'TOURney',
       description: map.homepage_subtitle || map.tourney_name?.replace(/<[^>]*>/g, '') || 'TOURney',
-      start_url: '/',
-      scope: '/',
+      start_url: location.origin + '/',
+      scope: location.origin + '/',
       display: 'standalone',
       background_color: map.color_bg || '#f5ede0',
       theme_color: map.color_ink || '#1a1008',
@@ -763,6 +763,8 @@ window.addEventListener('scroll', () => { document.getElementById('mainNav').cla
     const manifestUrl = URL.createObjectURL(blob);
     const link = document.querySelector('link[rel="manifest"]');
     if (link) link.href = manifestUrl;
+    const iconLink = document.querySelector('link[rel="icon"]');
+    if (iconLink) { iconLink.href = map.logo_url; iconLink.type = 'image/png'; }
   }
   // Hero background photo
   if (map.hero_photo_url) {

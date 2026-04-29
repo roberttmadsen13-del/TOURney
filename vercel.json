@@ -1,6 +1,12 @@
 {
   "redirects": [
-    { "source": "/t/bova-2026/:path*", "destination": "/t/bova/:path*", "permanent": true }
+    { "source": "/t/bova-2026/:path*", "destination": "/t/bova/:path*", "permanent": true },
+    {
+      "source": "/:path*",
+      "has": [{ "type": "host", "value": "bova-app.vercel.app" }],
+      "destination": "https://bova.greenskeeper.studio/t/bova/",
+      "permanent": true
+    }
   ],
   "rewrites": [
     { "source": "/",       "destination": "/marketing.html" },
