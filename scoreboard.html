@@ -993,7 +993,7 @@ function _subscribeTrash() {
           const who = post.player_name.split(' ')[0];
           showToast(`${who} is talking to you 👀`);
           if (typeof Notification !== 'undefined' && Notification.permission === 'granted') {
-            try { new Notification(_tournamentName, { body: `${post.player_name}: ${post.message}`, icon: '/icon.svg' }); } catch(e) {}
+            try { new Notification(_tournamentName, { body: `${post.player_name}: ${post.message}`, icon: '/icon-192.png' }); } catch(e) {}
           }
         }
       }

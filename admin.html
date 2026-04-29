@@ -605,6 +605,31 @@ td.email a:hover{color:var(--gold);}
       </div>
     </div>
 
+    <!-- HALL OF CHAMPIONS -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-title">Hall of Champions</div>
+        <div class="section-count">Past winners displayed on /champions</div>
+      </div>
+      <div style="background:var(--card);border:1px solid var(--border);padding:1.5rem;">
+        <div id="champEntries" style="display:flex;flex-direction:column;gap:0.75rem;margin-bottom:1.25rem;"></div>
+        <div style="border-top:1px solid var(--border);padding-top:1.25rem;">
+          <div style="font-family:'DM Mono',monospace;font-size:0.48rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);margin-bottom:0.75rem;">Add Year</div>
+          <div style="display:grid;grid-template-columns:1fr 2fr 1fr;gap:0.75rem;margin-bottom:0.75rem;">
+            <div class="fg"><label>Year</label><input type="number" id="champYear" placeholder="2025" min="1900" max="2100" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;"></div>
+            <div class="fg"><label>Individual Champion</label><input type="text" id="champIndivName" placeholder="First Last" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;"></div>
+            <div class="fg"><label>Score</label><input type="text" id="champIndivScore" placeholder="-12" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;"></div>
+          </div>
+          <div style="display:grid;grid-template-columns:2fr 1fr;gap:0.75rem;margin-bottom:0.75rem;">
+            <div class="fg"><label>Winning Team</label><input type="text" id="champTeamName" placeholder="Team Bova" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;"></div>
+            <div class="fg"><label>Team Score</label><input type="text" id="champTeamScore" placeholder="-24" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;"></div>
+          </div>
+          <div class="fg"><label>Notes <span style="opacity:0.5">(optional)</span></label><input type="text" id="champNotes" placeholder="Weather, format, memorable moment..." style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;"></div>
+          <button class="action-btn" style="padding:0.55rem 1.4rem;font-size:0.6rem;letter-spacing:0.15em;background:var(--gold);color:var(--ink);border-color:var(--gold);font-weight:700;margin-top:0.4rem;" onclick="addChampion()">Add to Hall</button>
+        </div>
+      </div>
+    </div>
+
     </div><!-- /tabHomepage -->
 
   </div><!-- /main -->
@@ -645,6 +670,7 @@ let teamAssignments = {};
 let coursePars = JSON.parse(JSON.stringify(DEFAULT_PARS));
 let roundFormats = JSON.parse(JSON.stringify(DEFAULT_FORMATS));
 let sortMode = 'name';
+let _champions = [];
 
 // ── AUTH ──────────────────────────────────────────────────────────
 async function doLogin() {
@@ -690,7 +716,7 @@ function showAdmin(email) {
 
 // ── DATA ──────────────────────────────────────────────────────────
 async function loadAll() {
-  await Promise.all([loadPlayers(), loadRoundStates(), loadTeams(), loadPars(), loadFormats(), loadChallengersCaptain(), loadCourseNames(), loadDesignSettings()]);
+  await Promise.all([loadPlayers(), loadRoundStates(), loadTeams(), loadPars(), loadFormats(), loadChallengersCaptain(), loadCourseNames(), loadDesignSettings(), loadChampions()]);
   buildParEditor();
 }
 
@@ -1211,6 +1237,72 @@ function subscribeRealtime() {
       showToast(`${p.first_name} ${p.last_name} just registered.`);
     })
     .subscribe();
+}
+
+function esc(s) {
+  return String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+
+// ── CHAMPIONS ─────────────────────────────────────────────────────
+async function loadChampions() {
+  const { data } = await sb.from('settings').select('value').eq('tournament_id', _tid).eq('key','past_champions').maybeSingle();
+  if (data?.value) try { _champions = JSON.parse(data.value); } catch { _champions = []; }
+  else _champions = [];
+  renderChampions();
+}
+
+function renderChampions() {
+  const el = document.getElementById('champEntries');
+  if (!el) return;
+  if (!_champions.length) {
+    el.innerHTML = '<div style="font-family:\'DM Mono\',monospace;font-size:0.5rem;letter-spacing:0.15em;color:var(--muted);padding:0.5rem 0;">No champions recorded yet.</div>';
+    return;
+  }
+  const sorted = [..._champions].sort((a, b) => b.year - a.year);
+  el.innerHTML = sorted.map(c => {
+    const idx = _champions.indexOf(c);
+    return `<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;padding:0.75rem;background:rgba(192,144,48,0.04);border:1px solid rgba(192,144,48,0.12);">
+      <div style="flex:1;min-width:0;">
+        <div style="font-family:'DM Mono',monospace;font-size:0.44rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--gold);margin-bottom:0.3rem;">${esc(c.year)}</div>
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:0.9rem;font-weight:600;color:var(--ink);">${esc(c.individual_name || '—')}${c.individual_score ? ' <span style="color:var(--muted);font-weight:400;">'+esc(c.individual_score)+'</span>' : ''}</div>
+        <div style="font-family:'DM Mono',monospace;font-size:0.45rem;color:var(--muted);margin-top:0.2rem;">${esc(c.team_name || '')}${c.team_score ? ' · '+esc(c.team_score) : ''}</div>
+        ${c.notes ? '<div style="font-size:0.75rem;color:var(--muted);font-style:italic;margin-top:0.25rem;">'+esc(c.notes)+'</div>' : ''}
+      </div>
+      <button onclick="removeChampion(${idx})" style="background:none;border:1px solid rgba(200,80,60,0.3);color:rgba(200,80,60,0.6);font-family:'Barlow Condensed',sans-serif;font-size:0.55rem;letter-spacing:0.1em;padding:0.3rem 0.6rem;cursor:pointer;flex-shrink:0;white-space:nowrap;">Remove</button>
+    </div>`;
+  }).join('');
+}
+
+async function addChampion() {
+  const year = parseInt(document.getElementById('champYear').value);
+  const name = document.getElementById('champIndivName').value.trim();
+  if (!year || !name) { showToast('Year and champion name required.'); return; }
+  _champions.push({
+    year,
+    individual_name: name,
+    individual_score: document.getElementById('champIndivScore').value.trim(),
+    team_name: document.getElementById('champTeamName').value.trim(),
+    team_score: document.getElementById('champTeamScore').value.trim(),
+    notes: document.getElementById('champNotes').value.trim(),
+  });
+  await saveChampions();
+  ['champYear','champIndivName','champIndivScore','champTeamName','champTeamScore','champNotes']
+    .forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
+}
+
+async function removeChampion(idx) {
+  if (!confirm('Remove this entry from the Hall of Champions?')) return;
+  _champions.splice(idx, 1);
+  await saveChampions();
+}
+
+async function saveChampions() {
+  await sb.from('settings').upsert(
+    { key: 'past_champions', value: JSON.stringify(_champions), updated_at: new Date().toISOString(), tournament_id: _tid },
+    { onConflict: 'tournament_id,key' }
+  );
+  renderChampions();
+  showToast('Hall of Champions updated.');
 }
 
 // ── TOAST ─────────────────────────────────────────────────────────
