@@ -84,32 +84,28 @@
 
 // ── DYNAMIC MANIFEST (reads uploaded logo from settings) ─────────
 (function () {
-  if (typeof supabase === 'undefined') return;
-  try {
-    var _sb = supabase.createClient(
-      'https://jllugkiojeoopitdvzsa.supabase.co',
-      'sb_publishable_DnBMNLaSu61ykJ6P_fI2fw_D9DdAScn'
-    );
-    Promise.resolve(window.tourney && window.tourney.ready ? window.tourney.ready : { tournament: null })
-      .then(function (ctx) {
-        var tid = ctx && ctx.tournament ? ctx.tournament.id : null;
-        var q = _sb.from('settings').select('key,value').in('key', ['logo_url','tourney_name','short_name']);
-        if (tid) q = q.eq('tournament_id', tid);
-        return q;
-      }).then(function (res) {
+  if (!window.tourney || !window.tourney.ready) return;
+  Promise.resolve(window.tourney.ready).then(function (ctx) {
+    var tournament = ctx && ctx.tournament ? ctx.tournament : null;
+    var tid = tournament ? tournament.id : null;
+    var _sb = window.tourney.db;
+    var q = _sb.from('settings').select('key,value').in('key', ['logo_url','color_bg','color_ink']);
+    if (tid) q = q.eq('tournament_id', tid);
+    return q.then(function (res) {
       var rows = res.data || [];
       var cfg = {};
       rows.forEach(function (r) { cfg[r.key] = r.value; });
       var iconUrl = cfg.logo_url || '/icon.svg';
       var iconType = iconUrl.endsWith('.svg') ? 'image/svg+xml' : 'image/png';
+      var origin = location.origin;
       var m = {
-        name: cfg.tourney_name || 'Bova Invitational',
-        short_name: cfg.short_name || 'Bova',
-        start_url: '/',
-        scope: '/',
+        name: tournament ? tournament.name : 'TOURney',
+        short_name: tournament ? (tournament.short_name || tournament.name.split(' ')[0]) : 'TOURney',
+        start_url: origin + '/',
+        scope: origin + '/',
         display: 'standalone',
-        background_color: '#f5ede0',
-        theme_color: '#1a1008',
+        background_color: cfg.color_bg || '#f5ede0',
+        theme_color: cfg.color_ink || '#1a1008',
         orientation: 'any',
         icons: [
           { src: iconUrl, sizes: '192x192', type: iconType, purpose: 'any maskable' },
@@ -119,6 +115,6 @@
       var blob = new Blob([JSON.stringify(m)], { type: 'application/json' });
       var link = document.querySelector('link[rel="manifest"]');
       if (link) link.href = URL.createObjectURL(blob);
-    }).catch(function () {});
-  } catch (e) {}
+    });
+  }).catch(function () {});
 })();
