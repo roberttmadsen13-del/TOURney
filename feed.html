@@ -231,6 +231,7 @@ a{color:inherit;text-decoration:none;}
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="/tourney-init.js"></script>
+<script src="/celebrate.js"></script>
 <script>
 const sb = window.tourney.db;
 
@@ -277,8 +278,14 @@ async function init() {
   subscribeRealtime(tournament.id);
   subscribeHoleInOne(tournament.id);
 
+  // HIO celebration from push notification click
+  const _sp = new URLSearchParams(window.location.search);
+  if (_sp.get('hio') === '1' && window.celebrate) {
+    window.celebrate.show({ name: _sp.get('player') || '', hole: _sp.get('hole') || '' });
+  }
+
   // Deep link: scroll to specific post
-  const targetId = new URLSearchParams(window.location.search).get('post');
+  const targetId = _sp.get('post');
   if (targetId) {
     setTimeout(() => {
       const el = document.getElementById(`post-${targetId}`);
@@ -486,7 +493,11 @@ function subscribeHoleInOne(tournamentId) {
           .single();
         if (data) playerName = `${data.first_name} ${data.last_name}`;
       }
-      showHoleInOne(playerName, score.hole ?? score.hole_number ?? '');
+      if (window.celebrate) {
+        window.celebrate.show({ name: playerName, hole: score.hole ?? score.hole_number ?? '' });
+      } else {
+        showHoleInOne(playerName, score.hole ?? score.hole_number ?? '');
+      }
     })
     .subscribe();
 }

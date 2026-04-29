@@ -1,6 +1,7 @@
-const CACHE = 'tourney-v8';
+const CACHE = 'tourney-v9';
 const PRECACHE = [
   '/',
+  '/celebrate.js',
   '/home.html',
   '/admin.html',
   '/scoreboard.html',
@@ -23,25 +24,34 @@ const PRECACHE = [
 
 self.addEventListener('push', (event) => {
   const data = event.data?.json() || {};
-  const title = data.title || 'Bova Invitational';
-  event.waitUntil(
-    self.registration.showNotification(title, {
-      body: data.body || '',
-      icon: '/icon-192.png',
-      badge: '/icon-192.png',
-      data: { url: data.url || '/feed' },
-      vibrate: [200, 100, 200],
-    })
-  );
+  const title = data.title || 'Tournament Alert';
+  const opts = {
+    body: data.body || '',
+    icon: data.icon || '/icon-192.png',
+    badge: '/icon-192.png',
+    data: { url: data.url || '/feed', type: data.type || '', player: data.player || '', hole: data.hole || '' },
+    vibrate: [200, 100, 200, 100, 400],
+    tag: data.tag || 'tourney',
+    renotify: true,
+  };
+  if (data.image) opts.image = data.image;
+  event.waitUntil(self.registration.showNotification(title, opts));
 });
 
 self.addEventListener('notificationclick', (event) => {
   event.notification.close();
-  const url = event.notification.data?.url || '/feed';
+  const d = event.notification.data || {};
+  let url = d.url || '/feed';
+  if (d.type === 'hio') {
+    const sep = url.includes('?') ? '&' : '?';
+    url += sep + 'hio=1' +
+      (d.player ? '&player=' + encodeURIComponent(d.player) : '') +
+      (d.hole   ? '&hole='   + encodeURIComponent(d.hole)   : '');
+  }
   event.waitUntil(
-    clients.matchAll({ type: 'window', includeUncontrolled: true }).then(windowClients => {
-      const existing = windowClients.find(c => c.url.includes('/feed'));
-      if (existing) return existing.focus().then(c => c.navigate(url));
+    clients.matchAll({ type: 'window', includeUncontrolled: true }).then(wins => {
+      const match = wins.find(w => w.url.includes('/feed') || w.url.includes('/scoreboard'));
+      if (match) return match.focus().then(w => w.navigate(url));
       return clients.openWindow(url);
     })
   );

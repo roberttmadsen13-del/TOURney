@@ -1,7 +1,46 @@
 (function () {
+  const VAPID_PUBLIC = 'BBzgY-W8AYtW3QEsbKDQwIjyoF53lDg0pOEnbpFIYwy-0VO1RuSsagBiolRyQGZvyYzHCURc0-0CfZ-VmcfAi3w';
+
+  function _urlB64ToUint8(b64) {
+    const pad = '='.repeat((4 - b64.length % 4) % 4);
+    const raw = atob((b64 + pad).replace(/-/g, '+').replace(/_/g, '/'));
+    return Uint8Array.from([...raw].map(c => c.charCodeAt(0)));
+  }
+
+  async function _subscribePush(sw, tournamentId) {
+    if (!('PushManager' in window) || !tournamentId) return;
+    try {
+      const perm = await Notification.requestPermission();
+      if (perm !== 'granted') return;
+      const existing = await sw.pushManager.getSubscription();
+      const sub = existing || await sw.pushManager.subscribe({
+        userVisibleOnly: true,
+        applicationServerKey: _urlB64ToUint8(VAPID_PUBLIC),
+      });
+      const j = sub.toJSON();
+      const sb = window.tourney?.db;
+      if (!sb) return;
+      await sb.from('push_subscriptions').upsert({
+        tournament_id: tournamentId,
+        endpoint: j.endpoint,
+        p256dh: j.keys.p256dh,
+        auth: j.keys.auth,
+      }, { onConflict: 'endpoint' });
+    } catch (_) {}
+  }
+
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-      navigator.serviceWorker.register('/sw.js').catch(() => {});
+      navigator.serviceWorker.register('/sw.js')
+        .then(sw => {
+          // Subscribe after tournament resolves so we have tournament_id
+          if (window.tourney && window.tourney.ready) {
+            Promise.resolve(window.tourney.ready).then(ctx => {
+              _subscribePush(sw, ctx?.tournament?.id);
+            }).catch(() => {});
+          }
+        })
+        .catch(() => {});
     });
   }
 

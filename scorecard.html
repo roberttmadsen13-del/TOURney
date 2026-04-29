@@ -1453,6 +1453,18 @@ async function autoSaveToDb(playerId, hole, gross) {
           event: 'ace',
           payload: { player: pName, hole: hole, round: currentRound }
         }).catch(function() {});
+        // Fire push notification to all subscribers for this tournament
+        sb.functions.invoke('send-push', {
+          body: {
+            tournament_id: tournament.id,
+            type: 'hio',
+            player_name: pName,
+            hole: hole,
+            tournament_name: tournament.name,
+            icon_url: tournament.logo_url || '/icon-192.png',
+            slug: tournament.slug,
+          }
+        }).catch(function() {});
       }
     } catch (e) {
       queueOffline(playerId, hole, gross);
