@@ -403,11 +403,7 @@ function esc(s) {
 // ── AUTH GUARD ───────────────────────────────────────────────────
 (async function authGuard() {
   const { data } = await sb.auth.getSession();
-  if (!data?.session?.user) {
-    window.location.href = '/login?redirect=/scorecard';
-    return;
-  }
-  // Store email for backward compat with auto-detect
+  if (!data?.session?.user) return;
   const email = data.session.user.email;
   if (email) localStorage.setItem('bova_profile_email', email);
   // Add sign out to nav

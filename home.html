@@ -536,7 +536,7 @@ html { scroll-behavior: smooth; }
         <div class="fi"><div class="fi-head"><div class="fi-day">Day 2 &mdash; Back</div><div class="fi-format">Shambles</div></div><div class="fi-body">Scramble tee shot only. Each player completes the hole individually from the best drive. Individual scores recorded — all count toward the team total.</div></div>
         <div class="fi"><div class="fi-head"><div class="fi-day">Day 3 &mdash; Front</div><div class="fi-format">Best Ball</div></div><div class="fi-body">Partners play their own ball — lower score per hole counts. Pairs assigned by handicap tier. The team benefits from the stronger partner on every hole.</div></div>
         <div class="fi"><div class="fi-head"><div class="fi-day">Day 3 &mdash; Back</div><div class="fi-format">Individual Stroke Play</div></div><div class="fi-body">Individual stroke play on the final nine — but every score still feeds the team. The back nine decides both the individual champion and the winning team simultaneously.</div></div>
-        <div class="format-note"><strong>Every format feeds the team score.</strong> Even the par 3 day and the individual back nine on Day Three — every stroke counts for your team. Team Bova is captained by Chris Bova. The opposing captain is set closer to the tournament. The winning team is determined by cumulative score across all 54 holes.</div>
+        <div class="format-note" id="formatNote"><strong>Every format feeds the team score.</strong> The winning team is determined by cumulative score across all holes.</div>
       </div>
     </div>
   </div>
@@ -717,7 +717,7 @@ window.addEventListener('scroll', () => { document.getElementById('mainNav').cla
 // Load admin-configured homepage content
 (async function loadHomepageContent() {
   const { tournament } = await window.tourney.ready;
-  const keys = ['tourney_name','tourney_year','tourney_location','reg_open','reg_show_dates','reg_show_why_me','reg_show_hat','homepage_subtitle','homepage_details','homepage_about','logo_url','hero_photo_url','about_photo_url','about_stat_teams','about_stat_days','about_stat_holes','reg_bullet_1','reg_bullet_2','reg_bullet_3','reg_max_players','color_primary','color_ink','color_bg','hero_cta_primary'];
+  const keys = ['tourney_name','tourney_year','tourney_location','reg_open','reg_show_dates','reg_show_why_me','reg_show_hat','homepage_subtitle','homepage_details','homepage_about','logo_url','hero_photo_url','about_photo_url','about_stat_teams','about_stat_days','about_stat_holes','reg_bullet_1','reg_bullet_2','reg_bullet_3','reg_max_players','color_primary','color_ink','color_bg','hero_cta_primary','team_a_name','team_b_name','homepage_format_note'];
   const { data } = await sb.from('settings').select('key,value').eq('tournament_id', tournament.id).in('key', keys);
   if (!data) return;
   const map = {};
@@ -819,6 +819,20 @@ window.addEventListener('scroll', () => { document.getElementById('mainNav').cla
   if (map.reg_show_hat === 'false') {
     const el = document.querySelector('.hat-section');
     if (el) el.style.display = 'none';
+  }
+  // Dynamic apple-mobile-web-app-title
+  const appleMeta = document.querySelector('meta[name="apple-mobile-web-app-title"]');
+  if (appleMeta) appleMeta.setAttribute('content', tournament.short_name || tournament.name.split(/\s+/)[0]);
+  // Format note — use custom value if set, otherwise generic with team names
+  const fnEl = document.getElementById('formatNote');
+  if (fnEl) {
+    if (map.homepage_format_note) {
+      fnEl.innerHTML = map.homepage_format_note;
+    } else {
+      const aN = map.team_a_name || 'Team A';
+      const bN = map.team_b_name || 'Team B';
+      fnEl.innerHTML = `<strong>Every format feeds the team score.</strong> ${aN} vs ${bN} — the winning team is determined by cumulative score across all holes.`;
+    }
   }
 })();
 
@@ -957,7 +971,7 @@ window.addEventListener('scroll', () => {
 // ── Feature 11: Hero Scoreboard ──────────────────────────────────────────────
 async function loadHeroScoreboard() {
   const { tournament } = await window.tourney.ready;
-  const [pRes, sRes, taRes, p1Res, p2Res, p3Res, capRes] = await Promise.all([
+  const [pRes, sRes, taRes, p1Res, p2Res, p3Res, capRes, tARes, tBRes] = await Promise.all([
     sb.from('players').select('id,first_name,last_name,handicap').eq('tournament_id', tournament.id),
     sb.from('scores').select('player_id,round,hole,gross_score').eq('tournament_id', tournament.id),
     sb.from('settings').select('value').eq('tournament_id', tournament.id).eq('key','team_assignments').maybeSingle(),
@@ -965,6 +979,8 @@ async function loadHeroScoreboard() {
     sb.from('settings').select('value').eq('tournament_id', tournament.id).eq('key','pars_day2').maybeSingle(),
     sb.from('settings').select('value').eq('tournament_id', tournament.id).eq('key','pars_day3').maybeSingle(),
     sb.from('settings').select('value').eq('tournament_id', tournament.id).eq('key','challengers_captain').maybeSingle(),
+    sb.from('settings').select('value').eq('tournament_id', tournament.id).eq('key','team_a_name').maybeSingle(),
+    sb.from('settings').select('value').eq('tournament_id', tournament.id).eq('key','team_b_name').maybeSingle(),
   ]);
 
   const players = pRes.data || [];
@@ -972,7 +988,9 @@ async function loadHeroScoreboard() {
   let teamAssignments = {};
   try { teamAssignments = JSON.parse(taRes.data?.value || '{}'); } catch {}
   const parsDay = [p1Res,p2Res,p3Res].map(r => { try { return JSON.parse(r.data?.value||'[]'); } catch { return []; } });
-  const challengersCaptain = capRes.data?.value || 'TBD';
+  const challengersCaptain = capRes.data?.value || '';
+  const teamAName = tARes.data?.value || 'Team A';
+  const teamBName = tBRes.data?.value || 'Team B';
 
   const HANDICAP_STROKES = {scratch:0,eagle:4,birdie:8,bogey:12,pretender:16,hacker:20};
 
@@ -1011,16 +1029,16 @@ async function loadHeroScoreboard() {
 
   bannersEl.innerHTML = `
     <div style="background:#0e0b06;padding:1.5rem;border-right:1px solid rgba(192,144,48,0.1);">
-      <div style="font-family:'DM Mono',monospace;font-size:0.45rem;letter-spacing:0.3em;text-transform:uppercase;color:rgba(192,144,48,0.5);margin-bottom:0.3rem;">Team One</div>
-      <div style="font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:900;color:#f0e6cc;">Team <em style="color:#c09030;">Bova</em></div>
+      <div style="font-family:'DM Mono',monospace;font-size:0.45rem;letter-spacing:0.3em;text-transform:uppercase;color:rgba(192,144,48,0.5);margin-bottom:0.3rem;">Team A</div>
+      <div style="font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:900;color:#f0e6cc;">${teamAName}</div>
       <div style="font-family:'Playfair Display',serif;font-size:2.2rem;font-weight:900;color:${totA<=totB?'#c09030':'rgba(240,230,204,0.4)'};margin-top:0.5rem;">${fmtNet(totA)}</div>
       <div style="font-family:'DM Mono',monospace;font-size:0.42rem;letter-spacing:0.15em;text-transform:uppercase;color:rgba(240,230,204,0.3);margin-top:0.2rem;">${teamA.length} players</div>
     </div>
     <div style="background:#0e0b06;padding:1.5rem;">
-      <div style="font-family:'DM Mono',monospace;font-size:0.45rem;letter-spacing:0.3em;text-transform:uppercase;color:rgba(74,106,138,0.7);margin-bottom:0.3rem;">Team Two</div>
-      <div style="font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:900;color:#f0e6cc;">The <em style="color:#4a6a8a;">Challengers</em></div>
+      <div style="font-family:'DM Mono',monospace;font-size:0.45rem;letter-spacing:0.3em;text-transform:uppercase;color:rgba(74,106,138,0.7);margin-bottom:0.3rem;">Team B</div>
+      <div style="font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:900;color:#f0e6cc;">${teamBName}</div>
       <div style="font-family:'Playfair Display',serif;font-size:2.2rem;font-weight:900;color:${totB<totA?'#c09030':'rgba(240,230,204,0.4)'};margin-top:0.5rem;">${fmtNet(totB)}</div>
-      <div style="font-family:'DM Mono',monospace;font-size:0.42rem;letter-spacing:0.15em;text-transform:uppercase;color:rgba(240,230,204,0.3);margin-top:0.2rem;">${teamB.length} players · Capt. ${challengersCaptain}</div>
+      <div style="font-family:'DM Mono',monospace;font-size:0.42rem;letter-spacing:0.15em;text-transform:uppercase;color:rgba(240,230,204,0.3);margin-top:0.2rem;">${teamB.length} players${challengersCaptain ? ' · Capt. ' + challengersCaptain : ''}</div>
     </div>`;
 
   const ranked = players
@@ -1035,7 +1053,7 @@ async function loadHeroScoreboard() {
   }
 
   lbEl.innerHTML = `<div style="border-top:1px solid rgba(192,144,48,0.15);">${ranked.map((p,i) => {
-    const team = teamAssignments[p.id]==='A'?'Bova':teamAssignments[p.id]==='B'?'Challengers':'—';
+    const team = teamAssignments[p.id]==='A' ? teamAName : teamAssignments[p.id]==='B' ? teamBName : '—';
     return `<div style="display:flex;align-items:center;gap:1rem;padding:0.75rem 0;border-bottom:1px solid rgba(192,144,48,0.08);">
       <div style="font-family:'DM Mono',monospace;font-size:0.55rem;color:rgba(240,230,204,0.25);width:1.4rem;text-align:right;">${i+1}</div>
       <div style="flex:1;">

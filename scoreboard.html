@@ -351,14 +351,10 @@ let _tournamentName = 'TOURney';
   if (bEl) bEl.textContent = map.team_b_name || 'Team Two';
 })();
 
-// ── AUTH GUARD ───────────────────────────────────────────────────
+// ── OPTIONAL AUTH (public page — show user controls if logged in) ─
 (async function authGuard() {
   const { data } = await sb.auth.getSession();
-  if (!data?.session?.user) {
-    window.location.href = '/login?redirect=/scoreboard';
-    return;
-  }
-  // Show user indicator in nav
+  if (!data?.session?.user) return;
   const email = data.session.user.email;
   const navRight = document.querySelector('.nav-right');
   if (navRight) {

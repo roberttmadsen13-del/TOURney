@@ -550,6 +550,7 @@ td.email a:hover{color:var(--gold);}
       </div>
       <div style="display:grid;gap:1rem;background:var(--card);border:1px solid var(--border);padding:1.5rem;">
         <div class="fg"><label>About Text</label><textarea id="lpAboutText" rows="6" placeholder="Tell the story of your tournament..." style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;resize:vertical;"></textarea></div>
+        <div class="fg"><label>Format Note</label><textarea id="lpFormatNote" rows="3" placeholder="Every format feeds the team score. Team A vs Team B — cumulative score across all holes decides the winner." style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;resize:vertical;"></textarea></div>
         <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;">
           <div class="fg"><label>Days Stat</label><input type="text" id="dsStatDays" placeholder="3" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;"></div>
           <div class="fg"><label>Teams Stat</label><input type="text" id="dsStatTeams" placeholder="2" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;"></div>
@@ -1429,7 +1430,7 @@ function switchAdminTab(tab) {
 //   homepage_about→.about-body, logo_url→nav img + PWA manifest icon
 // Pending wire-up in index.html: all other keys below
 const DS_ALL_KEYS = [
-  'homepage_subtitle','homepage_details','homepage_about',
+  'homepage_subtitle','homepage_details','homepage_about','homepage_format_note',
   'logo_url','hero_photo_url','about_photo_url',
   'tourney_name','tourney_year','tourney_location',
   'hero_cta_primary','color_primary','color_ink','color_bg',
@@ -1442,7 +1443,8 @@ const DS_ALL_KEYS = [
 const DS_FIELD_MAP = {
   homepage_subtitle: 'lpTourneyName',
   homepage_details:  'lpHeroMeta',
-  homepage_about:    'lpAboutText',
+  homepage_about:        'lpAboutText',
+  homepage_format_note:  'lpFormatNote',
   tourney_name:      'dsName',
   tourney_year:      'dsYear',
   tourney_location:  'dsLocation',
@@ -1508,7 +1510,8 @@ async function saveColors() {
 
 async function saveAbout() {
   const rows = [
-    { key:'homepage_about',   value: document.getElementById('lpAboutText')?.value || '' },
+    { key:'homepage_about',        value: document.getElementById('lpAboutText')?.value || '' },
+    { key:'homepage_format_note', value: document.getElementById('lpFormatNote')?.value || '' },
     { key:'about_stat_days',  value: document.getElementById('dsStatDays')?.value || '' },
     { key:'about_stat_teams', value: document.getElementById('dsStatTeams')?.value || '' },
     { key:'about_stat_holes', value: document.getElementById('dsStatHoles')?.value || '' },
