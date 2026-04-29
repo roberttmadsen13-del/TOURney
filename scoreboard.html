@@ -464,7 +464,7 @@ async function init() {
   render();
   updateTimestamp();
   subscribeRealtime();
-  initTrashTalk();
+  initTrashTalk(tournament.id);
 }
 
 
@@ -888,6 +888,7 @@ function showToast(msg) {
 // ── TRASH TALK ────────────────────────────────────────────────────
 let _trashPosts = [];
 let _trashPlayer = null;
+let _tournamentId = null;
 
 function _esc(s) {
   return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
@@ -963,6 +964,7 @@ async function postTrashTalk() {
   if (!_trashPlayer) { showToast('Log in on Profile page first to post.'); return; }
   btn.disabled = true;
   const { error } = await sb.from('trash_talk').insert({
+    tournament_id: _tournamentId,
     player_name: `${_trashPlayer.first_name} ${_trashPlayer.last_name}`,
     team: teamAssignments[_trashPlayer.id] || null,
     message: msg,
@@ -977,8 +979,8 @@ async function postTrashTalk() {
 }
 
 function _subscribeTrash() {
-  sb.channel('trash-talk-realtime')
-    .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'trash_talk' }, payload => {
+  sb.channel(`trash-talk-${_tournamentId}`)
+    .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'trash_talk', filter: `tournament_id=eq.${_tournamentId}` }, payload => {
       const post = payload.new;
       _trashPosts.unshift(post);
       if (_trashPosts.length > 50) _trashPosts.pop();
@@ -997,13 +999,14 @@ function _subscribeTrash() {
     .subscribe();
 }
 
-async function initTrashTalk() {
+async function initTrashTalk(tournamentId) {
+  _tournamentId = tournamentId;
   const email = localStorage.getItem('bova_profile_email');
   if (email) _trashPlayer = players.find(p => p.email && p.email.toLowerCase() === email.toLowerCase()) || null;
   _buildTagBtns();
   const ta = document.getElementById('trashInput');
   if (ta) ta.addEventListener('input', _updateChar);
-  const { data } = await sb.from('trash_talk').select('*').order('created_at', { ascending: false }).limit(50);
+  const { data } = await sb.from('trash_talk').select('*').eq('tournament_id', _tournamentId).order('created_at', { ascending: false }).limit(50);
   _trashPosts = data || [];
   _renderTrash();
   _subscribeTrash();
