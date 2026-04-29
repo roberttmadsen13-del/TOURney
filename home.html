@@ -717,7 +717,7 @@ window.addEventListener('scroll', () => { document.getElementById('mainNav').cla
 // Load admin-configured homepage content
 (async function loadHomepageContent() {
   const { tournament } = await window.tourney.ready;
-  const keys = ['tourney_name','tourney_year','tourney_location','reg_open','reg_show_dates','reg_show_why_me','reg_show_hat','homepage_subtitle','homepage_details','homepage_about','logo_url','hero_photo_url','about_photo_url','about_stat_teams','about_stat_days','about_stat_holes','reg_bullet_1','reg_bullet_2','reg_bullet_3','reg_max_players','color_primary','color_ink','color_bg','hero_cta_primary','team_a_name','team_b_name','homepage_format_note'];
+  const keys = ['tourney_name','tourney_year','tourney_location','reg_open','reg_show_dates','reg_show_why_me','reg_show_hat','homepage_subtitle','homepage_details','homepage_about','logo_url','hero_photo_url','about_photo_url','about_stat_teams','about_stat_days','about_stat_holes','reg_bullet_1','reg_bullet_2','reg_bullet_3','reg_max_players','color_primary','color_ink','color_bg','hero_cta_primary','team_a_name','team_b_name','homepage_format_note','team_a_captain','team_b_captain'];
   const { data } = await sb.from('settings').select('key,value').eq('tournament_id', tournament.id).in('key', keys);
   if (!data) return;
   const map = {};
@@ -833,6 +833,34 @@ window.addEventListener('scroll', () => { document.getElementById('mainNav').cla
       const bN = map.team_b_name || 'Team B';
       fnEl.innerHTML = `<strong>Every format feeds the team score.</strong> ${aN} vs ${bN} — the winning team is determined by cumulative score across all holes.`;
     }
+  }
+  // Team names in the teams section
+  const tbNames = document.querySelectorAll('.tb-name');
+  if (map.team_a_name && tbNames[0]) tbNames[0].textContent = map.team_a_name;
+  if (map.team_b_name && tbNames[1]) tbNames[1].textContent = map.team_b_name;
+  // Team captains
+  const tbCaptains = document.querySelectorAll('.tb-captain-name');
+  if (map.team_a_captain && tbCaptains[0]) tbCaptains[0].textContent = map.team_a_captain;
+  if (map.team_b_captain && tbCaptains[1]) tbCaptains[1].textContent = map.team_b_captain;
+  // Hero meta fallback — build from individual stats if homepage_details not set
+  if (!map.homepage_details) {
+    const metaEl = document.querySelector('.hero-meta');
+    if (metaEl) {
+      const days  = map.about_stat_days  || '3';
+      const teams = map.about_stat_teams || '2';
+      const holes = map.about_stat_holes || '54';
+      const year  = map.tourney_year     || new Date().getFullYear();
+      metaEl.textContent = `${days} Days · ${teams} Teams · ${holes} Holes · ${year}`;
+    }
+  }
+  // Footer
+  const wordmark = document.querySelector('.footer-wordmark');
+  if (wordmark && map.tourney_name) wordmark.textContent = map.tourney_name.replace(/<[^>]*>/g, '');
+  const copy = document.querySelector('.footer-copy');
+  if (copy) {
+    const year = map.tourney_year || new Date().getFullYear();
+    const loc  = map.tourney_location || '';
+    copy.textContent = loc ? `${year} · ${loc}` : String(year);
   }
 })();
 
