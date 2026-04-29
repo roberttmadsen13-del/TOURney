@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -57,7 +57,7 @@
     /* ─── FEATURES ─── */
     .features{background:rgba(245,237,224,0.02);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
     .feat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;margin-top:3.5rem}
-    @media(max-width:760px){.feat-grid{grid-template-columns:1fr}}
+    @media(max-width:760px){.feat-grid{grid-template-columns:1fr}.pricing-grid{grid-template-columns:1fr!important}}
     .feat-card{background:var(--surface);padding:2rem 1.75rem;border:1px solid var(--border)}
     .feat-icon{font-size:1.5rem;margin-bottom:1rem}
     .feat-title{font-size:1.3rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:.6rem}
@@ -200,31 +200,65 @@
   <section style="border-top:1px solid var(--border)">
     <div class="inner">
       <span class="s-eyebrow">Pricing</span>
-      <h2 class="s-title">Pay Per Player.<br><em>No Subscriptions.</em></h2>
-      <p class="s-sub">No monthly fee. No seat license. You pay per player per round — everything included. Infrastructure, hosting, SSL, storage, realtime scoring.</p>
-      <div class="feat-grid" style="margin-top:3rem">
-        <div class="feat-card">
-          <div class="feat-icon">🍺</div>
-          <div class="feat-title">Relaxed</div>
-          <div class="feat-body" style="margin-bottom:1.25rem">Handicap ranges instead of official indexes. No GHIN required. Perfect for friend groups, company outings, annual invitational traditions.</div>
-          <div style="font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.15em;color:var(--gold)">EARLY ACCESS — <a href="mailto:rob@greenskeeper.studio" style="color:var(--gold)">GET IN TOUCH</a></div>
+      <h2 class="s-title">Less Than a Sleeve<br><em>of Balls a Month.</em></h2>
+      <p class="s-sub">Simple monthly subscription. Everything included — hosting, SSL, realtime scoring, push notifications, unlimited players. No per-player fees. No event charges.</p>
+
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:2px;margin-top:3rem" class="pricing-grid">
+
+        <!-- Starter -->
+        <div class="feat-card" style="display:flex;flex-direction:column">
+          <div style="font-family:'DM Mono',monospace;font-size:.52rem;letter-spacing:.28em;text-transform:uppercase;color:var(--muted);margin-bottom:.85rem">Starter</div>
+          <div style="font-size:3rem;font-weight:700;line-height:1;color:var(--cream);margin-bottom:.25rem">$3<span style="font-size:1rem;color:var(--muted);font-weight:400">/mo</span></div>
+          <div style="font-family:'DM Mono',monospace;font-size:.58rem;color:var(--muted);letter-spacing:.06em;margin-bottom:1.75rem;line-height:1.6">For annual friend-group invitationals. Less than a sleeve of balls.</div>
+          <ul style="list-style:none;display:flex;flex-direction:column;gap:.7rem;flex:1;margin-bottom:2rem">
+            <li style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--muted);letter-spacing:.06em;display:flex;gap:.6rem"><span style="color:var(--gold)">✓</span> 1 round per tournament</li>
+            <li style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--muted);letter-spacing:.06em;display:flex;gap:.6rem"><span style="color:var(--gold)">✓</span> Up to 5 active tournaments/month</li>
+            <li style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--muted);letter-spacing:.06em;display:flex;gap:.6rem"><span style="color:var(--gold)">✓</span> Custom subdomain</li>
+            <li style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--muted);letter-spacing:.06em;display:flex;gap:.6rem"><span style="color:var(--gold)">✓</span> Full white-label — no TOURney branding</li>
+            <li style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--muted);letter-spacing:.06em;display:flex;gap:.6rem"><span style="color:var(--gold)">✓</span> All 5 scoring formats</li>
+            <li style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--muted);letter-spacing:.06em;display:flex;gap:.6rem"><span style="color:var(--gold)">✓</span> Push notifications</li>
+            <li style="font-family:'DM Mono',monospace;font-size:.6rem;color:rgba(245,237,224,0.2);letter-spacing:.06em;display:flex;gap:.6rem"><span>–</span> No historical data carry-forward</li>
+          </ul>
+          <a href="/create" style="display:block;text-align:center;padding:.75rem 1.25rem;border:1px solid var(--border);color:var(--cream);font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;text-decoration:none;border-radius:3px;transition:all .15s" onmouseover="this.style.borderColor='var(--gold)';this.style.color='var(--gold)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--cream)'">Get Started →</a>
         </div>
-        <div class="feat-card" style="border-color:var(--gold);position:relative">
+
+        <!-- Pro -->
+        <div class="feat-card" style="border-color:var(--gold);position:relative;display:flex;flex-direction:column">
           <div style="position:absolute;top:-1px;right:1.25rem;background:var(--gold);color:var(--ink);font-family:'DM Mono',monospace;font-size:.48rem;letter-spacing:.2em;padding:.2rem .6rem;font-weight:700">MOST POPULAR</div>
-          <div class="feat-icon">🏅</div>
-          <div class="feat-title">Competitive</div>
-          <div class="feat-body" style="margin-bottom:1.25rem">Real handicap indexes. Full stroke and net scoring. For club events, association tournaments, and anyone who takes the game seriously.</div>
-          <div style="font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.15em;color:var(--gold)">EARLY ACCESS — <a href="mailto:rob@greenskeeper.studio" style="color:var(--gold)">GET IN TOUCH</a></div>
+          <div style="font-family:'DM Mono',monospace;font-size:.52rem;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);margin-bottom:.85rem">Pro</div>
+          <div style="font-size:3rem;font-weight:700;line-height:1;color:var(--cream);margin-bottom:.25rem">$19<span style="font-size:1rem;color:var(--muted);font-weight:400">/mo</span></div>
+          <div style="font-family:'DM Mono',monospace;font-size:.58rem;color:var(--muted);letter-spacing:.06em;margin-bottom:1.75rem;line-height:1.6">For club events, association tournaments, and serious recurring organizers.</div>
+          <ul style="list-style:none;display:flex;flex-direction:column;gap:.7rem;flex:1;margin-bottom:2rem">
+            <li style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--muted);letter-spacing:.06em;display:flex;gap:.6rem"><span style="color:var(--gold)">✓</span> Up to 3 rounds per tournament</li>
+            <li style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--muted);letter-spacing:.06em;display:flex;gap:.6rem"><span style="color:var(--gold)">✓</span> Up to 15 active tournaments/month</li>
+            <li style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--muted);letter-spacing:.06em;display:flex;gap:.6rem"><span style="color:var(--gold)">✓</span> Everything in Starter</li>
+            <li style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--muted);letter-spacing:.06em;display:flex;gap:.6rem"><span style="color:var(--gold)">✓</span> Organizer analytics dashboard</li>
+            <li style="font-family:'DM Mono',monospace;font-size:.6rem;color:rgba(245,237,224,0.2);letter-spacing:.06em;display:flex;gap:.6rem"><span>–</span> No historical data carry-forward</li>
+          </ul>
+          <a href="/create" style="display:block;text-align:center;padding:.75rem 1.25rem;background:var(--gold);color:var(--ink);font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;text-decoration:none;border-radius:3px;transition:background .15s" onmouseover="this.style.background='#d4a035'" onmouseout="this.style.background='var(--gold)'">Get Started →</a>
         </div>
-        <div class="feat-card">
-          <div class="feat-icon">🌐</div>
-          <div class="feat-title">Always Included</div>
-          <div class="feat-body">Your own URL at <span style="color:var(--gold)">your-name.greenskeeper.studio</span>. Custom logo and colors. Unlimited players. Unlimited rounds. Full admin panel. Zero DevOps.</div>
+
+        <!-- Club -->
+        <div class="feat-card" style="display:flex;flex-direction:column">
+          <div style="font-family:'DM Mono',monospace;font-size:.52rem;letter-spacing:.28em;text-transform:uppercase;color:var(--muted);margin-bottom:.85rem">Club</div>
+          <div style="font-size:3rem;font-weight:700;line-height:1;color:var(--cream);margin-bottom:.25rem">$49<span style="font-size:1rem;color:var(--muted);font-weight:400">/mo</span></div>
+          <div style="font-family:'DM Mono',monospace;font-size:.58rem;color:var(--muted);letter-spacing:.06em;margin-bottom:1.75rem;line-height:1.6">For institutions, recurring leagues, and tournaments that build history.</div>
+          <ul style="list-style:none;display:flex;flex-direction:column;gap:.7rem;flex:1;margin-bottom:2rem">
+            <li style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--muted);letter-spacing:.06em;display:flex;gap:.6rem"><span style="color:var(--gold)">✓</span> Unlimited rounds per tournament</li>
+            <li style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--muted);letter-spacing:.06em;display:flex;gap:.6rem"><span style="color:var(--gold)">✓</span> Unlimited active tournaments</li>
+            <li style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--muted);letter-spacing:.06em;display:flex;gap:.6rem"><span style="color:var(--gold)">✓</span> Everything in Pro</li>
+            <li style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--muted);letter-spacing:.06em;display:flex;gap:.6rem"><span style="color:var(--gold)">✓</span> Priority support (direct line to Rob)</li>
+            <li style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--muted);letter-spacing:.06em;display:flex;gap:.6rem"><span style="color:var(--gold)">✓</span> Custom domain support</li>
+            <li style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--cream);letter-spacing:.06em;display:flex;gap:.6rem;padding:.5rem .6rem;background:rgba(192,144,48,0.06);border:1px solid rgba(192,144,48,0.2);border-radius:2px;margin-top:.25rem"><span style="color:var(--gold)">★</span> <span><strong style="color:var(--gold)">Full historical carry-forward</strong> — player records, champion wall, year-over-year stats persist automatically. Exclusive to Club.</span></li>
+          </ul>
+          <a href="/create" style="display:block;text-align:center;padding:.75rem 1.25rem;border:1px solid var(--border);color:var(--cream);font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;text-decoration:none;border-radius:3px;transition:all .15s" onmouseover="this.style.borderColor='var(--gold)';this.style.color='var(--gold)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--cream)'">Get Started →</a>
         </div>
+
       </div>
-      <div style="margin-top:2rem;font-family:'DM Mono',monospace;font-size:.62rem;color:var(--muted);letter-spacing:.08em;line-height:1.8">
-        We're in early access — pricing finalized after beta. Tell us about your event and we'll work something out.<br>
-        <a href="mailto:rob@greenskeeper.studio" style="color:var(--gold)">rob@greenskeeper.studio</a>
+
+      <div style="margin-top:2rem;font-family:'DM Mono',monospace;font-size:.62rem;color:var(--muted);letter-spacing:.08em;line-height:1.8;text-align:center">
+        Golf Genius charges $1,300/year. TOURney Club is <span style="color:var(--gold)">3× cheaper</span> and fully self-serve.<br>
+        Questions? <a href="mailto:rob@greenskeeper.studio" style="color:var(--gold)">rob@greenskeeper.studio</a>
       </div>
     </div>
   </section>
@@ -241,12 +275,12 @@
   <!-- CTA -->
   <section class="cta-section">
     <h2 class="cta-title">Stop Running Your<br><em>Tournament on a Spreadsheet.</em></h2>
-    <p class="cta-sub">Build it now. It's free to set up. We'll talk pricing before you go live.</p>
+    <p class="cta-sub">Starts at $3/month. Up and running in 15 minutes. Less than a sleeve of balls.</p>
     <a href="/create" class="btn-primary" style="font-size:.85rem;padding:1rem 3rem">Build Your Tournament →</a>
     <div style="margin-top:1.25rem;display:flex;gap:2rem;justify-content:center;flex-wrap:wrap">
-      <span style="font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.12em;color:var(--muted)">Free to set up</span>
-      <span style="font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.12em;color:var(--muted)">No credit card</span>
+      <span style="font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.12em;color:var(--muted)">From $3/month</span>
       <span style="font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.12em;color:var(--muted)">Live in 15 minutes</span>
+      <span style="font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.12em;color:var(--muted)">Full white-label</span>
       <span style="font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.12em;color:var(--muted)">Your brand, your URL</span>
     </div>
   </section>
