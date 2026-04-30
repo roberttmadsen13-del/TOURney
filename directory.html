@@ -119,8 +119,8 @@ a{color:inherit;text-decoration:none;}
     <!-- STATS BAR -->
     <div class="stats-bar">
       <div class="stat-item"><div class="stat-val" id="statTotal">—</div><div class="stat-label">Players</div></div>
-      <div class="stat-item"><div class="stat-val" id="statTeamA">—</div><div class="stat-label">Team Bova</div></div>
-      <div class="stat-item"><div class="stat-val" id="statTeamB">—</div><div class="stat-label">Challengers</div></div>
+      <div class="stat-item"><div class="stat-val" id="statTeamA">—</div><div class="stat-label" id="statLabelA">Team A</div></div>
+      <div class="stat-item"><div class="stat-val" id="statTeamB">—</div><div class="stat-label" id="statLabelB">Team B</div></div>
       <div class="stat-item"><div class="stat-val" id="statUnassigned">—</div><div class="stat-label">Unassigned</div></div>
     </div>
 
@@ -167,16 +167,22 @@ function formatPhone(raw) {
 
 async function init() {
   const { tournament } = await window.tourney.ready;
-  const [pRes, tRes, capRes] = await Promise.all([
+  const [pRes, tRes, capRes, namesRes] = await Promise.all([
     sb.from('players').select('*').eq('tournament_id', tournament.id).order('last_name'),
     sb.from('settings').select('*').eq('tournament_id', tournament.id).eq('key','team_assignments'),
     sb.from('settings').select('value').eq('tournament_id', tournament.id).eq('key','challengers_captain'),
+    sb.from('settings').select('key,value').eq('tournament_id', tournament.id).in('key',['team_a_name','team_b_name','team_a_captain']),
   ]);
 
   const players = pRes.data || [];
   let teamAssignments = {};
   if (tRes.data?.[0]) try { teamAssignments = JSON.parse(tRes.data[0].value); } catch {}
   const challengersCaptain = capRes.data?.[0]?.value || 'TBD';
+  const nm = {};
+  (namesRes.data || []).forEach(r => { nm[r.key] = r.value; });
+  const teamAName = nm.team_a_name || 'Team A';
+  const teamBName = nm.team_b_name || 'Team B';
+  const teamACaptain = nm.team_a_captain || 'TBD';
 
   document.getElementById('loadingState').style.display = 'none';
   document.getElementById('directoryContent').style.display = 'block';
@@ -190,11 +196,13 @@ async function init() {
   document.getElementById('statTeamA').textContent = teamA.length;
   document.getElementById('statTeamB').textContent = teamB.length;
   document.getElementById('statUnassigned').textContent = unassigned.length;
+  const lA = document.getElementById('statLabelA'); if (lA) lA.textContent = teamAName;
+  const lB = document.getElementById('statLabelB'); if (lB) lB.textContent = teamBName;
 
   // Teams grid
   const teamsHtml = `
-    ${renderTeamSection('A', 'Team Bova', 'Chris Bova', teamA)}
-    ${renderTeamSection('B', 'The Challengers', challengersCaptain, teamB)}
+    ${renderTeamSection('A', teamAName, teamACaptain, teamA)}
+    ${renderTeamSection('B', teamBName, challengersCaptain, teamB)}
   `;
   document.getElementById('teamsGrid').innerHTML = teamsHtml;
 

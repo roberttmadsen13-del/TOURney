@@ -256,14 +256,19 @@ async function init() {
 
   const { tournament } = await window.tourney.ready;
 
-  const [pRes, taRes, meRes, feedRes, celebRes] = await Promise.all([
+  const [pRes, taRes, meRes, feedRes, celebRes, namesRes] = await Promise.all([
     sb.from('players').select('id,first_name,last_name').eq('tournament_id', tournament.id).order('last_name'),
     sb.from('settings').select('value').eq('tournament_id', tournament.id).eq('key', 'team_assignments').maybeSingle(),
     sb.from('players').select('id,first_name,last_name').eq('tournament_id', tournament.id).eq('email', email.toLowerCase()).maybeSingle(),
     sb.from('trash_talk').select('*').eq('tournament_id', tournament.id).order('created_at', { ascending: false }),
     sb.from('settings').select('value').eq('tournament_id', tournament.id).eq('key', 'celebration_style').maybeSingle(),
+    sb.from('settings').select('key,value').eq('tournament_id', tournament.id).in('key',['team_a_name','team_b_name']),
   ]);
   if (celebRes.data?.value) _celebStyle = celebRes.data.value;
+  const _nm = {};
+  (namesRes.data || []).forEach(r => { _nm[r.key] = r.value; });
+  window._teamAName = _nm.team_a_name || 'Team A';
+  window._teamBName = _nm.team_b_name || 'Team B';
 
   players = pRes.data || [];
   if (taRes.data?.value) try { teamAssignments = JSON.parse(taRes.data.value); } catch {}
@@ -347,9 +352,9 @@ function buildThreadHTML(node) {
 function buildPostHTML(post, isReply) {
   const teamClass = post.team === 'A' ? 'team-a' : post.team === 'B' ? 'team-b' : 'team-none';
   const teamBadge = post.team === 'A'
-    ? `<span class="post-team-badge team-a">Team Bova</span>`
+    ? `<span class="post-team-badge team-a">${esc(window._teamAName || 'Team A')}</span>`
     : post.team === 'B'
-    ? `<span class="post-team-badge team-b">Challengers</span>`
+    ? `<span class="post-team-badge team-b">${esc(window._teamBName || 'Team B')}</span>`
     : '';
   const replyBtn = !isReply && me
     ? `<div class="post-actions"><button class="reply-btn" data-post-id="${post.id}" data-player-name="${esc(post.player_name)}">Reply</button></div>`
