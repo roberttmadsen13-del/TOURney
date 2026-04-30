@@ -35,6 +35,7 @@
     { "source": "/install",    "destination": "/install.html" },
     { "source": "/platform",          "destination": "/platform.html" },
     { "source": "/platform-manifest.json", "destination": "/platform-manifest.json" },
-    { "source": "/player",            "destination": "/player.html" }
+    { "source": "/player",            "destination": "/player.html" },
+    { "source": "/player-upgrade",    "destination": "/player-upgrade.html" }
   ]
 }

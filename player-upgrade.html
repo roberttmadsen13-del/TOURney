@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" href="/icon-192.png" type="image/png">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#1a1008">
+<title>Get Player Account — TOURney</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Mono:wght@300;400;500&family=Barlow+Condensed:wght@300;400;600;700;800&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#1a1008;--gold:#c09030;--gold-l:#d4aa50;--gold-p:#e8cc80;--cream:#f0e6cc;--red:#8a1e10;--border:rgba(192,144,48,0.28);--bg:#1a1008;--card:#231a0a;--muted:rgba(240,230,204,0.38);}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--bg);color:var(--cream);font-family:'Barlow',sans-serif;font-weight:300;min-height:100vh;}
+a{color:inherit;text-decoration:none;}
+
+.nav{height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;border-bottom:1px solid rgba(192,144,48,0.12);}
+.nav-logo{font-family:'Playfair Display',serif;font-size:0.9rem;font-weight:700;display:flex;align-items:center;gap:0.5rem;}
+.nav-logo em{font-style:italic;color:var(--gold);}
+.nav-back{font-family:'DM Mono',monospace;font-size:0.48rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);}
+.nav-back:hover{color:var(--gold);}
+
+.wrap{max-width:480px;margin:0 auto;padding:4rem 2rem;}
+@media(max-width:520px){.wrap{padding:2.5rem 1.25rem;}}
+
+.eyebrow{font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.5em;text-transform:uppercase;color:rgba(192,144,48,0.5);margin-bottom:0.75rem;}
+.headline{font-family:'Playfair Display',serif;font-size:clamp(2rem,8vw,3.2rem);font-weight:900;line-height:1.05;margin-bottom:0.5rem;}
+.headline em{font-style:italic;color:var(--gold-p);}
+.sub{font-family:'Barlow',sans-serif;font-size:0.95rem;color:rgba(240,230,204,0.55);margin-bottom:2.5rem;line-height:1.6;}
+
+.price-badge{display:inline-flex;align-items:baseline;gap:0.3rem;margin-bottom:2.5rem;}
+.price-val{font-family:'Playfair Display',serif;font-size:3rem;font-weight:900;color:var(--gold);line-height:1;}
+.price-unit{font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);}
+
+.features{display:flex;flex-direction:column;gap:0.65rem;margin-bottom:2.5rem;}
+.feature{display:flex;align-items:center;gap:0.75rem;font-family:'Barlow',sans-serif;font-size:0.88rem;color:rgba(240,230,204,0.7);}
+.feature-icon{width:18px;height:18px;border-radius:50%;background:rgba(192,144,48,0.15);border:1px solid rgba(192,144,48,0.35);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:0.55rem;color:var(--gold);}
+
+.divider{height:1px;background:rgba(192,144,48,0.15);margin:2.5rem 0;}
+
+.form-label{font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.28em;text-transform:uppercase;color:var(--gold);display:block;margin-bottom:0.4rem;}
+.form-input{width:100%;background:var(--card);border:1px solid rgba(192,144,48,0.28);padding:0.8rem 0.9rem;color:var(--cream);font-family:'Barlow',sans-serif;font-size:1rem;outline:none;border-radius:0;-webkit-appearance:none;margin-bottom:1rem;}
+.form-input:focus{border-color:var(--gold);}
+.form-input::placeholder{color:rgba(240,230,204,0.2);}
+.form-name-row{display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;}
+
+.btn-join{width:100%;padding:1rem;background:var(--gold);color:var(--ink);border:none;font-family:'Barlow Condensed',sans-serif;font-size:0.8rem;font-weight:700;letter-spacing:0.25em;text-transform:uppercase;cursor:pointer;transition:background 0.2s;margin-top:0.25rem;}
+.btn-join:hover:not(:disabled){background:var(--gold-l);}
+.btn-join:disabled{opacity:0.4;cursor:not-allowed;}
+
+.fine-print{font-family:'DM Mono',monospace;font-size:0.44rem;letter-spacing:0.12em;color:rgba(240,230,204,0.25);margin-top:0.85rem;text-align:center;line-height:1.6;}
+
+.form-err{font-family:'DM Mono',monospace;font-size:0.48rem;letter-spacing:0.15em;text-transform:uppercase;color:#c05040;margin-top:0.5rem;display:none;}
+.form-err.show{display:block;}
+
+/* CONFIRMATION STATE */
+.confirm{display:none;text-align:center;padding:2rem 0;}
+.confirm-icon{font-size:2.5rem;margin-bottom:1rem;}
+.confirm-title{font-family:'Playfair Display',serif;font-size:1.8rem;font-weight:900;color:var(--gold-p);margin-bottom:0.75rem;}
+.confirm-body{font-family:'Barlow',sans-serif;font-size:0.92rem;color:rgba(240,230,204,0.6);line-height:1.65;margin-bottom:1.5rem;}
+.confirm-cta{font-family:'DM Mono',monospace;font-size:0.48rem;letter-spacing:0.2em;text-transform:uppercase;padding:0.6rem 1.2rem;border:1px solid rgba(192,144,48,0.4);color:var(--gold);display:inline-block;transition:all 0.15s;}
+.confirm-cta:hover{background:rgba(192,144,48,0.1);}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-logo">
+    <svg width="11" height="15" viewBox="0 0 11 15" fill="none"><line x1="2" y1="1" x2="2" y2="14" stroke="#c09030" stroke-width="1.5" stroke-linecap="round"/><path d="M2 2L9.5 4.8L2 7.8Z" fill="#c09030"/></svg>
+    TOURney <em>Player</em>
+  </div>
+  <a href="/player" class="nav-back">← My Golf</a>
+</nav>
+
+<div class="wrap">
+
+  <!-- SIGN-UP FORM -->
+  <div id="formState">
+    <div class="eyebrow">TOURney Player Account</div>
+    <div class="headline">Get in the <em>Game.</em></div>
+    <div class="sub">One account follows you across every TOURney tournament — live scoring, leaderboard, push notifications, and your full golf history.</div>
+
+    <div class="price-badge">
+      <div class="price-val">$2</div>
+      <div class="price-unit">/ month</div>
+    </div>
+
+    <div class="features">
+      <div class="feature"><div class="feature-icon">✓</div>Live hole-by-hole scoring from your phone</div>
+      <div class="feature"><div class="feature-icon">✓</div>Real-time leaderboard + push notifications</div>
+      <div class="feature"><div class="feature-icon">✓</div>Hole-in-one alerts with full celebration</div>
+      <div class="feature"><div class="feature-icon">✓</div>Full tournament history across all events</div>
+      <div class="feature"><div class="feature-icon">✓</div>Player directory, team rosters, trash talk feed</div>
+      <div class="feature"><div class="feature-icon">✓</div>Offline scoring — works without cell service</div>
+    </div>
+
+    <div class="divider"></div>
+
+    <form id="signupForm" autocomplete="on">
+      <div class="form-name-row">
+        <div>
+          <label class="form-label" for="signupFirst">First Name</label>
+          <input class="form-input" type="text" id="signupFirst" placeholder="Rob" autocomplete="given-name" required>
+        </div>
+        <div>
+          <label class="form-label" for="signupLast">Last Name</label>
+          <input class="form-input" type="text" id="signupLast" placeholder="Madsen" autocomplete="family-name" required>
+        </div>
+      </div>
+      <label class="form-label" for="signupEmail">Email</label>
+      <input class="form-input" type="email" id="signupEmail" placeholder="you@email.com" autocomplete="email" required>
+      <button type="submit" class="btn-join" id="joinBtn">Get Player Account — $2/mo</button>
+      <div id="formErr" class="form-err"></div>
+      <div class="fine-print">You'll receive payment instructions by email. Account activates on payment confirmation. Cancel anytime.</div>
+    </form>
+  </div>
+
+  <!-- CONFIRMATION -->
+  <div id="confirmState" class="confirm">
+    <div class="confirm-icon">⛳</div>
+    <div class="confirm-title">You're on the list.</div>
+    <div class="confirm-body">
+      We've got your info, <strong id="confirmName"></strong>.<br>
+      Payment instructions are on the way to <strong id="confirmEmail"></strong>.<br><br>
+      Your account activates as soon as payment is confirmed — usually within a few hours.
+    </div>
+    <a href="/player" class="confirm-cta">← Back to My Golf</a>
+  </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script>
+const sb = supabase.createClient(
+  'https://jllugkiojeoopitdvzsa.supabase.co',
+  'sb_publishable_DnBMNLaSu61ykJ6P_fI2fw_D9DdAScn'
+);
+
+// Pre-fill email from URL param (e.g. /player-upgrade?email=x@y.com)
+(function () {
+  const sp = new URLSearchParams(location.search);
+  const e = sp.get('email');
+  if (e) document.getElementById('signupEmail').value = e;
+})();
+
+document.getElementById('signupForm').addEventListener('submit', async (ev) => {
+  ev.preventDefault();
+  const first = document.getElementById('signupFirst').value.trim();
+  const last  = document.getElementById('signupLast').value.trim();
+  const email = document.getElementById('signupEmail').value.trim().toLowerCase();
+  const btn   = document.getElementById('joinBtn');
+  const err   = document.getElementById('formErr');
+
+  if (!first || !last || !email) return;
+  btn.disabled = true;
+  btn.textContent = 'Submitting…';
+  err.classList.remove('show');
+
+  const { error } = await sb.from('player_accounts').upsert(
+    {
+      email,
+      plan: 'player',
+      billing_status: 'pending_payment',
+      updated_at: new Date().toISOString(),
+    },
+    { onConflict: 'email', ignoreDuplicates: false }
+  );
+
+  if (error) {
+    err.textContent = 'Something went wrong. Try again or contact us.';
+    err.classList.add('show');
+    btn.disabled = false;
+    btn.textContent = 'Get Player Account — $2/mo';
+    return;
+  }
+
+  document.getElementById('confirmName').textContent  = first + ' ' + last;
+  document.getElementById('confirmEmail').textContent = email;
+  document.getElementById('formState').style.display    = 'none';
+  document.getElementById('confirmState').style.display = 'block';
+});
+</script>
+</body>
+</html>

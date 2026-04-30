@@ -14,6 +14,7 @@ const PRECACHE = [
   '/course.html',
   '/install.html',
   '/player.html',
+  '/player-upgrade.html',
   '/manifest.json',
   '/icon-192.png',
   '/icon-512.png',

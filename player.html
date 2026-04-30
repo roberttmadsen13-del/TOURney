@@ -133,16 +133,21 @@ a{color:inherit;text-decoration:none;}
   </div>
 </div>
 
-<!-- PORTAL -->
-<div id="portalWrap" class="portal">
-  <!-- BILLING BANNER -->
-  <div id="billingBanner" style="display:none;border:1px solid rgba(192,144,48,0.35);background:rgba(192,144,48,0.07);padding:1rem 1.4rem;margin-bottom:2rem;display:none;flex-direction:column;gap:0.5rem;">
-    <div style="font-family:'DM Mono',monospace;font-size:0.48rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--gold);">Free Account</div>
-    <div style="font-family:'Barlow',sans-serif;font-size:0.85rem;color:var(--cream);opacity:0.75;">Upgrade to a Player Account for $2/month — full tournament history, stat tracking, and priority invitations.</div>
-    <div style="margin-top:0.25rem;">
-      <a id="upgradeLink" href="/player-upgrade" style="font-family:'DM Mono',monospace;font-size:0.48rem;letter-spacing:0.2em;text-transform:uppercase;padding:0.45rem 1rem;border:1px solid var(--gold);color:var(--gold);text-decoration:none;display:inline-block;transition:all 0.15s;" onmouseover="this.style.background='rgba(192,144,48,0.15)'" onmouseout="this.style.background='transparent'">Upgrade — $2/mo →</a>
+<!-- UPGRADE WALL (shown instead of portal when no active account) -->
+<div id="upgradeWall" style="display:none;min-height:calc(100vh - 56px);display:none;align-items:center;justify-content:center;padding:2rem;">
+  <div style="max-width:400px;width:100%;text-align:center;">
+    <div style="font-family:'DM Mono',monospace;font-size:0.48rem;letter-spacing:0.45em;text-transform:uppercase;color:rgba(192,144,48,0.45);margin-bottom:0.75rem;" id="wallEyebrow">Player Account Required</div>
+    <div style="font-family:'Playfair Display',serif;font-size:2rem;font-weight:900;line-height:1.1;margin-bottom:0.75rem;" id="wallTitle">Get in the <em style="font-style:italic;color:#e8cc80;">Game.</em></div>
+    <div style="font-family:'Barlow',sans-serif;font-size:0.88rem;color:rgba(240,230,204,0.5);line-height:1.6;margin-bottom:2rem;" id="wallBody">A Player Account is required to access tournament features. $2/month.</div>
+    <a id="wallCta" href="/player-upgrade" style="display:inline-block;padding:0.85rem 2rem;background:var(--gold);color:var(--ink);font-family:'Barlow Condensed',sans-serif;font-size:0.75rem;font-weight:700;letter-spacing:0.25em;text-transform:uppercase;transition:background 0.2s;" onmouseover="this.style.background='#d4aa50'" onmouseout="this.style.background='var(--gold)'">Get Player Account — $2/mo</a>
+    <div style="margin-top:1.25rem;">
+      <button onclick="document.getElementById('upgradeWall').style.display='none';document.getElementById('loginWrap').style.display='flex';" style="font-family:'DM Mono',monospace;font-size:0.44rem;letter-spacing:0.18em;text-transform:uppercase;color:rgba(240,230,204,0.25);background:none;border:none;cursor:pointer;">← Use different email</button>
     </div>
   </div>
+</div>
+
+<!-- PORTAL -->
+<div id="portalWrap" class="portal">
 
   <div class="portal-header">
     <div class="portal-eyebrow">Player Portal</div>
@@ -243,11 +248,23 @@ async function loadPortal(email) {
   const invites  = invitesRes.data || [];
   const account  = accountRes.data;
 
-  // ── Billing gate ─────────────────────────────────────────────
+  // ── Billing gate — hard wall ──────────────────────────────────
   const isActive = account && account.billing_status === 'active' &&
     (!account.billing_expires_at || new Date(account.billing_expires_at) > new Date());
-  const billingBanner = document.getElementById('billingBanner');
-  if (billingBanner) billingBanner.style.display = isActive ? 'none' : 'flex';
+  const isPending = account && account.billing_status === 'pending_payment';
+
+  if (!isActive) {
+    document.getElementById('loginWrap').style.display = 'none';
+    const wall = document.getElementById('upgradeWall');
+    if (isPending) {
+      document.getElementById('wallEyebrow').textContent = 'Payment Pending';
+      document.getElementById('wallTitle').innerHTML = 'Almost <em style="font-style:italic;color:#e8cc80;">there.</em>';
+      document.getElementById('wallBody').textContent = 'Your account is pending payment confirmation. Check your email for instructions. Sit tight — we\'ll activate you shortly.';
+      document.getElementById('wallCta').style.display = 'none';
+    }
+    wall.style.display = 'flex';
+    return;
+  }
 
   // ── Stats ─────────────────────────────────────────────────────
   const hios = scores.filter(s => s.gross_score === 1).length;
