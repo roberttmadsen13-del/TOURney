@@ -259,7 +259,7 @@ td.email a:hover{color:var(--gold);}
     <div class="page-header">
       <div>
         <div class="page-title" id="adminPageTitle">Command <em>Center</em></div>
-        <div class="page-sub">Bova Invitational &nbsp;&middot;&nbsp; 2026</div>
+        <div class="page-sub" id="adminPageSub">Tournament Admin</div>
       </div>
     </div>
 
@@ -278,8 +278,8 @@ td.email a:hover{color:var(--gold);}
       <div class="stat-card"><div class="stat-val" id="sTotal">—</div><div class="stat-label">Registered</div></div>
       <div class="stat-card"><div class="stat-val" id="sAccounts">—</div><div class="stat-label">Accounts</div></div>
       <div class="stat-card"><div class="stat-val" id="sHats">—</div><div class="stat-label">Hat Orders</div></div>
-      <div class="stat-card"><div class="stat-val" id="sTeamA">—</div><div class="stat-label">Team Bova</div></div>
-      <div class="stat-card"><div class="stat-val" id="sTeamB">—</div><div class="stat-label">Challengers</div></div>
+      <div class="stat-card"><div class="stat-val" id="sTeamA">—</div><div class="stat-label" id="statLabelA">Team A</div></div>
+      <div class="stat-card"><div class="stat-val" id="sTeamB">—</div><div class="stat-label" id="statLabelB">Team B</div></div>
     </div>
 
     <!-- ROUND CONTROL -->
@@ -402,12 +402,12 @@ td.email a:hover{color:var(--gold);}
       </div>
       <div class="team-assign-grid">
         <div class="team-col">
-          <div class="team-col-title">Team <em>Bova</em></div>
-          <div class="team-col-cap">Captain &mdash; Chris Bova</div>
+          <div class="team-col-title" id="teamColTitleA">Team A</div>
+          <div class="team-col-cap" id="teamColCapA">Captain</div>
           <div class="team-player-list" id="teamAList"></div>
         </div>
         <div class="team-col">
-          <div class="team-col-title">The <em>Challengers</em></div>
+          <div class="team-col-title" id="teamColTitleB">Team B</div>
           <div class="team-col-cap" style="display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap;">
             <span style="flex-shrink:0;">Captain &mdash;</span>
             <input type="text" id="challengersCaptainInput"
@@ -664,7 +664,7 @@ td.email a:hover{color:var(--gold);}
             <div class="fg"><label>Score</label><input type="text" id="champIndivScore" placeholder="-12" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;"></div>
           </div>
           <div style="display:grid;grid-template-columns:2fr 1fr;gap:0.75rem;margin-bottom:0.75rem;">
-            <div class="fg"><label>Winning Team</label><input type="text" id="champTeamName" placeholder="Team Bova" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;"></div>
+            <div class="fg"><label>Winning Team</label><input type="text" id="champTeamName" placeholder="Winning team name" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;"></div>
             <div class="fg"><label>Team Score</label><input type="text" id="champTeamScore" placeholder="-24" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;"></div>
           </div>
           <div class="fg"><label>Notes <span style="opacity:0.5">(optional)</span></label><input type="text" id="champNotes" placeholder="Weather, format, memorable moment..." style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;"></div>
@@ -765,6 +765,8 @@ const FORMAT_OPTIONS = [
 let players = [];
 let roundStates = {day1:'pending',day2:'pending',day3:'pending'};
 let teamAssignments = {};
+let _teamAName = 'Team A';
+let _teamBName = 'Team B';
 let coursePars = JSON.parse(JSON.stringify(DEFAULT_PARS));
 let roundFormats = JSON.parse(JSON.stringify(DEFAULT_FORMATS));
 let sortMode = 'name';
@@ -816,8 +818,25 @@ function showAdmin(email) {
 
 // ── DATA ──────────────────────────────────────────────────────────
 async function loadAll() {
-  await Promise.all([loadPlayers(), loadRoundStates(), loadTeams(), loadPars(), loadFormats(), loadChallengersCaptain(), loadCourseNames(), loadDesignSettings(), loadChampions(), loadNotifySettings(), loadInvitations()]);
+  await Promise.all([loadPlayers(), loadRoundStates(), loadTeams(), loadPars(), loadFormats(), loadChallengersCaptain(), loadTeamNames(), loadCourseNames(), loadDesignSettings(), loadChampions(), loadNotifySettings(), loadInvitations()]);
   buildParEditor();
+}
+
+async function loadTeamNames() {
+  const { data } = await sb.from('settings').select('key,value').eq('tournament_id', _tid).in('key',['team_a_name','team_b_name','team_a_captain']);
+  if (!data) return;
+  let capA = '';
+  data.forEach(r => {
+    if (r.key === 'team_a_name') _teamAName = r.value;
+    if (r.key === 'team_b_name') _teamBName = r.value;
+    if (r.key === 'team_a_captain') capA = r.value;
+  });
+  const lA = document.getElementById('statLabelA'); if (lA) lA.textContent = _teamAName;
+  const lB = document.getElementById('statLabelB'); if (lB) lB.textContent = _teamBName;
+  const colA = document.getElementById('teamColTitleA'); if (colA) colA.textContent = _teamAName;
+  const colB = document.getElementById('teamColTitleB'); if (colB) colB.textContent = _teamBName;
+  const capEl = document.getElementById('teamColCapA'); if (capEl && capA) capEl.textContent = `Captain — ${capA}`;
+  const sub = document.getElementById('adminPageSub'); if (sub) sub.textContent = _teamAName + ' vs ' + _teamBName;
 }
 
 async function loadChallengersCaptain() {
@@ -1056,7 +1075,7 @@ function renderTable() {
 
   tbody.innerHTML = sorted.map((p, i) => {
     const team = teamAssignments[p.id];
-    const teamLabel = team === 'A' ? '<span style="color:var(--gold)">Bova</span>' : team === 'B' ? '<span style="color:#6a8a9a">Challengers</span>' : '<span style="color:rgba(240,230,204,0.2)">—</span>';
+    const teamLabel = team === 'A' ? `<span style="color:var(--gold)">${esc(_teamAName)}</span>` : team === 'B' ? `<span style="color:#6a8a9a">${esc(_teamBName)}</span>` : '<span style="color:rgba(240,230,204,0.2)">—</span>';
     const dates = (p.available_dates || []).map(d => DATE_LABELS[d] || d).join(', ');
     // Use original position from created_at order for the # column
     const origPos = players.findIndex(pl => pl.id === p.id) + 1;
@@ -1103,7 +1122,7 @@ async function toggleAdmin(id, makeAdmin) {
 function exportCSV() {
   const headers = ['Number','First Name','Last Name','Email','Phone','Handicap','Available Dates','Why Me','Trash Talk','Hat','Team'];
   const rows = players.map((p, i) => {
-    const team = teamAssignments[p.id] === 'A' ? 'Team Bova' : teamAssignments[p.id] === 'B' ? 'The Challengers' : '';
+    const team = teamAssignments[p.id] === 'A' ? _teamAName : teamAssignments[p.id] === 'B' ? _teamBName : '';
     const dates = (p.available_dates || []).map(d => DATE_LABELS[d] || d).join('; ');
     const esc = v => `"${String(v || '').replace(/"/g, '""')}"`;
     return [i+1, esc(p.first_name), esc(p.last_name), esc(p.email), esc(p.phone_number), esc(p.handicap), esc(dates), esc(p.why_me), esc(p.trash_talk), p.hat ? 'Yes' : 'No', esc(team)].join(',');
@@ -1112,7 +1131,7 @@ function exportCSV() {
   const blob = new Blob([csv], { type: 'text/csv' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
-  a.href = url; a.download = 'bova-invitational-players.csv'; a.click();
+  a.href = url; a.download = `${_slug || 'tournament'}-players.csv`; a.click();
   URL.revokeObjectURL(url);
 }
 
@@ -1130,7 +1149,7 @@ function renderTeamUI() {
   const chip = (p, team) => `<div class="team-player-chip">
     <span class="pname">${p.first_name} ${p.last_name}</span>
     <span style="display:flex;gap:0.5rem;align-items:center;">
-      <button class="move-btn" onclick="movePlayer('${p.id}','${team === 'A' ? 'B' : 'A'}')">&#8594; ${team === 'A' ? 'Challengers' : 'Bova'}</button>
+      <button class="move-btn" onclick="movePlayer('${p.id}','${team === 'A' ? 'B' : 'A'}')">&#8594; ${team === 'A' ? esc(_teamBName) : esc(_teamAName)}</button>
       <button class="move-btn" onclick="movePlayer('${p.id}',null)" title="Move to unassigned" style="color:var(--red);border:1px solid rgba(138,30,16,0.4);padding:0.12rem 0.45rem;">Unassign</button>
     </span>
   </div>`;
@@ -1148,7 +1167,7 @@ function renderTeamUI() {
 }
 
 function assignFromPool(id) {
-  const choice = prompt('Assign to: type A for Team Bova or B for The Challengers');
+  const choice = prompt(`Assign to: type A for ${_teamAName} or B for ${_teamBName}`);
   if (choice && ['A','B'].includes(choice.toUpperCase())) {
     teamAssignments[id] = choice.toUpperCase();
     renderTeamUI();
@@ -1762,13 +1781,13 @@ async function clearRoundScores() {
   if (!confirm(`Delete all ${round} scores for ${player?.first_name} ${player?.last_name}?`)) return;
   await sb.from('scores').delete().eq('tournament_id', _tid).eq('player_id', playerId).eq('round', round);
   // Clear localStorage for this round and offline queue entries for this player/round
-  try { localStorage.removeItem(`bova_scores_${round}`); } catch {}
-  try { localStorage.removeItem('bova_scorecard_session'); } catch {}
+  try { localStorage.removeItem(`${_slug}_scores_${round}`); } catch {}
+  try { localStorage.removeItem(`${_slug}_scorecard_session`); } catch {}
   try {
-    const queue = JSON.parse(localStorage.getItem('bova_offline_queue') || '[]');
+    const queue = JSON.parse(localStorage.getItem(`${_slug}_offline_queue`) || '[]');
     const filtered = queue.filter(e => !(e.player_id === playerId && e.round === round));
-    if (filtered.length) localStorage.setItem('bova_offline_queue', JSON.stringify(filtered));
-    else localStorage.removeItem('bova_offline_queue');
+    if (filtered.length) localStorage.setItem(`${_slug}_offline_queue`, JSON.stringify(filtered));
+    else localStorage.removeItem(`${_slug}_offline_queue`);
   } catch {}
   showToast('Scores cleared.');
   loadScoreEditor();
@@ -1784,14 +1803,14 @@ async function clearRoundAll(round) {
   const { error } = await sb.from('scores').delete().eq('tournament_id', _tid).eq('round', round);
   if (error) { showToast('Error: ' + error.message); return; }
   // Clear localStorage scorecard data for this round (all players)
-  try { localStorage.removeItem(`bova_scores_${round}`); } catch {}
-  try { localStorage.removeItem('bova_scorecard_session'); } catch {}
+  try { localStorage.removeItem(`${_slug}_scores_${round}`); } catch {}
+  try { localStorage.removeItem(`${_slug}_scorecard_session`); } catch {}
   // Remove offline queue entries for this round
   try {
-    const queue = JSON.parse(localStorage.getItem('bova_offline_queue') || '[]');
+    const queue = JSON.parse(localStorage.getItem(`${_slug}_offline_queue`) || '[]');
     const filtered = queue.filter(e => e.round !== round);
-    if (filtered.length) localStorage.setItem('bova_offline_queue', JSON.stringify(filtered));
-    else localStorage.removeItem('bova_offline_queue');
+    if (filtered.length) localStorage.setItem(`${_slug}_offline_queue`, JSON.stringify(filtered));
+    else localStorage.removeItem(`${_slug}_offline_queue`);
   } catch {}
   showToast(`${label} scores cleared.`);
   loadScoreEditor();
@@ -1840,11 +1859,11 @@ async function clearAllTournamentScores() {
   const { error } = await sb.from('scores').delete().eq('tournament_id', _tid);
   if (error) { showToast('Error: ' + error.message); return; }
   // Clear ALL localStorage scorecard data (all rounds, all players)
-  try { localStorage.removeItem('bova_scores_day1'); } catch {}
-  try { localStorage.removeItem('bova_scores_day2'); } catch {}
-  try { localStorage.removeItem('bova_scores_day3'); } catch {}
-  try { localStorage.removeItem('bova_scorecard_session'); } catch {}
-  try { localStorage.removeItem('bova_offline_queue'); } catch {}
+  try { localStorage.removeItem(`${_slug}_scores_day1`); } catch {}
+  try { localStorage.removeItem(`${_slug}_scores_day2`); } catch {}
+  try { localStorage.removeItem(`${_slug}_scores_day3`); } catch {}
+  try { localStorage.removeItem(`${_slug}_scorecard_session`); } catch {}
+  try { localStorage.removeItem(`${_slug}_offline_queue`); } catch {}
   showToast('All tournament scores cleared.');
   loadScoreEditor();
 }
