@@ -81,6 +81,22 @@ a{color:inherit;text-decoration:none;}
 .tourney-link.primary{border-color:rgba(192,144,48,0.5);color:var(--gold);}
 .active-badge{position:absolute;top:1rem;right:1rem;font-family:'DM Mono',monospace;font-size:0.38rem;letter-spacing:0.18em;text-transform:uppercase;padding:0.15rem 0.5rem;background:rgba(42,122,32,0.15);border:1px solid rgba(42,122,32,0.4);color:#4a9a40;}
 
+/* INVITE CARDS */
+.invite-card{background:var(--card);padding:1.1rem 1.4rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;}
+.invite-card-info{display:flex;flex-direction:column;gap:0.3rem;}
+.invite-card-name{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--cream);}
+.invite-card-msg{font-family:'Barlow',sans-serif;font-size:0.78rem;color:var(--muted);}
+.invite-actions{display:flex;gap:0.5rem;flex-shrink:0;}
+.invite-btn{font-family:'DM Mono',monospace;font-size:0.42rem;letter-spacing:0.15em;text-transform:uppercase;padding:0.35rem 0.85rem;border:1px solid;cursor:pointer;background:transparent;transition:all 0.15s;}
+.invite-btn.accept{color:#4a9a40;border-color:#4a9a40;}
+.invite-btn.accept:hover{background:#4a9a40;color:#fff;}
+.invite-btn.decline{color:rgba(240,230,204,0.3);border-color:rgba(240,230,204,0.15);}
+.invite-btn.decline:hover{color:var(--red);border-color:var(--red);}
+
+/* SCORE SUMMARY */
+.tourney-summary{font-family:'DM Mono',monospace;font-size:0.42rem;letter-spacing:0.12em;color:var(--muted);display:flex;gap:0.85rem;}
+.tourney-summary span{color:rgba(192,144,48,0.55);}
+
 /* EMPTY */
 .no-tourneys{text-align:center;padding:4rem 2rem;color:var(--muted);font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.2em;text-transform:uppercase;}
 
@@ -119,16 +135,31 @@ a{color:inherit;text-decoration:none;}
 
 <!-- PORTAL -->
 <div id="portalWrap" class="portal">
+  <!-- BILLING BANNER -->
+  <div id="billingBanner" style="display:none;border:1px solid rgba(192,144,48,0.35);background:rgba(192,144,48,0.07);padding:1rem 1.4rem;margin-bottom:2rem;display:none;flex-direction:column;gap:0.5rem;">
+    <div style="font-family:'DM Mono',monospace;font-size:0.48rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--gold);">Free Account</div>
+    <div style="font-family:'Barlow',sans-serif;font-size:0.85rem;color:var(--cream);opacity:0.75;">Upgrade to a Player Account for $2/month — full tournament history, stat tracking, and priority invitations.</div>
+    <div style="margin-top:0.25rem;">
+      <a id="upgradeLink" href="/player-upgrade" style="font-family:'DM Mono',monospace;font-size:0.48rem;letter-spacing:0.2em;text-transform:uppercase;padding:0.45rem 1rem;border:1px solid var(--gold);color:var(--gold);text-decoration:none;display:inline-block;transition:all 0.15s;" onmouseover="this.style.background='rgba(192,144,48,0.15)'" onmouseout="this.style.background='transparent'">Upgrade — $2/mo →</a>
+    </div>
+  </div>
+
   <div class="portal-header">
     <div class="portal-eyebrow">Player Portal</div>
     <div class="portal-name" id="portalName">—</div>
     <div class="portal-email" id="portalEmail">—</div>
   </div>
 
-  <div class="stats-strip" id="statsStrip">
+  <div class="stats-strip">
     <div class="stat-cell"><div class="stat-val" id="statTourneys">—</div><div class="stat-label">Tournaments</div></div>
     <div class="stat-cell"><div class="stat-val" id="statRounds">—</div><div class="stat-label">Rounds</div></div>
     <div class="stat-cell"><div class="stat-val" id="statHios">—</div><div class="stat-label">Hole-in-Ones</div></div>
+  </div>
+
+  <!-- INVITATIONS -->
+  <div id="invitesSection" style="display:none;margin-bottom:2.5rem;">
+    <div class="section-label" style="color:var(--gold);">You've Been Invited</div>
+    <div id="inviteCards" style="display:flex;flex-direction:column;gap:1px;background:rgba(192,144,48,0.12);"></div>
   </div>
 
   <div class="section-label">My Tournaments</div>
@@ -196,46 +227,73 @@ async function loadPortal(email) {
   // First player record for name display (use most recent)
   const me = records[0];
 
-  // Tournament details
+  // Parallel: tournament details + scores + invitations + billing
   const tids = [...new Set(records.map(r => r.tournament_id))];
-  const { data: tourneys } = await sb
-    .from('tournaments')
-    .select('id, name, slug, logo_url, short_name')
-    .in('id', tids);
-
-  // Scores across ALL player IDs (one per tournament)
   const pids = records.map(r => r.id);
-  const { data: scores } = await sb
-    .from('scores')
-    .select('tournament_id, round, gross_score, player_id')
-    .in('player_id', pids);
 
-  // HIO count
-  const hios = (scores || []).filter(s => s.gross_score === 1).length;
+  const [tourneysRes, scoresRes, invitesRes, accountRes] = await Promise.all([
+    sb.from('tournaments').select('id, name, slug, logo_url, short_name').in('id', tids),
+    sb.from('scores').select('tournament_id, round, gross_score, player_id').in('player_id', pids),
+    sb.from('invitations').select('id, tournament_id, message, status').eq('email', email).eq('status', 'pending'),
+    sb.from('player_accounts').select('plan, billing_status, billing_expires_at').eq('email', email).maybeSingle(),
+  ]);
 
-  // Rounds: unique (tournament_id, round) combos
-  const roundSet = new Set((scores || []).map(s => s.tournament_id + '-' + s.round));
+  const tourneys = tourneysRes.data || [];
+  const scores   = scoresRes.data || [];
+  const invites  = invitesRes.data || [];
+  const account  = accountRes.data;
+
+  // ── Billing gate ─────────────────────────────────────────────
+  const isActive = account && account.billing_status === 'active' &&
+    (!account.billing_expires_at || new Date(account.billing_expires_at) > new Date());
+  const billingBanner = document.getElementById('billingBanner');
+  if (billingBanner) billingBanner.style.display = isActive ? 'none' : 'flex';
+
+  // ── Stats ─────────────────────────────────────────────────────
+  const hios = scores.filter(s => s.gross_score === 1).length;
+  const roundSet = new Set(scores.map(s => s.tournament_id + '-' + s.round));
   const totalRounds = roundSet.size;
 
-  // Render
-  document.getElementById('portalName').innerHTML = `${me.first_name} <em>${me.last_name}</em>`;
+  // ── Render header + stats ─────────────────────────────────────
+  document.getElementById('portalName').innerHTML = `${esc(me.first_name)} <em>${esc(me.last_name)}</em>`;
   document.getElementById('portalEmail').textContent = email;
   document.getElementById('statTourneys').textContent = tids.length;
   document.getElementById('statRounds').textContent = totalRounds;
   document.getElementById('statHios').textContent = hios;
 
+  // ── Invitations ───────────────────────────────────────────────
+  const tourneysById = {};
+  tourneys.forEach(t => { tourneysById[t.id] = t; });
+
+  const invitesSection = document.getElementById('invitesSection');
+  const inviteCards    = document.getElementById('inviteCards');
+  if (invites.length && invitesSection && inviteCards) {
+    inviteCards.innerHTML = invites.map(inv => {
+      const t = tourneysById[inv.tournament_id] || {};
+      return `<div class="invite-card">
+        <div class="invite-card-info">
+          <div class="invite-card-name">${esc(t.name || 'Tournament')}</div>
+          ${inv.message ? `<div class="invite-card-msg">"${esc(inv.message)}"</div>` : ''}
+        </div>
+        <div class="invite-actions">
+          <button class="invite-btn accept" onclick="respondInvite('${inv.id}','accepted','${esc(t.slug||'')}')">Accept</button>
+          <button class="invite-btn decline" onclick="respondInvite('${inv.id}','declined','')">Decline</button>
+        </div>
+      </div>`;
+    }).join('');
+    invitesSection.style.display = 'block';
+  }
+
   const grid = document.getElementById('tourneyGrid');
   grid.innerHTML = '';
 
-  if (!tourneys || !tourneys.length) {
+  // ── Tournament cards ──────────────────────────────────────────
+  if (!tourneys.length) {
     document.getElementById('noTourneys').style.display = 'block';
   } else {
     document.getElementById('noTourneys').style.display = 'none';
-    const tourneysById = {};
-    (tourneys || []).forEach(t => { tourneysById[t.id] = t; });
-
-    // Sort: most recent first (by id desc as proxy)
-    const sorted = [...records].sort((a, b) => (tourneysById[b.tournament_id]?.id || '').localeCompare(tourneysById[a.tournament_id]?.id || ''));
+    const sorted = [...records].sort((a, b) =>
+      (tourneysById[b.tournament_id]?.id || '').localeCompare(tourneysById[a.tournament_id]?.id || ''));
 
     sorted.forEach(rec => {
       const t = tourneysById[rec.tournament_id];
@@ -244,8 +302,17 @@ async function loadPortal(email) {
       const tierClass = TIER_MAP[rec.handicap] || '';
       const tierLabel = TIER_LABEL[rec.handicap] || rec.handicap || '';
 
-      // Has scores for this player's ID in this tournament
-      const isActive = (scores || []).some(s => s.player_id === rec.id);
+      // Per-tournament score stats
+      const myScores  = scores.filter(s => s.player_id === rec.id);
+      const hasScores = myScores.length > 0;
+      const myRounds  = new Set(myScores.map(s => s.round)).size;
+      const myHios    = myScores.filter(s => s.gross_score === 1).length;
+      const summaryHtml = hasScores
+        ? `<div class="tourney-summary">
+            <span>${myRounds}</span> round${myRounds !== 1 ? 's' : ''}
+            ${myHios ? `&nbsp;· <span>${myHios}</span> HIO` : ''}
+          </div>`
+        : '';
 
       const logoHtml = t.logo_url
         ? `<img class="tourney-logo" src="${esc(t.logo_url)}" alt="" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">`
@@ -255,7 +322,7 @@ async function loadPortal(email) {
       const card = document.createElement('div');
       card.className = 'tourney-card';
       card.innerHTML = `
-        ${isActive ? '<div class="active-badge">Active</div>' : ''}
+        ${hasScores ? '<div class="active-badge">Played</div>' : ''}
         <div class="tourney-card-top">
           ${logoHtml}
           <div class="tourney-meta">
@@ -264,6 +331,7 @@ async function loadPortal(email) {
           </div>
         </div>
         ${tierLabel ? `<div class="tourney-tier ${tierClass}">${esc(tierLabel)}</div>` : ''}
+        ${summaryHtml}
         <div class="tourney-links">
           <a class="tourney-link primary" href="${baseUrl}/scorecard" target="_blank">Enter Scores</a>
           <a class="tourney-link" href="${baseUrl}/scoreboard" target="_blank">Leaderboard</a>
@@ -276,6 +344,16 @@ async function loadPortal(email) {
 
   document.getElementById('loginWrap').style.display = 'none';
   document.getElementById('portalWrap').style.display = 'block';
+}
+
+async function respondInvite(inviteId, status, slug) {
+  await sb.from('invitations').update({ status }).eq('id', inviteId);
+  if (status === 'accepted' && slug) {
+    window.open(`https://${slug}.greenskeeper.studio/`, '_blank');
+  }
+  // Reload portal to reflect updated invites
+  const email = sessionStorage.getItem(SESSION_KEY);
+  if (email) loadPortal(email).catch(() => {});
 }
 
 function esc(s) {
