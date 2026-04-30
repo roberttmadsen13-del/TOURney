@@ -210,8 +210,8 @@ a{color:inherit;text-decoration:none;}
         <div class="empty-rule-diamond"></div>
         <div class="empty-rule-line"></div>
       </div>
-      <div class="empty-title">First Year of the Bova <em>Invitational</em></div>
-      <div class="empty-body">History starts now. The 2026 champion will be the first name etched into this hall — the inaugural holder of the Bova Trophy.</div>
+      <div class="empty-title" id="emptyTitle">First Year</div>
+      <div class="empty-body" id="emptyBody">History starts now. The first champion will be the first name etched into this hall.</div>
     </div>
   </div>
 </div>
@@ -234,6 +234,12 @@ async function init() {
   champions.sort((a, b) => b.year - a.year);
 
   if (!champions.length) {
+    const name = tournament.name || 'this tournament';
+    const year = new Date().getFullYear();
+    const t = document.getElementById('emptyTitle');
+    const b = document.getElementById('emptyBody');
+    if (t) t.innerHTML = `First Year of <em>${esc(name)}</em>`;
+    if (b) b.textContent = `History starts now. The ${year} champion will be the first name etched into this hall.`;
     document.getElementById('emptyState').style.display = 'block';
     return;
   }
