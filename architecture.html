@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TOURney Architecture Flow</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 1rem;
+      background: #f5ede0;
+      font-family: sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    h1 {
+      color: #1a1008;
+      font-size: 1.5rem;
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    .mermaid {
+      max-width: 100%;
+      overflow-x: auto;
+      background: #fff;
+      padding: 1rem;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10.4.0/dist/mermaid.min.js"></script>
+  <script>
+    mermaid.initialize({ startOnLoad: true, theme: 'base', themeVariables: {
+      primaryColor: '#f5ede0',
+      primaryTextColor: '#1a1008',
+      primaryBorderColor: '#c09030',
+      lineColor: '#c09030',
+      secondaryColor: '#27ae60',
+      tertiaryColor: '#1a1008'
+    }});
+  </script>
+</head>
+<body>
+
+  <h1>TOURney Platform Flow</h1>
+  
+  <div class="mermaid">
+flowchart TD
+    classDef platform fill:#1a1008,stroke:#c09030,color:#f5ede0,stroke-width:2px;
+    classDef tenant fill:#0e0b06,stroke:#27ae60,color:#f5ede0,stroke-width:2px;
+    classDef data fill:#1a2a1a,stroke:#27ae60,color:#f5ede0;
+    classDef client fill:#0a0703,stroke:#444,color:#f5ede0;
+
+    subgraph PLATFORM["Platform Level (tourney.greenskeeper.studio)"]
+        MKTG["marketing.html\nSales & Pricing"]
+        CREATE["create.html\n5-Step Setup Wizard"]
+        PLAT["platform.html\nSuper Admin (Rob)"]
+    end
+
+    subgraph TOURNAMENT["Tournament Instance (/t/{slug}/)"]
+        HOME["home.html\nLanding Page & Registration"]
+        ADMIN["admin.html\nOwner Dashboard"]
+        LOGIN["login.html\nPlayer Auth"]
+        INSTALL["install.html\nPWA Install Guide"]
+        
+        SCOREBOARD["scoreboard.html\nLive Leaderboard"]
+        SCORECARD["scorecard.html\nHole-by-Hole Scores"]
+        
+        FEED["feed.html\nActivity Feed & Alerts"]
+        PROFILE["profile.html\nPlayer Stats & Edit"]
+        DIRECTORY["directory.html\nFull Roster & Teams"]
+        COURSE["course.html\nCourse Info & Pars"]
+        CHAMPS["champions.html\nHall of Fame"]
+    end
+
+    subgraph DATA["Storage & State"]
+        SB[("Supabase\ntournaments, players\nscores, settings")]
+        LS["localStorage\nSession State\nOffline Queue"]
+    end
+
+    MKTG -->|"Click 'Create'"| CREATE
+    CREATE -->|"Creates Tenant"| ADMIN
+    PLAT -->|"Jump to"| ADMIN
+
+    ADMIN -->|"Configures"| SB
+    ADMIN -->|"Updates"| HOME
+    
+    HOME -->|"Register"| SB
+    HOME -->|"Requires login"| LOGIN
+    LOGIN -->|"Success"| HOME
+    HOME -->|"Install app"| INSTALL
+    INSTALL -->|"After install"| HOME
+    
+    HOME -->|"View live scoring"| SCOREBOARD
+    SCOREBOARD -->|"Enter scores"| SCORECARD
+    SCORECARD -->|"Auto-saves"| SB
+    SB -->|"Realtime"| SCOREBOARD
+    
+    FEED -->|"Tap player"| PROFILE
+    PROFILE -->|"View all"| DIRECTORY
+    SCORECARD -->|"Check par"| COURSE
+    
+    HOME -.-> SB
+    ADMIN -.-> SB
+    SCOREBOARD -.-> SB
+    FEED -.-> SB
+    PROFILE -.-> SB
+    DIRECTORY -.-> SB
+    COURSE -.-> SB
+    CHAMPS -.-> SB
+    
+    SCORECARD -.->|"Cache offline"| LS
+    LS -.->|"Sync online"| SB
+
+    class MKTG,CREATE,PLAT platform;
+    class HOME,ADMIN,LOGIN,INSTALL,SCOREBOARD,SCORECARD,FEED,PROFILE,DIRECTORY,COURSE,CHAMPS tenant;
+    class SB data;
+    class LS client;
+  </div>
+
+</body>
+</html>
