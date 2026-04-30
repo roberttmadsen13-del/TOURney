@@ -18,12 +18,13 @@
 body{background:var(--bg);color:var(--ink);font-family:'Barlow',sans-serif;font-weight:400;min-height:100vh;-webkit-user-select:none;user-select:none;}
 
 /* NAV */
-.nav{position:sticky;top:0;z-index:100;height:52px;display:flex;align-items:center;justify-content:space-between;padding:0 1.2rem;background:rgba(10,7,2,0.98);border-bottom:1px solid var(--border);}
+.nav{position:sticky;top:0;z-index:100;height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;background:rgba(14,11,6,0.97);border-bottom:1px solid var(--border);}
 .nav-logo{font-family:'Playfair Display',serif;font-size:0.85rem;font-weight:700;display:flex;align-items:center;gap:0.45rem;}
 .nav-logo em{font-style:italic;color:var(--gold);}
 .nav-right{display:flex;gap:0.8rem;align-items:center;}
-.nav-link{font-family:'DM Mono',monospace;font-size:0.48rem;letter-spacing:0.15em;text-transform:uppercase;color:rgba(240,230,204,0.4);text-decoration:none;}
-.nav-link:hover{color:var(--gold);}
+.nav-links{display:flex;gap:1.5rem;list-style:none;}
+.nav-links a{font-family:'Barlow Condensed',sans-serif;font-size:0.65rem;letter-spacing:0.18em;text-transform:uppercase;color:rgba(240,230,204,0.6);text-decoration:none;transition:color 0.2s;}
+.nav-links a:hover{color:var(--gold);}
 
 /* SETUP SCREEN */
 .setup{max-width:420px;margin:0 auto;padding:2rem 1.5rem;}
@@ -226,6 +227,7 @@ body{background:var(--bg);color:var(--ink);font-family:'Barlow',sans-serif;font-
     <a href="/directory" class="nav-link">Directory</a>
     <a href="/" class="nav-link">Home</a>
   </div>
+  <div class="nav-right"></div>
 </nav>
 
 <div class="saving" id="savingIndicator"></div>
@@ -940,15 +942,21 @@ function renderPlayers() {
   if (!hasOpps) {
     rightHtml = `<div style="padding:1rem 0;font-family:'DM Mono',monospace;font-size:0.4rem;letter-spacing:0.15em;text-transform:uppercase;color:rgba(240,230,204,0.15);">No opponents<br>selected</div>`;
   } else if (isScramble) {
-    // Opposing team has one scramble score; read from either opp player
+    // Opposing team has one scramble score; check both opp players
     const refOpp = opp1Player || opp2Player;
-    const gross  = opponentScores[refOpp.id]?.[currentHole] || null;
+    const opp1Gross = opp1Player ? (opponentScores[opp1Player.id]?.[currentHole] ?? null) : null;
+    const opp2Gross = opp2Player ? (opponentScores[opp2Player.id]?.[currentHole] ?? null) : null;
+    const gross  = opp1Gross ?? opp2Gross;
     const cls    = scoreValClass(gross, par);
     const lbl    = scoreLabel(gross, par);
+    // Show opponent player names
+    const oppNames = [opp1Player, opp2Player].filter(Boolean)
+      .map(o => `<span class="player-badge ${oppColCls}" style="width:1.6rem;height:1.6rem;font-size:0.7rem;">${(o.first_name[0] + (o.last_name?.[0] || '')).toUpperCase()}</span>`)
+      .join('');
     rightHtml = `
-      <div class="scramble-label">Team Score</div>
+      <div style="display:flex;align-items:center;gap:0.35rem;margin-bottom:0.4rem;">${oppNames}<span class="scramble-label" style="margin:0">Team Score</span></div>
       <div class="scramble-opp-box" id="opp-box-${refOpp.id}">
-        ${gross
+        ${gross != null
           ? `<div class="opp-score-box" style="justify-content:center;">
                <div class="opp-num ${cls}">${gross}</div>
                <div class="opp-rel ${cls}">${lbl}</div>
@@ -1039,7 +1047,7 @@ function adjustScore(playerId, par, delta) {
   if (scoreHistory.length > 20) scoreHistory.shift();
   updateUndoBtn();
 
-  // Day 2 scramble: mirror score to partner
+  // Day 2 scramble: mirror score to partner locally
   if (isScrambleHole(currentHole) && playerId === scorerPlayer.id && partnerPlayer) {
     if (!enteredScores[partnerPlayer.id]) enteredScores[partnerPlayer.id] = {};
     enteredScores[partnerPlayer.id][currentHole] = next;

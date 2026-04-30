@@ -181,6 +181,25 @@ td.email a:hover{color:var(--gold);}
 .save-pars-btn{margin-top:1.2rem;padding:0.65rem 1.8rem;background:var(--gold);color:var(--ink);border:none;font-family:'Barlow Condensed',sans-serif;font-size:0.68rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;cursor:pointer;transition:background 0.2s;}
 .save-pars-btn:hover{background:var(--gold-l);}
 
+/* Course search autocomplete */
+.course-search-wrap{position:relative;}
+.course-search-input{background:var(--card);border:1px solid var(--border);padding:0.55rem 0.75rem;padding-right:2.5rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.85rem;outline:none;width:100%;}
+.course-search-input:focus{border-color:var(--gold);}
+.course-search-input.db-filled{border-color:rgba(42,122,32,0.4);background:rgba(42,122,32,0.04);}
+.course-search-icon{position:absolute;right:0.65rem;top:50%;transform:translateY(-50%);pointer-events:none;color:var(--muted);font-size:0.7rem;}
+.course-dropdown{position:absolute;top:100%;left:0;right:0;z-index:50;background:var(--card);border:1px solid var(--gold);border-top:none;max-height:240px;overflow-y:auto;display:none;}
+.course-dropdown.open{display:block;}
+.course-option{padding:0.55rem 0.75rem;cursor:pointer;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(192,144,48,0.1);transition:background 0.12s;}
+.course-option:hover,.course-option.active{background:rgba(192,144,48,0.1);}
+.course-option-name{font-family:'Barlow',sans-serif;font-size:0.82rem;font-weight:500;color:var(--ink);}
+.course-option-loc{font-family:'DM Mono',monospace;font-size:0.42rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);white-space:nowrap;}
+.course-option:last-child{border-bottom:none;}
+.course-mode-toggle{display:flex;gap:0;margin-bottom:0.5rem;}
+.course-mode-btn{flex:1;padding:0.45rem 0.6rem;border:1px solid var(--border);background:transparent;font-family:'DM Mono',monospace;font-size:0.42rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);cursor:pointer;transition:all 0.15s;}
+.course-mode-btn:first-child{border-right:none;}
+.course-mode-btn.active{background:rgba(192,144,48,0.12);color:var(--gold);border-color:var(--gold);}
+.course-auto-tag{display:inline-block;font-family:'DM Mono',monospace;font-size:0.38rem;letter-spacing:0.1em;text-transform:uppercase;color:#2a7a20;padding:0.1rem 0.4rem;border:1px solid rgba(42,122,32,0.3);background:rgba(42,122,32,0.06);margin-left:0.5rem;}
+
 /* LOGO UPLOAD */
 .logo-upload-wrap{display:flex;align-items:center;gap:1.2rem;flex-wrap:wrap;padding:1.2rem;background:var(--card);border:1px solid var(--border);}
 .logo-file-label{display:inline-block;padding:0.55rem 1.2rem;border:1px solid var(--gold);color:var(--gold);font-family:'Barlow Condensed',sans-serif;font-size:0.65rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;cursor:pointer;transition:all 0.2s;}
@@ -673,6 +692,14 @@ let _slug = null;  // tournament slug — used for storage namespacing
 const DATE_LABELS = {aug21:'Aug 21-24',aug28:'Aug 28-31',sep4:'Sep 4-7',sep11:'Sep 11-14',sep18:'Sep 18-21',sep25:'Sep 25-28',oct2:'Oct 2-5',oct9:'Oct 9-12'};
 const TIER_MAP = {scratch:'t-scratch',eagle:'t-eagle',birdie:'t-birdie',bogey:'t-bogey',pretender:'t-pretender',hacker:'t-hacker'};
 const TIER_LABELS = {scratch:'Scratch',eagle:'Eagle',birdie:'Birdie',bogey:'Bogey',pretender:'Pretenders',hacker:'Dreamers'};
+
+function formatPhone(raw) {
+  if (!raw) return '';
+  const digits = raw.replace(/\D/g, '');
+  if (digits.length === 10) return `(${digits.slice(0,3)}) ${digits.slice(3,6)}-${digits.slice(6)}`;
+  if (digits.length === 11 && digits[0] === '1') return `(${digits.slice(1,4)}) ${digits.slice(4,7)}-${digits.slice(7)}`;
+  return raw; // return as-is if non-standard
+}
 const TIER_ORDER = ['scratch','eagle','birdie','bogey','pretender','hacker'];
 const DEFAULT_PARS = {
   day1:[3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3],
@@ -951,7 +978,7 @@ function renderTable() {
       <td style="color:rgba(240,230,204,0.3)">${origPos}</td>
       <td class="name">${p.first_name} ${p.last_name}</td>
       <td class="email"><a href="mailto:${p.email}">${p.email}</a></td>
-      <td style="font-size:0.7rem;color:rgba(240,230,204,0.5)">${p.phone_number ? `<a href="tel:${p.phone_number}" style="color:inherit;text-decoration:none">${p.phone_number}</a>` : '—'}</td>
+      <td style="font-size:0.7rem;color:rgba(240,230,204,0.5)">${p.phone_number ? `<a href="tel:${p.phone_number}" style="color:inherit;text-decoration:none">${formatPhone(p.phone_number)}</a>` : '—'}</td>
       <td><span class="tier-pill ${TIER_MAP[p.handicap] || ''}">${TIER_LABELS[p.handicap] || p.handicap}</span></td>
       <td style="font-size:0.7rem;color:rgba(240,230,204,0.4)">${dates || '—'}</td>
       <td style="font-size:0.72rem;color:rgba(240,230,204,0.45);max-width:160px">${p.why_me || '—'}</td>
@@ -1080,9 +1107,17 @@ function buildParEditor() {
     const body = document.getElementById(`parBody-${day}`);
     const pars = coursePars[day] || DEFAULT_PARS[day];
     body.innerHTML = `
+      <div class="course-mode-toggle">
+        <button class="course-mode-btn active" id="modeSearch-${day}" onclick="setCourseMode('${day}','search')">Search Database</button>
+        <button class="course-mode-btn" id="modeCustom-${day}" onclick="setCourseMode('${day}','custom')">Custom Course</button>
+      </div>
       <div class="fg" style="padding:0 0 0.5rem;">
         <label>Course Name</label>
-        <input type="text" id="courseName-${day}" placeholder="e.g. Barefoot Resort — Dye Course" style="background:var(--card);border:1px solid var(--border);padding:0.55rem 0.75rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.85rem;outline:none;width:100%;" onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='var(--border)'">
+        <div class="course-search-wrap">
+          <input type="text" class="course-search-input" id="courseName-${day}" placeholder="Start typing a course name..." autocomplete="off" oninput="onCourseSearch('${day}')" onfocus="onCourseSearch('${day}')">
+          <span class="course-search-icon" id="courseIcon-${day}">&#128269;</span>
+          <div class="course-dropdown" id="courseDropdown-${day}"></div>
+        </div>
       </div>
       <div class="par-nine-label">Front Nine (Holes 1–9)</div>
       <div class="par-inputs" id="parFront-${day}">
@@ -1111,6 +1146,162 @@ function buildParEditor() {
     const el = document.getElementById(`courseName-${day}`);
     if (el && window._courseNames?.[day]) el.value = window._courseNames[day];
   });
+  // Close dropdowns on outside click
+  document.addEventListener('click', function(e) {
+    document.querySelectorAll('.course-dropdown').forEach(dd => {
+      if (!dd.parentNode.contains(e.target)) dd.classList.remove('open');
+    });
+  });
+}
+
+// ── COURSE SEARCH (queries Supabase golf_courses table) ──────────
+let _courseDropdownIdx = {};
+let _courseSearchTimer = {};
+let _courseSearchCache = {};
+
+function setCourseMode(day, mode) {
+  const searchBtn = document.getElementById(`modeSearch-${day}`);
+  const customBtn = document.getElementById(`modeCustom-${day}`);
+  const input = document.getElementById(`courseName-${day}`);
+  if (mode === 'search') {
+    searchBtn.classList.add('active');
+    customBtn.classList.remove('active');
+    input.placeholder = 'Start typing a course name...';
+  } else {
+    customBtn.classList.add('active');
+    searchBtn.classList.remove('active');
+    input.placeholder = 'Enter custom course name';
+    input.classList.remove('db-filled');
+    document.getElementById(`courseDropdown-${day}`).classList.remove('open');
+    document.getElementById(`courseIcon-${day}`).innerHTML = '&#9998;';
+  }
+}
+
+function onCourseSearch(day) {
+  const input = document.getElementById(`courseName-${day}`);
+  const dropdown = document.getElementById(`courseDropdown-${day}`);
+  const mode = document.getElementById(`modeCustom-${day}`).classList.contains('active') ? 'custom' : 'search';
+  if (mode === 'custom') { dropdown.classList.remove('open'); return; }
+
+  const q = input.value.trim();
+  if (q.length < 2) { dropdown.classList.remove('open'); return; }
+
+  // Debounce DB query
+  clearTimeout(_courseSearchTimer[day]);
+  _courseSearchTimer[day] = setTimeout(() => doCourseSearch(day, q), 200);
+}
+
+async function doCourseSearch(day, q) {
+  const dropdown = document.getElementById(`courseDropdown-${day}`);
+  const input = document.getElementById(`courseName-${day}`);
+
+  // Check cache first
+  if (_courseSearchCache[q]) {
+    renderCourseResults(day, _courseSearchCache[q], q);
+    return;
+  }
+
+  // Query Supabase — ilike search on name, city, state
+  const pattern = `%${q}%`;
+  const { data, error } = await sb.from('golf_courses')
+    .select('name, city, state, pars')
+    .or(`name.ilike.${pattern},city.ilike.${pattern},state.ilike.${pattern}`)
+    .limit(12);
+
+  const results = data || [];
+  _courseSearchCache[q] = results;
+  renderCourseResults(day, results, q);
+}
+
+function renderCourseResults(day, results, q) {
+  const dropdown = document.getElementById(`courseDropdown-${day}`);
+  const input = document.getElementById(`courseName-${day}`);
+
+  if (!results.length) {
+    dropdown.innerHTML = '<div class="course-option" style="pointer-events:none;color:var(--muted);font-style:italic;font-size:0.75rem;">No matches — try "Custom Course"</div>';
+    dropdown.classList.add('open');
+    return;
+  }
+
+  _courseDropdownIdx[day] = -1;
+  dropdown.innerHTML = results.map((c, i) =>
+    `<div class="course-option" data-idx="${i}" data-course='${JSON.stringify(c).replace(/'/g,"&#39;")}' onclick="selectCourseFromEl(this,'${day}')" onmouseenter="highlightCourse('${day}',${i})">
+      <span class="course-option-name">${highlightMatch(c.name, q)}</span>
+      <span class="course-option-loc">${c.city}, ${c.state}</span>
+    </div>`
+  ).join('');
+  dropdown.classList.add('open');
+
+  // Keyboard nav
+  input.onkeydown = function(e) {
+    const items = dropdown.querySelectorAll('.course-option[data-idx]');
+    if (!items.length) return;
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      _courseDropdownIdx[day] = Math.min((_courseDropdownIdx[day] ?? -1) + 1, items.length - 1);
+      updateHighlight(day, items);
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      _courseDropdownIdx[day] = Math.max((_courseDropdownIdx[day] ?? 0) - 1, 0);
+      updateHighlight(day, items);
+    } else if (e.key === 'Enter' && (_courseDropdownIdx[day] ?? -1) >= 0) {
+      e.preventDefault();
+      items[_courseDropdownIdx[day]].click();
+    } else if (e.key === 'Escape') {
+      dropdown.classList.remove('open');
+    }
+  };
+}
+
+function highlightMatch(text, query) {
+  const words = query.split(/\s+/);
+  let result = text;
+  words.forEach(w => {
+    if (!w) return;
+    const re = new RegExp(`(${w.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')})`, 'gi');
+    result = result.replace(re, '<strong style="color:var(--gold)">$1</strong>');
+  });
+  return result;
+}
+
+function highlightCourse(day, idx) {
+  _courseDropdownIdx[day] = idx;
+  const items = document.getElementById(`courseDropdown-${day}`).querySelectorAll('.course-option[data-idx]');
+  updateHighlight(day, items);
+}
+
+function updateHighlight(day, items) {
+  items.forEach((el, i) => {
+    el.classList.toggle('active', i === _courseDropdownIdx[day]);
+  });
+}
+
+function selectCourseFromEl(el, day) {
+  const course = JSON.parse(el.dataset.course);
+  selectCourse(day, course);
+}
+
+function selectCourse(day, course) {
+  const input = document.getElementById(`courseName-${day}`);
+  input.value = course.name;
+  input.classList.add('db-filled');
+  document.getElementById(`courseIcon-${day}`).innerHTML = '&#10003;';
+
+  // Auto-fill all 18 pars
+  const pars = course.pars;
+  pars.forEach((p, i) => {
+    const el = document.getElementById(`par-${day}-${i+1}`);
+    if (el) {
+      el.value = p;
+      el.style.transition = 'background 0.3s';
+      el.style.background = 'rgba(42,122,32,0.15)';
+      setTimeout(() => { el.style.background = ''; }, 600);
+    }
+  });
+  updateParSubtotals(day);
+
+  document.getElementById(`courseDropdown-${day}`).classList.remove('open');
+  showToast(`Loaded pars for ${course.name} (${course.city}, ${course.state})`);
 }
 
 function toggleParDay(day) {
@@ -1201,7 +1392,7 @@ function editPlayer(id) {
       <div class="fg"><label>First Name</label><input type="text" id="ep-first" value="${p.first_name || ''}"></div>
       <div class="fg"><label>Last Name</label><input type="text" id="ep-last" value="${p.last_name || ''}"></div>
       <div class="fg"><label>Email</label><input type="email" id="ep-email" value="${p.email || ''}"></div>
-      <div class="fg"><label>Phone</label><input type="tel" id="ep-phone" value="${p.phone_number || ''}"></div>
+      <div class="fg"><label>Phone</label><input type="tel" id="ep-phone" value="${formatPhone(p.phone_number || '')}"></div>
       <div class="fg"><label>Handicap Tier</label><select id="ep-tier">${tierOpts}</select></div>
       <div class="fg"><label>Hat</label><select id="ep-hat"><option value="false"${!p.hat?' selected':''}>No</option><option value="true"${p.hat?' selected':''}>Yes</option></select></div>
       <div class="edit-modal-btns">
@@ -1211,6 +1402,15 @@ function editPlayer(id) {
     </div>
   `;
   document.body.appendChild(overlay);
+  // Auto-format phone input
+  const epPhone = overlay.querySelector('#ep-phone');
+  epPhone.addEventListener('input', function() {
+    const digits = this.value.replace(/\D/g, '').slice(0, 10);
+    if (digits.length === 0) { this.value = ''; return; }
+    if (digits.length <= 3) this.value = `(${digits}`;
+    else if (digits.length <= 6) this.value = `(${digits.slice(0,3)}) ${digits.slice(3)}`;
+    else this.value = `(${digits.slice(0,3)}) ${digits.slice(3,6)}-${digits.slice(6)}`;
+  });
   overlay.querySelector('#ep-cancel').onclick = () => overlay.remove();
   overlay.addEventListener('click', e => { if (e.target === overlay) overlay.remove(); });
   overlay.querySelector('#ep-save').onclick = async () => {
@@ -1250,7 +1450,7 @@ function subscribeRealtime() {
         <td style="color:rgba(240,230,204,0.3)">${i+1}</td>
         <td class="name">${p.first_name} ${p.last_name}</td>
         <td class="email"><a href="mailto:${p.email}">${p.email}</a></td>
-        <td style="font-size:0.7rem;color:rgba(240,230,204,0.5)">${p.phone_number ? `<a href="tel:${p.phone_number}" style="color:inherit;text-decoration:none">${p.phone_number}</a>` : '—'}</td>
+        <td style="font-size:0.7rem;color:rgba(240,230,204,0.5)">${p.phone_number ? `<a href="tel:${p.phone_number}" style="color:inherit;text-decoration:none">${formatPhone(p.phone_number)}</a>` : '—'}</td>
         <td><span class="tier-pill ${TIER_MAP[p.handicap] || ''}">${TIER_LABELS[p.handicap] || p.handicap}</span></td>
         <td style="font-size:0.7rem;color:rgba(240,230,204,0.4)">${dates || '—'}</td>
         <td style="font-size:0.72rem;color:rgba(240,230,204,0.45)">${p.why_me || '—'}</td>
