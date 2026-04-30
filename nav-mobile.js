@@ -49,6 +49,16 @@
 
     if (nav.parentNode) nav.parentNode.insertBefore(drawer, nav.nextSibling);
 
+    // Always inject "My Golf" portal link for players (skip if already there)
+    var _curPath = window.location.pathname.replace(/\/$/, '');
+    if (_curPath !== '/player' && !_curPath.endsWith('/player')) {
+      var myGolfLink = document.createElement('a');
+      myGolfLink.href = '/player';
+      myGolfLink.textContent = '⛳ My Golf';
+      myGolfLink.style.cssText = 'color:rgba(192,144,48,0.7);font-size:0.6rem;letter-spacing:0.18em;';
+      inner.appendChild(myGolfLink);
+    }
+
     // Allow post-init injection (e.g. platform link for owner, admin link per page)
     window._navInjectLink = function(href, label, style) {
       var a = document.createElement('a');
