@@ -1,4 +1,4 @@
-const CACHE = 'tourney-v9';
+const CACHE = 'tourney-v10';
 const PRECACHE = [
   '/',
   '/celebrate.js',
@@ -13,6 +13,7 @@ const PRECACHE = [
   '/champions.html',
   '/course.html',
   '/install.html',
+  '/player.html',
   '/manifest.json',
   '/icon-192.png',
   '/icon-512.png',

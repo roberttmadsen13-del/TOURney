@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" href="/icon-192.png" type="image/png">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#1a1008">
+<title>My Golf — TOURney</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Mono:wght@300;400;500&family=Barlow+Condensed:wght@300;400;600;700;800&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#1a1008;--gold:#c09030;--gold-l:#d4aa50;--gold-p:#e8cc80;--cream:#f0e6cc;--red:#8a1e10;--border:rgba(192,144,48,0.28);--bg:#1a1008;--card:#231a0a;--card2:#2d2010;--muted:rgba(240,230,204,0.38);}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--bg);color:var(--cream);font-family:'Barlow',sans-serif;font-weight:300;min-height:100vh;}
+a{color:inherit;text-decoration:none;}
+
+/* NAV */
+.nav{height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;border-bottom:1px solid rgba(192,144,48,0.18);}
+.nav-logo{font-family:'Playfair Display',serif;font-size:0.9rem;font-weight:700;display:flex;align-items:center;gap:0.5rem;color:var(--cream);}
+.nav-logo em{font-style:italic;color:var(--gold);}
+.nav-back{font-family:'DM Mono',monospace;font-size:0.48rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);}
+.nav-back:hover{color:var(--gold);}
+
+/* LOGIN SCREEN */
+.login-wrap{min-height:calc(100vh - 56px);display:flex;align-items:center;justify-content:center;padding:2rem;}
+.login-box{width:100%;max-width:400px;}
+.login-eyebrow{font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.45em;text-transform:uppercase;color:rgba(192,144,48,0.5);margin-bottom:0.75rem;}
+.login-title{font-family:'Playfair Display',serif;font-size:2.4rem;font-weight:900;line-height:1.05;margin-bottom:0.5rem;}
+.login-title em{font-style:italic;color:var(--gold-p);}
+.login-sub{font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.25em;text-transform:uppercase;color:var(--muted);margin-bottom:2.5rem;}
+.fg{display:flex;flex-direction:column;gap:0.35rem;margin-bottom:1rem;}
+.fg label{font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.28em;text-transform:uppercase;color:var(--gold);}
+.fg input{background:var(--card);border:1px solid rgba(192,144,48,0.28);padding:0.75rem 0.9rem;color:var(--cream);font-family:'Barlow',sans-serif;font-size:1rem;outline:none;width:100%;border-radius:0;-webkit-appearance:none;}
+.fg input:focus{border-color:var(--gold);}
+.fg input::placeholder{color:rgba(240,230,204,0.25);}
+.btn-primary{width:100%;padding:0.9rem;background:var(--gold);color:var(--ink);border:none;font-family:'Barlow Condensed',sans-serif;font-size:0.75rem;font-weight:700;letter-spacing:0.25em;text-transform:uppercase;cursor:pointer;transition:background 0.2s;}
+.btn-primary:hover{background:var(--gold-l);}
+.login-err{font-family:'DM Mono',monospace;font-size:0.5rem;color:#c0503a;margin-top:0.75rem;display:none;}
+.login-err.show{display:block;}
+
+/* PORTAL */
+.portal{display:none;max-width:960px;margin:0 auto;padding:3rem 2rem;}
+@media(max-width:600px){.portal{padding:2rem 1rem;}}
+
+.portal-header{margin-bottom:2.5rem;}
+.portal-eyebrow{font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.45em;text-transform:uppercase;color:rgba(192,144,48,0.5);margin-bottom:0.5rem;}
+.portal-name{font-family:'Playfair Display',serif;font-size:2.2rem;font-weight:900;line-height:1;}
+.portal-name em{font-style:italic;color:var(--gold-p);}
+.portal-email{font-family:'DM Mono',monospace;font-size:0.48rem;letter-spacing:0.18em;color:var(--muted);margin-top:0.4rem;}
+
+/* STATS STRIP */
+.stats-strip{display:flex;border:1px solid rgba(192,144,48,0.18);margin-bottom:3rem;overflow:hidden;}
+.stat-cell{flex:1;padding:1.1rem 1.4rem;border-right:1px solid rgba(192,144,48,0.18);}
+.stat-cell:last-child{border-right:none;}
+.stat-val{font-family:'Playfair Display',serif;font-size:2rem;font-weight:900;color:var(--gold);line-height:1;}
+.stat-label{font-family:'DM Mono',monospace;font-size:0.44rem;letter-spacing:0.25em;text-transform:uppercase;color:var(--muted);margin-top:0.25rem;}
+@media(max-width:480px){.stats-strip{flex-wrap:wrap;}.stat-cell{flex:1 1 50%;border-bottom:1px solid rgba(192,144,48,0.18);}}
+
+/* SECTION */
+.section-label{font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.38em;text-transform:uppercase;color:rgba(192,144,48,0.5);margin-bottom:1.25rem;padding-bottom:0.75rem;border-bottom:1px solid rgba(192,144,48,0.18);}
+
+/* TOURNAMENT CARDS */
+.tourney-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1px;background:rgba(192,144,48,0.12);margin-bottom:3rem;}
+.tourney-card{background:var(--card);padding:1.5rem;display:flex;flex-direction:column;gap:0.85rem;cursor:pointer;transition:background 0.18s;position:relative;}
+.tourney-card:hover{background:var(--card2);}
+.tourney-card-top{display:flex;align-items:center;gap:0.85rem;}
+.tourney-logo{width:44px;height:44px;border-radius:50%;object-fit:cover;flex-shrink:0;border:1px solid rgba(192,144,48,0.3);}
+.tourney-logo-fallback{width:44px;height:44px;border-radius:50%;background:rgba(192,144,48,0.1);border:1px solid rgba(192,144,48,0.25);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:900;color:var(--gold);}
+.tourney-meta{flex:1;min-width:0;}
+.tourney-name{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--cream);line-height:1.2;margin-bottom:0.2rem;}
+.tourney-slug{font-family:'DM Mono',monospace;font-size:0.42rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);}
+.tourney-tier{display:inline-block;padding:0.12rem 0.55rem;border:1px solid;font-family:'DM Mono',monospace;font-size:0.4rem;letter-spacing:0.1em;text-transform:uppercase;align-self:flex-start;}
+.t-scratch{color:var(--gold);border-color:var(--gold);}
+.t-eagle{color:#4a9a40;border-color:#4a9a40;}
+.t-birdie{color:#4a7aaa;border-color:#4a7aaa;}
+.t-bogey{color:#c07840;border-color:#c07840;}
+.t-pretender{color:#9a5aaa;border-color:#9a5aaa;}
+.t-hacker{color:rgba(240,230,204,0.3);border-color:rgba(240,230,204,0.18);}
+.tourney-links{display:flex;gap:0.5rem;flex-wrap:wrap;}
+.tourney-link{font-family:'DM Mono',monospace;font-size:0.42rem;letter-spacing:0.15em;text-transform:uppercase;padding:0.3rem 0.7rem;border:1px solid rgba(192,144,48,0.3);color:rgba(240,230,204,0.55);transition:all 0.15s;text-decoration:none;}
+.tourney-link:hover{border-color:var(--gold);color:var(--gold);}
+.tourney-link.primary{border-color:rgba(192,144,48,0.5);color:var(--gold);}
+.active-badge{position:absolute;top:1rem;right:1rem;font-family:'DM Mono',monospace;font-size:0.38rem;letter-spacing:0.18em;text-transform:uppercase;padding:0.15rem 0.5rem;background:rgba(42,122,32,0.15);border:1px solid rgba(42,122,32,0.4);color:#4a9a40;}
+
+/* EMPTY */
+.no-tourneys{text-align:center;padding:4rem 2rem;color:var(--muted);font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.2em;text-transform:uppercase;}
+
+/* LOGOUT */
+.logout-row{display:flex;justify-content:flex-end;margin-top:1rem;}
+.logout-btn{font-family:'DM Mono',monospace;font-size:0.46rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);background:none;border:none;cursor:pointer;padding:0;}
+.logout-btn:hover{color:var(--gold);}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-logo">
+    <svg width="11" height="15" viewBox="0 0 11 15" fill="none"><line x1="2" y1="1" x2="2" y2="14" stroke="#c09030" stroke-width="1.5" stroke-linecap="round"/><path d="M2 2L9.5 4.8L2 7.8Z" fill="#c09030"/></svg>
+    TOURney <em>Player</em>
+  </div>
+  <a href="https://tourney.greenskeeper.studio" class="nav-back">← Platform</a>
+</nav>
+
+<!-- LOGIN -->
+<div id="loginWrap" class="login-wrap">
+  <div class="login-box">
+    <div class="login-eyebrow">TOURney</div>
+    <div class="login-title">My <em>Golf</em></div>
+    <div class="login-sub">Tournament history &amp; upcoming events</div>
+    <form id="loginForm" autocomplete="on">
+      <div class="fg">
+        <label for="emailInput">Your Email</label>
+        <input type="email" id="emailInput" placeholder="you@email.com" autocomplete="email" required>
+      </div>
+      <button type="submit" class="btn-primary" id="loginBtn">View My Golf</button>
+      <div id="loginErr" class="login-err"></div>
+    </form>
+  </div>
+</div>
+
+<!-- PORTAL -->
+<div id="portalWrap" class="portal">
+  <div class="portal-header">
+    <div class="portal-eyebrow">Player Portal</div>
+    <div class="portal-name" id="portalName">—</div>
+    <div class="portal-email" id="portalEmail">—</div>
+  </div>
+
+  <div class="stats-strip" id="statsStrip">
+    <div class="stat-cell"><div class="stat-val" id="statTourneys">—</div><div class="stat-label">Tournaments</div></div>
+    <div class="stat-cell"><div class="stat-val" id="statRounds">—</div><div class="stat-label">Rounds</div></div>
+    <div class="stat-cell"><div class="stat-val" id="statHios">—</div><div class="stat-label">Hole-in-Ones</div></div>
+  </div>
+
+  <div class="section-label">My Tournaments</div>
+  <div id="tourneyGrid" class="tourney-grid"></div>
+  <div id="noTourneys" class="no-tourneys" style="display:none">No tournament history found.</div>
+
+  <div class="logout-row">
+    <button class="logout-btn" id="logoutBtn">Sign out</button>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script>
+const SUPABASE_URL = 'https://jllugkiojeoopitdvzsa.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_DnBMNLaSu61ykJ6P_fI2fw_D9DdAScn';
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+const TIER_MAP   = {scratch:'t-scratch',eagle:'t-eagle',birdie:'t-birdie',bogey:'t-bogey',pretender:'t-pretender',hacker:'t-hacker'};
+const TIER_LABEL = {scratch:'Scratch',eagle:'Eagle',birdie:'Birdie',bogey:'Bogey',pretender:'Pretenders',hacker:'Dreamers'};
+
+const SESSION_KEY = 'gks_player_email';
+
+// ── AUTH ────────────────────────────────────────────────────────────
+document.getElementById('loginForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const email = document.getElementById('emailInput').value.trim().toLowerCase();
+  if (!email) return;
+  const btn = document.getElementById('loginBtn');
+  const err = document.getElementById('loginErr');
+  btn.textContent = 'Looking up…';
+  btn.disabled = true;
+  err.classList.remove('show');
+  try {
+    await loadPortal(email);
+  } catch (ex) {
+    err.textContent = ex.message || 'Something went wrong. Try again.';
+    err.classList.add('show');
+    btn.textContent = 'View My Golf';
+    btn.disabled = false;
+  }
+});
+
+document.getElementById('logoutBtn').addEventListener('click', () => {
+  sessionStorage.removeItem(SESSION_KEY);
+  document.getElementById('portalWrap').style.display = 'none';
+  document.getElementById('loginWrap').style.display = 'flex';
+  document.getElementById('emailInput').value = '';
+  document.getElementById('loginBtn').textContent = 'View My Golf';
+  document.getElementById('loginBtn').disabled = false;
+});
+
+// ── PORTAL LOAD ─────────────────────────────────────────────────────
+async function loadPortal(email) {
+  // All player records for this email
+  const { data: records, error: pErr } = await sb
+    .from('players')
+    .select('id, first_name, last_name, handicap, tournament_id')
+    .eq('email', email);
+
+  if (pErr) throw new Error('Database error. Please try again.');
+  if (!records || !records.length) throw new Error('No account found for that email. Check the spelling or contact your tournament admin.');
+
+  sessionStorage.setItem(SESSION_KEY, email);
+
+  // First player record for name display (use most recent)
+  const me = records[0];
+
+  // Tournament details
+  const tids = [...new Set(records.map(r => r.tournament_id))];
+  const { data: tourneys } = await sb
+    .from('tournaments')
+    .select('id, name, slug, logo_url, short_name')
+    .in('id', tids);
+
+  // Round counts per tournament
+  const { data: scores } = await sb
+    .from('scores')
+    .select('tournament_id, round, hole')
+    .in('tournament_id', tids)
+    .eq('player_id', me.id);
+
+  // HIO count
+  const hios = (scores || []).filter(s => s.gross_score === 1).length;
+
+  // Rounds: unique (tournament_id, round) combos
+  const roundSet = new Set((scores || []).map(s => s.tournament_id + '-' + s.round));
+  const totalRounds = roundSet.size;
+
+  // Render
+  document.getElementById('portalName').innerHTML = `${me.first_name} <em>${me.last_name}</em>`;
+  document.getElementById('portalEmail').textContent = email;
+  document.getElementById('statTourneys').textContent = tids.length;
+  document.getElementById('statRounds').textContent = totalRounds;
+  document.getElementById('statHios').textContent = hios;
+
+  const grid = document.getElementById('tourneyGrid');
+  grid.innerHTML = '';
+
+  if (!tourneys || !tourneys.length) {
+    document.getElementById('noTourneys').style.display = 'block';
+  } else {
+    document.getElementById('noTourneys').style.display = 'none';
+    const tourneysById = {};
+    (tourneys || []).forEach(t => { tourneysById[t.id] = t; });
+
+    // Sort: most recent first (by id desc as proxy)
+    const sorted = [...records].sort((a, b) => (tourneysById[b.tournament_id]?.id || '').localeCompare(tourneysById[a.tournament_id]?.id || ''));
+
+    sorted.forEach(rec => {
+      const t = tourneysById[rec.tournament_id];
+      if (!t) return;
+      const baseUrl = `https://${t.slug}.greenskeeper.studio`;
+      const tierClass = TIER_MAP[rec.handicap] || '';
+      const tierLabel = TIER_LABEL[rec.handicap] || rec.handicap || '';
+
+      // Check if any score in last 24h to show "active"
+      const recentScore = (scores || []).find(s => s.tournament_id === t.id);
+      const isActive = !!recentScore; // simplified — has scores = has played
+
+      const logoHtml = t.logo_url
+        ? `<img class="tourney-logo" src="${esc(t.logo_url)}" alt="" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">`
+          + `<div class="tourney-logo-fallback" style="display:none">${esc((t.name||'T').charAt(0))}</div>`
+        : `<div class="tourney-logo-fallback">${esc((t.name||'T').charAt(0))}</div>`;
+
+      const card = document.createElement('div');
+      card.className = 'tourney-card';
+      card.innerHTML = `
+        ${isActive ? '<div class="active-badge">Active</div>' : ''}
+        <div class="tourney-card-top">
+          ${logoHtml}
+          <div class="tourney-meta">
+            <div class="tourney-name">${esc(t.name)}</div>
+            <div class="tourney-slug">${esc(t.slug)}.greenskeeper.studio</div>
+          </div>
+        </div>
+        ${tierLabel ? `<div class="tourney-tier ${tierClass}">${esc(tierLabel)}</div>` : ''}
+        <div class="tourney-links">
+          <a class="tourney-link primary" href="${baseUrl}/scorecard" target="_blank">Enter Scores</a>
+          <a class="tourney-link" href="${baseUrl}/scoreboard" target="_blank">Leaderboard</a>
+          <a class="tourney-link" href="${baseUrl}/feed" target="_blank">Feed</a>
+          <a class="tourney-link" href="${baseUrl}/" target="_blank">Home</a>
+        </div>`;
+      grid.appendChild(card);
+    });
+  }
+
+  document.getElementById('loginWrap').style.display = 'none';
+  document.getElementById('portalWrap').style.display = 'block';
+}
+
+function esc(s) {
+  return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ── AUTO-LOGIN if session exists ─────────────────────────────────────
+(function () {
+  const saved = sessionStorage.getItem(SESSION_KEY);
+  if (saved) {
+    document.getElementById('emailInput').value = saved;
+    loadPortal(saved).catch(() => {
+      sessionStorage.removeItem(SESSION_KEY);
+    });
+  }
+})();
+</script>
+</body>
+</html>
