@@ -203,12 +203,12 @@ async function loadPortal(email) {
     .select('id, name, slug, logo_url, short_name')
     .in('id', tids);
 
-  // Round counts per tournament
+  // Scores across ALL player IDs (one per tournament)
+  const pids = records.map(r => r.id);
   const { data: scores } = await sb
     .from('scores')
-    .select('tournament_id, round, hole')
-    .in('tournament_id', tids)
-    .eq('player_id', me.id);
+    .select('tournament_id, round, gross_score, player_id')
+    .in('player_id', pids);
 
   // HIO count
   const hios = (scores || []).filter(s => s.gross_score === 1).length;
@@ -244,9 +244,8 @@ async function loadPortal(email) {
       const tierClass = TIER_MAP[rec.handicap] || '';
       const tierLabel = TIER_LABEL[rec.handicap] || rec.handicap || '';
 
-      // Check if any score in last 24h to show "active"
-      const recentScore = (scores || []).find(s => s.tournament_id === t.id);
-      const isActive = !!recentScore; // simplified — has scores = has played
+      // Has scores for this player's ID in this tournament
+      const isActive = (scores || []).some(s => s.player_id === rec.id);
 
       const logoHtml = t.logo_url
         ? `<img class="tourney-logo" src="${esc(t.logo_url)}" alt="" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">`
