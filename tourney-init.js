@@ -108,6 +108,26 @@
       if (metaTitle) metaTitle.content = data.short_name || data.name.split(' ')[0];
       const loginSub = document.getElementById('loginSubtitle');
       if (loginSub) loginSub.textContent = `${data.name} · Restricted`;
+
+      // Replace nav wordmark text on every page — preserves svg/img/span siblings.
+      const updateNavWordmarks = () => {
+        document.querySelectorAll('.nav-logo').forEach(el => {
+          const toRemove = [];
+          el.childNodes.forEach(n => {
+            if (n.nodeType === 3 && n.textContent.trim()) toRemove.push(n);
+            else if (n.nodeType === 1 && n.tagName === 'EM') toRemove.push(n);
+          });
+          if (toRemove.length) {
+            el.insertBefore(document.createTextNode(data.name), toRemove[0]);
+            toRemove.forEach(n => n.remove());
+          }
+        });
+      };
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', updateNavWordmarks);
+      } else {
+        updateNavWordmarks();
+      }
     }
 
     return { db, tournament: data };
