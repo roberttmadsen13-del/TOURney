@@ -1558,7 +1558,7 @@ let _admins = [];
 
 async function loadAdmins() {
   const { data } = await sb.from('tournament_admins')
-    .select('player_id, players(email, first_name, last_name)')
+    .select('email, player_id, players(first_name, last_name)')
     .eq('tournament_id', _tid);
   _admins = data || [];
   renderAdmins();
@@ -1572,14 +1572,13 @@ function renderAdmins() {
   }
   el.innerHTML = _admins.map(a => {
     const p = a.players;
-    const name = p ? `${esc(p.first_name || '')} ${esc(p.last_name || '')}`.trim() || esc(p.email) : esc(a.player_id);
-    const email = p ? esc(p.email) : '';
+    const name = p ? `${esc(p.first_name || '')} ${esc(p.last_name || '')}`.trim() : '';
     return `<div style="display:flex;align-items:center;justify-content:space-between;padding:0.6rem 0.9rem;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:6px;">
       <div>
-        <div style="font-family:'Barlow Condensed',sans-serif;font-size:0.85rem;font-weight:600;color:var(--cream);">${name}</div>
-        ${email ? `<div style="font-family:'DM Mono',monospace;font-size:0.55rem;color:var(--muted);letter-spacing:0.1em;">${email}</div>` : ''}
+        ${name ? `<div style="font-family:'Barlow Condensed',sans-serif;font-size:0.85rem;font-weight:600;color:var(--cream);">${name}</div>` : ''}
+        <div style="font-family:'DM Mono',monospace;font-size:0.55rem;color:var(--muted);letter-spacing:0.1em;">${esc(a.email)}</div>
       </div>
-      <button onclick="removeAdmin('${esc(a.player_id)}')" style="padding:0.3rem 0.7rem;background:rgba(180,40,40,0.15);border:1px solid rgba(180,40,40,0.4);border-radius:4px;color:#e08080;font-family:'DM Mono',monospace;font-size:0.55rem;cursor:pointer;letter-spacing:0.1em;text-transform:uppercase;">Remove</button>
+      <button onclick="removeAdmin('${esc(a.email)}')" style="padding:0.3rem 0.7rem;background:rgba(180,40,40,0.15);border:1px solid rgba(180,40,40,0.4);border-radius:4px;color:#e08080;font-family:'DM Mono',monospace;font-size:0.55rem;cursor:pointer;letter-spacing:0.1em;text-transform:uppercase;">Remove</button>
     </div>`;
   }).join('');
 }
@@ -1590,42 +1589,33 @@ async function addAdmin() {
   const msg = document.getElementById('accessMsg');
   msg.style.display = 'none';
 
-  // Look up player by email in this tournament
-  const { data: players } = await sb.from('players')
-    .select('id, first_name, last_name, email')
-    .eq('tournament_id', _tid)
-    .eq('email', email)
-    .maybeSingle();
-
-  if (!players) {
-    msg.style.color = '#e08080';
-    msg.textContent = 'No player found with that email in this tournament.';
-    msg.style.display = 'block';
-    return;
-  }
-
   const { error } = await sb.from('tournament_admins')
-    .insert({ tournament_id: _tid, player_id: players.id });
+    .insert({ tournament_id: _tid, email });
 
-  if (error && error.code !== '23505') {
-    msg.style.color = '#e08080';
-    msg.textContent = 'Error: ' + error.message;
+  if (error) {
+    if (error.code === '23505') {
+      msg.style.color = '#e08080';
+      msg.textContent = 'That email is already an admin.';
+    } else {
+      msg.style.color = '#e08080';
+      msg.textContent = 'Error: ' + error.message;
+    }
     msg.style.display = 'block';
     return;
   }
 
   document.getElementById('newAdminEmail').value = '';
   msg.style.color = '#2a7a20';
-  msg.textContent = `${players.first_name} ${players.last_name} added as admin.`;
+  msg.textContent = `${email} added as admin.`;
   msg.style.display = 'block';
   await loadAdmins();
 }
 
-async function removeAdmin(playerId) {
+async function removeAdmin(email) {
   await sb.from('tournament_admins')
     .delete()
     .eq('tournament_id', _tid)
-    .eq('player_id', playerId);
+    .eq('email', email);
   await loadAdmins();
 }
 
