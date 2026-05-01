@@ -32,19 +32,128 @@
     .nav-cta{padding:.55rem 1.4rem;background:var(--gold);color:var(--ink);font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;border:none;border-radius:3px;cursor:pointer;text-decoration:none;transition:background .15s}
     .nav-cta:hover{background:#d4a035}
 
-    /* ─── HERO ─── */
-    .hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:8rem 1.5rem 5rem;position:relative;overflow:hidden}
-    .hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 40%, rgba(192,144,48,0.07) 0%, transparent 70%);pointer-events:none}
+    /* ─── HERO SPLIT ─── */
+    .hero-outer{min-height:100vh;display:flex;align-items:center;position:relative;overflow:hidden;padding-top:70px}
+    .hero-outer::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 60% at 68% 50%,rgba(192,144,48,0.07) 0%,transparent 70%);pointer-events:none}
+    .hero-inner{max-width:1180px;margin:0 auto;width:100%;padding:4rem 3rem;display:grid;grid-template-columns:1fr 290px;gap:5rem;align-items:center}
+    @media(max-width:920px){
+      .hero-inner{grid-template-columns:1fr;text-align:center;padding:3rem 1.5rem 4rem;gap:3rem}
+      .hero-phone-col{display:flex;justify-content:center}
+      .hero-actions{justify-content:center}
+      .hero-sub{margin:0 auto 2.5rem}
+    }
+    @media(max-width:560px){.hero-phone-col{display:none}}
     .hero-eyebrow{font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);margin-bottom:1.5rem}
-    .hero-title{font-size:clamp(3rem,8vw,6rem);font-weight:700;line-height:.95;letter-spacing:.02em;text-transform:uppercase;margin-bottom:1.5rem;max-width:900px}
+    .hero-title{font-size:clamp(3rem,7vw,5.5rem);font-weight:700;line-height:.92;letter-spacing:.02em;text-transform:uppercase;margin-bottom:1.5rem}
     .hero-title em{color:var(--gold);font-style:italic}
-    .hero-sub{font-family:'DM Mono',monospace;font-size:clamp(.7rem,.9vw,.85rem);color:var(--muted);max-width:560px;line-height:1.7;letter-spacing:.04em;margin-bottom:3rem}
-    .hero-actions{display:flex;gap:1rem;flex-wrap:wrap;justify-content:center;align-items:center}
+    .hero-sub{font-family:'DM Mono',monospace;font-size:clamp(.65rem,.85vw,.8rem);color:var(--muted);max-width:480px;line-height:1.7;letter-spacing:.04em;margin-bottom:2.5rem}
+    .hero-actions{display:flex;gap:1rem;flex-wrap:wrap;align-items:center}
     .btn-primary{padding:.9rem 2.5rem;background:var(--gold);color:var(--ink);font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:.82rem;letter-spacing:.2em;text-transform:uppercase;border:none;border-radius:3px;cursor:pointer;text-decoration:none;transition:background .15s;display:inline-block}
     .btn-primary:hover{background:#d4a035}
     .btn-ghost{padding:.9rem 2rem;background:none;color:var(--muted);font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:.75rem;letter-spacing:.2em;text-transform:uppercase;border:1px solid var(--border);border-radius:3px;cursor:pointer;text-decoration:none;transition:all .15s;display:inline-block}
     .btn-ghost:hover{border-color:var(--cream);color:var(--cream)}
-    .hero-note{margin-top:1.25rem;font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.15em;color:var(--muted)}
+    .hero-note{margin-top:1rem;font-family:'DM Mono',monospace;font-size:.56rem;letter-spacing:.12em;color:var(--gold);opacity:.6}
+
+    /* ─── PHONE FRAME ─── */
+    .phone-wrap{position:relative;display:flex;justify-content:center;align-items:center}
+    .phone-glow{position:absolute;inset:-30px;background:radial-gradient(ellipse 55% 50% at 50% 50%,rgba(192,144,48,0.22) 0%,transparent 70%);filter:blur(24px);pointer-events:none;z-index:0}
+    .phone{position:relative;z-index:1;width:252px;height:508px;border-radius:40px;border:2.5px solid rgba(255,255,255,0.07);background:#0f0d0b;box-shadow:0 50px 100px rgba(0,0,0,0.85),0 0 0 1px rgba(255,255,255,0.025),inset 0 0 0 1px rgba(255,255,255,0.03)}
+    .hero-phone-wrap .phone{transform:rotate(-5deg);transition:transform .5s ease}
+    .hero-phone-wrap:hover .phone{transform:rotate(-1deg)}
+    .phone-notch{position:absolute;top:0;left:50%;transform:translateX(-50%);width:82px;height:23px;background:#0f0d0b;border-radius:0 0 15px 15px;z-index:20}
+    .phone-screen{width:100%;height:100%;background:#0a0703;display:flex;flex-direction:column;overflow:hidden;border-radius:38px}
+
+    /* ─── PHONE INTERNALS ─── */
+    .p-status{display:flex;justify-content:space-between;align-items:center;padding:26px 16px 0;height:42px;font-size:8px;font-family:'DM Mono',monospace;color:rgba(245,237,224,0.32);flex-shrink:0}
+    .p-status-r{display:flex;gap:3px;align-items:center;font-size:7px}
+    .p-header{padding:5px 13px 9px;border-bottom:1px solid rgba(245,237,224,0.06);flex-shrink:0}
+    .p-tourney{font-family:'DM Mono',monospace;font-size:6px;letter-spacing:.28em;text-transform:uppercase;color:rgba(192,144,48,0.6);margin-bottom:3px}
+    .p-page-title{font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#f5ede0;line-height:1;display:flex;align-items:center;justify-content:space-between}
+    .p-badge{font-family:'DM Mono',monospace;font-size:5.5px;letter-spacing:.18em;background:rgba(192,144,48,0.15);color:#c09030;padding:2px 5px;border-radius:2px;border:1px solid rgba(192,144,48,0.28);animation:pulseBadge 2s ease-in-out infinite}
+    @keyframes pulseBadge{0%,100%{opacity:1}50%{opacity:.55}}
+    .p-round-tabs{display:flex;padding:5px 13px;gap:5px;flex-shrink:0}
+    .p-rt{font-family:'DM Mono',monospace;font-size:7px;letter-spacing:.1em;padding:2px 8px;border-radius:2px;color:rgba(245,237,224,0.28)}
+    .p-rt.active{background:rgba(192,144,48,0.18);color:#c09030;border:1px solid rgba(192,144,48,0.28)}
+    .p-col-heads{display:grid;grid-template-columns:18px 1fr 32px 22px;padding:2px 13px 4px;border-bottom:1px solid rgba(245,237,224,0.05);flex-shrink:0}
+    .p-col-h{font-family:'DM Mono',monospace;font-size:5.5px;letter-spacing:.1em;text-transform:uppercase;color:rgba(245,237,224,0.18)}
+    .p-col-hr{text-align:right}
+
+    /* Leaderboard rows */
+    .lb-list{flex:1;overflow:hidden;display:flex;flex-direction:column}
+    .lb-row{display:grid;grid-template-columns:18px 1fr 32px 22px;align-items:center;padding:6px 13px;border-bottom:1px solid rgba(245,237,224,0.035)}
+    .lb-row.flash{animation:rowFlash .65s ease-out forwards}
+    @keyframes rowFlash{0%{background:rgba(192,144,48,0.28)}100%{background:transparent}}
+    .lb-rank{font-family:'DM Mono',monospace;font-size:8px;color:rgba(245,237,224,0.26)}
+    .lb-name{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:600;letter-spacing:.04em;color:#f5ede0;white-space:nowrap;overflow:hidden}
+    .lb-score{font-family:'DM Mono',monospace;font-size:11px;font-weight:500;text-align:right}
+    .lb-score.under{color:#c09030}
+    .lb-score.even{color:rgba(245,237,224,0.5)}
+    .lb-score.over{color:rgba(210,90,70,0.85)}
+    .lb-thru{font-family:'DM Mono',monospace;font-size:7px;color:rgba(245,237,224,0.22);text-align:right}
+
+    /* Bottom nav */
+    .p-nav{display:flex;border-top:1px solid rgba(245,237,224,0.06);padding:6px 0 14px;flex-shrink:0}
+    .p-nav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;font-family:'DM Mono',monospace;font-size:5.5px;letter-spacing:.07em;text-transform:uppercase;color:rgba(245,237,224,0.2)}
+    .p-nav-item.active{color:#c09030}
+    .p-nav-icon{font-size:12px;line-height:1.3}
+
+    /* ─── SCORECARD SCREEN ─── */
+    .sc-player{padding:6px 13px;border-bottom:1px solid rgba(245,237,224,0.06);font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:600;letter-spacing:.06em;color:rgba(245,237,224,0.6);flex-shrink:0}
+    .sc-grid{flex:1;overflow:hidden;padding:6px 6px 0}
+    .sc-table{width:100%;border-collapse:collapse}
+    .sc-table th{font-family:'DM Mono',monospace;font-size:6.5px;color:rgba(245,237,224,0.28);text-align:center;padding:2px 0 4px;font-weight:400;letter-spacing:.04em}
+    .sc-table th.sc-lbl{text-align:left;padding-left:3px;font-size:6px}
+    .sc-table td{text-align:center;padding:2px 0}
+    .sc-cell{width:21px;height:21px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto;font-family:'DM Mono',monospace;font-size:8px;color:#f5ede0}
+    .sc-cell.birdie{background:rgba(192,144,48,0.2);border:1.5px solid rgba(192,144,48,0.65)}
+    .sc-cell.eagle{background:rgba(80,148,228,0.18);border:1.5px solid rgba(80,148,228,0.6)}
+    .sc-cell.bogey{background:rgba(205,80,60,0.12);border:1.5px solid rgba(205,80,60,0.45)}
+    .sc-cell.par{color:rgba(245,237,224,0.42)}
+    .sc-row-lbl{font-family:'DM Mono',monospace;font-size:6.5px;color:rgba(245,237,224,0.26);text-align:left;padding-left:3px}
+    .sc-totals{padding:7px 13px;border-top:1px solid rgba(245,237,224,0.08);display:flex;justify-content:space-between;align-items:baseline;flex-shrink:0}
+    .sc-tot-num{font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:700;color:#f5ede0}
+    .sc-tot-par{font-family:'DM Mono',monospace;font-size:10px;color:#c09030;margin-left:4px}
+    .sc-tot-label{font-family:'DM Mono',monospace;font-size:6.5px;color:rgba(245,237,224,0.3);letter-spacing:.08em}
+    .sc-tot-right{text-align:right;display:flex;flex-direction:column;gap:2px}
+
+    /* ─── FEED SCREEN ─── */
+    .feed-list{flex:1;overflow:hidden;padding:7px;display:flex;flex-direction:column;gap:5px}
+    .feed-card{border-radius:5px;padding:8px 9px;border:1px solid rgba(245,237,224,0.07);background:rgba(245,237,224,0.02)}
+    .feed-card.hio{background:rgba(192,144,48,0.09);border-color:rgba(192,144,48,0.3)}
+    .feed-card.sys{background:rgba(245,237,224,0.03);border-color:rgba(245,237,224,0.09)}
+    .feed-lbl{font-family:'DM Mono',monospace;font-size:5.5px;letter-spacing:.22em;text-transform:uppercase;color:rgba(245,237,224,0.28);margin-bottom:3px}
+    .feed-card.hio .feed-lbl{color:#c09030}
+    .feed-ttl{font-family:'Barlow Condensed',sans-serif;font-size:12.5px;font-weight:700;letter-spacing:.05em;color:#f5ede0;line-height:1.15;margin-bottom:2px}
+    .feed-bod{font-family:'DM Mono',monospace;font-size:6.5px;color:rgba(245,237,224,0.38);line-height:1.5}
+    .feed-time{font-family:'DM Mono',monospace;font-size:5.5px;color:rgba(245,237,224,0.18);margin-top:3px}
+
+    /* ─── DEMO SCREENS (absolute-stacked inside phone) ─── */
+    .demo-screens{width:100%;height:100%;position:relative;overflow:hidden}
+    .demo-screen{position:absolute;inset:0;display:flex;flex-direction:column;opacity:0;transition:opacity .28s ease;pointer-events:none}
+    .demo-screen.active{opacity:1;pointer-events:auto}
+
+    /* ─── DEMO SECTION ─── */
+    .demo-section{padding:6rem 1.5rem;border-top:1px solid var(--border);background:rgba(245,237,224,0.01)}
+    .demo-wrap{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr 300px;gap:5rem;align-items:center}
+    @media(max-width:880px){
+      .demo-wrap{grid-template-columns:1fr;text-align:center}
+      .demo-tabs-row{justify-content:center}
+      .demo-feat-list{align-items:center}
+      .demo-phone-col{display:flex;justify-content:center}
+    }
+    .demo-meta{display:flex;flex-direction:column;gap:1.25rem}
+    .demo-tabs-row{display:flex;gap:0;border:1px solid var(--border);border-radius:3px;overflow:hidden;align-self:flex-start;width:fit-content}
+    .d-tab{padding:.55rem 1.15rem;font-family:'DM Mono',monospace;font-size:.55rem;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);background:none;border:none;border-right:1px solid var(--border);cursor:pointer;transition:all .15s;white-space:nowrap}
+    .d-tab:last-child{border-right:none}
+    .d-tab.active{background:var(--gold);color:var(--ink)}
+    .d-tab:hover:not(.active){color:var(--cream)}
+    .demo-feat-list{display:flex;flex-direction:column;gap:.85rem;margin-top:.25rem}
+    .demo-feat{display:flex;gap:.75rem;align-items:flex-start}
+    .demo-feat-dot{width:4px;height:4px;background:var(--gold);border-radius:50%;flex-shrink:0;margin-top:6px}
+    .demo-feat-text{font-family:'DM Mono',monospace;font-size:.65rem;color:var(--muted);line-height:1.65}
+    .demo-feat-text strong{color:var(--cream);font-weight:500}
+    .demo-phone-col{position:relative}
+    .demo-phone-col .phone{height:540px}
 
     /* ─── SECTION BASE ─── */
     section{padding:6rem 1.5rem}
@@ -79,10 +188,6 @@
     .stat-num{font-size:2.8rem;font-weight:700;letter-spacing:.02em;color:var(--gold);line-height:1}
     .stat-label{font-family:'DM Mono',monospace;font-size:.55rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-top:.35rem}
 
-    /* ─── STACK ─── */
-    .stack-pills{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:2rem}
-    .pill{font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.15em;color:var(--muted);border:1px solid var(--border);padding:.4rem .85rem;border-radius:2px}
-
     /* ─── CTA SECTION ─── */
     .cta-section{text-align:center;padding:7rem 1.5rem;border-top:1px solid var(--border)}
     .cta-title{font-size:clamp(2.5rem,5vw,4rem);font-weight:700;text-transform:uppercase;letter-spacing:.04em;margin-bottom:1.5rem;line-height:.95}
@@ -107,20 +212,231 @@
     </div>
   </nav>
 
-  <!-- Hero -->
-  <section class="hero">
-    <div class="hero-eyebrow">Golf Tournament Platform · By Greenskeeper Studios</div>
-    <h1 class="hero-title">Your Tournament.<br><em>Your App.</em></h1>
-    <p class="hero-sub">Give your players a real app — live leaderboard, push notifications, offline scoring, player directory. Fully branded with your colors and logo. Up in 15 minutes.</p>
-    <div class="hero-actions">
-      <a href="/create" class="btn-primary">Build Your Tournament →</a>
-      <a href="/t/test-2026/" class="btn-ghost">See a Live Demo</a>
-    </div>
-    <div class="hero-note" style="font-size:.62rem;color:var(--gold);letter-spacing:.1em">your-tournament.greenskeeper.studio</div>
-  </section>
+  <!-- Hero: split layout -->
+  <div class="hero-outer">
+    <div class="hero-inner">
 
-  <!-- What it looks like -->
-  <section class="features" style="border-top:1px solid var(--border);border-bottom:1px solid var(--border)">
+      <!-- Left: copy -->
+      <div>
+        <div class="hero-eyebrow">Golf Tournament Platform · By Greenskeeper Studios</div>
+        <h1 class="hero-title">Your Tournament.<br><em>Your App.</em></h1>
+        <p class="hero-sub">Give your players a real app — live leaderboard, push notifications, offline scoring, player directory. Fully branded. Up in 15 minutes.</p>
+        <div class="hero-actions">
+          <a href="/create" class="btn-primary">Build Your Tournament →</a>
+          <a href="#demo" class="btn-ghost">See It in Action ↓</a>
+        </div>
+        <div class="hero-note">your-tournament.greenskeeper.studio</div>
+      </div>
+
+      <!-- Right: animated phone -->
+      <div class="hero-phone-col">
+        <div class="hero-phone-wrap phone-wrap">
+          <div class="phone-glow"></div>
+          <div class="phone">
+            <div class="phone-notch"></div>
+            <div class="phone-screen">
+              <div class="p-status"><span>9:41</span><div class="p-status-r"><span>●●●</span><span>▮</span></div></div>
+              <div class="p-header">
+                <div class="p-tourney">Greenskeeper Cup 2026</div>
+                <div class="p-page-title">Leaderboard <span class="p-badge">LIVE</span></div>
+              </div>
+              <div class="p-round-tabs">
+                <div class="p-rt">R1</div>
+                <div class="p-rt active">R2</div>
+              </div>
+              <div class="p-col-heads">
+                <div class="p-col-h">#</div>
+                <div class="p-col-h">Player</div>
+                <div class="p-col-h p-col-hr">Score</div>
+                <div class="p-col-h p-col-hr">Thru</div>
+              </div>
+              <div class="lb-list" id="hero-lb"></div>
+              <div class="p-nav">
+                <div class="p-nav-item active"><div class="p-nav-icon">🏆</div><div>Board</div></div>
+                <div class="p-nav-item"><div class="p-nav-icon">⛳</div><div>Card</div></div>
+                <div class="p-nav-item"><div class="p-nav-icon">📡</div><div>Feed</div></div>
+                <div class="p-nav-item"><div class="p-nav-icon">👤</div><div>Me</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Demo section -->
+  <div id="demo" class="demo-section">
+    <div class="demo-wrap">
+
+      <!-- Left: labels + tabs -->
+      <div class="demo-meta">
+        <span class="s-eyebrow">See It In Action</span>
+        <h2 class="s-title">The Whole App.<br><em>Right Here.</em></h2>
+        <p style="font-family:'DM Mono',monospace;font-size:.7rem;color:var(--muted);line-height:1.7;max-width:420px">No redirects. No sign-up required. This is the actual app your players will use — live in the browser.</p>
+        <div class="demo-tabs-row">
+          <button class="d-tab active" data-tab="lb" onclick="switchTab('lb')">Leaderboard</button>
+          <button class="d-tab" data-tab="sc" onclick="switchTab('sc')">Scorecard</button>
+          <button class="d-tab" data-tab="fd" onclick="switchTab('fd')">Feed</button>
+        </div>
+        <div class="demo-feat-list" id="demo-ctx"></div>
+      </div>
+
+      <!-- Right: phone with tabbed screens -->
+      <div class="demo-phone-col">
+        <div class="phone-wrap">
+          <div class="phone-glow"></div>
+          <div class="phone" style="height:540px">
+            <div class="phone-notch"></div>
+            <div class="phone-screen" style="border-radius:38px">
+              <div class="demo-screens">
+
+                <!-- LEADERBOARD SCREEN -->
+                <div class="demo-screen active" id="screen-lb">
+                  <div class="p-status"><span>9:41</span><div class="p-status-r"><span>●●●</span><span>▮</span></div></div>
+                  <div class="p-header">
+                    <div class="p-tourney">Greenskeeper Cup 2026</div>
+                    <div class="p-page-title">Leaderboard <span class="p-badge">LIVE</span></div>
+                  </div>
+                  <div class="p-round-tabs"><div class="p-rt">R1</div><div class="p-rt active">R2</div></div>
+                  <div class="p-col-heads">
+                    <div class="p-col-h">#</div>
+                    <div class="p-col-h">Player</div>
+                    <div class="p-col-h p-col-hr">Score</div>
+                    <div class="p-col-h p-col-hr">Thru</div>
+                  </div>
+                  <div class="lb-list" id="demo-lb"></div>
+                  <div class="p-nav">
+                    <div class="p-nav-item active"><div class="p-nav-icon">🏆</div><div>Board</div></div>
+                    <div class="p-nav-item"><div class="p-nav-icon">⛳</div><div>Card</div></div>
+                    <div class="p-nav-item"><div class="p-nav-icon">📡</div><div>Feed</div></div>
+                    <div class="p-nav-item"><div class="p-nav-icon">👤</div><div>Me</div></div>
+                  </div>
+                </div>
+
+                <!-- SCORECARD SCREEN -->
+                <div class="demo-screen" id="screen-sc">
+                  <div class="p-status"><span>9:41</span><div class="p-status-r"><span>●●●</span><span>▮</span></div></div>
+                  <div class="p-header">
+                    <div class="p-tourney">Greenskeeper Cup 2026</div>
+                    <div class="p-page-title">Scorecard</div>
+                  </div>
+                  <div class="sc-player">J. Sullivan · Scramble · Rd 2</div>
+                  <div class="sc-grid">
+                    <table class="sc-table">
+                      <thead>
+                        <tr>
+                          <th class="sc-lbl">Hole</th>
+                          <th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td class="sc-row-lbl">Par</td>
+                          <td><div class="sc-cell par">4</div></td>
+                          <td><div class="sc-cell par">3</div></td>
+                          <td><div class="sc-cell par">5</div></td>
+                          <td><div class="sc-cell par">4</div></td>
+                          <td><div class="sc-cell par">4</div></td>
+                          <td><div class="sc-cell par">3</div></td>
+                          <td><div class="sc-cell par">4</div></td>
+                          <td><div class="sc-cell par">5</div></td>
+                          <td><div class="sc-cell par">4</div></td>
+                        </tr>
+                        <tr>
+                          <td class="sc-row-lbl">Score</td>
+                          <td><div class="sc-cell par">4</div></td>
+                          <td><div class="sc-cell birdie">2</div></td>
+                          <td><div class="sc-cell par">5</div></td>
+                          <td><div class="sc-cell birdie">3</div></td>
+                          <td><div class="sc-cell bogey">5</div></td>
+                          <td><div class="sc-cell eagle">1</div></td>
+                          <td><div class="sc-cell par">4</div></td>
+                          <td><div class="sc-cell birdie">4</div></td>
+                          <td><div class="sc-cell par">4</div></td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <div class="sc-totals">
+                    <div>
+                      <div style="display:flex;align-items:baseline;gap:4px">
+                        <span class="sc-tot-num">32</span>
+                        <span class="sc-tot-par">−4</span>
+                      </div>
+                      <div class="sc-tot-label">Front 9</div>
+                    </div>
+                    <div class="sc-tot-right">
+                      <span style="font-family:'DM Mono',monospace;font-size:6.5px;color:rgba(245,237,224,0.28)">36 par</span>
+                      <span style="font-family:'DM Mono',monospace;font-size:6.5px;color:rgba(192,144,48,0.75)">1 Eagle · 3 Birdies</span>
+                    </div>
+                  </div>
+                  <div class="p-nav">
+                    <div class="p-nav-item"><div class="p-nav-icon">🏆</div><div>Board</div></div>
+                    <div class="p-nav-item active"><div class="p-nav-icon">⛳</div><div>Card</div></div>
+                    <div class="p-nav-item"><div class="p-nav-icon">📡</div><div>Feed</div></div>
+                    <div class="p-nav-item"><div class="p-nav-icon">👤</div><div>Me</div></div>
+                  </div>
+                </div>
+
+                <!-- FEED SCREEN -->
+                <div class="demo-screen" id="screen-fd">
+                  <div class="p-status"><span>9:41</span><div class="p-status-r"><span>●●●</span><span>▮</span></div></div>
+                  <div class="p-header">
+                    <div class="p-tourney">Greenskeeper Cup 2026</div>
+                    <div class="p-page-title">Feed</div>
+                  </div>
+                  <div class="feed-list">
+                    <div class="feed-card hio">
+                      <div class="feed-lbl">⛳ Hole In One</div>
+                      <div class="feed-ttl">C. Sullivan — Hole 7</div>
+                      <div class="feed-bod">2 iron, 168 yards. Stone cold.</div>
+                      <div class="feed-time">2 min ago</div>
+                    </div>
+                    <div class="feed-card sys">
+                      <div class="feed-lbl">System</div>
+                      <div class="feed-ttl">Scoring Open — Round 2</div>
+                      <div class="feed-bod">Scorecards are live. Submit as you play.</div>
+                      <div class="feed-time">1 hr ago</div>
+                    </div>
+                    <div class="feed-card">
+                      <div class="feed-lbl">Leaderboard</div>
+                      <div class="feed-ttl">J. Harmon moves to #2</div>
+                      <div class="feed-bod">Eagle on 6 drops score to −3 through 16.</div>
+                      <div class="feed-time">47 min ago</div>
+                    </div>
+                    <div class="feed-card">
+                      <div class="feed-lbl">Leaderboard</div>
+                      <div class="feed-ttl">K. Wallace birdie — Hole 14</div>
+                      <div class="feed-bod">Tied for 3rd at −2 through 14 holes.</div>
+                      <div class="feed-time">1 hr 12 min ago</div>
+                    </div>
+                    <div class="feed-card sys">
+                      <div class="feed-lbl">Admin</div>
+                      <div class="feed-ttl">Welcome to Round 2</div>
+                      <div class="feed-bod">Shotgun start at 8AM. Good luck out there.</div>
+                      <div class="feed-time">6 hr ago</div>
+                    </div>
+                  </div>
+                  <div class="p-nav">
+                    <div class="p-nav-item"><div class="p-nav-icon">🏆</div><div>Board</div></div>
+                    <div class="p-nav-item"><div class="p-nav-icon">⛳</div><div>Card</div></div>
+                    <div class="p-nav-item active"><div class="p-nav-icon">📡</div><div>Feed</div></div>
+                    <div class="p-nav-item"><div class="p-nav-icon">👤</div><div>Me</div></div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Features -->
+  <section class="features">
     <div class="inner">
       <span class="s-eyebrow">What Your Players Experience</span>
       <h2 class="s-title">Not a Spreadsheet.<br><em>A Real App.</em></h2>
@@ -263,8 +579,6 @@
     </div>
   </section>
 
-
-
   <!-- CTA -->
   <section class="cta-section">
     <h2 class="cta-title">Stop Running Your<br><em>Tournament on a Spreadsheet.</em></h2>
@@ -284,9 +598,102 @@
     <div class="footer-copy">© 2026 Greenskeeper Studios &nbsp;·&nbsp; Built for golfers, by golfers &nbsp;·&nbsp; <a href="mailto:rob@greenskeeper.studio" style="color:var(--gold)">rob@greenskeeper.studio</a></div>
   </footer>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
-<a href="/create" style="position:fixed;bottom:2rem;right:2rem;z-index:999;padding:.8rem 1.5rem;background:var(--gold);color:var(--ink);font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:.8rem;letter-spacing:.15em;text-transform:uppercase;text-decoration:none;border-radius:50px;box-shadow:0 8px 24px rgba(192,144,48,0.3);transition:transform 0.2s, background 0.2s;display:flex;align-items:center;gap:0.5rem;" onmouseover="this.style.transform='translateY(-2px)';this.style.background='#d4a035'" onmouseout="this.style.transform='translateY(0)';this.style.background='var(--gold)'">
-  <span>Create Tournament</span>
-</a>
+  <a href="/create" style="position:fixed;bottom:2rem;right:2rem;z-index:999;padding:.8rem 1.5rem;background:var(--gold);color:var(--ink);font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:.8rem;letter-spacing:.15em;text-transform:uppercase;text-decoration:none;border-radius:50px;box-shadow:0 8px 24px rgba(192,144,48,0.3);transition:transform 0.2s,background 0.2s;display:flex;align-items:center;gap:0.5rem" onmouseover="this.style.transform='translateY(-2px)';this.style.background='#d4a035'" onmouseout="this.style.transform='translateY(0)';this.style.background='var(--gold)'">
+    <span>Create Tournament</span>
+  </a>
+
+<script>
+(function(){
+  /* ── Leaderboard data ── */
+  var BASE = [
+    { name:'C. Sullivan', score:-4, thru:18 },
+    { name:'J. Harmon',   score:-3, thru:16 },
+    { name:'K. Wallace',  score:-2, thru:18 },
+    { name:'R. Okafor',   score:-1, thru:14 },
+    { name:'M. Briggs',   score: 0, thru:18 },
+    { name:'P. Delaney',  score: 1, thru:12 },
+    { name:'S. Chen',     score: 2, thru: 9 },
+    { name:'J. Taylor',   score: 3, thru:18 },
+  ];
+  var heroP = BASE.map(function(p){ return {name:p.name,score:p.score,thru:p.thru}; });
+  var demoP = BASE.map(function(p){ return {name:p.name,score:p.score,thru:p.thru}; });
+
+  function fmt(n){ return n<0 ? String(n) : n===0 ? 'E' : '+'+n; }
+  function cls(n){ return n<0 ? 'under' : n>0 ? 'over' : 'even'; }
+
+  function renderLb(players, id, flashName) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    var sorted = players.slice().sort(function(a,b){ return a.score - b.score; });
+    el.innerHTML = sorted.map(function(p,i){
+      var fl = p.name === flashName ? ' flash' : '';
+      return '<div class="lb-row'+fl+'">' +
+        '<span class="lb-rank">'+(i+1)+'</span>' +
+        '<span class="lb-name">'+p.name+'</span>' +
+        '<span class="lb-score '+cls(p.score)+'">'+fmt(p.score)+'</span>' +
+        '<span class="lb-thru">'+(p.thru===18?'F':p.thru)+'</span>' +
+        '</div>';
+    }).join('');
+  }
+
+  function tick(pool) {
+    /* pick a player still on course, prefer those with fewer holes played */
+    var inPlay = pool.filter(function(p){ return p.thru < 18; });
+    if (!inPlay.length) return null;
+    var p = inPlay[Math.floor(Math.random() * inPlay.length)];
+    var delta = Math.random() < 0.58 ? -1 : 1;
+    p.score = Math.max(-8, Math.min(6, p.score + delta));
+    p.thru  = Math.min(18, p.thru + (Math.random() < 0.45 ? 2 : 1));
+    return p.name;
+  }
+
+  renderLb(heroP, 'hero-lb', null);
+  renderLb(demoP, 'demo-lb', null);
+
+  setInterval(function(){
+    var flashed = tick(heroP);
+    renderLb(heroP, 'hero-lb', flashed);
+  }, 1900);
+
+  setInterval(function(){
+    var flashed = tick(demoP);
+    renderLb(demoP, 'demo-lb', flashed);
+  }, 2300);
+
+  /* ── Demo tab switching ── */
+  var CTX = {
+    lb: [
+      '<strong>Live, real-time updates.</strong> Every score change appears instantly for all players — no refresh needed.',
+      '<strong>Multiple rounds.</strong> Tap R1/R2 to switch days. Each round tracked separately with its own leaderboard.',
+      '<strong>Tap any player</strong> to see their full scorecard, handicap tier, and contact info.',
+    ],
+    sc: [
+      '<strong>Hole-by-hole scoring.</strong> Gold ring = birdie. Blue = eagle. Red = bogey. Entered directly on course.',
+      '<strong>Offline-first.</strong> Players score with no signal. Syncs automatically when back online.',
+      '<strong>Admin controls the window.</strong> You open and close scoring each round — no unauthorized submissions.',
+    ],
+    fd: [
+      '<strong>Hole-in-one alerts</strong> blast to every player\'s phone the second it\'s posted — full celebration mode.',
+      '<strong>Push notifications</strong> for scoring opens, leaderboard moves, and tournament announcements.',
+      '<strong>Live event timeline.</strong> Everyone sees what\'s happening across all groups in real time.',
+    ],
+  };
+
+  window.switchTab = function(tab) {
+    document.querySelectorAll('.d-tab').forEach(function(t){ t.classList.remove('active'); });
+    var btn = document.querySelector('[data-tab="'+tab+'"]');
+    if (btn) btn.classList.add('active');
+    document.querySelectorAll('.demo-screen').forEach(function(s){ s.classList.remove('active'); });
+    var scr = document.getElementById('screen-'+tab);
+    if (scr) scr.classList.add('active');
+    var ctx = document.getElementById('demo-ctx');
+    if (ctx) ctx.innerHTML = CTX[tab].map(function(t){
+      return '<div class="demo-feat"><div class="demo-feat-dot"></div><div class="demo-feat-text">'+t+'</div></div>';
+    }).join('');
+  };
+
+  switchTab('lb');
+})();
+</script>
 </body>
 </html>
