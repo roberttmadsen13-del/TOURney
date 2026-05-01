@@ -39,7 +39,7 @@ body{background:var(--ink);color:var(--cream);font-family:'Barlow',sans-serif;fo
 <body>
 <div class="card">
   <div class="logo-wrap" id="logoWrap"></div>
-  <div class="title">The Bova<br><em>Invitational</em></div>
+  <div class="title" id="installTitle">Loading&hellip;</div>
   <div class="sub">Install the App</div>
 
   <div class="installed" id="installedMsg">App installed — you're all set</div>
@@ -61,6 +61,7 @@ body{background:var(--ink);color:var(--cream);font-family:'Barlow',sans-serif;fo
 (async function() {
   try {
     var ctx = await window.tourney.ready;
+    if (ctx.tournament.name) document.getElementById('installTitle').textContent = ctx.tournament.name;
     var { data } = await window.tourney.db.from('settings').select('value').eq('tournament_id', ctx.tournament.id).eq('key','logo_url').maybeSingle();
     if (data && data.value) {
       document.getElementById('logoWrap').innerHTML = '<img src="' + data.value + '" alt="Logo">';

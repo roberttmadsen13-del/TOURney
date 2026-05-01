@@ -60,6 +60,12 @@
       throw new Error('Tournament not found: ' + slug);
     }
 
+    // Fire settings fetch in parallel with sync DOM work below.
+    const settingsFetch = db.from('settings')
+      .select('key,value')
+      .eq('tournament_id', data.id)
+      .in('key', ['tourney_location', 'tourney_year', 'team_a_name', 'team_b_name']);
+
     // Only rebase nav links when on tenant URL — root URL pages stay on root paths.
     if (onTenantUrl) {
       if (document.readyState === 'loading') {
@@ -127,6 +133,29 @@
         document.addEventListener('DOMContentLoaded', updateNavWordmarks);
       } else {
         updateNavWordmarks();
+      }
+    }
+
+    // Await settings fetched in parallel above — patch data + update eyebrows.
+    const { data: metaRows } = await settingsFetch;
+    if (metaRows?.length) {
+      metaRows.forEach(({ key, value }) => {
+        if (key === 'tourney_location') data.location    = value;
+        if (key === 'tourney_year')     data.year        = value;
+        if (key === 'team_a_name')      data.team_a_name = value;
+        if (key === 'team_b_name')      data.team_b_name = value;
+      });
+      const parts = [data.location, data.year].filter(Boolean);
+      if (parts.length) {
+        const eyebrowText = parts.join(' · ');
+        const updateEyebrows = () => {
+          document.querySelectorAll('.page-eyebrow').forEach(el => el.textContent = eyebrowText);
+        };
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', updateEyebrows);
+        } else {
+          updateEyebrows();
+        }
       }
     }
 
