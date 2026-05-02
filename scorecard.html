@@ -269,12 +269,17 @@ body{background:var(--bg);color:var(--ink);font-family:'Barlow',sans-serif;font-
     Scoring opens when the admin starts a round. Check back soon.
   </div>
 
+  <div id="unassignedGate" style="display:none;text-align:center;padding:2.5rem 1.5rem;">
+    <div style="font-size:2.2rem;margin-bottom:1rem;">⛳</div>
+    <div style="font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:700;margin-bottom:0.75rem;">You haven't been assigned to a team yet</div>
+    <div style="font-size:0.85rem;color:var(--muted);line-height:1.7;max-width:320px;margin:0 auto;">Your spot is confirmed — the admin will assign teams before scoring opens. Check back once teams are set.</div>
+  </div>
 
   <!-- Not-logged-in prompt (hidden when player detected) -->
   <div id="loginPrompt" style="display:none;text-align:center;padding:2rem 1rem;">
     <div style="font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:700;margin-bottom:0.8rem;">Welcome back</div>
     <div style="font-size:0.85rem;color:var(--muted);margin-bottom:1.5rem;line-height:1.6;">
-      To auto-fill your info, log in on the <a href="profile.html" style="color:var(--gold);text-decoration:underline;">Profile</a> page first.<br>
+      To auto-fill your info, log in on the <a href="/profile" style="color:var(--gold);text-decoration:underline;">Profile</a> page first.<br>
       Or select your name below.
     </div>
     <div class="fg">
@@ -569,8 +574,13 @@ async function init() {
   const detectedPlayer = profileEmail ? players.find(p => p.email && p.email.toLowerCase() === profileEmail.toLowerCase()) : null;
 
   if (detectedPlayer) {
-    // Auto-fill player info
     const detectedTeam = teamAssignments[detectedPlayer.id] || '';
+    // Gate: unassigned players cannot score
+    if (!detectedTeam) {
+      document.getElementById('unassignedGate').style.display = 'block';
+      return;
+    }
+    // Auto-fill player info
     document.getElementById('scorerSelect').value = detectedPlayer.id;
     document.getElementById('scorerDisplay').value = `${detectedPlayer.first_name} ${detectedPlayer.last_name}`;
     document.getElementById('teamSelect').value = detectedTeam;
@@ -594,6 +604,11 @@ async function init() {
       const p = players.find(x => x.id === this.value);
       if (!p) return;
       const team = teamAssignments[p.id] || '';
+      if (!team) {
+        document.getElementById('loginPrompt').style.display = 'none';
+        document.getElementById('unassignedGate').style.display = 'block';
+        return;
+      }
       document.getElementById('scorerSelect').value = p.id;
       document.getElementById('scorerDisplay').value = `${p.first_name} ${p.last_name}`;
       document.getElementById('teamSelect').value = team;

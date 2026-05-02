@@ -350,7 +350,6 @@ a { color: inherit; }
   .fg input, .fg select { font-size: 1rem; padding: 0.75rem 0.85rem; }
   .form-submit { padding: 1.1rem; font-size: 0.8rem; }
   .hat-check { width: 24px; height: 24px; }
-  .nav-drawer { overflow-y: auto; }
   .rsvp-form-wrap { padding: 1.5rem; }
 }
 
@@ -699,6 +698,7 @@ html { scroll-behavior: smooth; }
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="/tourney-init.js"></script>
 <script>
 const SUPABASE_URL = 'https://jllugkiojeoopitdvzsa.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_DnBMNLaSu61ykJ6P_fI2fw_D9DdAScn';
@@ -709,7 +709,8 @@ window.addEventListener('scroll', () => { document.getElementById('mainNav').cla
 // Load admin-configured homepage content
 (async function loadHomepageContent() {
   const keys = ['homepage_subtitle','homepage_details','homepage_about','logo_url'];
-  const { data } = await sb.from('settings').select('key,value').in('key', keys);
+  const { tournament } = await window.tourney.ready;
+  const { data } = await sb.from('settings').select('key,value').eq('tournament_id', tournament.id).in('key', keys);
   if (!data) return;
   const map = {};
   data.forEach(r => { map[r.key] = r.value; });
@@ -731,8 +732,8 @@ window.addEventListener('scroll', () => { document.getElementById('mainNav').cla
   // Dynamic PWA manifest with uploaded logo as app icon
   if (map.logo_url) {
     const manifest = {
-      name: 'Bova Invitational',
-      short_name: 'Bova',
+      name: tournament.name,
+      short_name: tournament.short_name || tournament.name.split(' ')[0],
       description: map.homepage_subtitle || 'Inaugural Edition — Myrtle Beach, SC — 2026',
       start_url: '/',
       scope: '/',
@@ -750,6 +751,7 @@ window.addEventListener('scroll', () => { document.getElementById('mainNav').cla
     const link = document.querySelector('link[rel="manifest"]');
     if (link) link.href = manifestUrl;
   }
+  loadHeroScoreboard(tournament.id);
 })();
 
 const MAX = 24;
@@ -886,21 +888,22 @@ window.addEventListener('scroll', () => {
   const el = document.getElementById('captain2Name');
   if (!el) return;
   try {
-    const { data } = await sb.from('settings').select('value').eq('key','challengers_captain').single();
+    const { tournament } = await window.tourney.ready;
+    const { data } = await sb.from('settings').select('value').eq('tournament_id', tournament.id).eq('key','challengers_captain').maybeSingle();
     if (data?.value) el.textContent = data.value;
   } catch {}
 })();
 
 // ── Feature 11: Hero Scoreboard ──────────────────────────────────────────────
-async function loadHeroScoreboard() {
+async function loadHeroScoreboard(tournamentId) {
   const [pRes, sRes, taRes, p1Res, p2Res, p3Res, capRes] = await Promise.all([
-    sb.from('players').select('id,first_name,last_name,handicap'),
-    sb.from('scores').select('player_id,round,hole,gross_score'),
-    sb.from('settings').select('value').eq('key','team_assignments').maybeSingle(),
-    sb.from('settings').select('value').eq('key','pars_day1').maybeSingle(),
-    sb.from('settings').select('value').eq('key','pars_day2').maybeSingle(),
-    sb.from('settings').select('value').eq('key','pars_day3').maybeSingle(),
-    sb.from('settings').select('value').eq('key','challengers_captain').maybeSingle(),
+    sb.from('players').select('id,first_name,last_name,handicap').eq('tournament_id', tournamentId),
+    sb.from('scores').select('player_id,round,hole,gross_score').eq('tournament_id', tournamentId),
+    sb.from('settings').select('value').eq('tournament_id', tournamentId).eq('key','team_assignments').maybeSingle(),
+    sb.from('settings').select('value').eq('tournament_id', tournamentId).eq('key','pars_day1').maybeSingle(),
+    sb.from('settings').select('value').eq('tournament_id', tournamentId).eq('key','pars_day2').maybeSingle(),
+    sb.from('settings').select('value').eq('tournament_id', tournamentId).eq('key','pars_day3').maybeSingle(),
+    sb.from('settings').select('value').eq('tournament_id', tournamentId).eq('key','challengers_captain').maybeSingle(),
   ]);
 
   const players = pRes.data || [];

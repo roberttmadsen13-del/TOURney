@@ -75,23 +75,6 @@
       }
     }
 
-    // Demo checkout button
-    if (slug === 'test-2026' || slug === 'demo') {
-      const demoCta = document.createElement('a');
-      demoCta.href = '/create';
-      demoCta.innerHTML = '⚡ Buy TOURney for your event';
-      demoCta.style.cssText = 'position:fixed;bottom:2rem;left:50%;transform:translateX(-50%);z-index:9999;padding:.8rem 1.5rem;background:#c09030;color:#0a0703;font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:.85rem;text-transform:uppercase;letter-spacing:.15em;text-decoration:none;border-radius:50px;box-shadow:0 8px 24px rgba(192,144,48,0.4);white-space:nowrap;transition:transform 0.2s';
-      demoCta.onmouseenter = () => demoCta.style.transform = 'translateX(-50%) translateY(-2px)';
-      demoCta.onmouseleave = () => demoCta.style.transform = 'translateX(-50%) translateY(0)';
-      
-      const injectDemoCta = () => document.body.appendChild(demoCta);
-      if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', injectDemoCta);
-      } else {
-        injectDemoCta();
-      }
-    }
-
     // Non-blocking brand color injection — all pages get the tournament's colors.
     injectBrandColors(data.id);
 
@@ -133,6 +116,32 @@
         document.addEventListener('DOMContentLoaded', updateNavWordmarks);
       } else {
         updateNavWordmarks();
+      }
+
+      // Update hero title and footer wordmarks (home page only — no-ops on other pages)
+      const updateHeroAndFooter = () => {
+        const heroTitle = document.querySelector('.hero-title');
+        if (heroTitle) {
+          const words = data.name.trim().split(/\s+/);
+          const last = words.pop();
+          heroTitle.innerHTML = (words.length ? words.join(' ') + '<br>' : '') + '<em>' + last + '</em>';
+        }
+        document.querySelectorAll('.footer-wordmark').forEach(el => {
+          const words = data.name.trim().split(/\s+/);
+          const last = words.pop();
+          el.innerHTML = (words.length ? words.join(' ') + ' ' : '') + '<em>' + last + '</em>';
+        });
+      };
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', updateHeroAndFooter);
+      } else {
+        updateHeroAndFooter();
+      }
+
+      // Favicon — use tournament logo when available
+      if (data.logo_url) {
+        const favIcon = document.querySelector('link[rel="icon"]');
+        if (favIcon) favIcon.href = data.logo_url;
       }
     }
 

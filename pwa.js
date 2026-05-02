@@ -25,7 +25,7 @@
         endpoint: j.endpoint,
         p256dh: j.keys.p256dh,
         auth: j.keys.auth,
-      }, { onConflict: 'endpoint' });
+      }, { onConflict: 'tournament_id,endpoint' });
     } catch (_) {}
   }
 
