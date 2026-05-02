@@ -408,7 +408,10 @@ function esc(s) {
 // ── AUTH GUARD ───────────────────────────────────────────────────
 (async function authGuard() {
   const { data } = await sb.auth.getSession();
-  if (!data?.session?.user) return;
+  if (!data?.session?.user) {
+    window.location.href = `/t/${_slug}/login?redirect=/t/${_slug}/scorecard`;
+    return;
+  }
   const email = data.session.user.email;
   if (email) localStorage.setItem(`${_slug}_profile_email`, email);
   // Add sign out to nav
@@ -488,6 +491,7 @@ let enteredScores  = {}; // { [playerId]: { [hole]: grossScore } }
 let opponentScores = {}; // { [playerId]: { [hole]: grossScore } }
 
 let _foursomeChannel = null;
+let _roundPairings = [];
 let scoreHistory = [];
 
 // ── INIT ──────────────────────────────────────────────────────────
@@ -523,8 +527,16 @@ async function init() {
     return;
   }
 
-  // Auto-detect player from profile login (bova_profile_email in localStorage)
-  const profileEmail = localStorage.getItem(`${_slug}_profile_email`);
+  // Pre-fetch all pairings for this round — used by both auth and fallback paths
+  const { data: _pairData } = await sb.from('settings')
+    .select('key,value')
+    .eq('tournament_id', tournament.id)
+    .like('key', `pairing_${currentRound}_%`);
+  _roundPairings = _pairData || [];
+
+  // Auto-detect player — read session directly to avoid race with authGuard localStorage write
+  const { data: _authData } = await sb.auth.getSession();
+  const profileEmail = _authData?.session?.user?.email || localStorage.getItem(`${_slug}_profile_email`);
   const detectedPlayer = profileEmail ? players.find(p => p.email && p.email.toLowerCase() === profileEmail.toLowerCase()) : null;
 
   if (detectedPlayer) {
@@ -537,6 +549,7 @@ async function init() {
     document.getElementById('loginPrompt').style.display = 'none';
     document.getElementById('setupForm').style.display = 'block';
     refreshSetupLists();
+    _prefillOpponentIfPicked(detectedPlayer.id);
   } else {
     // No profile — show fallback name picker, hide main form
     document.getElementById('loginPrompt').style.display = 'block';
@@ -559,6 +572,7 @@ async function init() {
       document.getElementById('loginPrompt').style.display = 'none';
       document.getElementById('setupForm').style.display = 'block';
       refreshSetupLists();
+      _prefillOpponentIfPicked(p.id);
     });
   }
 
@@ -601,8 +615,8 @@ async function restoreSessionIfAny() {
     sb.from('settings').upsert({
       tournament_id: tournament.id,
       key: `pairing_${currentRound}_${scorerPlayer.id}`,
-      value: partnerPlayer?.id || ''
-    }, { onConflict: 'tournament_id,key' }).catch(() => {});
+      value: JSON.stringify({ partner: partnerPlayer?.id || '', opp1: opp1Player?.id || '' })
+    }, { onConflict: 'tournament_id,key' }).then(null, () => {});
   });
 
   await loadOpponentScores();
@@ -612,6 +626,23 @@ async function restoreSessionIfAny() {
   document.getElementById('setupScreen').style.display = 'none';
   document.getElementById('scorecardScreen').style.display = 'block';
   renderHole();
+}
+
+// ── PAIRING HELPER ────────────────────────────────────────────────
+function _prefillOpponentIfPicked(playerId) {
+  for (const row of _roundPairings) {
+    try {
+      const parsed = JSON.parse(row.value);
+      if (parsed.opp1 === playerId) {
+        const opp1Sel = document.getElementById('opp1Select');
+        if (opp1Sel) {
+          opp1Sel.value = row.key.replace(`pairing_${currentRound}_`, '');
+          opp1Sel.disabled = true;
+        }
+        break;
+      }
+    } catch {}
+  }
 }
 
 // ── SETUP DROPDOWNS ───────────────────────────────────────────────
@@ -683,8 +714,8 @@ async function startScoring() {
     sb.from('settings').upsert({
       tournament_id: tournament.id,
       key: `pairing_${currentRound}_${scorerPlayer.id}`,
-      value: partnerPlayer?.id || ''
-    }, { onConflict: 'tournament_id,key' }).catch(() => {});
+      value: JSON.stringify({ partner: partnerPlayer?.id || '', opp1: opp1Player?.id || '' })
+    }, { onConflict: 'tournament_id,key' }).then(null, () => {});
   });
 
   // Load existing opponent scores from DB
@@ -713,7 +744,9 @@ async function loadOpponentScores() {
       .eq('key', `pairing_${currentRound}_${opp1Player.id}`)
       .maybeSingle();
     if (pr?.value) {
-      const p2 = players.find(p => p.id === pr.value);
+      let _partnerId = pr.value;
+      try { _partnerId = JSON.parse(pr.value).partner || ''; } catch {}
+      const p2 = players.find(p => p.id === _partnerId);
       if (p2) { opp2Player = p2; saveSessionState(); }
     }
   }
