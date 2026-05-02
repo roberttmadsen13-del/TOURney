@@ -821,7 +821,7 @@ async function loadAll() {
   await Promise.all([loadPlayers(), loadRoundStates(), loadTeams(), loadPars(), loadFormats(), loadChallengersCaptain(), loadTeamNames(), loadCourseNames(), loadDesignSettings(), loadChampions(), loadNotifySettings(), loadInvitations()]);
   renderTable();
   buildParEditor();
-  renderTeamAssignment();
+  renderTeamUI();
 }
 
 async function loadTeamNames() {
