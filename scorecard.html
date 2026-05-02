@@ -409,7 +409,8 @@ function esc(s) {
 (async function authGuard() {
   const { data } = await sb.auth.getSession();
   if (!data?.session?.user) {
-    window.location.href = `/t/${_slug}/login?redirect=/t/${_slug}/scorecard`;
+    const _pathSlug = window.location.pathname.split('/')[2] || _slug;
+    window.location.href = `/t/${_pathSlug}/login?redirect=${encodeURIComponent(window.location.pathname)}`;
     return;
   }
   const email = data.session.user.email;
