@@ -817,6 +817,7 @@ function subscribeToFoursome() {
       }
 
       renderPlayers();
+      renderMiniStrip();
       renderSummary();
 
       // Flash the opponent score if it's for the current hole
@@ -827,12 +828,12 @@ function subscribeToFoursome() {
     })
     .subscribe();
 
-  // Poll every 10s as fallback — catches opp2 discovery + any missed realtime events
+  // Poll every 3s as fallback — catches opp2 discovery + any missed realtime events
   if (_pollInterval) clearInterval(_pollInterval);
   _pollInterval = setInterval(async () => {
     await loadOpponentScores();
     renderHole();
-  }, 10000);
+  }, 3000);
 }
 
 // ── FORMAT DETECTION (config-driven) ─────────────────────────────
