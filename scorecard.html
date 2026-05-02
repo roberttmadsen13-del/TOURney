@@ -493,6 +493,7 @@ let opponentScores = {}; // { [playerId]: { [hole]: grossScore } }
 
 let _foursomeChannel = null;
 let _roundPairings = [];
+let _pollInterval = null;
 let scoreHistory = [];
 
 // ── INIT ──────────────────────────────────────────────────────────
@@ -825,6 +826,13 @@ function subscribeToFoursome() {
       }
     })
     .subscribe();
+
+  // Poll every 10s as fallback — catches opp2 discovery + any missed realtime events
+  if (_pollInterval) clearInterval(_pollInterval);
+  _pollInterval = setInterval(async () => {
+    await loadOpponentScores();
+    renderHole();
+  }, 10000);
 }
 
 // ── FORMAT DETECTION (config-driven) ─────────────────────────────
