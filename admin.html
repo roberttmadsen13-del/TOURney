@@ -820,6 +820,7 @@ function showAdmin(email) {
 async function loadAll() {
   await Promise.all([loadPlayers(), loadRoundStates(), loadTeams(), loadPars(), loadFormats(), loadChallengersCaptain(), loadTeamNames(), loadCourseNames(), loadDesignSettings(), loadChampions(), loadNotifySettings(), loadInvitations()]);
   buildParEditor();
+  renderTeamAssignment();
 }
 
 async function loadTeamNames() {
