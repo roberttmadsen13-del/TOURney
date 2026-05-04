@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -83,15 +83,24 @@
     .upload-lbl{font-family:'DM Mono',monospace;font-size:.62rem;color:var(--muted);letter-spacing:.08em}
     .upload-preview{max-height:3.5rem;max-width:10rem;margin:0 auto .5rem;display:block;object-fit:contain}
 
+    /* ─── Mode cards (competitive / casual) ─── */
+    .mode-cards{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-bottom:.5rem}
+    @media(max-width:420px){.mode-cards{grid-template-columns:1fr}}
+    .mode-card{border:1.5px solid var(--border);border-radius:6px;padding:1.1rem 1rem;cursor:pointer;transition:all .18s;background:var(--surface)}
+    .mode-card.active{border-color:var(--gold);background:rgba(192,144,48,.07)}
+    .mode-card:hover{border-color:rgba(192,144,48,.5)}
+    .mc-name{font-size:.68rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);margin-bottom:.4rem}
+    .mode-card.active .mc-name{color:var(--gold)}
+    .mc-desc{font-family:'DM Mono',monospace;font-size:.57rem;color:var(--muted);line-height:1.55}
+    .mode-card.active .mc-desc{color:rgba(245,237,224,.7)}
+
     /* ─── Format ─── */
     .days-row{display:flex;gap:.5rem;margin-bottom:1.5rem;flex-wrap:wrap}
     .day-btn{width:2.4rem;height:2.4rem;border:1px solid var(--border);border-radius:4px;background:var(--surface);color:var(--muted);font-family:'DM Mono',monospace;font-size:.7rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s}
     .day-btn.on{border-color:var(--gold);color:var(--gold);background:rgba(192,144,48,.1)}
-    .fmt-row{background:rgba(245,237,224,.03);border:1px solid var(--border);border-radius:6px;padding:.9rem 1.1rem;margin-bottom:.65rem}
-    .fmt-day{font-size:.62rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:.65rem}
-    .fmt-nines{display:grid;grid-template-columns:1fr 1fr;gap:.65rem}
-    @media(max-width:420px){.fmt-nines{grid-template-columns:1fr}}
-    .fmt-nine-lbl{font-family:'DM Mono',monospace;font-size:.55rem;color:var(--muted);letter-spacing:.08em;margin-bottom:.3rem}
+    .fmt-row{background:rgba(245,237,224,.03);border:1px solid var(--border);border-radius:6px;padding:.9rem 1.1rem;margin-bottom:.65rem;display:grid;grid-template-columns:6rem 1fr;align-items:center;gap:.75rem}
+    @media(max-width:420px){.fmt-row{grid-template-columns:1fr;gap:.4rem}}
+    .fmt-day{font-size:.62rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--gold)}
     .fmt-select{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:.45rem .6rem;color:var(--cream);font-family:'DM Mono',monospace;font-size:.68rem;outline:none;appearance:none}
     .fmt-select option{background:#1a1008}
 
@@ -173,8 +182,38 @@
       <div class="auth-foot" id="authFoot">Already have an account? <a onclick="toggleMode()">Sign in</a></div>
     </div>
 
-    <!-- Step 2: Identity -->
+    <!-- Step 2: Format — competitive/casual + days + round format -->
     <div class="panel" id="s2">
+      <div class="step-title">Tournament Format</div>
+      <div class="step-sub">Days, rounds, and how competitive you want to get</div>
+
+      <div class="fl" style="margin-bottom:.75rem">Event Style</div>
+      <div class="mode-cards">
+        <div class="mode-card active" id="mc-competitive" onclick="pickMode('competitive')">
+          <div class="mc-name">Competitive</div>
+          <div class="mc-desc">Live scoring, leaderboard, team rosters, handicap tiers</div>
+        </div>
+        <div class="mode-card" id="mc-casual" onclick="pickMode('casual')">
+          <div class="mc-name">Casual</div>
+          <div class="mc-desc">Relaxed tracking, no pressure leaderboard, easy sign-up</div>
+        </div>
+      </div>
+
+      <div class="fl" style="margin-top:1.75rem;margin-bottom:.75rem">Number of Days</div>
+      <div class="days-row" id="daysBtns"></div>
+
+      <div class="fl" style="margin-bottom:.65rem">Scoring Format per Day</div>
+      <div id="fmtRows"></div>
+      <div class="hint" style="margin-top:-.2rem;margin-bottom:1rem">Front & back nine use the same format — split per nine in admin if needed.</div>
+
+      <div class="nav">
+        <button class="btn-back" onclick="back()">← Back</button>
+        <button class="btn-next" onclick="next2()">Your Tournament →</button>
+      </div>
+    </div>
+
+    <!-- Step 3: Identity -->
+    <div class="panel" id="s3">
       <div class="step-title">Your Tournament</div>
       <div class="step-sub">The name and place your players will see everywhere</div>
       <div class="field">
@@ -200,12 +239,12 @@
       </div>
       <div class="nav">
         <button class="btn-back" onclick="back()">← Back</button>
-        <button class="btn-next" onclick="next2()">Brand & Colors →</button>
+        <button class="btn-next" onclick="next3()">Brand & Colors →</button>
       </div>
     </div>
 
-    <!-- Step 3: Brand -->
-    <div class="panel" id="s3">
+    <!-- Step 4: Brand -->
+    <div class="panel" id="s4">
       <div class="step-title">Brand & Design</div>
       <div class="step-sub">Colors and logo — applied automatically on every page</div>
       <div class="fl" style="margin-bottom:.75rem">Site Colors</div>
@@ -237,20 +276,7 @@
       </div>
       <div class="nav">
         <button class="btn-back" onclick="back()">← Back</button>
-        <button class="btn-next" onclick="next3()">Format →</button>
-      </div>
-    </div>
-
-    <!-- Step 4: Format -->
-    <div class="panel" id="s4">
-      <div class="step-title">Tournament Format</div>
-      <div class="step-sub">How many days and what scoring type per round</div>
-      <div class="fl" style="margin-bottom:.75rem">Number of Days</div>
-      <div class="days-row" id="daysBtns"></div>
-      <div id="fmtRows"></div>
-      <div class="nav">
-        <button class="btn-back" onclick="back()">← Back</button>
-        <button class="btn-next" onclick="next4()">Review →</button>
+        <button class="btn-next" onclick="next4()">Review & Launch →</button>
       </div>
     </div>
 
@@ -297,7 +323,7 @@
       <div id="reviewRows" style="margin-bottom:1.5rem"></div>
       <div class="nav">
         <button class="btn-back" onclick="back()">← Back</button>
-        <button class="btn-next" id="btnLaunch" onclick="launch()">🚀 Choose Plan & Pay →</button>
+        <button class="btn-next" id="btnLaunch" onclick="launch()">Choose Plan & Pay →</button>
       </div>
     </div>
 
@@ -328,7 +354,9 @@
 
   const S = {
     step: 1, user: null, slugOk: false,
-    logoUrl: '', logoFile: null, days: 3,
+    logoUrl: '', logoFile: null,
+    mode: 'competitive',
+    days: 3,
     formats: mkFormats(3),
     tier: 'starter',
   };
@@ -363,12 +391,13 @@
     S.step = n;
     updateDots();
     window.scrollTo(0, 0);
-    if (n === 4) renderFormat();
+    if (n === 2) renderFormat();
     if (n === 5) renderReview();
   }
 
   function back() {
     if (S.step <= 1) return;
+    // Don't go back from format (step 2) to account when already logged in
     if (S.user && S.step === 2) return;
     go(S.step - 1);
   }
@@ -431,7 +460,55 @@
     el.style.display = 'block';
   }
 
-  // ─── Step 2: Identity ───
+  // ─── Step 2: Format ───
+  function pickMode(m) {
+    S.mode = m;
+    ['competitive','casual'].forEach(k => {
+      document.getElementById(`mc-${k}`).classList.toggle('active', k === m);
+    });
+  }
+
+  function renderFormat() {
+    const row = document.getElementById('daysBtns');
+    row.innerHTML = '';
+    for (let i = 1; i <= 7; i++) {
+      const b = document.createElement('button');
+      b.className = 'day-btn' + (i === S.days ? ' on' : '');
+      b.textContent = i;
+      b.onclick = () => { S.days = i; S.formats = mkFormats(i); renderFormat(); };
+      row.appendChild(b);
+    }
+
+    const makeOpts = (sel) => FMT.map(o =>
+      `<option value="${o.value}"${o.value===sel?' selected':''}>${o.label}</option>`
+    ).join('');
+    const DAY_WORDS = ['One','Two','Three','Four','Five','Six','Seven'];
+
+    const cont = document.getElementById('fmtRows');
+    cont.innerHTML = '';
+    for (let i = 1; i <= S.days; i++) {
+      const key = `day${i}`;
+      const fmt = S.formats[key] || { front:'stroke', back:'stroke' };
+      const div = document.createElement('div');
+      div.className = 'fmt-row';
+      div.innerHTML = `
+        <div class="fmt-day">Day ${DAY_WORDS[i-1]}</div>
+        <select class="fmt-select" id="fd-${key}">${makeOpts(fmt.front)}</select>`;
+      cont.appendChild(div);
+    }
+  }
+
+  function next2() {
+    // Capture single format per day — write as front+back both
+    for (let i = 1; i <= S.days; i++) {
+      const key = `day${i}`;
+      const val = document.getElementById(`fd-${key}`)?.value || 'stroke';
+      S.formats[key] = { front: val, back: val };
+    }
+    go(3);
+  }
+
+  // ─── Step 3: Identity ───
   let slugTimer;
 
   function onName(val) {
@@ -483,16 +560,16 @@
     } catch { st.textContent = ''; S.slugOk = true; }
   }
 
-  function next2() {
+  function next3() {
     const name = document.getElementById('tName').value.trim();
     const slug = document.getElementById('tSlug').value.trim();
     if (!name) { alert('Tournament name is required.'); return; }
     if (!slug || slug.length < 3) { alert('A valid URL slug is required.'); return; }
     if (!S.slugOk) { alert('Please wait for slug availability check, or try a different slug.'); return; }
-    go(3);
+    go(4);
   }
 
-  // ─── Step 3: Brand ───
+  // ─── Step 4: Brand ───
   function onColor() {
     const p = document.getElementById('cPrimary').value;
     const i = document.getElementById('cInk').value;
@@ -517,7 +594,7 @@
     lbl.textContent = '✓ Ready — uploads on create';
   }
 
-  function next3() { go(4); }
+  function next4() { go(5); }
 
   // ─── Tier picker ───
   function pickTier(t) {
@@ -525,53 +602,6 @@
     ['starter', 'pro', 'club'].forEach(k => {
       document.getElementById(`tc-${k}`).classList.toggle('active', k === t);
     });
-  }
-
-  // ─── Step 4: Format ───
-  function renderFormat() {
-    const row = document.getElementById('daysBtns');
-    row.innerHTML = '';
-    for (let i = 1; i <= 7; i++) {
-      const b = document.createElement('button');
-      b.className = 'day-btn' + (i === S.days ? ' on' : '');
-      b.textContent = i;
-      b.onclick = () => { S.days = i; S.formats = mkFormats(i); renderFormat(); };
-      row.appendChild(b);
-    }
-
-    const makeOpts = (sel) => FMT.map(o =>
-      `<option value="${o.value}"${o.value===sel?' selected':''}>${o.label}</option>`
-    ).join('');
-    const DAY_WORDS = ['One','Two','Three','Four','Five','Six','Seven'];
-
-    const cont = document.getElementById('fmtRows');
-    cont.innerHTML = '';
-    for (let i = 1; i <= S.days; i++) {
-      const key = `day${i}`;
-      const fmt = S.formats[key] || { front:'stroke', back:'stroke' };
-      const div = document.createElement('div');
-      div.className = 'fmt-row';
-      div.innerHTML = `
-        <div class="fmt-day">Day ${DAY_WORDS[i-1]}</div>
-        <div class="fmt-nines">
-          <div><div class="fmt-nine-lbl">Front 9 (Holes 1–9)</div>
-            <select class="fmt-select" id="ff-${key}">${makeOpts(fmt.front)}</select></div>
-          <div><div class="fmt-nine-lbl">Back 9 (Holes 10–18)</div>
-            <select class="fmt-select" id="fb-${key}">${makeOpts(fmt.back)}</select></div>
-        </div>`;
-      cont.appendChild(div);
-    }
-  }
-
-  function next4() {
-    for (let i = 1; i <= S.days; i++) {
-      const key = `day${i}`;
-      S.formats[key] = {
-        front: document.getElementById(`ff-${key}`)?.value || 'stroke',
-        back:  document.getElementById(`fb-${key}`)?.value || 'stroke',
-      };
-    }
-    go(5);
   }
 
   // ─── Step 5: Review & Launch ───
@@ -583,22 +613,24 @@
     const sub    = document.getElementById('tSub').value.trim();
     const accent = document.getElementById('cPrimary').value;
 
+    const DAY_WORDS = ['One','Two','Three','Four','Five','Six','Seven'];
     const fmtStr = Object.entries(S.formats)
-      .map(([k,v]) => `${k}:${v.front}/${v.back}`).join(' · ');
+      .map(([k,v],i) => `Day ${DAY_WORDS[i]}: ${v.front}`).join(' · ');
 
     const tierLabel = { starter: 'Starter — $3/mo', pro: 'Pro — $19/mo', club: 'Club — $49/mo' };
     const rows = [
-      ['Plan', tierLabel[S.tier]],
+      ['Plan',       tierLabel[S.tier]],
+      ['Style',      S.mode.charAt(0).toUpperCase() + S.mode.slice(1)],
       ['Tournament', name],
-      ['URL', `tourney.app/t/${slug}/`],
-      ['Year', year || '—'],
-      ['Location', loc || '—'],
-      ['Tagline', sub || '—'],
-      ['Accent Color', accent],
-      ['Days', S.days],
-      ['Format', fmtStr],
-      ['Logo', S.logoFile ? `✓ ${S.logoFile.name}` : 'None (add in admin)'],
-      ['Account', S.user?.email],
+      ['URL',        `tourney.app/t/${slug}/`],
+      ['Year',       year || '—'],
+      ['Location',   loc || '—'],
+      ['Tagline',    sub || '—'],
+      ['Accent',     accent],
+      ['Days',       S.days],
+      ['Format',     fmtStr],
+      ['Logo',       S.logoFile ? `✓ ${S.logoFile.name}` : 'None (add in admin)'],
+      ['Account',    S.user?.email],
     ];
 
     document.getElementById('reviewRows').innerHTML = rows.map(([k,v]) =>
@@ -636,7 +668,7 @@
 
       const now = new Date().toISOString();
 
-      // 2. Upload logo now that slug is finalized
+      // 2. Upload logo
       if (S.logoFile) {
         const ext  = S.logoFile.name.split('.').pop();
         const path = `${slug}/logo.${ext}`;
@@ -649,6 +681,7 @@
 
       // 3. Seed settings
       const settings = [
+        { key:'tourney_mode',      value: S.mode },
         { key:'tourney_name',      value: name },
         { key:'tourney_year',      value: year },
         { key:'tourney_location',  value: loc },
@@ -705,17 +738,15 @@
       const payload = await res.json();
       if (payload.error) throw new Error(payload.error);
 
-      // Redirect to Stripe — webhook activates the tournament on success
       window.location.href = payload.url;
 
     } catch(e) {
-      // Roll back pending tournament so slug is freed and user can retry
       if (tid) {
         await db.from('settings').delete().eq('tournament_id', tid);
         await db.from('tournaments').delete().eq('id', tid);
       }
       showAlert(alrt, e.message || 'Creation failed — please try again.');
-      btn.innerHTML = '🚀 Choose Plan & Pay →';
+      btn.innerHTML = 'Choose Plan & Pay →';
       btn.disabled = false;
     }
   }

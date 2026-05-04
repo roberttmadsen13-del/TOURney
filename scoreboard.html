@@ -421,6 +421,7 @@ let players = [];
 let scores = [];
 let teamAssignments = {};
 let roundStates = {};
+let _competitiveMode = false;
 let coursePars = JSON.parse(JSON.stringify(DEFAULT_PARS));
 let roundFormats = JSON.parse(JSON.stringify(DEFAULT_FORMATS));
 let activeTab = 'team';
@@ -431,13 +432,14 @@ let selectedScorecardRound = null;
 async function init() {
   const { tournament } = await window.tourney.ready;
   _slug = tournament.slug;
-  const [pRes, sRes, tRes, rRes, parRes, fmtRes] = await Promise.all([
+  const [pRes, sRes, tRes, rRes, parRes, fmtRes, modeRes] = await Promise.all([
     sb.from('players').select('*').eq('tournament_id', tournament.id),
     sb.from('scores').select('*').eq('tournament_id', tournament.id),
     sb.from('settings').select('*').eq('tournament_id', tournament.id).eq('key','team_assignments'),
     sb.from('settings').select('*').eq('tournament_id', tournament.id).in('key',['round_day1','round_day2','round_day3']),
     sb.from('settings').select('*').eq('tournament_id', tournament.id).in('key',['pars_day1','pars_day2','pars_day3']),
     sb.from('settings').select('*').eq('tournament_id', tournament.id).eq('key','round_formats'),
+    sb.from('settings').select('value').eq('tournament_id', tournament.id).eq('key','tourney_mode').maybeSingle(),
   ]);
 
   players = pRes.data || [];
@@ -455,6 +457,7 @@ async function init() {
   });
 
   if (fmtRes.data?.[0]) try { roundFormats = { ...DEFAULT_FORMATS, ...JSON.parse(fmtRes.data[0].value) }; } catch {}
+  _competitiveMode = modeRes.data?.value === 'competitive';
 
   currentRound = Object.entries(roundStates).find(([,v]) => v === 'open')?.[0] || null;
 
@@ -608,13 +611,17 @@ function buildLeaderboard() {
     const days = ['day1','day2','day3'].map(d => calcPlayerRound(p.id, d));
     const totalThru = days.reduce((a, d) => a + d.thru, 0);
     const totalRel  = days.reduce((a, d) => a + d.rel, 0);
-    return { ...p, days, totalThru, totalRel, team: teamAssignments[p.id] };
+    const handicap  = parseInt(p.handicap) || 0;
+    const totalNet  = _competitiveMode && totalThru > 0 ? totalRel - handicap : totalRel;
+    return { ...p, days, totalThru, totalRel, totalNet, handicap, team: teamAssignments[p.id] };
   }).sort((a, b) => {
+    const scoreA = _competitiveMode ? a.totalNet : a.totalRel;
+    const scoreB = _competitiveMode ? b.totalNet : b.totalRel;
     if (a.totalThru === 0 && b.totalThru === 0) return 0;
     if (a.totalThru === 0) return 1;
     if (b.totalThru === 0) return -1;
-    if (a.totalRel !== b.totalRel) return a.totalRel - b.totalRel;
-    return b.totalThru - a.totalThru; // more holes played ranks higher on ties
+    if (scoreA !== scoreB) return scoreA - scoreB;
+    return b.totalThru - a.totalThru;
   });
 }
 
@@ -662,13 +669,13 @@ function render() {
       <td class="${cls}" style="${p.totalThru===0?'color:rgba(240,230,204,0.15)':''}">${posLabel}</td>
       <td>
         <div class="lb-name"><span class="${dotClass(p.team)}"></span>${_esc(p.first_name)} ${_esc(p.last_name)}</div>
-        <div class="lb-tier">${TIER_LABELS[p.handicap] || ''}</div>
+        <div class="lb-tier">${_competitiveMode ? `HCP ${p.handicap}` : (TIER_LABELS[p.handicap] || '')}</div>
       </td>
       <td class="score-cell thru">${p.totalThru > 0 ? (p.totalThru >= 54 ? 'F' : p.totalThru) : '—'}</td>
       <td class="score-cell ${roundScoreClass(p.days[0])}">${formatRoundScore(p.days[0])}</td>
       <td class="score-cell ${roundScoreClass(p.days[1])}">${formatRoundScore(p.days[1])}</td>
       <td class="score-cell ${roundScoreClass(p.days[2])}">${formatRoundScore(p.days[2])}</td>
-      <td class="score-tally ${scoreClass(p.totalRel)}">${formatScore(p.totalRel, p.totalThru)}</td>
+      <td class="score-tally ${scoreClass(p.totalNet)}">${formatScore(p.totalNet, p.totalThru)}</td>
     </tr>`;
   }).join('');
   document.getElementById('leaderboardBody').innerHTML = lbRows;
