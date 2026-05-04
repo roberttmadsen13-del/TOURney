@@ -127,9 +127,14 @@ a{color:inherit;text-decoration:none;}
         <label for="emailInput">Your Email</label>
         <input type="email" id="emailInput" placeholder="you@email.com" autocomplete="email" required>
       </div>
-      <button type="submit" class="btn-primary" id="loginBtn">View My Golf</button>
+      <button type="submit" class="btn-primary" id="loginBtn">Send Magic Link</button>
       <div id="loginErr" class="login-err"></div>
     </form>
+    <div id="otpSent" style="display:none;text-align:center;padding:1rem 0;">
+      <div style="font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.25em;text-transform:uppercase;color:var(--gold);margin-bottom:0.75rem;">Check your inbox</div>
+      <div style="font-family:'Barlow',sans-serif;font-size:0.88rem;color:rgba(240,230,204,0.55);line-height:1.6;margin-bottom:1.25rem;">Sent a sign-in link to <span id="otpEmail" style="color:var(--cream)"></span></div>
+      <button onclick="document.getElementById('otpSent').style.display='none';document.getElementById('loginForm').style.display='block';" style="font-family:'DM Mono',monospace;font-size:0.44rem;letter-spacing:0.18em;text-transform:uppercase;color:rgba(240,230,204,0.3);background:none;border:none;cursor:pointer;">← Use different email</button>
+    </div>
   </div>
 </div>
 
@@ -194,25 +199,34 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
   if (!email) return;
   const btn = document.getElementById('loginBtn');
   const err = document.getElementById('loginErr');
-  btn.textContent = 'Looking up…';
+  btn.textContent = 'Sending…';
   btn.disabled = true;
   err.classList.remove('show');
-  try {
-    await loadPortal(email);
-  } catch (ex) {
-    err.textContent = ex.message || 'Something went wrong. Try again.';
+  const { error } = await sb.auth.signInWithOtp({
+    email,
+    options: { emailRedirectTo: location.origin + '/player' }
+  });
+  if (error) {
+    err.textContent = error.message || 'Something went wrong. Try again.';
     err.classList.add('show');
-    btn.textContent = 'View My Golf';
+    btn.textContent = 'Send Magic Link';
     btn.disabled = false;
+    return;
   }
+  document.getElementById('loginForm').style.display = 'none';
+  document.getElementById('otpEmail').textContent = email;
+  document.getElementById('otpSent').style.display = 'block';
 });
 
-document.getElementById('logoutBtn').addEventListener('click', () => {
+document.getElementById('logoutBtn').addEventListener('click', async () => {
+  await sb.auth.signOut();
   sessionStorage.removeItem(SESSION_KEY);
   document.getElementById('portalWrap').style.display = 'none';
   document.getElementById('loginWrap').style.display = 'flex';
+  document.getElementById('loginForm').style.display = 'block';
+  document.getElementById('otpSent').style.display = 'none';
   document.getElementById('emailInput').value = '';
-  document.getElementById('loginBtn').textContent = 'View My Golf';
+  document.getElementById('loginBtn').textContent = 'Send Magic Link';
   document.getElementById('loginBtn').disabled = false;
 });
 
@@ -390,7 +404,8 @@ async function respondInvite(inviteId, status, slug) {
     window.open(`https://${slug}.greenskeeper.studio/`, '_blank');
   }
   // Reload portal to reflect updated invites
-  const email = sessionStorage.getItem(SESSION_KEY);
+  const { data: { session } } = await sb.auth.getSession();
+  const email = session?.user?.email || sessionStorage.getItem(SESSION_KEY);
   if (email) loadPortal(email).catch(() => {});
 }
 
@@ -399,13 +414,26 @@ function esc(s) {
 }
 
 // ── AUTO-LOGIN if session exists ─────────────────────────────────────
-(function () {
+// Listen for magic-link sign-in completing (handles the redirect back to /player)
+sb.auth.onAuthStateChange((event, session) => {
+  if ((event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') && session?.user?.email) {
+    const portalVisible = document.getElementById('portalWrap').style.display === 'block';
+    if (!portalVisible) loadPortal(session.user.email).catch(() => {});
+  }
+});
+
+(async function () {
+  // Check real Supabase session first (covers magic-link redirect + persisted session)
+  const { data: { session } } = await sb.auth.getSession();
+  if (session?.user?.email) {
+    loadPortal(session.user.email).catch(() => {});
+    return;
+  }
+  // Fallback: sessionStorage (old sessions before auth upgrade)
   const saved = sessionStorage.getItem(SESSION_KEY);
   if (saved) {
     document.getElementById('emailInput').value = saved;
-    loadPortal(saved).catch(() => {
-      sessionStorage.removeItem(SESSION_KEY);
-    });
+    loadPortal(saved).catch(() => { sessionStorage.removeItem(SESSION_KEY); });
   }
 })();
 </script>
