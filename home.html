@@ -791,6 +791,7 @@ async function submitRsvp() {
   if (!selectedDates.size) { document.getElementById('errDates').classList.add('show'); ok=false; } else document.getElementById('errDates').classList.remove('show');
   if (!ok) return;
 
+  const { tournament } = await window.tourney.ready;
   const { error } = await sb.from('players').insert({
     first_name: first,
     last_name:  last,
@@ -801,6 +802,7 @@ async function submitRsvp() {
     why_me:     document.getElementById('rsvpWhyMe').value.trim(),
     trash_talk: document.getElementById('rsvpTrash').value.trim(),
     hat:        wantsHat,
+    tournament_id: tournament.id,
   });
 
   if (error) {
@@ -820,7 +822,8 @@ async function submitRsvp() {
 
 async function refreshField() {
   try {
-    const { data } = await sb.from('players').select('*').order('created_at', { ascending: true });
+    const { tournament } = await window.tourney.ready;
+    const { data } = await sb.from('players').select('*').eq('tournament_id', tournament.id).order('created_at', { ascending: true });
     const players = data || [];
     const n = players.length;
     document.getElementById('statRegistered').textContent = n;

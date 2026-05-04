@@ -1,5 +1,6 @@
 {
   "redirects": [
+    { "source": "/favicon.ico", "destination": "/favicon.svg", "permanent": false },
     { "source": "/t/bova-2026/:path*", "destination": "/t/bova/:path*", "permanent": true },
     {
       "source": "/:path*",

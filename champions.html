@@ -32,25 +32,7 @@ a{color:inherit;text-decoration:none;}
 .page-header{background:#0e0b06;padding:3.5rem 2rem 2.8rem;border-bottom:1px solid rgba(192,144,48,0.2);text-align:center;}
 .page-eyebrow{font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.5em;text-transform:uppercase;color:rgba(192,144,48,0.6);margin-bottom:1rem;}
 
-/* CSS Trophy */
-.trophy-wrap{margin:0 auto 1.4rem;width:60px;height:60px;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:0;}
-.trophy-cup{
-  width:38px;height:28px;
-  background:linear-gradient(160deg,var(--gold-l) 0%,var(--gold) 60%,#a07820 100%);
-  border-radius:50% 50% 10px 10px / 35% 35% 10px 10px;
-  position:relative;
-  box-shadow:0 2px 8px rgba(192,144,48,0.35);
-}
-.trophy-cup::before,.trophy-cup::after{
-  content:'';position:absolute;top:7px;
-  width:12px;height:16px;
-  background:linear-gradient(160deg,var(--gold-l),var(--gold));
-  box-shadow:0 2px 4px rgba(192,144,48,0.2);
-}
-.trophy-cup::before{left:-11px;border-radius:10px 0 0 10px;}
-.trophy-cup::after{right:-11px;border-radius:0 10px 10px 0;}
-.trophy-stem{width:7px;height:11px;background:linear-gradient(to bottom,var(--gold),#a07820);}
-.trophy-base{width:32px;height:6px;background:linear-gradient(160deg,var(--gold-l),var(--gold));border-radius:3px;box-shadow:0 2px 6px rgba(192,144,48,0.25);}
+.trophy-wrap{margin:0 auto 1.4rem;display:flex;align-items:center;justify-content:center;}
 
 .page-title{font-family:'Playfair Display',serif;font-size:clamp(2rem,5vw,3.2rem);font-weight:900;line-height:1;color:var(--cream);margin-bottom:0.45rem;}
 .page-title em{font-style:italic;color:var(--gold-p);}
@@ -120,24 +102,7 @@ a{color:inherit;text-decoration:none;}
 
 /* EMPTY STATE */
 .empty-wrap{text-align:center;padding:5rem 2rem;}
-.empty-trophy-wrap{margin:0 auto 1.8rem;width:70px;height:70px;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:0;}
-.empty-cup{
-  width:42px;height:32px;
-  background:linear-gradient(160deg,rgba(192,144,48,0.22),rgba(192,144,48,0.1));
-  border:1px solid rgba(192,144,48,0.3);
-  border-radius:50% 50% 10px 10px / 35% 35% 10px 10px;
-  position:relative;
-}
-.empty-cup::before,.empty-cup::after{
-  content:'';position:absolute;top:8px;
-  width:13px;height:18px;
-  background:rgba(192,144,48,0.12);
-  border:1px solid rgba(192,144,48,0.22);
-}
-.empty-cup::before{left:-12px;border-radius:10px 0 0 10px;}
-.empty-cup::after{right:-12px;border-radius:0 10px 10px 0;}
-.empty-stem{width:7px;height:12px;background:rgba(192,144,48,0.18);border-left:1px solid rgba(192,144,48,0.22);border-right:1px solid rgba(192,144,48,0.22);}
-.empty-base{width:36px;height:7px;background:rgba(192,144,48,0.15);border:1px solid rgba(192,144,48,0.22);border-radius:3px;}
+.empty-trophy-wrap{margin:0 auto 1.8rem;display:flex;align-items:center;justify-content:center;}
 
 .empty-rule{display:flex;align-items:center;gap:1rem;justify-content:center;margin-bottom:1.2rem;}
 .empty-rule-line{width:40px;height:1px;background:rgba(192,144,48,0.25);}
@@ -176,9 +141,21 @@ a{color:inherit;text-decoration:none;}
 <div class="page-header">
   <div class="page-eyebrow">Myrtle Beach, SC &middot; Tournament History</div>
   <div class="trophy-wrap">
-    <div class="trophy-cup"></div>
-    <div class="trophy-stem"></div>
-    <div class="trophy-base"></div>
+    <svg width="56" height="60" viewBox="0 0 56 60" fill="none" aria-hidden="true">
+      <defs>
+        <linearGradient id="tg" x1="0" y1="0" x2="56" y2="60" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stop-color="#edd060"/>
+          <stop offset="55%" stop-color="#c09030"/>
+          <stop offset="100%" stop-color="#8a6010"/>
+        </linearGradient>
+      </defs>
+      <path d="M10 4h36l-4 22c-1 5-5 8-12 8s-11-3-12-8z" fill="url(#tg)"/>
+      <path d="M10 8C6 8 3 11 3 15s3 7 7 7" stroke="#c09030" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+      <path d="M46 8c4 0 7 3 7 7s-3 7-7 7" stroke="#c09030" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+      <rect x="25" y="34" width="6" height="12" fill="#c09030" rx="1"/>
+      <rect x="15" y="46" width="26" height="9" rx="3.5" fill="url(#tg)"/>
+      <path d="M17 7l4-1-3 14-3-8z" fill="rgba(255,255,255,0.18)"/>
+    </svg>
   </div>
   <div class="page-title">Hall of <em>Champions</em></div>
   <div class="page-sub">Individual Trophy &middot; Winning Team &middot; All Years</div>
@@ -201,9 +178,13 @@ a{color:inherit;text-decoration:none;}
   <div id="emptyState" style="display:none;">
     <div class="empty-wrap">
       <div class="empty-trophy-wrap">
-        <div class="empty-cup"></div>
-        <div class="empty-stem"></div>
-        <div class="empty-base"></div>
+        <svg width="56" height="60" viewBox="0 0 56 60" fill="none" aria-hidden="true">
+          <path d="M10 4h36l-4 22c-1 5-5 8-12 8s-11-3-12-8z" fill="rgba(192,144,48,0.28)"/>
+          <path d="M10 8C6 8 3 11 3 15s3 7 7 7" stroke="rgba(192,144,48,0.28)" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+          <path d="M46 8c4 0 7 3 7 7s-3 7-7 7" stroke="rgba(192,144,48,0.28)" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+          <rect x="25" y="34" width="6" height="12" fill="rgba(192,144,48,0.22)" rx="1"/>
+          <rect x="15" y="46" width="26" height="9" rx="3.5" fill="rgba(192,144,48,0.28)"/>
+        </svg>
       </div>
       <div class="empty-rule">
         <div class="empty-rule-line"></div>
