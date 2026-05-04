@@ -709,7 +709,7 @@ window.addEventListener('scroll', () => { document.getElementById('mainNav').cla
 
 // Load admin-configured homepage content
 (async function loadHomepageContent() {
-  const keys = ['homepage_subtitle','homepage_details','homepage_about','logo_url'];
+  const keys = ['homepage_subtitle','homepage_details','homepage_about','logo_url','hero_photo_url'];
   const { tournament } = await window.tourney.ready;
   const { data } = await sb.from('settings').select('key,value').eq('tournament_id', tournament.id).in('key', keys);
   if (!data) return;
@@ -729,6 +729,11 @@ window.addEventListener('scroll', () => { document.getElementById('mainNav').cla
       const paras = map.homepage_about.split('\n\n').filter(Boolean);
       els.forEach((el, i) => { if (paras[i]) el.innerHTML = paras[i]; });
     }
+  }
+  // Hero image — swap out the default Unsplash photo if admin set one
+  if (map.hero_photo_url) {
+    const heroImg = document.querySelector('.hero-img');
+    if (heroImg) heroImg.src = map.hero_photo_url;
   }
   // Dynamic PWA manifest with uploaded logo as app icon
   if (map.logo_url) {

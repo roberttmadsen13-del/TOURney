@@ -1889,13 +1889,19 @@ async function uploadLogo(input) {
   if (error) { showToast('Upload failed: ' + error.message); return; }
   const { data } = sb.storage.from('brand').getPublicUrl(path);
   const url = data.publicUrl + '?t=' + Date.now();
-  await sb.from('settings').upsert({ key: 'logo_url', tournament_id: _tid, value: url, updated_at: new Date().toISOString() }, { onConflict: 'tournament_id,key' });
+  await Promise.all([
+    sb.from('settings').upsert({ key: 'logo_url', tournament_id: _tid, value: url, updated_at: new Date().toISOString() }, { onConflict: 'tournament_id,key' }),
+    sb.from('tournaments').update({ logo_url: url }).eq('id', _tid),
+  ]);
   renderLogoPreview(url);
   showToast('Logo saved.');
 }
 
 async function clearLogo() {
-  await sb.from('settings').delete().eq('tournament_id', _tid).eq('key','logo_url');
+  await Promise.all([
+    sb.from('settings').delete().eq('tournament_id', _tid).eq('key','logo_url'),
+    sb.from('tournaments').update({ logo_url: null }).eq('id', _tid),
+  ]);
   const el = document.getElementById('logoPreview');
   if (el) el.textContent = 'No logo uploaded';
   showToast('Logo cleared.');
