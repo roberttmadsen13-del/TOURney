@@ -122,18 +122,43 @@ a{color:inherit;text-decoration:none;}
     <div class="login-eyebrow">TOURney</div>
     <div class="login-title">My <em>Golf</em></div>
     <div class="login-sub">Tournament history &amp; upcoming events</div>
-    <form id="loginForm" autocomplete="on">
+
+    <!-- SIGN IN -->
+    <div id="signInMode">
       <div class="fg">
-        <label for="emailInput">Your Email</label>
-        <input type="email" id="emailInput" placeholder="you@email.com" autocomplete="email" required>
+        <label for="emailInput">Email Address</label>
+        <input type="email" id="emailInput" placeholder="your@email.com" autocomplete="email">
       </div>
-      <button type="submit" class="btn-primary" id="loginBtn">Send Magic Link</button>
-      <div id="loginErr" class="login-err"></div>
-    </form>
-    <div id="otpSent" style="display:none;text-align:center;padding:1rem 0;">
-      <div style="font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.25em;text-transform:uppercase;color:var(--gold);margin-bottom:0.75rem;">Check your inbox</div>
-      <div style="font-family:'Barlow',sans-serif;font-size:0.88rem;color:rgba(240,230,204,0.55);line-height:1.6;margin-bottom:1.25rem;">Sent a sign-in link to <span id="otpEmail" style="color:var(--cream)"></span></div>
-      <button onclick="document.getElementById('otpSent').style.display='none';document.getElementById('loginForm').style.display='block';" style="font-family:'DM Mono',monospace;font-size:0.44rem;letter-spacing:0.18em;text-transform:uppercase;color:rgba(240,230,204,0.3);background:none;border:none;cursor:pointer;">← Use different email</button>
+      <div class="fg">
+        <label for="passwordInput">Password</label>
+        <input type="password" id="passwordInput" placeholder="Enter your password" autocomplete="current-password">
+      </div>
+      <div class="login-err" id="signInErr"></div>
+      <button class="btn-primary" id="signInBtn" onclick="doSignIn()">Sign In</button>
+      <div style="margin-top:1rem;text-align:center;">
+        <a onclick="showMode('forgot')" style="font-family:'DM Mono',monospace;font-size:0.46rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);cursor:pointer;">Forgot password?</a>
+      </div>
+    </div>
+
+    <!-- FORGOT PASSWORD -->
+    <div id="forgotMode" style="display:none;">
+      <div style="font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-bottom:1.25rem;">Enter your email — we'll send a reset link.</div>
+      <div class="fg">
+        <label for="forgotEmail">Email Address</label>
+        <input type="email" id="forgotEmail" placeholder="your@email.com" autocomplete="email">
+      </div>
+      <div class="login-err" id="forgotErr"></div>
+      <button class="btn-primary" id="forgotBtn" onclick="doForgot()">Send Reset Link</button>
+      <div style="margin-top:1rem;text-align:center;">
+        <a onclick="showMode('signin')" style="font-family:'DM Mono',monospace;font-size:0.46rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);cursor:pointer;">← Back to sign in</a>
+      </div>
+    </div>
+
+    <!-- RESET SENT -->
+    <div id="resetSentMode" style="display:none;text-align:center;padding:0.5rem 0;">
+      <div style="font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.25em;text-transform:uppercase;color:var(--gold);margin-bottom:0.75rem;">Reset link sent</div>
+      <div style="font-family:'Barlow',sans-serif;font-size:0.88rem;color:rgba(240,230,204,0.55);line-height:1.6;margin-bottom:1.25rem;">Check your inbox and follow the link to set a new password.</div>
+      <a onclick="showMode('signin')" style="font-family:'DM Mono',monospace;font-size:0.46rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);cursor:pointer;">← Back to sign in</a>
     </div>
   </div>
 </div>
@@ -193,41 +218,64 @@ const TIER_LABEL = {scratch:'Scratch',eagle:'Eagle',birdie:'Birdie',bogey:'Bogey
 const SESSION_KEY = 'gks_player_email';
 
 // ── AUTH ────────────────────────────────────────────────────────────
-document.getElementById('loginForm').addEventListener('submit', async (e) => {
-  e.preventDefault();
-  const email = document.getElementById('emailInput').value.trim().toLowerCase();
-  if (!email) return;
-  const btn = document.getElementById('loginBtn');
-  const err = document.getElementById('loginErr');
-  btn.textContent = 'Sending…';
-  btn.disabled = true;
+function showMode(mode) {
+  document.getElementById('signInMode').style.display   = mode === 'signin'    ? 'block' : 'none';
+  document.getElementById('forgotMode').style.display   = mode === 'forgot'    ? 'block' : 'none';
+  document.getElementById('resetSentMode').style.display = mode === 'resetsent' ? 'block' : 'none';
+}
+
+async function doSignIn() {
+  const email    = document.getElementById('emailInput').value.trim().toLowerCase();
+  const password = document.getElementById('passwordInput').value;
+  const err      = document.getElementById('signInErr');
+  const btn      = document.getElementById('signInBtn');
   err.classList.remove('show');
-  const { error } = await sb.auth.signInWithOtp({
-    email,
-    options: { emailRedirectTo: location.origin + '/player' }
-  });
+  if (!email || !password) { err.textContent = 'Email and password required.'; err.classList.add('show'); return; }
+  btn.textContent = 'Signing in…';
+  btn.disabled = true;
+  const { error } = await sb.auth.signInWithPassword({ email, password });
   if (error) {
-    err.textContent = error.message || 'Something went wrong. Try again.';
+    err.textContent = error.message === 'Invalid login credentials' ? 'Incorrect email or password.' : (error.message || 'Sign in failed.');
     err.classList.add('show');
-    btn.textContent = 'Send Magic Link';
+    btn.textContent = 'Sign In';
     btn.disabled = false;
     return;
   }
-  document.getElementById('loginForm').style.display = 'none';
-  document.getElementById('otpEmail').textContent = email;
-  document.getElementById('otpSent').style.display = 'block';
-});
+  // onAuthStateChange fires → auto-loads portal
+}
+
+async function doForgot() {
+  const email = document.getElementById('forgotEmail').value.trim().toLowerCase();
+  const err   = document.getElementById('forgotErr');
+  const btn   = document.getElementById('forgotBtn');
+  err.classList.remove('show');
+  if (!email) { err.textContent = 'Enter your email address.'; err.classList.add('show'); return; }
+  btn.textContent = 'Sending…';
+  btn.disabled = true;
+  const { error } = await sb.auth.resetPasswordForEmail(email, {
+    redirectTo: location.origin + '/player'
+  });
+  btn.textContent = 'Send Reset Link';
+  btn.disabled = false;
+  if (error) { err.textContent = error.message || 'Something went wrong.'; err.classList.add('show'); return; }
+  showMode('resetsent');
+}
+
+// Enter key submits sign-in form
+document.getElementById('passwordInput').addEventListener('keydown', e => { if (e.key === 'Enter') doSignIn(); });
+document.getElementById('emailInput').addEventListener('keydown', e => { if (e.key === 'Enter') { const pw = document.getElementById('passwordInput'); pw.value ? doSignIn() : pw.focus(); } });
 
 document.getElementById('logoutBtn').addEventListener('click', async () => {
   await sb.auth.signOut();
   sessionStorage.removeItem(SESSION_KEY);
   document.getElementById('portalWrap').style.display = 'none';
+  document.getElementById('upgradeWall').style.display = 'none';
   document.getElementById('loginWrap').style.display = 'flex';
-  document.getElementById('loginForm').style.display = 'block';
-  document.getElementById('otpSent').style.display = 'none';
   document.getElementById('emailInput').value = '';
-  document.getElementById('loginBtn').textContent = 'Send Magic Link';
-  document.getElementById('loginBtn').disabled = false;
+  document.getElementById('passwordInput').value = '';
+  document.getElementById('signInBtn').textContent = 'Sign In';
+  document.getElementById('signInBtn').disabled = false;
+  showMode('signin');
 });
 
 // ── PORTAL LOAD ─────────────────────────────────────────────────────
@@ -414,7 +462,7 @@ function esc(s) {
 }
 
 // ── AUTO-LOGIN if session exists ─────────────────────────────────────
-// Listen for magic-link sign-in completing (handles the redirect back to /player)
+// Fires on signInWithPassword success, token refresh, or password reset landing
 sb.auth.onAuthStateChange((event, session) => {
   if ((event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') && session?.user?.email) {
     const portalVisible = document.getElementById('portalWrap').style.display === 'block';
