@@ -390,7 +390,7 @@ async function loadPortal(email) {
     allDisplayRecords.forEach(rec => {
       const t = tourneysById[rec.tournament_id];
       if (!t) return;
-      const baseUrl = `https://${t.slug}.greenskeeper.studio`;
+      const baseUrl = `https://tourney.greenskeeper.studio/t/${t.slug}`;
 
       const logoHtml = t.logo_url
         ? `<img class="tourney-logo" src="${esc(t.logo_url)}" alt="" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">`
@@ -426,7 +426,7 @@ async function loadPortal(email) {
           ${logoHtml}
           <div class="tourney-meta">
             <div class="tourney-name">${esc(t.name)}</div>
-            <div class="tourney-slug">${esc(t.slug)}.greenskeeper.studio</div>
+            <div class="tourney-slug">tourney.greenskeeper.studio/t/${esc(t.slug)}</div>
           </div>
         </div>
         ${tierHtml}
@@ -449,7 +449,7 @@ async function loadPortal(email) {
 async function respondInvite(inviteId, status, slug) {
   await sb.from('invitations').update({ status }).eq('id', inviteId);
   if (status === 'accepted' && slug) {
-    window.open(`https://${slug}.greenskeeper.studio/`, '_blank');
+    window.open(`https://tourney.greenskeeper.studio/t/${slug}`, '_blank');
   }
   // Reload portal to reflect updated invites
   const { data: { session } } = await sb.auth.getSession();
