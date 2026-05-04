@@ -516,6 +516,7 @@ let scorerPlayer  = null;
 let partnerPlayer = null;
 let opp1Player    = null;
 let opp2Player    = null;
+let _scoringAsId  = null;
 let scorerTeam    = null;
 let currentHole   = 1;
 
@@ -568,12 +569,40 @@ async function init() {
     .like('key', `pairing_${currentRound}_%`);
   _roundPairings = _pairData || [];
 
+  // Live pairing subscription — keeps _roundPairings current so both setup screen
+  // (opp1 pre-fill) and scoring screen (opp2 discovery) work without the 3s poll delay.
+  sb.channel('pairings-watch')
+    .on('postgres_changes', {
+      event: '*', schema: 'public', table: 'settings',
+      filter: `tournament_id=eq.${tournament.id}`
+    }, (payload) => {
+      const row = payload.new;
+      if (!row?.key?.startsWith(`pairing_${currentRound}_`)) return;
+      const idx = _roundPairings.findIndex(r => r.key === row.key);
+      if (idx >= 0) _roundPairings[idx] = row; else _roundPairings.push(row);
+      // Setup screen: re-check if someone just named us as their opp1
+      if (_scoringAsId) {
+        const ss = document.getElementById('setupScreen');
+        if (ss && ss.style.display !== 'none') _prefillOpponentIfPicked(_scoringAsId);
+      }
+      // Scoring screen: immediately surface opp2 when opp1's pairing is written
+      if (opp1Player && !opp2Player && row.key === `pairing_${currentRound}_${opp1Player.id}`) {
+        try {
+          const p2id = JSON.parse(row.value).partner || '';
+          const p2 = players.find(p => p.id === p2id);
+          if (p2) { opp2Player = p2; saveSessionState(); renderPlayers(); renderMiniStrip(); }
+        } catch {}
+      }
+    })
+    .subscribe();
+
   // Auto-detect player — read session directly to avoid race with authGuard localStorage write
   const { data: _authData } = await sb.auth.getSession();
   const profileEmail = _authData?.session?.user?.email || localStorage.getItem(`${_slug}_profile_email`);
   const detectedPlayer = profileEmail ? players.find(p => p.email && p.email.toLowerCase() === profileEmail.toLowerCase()) : null;
 
   if (detectedPlayer) {
+    _scoringAsId = detectedPlayer.id;
     const detectedTeam = teamAssignments[detectedPlayer.id] || '';
     // Gate: unassigned players cannot score
     if (!detectedTeam) {
@@ -603,6 +632,7 @@ async function init() {
     fallbackSel.addEventListener('change', function() {
       const p = players.find(x => x.id === this.value);
       if (!p) return;
+      _scoringAsId = p.id;
       const team = teamAssignments[p.id] || '';
       if (!team) {
         document.getElementById('loginPrompt').style.display = 'none';
@@ -748,6 +778,17 @@ async function startScoring() {
   opp1Player    = opp1Id ? players.find(p => p.id === opp1Id) : null;
 
   opp2Player = null;
+  // Immediately try from pre-fetched pairings cache — no round trip needed
+  if (opp1Player) {
+    const cached = _roundPairings.find(r => r.key === `pairing_${currentRound}_${opp1Player.id}`);
+    if (cached) {
+      try {
+        const p2id = JSON.parse(cached.value).partner || '';
+        const p2 = players.find(p => p.id === p2id);
+        if (p2) opp2Player = p2;
+      } catch {}
+    }
+  }
   scorerTeam    = team;
 
   if (!enteredScores[scorerId]) enteredScores[scorerId] = {};
@@ -873,7 +914,9 @@ function subscribeToFoursome() {
   // Poll every 3s as fallback — catches opp2 discovery + any missed realtime events
   if (_pollInterval) clearInterval(_pollInterval);
   _pollInterval = setInterval(async () => {
+    const prevOpp2 = opp2Player;
     await loadOpponentScores();
+    if (opp2Player !== prevOpp2) { renderPlayers(); renderMiniStrip(); }
     renderHole();
   }, 3000);
 }
