@@ -457,7 +457,8 @@ function esc(s) {
       e.preventDefault();
       await sb.auth.signOut();
       localStorage.removeItem(`${_slug}_profile_email`);
-      window.location.href = '/login?redirect=/scorecard';
+      const _pfx = location.pathname.match(/\/t\/([^/?#]+)/) ? `/t/${_slug}` : '';
+      window.location.href = `${_pfx}/login`;
     };
     navRight.appendChild(signOutBtn);
   }
@@ -469,24 +470,27 @@ function esc(s) {
     mobileSignOut.onclick = async function() {
       await sb.auth.signOut();
       localStorage.removeItem(`${_slug}_profile_email`);
-      window.location.href = '/login?redirect=/scorecard';
+      const _pfx = location.pathname.match(/\/t\/([^/?#]+)/) ? `/t/${_slug}` : '';
+      window.location.href = `${_pfx}/login`;
     };
     drawer.appendChild(mobileSignOut);
   }
   // Show Admin link if user is admin
   const { tournament } = await window.tourney.ready;
+  const _onTenant = !!location.pathname.match(/\/t\/([^/?#]+)/);
+  const _adminHref = _onTenant ? `/t/${tournament.slug}/admin` : '/admin';
   const { data: adminCheck } = await sb.from('players').select('is_admin').eq('tournament_id', tournament.id).eq('email', email.toLowerCase()).single();
   if (adminCheck?.is_admin) {
     if (navRight) {
       const adminLink = document.createElement('a');
-      adminLink.href = '/admin';
+      adminLink.href = _adminHref;
       adminLink.textContent = 'Admin';
       adminLink.className = 'nav-link';
       navRight.appendChild(adminLink);
     }
     if (drawer) {
       const mobileAdmin = document.createElement('a');
-      mobileAdmin.href = '/admin';
+      mobileAdmin.href = _adminHref;
       mobileAdmin.textContent = 'Admin';
       drawer.appendChild(mobileAdmin);
     }
@@ -1764,7 +1768,9 @@ async function submitRound() {
   clearSessionState();
   lockScorecard();
   showToast('Scores submitted!');
-  setTimeout(() => { window.location.href = '/scoreboard'; }, 2500);
+  const _sbOnTenant = !!location.pathname.match(/\/t\/([^/?#]+)/);
+  const _sbUrl = _sbOnTenant ? `/t/${_slug}/scoreboard` : '/scoreboard';
+  setTimeout(() => { window.location.href = _sbUrl; }, 2500);
 }
 
 // ── TOAST ─────────────────────────────────────────────────────────

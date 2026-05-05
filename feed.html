@@ -248,7 +248,9 @@ let mentionState = null;
 async function init() {
   const { data: sess } = await sb.auth.getSession();
   if (!sess?.session?.user) {
-    window.location.href = '/login?redirect=/feed';
+    const _pM = location.pathname.match(/\/t\/([^/?#]+)/);
+    const _pfx = _pM ? `/t/${_pM[1]}` : '';
+    window.location.href = `${_pfx}/login?redirect=${_pfx}/feed`;
     return;
   }
   const email = sess.session.user.email;
