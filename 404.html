@@ -40,5 +40,15 @@ body{background:#0e0b06;color:#f0e6cc;font-family:'Barlow Condensed',sans-serif;
   <a class="link" href="/feed">Feed</a>
   <a class="link" href="/">Home</a>
 </div>
+<script>
+const _m = location.pathname.match(/\/t\/([^/?#]+)/);
+if (_m) {
+  const _s = _m[1];
+  document.querySelectorAll('a[href^="/"]').forEach(a => {
+    const h = a.getAttribute('href');
+    if (!h.startsWith('/t/')) a.setAttribute('href', h === '/' ? `/t/${_s}` : `/t/${_s}${h}`);
+  });
+}
+</script>
 </body>
 </html>
