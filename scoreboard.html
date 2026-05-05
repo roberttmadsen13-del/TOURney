@@ -258,6 +258,7 @@ details[open] .explainer summary::after,.explainer details[open]>summary::after{
         </div>
       </div>
 
+      <div id="scoringModeBadge" style="display:none;margin-bottom:0.75rem;font-family:'DM Mono',monospace;font-size:0.45rem;letter-spacing:0.18em;text-transform:uppercase;padding:0.22rem 0.7rem;border:1px solid rgba(192,144,48,0.3);color:rgba(192,144,48,0.65);"></div>
       <table class="lb-table">
         <thead>
           <tr>
@@ -267,7 +268,7 @@ details[open] .explainer summary::after,.explainer details[open]>summary::after{
             <th class="center" id="hdr-d1">Day 1</th>
             <th class="center" id="hdr-d2">Day 2</th>
             <th class="center" id="hdr-d3">Day 3</th>
-            <th class="right">Total</th>
+            <th class="right" id="hdrTotal">Total</th>
           </tr>
         </thead>
         <tbody id="leaderboardBody">
@@ -476,7 +477,7 @@ async function init() {
     sb.from('settings').select('*').eq('tournament_id', tournament.id).in('key',['round_day1','round_day2','round_day3']),
     sb.from('settings').select('*').eq('tournament_id', tournament.id).in('key',['pars_day1','pars_day2','pars_day3']),
     sb.from('settings').select('*').eq('tournament_id', tournament.id).eq('key','round_formats'),
-    sb.from('settings').select('value').eq('tournament_id', tournament.id).eq('key','tourney_mode').maybeSingle(),
+    sb.from('settings').select('value').eq('tournament_id', tournament.id).eq('key','tournament_mode').maybeSingle(),
   ]);
 
   players = pRes.data || [];
@@ -495,6 +496,13 @@ async function init() {
 
   if (fmtRes.data?.[0]) try { roundFormats = { ...DEFAULT_FORMATS, ...JSON.parse(fmtRes.data[0].value) }; } catch {}
   _competitiveMode = modeRes.data?.value === 'competitive';
+  const _modeBadge = document.getElementById('scoringModeBadge');
+  if (_modeBadge) {
+    _modeBadge.textContent = _competitiveMode ? 'Competitive · Handicap-Adjusted' : 'Casual · Gross Score';
+    _modeBadge.style.display = 'inline-block';
+  }
+  const _hdrTotal = document.getElementById('hdrTotal');
+  if (_hdrTotal) _hdrTotal.textContent = _competitiveMode ? 'Net Total' : 'Total';
 
   currentRound = Object.entries(roundStates).find(([,v]) => v === 'open')?.[0] || null;
 
