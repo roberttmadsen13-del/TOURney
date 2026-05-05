@@ -1120,7 +1120,7 @@ function renderTable() {
       <td>${teamLabel}</td>
       <td>${p.has_account ? '<span style="color:#2a6a28;">&#10003;</span>' : '<span style="color:rgba(26,16,8,0.2);">—</span>'}</td>
       <td><button class="action-btn" style="color:${p.is_admin ? 'var(--gold)' : 'var(--muted)'};border-color:${p.is_admin ? 'var(--gold)' : 'rgba(26,16,8,0.2)'};" onclick="toggleAdmin('${p.id}',${!p.is_admin})">${p.is_admin ? 'Admin' : 'Grant'}</button></td>
-      <td style="display:flex;gap:0.4rem;"><button class="action-btn" style="color:var(--gold);border-color:var(--gold);" onclick="editPlayer('${p.id}')">Edit</button><button class="action-btn" onclick="removePlayer('${p.id}','${p.first_name} ${p.last_name}')">Remove</button></td>
+      <td style="display:flex;gap:0.4rem;"><button class="action-btn" style="color:var(--gold);border-color:var(--gold);" onclick="editPlayer('${p.id}')">Edit</button><a class="action-btn" href="/player?as=${encodeURIComponent(p.email)}" target="_blank" style="display:inline-flex;align-items:center;">Portal</a><button class="action-btn" onclick="removePlayer('${p.id}','${p.first_name} ${p.last_name}')">Remove</button></td>
     </tr>`;
   }).join('');
 }

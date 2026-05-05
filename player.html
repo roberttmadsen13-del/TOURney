@@ -315,7 +315,7 @@ document.getElementById('logoutBtn').addEventListener('click', async () => {
 });
 
 // ── PORTAL LOAD ─────────────────────────────────────────────────────
-async function loadPortal(email) {
+async function loadPortal(email, opts = {}) {
   // Player records + admin memberships in parallel
   const [playerRes, adminRes] = await Promise.all([
     sb.from('players').select('id, first_name, last_name, handicap, phone_number, tournament_id').eq('email', email),
@@ -353,9 +353,11 @@ async function loadPortal(email) {
   const account  = accountRes.data;
 
   // ── Billing gate — hard wall ──────────────────────────────────
-  const isActive = account && account.billing_status === 'active' &&
-    (!account.billing_expires_at || new Date(account.billing_expires_at) > new Date());
-  const isPending = account && account.billing_status === 'pending_payment';
+  const isAdmin = adminRows.length > 0;
+  const isActive = opts.bypass || isAdmin ||
+    (account && account.billing_status === 'active' &&
+    (!account.billing_expires_at || new Date(account.billing_expires_at) > new Date()));
+  const isPending = !isActive && account && account.billing_status === 'pending_payment';
 
   if (!isActive) {
     document.getElementById('loginWrap').style.display = 'none';
@@ -512,6 +514,20 @@ async function loadPortal(email) {
 
   document.getElementById('loginWrap').style.display = 'none';
   document.getElementById('portalWrap').style.display = 'block';
+
+  // Admin "viewing as" banner
+  let banner = document.getElementById('viewAsBanner');
+  if (opts.viewingAs) {
+    if (!banner) {
+      banner = document.createElement('div');
+      banner.id = 'viewAsBanner';
+      banner.style.cssText = 'background:rgba(192,144,48,0.12);border:1px solid rgba(192,144,48,0.35);color:var(--gold);font-family:\'DM Mono\',monospace;font-size:0.46rem;letter-spacing:0.2em;text-transform:uppercase;padding:0.5rem 1rem;margin-bottom:1.5rem;display:flex;align-items:center;justify-content:space-between;';
+      document.querySelector('.portal-header').before(banner);
+    }
+    banner.innerHTML = `<span>Admin view — ${esc(email)}</span><a href="/player" style="color:var(--muted);font-size:0.42rem;">← Your portal</a>`;
+  } else if (banner) {
+    banner.remove();
+  }
 }
 
 async function respondInvite(inviteId, status, slug) {
@@ -581,7 +597,17 @@ sb.auth.onAuthStateChange((event, session) => {
 (async function () {
   // Check real Supabase session first (covers magic-link redirect + persisted session)
   const { data: { session } } = await sb.auth.getSession();
+  const asEmail = new URLSearchParams(location.search).get('as');
+
   if (session?.user?.email) {
+    // ?as=email admin impersonation — verify current user is an admin first
+    if (asEmail && asEmail !== session.user.email) {
+      const { data: adminCheck } = await sb.from('tournament_admins').select('tournament_id').eq('email', session.user.email).limit(1);
+      if (adminCheck && adminCheck.length > 0) {
+        loadPortal(asEmail, { bypass: true, viewingAs: true }).catch(() => {});
+        return;
+      }
+    }
     loadPortal(session.user.email).catch(() => {});
     return;
   }
