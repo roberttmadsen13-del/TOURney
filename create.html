@@ -98,10 +98,20 @@
     .days-row{display:flex;gap:.5rem;margin-bottom:1.5rem;flex-wrap:wrap}
     .day-btn{width:2.4rem;height:2.4rem;border:1px solid var(--border);border-radius:4px;background:var(--surface);color:var(--muted);font-family:'DM Mono',monospace;font-size:.7rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s}
     .day-btn.on{border-color:var(--gold);color:var(--gold);background:rgba(192,144,48,.1)}
-    .fmt-row{background:rgba(245,237,224,.03);border:1px solid var(--border);border-radius:6px;padding:.9rem 1.1rem;margin-bottom:.65rem;display:grid;grid-template-columns:6rem 1fr;align-items:center;gap:.75rem}
-    @media(max-width:420px){.fmt-row{grid-template-columns:1fr;gap:.4rem}}
-    .fmt-day{font-size:.62rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--gold)}
-    .fmt-select{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:.45rem .6rem;color:var(--cream);font-family:'DM Mono',monospace;font-size:.68rem;outline:none;appearance:none}
+    .fmt-row{background:rgba(245,237,224,.03);border:1px solid var(--border);border-radius:6px;padding:.75rem 1rem;margin-bottom:.55rem;display:grid;grid-template-columns:4.5rem 1fr 1fr;align-items:start;gap:.5rem}
+    @media(max-width:480px){.fmt-row{grid-template-columns:1fr 1fr}.fmt-day{grid-column:1/-1;padding-bottom:.1rem}}
+    .fmt-day{font-size:.58rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);padding-top:.35rem}
+    .fmt-select{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:.42rem .55rem;color:var(--cream);font-family:'DM Mono',monospace;font-size:.65rem;outline:none;appearance:none}
+    .fmt-nine-lbl{font-family:'DM Mono',monospace;font-size:.46rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:.22rem}
+    /* ─── Pricing card ─── */
+    .price-card{border:1px solid rgba(192,144,48,.3);border-radius:6px;padding:1.1rem 1.2rem;margin-top:1.5rem;background:rgba(192,144,48,.04)}
+    .price-row{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:.35rem}
+    .price-lbl{font-family:'DM Mono',monospace;font-size:.55rem;letter-spacing:.15em;text-transform:uppercase;color:var(--muted)}
+    .price-val{font-size:.78rem;color:var(--cream)}
+    .price-total{display:flex;justify-content:space-between;align-items:baseline;border-top:1px solid var(--border);padding-top:.75rem;margin-top:.4rem}
+    .price-total-lbl{font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.15em;text-transform:uppercase;color:var(--gold)}
+    .price-total-val{font-size:1.4rem;font-weight:700;color:var(--gold)}
+    .price-note{font-family:'DM Mono',monospace;font-size:.5rem;color:var(--muted);margin-top:.6rem;opacity:.7}
     .fmt-select option{background:#1a1008}
 
     /* ─── Review ─── */
@@ -200,8 +210,21 @@
       <div class="fl" style="margin-top:1.75rem;margin-bottom:.75rem">Number of Days</div>
       <div class="days-row" id="daysBtns"></div>
 
+      <div class="fl" style="margin-top:1.75rem;margin-bottom:.5rem">Max Players</div>
+      <div class="days-row" id="playersBtns"></div>
+
       <div class="fl" style="margin-bottom:.65rem">Scoring Format per Nine Holes</div>
       <div id="fmtRows"></div>
+
+      <div class="price-card" id="priceCard">
+        <div class="price-row"><span class="price-lbl">Players</span><span class="price-val" id="pc-players">—</span></div>
+        <div class="price-row"><span class="price-lbl">Rounds</span><span class="price-val" id="pc-days">—</span></div>
+        <div class="price-total">
+          <span class="price-total-lbl">Est. per tourney</span>
+          <span class="price-total-val" id="pc-total">$—</span>
+        </div>
+        <div class="price-note">Billing not yet active — pricing preview only.</div>
+      </div>
 
       <div class="nav">
         <button class="btn-back" onclick="back()">← Back</button>
@@ -315,8 +338,21 @@
     logoUrl: '', logoFile: null,
     mode: 'competitive',
     days: 3,
+    maxPlayers: 24,
     formats: mkFormats(3),
   };
+
+  function calcPrice(players, days) {
+    const base = players <= 12 ? 5 : players <= 24 ? 12 : players <= 36 ? 20 : 30;
+    const mult = days === 1 ? 1 : days <= 3 ? 1.5 : 2;
+    return Math.round(base * mult);
+  }
+
+  function updatePriceCard() {
+    document.getElementById('pc-players').textContent = S.maxPlayers;
+    document.getElementById('pc-days').textContent = S.days + (S.days === 1 ? ' round' : ' rounds');
+    document.getElementById('pc-total').textContent = '$' + calcPrice(S.maxPlayers, S.days);
+  }
 
   function mkFormats(n) {
     const f = {};
@@ -439,6 +475,20 @@
       row.appendChild(b);
     }
 
+    const pRow = document.getElementById('playersBtns');
+    pRow.innerHTML = '';
+    [8,12,16,20,24,32,40,48].forEach(n => {
+      const b = document.createElement('button');
+      b.className = 'day-btn' + (n === S.maxPlayers ? ' on' : '');
+      b.textContent = n;
+      b.style.width = 'auto';
+      b.style.padding = '0 .65rem';
+      b.onclick = () => { S.maxPlayers = n; renderFormat(); };
+      pRow.appendChild(b);
+    });
+
+    updatePriceCard();
+
     const makeOpts = (sel) => FMT.map(o =>
       `<option value="${o.value}"${o.value===sel?' selected':''}>${o.label}</option>`
     ).join('');
@@ -451,15 +501,14 @@
       const fmt = S.formats[key] || { front:'stroke', back:'stroke' };
       const div = document.createElement('div');
       div.className = 'fmt-row';
-      div.style.cssText = 'display:grid;grid-template-columns:5rem 1fr 1fr;gap:.6rem;align-items:center;';
       div.innerHTML = `
         <div class="fmt-day">Day ${DAY_WORDS[i-1]}</div>
         <div>
-          <div style="font-family:'DM Mono',monospace;font-size:.48rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(245,237,224,0.4);margin-bottom:.25rem">Front 9</div>
+          <div class="fmt-nine-lbl">Front 9</div>
           <select class="fmt-select" id="fd-${key}-front">${makeOpts(fmt.front)}</select>
         </div>
         <div>
-          <div style="font-family:'DM Mono',monospace;font-size:.48rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(245,237,224,0.4);margin-bottom:.25rem">Back 9</div>
+          <div class="fmt-nine-lbl">Back 9</div>
           <select class="fmt-select" id="fd-${key}-back">${makeOpts(fmt.back)}</select>
         </div>`;
       cont.appendChild(div);
@@ -625,7 +674,7 @@
         { key:'about_stat_teams',  value: '2' },
         { key:'about_stat_holes',  value: String(S.days * 18) },
         { key:'reg_open',          value: 'true' },
-        { key:'reg_max_players',   value: '24' },
+        { key:'reg_max_players',   value: String(S.maxPlayers) },
         { key:'reg_bullet_1',      value: 'Open to all skill levels' },
         { key:'reg_bullet_2',      value: `${S.days}-day tournament` },
         { key:'reg_bullet_3',      value: loc || 'Location TBD' },

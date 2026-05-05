@@ -234,12 +234,6 @@ async function loadTournaments() {
 
 async function deleteTourney(id, name) {
   if (!confirm(`Delete "${name}"? This cannot be undone.`)) return;
-  // Delete in dependency order to avoid FK violations
-  await sb.from('scores').delete().eq('tournament_id', id);
-  await sb.from('players').delete().eq('tournament_id', id);
-  await sb.from('tournament_admins').delete().eq('tournament_id', id);
-  await sb.from('invitations').delete().eq('tournament_id', id);
-  await sb.from('settings').delete().eq('tournament_id', id);
   const { error } = await sb.from('tournaments').delete().eq('id', id);
   if (error) { alert('Delete failed: ' + error.message); return; }
   loadTournaments();
