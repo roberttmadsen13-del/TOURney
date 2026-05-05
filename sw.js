@@ -1,4 +1,4 @@
-const CACHE = 'tourney-v12';
+const CACHE = 'tourney-v13';
 const PRECACHE = [
   '/',
   '/celebrate.js',

@@ -24,7 +24,8 @@
 }
 * { margin: 0; padding: 0; box-sizing: border-box; }
 html { scroll-behavior: smooth; }
-body { background: var(--ink); color: var(--cream); font-family: 'Barlow', sans-serif; font-weight: 300; overflow-x: hidden; }
+body { background: var(--ink); color: var(--cream); font-family: 'Barlow', sans-serif; font-weight: 300; }
+html { overflow-x: hidden; }
 ::selection { background: var(--gold); color: var(--ink); }
 
 /* All photos get same warm sepia treatment */
@@ -361,21 +362,20 @@ html { scroll-behavior: smooth; }
 /* Parallax hero image */
 .hero-img { transform: scale(1.08); transition: transform 0.1s linear; }
 
-/* Section entrance animations */
-.s-inner, .about-grid, .days-grid, .format-two-col, .teams-vs, .rsvp-grid {
+/* Section entrance animations — JS adds .will-animate before observing */
+.will-animate {
   opacity: 0;
   transform: translateY(32px);
   transition: opacity 0.7s ease, transform 0.7s ease;
 }
-.s-inner.visible, .about-grid.visible, .days-grid.visible, 
-.format-two-col.visible, .teams-vs.visible, .rsvp-grid.visible {
+.will-animate.visible {
   opacity: 1;
   transform: translateY(0);
 }
 
 /* Staggered day blocks */
-.day-block { opacity: 0; transform: translateY(24px); transition: opacity 0.5s ease, transform 0.5s ease; }
-.day-block.visible { opacity: 1; transform: translateY(0); }
+.day-block.will-animate { opacity: 0; transform: translateY(24px); transition: opacity 0.5s ease, transform 0.5s ease; }
+.day-block.will-animate.visible { opacity: 1; transform: translateY(0); }
 .day-block:nth-child(2) { transition-delay: 0.12s; }
 .day-block:nth-child(3) { transition-delay: 0.24s; }
 
@@ -876,14 +876,17 @@ function closeLightbox(e) {
   }
 }
 
-// SCROLL ANIMATIONS
+// SCROLL ANIMATIONS — mark elements first, then observe (content visible if JS/observer fails)
 const observerTargets = document.querySelectorAll('.s-inner, .about-grid, .days-grid, .day-block, .format-two-col, .teams-vs, .rsvp-grid');
+observerTargets.forEach(el => el.classList.add('will-animate'));
 const observer = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
-    if (entry.isIntersecting) { entry.target.classList.add('visible'); }
+    if (entry.isIntersecting) { entry.target.classList.add('visible'); observer.unobserve(entry.target); }
   });
-}, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+}, { threshold: 0.05, rootMargin: '0px 0px -20px 0px' });
 observerTargets.forEach(el => observer.observe(el));
+// Fallback: if anything still hidden after 2s, reveal it
+setTimeout(() => { observerTargets.forEach(el => el.classList.add('visible')); }, 2000);
 
 // HERO PARALLAX
 window.addEventListener('scroll', () => {

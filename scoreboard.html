@@ -632,7 +632,7 @@ function render() {
   // Team totals
   const teamA = lb.filter(p => p.team === 'A');
   const teamB = lb.filter(p => p.team === 'B');
-  const sumTeam = arr => arr.reduce((a, p) => a + p.totalRel, 0);
+  const sumTeam = arr => arr.reduce((a, p) => a + (_competitiveMode ? p.totalNet : p.totalRel), 0);
   const thruTeam = arr => arr.reduce((a, p) => a + p.totalThru, 0);
 
   const teamAEl = document.getElementById('teamAScore');
@@ -691,14 +691,14 @@ function render() {
       <td class="${cls}" style="${p.totalThru===0?'color:rgba(240,230,204,0.15)':''}">${posLabel}</td>
       <td>
         <div class="lb-name"><span class="${dotClass(p.team)}"></span>${_esc(p.first_name)} ${_esc(p.last_name)}</div>
-        <div class="lb-tier">${TIER_LABELS[p.handicap] || ''}</div>
+        <div class="lb-tier">${_competitiveMode ? `HCP ${p.handicap}` : (TIER_LABELS[p.handicap] || '')}</div>
       </td>
       <td class="score-cell thru">${p.totalThru > 0 ? (p.totalThru >= 54 ? 'F' : p.totalThru) : '—'}</td>
       <td class="score-cell ${todayScore ? roundScoreClass(todayScore) : ''}">${todayScore ? formatRoundScore(todayScore) : '—'}</td>
       <td class="score-cell ${roundScoreClass(p.days[0])}">${formatRoundScore(p.days[0])}</td>
       <td class="score-cell ${roundScoreClass(p.days[1])}">${formatRoundScore(p.days[1])}</td>
       <td class="score-cell ${roundScoreClass(p.days[2])}">${formatRoundScore(p.days[2])}</td>
-      <td class="score-tally ${scoreClass(p.totalRel)}">${formatScore(p.totalRel, p.totalThru)}</td>
+      <td class="score-tally ${scoreClass(p.totalNet)}">${formatScore(p.totalNet, p.totalThru)}</td>
     </tr>`;
   }).join('');
   document.getElementById('indLeaderboardBody').innerHTML = indRows;
