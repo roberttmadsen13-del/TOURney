@@ -2261,6 +2261,12 @@ async function saveRegistration() {
     { key:'reg_show_hat',    value: document.getElementById('dsShowHat')?.value || 'true' },
     { key:'team_a_name',     value: document.getElementById('dsTeamAName')?.value || '' },
     { key:'team_b_name',     value: document.getElementById('dsTeamBName')?.value || '' },
+    { key:'team_c_name',     value: document.getElementById('dsTeamCName')?.value || '' },
+    { key:'team_d_name',     value: document.getElementById('dsTeamDName')?.value || '' },
+    { key:'team_e_name',     value: document.getElementById('dsTeamEName')?.value || '' },
+    { key:'team_f_name',     value: document.getElementById('dsTeamFName')?.value || '' },
+    { key:'team_g_name',     value: document.getElementById('dsTeamGName')?.value || '' },
+    { key:'team_h_name',     value: document.getElementById('dsTeamHName')?.value || '' },
   ].map(r => ({ ...r, tournament_id: _tid, updated_at: new Date().toISOString() }));
   await sb.from('settings').upsert(rows, { onConflict: 'tournament_id,key' });
   showToast('Registration saved.');
