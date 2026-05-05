@@ -469,6 +469,9 @@
   }
 
   function renderFormat() {
+    // Hide back when user is already authed — no step 1 to return to
+    const backBtn = document.querySelector('#s2 .btn-back');
+    if (backBtn) backBtn.style.display = S.user ? 'none' : '';
     const row = document.getElementById('daysBtns');
     row.innerHTML = '';
     for (let i = 1; i <= 7; i++) {
@@ -602,6 +605,7 @@
     ['starter', 'pro', 'club'].forEach(k => {
       document.getElementById(`tc-${k}`).classList.toggle('active', k === t);
     });
+    if (S.step === 5) renderReview();
   }
 
   // ─── Step 5: Review & Launch ───
