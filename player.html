@@ -436,7 +436,7 @@ async function loadPortal(email) {
           <a class="tourney-link" href="${baseUrl}/scoreboard" target="_blank">Leaderboard</a>
           <a class="tourney-link" href="${baseUrl}/feed" target="_blank">Feed</a>
           <a class="tourney-link" href="${baseUrl}/" target="_blank">Home</a>
-          ${rec._adminOnly ? `<a class="tourney-link" href="${baseUrl}/admin" target="_blank">Admin</a>` : ''}
+          ${(rec._adminOnly || adminRows.some(r => r.tournament_id === rec.tournament_id)) ? `<a class="tourney-link" href="${baseUrl}/admin" target="_blank">Admin</a>` : ''}
         </div>`;
       grid.appendChild(card);
     });

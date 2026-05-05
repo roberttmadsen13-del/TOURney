@@ -655,6 +655,11 @@ html { scroll-behavior: smooth; }
             </div>
           </div>
           <button class="form-submit" onclick="submitRsvp()">Confirm Registration</button>
+          <div id="playerAccountBanner" style="display:none;margin-top:1rem;padding:1rem 1.2rem;border:1px solid rgba(192,144,48,0.4);background:rgba(192,144,48,0.06);text-align:center;">
+            <div style="font-family:'Barlow Condensed',sans-serif;font-size:0.72rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);margin-bottom:0.5rem;">Player Account Required</div>
+            <div style="font-size:0.82rem;color:rgba(240,230,204,0.55);margin-bottom:0.9rem;">A $2/mo Player Account is required to join a tournament.</div>
+            <a href="/player-upgrade" class="btn-gold" style="font-size:0.65rem;padding:0.5rem 1.5rem;">Get Player Account &rarr;</a>
+          </div>
         </div>
         <div class="success-state" id="successRsvp">
           <div class="ss-title">Registration Confirmed.</div>
@@ -796,6 +801,22 @@ async function submitRsvp() {
   if (!hcap)  { setErr('rsvpHandicap','errHandicap',true); ok=false; } else setErr('rsvpHandicap','errHandicap',false);
   if (!selectedDates.size) { document.getElementById('errDates').classList.add('show'); ok=false; } else document.getElementById('errDates').classList.remove('show');
   if (!ok) return;
+
+  // Gate: require active player_accounts subscription
+  const { data: acct } = await sb.from('player_accounts')
+    .select('billing_status, billing_expires_at')
+    .eq('email', email.toLowerCase())
+    .maybeSingle();
+  const isActive = acct?.billing_status === 'active' &&
+    (!acct.billing_expires_at || new Date(acct.billing_expires_at) > new Date());
+  if (!isActive) {
+    showToast('Player Account Required', 'A $2/mo Player Account is required to join. Tap below to get one.');
+    setTimeout(() => {
+      const el = document.getElementById('playerAccountBanner');
+      if (el) el.style.display = 'block';
+    }, 100);
+    return;
+  }
 
   const { tournament } = await window.tourney.ready;
   const { error } = await sb.from('players').insert({
