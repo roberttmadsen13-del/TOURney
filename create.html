@@ -440,7 +440,7 @@
     }
 
     const { data: { session } } = await db.auth.getSession();
-    if (session?.user) { S.user = session.user; go(2); }
+    if (session?.user) { checkBillingThenGo(session.user); }
   })();
 
   // ─── Step indicator ───
@@ -462,6 +462,22 @@
     updateDots();
     window.scrollTo(0, 0);
     if (n === 2) renderFormat();
+  }
+
+  // ─── Billing gate ───
+  // Allowed statuses — 'comped' covers founders/Rob, 'trial' covers test accounts
+  const BILLING_OK = new Set(['active', 'comped', 'trial']);
+  async function checkBillingThenGo(user) {
+    S.user = user;
+    const { data: acct } = await db.from('player_accounts')
+      .select('billing_status')
+      .eq('email', user.email)
+      .maybeSingle();
+    if (acct && BILLING_OK.has(acct.billing_status)) {
+      go(2);
+    } else {
+      location.href = '/player-upgrade?email=' + encodeURIComponent(user.email);
+    }
   }
 
   function back() {
@@ -513,8 +529,7 @@
         res = await db.auth.signInWithPassword({ email, password: pw });
         if (res.error) throw res.error;
       }
-      S.user = res.data.user;
-      go(2);
+      await checkBillingThenGo(res.data.user);
     } catch(e) {
       showAlert(alrt, e.message || 'Authentication failed. Try again.');
     } finally {
