@@ -46,6 +46,7 @@ a{color:inherit;text-decoration:none;}
 .portal-name{font-family:'Playfair Display',serif;font-size:2.2rem;font-weight:900;line-height:1;}
 .portal-name em{font-style:italic;color:var(--gold-p);}
 .portal-email{font-family:'DM Mono',monospace;font-size:0.48rem;letter-spacing:0.18em;color:var(--muted);margin-top:0.4rem;}
+.portal-phone{font-family:'DM Mono',monospace;font-size:0.48rem;letter-spacing:0.18em;color:var(--muted);margin-top:0.2rem;}
 
 /* STATS STRIP */
 .stats-strip{display:flex;border:1px solid rgba(192,144,48,0.18);margin-bottom:3rem;overflow:hidden;}
@@ -203,12 +204,19 @@ a{color:inherit;text-decoration:none;}
     <div class="portal-eyebrow">Player Portal</div>
     <div class="portal-name" id="portalName">—</div>
     <div class="portal-email" id="portalEmail">—</div>
+    <div class="portal-phone" id="portalPhone" style="display:none"></div>
   </div>
 
   <div class="stats-strip">
     <div class="stat-cell"><div class="stat-val" id="statTourneys">—</div><div class="stat-label">Tournaments</div></div>
     <div class="stat-cell"><div class="stat-val" id="statRounds">—</div><div class="stat-label">Rounds</div></div>
     <div class="stat-cell"><div class="stat-val" id="statHios">—</div><div class="stat-label">Hole-in-Ones</div></div>
+  </div>
+
+  <!-- HANDICAP / GOLF PROFILE -->
+  <div id="hcapSection" style="display:none;margin-bottom:2.5rem;">
+    <div class="section-label">My Golf Profile</div>
+    <div id="hcapContent"></div>
   </div>
 
   <!-- INVITATIONS -->
@@ -234,6 +242,14 @@ const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 const TIER_MAP   = {scratch:'t-scratch',eagle:'t-eagle',birdie:'t-birdie',bogey:'t-bogey',pretender:'t-pretender',hacker:'t-hacker'};
 const TIER_LABEL = {scratch:'Scratch',eagle:'Eagle',birdie:'Birdie',bogey:'Bogey',pretender:'Pretenders',hacker:'Dreamers'};
+
+function formatPhone(raw) {
+  if (!raw) return '';
+  const d = raw.replace(/\D/g, '');
+  if (d.length === 10) return `(${d.slice(0,3)}) ${d.slice(3,6)}-${d.slice(6)}`;
+  if (d.length === 11 && d[0] === '1') return `+1 (${d.slice(1,4)}) ${d.slice(4,7)}-${d.slice(7)}`;
+  return raw;
+}
 
 const SESSION_KEY = 'gks_player_email';
 
@@ -302,7 +318,7 @@ document.getElementById('logoutBtn').addEventListener('click', async () => {
 async function loadPortal(email) {
   // Player records + admin memberships in parallel
   const [playerRes, adminRes] = await Promise.all([
-    sb.from('players').select('id, first_name, last_name, handicap, tournament_id').eq('email', email),
+    sb.from('players').select('id, first_name, last_name, handicap, phone_number, tournament_id').eq('email', email),
     sb.from('tournament_admins').select('tournament_id').eq('email', email),
   ]);
 
@@ -367,6 +383,38 @@ async function loadPortal(email) {
   document.getElementById('statTourneys').textContent = tids.length;
   document.getElementById('statRounds').textContent = totalRounds;
   document.getElementById('statHios').textContent = hios;
+
+  // ── Phone ─────────────────────────────────────────────────────
+  const phone = me && me.phone_number;
+  if (phone) {
+    const phoneEl = document.getElementById('portalPhone');
+    phoneEl.innerHTML = `<a href="tel:${esc(phone)}" style="color:inherit;text-decoration:none;">${esc(formatPhone(phone))}</a>`;
+    phoneEl.style.display = '';
+  }
+
+  // ── Handicap / golf profile ───────────────────────────────────
+  const roundMap = {};
+  scores.forEach(s => {
+    const key = s.player_id + '-' + s.tournament_id + '-' + s.round;
+    roundMap[key] = (roundMap[key] || 0) + s.gross_score;
+  });
+  const roundTotals = Object.values(roundMap);
+  const tierLabel = (me && TIER_LABEL[me.handicap]) || (me && me.handicap) || '';
+  let hcapHtml = '';
+  if (tierLabel) {
+    hcapHtml += `<div style="font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--muted);margin-bottom:0.55rem;">Registered Tier: <span style="color:var(--gold)">${esc(tierLabel)}</span></div>`;
+  }
+  if (roundTotals.length >= 5) {
+    const avg = Math.round(roundTotals.reduce((a, b) => a + b, 0) / roundTotals.length);
+    hcapHtml += `<div style="font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--muted);">Avg Round Score: <span style="color:var(--cream)">${avg} strokes</span></div>`;
+  } else if (tierLabel) {
+    const need = 5 - roundTotals.length;
+    hcapHtml += `<div style="font-family:'DM Mono',monospace;font-size:0.44rem;letter-spacing:0.18em;text-transform:uppercase;color:rgba(240,230,204,0.32);">${need} more round${need !== 1 ? 's' : ''} to unlock scoring average</div>`;
+  }
+  if (hcapHtml) {
+    document.getElementById('hcapContent').innerHTML = hcapHtml;
+    document.getElementById('hcapSection').style.display = 'block';
+  }
 
   // ── Invitations ───────────────────────────────────────────────
   const tourneysById = {};
