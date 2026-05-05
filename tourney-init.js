@@ -105,14 +105,15 @@
         );
       }
 
-      // Admin link for tournament admins
-      const { data: adminRow } = await db
+      // Admin link for tournament owners + admins
+      const isOwner = data.owner_email?.toLowerCase() === email.toLowerCase();
+      const { data: adminRow } = isOwner ? { data: null } : await db
         .from('tournament_admins')
         .select('id')
         .eq('tournament_id', data.id)
         .eq('email', email)
         .maybeSingle();
-      if (adminRow && window._navInjectLink) {
+      if ((isOwner || adminRow) && window._navInjectLink) {
         const adminHref = onTenantUrl ? `/t/${slug}/admin` : '/admin';
         window._navInjectLink(
           adminHref,
