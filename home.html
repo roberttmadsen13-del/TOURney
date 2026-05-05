@@ -462,9 +462,9 @@ html { scroll-behavior: smooth; }
         <p class="about-body">The Bova Invitational is a private, invitation-only golf tournament held in Myrtle Beach, South Carolina. <strong>Two teams compete across all three days</strong> on three of the best tracks on the Grand Strand.</p>
         <p class="about-body">Every format — scramble, shambles, best ball, stroke play — feeds the team score. Individual glory exists, but the weekend is decided by which team wins. The field is limited to <strong>24 players</strong> and does not run without 16 confirmed.</p>
         <div class="about-stats">
-          <div class="about-stat"><div class="as-val">24</div><div class="as-label">Max Players</div></div>
-          <div class="about-stat"><div class="as-val">3</div><div class="as-label">Days</div></div>
-          <div class="about-stat"><div class="as-val">54</div><div class="as-label">Holes</div></div>
+          <div class="about-stat"><div class="as-val" id="statMaxPlayers">—</div><div class="as-label">Max Players</div></div>
+          <div class="about-stat"><div class="as-val" id="statDays">—</div><div class="as-label">Days</div></div>
+          <div class="about-stat"><div class="as-val" id="statHoles">—</div><div class="as-label">Holes</div></div>
         </div>
       </div>
     </div>
@@ -480,37 +480,8 @@ html { scroll-behavior: smooth; }
   </div>
 
   <div class="s-inner">
-    <div class="days-grid">
-      <div class="day-block">
-        <div class="db-num">01</div>
-        <div class="db-label">Day One</div>
-        <div class="db-title">Par 3<br><em>Team Selection</em></div>
-        <div class="db-format">Arrive at Lunch &mdash; Individual Stroke, Team Scored</div>
-        <div class="dbe"><div class="dbe-time">12:00</div><div class="dbe-text"><strong>Arrival &amp; Check-In.</strong> Bags dropped, settle in.</div></div>
-        <div class="dbe"><div class="dbe-time">1:00</div><div class="dbe-text"><strong>Team selection.</strong> Captains set head-to-head matchups. Teams finalized.</div></div>
-        <div class="dbe"><div class="dbe-time">2:00</div><div class="dbe-text"><strong>Par 3 course.</strong> Full 18. Individual stroke play — every score feeds the team total.</div></div>
-        <div class="dbe"><div class="dbe-time">7:30</div><div class="dbe-text"><strong>Welcome dinner.</strong> Day One results. Weekend team competition underway.</div></div>
-      </div>
-      <div class="day-block">
-        <div class="db-num">02</div>
-        <div class="db-label">Day Two</div>
-        <div class="db-title">Scramble &amp;<br><em>Shambles</em></div>
-        <div class="db-format">Full 18 &mdash; Team Scoring All Day</div>
-        <div class="dbe"><div class="dbe-time">7:00</div><div class="dbe-text"><strong>Breakfast.</strong> Team standings from Day One posted.</div></div>
-        <div class="dbe"><div class="dbe-time">8:30</div><div class="dbe-text"><strong>Round Two.</strong> Front 9 Scramble — all team. Back 9 Shambles — individual play, team scored.</div></div>
-        <div class="dbe"><div class="dbe-time">3:00</div><div class="dbe-text"><strong>Scores posted.</strong> Cumulative team and individual standings updated.</div></div>
-        <div class="dbe"><div class="dbe-time">7:30</div><div class="dbe-text"><strong>Evening update.</strong> Weekend totals posted heading into the final round.</div></div>
-      </div>
-      <div class="day-block">
-        <div class="db-num">03</div>
-        <div class="db-label">Day Three</div>
-        <div class="db-title">Championship<br><em>Final Round</em></div>
-        <div class="db-format">Team Scored All 18</div>
-        <div class="dbe"><div class="dbe-time">7:30</div><div class="dbe-text"><strong>Final standings posted.</strong> Both team and individual totals going into the last round.</div></div>
-        <div class="dbe"><div class="dbe-time">9:00</div><div class="dbe-text"><strong>Championship 18.</strong> Front 9 Best Ball — team scored. Back 9 individual stroke play — still team scored.</div></div>
-        <div class="dbe"><div class="dbe-time">3:00</div><div class="dbe-text"><strong>19th hole.</strong> All scores in. Weekend team totals finalized.</div></div>
-        <div class="dbe"><div class="dbe-time">5:00</div><div class="dbe-text"><strong>Awards ceremony.</strong> Winning team crowned. Individual champion. Bova Trophy. Flight prizes.</div></div>
-      </div>
+    <div class="days-grid" id="scheduleGrid">
+      <div class="day-block" style="grid-column:1/-1;color:rgba(240,230,204,0.3);font-style:italic;font-family:'DM Mono',monospace;font-size:0.75rem;padding:2rem 1.5rem;">Schedule not yet configured. Set up from the admin panel.</div>
     </div>
   </div>
 </section>
@@ -528,12 +499,8 @@ html { scroll-behavior: smooth; }
           alt="Golf flagstick close-up on a manicured green with afternoon shadows">
       </div>
       <div>
-        <div class="fi"><div class="fi-head"><div class="fi-day">Day 1 &mdash; Full 18</div><div class="fi-format">Par 3 Stroke Play</div></div><div class="fi-body">Arrive at lunch. Teams selected by captains. Straight onto the par 3 course. Individual stroke play throughout — every score feeds the team total.</div></div>
-        <div class="fi"><div class="fi-head"><div class="fi-day">Day 2 &mdash; Front</div><div class="fi-format">Scramble</div></div><div class="fi-body">All players hit from each lie. Team selects best shot and plays from there. Full team format — every stroke feeds the team score.</div></div>
-        <div class="fi"><div class="fi-head"><div class="fi-day">Day 2 &mdash; Back</div><div class="fi-format">Shambles</div></div><div class="fi-body">Scramble tee shot only. Each player completes the hole individually from the best drive. Individual scores recorded — all count toward the team total.</div></div>
-        <div class="fi"><div class="fi-head"><div class="fi-day">Day 3 &mdash; Front</div><div class="fi-format">Best Ball</div></div><div class="fi-body">Partners play their own ball — lower score per hole counts. Pairs assigned by handicap tier. The team benefits from the stronger partner on every hole.</div></div>
-        <div class="fi"><div class="fi-head"><div class="fi-day">Day 3 &mdash; Back</div><div class="fi-format">Individual Stroke Play</div></div><div class="fi-body">Individual stroke play on the final nine — but every score still feeds the team. The back nine decides both the individual champion and the winning team simultaneously.</div></div>
-        <div class="format-note"><strong>Every format feeds the team score.</strong> Even the par 3 day and the individual back nine on Day Three — every stroke counts for your team. Team Bova is captained by Chris Bova. The opposing captain is set closer to the tournament. The winning team is determined by cumulative score across all 54 holes.</div>
+        <div id="formatItems"><div class="fi" style="color:rgba(240,230,204,0.3);font-style:italic;"><div class="fi-head"><div class="fi-day">Formats</div><div class="fi-format">Loading…</div></div></div></div>
+        <div class="format-note" id="fmtNote"></div>
       </div>
     </div>
   </div>
@@ -545,25 +512,25 @@ html { scroll-behavior: smooth; }
     <div class="s-label">The Teams</div>
     <h2 class="s-title">Two Sides. <em>One Trophy.</em></h2>
     <p class="s-sub">Every stroke across all 54 holes feeds the team score</p>
-    <div class="teams-vs">
+    <div class="teams-vs" id="teamsVs">
       <div class="team-block">
-        <div class="tb-label">Team One &mdash; Captain</div>
-        <div class="tb-name">Team <em>Bova</em></div>
+        <div class="tb-label">Team One</div>
+        <div class="tb-name" id="teamADisplayName">Team <em>A</em></div>
         <div class="tb-captain-label">Captain</div>
-        <div class="tb-captain-name">Chris Bova</div>
+        <div class="tb-captain-name" id="captain1Name">TBD</div>
       </div>
       <div class="vs-col">
         <div class="vs-word">vs</div>
       </div>
       <div class="team-block">
-        <div class="tb-label">Team Two &mdash; Captain</div>
-        <div class="tb-name">The <em>Challengers</em></div>
+        <div class="tb-label">Team Two</div>
+        <div class="tb-name" id="teamBDisplayName">Team <em>B</em></div>
         <div class="tb-captain-label">Captain</div>
         <div class="tb-captain-name" id="captain2Name">TBD</div>
       </div>
     </div>
-    <div class="teams-note">
-      Teams set Friday evening &nbsp;&middot;&nbsp; All formats count toward team total &nbsp;&middot;&nbsp; Winning team and individual champion crowned Sunday
+    <div class="teams-note" id="teamsNote">
+      All formats count toward team total &nbsp;&middot;&nbsp; Winning team crowned at closing ceremony
     </div>
   </div>
 </section>
@@ -582,9 +549,9 @@ html { scroll-behavior: smooth; }
           <div class="progress-track"><div class="progress-bar" id="progressFill"></div></div>
         </div>
         <div class="rsvp-bullets">
-          <div class="rsvp-bullet">Once <strong>16 players</strong> confirm, the tournament is on and dates are locked by group vote.</div>
-          <div class="rsvp-bullet">Hard cap of <strong>24 players</strong> for tee time logistics. Registration closes when full.</div>
-          <div class="rsvp-bullet">Every stroke counts for your <strong>team across all 54 holes</strong>. Individual Bova Trophy and winning team both crowned at Sunday's ceremony.</div>
+          <div class="rsvp-bullet" id="rsvpBullet1">Open to invited players only.</div>
+          <div class="rsvp-bullet" id="rsvpBullet2">Multi-day tournament. Registration closes when the field is confirmed.</div>
+          <div class="rsvp-bullet" id="rsvpBullet3">Location TBD.</div>
         </div>
       </div>
       <div>
@@ -637,7 +604,7 @@ html { scroll-behavior: smooth; }
             </div>
           </div>
 
-          <div class="hat-section">
+          <div class="hat-section" id="hatSection" style="display:none">
             <div class="hat-header">
               <div class="hat-title">Inaugural Hat &mdash; Legacy Caddy</div>
               <div class="hat-price">$55</div>
@@ -714,54 +681,136 @@ window.addEventListener('scroll', () => { document.getElementById('mainNav').cla
 
 // Load admin-configured homepage content
 (async function loadHomepageContent() {
-  const keys = ['homepage_subtitle','homepage_details','homepage_about','logo_url','hero_photo_url'];
   const { tournament } = await window.tourney.ready;
+  const fmtDayKeys = [];
+  for (let i = 1; i <= 7; i++) { fmtDayKeys.push(`format_day${i}_front`, `format_day${i}_back`); }
+  const keys = [
+    'homepage_subtitle','homepage_details','homepage_about','logo_url','hero_photo_url',
+    'about_stat_days','about_stat_teams','about_stat_holes','reg_max_players',
+    'homepage_format_note','schedule_json',
+    'reg_bullet_1','reg_bullet_2','reg_bullet_3',
+    'reg_show_hat','team_a_name','team_b_name','team_count',
+    'team_a_captain','challengers_captain',
+    ...fmtDayKeys
+  ];
   const { data } = await sb.from('settings').select('key,value').eq('tournament_id', tournament.id).in('key', keys);
   if (!data) return;
   const map = {};
   data.forEach(r => { map[r.key] = r.value; });
-  if (map.homepage_subtitle) {
-    const el = document.querySelector('.hero-eyebrow');
-    if (el) el.innerHTML = map.homepage_subtitle;
-  }
-  if (map.homepage_details) {
-    const el = document.querySelector('.hero-meta');
-    if (el) el.innerHTML = map.homepage_details;
-  }
+
+  // Hero eyebrow & meta
+  const eyebrow = document.querySelector('.hero-eyebrow');
+  if (eyebrow && map.homepage_subtitle) eyebrow.innerHTML = map.homepage_subtitle;
+  const heroMeta = document.querySelector('.hero-meta');
+  if (heroMeta && map.homepage_details) heroMeta.innerHTML = map.homepage_details;
+
+  // About body paragraphs
   if (map.homepage_about) {
     const els = document.querySelectorAll('.about-body');
-    if (els.length) {
-      const paras = map.homepage_about.split('\n\n').filter(Boolean);
-      els.forEach((el, i) => { if (paras[i]) el.innerHTML = paras[i]; });
+    const paras = map.homepage_about.split('\n\n').filter(Boolean);
+    els.forEach((el, i) => { el.innerHTML = paras[i] || paras[0] || ''; });
+  }
+
+  // About stats
+  const el_mp = document.getElementById('statMaxPlayers'); if (el_mp && map.reg_max_players) el_mp.textContent = map.reg_max_players;
+  const el_d  = document.getElementById('statDays');       if (el_d  && map.about_stat_days)  el_d.textContent  = map.about_stat_days;
+  const el_h  = document.getElementById('statHoles');      if (el_h  && map.about_stat_holes) el_h.textContent  = map.about_stat_holes;
+
+  // Schedule section title
+  const numDays = parseInt(map.about_stat_days || '3');
+  const DAY_WORDS = ['One','Two','Three','Four','Five','Six','Seven'];
+  const schedTitle = document.querySelector('#schedule .s-title');
+  if (schedTitle) {
+    const label = DAY_WORDS[numDays-1] ? DAY_WORDS[numDays-1] + ' Day' + (numDays > 1 ? 's' : '') : numDays + ' Days';
+    schedTitle.innerHTML = `${DAY_WORDS[numDays-1] || numDays} Day${numDays>1?'s':''} of <em>Competition</em>`;
+  }
+
+  // Schedule grid
+  const schedGrid = document.getElementById('scheduleGrid');
+  if (schedGrid) {
+    try {
+      const schedule = JSON.parse(map.schedule_json || '[]');
+      if (schedule.length) {
+        schedGrid.innerHTML = schedule.map((day, i) => `
+          <div class="day-block">
+            <div class="db-num">${String(day.day||i+1).padStart(2,'0')}</div>
+            <div class="db-label">Day ${DAY_WORDS[i]||i+1}</div>
+            ${day.title ? `<div class="db-title">${day.title}</div>` : ''}
+            ${day.subtitle ? `<div class="db-format">${day.subtitle}</div>` : ''}
+            ${(day.entries||[]).map(e=>`<div class="dbe"><div class="dbe-time">${e.time||''}</div><div class="dbe-text">${e.text||''}</div></div>`).join('')}
+          </div>`).join('');
+      }
+    } catch {}
+  }
+
+  // Format items
+  const FMT_LABELS = { stroke:'Stroke Play',scramble:'Scramble',bestball:'Best Ball',shambles:'Shambles',stableford:'Stableford',match:'Match Play',alternate:'Alternate Shot',chapman:'Chapman / Pinehurst',skins:'Skins',greensomes:'Greensomes',mod_stableford:'Modified Stableford',nassau:'Nassau' };
+  const FMT_DESC   = { stroke:'Every stroke counts. Lowest total score wins.',scramble:'All players hit, best shot chosen, repeat. Great for mixed-skill groups.',bestball:'Each player plays their own ball; lowest score on each hole counts for the team.',shambles:'Scramble off the tee, then everyone plays their own ball from the best drive.',stableford:'Points per hole vs par. Bogey = 1, par = 2, birdie = 3, eagle = 4. Most points wins.',match:'Hole-by-hole competition. Win the hole, earn a point. Most holes won wins.',alternate:'Partners share one ball and alternate shots every stroke. Pure teamwork.',chapman:'Both players hit drives, swap balls, then choose the best to finish alternate shot.',skins:'Each hole is worth a skin. Ties carry the skin forward. Winner takes the pot.',greensomes:'Both partners drive, best drive chosen, then alternate shots into the hole.',mod_stableford:'Points scale with score vs par — double bogey loses a point, eagle earns 5.',nassau:'Three bets in one: front 9, back 9, and overall. Classic side-bet format.' };
+  const fmtItems = document.getElementById('formatItems');
+  if (fmtItems) {
+    let items = '';
+    for (let i = 1; i <= numDays; i++) {
+      const front = map[`format_day${i}_front`] || 'stroke';
+      const back  = map[`format_day${i}_back`]  || 'stroke';
+      if (front === back) {
+        items += `<div class="fi"><div class="fi-head"><div class="fi-day">Day ${DAY_WORDS[i-1]||i} &mdash; Full 18</div><div class="fi-format">${FMT_LABELS[front]||front}</div></div><div class="fi-body">${FMT_DESC[front]||''}</div></div>`;
+      } else {
+        items += `<div class="fi"><div class="fi-head"><div class="fi-day">Day ${DAY_WORDS[i-1]||i} &mdash; Front</div><div class="fi-format">${FMT_LABELS[front]||front}</div></div><div class="fi-body">${FMT_DESC[front]||''}</div></div>`;
+        items += `<div class="fi"><div class="fi-head"><div class="fi-day">Day ${DAY_WORDS[i-1]||i} &mdash; Back</div><div class="fi-format">${FMT_LABELS[back]||back}</div></div><div class="fi-body">${FMT_DESC[back]||''}</div></div>`;
+      }
+    }
+    if (items) fmtItems.innerHTML = items;
+  }
+  const fmtNote = document.getElementById('fmtNote');
+  if (fmtNote && map.homepage_format_note) fmtNote.innerHTML = map.homepage_format_note;
+
+  // Teams section
+  const teamCount = parseInt(map.team_count || '2');
+  const teamsSection = document.getElementById('teams');
+  if (teamsSection) {
+    if (teamCount <= 1) {
+      teamsSection.style.display = 'none';
+    } else {
+      const setTeamName = (id, name) => {
+        const el = document.getElementById(id); if (!el || !name) return;
+        const words = name.trim().split(/\s+/); const last = words.pop();
+        el.innerHTML = (words.length ? words.join(' ') + ' ' : '') + '<em>' + last + '</em>';
+      };
+      setTeamName('teamADisplayName', map.team_a_name || 'Team A');
+      setTeamName('teamBDisplayName', map.team_b_name || 'Team B');
+      const cap1 = document.getElementById('captain1Name'); if (cap1) cap1.textContent = map.team_a_captain || 'TBD';
+      const cap2 = document.getElementById('captain2Name'); if (cap2) cap2.textContent = map.challengers_captain || 'TBD';
+      const sTitle = teamsSection.querySelector('.s-title');
+      if (sTitle) sTitle.innerHTML = teamCount > 2 ? `${teamCount} Teams. <em>One Trophy.</em>` : `Two Sides. <em>One Trophy.</em>`;
     }
   }
-  // Hero image — swap out the default Unsplash photo if admin set one
-  if (map.hero_photo_url) {
-    const heroImg = document.querySelector('.hero-img');
-    if (heroImg) heroImg.src = map.hero_photo_url;
-  }
-  // Dynamic PWA manifest with uploaded logo as app icon
+
+  // RSVP bullets
+  if (map.reg_bullet_1) { const el = document.getElementById('rsvpBullet1'); if (el) el.innerHTML = map.reg_bullet_1; }
+  if (map.reg_bullet_2) { const el = document.getElementById('rsvpBullet2'); if (el) el.innerHTML = map.reg_bullet_2; }
+  if (map.reg_bullet_3) { const el = document.getElementById('rsvpBullet3'); if (el) el.innerHTML = map.reg_bullet_3; }
+
+  // Hat section
+  const hatSec = document.getElementById('hatSection');
+  if (hatSec) hatSec.style.display = map.reg_show_hat === 'true' ? '' : 'none';
+
+  // Hero image
+  if (map.hero_photo_url) { const img = document.querySelector('.hero-img'); if (img) img.src = map.hero_photo_url; }
+
+  // PWA manifest
   if (map.logo_url) {
-    const manifest = {
-      name: tournament.name,
-      short_name: tournament.short_name || tournament.name.split(' ')[0],
-      description: map.homepage_subtitle || 'Inaugural Edition — Myrtle Beach, SC — 2026',
-      start_url: '/',
-      scope: '/',
-      display: 'standalone',
-      background_color: '#f5ede0',
-      theme_color: '#1a1008',
-      orientation: 'any',
-      icons: [
-        { src: map.logo_url, sizes: '192x192', type: 'image/png', purpose: 'any' },
-        { src: map.logo_url, sizes: '512x512', type: 'image/png', purpose: 'any' }
-      ]
-    };
-    const blob = new Blob([JSON.stringify(manifest)], { type: 'application/json' });
-    const manifestUrl = URL.createObjectURL(blob);
+    const manifest = { name:tournament.name, short_name:tournament.short_name||tournament.name.split(' ')[0], description:map.homepage_subtitle||tournament.name, start_url:'/', scope:'/', display:'standalone', background_color:'#f5ede0', theme_color:'#1a1008', orientation:'any', icons:[{src:map.logo_url,sizes:'192x192',type:'image/png',purpose:'any'},{src:map.logo_url,sizes:'512x512',type:'image/png',purpose:'any'}] };
     const link = document.querySelector('link[rel="manifest"]');
-    if (link) link.href = manifestUrl;
+    if (link) link.href = URL.createObjectURL(new Blob([JSON.stringify(manifest)],{type:'application/json'}));
   }
+
+  window._homeTeamAName = map.team_a_name || 'Team A';
+  window._homeTeamBName = map.team_b_name || 'Team B';
+  window._homeTeamNames = {};
+  ['a','b','c','d','e','f','g','h'].forEach((l,i) => {
+    if (map[`team_${l}_name`]) window._homeTeamNames[l.toUpperCase()] = map[`team_${l}_name`];
+  });
+
   loadHeroScoreboard(tournament.id);
 })();
 
@@ -981,16 +1030,20 @@ async function loadHeroScoreboard(tournamentId) {
   const lbEl = document.getElementById('heroLeaderboard');
   if (!bannersEl || !lbEl) return;
 
+  const _tAName = window._homeTeamAName || 'Team A';
+  const _tBName = window._homeTeamBName || 'Team B';
+  const _tAWords = _tAName.trim().split(/\s+/); const _tALast = _tAWords.pop();
+  const _tBWords = _tBName.trim().split(/\s+/); const _tBLast = _tBWords.pop();
   bannersEl.innerHTML = `
     <div style="background:#0e0b06;padding:1.5rem;border-right:1px solid rgba(192,144,48,0.1);">
       <div style="font-family:'DM Mono',monospace;font-size:0.45rem;letter-spacing:0.3em;text-transform:uppercase;color:rgba(192,144,48,0.5);margin-bottom:0.3rem;">Team One</div>
-      <div style="font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:900;color:#f0e6cc;">Team <em style="color:#c09030;">Bova</em></div>
+      <div style="font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:900;color:#f0e6cc;">${_tAWords.length?_tAWords.join(' ')+' ':''}<em style="color:#c09030;">${_tALast}</em></div>
       <div style="font-family:'Playfair Display',serif;font-size:2.2rem;font-weight:900;color:${totA<=totB?'#c09030':'rgba(240,230,204,0.4)'};margin-top:0.5rem;">${fmtNet(totA)}</div>
       <div style="font-family:'DM Mono',monospace;font-size:0.42rem;letter-spacing:0.15em;text-transform:uppercase;color:rgba(240,230,204,0.3);margin-top:0.2rem;">${teamA.length} players</div>
     </div>
     <div style="background:#0e0b06;padding:1.5rem;">
       <div style="font-family:'DM Mono',monospace;font-size:0.45rem;letter-spacing:0.3em;text-transform:uppercase;color:rgba(74,106,138,0.7);margin-bottom:0.3rem;">Team Two</div>
-      <div style="font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:900;color:#f0e6cc;">The <em style="color:#4a6a8a;">Challengers</em></div>
+      <div style="font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:900;color:#f0e6cc;">${_tBWords.length?_tBWords.join(' ')+' ':''}<em style="color:#4a6a8a;">${_tBLast}</em></div>
       <div style="font-family:'Playfair Display',serif;font-size:2.2rem;font-weight:900;color:${totB<totA?'#c09030':'rgba(240,230,204,0.4)'};margin-top:0.5rem;">${fmtNet(totB)}</div>
       <div style="font-family:'DM Mono',monospace;font-size:0.42rem;letter-spacing:0.15em;text-transform:uppercase;color:rgba(240,230,204,0.3);margin-top:0.2rem;">${teamB.length} players · Capt. ${challengersCaptain}</div>
     </div>`;
@@ -1007,7 +1060,7 @@ async function loadHeroScoreboard(tournamentId) {
   }
 
   lbEl.innerHTML = `<div style="border-top:1px solid rgba(192,144,48,0.15);">${ranked.map((p,i) => {
-    const team = teamAssignments[p.id]==='A'?'Bova':teamAssignments[p.id]==='B'?'Challengers':'—';
+    const _ta = teamAssignments[p.id]; const team = _ta ? ((window._homeTeamNames||{})[_ta] || (window._homeTeamAName||'Team A')) : '—';
     return `<div style="display:flex;align-items:center;gap:1rem;padding:0.75rem 0;border-bottom:1px solid rgba(192,144,48,0.08);">
       <div style="font-family:'DM Mono',monospace;font-size:0.55rem;color:rgba(240,230,204,0.25);width:1.4rem;text-align:right;">${i+1}</div>
       <div style="flex:1;">

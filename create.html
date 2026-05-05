@@ -190,6 +190,8 @@
     <div class="dot" id="dot-4">4</div>
   </div>
 
+  <div id="prefillBanner" style="display:none;max-width:480px;margin:0 auto -0.5rem;padding:0.55rem 1rem;background:rgba(192,144,48,0.1);border:1px solid rgba(192,144,48,0.25);font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold);text-align:center;"></div>
+
   <main class="main">
 
     <!-- Step 1: Account -->
@@ -410,6 +412,27 @@
   // ─── Init ───
   (async () => {
     document.getElementById('tYear').value = new Date().getFullYear();
+
+    const _pfRaw = new URLSearchParams(location.search).get('prefill');
+    if (_pfRaw) {
+      try {
+        const p = JSON.parse(decodeURIComponent(_pfRaw));
+        if (p.mode)                          S.mode = p.mode;
+        if (p.days      && p.days > 0)     { S.days = Math.min(p.days, 7); S.formats = mkFormats(S.days); }
+        if (p.teamCount && p.teamCount > 0)  S.teamCount = Math.min(p.teamCount, 8);
+        if (p.maxPlayers)                    S.maxPlayers = p.maxPlayers;
+        if (p.year) document.getElementById('tYear').value = String(p.year);
+        if (p.name) { const el = document.getElementById('tName'); if (el) { el.value = p.name; onName(p.name); } }
+        if (p.loc)  { const el = document.getElementById('tLoc');  if (el) el.value = p.loc; }
+        if (p.primary) { const el = document.getElementById('cPrimary'); if (el) el.value = p.primary; }
+        if (p.ink)     { const el = document.getElementById('cInk');     if (el) el.value = p.ink; }
+        if (p.bg)      { const el = document.getElementById('cBg');      if (el) el.value = p.bg; }
+        onColor();
+        const banner = document.getElementById('prefillBanner');
+        if (banner && p.from) { banner.textContent = `Cloning from "${p.from}" — review all steps before creating.`; banner.style.display = 'block'; }
+      } catch(e) {}
+    }
+
     const { data: { session } } = await db.auth.getSession();
     if (session?.user) { S.user = session.user; go(2); }
   })();
@@ -733,33 +756,31 @@
         { key:'tourney_year',      value: year },
         { key:'tourney_location',  value: loc },
         { key:'homepage_subtitle', value: sub || [year, loc].filter(Boolean).join(' · ') },
-        { key:'homepage_details',  value: '' },
-        { key:'homepage_about',    value: '' },
+        { key:'homepage_details',  value: `${S.days} Day${S.days>1?'s':''} · ${S.teamCount<=1?'Individual':S.teamCount+' Teams'} · ${S.days*18} Holes · ${year}` },
+        { key:'homepage_about',    value: `${name} is a ${S.days}-day golf tournament${loc?' in '+loc:''}. ${S.teamCount<=1?'Individual scoring — every stroke counts.':'Two teams compete across all rounds — every stroke feeds the team score.'} Set up your tournament details from the admin page.` },
         { key:'hero_cta_primary',  value: 'Request Your Spot' },
         { key:'color_primary',     value: accent },
         { key:'color_ink',         value: ink },
         { key:'color_bg',          value: bg },
         { key:'about_stat_days',   value: String(S.days) },
-        { key:'about_stat_teams',  value: '2' },
+        { key:'about_stat_teams',  value: S.teamCount <= 1 ? 'Solo' : String(S.teamCount) },
         { key:'about_stat_holes',  value: String(S.days * 18) },
         { key:'reg_open',          value: 'true' },
         { key:'reg_max_players',   value: String(S.maxPlayers) },
-        { key:'reg_bullet_1',      value: 'Open to all skill levels' },
-        { key:'reg_bullet_2',      value: `${S.days}-day tournament` },
+        { key:'reg_bullet_1',      value: 'Open to invited players only' },
+        { key:'reg_bullet_2',      value: `${S.days}-day tournament · ${S.days*18} holes` },
         { key:'reg_bullet_3',      value: loc || 'Location TBD' },
         { key:'round_formats',     value: JSON.stringify(S.formats) },
         { key:'reg_show_dates',    value: 'false' },
         { key:'reg_show_why_me',   value: 'false' },
         { key:'reg_show_hat',      value: 'false' },
+        { key:'schedule_json',     value: '[]' },
+        { key:'homepage_format_note', value: `Every format feeds the ${S.teamCount<=1?'individual':'team'} score. The winning ${S.teamCount<=1?'player':'team'} is determined by cumulative score across all ${S.days*18} holes.` },
         { key:'team_count',        value: String(S.teamCount) },
-        { key:'team_size',         value: String(S.teamSize) },
-        ...( S.teamCount === 1
-          ? []
-          : Array.from({length: S.teamCount}, (_,i) => ({
-              key: `team_${String.fromCharCode(97+i)}_name`,
-              value: `Team ${String.fromCharCode(65+i)}`
-            }))
-        ),
+        ...Array.from({length: Math.max(S.teamCount,2)}, (_,i) => ({
+            key: `team_${String.fromCharCode(97+i)}_name`,
+            value: `Team ${String.fromCharCode(65+i)}`
+          })),
       ];
       for (let i = 1; i <= S.days; i++) {
         settings.push({ key:`round_day${i}`,       value: 'pending' });

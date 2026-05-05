@@ -441,6 +441,16 @@ td.email a:hover{color:var(--gold);}
       <div id="scoreEditorGrid"></div>
     </div>
 
+    <!-- CREATE NEXT EVENT -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-title">Next Event</div>
+        <div class="section-count">Clone this tournament into a new one</div>
+      </div>
+      <p style="font-family:'DM Mono',monospace;font-size:0.6rem;color:var(--muted);margin:0 0 1.25rem;line-height:1.7;">Pre-fills name, location, format, team structure, and brand colors into a fresh Create flow. Year auto-increments. You review and confirm before anything is created.</p>
+      <button class="save-teams-btn" onclick="createNextEvent()">Create Next Event →</button>
+    </div>
+
     <!-- DANGER ZONE -->
     <div class="section">
       <div class="section-header">
@@ -630,6 +640,21 @@ td.email a:hover{color:var(--gold);}
           <div class="fg"><label>Team B Name</label><input type="text" id="dsTeamBName" placeholder="Team Two" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;"></div>
         </div>
         <button class="action-btn" style="padding:0.55rem 1.4rem;font-size:0.6rem;letter-spacing:0.15em;background:var(--gold);color:var(--ink);border-color:var(--gold);font-weight:700;margin-top:0.4rem;" onclick="saveRegistration()">Save Registration</button>
+      </div>
+    </div>
+
+    <!-- SCHEDULE EDITOR -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-title">Schedule</div>
+        <div class="section-count">Per-day itinerary shown on the tournament homepage</div>
+      </div>
+      <div style="background:var(--card);border:1px solid var(--border);padding:1.5rem;">
+        <div id="schedEditorDays" style="display:flex;flex-direction:column;gap:1.5rem;"></div>
+        <div style="display:flex;gap:0.6rem;flex-wrap:wrap;margin-top:1.25rem;border-top:1px solid var(--border);padding-top:1.25rem;">
+          <button class="action-btn" style="padding:0.55rem 1.4rem;font-size:0.6rem;letter-spacing:0.15em;background:var(--gold);color:var(--ink);border-color:var(--gold);font-weight:700;" onclick="saveSchedule()">Save Schedule</button>
+          <div id="schedSaveMsg" style="font-family:'DM Mono',monospace;font-size:0.48rem;letter-spacing:0.2em;text-transform:uppercase;color:#2a7a20;display:none;align-self:center;">Saved</div>
+        </div>
       </div>
     </div>
 
@@ -1837,6 +1862,22 @@ async function clearRoundScores() {
   loadScoreEditor();
 }
 
+// ── CREATE NEXT EVENT ────────────────────────────────────────────
+async function createNextEvent() {
+  const name       = document.getElementById('dsName')?.value.trim()       || '';
+  const year       = parseInt(document.getElementById('dsYear')?.value)     || new Date().getFullYear();
+  const loc        = document.getElementById('dsLocation')?.value.trim()   || '';
+  const primary    = document.getElementById('dsColorGold')?.value         || '#c09030';
+  const ink        = document.getElementById('dsColorInk')?.value          || '#1a1008';
+  const bg         = document.getElementById('dsColorBg')?.value           || '#f5ede0';
+  const days       = parseInt(document.getElementById('dsStatDays')?.value) || 3;
+  const maxPlayers = parseInt(document.getElementById('dsMaxPlayers')?.value) || 24;
+  const { data: modeRow } = await sb.from('settings').select('value').eq('tournament_id', _tid).eq('key','tournament_mode').maybeSingle();
+  const mode = modeRow?.value || 'competitive';
+  const prefill = { name, year: year + 1, loc, mode, days, teamCount: _teamCount, maxPlayers, primary, ink, bg, from: name };
+  window.location.href = '/create?prefill=' + encodeURIComponent(JSON.stringify(prefill));
+}
+
 // ── DANGER ZONE ──────────────────────────────────────────────────
 async function clearRoundAll(round) {
   const label = round.replace('day','Day ');
@@ -1980,6 +2021,7 @@ const DS_ALL_KEYS = [
   'reg_open','reg_max_players','reg_bullet_1','reg_bullet_2','reg_bullet_3',
   'reg_show_dates','reg_show_why_me','reg_show_hat',
   'team_a_name','team_b_name',
+  'schedule_json','about_stat_days',
 ];
 
 const DS_FIELD_MAP = {
@@ -2019,6 +2061,7 @@ async function loadDesignSettings() {
   if (map.logo_url) renderLogoPreview(map.logo_url);
   if (map.hero_photo_url) renderPhotoPreview('heroPhotoPreview', map.hero_photo_url);
   if (map.about_photo_url) renderPhotoPreview('aboutPhotoPreview', map.about_photo_url);
+  buildScheduleEditor(parseInt(map.about_stat_days || '3'), map.schedule_json || '[]');
 }
 
 function renderPhotoPreview(id, url) {
@@ -2058,6 +2101,75 @@ async function loadNotifySettings() {
   if (cb) cb.checked = map.notify_hole_in_one !== 'false';
   const sel = document.getElementById('celebrationStyle');
   if (sel && map.celebration_style) sel.value = map.celebration_style;
+}
+
+// ── SCHEDULE EDITOR ──────────────────────────────────────────────
+const DAY_WORDS_ADMIN = ['One','Two','Three','Four','Five','Six','Seven'];
+
+function buildScheduleEditor(numDays, schedJson) {
+  const container = document.getElementById('schedEditorDays');
+  if (!container) return;
+  let schedule = [];
+  try { schedule = JSON.parse(schedJson); } catch {}
+  container.innerHTML = '';
+  for (let d = 1; d <= numDays; d++) {
+    const dayData = schedule.find(x => x.day === d) || { day: d, title: '', subtitle: '', entries: [] };
+    const block = document.createElement('div');
+    block.dataset.day = d;
+    block.style.cssText = 'border:1px solid var(--border);padding:1rem;border-radius:4px;';
+    block.innerHTML = `
+      <div style="font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.28em;text-transform:uppercase;color:var(--gold);margin-bottom:0.75rem;">Day ${DAY_WORDS_ADMIN[d-1] || d}</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;margin-bottom:0.75rem;">
+        <div class="fg"><label>Day Title</label><input type="text" class="sched-title" placeholder="Championship Round" value="${esc(dayData.title||'')}" style="background:rgba(10,6,2,0.5);border:1px solid var(--border);padding:0.5rem 0.75rem;color:var(--cream);font-family:'Barlow',sans-serif;font-size:0.85rem;width:100%;outline:none;"></div>
+        <div class="fg"><label>Subtitle / Format</label><input type="text" class="sched-subtitle" placeholder="Full 18 — Team Scoring" value="${esc(dayData.subtitle||'')}" style="background:rgba(10,6,2,0.5);border:1px solid var(--border);padding:0.5rem 0.75rem;color:var(--cream);font-family:'Barlow',sans-serif;font-size:0.85rem;width:100%;outline:none;"></div>
+      </div>
+      <div class="sched-entries" style="display:flex;flex-direction:column;gap:0.5rem;margin-bottom:0.75rem;">
+        ${(dayData.entries||[]).map((e,i) => schedEntryHTML(e.time, e.text)).join('')}
+      </div>
+      <button onclick="addSchedEntry(this)" style="font-family:'DM Mono',monospace;font-size:0.45rem;letter-spacing:0.12em;text-transform:uppercase;padding:0.3rem 0.8rem;border:1px solid var(--border);color:var(--muted);background:transparent;cursor:pointer;">+ Add Entry</button>`;
+    container.appendChild(block);
+  }
+}
+
+function schedEntryHTML(time, text) {
+  return `<div style="display:grid;grid-template-columns:5rem 1fr auto;gap:0.5rem;align-items:start;">
+    <input type="text" class="sched-entry-time" placeholder="9:00" value="${esc(time||'')}" style="background:rgba(10,6,2,0.5);border:1px solid var(--border);padding:0.4rem 0.6rem;color:var(--cream);font-family:'DM Mono',monospace;font-size:0.72rem;outline:none;">
+    <input type="text" class="sched-entry-text" placeholder="Shotgun start — Front 9 Scramble" value="${esc(text||'')}" style="background:rgba(10,6,2,0.5);border:1px solid var(--border);padding:0.4rem 0.6rem;color:var(--cream);font-family:'Barlow',sans-serif;font-size:0.82rem;outline:none;">
+    <button onclick="this.closest('div').remove()" style="font-family:'DM Mono',monospace;font-size:0.6rem;padding:0.35rem 0.6rem;border:1px solid rgba(138,30,16,0.4);color:var(--red);background:transparent;cursor:pointer;white-space:nowrap;">✕</button>
+  </div>`;
+}
+
+function addSchedEntry(btn) {
+  const entriesEl = btn.previousElementSibling;
+  const div = document.createElement('div');
+  div.innerHTML = schedEntryHTML('', '');
+  entriesEl.appendChild(div.firstElementChild);
+}
+
+async function saveSchedule() {
+  const container = document.getElementById('schedEditorDays');
+  if (!container) return;
+  const schedule = [];
+  container.querySelectorAll('[data-day]').forEach(block => {
+    const d = parseInt(block.dataset.day);
+    const title = block.querySelector('.sched-title')?.value?.trim() || '';
+    const subtitle = block.querySelector('.sched-subtitle')?.value?.trim() || '';
+    const entries = [];
+    block.querySelectorAll('.sched-entries > div').forEach(row => {
+      const time = row.querySelector('.sched-entry-time')?.value?.trim() || '';
+      const text = row.querySelector('.sched-entry-text')?.value?.trim() || '';
+      if (time || text) entries.push({ time, text });
+    });
+    schedule.push({ day: d, title, subtitle, entries });
+  });
+  const { error } = await sb.from('settings').upsert(
+    { key: 'schedule_json', tournament_id: _tid, value: JSON.stringify(schedule), updated_at: new Date().toISOString() },
+    { onConflict: 'tournament_id,key' }
+  );
+  if (error) { showToast('Error: ' + error.message); return; }
+  const msg = document.getElementById('schedSaveMsg');
+  if (msg) { msg.style.display = 'flex'; setTimeout(() => { msg.style.display = 'none'; }, 2500); }
+  showToast('Schedule saved.');
 }
 
 async function saveNotifySettings() {

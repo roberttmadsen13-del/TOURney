@@ -31,10 +31,14 @@
     document.querySelectorAll('a[href^="/"]').forEach(a => {
       const href = a.getAttribute('href');
       if (!href.startsWith('/t/')) {
-        // href="/" → /t/slug (no trailing slash — Vercel route is /t/:slug not /t/:slug/)
         a.setAttribute('href', href === '/' ? `/t/${slug}` : `/t/${slug}${href}`);
       }
     });
+    // Rebase FAB injected by nav-mobile.js
+    const fab = document.querySelector('.fab-enter-scores');
+    if (fab && fab.getAttribute('href') === '/scorecard') {
+      fab.setAttribute('href', `/t/${slug}/scorecard`);
+    }
   }
 
   async function init() {
@@ -73,14 +77,19 @@
       } else {
         rebaseNavLinks(slug);
       }
+      // FAB may be injected after DOMContentLoaded — patch again after short delay
+      setTimeout(() => rebaseNavLinks(slug), 300);
     }
 
     // Non-blocking brand color injection — all pages get the tournament's colors.
     injectBrandColors(data.id);
 
-    // Platform link for Rob — injected into nav drawer after auth resolves.
-    db.auth.getSession().then(function(res) {
-      var email = res.data?.session?.user?.email;
+    // Auth-gated nav injections: platform link for Rob + admin link for tournament admins.
+    db.auth.getSession().then(async function(res) {
+      const email = res.data?.session?.user?.email;
+      if (!email) return;
+
+      // Platform link for owner
       if (email === 'robert.t.madsen13@gmail.com' && window._navInjectLink) {
         window._navInjectLink(
           'https://tourney.greenskeeper.studio/platform',
@@ -88,11 +97,34 @@
           'border-top:1px solid rgba(192,144,48,0.2);color:rgba(192,144,48,0.7);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;padding:.65rem 1.25rem'
         );
       }
+
+      // Admin link for tournament admins
+      const { data: adminRow } = await db
+        .from('tournament_admins')
+        .select('id')
+        .eq('tournament_id', data.id)
+        .eq('email', email)
+        .maybeSingle();
+      if (adminRow && window._navInjectLink) {
+        const adminHref = onTenantUrl ? `/t/${slug}/admin` : '/admin';
+        window._navInjectLink(
+          adminHref,
+          '⚙ Admin',
+          'color:rgba(192,144,48,0.85);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;padding:.65rem 1.25rem'
+        );
+      }
     });
 
-    // Update page title and PWA meta with actual tournament name.
+    // Update page title — set directly from tournament name, no fragile regex replace.
     if (data.name) {
-      document.title = document.title.replace(/Bova Invitational/gi, data.name);
+      // Preserve any page-specific prefix before " — " separator if present
+      const existingTitle = document.title;
+      const sep = existingTitle.indexOf(' — ');
+      if (sep > 0 && !existingTitle.startsWith('The Bova') && !existingTitle.startsWith('Bova')) {
+        document.title = existingTitle.slice(0, sep) + ' — ' + data.name;
+      } else {
+        document.title = data.name;
+      }
       const metaTitle = document.querySelector('meta[name="apple-mobile-web-app-title"]');
       if (metaTitle) metaTitle.content = data.short_name || data.name.split(' ')[0];
       const loginSub = document.getElementById('loginSubtitle');
