@@ -26,11 +26,14 @@
     return null;
   }
 
+  // Platform-level paths that must never be prefixed with /t/{slug}/
+  const PLATFORM_PATHS = ['/player', '/player-upgrade', '/create', '/platform'];
+
   // Only rebase links when actually on a /t/:slug/ URL — root URL pages stay on root paths.
   function rebaseNavLinks(slug) {
     document.querySelectorAll('a[href^="/"]').forEach(a => {
       const href = a.getAttribute('href');
-      if (!href.startsWith('/t/')) {
+      if (!href.startsWith('/t/') && !PLATFORM_PATHS.some(p => href === p || href.startsWith(p + '?') || href.startsWith(p + '/'))) {
         a.setAttribute('href', href === '/' ? `/t/${slug}` : `/t/${slug}${href}`);
       }
     });
