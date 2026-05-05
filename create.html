@@ -224,12 +224,8 @@
 
       <div class="fl" style="margin-top:1.75rem;margin-bottom:.65rem">Team Structure</div>
       <div class="days-row" id="teamCountBtns"></div>
-      <div id="teamSizeWrap" style="margin-top:1rem;display:none">
-        <div class="fl" style="margin-bottom:.5rem">Players per Team</div>
-        <div class="days-row" id="teamSizeBtns"></div>
-      </div>
 
-      <div class="fl" style="margin-top:1.75rem;margin-bottom:.75rem">Number of Days</div>
+      <div class="fl" style="margin-top:1.75rem;margin-bottom:.75rem">Number of Rounds</div>
       <div class="days-row" id="daysBtns"></div>
 
       <div class="fl" style="margin-top:1.75rem;margin-bottom:.5rem">Max Players</div>
@@ -549,22 +545,6 @@
       b.onclick = () => { S.teamCount = o.n; renderFormat(); };
       tcRow.appendChild(b);
     });
-
-    // Team size buttons (hidden for individual)
-    const tsWrap = document.getElementById('teamSizeWrap');
-    tsWrap.style.display = S.teamCount === 1 ? 'none' : 'block';
-    if (S.teamCount > 1) {
-      const tsRow = document.getElementById('teamSizeBtns');
-      tsRow.innerHTML = '';
-      [{n:2,label:'2-Person'},{n:3,label:'3-Person'},{n:4,label:'4-Person (Foursome)'},{n:5,label:'5-Person'},{n:6,label:'6-Person'}].forEach(o => {
-        const b = document.createElement('button');
-        b.className = 'day-btn' + (o.n === S.teamSize ? ' on' : '');
-        b.textContent = o.label;
-        b.style.cssText = 'width:auto;padding:0 .75rem;min-width:2.4rem;';
-        b.onclick = () => { S.teamSize = o.n; renderFormat(); };
-        tsRow.appendChild(b);
-      });
-    }
 
     updatePriceCard();
 

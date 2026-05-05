@@ -112,8 +112,8 @@ td.email a:hover{color:var(--gold);}
 .action-btn:hover{background:var(--red);color:var(--cream);}
 
 /* TEAM ASSIGNMENT */
-.team-assign-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);}
-@media(max-width:600px){.team-assign-grid{grid-template-columns:1fr;}}
+.team-assign-grid{display:grid;gap:1px;background:var(--border);}
+@media(max-width:600px){.team-assign-grid{grid-template-columns:1fr !important;}}
 .team-col{background:var(--card);padding:1.5rem;}
 .team-col-title{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;margin-bottom:0.3rem;}
 .team-col-title em{font-style:italic;color:var(--gold);}
@@ -399,25 +399,11 @@ td.email a:hover{color:var(--gold);}
         <div class="section-title">Team Assignment</div>
         <div class="section-count" id="teamCount"></div>
       </div>
-      <div class="team-assign-grid">
-        <div class="team-col">
-          <div class="team-col-title" id="teamColTitleA">Team A</div>
-          <div class="team-col-cap" id="teamColCapA">Captain</div>
-          <div class="team-player-list" id="teamAList"></div>
-        </div>
-        <div class="team-col">
-          <div class="team-col-title" id="teamColTitleB">Team B</div>
-          <div class="team-col-cap" style="display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap;">
-            <span style="flex-shrink:0;">Captain &mdash;</span>
-            <input type="text" id="challengersCaptainInput"
-              style="background:rgba(10,6,2,0.7);border:1px solid var(--border);padding:0.25rem 0.5rem;color:var(--cream);font-family:'Barlow Condensed',sans-serif;font-size:0.78rem;outline:none;flex:1;min-width:100px;"
-              placeholder="Enter captain name"
-              onkeydown="if(event.key==='Enter')saveChallengersCaptain()">
-            <button onclick="saveChallengersCaptain()" style="font-family:'DM Mono',monospace;font-size:0.42rem;letter-spacing:0.1em;text-transform:uppercase;padding:0.25rem 0.6rem;border:1px solid var(--gold);color:var(--gold);background:transparent;cursor:pointer;">Save</button>
-          </div>
-          <div class="team-player-list" id="teamBList"></div>
-        </div>
+      <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:1.25rem;flex-wrap:wrap;">
+        <span style="font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.14em;color:var(--muted);text-transform:uppercase;">Number of Teams</span>
+        <div id="teamCountBtns" style="display:flex;gap:0.4rem;flex-wrap:wrap;"></div>
       </div>
+      <div id="teamAssignGrid" class="team-assign-grid"></div>
       <div class="unassigned-pool">
         <div class="pool-label">Unassigned &mdash; click to assign</div>
         <div class="pool-chips" id="unassignedPool"></div>
@@ -764,8 +750,9 @@ const FORMAT_OPTIONS = [
 let players = [];
 let roundStates = {day1:'pending',day2:'pending',day3:'pending'};
 let teamAssignments = {};
-let _teamAName = 'Team A';
-let _teamBName = 'Team B';
+let _teamCount = 2;
+const TEAM_LETTERS = ['A','B','C','D','E','F','G','H'];
+let _teamNames = ['Team A','Team B','Team C','Team D','Team E','Team F','Team G','Team H'];
 let coursePars = JSON.parse(JSON.stringify(DEFAULT_PARS));
 let roundFormats = JSON.parse(JSON.stringify(DEFAULT_FORMATS));
 let sortMode = 'name';
@@ -824,20 +811,19 @@ async function loadAll() {
 }
 
 async function loadTeamNames() {
-  const { data } = await sb.from('settings').select('key,value').eq('tournament_id', _tid).in('key',['team_a_name','team_b_name','team_a_captain']);
+  const nameKeys = TEAM_LETTERS.map(l => `team_${l.toLowerCase()}_name`);
+  const { data } = await sb.from('settings').select('key,value').eq('tournament_id', _tid).in('key', ['team_count', ...nameKeys]);
   if (!data) return;
-  let capA = '';
   data.forEach(r => {
-    if (r.key === 'team_a_name') _teamAName = r.value;
-    if (r.key === 'team_b_name') _teamBName = r.value;
-    if (r.key === 'team_a_captain') capA = r.value;
+    if (r.key === 'team_count') _teamCount = parseInt(r.value) || 2;
+    TEAM_LETTERS.forEach((l, i) => {
+      if (r.key === `team_${l.toLowerCase()}_name` && r.value) _teamNames[i] = r.value;
+    });
   });
-  const lA = document.getElementById('statLabelA'); if (lA) lA.textContent = _teamAName;
-  const lB = document.getElementById('statLabelB'); if (lB) lB.textContent = _teamBName;
-  const colA = document.getElementById('teamColTitleA'); if (colA) colA.textContent = _teamAName;
-  const colB = document.getElementById('teamColTitleB'); if (colB) colB.textContent = _teamBName;
-  const capEl = document.getElementById('teamColCapA'); if (capEl && capA) capEl.textContent = `Captain — ${capA}`;
-  const sub = document.getElementById('adminPageSub'); if (sub) sub.textContent = _teamAName + ' vs ' + _teamBName;
+  const lA = document.getElementById('statLabelA'); if (lA) lA.textContent = _teamNames[0];
+  const lB = document.getElementById('statLabelB'); if (lB) lB.textContent = _teamNames[1];
+  const sub = document.getElementById('adminPageSub');
+  if (sub) sub.textContent = _teamCount <= 1 ? 'Individual Format' : _teamNames.slice(0, _teamCount).join(' · ');
 }
 
 async function loadChallengersCaptain() {
@@ -990,8 +976,11 @@ function renderStats() {
   document.getElementById('sTotal').textContent = n;
   document.getElementById('sAccounts').textContent = players.filter(p => p.has_account).length;
   document.getElementById('sHats').textContent = players.filter(p => p.hat).length;
-  document.getElementById('sTeamA').textContent = Object.values(teamAssignments).filter(t => t === 'A').length;
-  document.getElementById('sTeamB').textContent = Object.values(teamAssignments).filter(t => t === 'B').length;
+  const assigned = Object.values(teamAssignments).filter(t => TEAM_LETTERS.slice(0,_teamCount).includes(t)).length;
+  document.getElementById('sTeamA').textContent = assigned;
+  document.getElementById('sTeamB').textContent = n - assigned;
+  const lA = document.getElementById('statLabelA'); if (lA) lA.textContent = _teamCount <= 1 ? 'Individual' : 'Assigned';
+  const lB = document.getElementById('statLabelB'); if (lB) lB.textContent = _teamCount <= 1 ? '—' : 'Unassigned';
 }
 
 // ── ROUNDS ────────────────────────────────────────────────────────
@@ -1076,7 +1065,8 @@ function renderTable() {
 
   tbody.innerHTML = sorted.map((p, i) => {
     const team = teamAssignments[p.id];
-    const teamLabel = team === 'A' ? `<span style="color:var(--gold)">${esc(_teamAName)}</span>` : team === 'B' ? `<span style="color:#6a8a9a">${esc(_teamBName)}</span>` : '<span style="color:rgba(240,230,204,0.2)">—</span>';
+    const teamIdx = TEAM_LETTERS.indexOf(team);
+    const teamLabel = teamIdx >= 0 && teamIdx < _teamCount ? `<span style="color:var(--gold)">${esc(_teamNames[teamIdx])}</span>` : '<span style="color:rgba(240,230,204,0.2)">—</span>';
     const dates = (p.available_dates || []).map(d => DATE_LABELS[d] || d).join(', ');
     // Use original position from created_at order for the # column
     const origPos = players.findIndex(pl => pl.id === p.id) + 1;
@@ -1123,7 +1113,8 @@ async function toggleAdmin(id, makeAdmin) {
 function exportCSV() {
   const headers = ['Number','First Name','Last Name','Email','Phone','Handicap','Available Dates','Why Me','Trash Talk','Hat','Team'];
   const rows = players.map((p, i) => {
-    const team = teamAssignments[p.id] === 'A' ? _teamAName : teamAssignments[p.id] === 'B' ? _teamBName : '';
+    const _ti = TEAM_LETTERS.indexOf(teamAssignments[p.id]);
+    const team = _ti >= 0 && _ti < _teamCount ? (_teamNames[_ti] || teamAssignments[p.id]) : '';
     const dates = (p.available_dates || []).map(d => DATE_LABELS[d] || d).join('; ');
     const esc = v => `"${String(v || '').replace(/"/g, '""')}"`;
     return [i+1, esc(p.first_name), esc(p.last_name), esc(p.email), esc(p.phone_number), esc(p.handicap), esc(dates), esc(p.why_me), esc(p.trash_talk), p.hat ? 'Yes' : 'No', esc(team)].join(',');
@@ -1137,40 +1128,95 @@ function exportCSV() {
 }
 
 // ── TEAM ASSIGNMENT ───────────────────────────────────────────────
+const _esc = s => String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+
 function renderTeamUI() {
-  const teamA = players.filter(p => teamAssignments[p.id] === 'A');
-  const teamB = players.filter(p => teamAssignments[p.id] === 'B');
-  const unassigned = players.filter(p => !teamAssignments[p.id]);
+  const letters = TEAM_LETTERS.slice(0, _teamCount);
 
-  document.getElementById('teamCount').textContent = `${teamA.length + teamB.length} assigned, ${unassigned.length} unassigned`;
+  // Team count buttons
+  const btnContainer = document.getElementById('teamCountBtns');
+  if (btnContainer) {
+    const opts = ['Individual','2 Teams','3 Teams','4 Teams','5 Teams','6 Teams','7 Teams','8 Teams'];
+    btnContainer.innerHTML = opts.map((label, i) => {
+      const n = i === 0 ? 1 : i + 1;
+      const active = n === _teamCount;
+      return `<button onclick="saveTeamCount(${n})" style="font-family:'DM Mono',monospace;font-size:0.45rem;letter-spacing:0.1em;text-transform:uppercase;padding:0.25rem 0.65rem;border:1px solid ${active ? 'var(--gold)' : 'var(--border)'};color:${active ? 'var(--gold)' : 'var(--muted)'};background:transparent;cursor:pointer;">${label}</button>`;
+    }).join('');
+  }
 
+  const grid = document.getElementById('teamAssignGrid');
+  const pool = document.getElementById('unassignedPool');
   const warn = document.getElementById('teamsWarn');
-  warn.classList.toggle('show', Math.abs(teamA.length - teamB.length) > 1);
+  const countEl = document.getElementById('teamCount');
 
-  const chip = (p, team) => `<div class="team-player-chip">
-    <span class="pname">${p.first_name} ${p.last_name}</span>
-    <span style="display:flex;gap:0.5rem;align-items:center;">
-      <button class="move-btn" onclick="movePlayer('${p.id}','${team === 'A' ? 'B' : 'A'}')">&#8594; ${team === 'A' ? esc(_teamBName) : esc(_teamAName)}</button>
-      <button class="move-btn" onclick="movePlayer('${p.id}',null)" title="Move to unassigned" style="color:var(--red);border:1px solid rgba(138,30,16,0.4);padding:0.12rem 0.45rem;">Unassign</button>
-    </span>
-  </div>`;
+  if (_teamCount <= 1) {
+    grid.innerHTML = '<div style="color:var(--muted);font-size:0.78rem;font-style:italic;padding:0.75rem 1rem;background:var(--card);">Individual format — no team assignment needed.</div>';
+    pool.innerHTML = '';
+    countEl.textContent = `${players.length} players`;
+    warn.classList.remove('show');
+    renderStats();
+    return;
+  }
 
-  document.getElementById('teamAList').innerHTML = teamA.length ? teamA.map(p => chip(p,'A')).join('') : '<div style="color:rgba(240,230,204,0.2);font-size:0.75rem;font-style:italic">No players assigned</div>';
-  document.getElementById('teamBList').innerHTML = teamB.length ? teamB.map(p => chip(p,'B')).join('') : '<div style="color:rgba(240,230,204,0.2);font-size:0.75rem;font-style:italic">No players assigned</div>';
+  const buckets = {};
+  letters.forEach(l => buckets[l] = []);
+  players.forEach(p => { if (teamAssignments[p.id] && buckets[teamAssignments[p.id]]) buckets[teamAssignments[p.id]].push(p); });
+  const unassigned = players.filter(p => !teamAssignments[p.id] || !buckets[teamAssignments[p.id]]);
 
-  let unHTML = '';
-  unassigned.forEach(p => {
-    unHTML += `<span class="pool-chip" onclick="assignFromPool('${p.id}')">${p.first_name} ${p.last_name}</span>`;
-  });
-  document.getElementById('unassignedPool').innerHTML = unHTML || '<span style="color:rgba(240,230,204,0.2);font-size:0.72rem">All players assigned</span>';
+  countEl.textContent = `${players.length - unassigned.length} assigned, ${unassigned.length} unassigned`;
+  const counts = letters.map(l => buckets[l].length);
+  warn.classList.toggle('show', counts.length > 1 && Math.max(...counts) - Math.min(...counts) > 1);
+
+  const chip = (p, myLetter) => {
+    const others = letters.filter(l => l !== myLetter);
+    const moveBtns = others.map(l => `<button class="move-btn" onclick="movePlayer('${p.id}','${l}')">&#8594; ${_esc(_teamNames[TEAM_LETTERS.indexOf(l)])}</button>`).join('');
+    return `<div class="team-player-chip">
+      <span class="pname">${_esc(p.first_name)} ${_esc(p.last_name)}</span>
+      <span style="display:flex;gap:0.4rem;align-items:center;flex-wrap:wrap;">${moveBtns}<button class="move-btn" onclick="movePlayer('${p.id}',null)" style="color:var(--red);border:1px solid rgba(138,30,16,0.4);padding:0.12rem 0.45rem;">Unassign</button></span>
+    </div>`;
+  };
+
+  const cols = Math.min(_teamCount, 4);
+  grid.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
+  grid.innerHTML = letters.map((l, i) => `
+    <div class="team-col">
+      <div class="team-col-title" contenteditable="true" spellcheck="false" onblur="saveTeamName('${l}',this.textContent)">${_esc(_teamNames[i])}</div>
+      <div class="team-col-cap">${buckets[l].length} player${buckets[l].length !== 1 ? 's' : ''}</div>
+      <div class="team-player-list">${buckets[l].length ? buckets[l].map(p => chip(p, l)).join('') : '<div style="color:rgba(240,230,204,0.2);font-size:0.75rem;font-style:italic">No players assigned</div>'}</div>
+    </div>`).join('');
+
+  pool.innerHTML = unassigned.length
+    ? unassigned.map(p => `<span class="pool-chip" onclick="assignFromPool('${p.id}')">${_esc(p.first_name)} ${_esc(p.last_name)}</span>`).join('')
+    : '<span style="color:rgba(240,230,204,0.2);font-size:0.72rem">All players assigned</span>';
 
   renderStats();
 }
 
+async function saveTeamCount(n) {
+  _teamCount = n;
+  await sb.from('settings').upsert({ key: 'team_count', tournament_id: _tid, value: String(n), updated_at: new Date().toISOString() }, { onConflict: 'tournament_id,key' });
+  const sub = document.getElementById('adminPageSub');
+  if (sub) sub.textContent = n <= 1 ? 'Individual Format' : _teamNames.slice(0, n).join(' · ');
+  renderTeamUI();
+  showToast(`Team count updated to ${n <= 1 ? 'Individual' : n + ' teams'}.`);
+}
+
+async function saveTeamName(letter, name) {
+  const i = TEAM_LETTERS.indexOf(letter);
+  if (i < 0) return;
+  name = name.trim() || `Team ${letter}`;
+  _teamNames[i] = name;
+  await sb.from('settings').upsert({ key: `team_${letter.toLowerCase()}_name`, tournament_id: _tid, value: name, updated_at: new Date().toISOString() }, { onConflict: 'tournament_id,key' });
+  if (letter === 'A') { const el = document.getElementById('statLabelA'); if (el) el.textContent = name; }
+  if (letter === 'B') { const el = document.getElementById('statLabelB'); if (el) el.textContent = name; }
+}
+
 function assignFromPool(id) {
-  const choice = prompt(`Assign to: type A for ${_teamAName} or B for ${_teamBName}`);
-  if (choice && ['A','B'].includes(choice.toUpperCase())) {
-    teamAssignments[id] = choice.toUpperCase();
+  const letters = TEAM_LETTERS.slice(0, _teamCount);
+  const opts = letters.map((l, i) => `${l} — ${_teamNames[i]}`).join('\n');
+  const choice = prompt(`Assign to team (enter letter):\n${opts}`);
+  if (choice && letters.includes(choice.trim().toUpperCase())) {
+    teamAssignments[id] = choice.trim().toUpperCase();
     renderTeamUI();
   }
 }
@@ -1181,28 +1227,25 @@ function movePlayer(id, team) {
 }
 
 function autoBalanceTeams() {
-  const unassigned = players.filter(p => !teamAssignments[p.id]);
+  const letters = TEAM_LETTERS.slice(0, _teamCount);
+  const unassigned = players.filter(p => !teamAssignments[p.id] || !letters.includes(teamAssignments[p.id]));
   if (!unassigned.length) { showToast('All players already assigned.'); return; }
-  const teamACount = Object.values(teamAssignments).filter(t => t === 'A').length;
-  const teamBCount = Object.values(teamAssignments).filter(t => t === 'B').length;
-  // Shuffle unassigned for random distribution
+  const counts = {};
+  letters.forEach(l => counts[l] = Object.values(teamAssignments).filter(t => t === l).length);
   const shuffled = [...unassigned].sort(() => Math.random() - 0.5);
-  let aCount = teamACount, bCount = teamBCount;
   shuffled.forEach(p => {
-    if (aCount <= bCount) { teamAssignments[p.id] = 'A'; aCount++; }
-    else { teamAssignments[p.id] = 'B'; bCount++; }
+    const min = letters.reduce((a, b) => counts[a] <= counts[b] ? a : b);
+    teamAssignments[p.id] = min;
+    counts[min]++;
   });
   renderTeamUI();
   showToast(`${shuffled.length} player${shuffled.length > 1 ? 's' : ''} auto-assigned. Hit Save to confirm.`);
 }
 
 async function saveTeams() {
-  const warn = document.getElementById('teamsWarn');
-  const teamA = players.filter(p => teamAssignments[p.id] === 'A').length;
-  const teamB = players.filter(p => teamAssignments[p.id] === 'B').length;
-  if (Math.abs(teamA - teamB) > 1) {
-    warn.classList.add('show');
-  }
+  const letters = TEAM_LETTERS.slice(0, _teamCount);
+  const counts = letters.map(l => Object.values(teamAssignments).filter(t => t === l).length);
+  document.getElementById('teamsWarn').classList.toggle('show', counts.length > 1 && Math.max(...counts) - Math.min(...counts) > 1);
   await sb.from('settings').upsert({ key: 'team_assignments', tournament_id: _tid, value: JSON.stringify(teamAssignments), updated_at: new Date().toISOString() }, { onConflict: 'tournament_id,key' });
   showToast('Team assignments saved.');
 }
