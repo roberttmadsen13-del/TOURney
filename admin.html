@@ -609,12 +609,22 @@ td.email a:hover{color:var(--gold);}
       <div style="display:grid;gap:1rem;background:var(--card);border:1px solid var(--border);padding:1.5rem;">
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
           <div class="fg">
+            <label>Scoring Mode</label>
+            <select id="dsTourneyMode" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;width:100%;-webkit-appearance:none;">
+              <option value="competitive">Competitive (Handicap-Adjusted)</option>
+              <option value="casual">Casual (Gross Score)</option>
+            </select>
+          </div>
+          <div class="fg">
             <label>Registration Status</label>
             <select id="dsRegOpen" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;width:100%;-webkit-appearance:none;">
               <option value="true">Open</option>
               <option value="false">Closed</option>
             </select>
           </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+          <div class="fg"><label>Min Players (to run)</label><input type="number" id="dsMinPlayers" value="" min="1" max="200" placeholder="e.g. 12" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;"></div>
           <div class="fg"><label>Max Players</label><input type="number" id="dsMaxPlayers" value="24" min="1" max="200" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;"></div>
         </div>
         <div class="fg"><label>Info Bullet 1</label><input type="text" id="dsRegBullet1" placeholder="Covers greens fees, cart, and meals" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;"></div>
@@ -2020,9 +2030,10 @@ const DS_ALL_KEYS = [
   'tourney_name','tourney_year','tourney_location',
   'hero_cta_primary','color_primary','color_ink','color_bg',
   'about_stat_days','about_stat_teams','about_stat_holes',
-  'reg_open','reg_max_players','reg_bullet_1','reg_bullet_2','reg_bullet_3',
+  'tournament_mode',
+  'reg_open','reg_max_players','reg_min_players','reg_bullet_1','reg_bullet_2','reg_bullet_3',
   'reg_show_dates','reg_show_why_me','reg_show_hat',
-  'team_a_name','team_b_name',
+  'team_a_name','team_b_name','team_c_name','team_d_name','team_e_name','team_f_name','team_g_name','team_h_name',
   'schedule_json','about_stat_days',
 ];
 
@@ -2041,7 +2052,9 @@ const DS_FIELD_MAP = {
   about_stat_days:   'dsStatDays',
   about_stat_teams:  'dsStatTeams',
   about_stat_holes:  'dsStatHoles',
+  tournament_mode:   'dsTourneyMode',
   reg_max_players:   'dsMaxPlayers',
+  reg_min_players:   'dsMinPlayers',
   reg_show_dates:    'dsShowDates',
   reg_show_why_me:   'dsShowWhyMe',
   reg_show_hat:      'dsShowHat',
@@ -2202,7 +2215,9 @@ async function saveAbout() {
 
 async function saveRegistration() {
   const rows = [
+    { key:'tournament_mode', value: document.getElementById('dsTourneyMode')?.value || 'competitive' },
     { key:'reg_open',        value: document.getElementById('dsRegOpen')?.value || 'true' },
+    { key:'reg_min_players', value: document.getElementById('dsMinPlayers')?.value || '' },
     { key:'reg_max_players', value: document.getElementById('dsMaxPlayers')?.value || '24' },
     { key:'reg_bullet_1',    value: document.getElementById('dsRegBullet1')?.value || '' },
     { key:'reg_bullet_2',    value: document.getElementById('dsRegBullet2')?.value || '' },
