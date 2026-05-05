@@ -97,7 +97,7 @@
   installBtn.addEventListener('click', async (e) => {
     if (e.target && e.target.classList && e.target.classList.contains('x')) {
       installBtn.classList.remove('show');
-      sessionStorage.setItem('bova_install_dismissed', '1');
+      sessionStorage.setItem('tourney_install_dismissed', '1');
       return;
     }
     if (!deferredPrompt) return;
@@ -110,7 +110,7 @@
   window.addEventListener('beforeinstallprompt', (e) => {
     e.preventDefault();
     deferredPrompt = e;
-    if (!sessionStorage.getItem('bova_install_dismissed') && !window.matchMedia('(display-mode: standalone)').matches) {
+    if (!sessionStorage.getItem('tourney_install_dismissed') && !window.matchMedia('(display-mode: standalone)').matches) {
       installBtn.classList.add('show');
     }
   });

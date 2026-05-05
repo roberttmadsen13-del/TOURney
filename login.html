@@ -185,9 +185,7 @@ async function doSignIn() {
     return;
   }
 
-  // Mark account as active + store email for backward compat
   sb.from('players').update({ has_account: true }).eq('email', email).then(() => {});
-  localStorage.setItem('bova_profile_email', email);
   window.location.href = redirectTo;
 }
 
@@ -254,7 +252,6 @@ async function doSignUp() {
   } else if (data.session) {
     // Auto-confirmed — redirect
     sb.from('players').update({ has_account: true }).eq('email', email).then(() => {});
-    localStorage.setItem('bova_profile_email', email);
     window.location.href = redirectTo;
   }
 }

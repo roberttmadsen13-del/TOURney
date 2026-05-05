@@ -460,7 +460,7 @@ const DEFAULT_PARS = {
 };
 const DEFAULT_FORMATS = {
   day1: { front: 'stroke',    back: 'stroke'    },
-  day2: { front: 'scramble',  back: 'shamble'   },
+  day2: { front: 'scramble',  back: 'shambles'  },
   day3: { front: 'best_ball', back: 'stroke'    },
 };
 
@@ -483,8 +483,8 @@ async function init() {
     sb.from('players').select('*').eq('tournament_id', tournament.id),
     sb.from('scores').select('*').eq('tournament_id', tournament.id),
     sb.from('settings').select('*').eq('tournament_id', tournament.id).eq('key','team_assignments'),
-    sb.from('settings').select('*').eq('tournament_id', tournament.id).in('key',['round_day1','round_day2','round_day3']),
-    sb.from('settings').select('*').eq('tournament_id', tournament.id).in('key',['pars_day1','pars_day2','pars_day3']),
+    sb.from('settings').select('*').eq('tournament_id', tournament.id).like('key','round_day%'),
+    sb.from('settings').select('*').eq('tournament_id', tournament.id).like('key','pars_day%'),
     sb.from('settings').select('*').eq('tournament_id', tournament.id).eq('key','round_formats'),
     sb.from('settings').select('value').eq('tournament_id', tournament.id).eq('key','tournament_mode').maybeSingle(),
   ]);
@@ -662,7 +662,7 @@ function scoreClass(n) {
 
 function buildLeaderboard() {
   return players.map(p => {
-    const days = ['day1','day2','day3'].map(d => calcPlayerRound(p.id, d));
+    const days = Object.keys(roundStates).filter(k => /^day\d+$/.test(k)).sort().map(d => calcPlayerRound(p.id, d));
     const totalThru = days.reduce((a, d) => a + d.thru, 0);
     const totalRel  = days.reduce((a, d) => a + d.rel, 0);
     const handicap  = parseInt(p.handicap) || 0;
@@ -759,8 +759,9 @@ function render() {
 }
 
 function renderRoundSelector() {
-  const roundLabels = { day1: 'Day 1', day2: 'Day 2', day3: 'Day 3' };
-  const roundsWithScores = ['day1','day2','day3'].filter(r => scores.some(s => s.round === r));
+  const allDays = Object.keys(roundStates).filter(k => /^day\d+$/.test(k)).sort();
+  const roundLabels = Object.fromEntries(allDays.map((d, i) => [d, `Day ${i+1}`]));
+  const roundsWithScores = allDays.filter(r => scores.some(s => s.round === r));
   if (currentRound && !roundsWithScores.includes(currentRound)) roundsWithScores.push(currentRound);
 
   const bar = document.getElementById('roundSelBar');

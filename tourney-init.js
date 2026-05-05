@@ -177,10 +177,12 @@
         updateHeroAndFooter();
       }
 
-      // Favicon — use tournament logo when available
+      // Favicon + nav logo — use tournament logo when available
       if (data.logo_url) {
         const favIcon = document.querySelector('link[rel="icon"]');
         if (favIcon) favIcon.href = data.logo_url;
+        const navLogo = document.getElementById('navLogoImg');
+        if (navLogo) { navLogo.src = data.logo_url; navLogo.alt = data.name; navLogo.style.display = ''; }
       }
     }
 
