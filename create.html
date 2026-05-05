@@ -113,6 +113,7 @@
     .price-total-val{font-size:1.4rem;font-weight:700;color:var(--gold)}
     .price-note{font-family:'DM Mono',monospace;font-size:.5rem;color:var(--muted);margin-top:.6rem;opacity:.7}
     .fmt-select option{background:#1a1008}
+    .fmt-desc{font-family:'DM Mono',monospace;font-size:.44rem;letter-spacing:.06em;color:var(--muted);margin-top:.3rem;min-height:.9rem;line-height:1.4}
 
     /* ─── Review ─── */
     .review-item{display:flex;justify-content:space-between;align-items:flex-start;padding:.65rem 0;border-bottom:1px solid var(--border);gap:1rem}
@@ -350,18 +351,18 @@
   if (sessionStorage.getItem('create_code')) unlockFlow();
 
   const FMT = [
-    { value:'stroke',       label:'Stroke Play' },
-    { value:'scramble',     label:'Scramble' },
-    { value:'bestball',     label:'Best Ball' },
-    { value:'shambles',     label:'Shambles' },
-    { value:'stableford',   label:'Stableford' },
-    { value:'match',        label:'Match Play' },
-    { value:'alternate',    label:'Alternate Shot' },
-    { value:'chapman',      label:'Chapman / Pinehurst' },
-    { value:'skins',        label:'Skins' },
-    { value:'greensomes',   label:'Greensomes' },
-    { value:'mod_stableford', label:'Modified Stableford' },
-    { value:'nassau',       label:'Nassau' },
+    { value:'stroke',       label:'Stroke Play',          desc:'Every stroke counts. Lowest total score wins.' },
+    { value:'scramble',     label:'Scramble',             desc:'All players hit, best shot chosen, repeat. Great for mixed-skill groups.' },
+    { value:'bestball',     label:'Best Ball',            desc:'Each player plays their own ball; lowest score on each hole counts for the team.' },
+    { value:'shambles',     label:'Shambles',             desc:'Scramble off the tee, then everyone plays their own ball from the best drive.' },
+    { value:'stableford',   label:'Stableford',           desc:'Points per hole vs par. Bogey = 1, par = 2, birdie = 3, eagle = 4. Most points wins.' },
+    { value:'match',        label:'Match Play',           desc:'Hole-by-hole competition. Win the hole, earn a point. Most holes won wins the match.' },
+    { value:'alternate',    label:'Alternate Shot',       desc:'Partners share one ball and alternate shots every stroke. Pure teamwork.' },
+    { value:'chapman',      label:'Chapman / Pinehurst',  desc:'Both players hit drives, swap balls, then choose the best to finish alternate shot.' },
+    { value:'skins',        label:'Skins',                desc:'Each hole is worth a skin. Ties carry the skin forward. Winner takes the pot.' },
+    { value:'greensomes',   label:'Greensomes',           desc:'Both partners drive, best drive chosen, then alternate shots into the hole.' },
+    { value:'mod_stableford', label:'Modified Stableford', desc:'Points scale with score vs par — double bogey loses a point, eagle earns 5. Aggressive play rewarded.' },
+    { value:'nassau',       label:'Nassau',               desc:'Three bets in one: front 9, back 9, and overall. Classic side-bet format.' },
   ];
 
   const DAY_DEFAULTS = [
@@ -548,9 +549,14 @@
 
     updatePriceCard();
 
+    const FMT_DESC = Object.fromEntries(FMT.map(o => [o.value, o.desc]));
     const makeOpts = (sel) => FMT.map(o =>
       `<option value="${o.value}"${o.value===sel?' selected':''}>${o.label}</option>`
     ).join('');
+    function updateFmtDesc(key, side, val) {
+      const el = document.getElementById(`fd-${key}-${side}-desc`);
+      if (el) el.textContent = FMT_DESC[val] || '';
+    }
     const DAY_WORDS = ['One','Two','Three','Four','Five','Six','Seven'];
 
     const cont = document.getElementById('fmtRows');
@@ -564,13 +570,17 @@
         <div class="fmt-day">Day ${DAY_WORDS[i-1]}</div>
         <div>
           <div class="fmt-nine-lbl">Front 9</div>
-          <select class="fmt-select" id="fd-${key}-front">${makeOpts(fmt.front)}</select>
+          <select class="fmt-select" id="fd-${key}-front" onchange="updateFmtDesc('${key}','front',this.value)">${makeOpts(fmt.front)}</select>
+          <div class="fmt-desc" id="fd-${key}-front-desc"></div>
         </div>
         <div>
           <div class="fmt-nine-lbl">Back 9</div>
-          <select class="fmt-select" id="fd-${key}-back">${makeOpts(fmt.back)}</select>
+          <select class="fmt-select" id="fd-${key}-back" onchange="updateFmtDesc('${key}','back',this.value)">${makeOpts(fmt.back)}</select>
+          <div class="fmt-desc" id="fd-${key}-back-desc"></div>
         </div>`;
       cont.appendChild(div);
+      updateFmtDesc(key, 'front', fmt.front);
+      updateFmtDesc(key, 'back', fmt.back);
     }
   }
 
