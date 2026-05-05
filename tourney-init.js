@@ -178,12 +178,21 @@
         updateHeroAndFooter();
       }
 
-      // Favicon + nav logo — use tournament logo when available
+      // Favicon + all logo images — use tournament logo when available
       if (data.logo_url) {
         const favIcon = document.querySelector('link[rel="icon"]');
         if (favIcon) favIcon.href = data.logo_url;
-        const navLogo = document.getElementById('navLogoImg');
-        if (navLogo) { navLogo.src = data.logo_url; navLogo.alt = data.name; navLogo.style.display = ''; }
+        const applyLogos = () => {
+          ['navLogoImg','heroLogoImg','footerLogoImg'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) { el.src = data.logo_url; el.alt = data.name; el.style.display = ''; }
+          });
+        };
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', applyLogos);
+        } else {
+          applyLogos();
+        }
       }
     }
 
