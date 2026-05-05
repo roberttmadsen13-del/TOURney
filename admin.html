@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -644,9 +644,15 @@ td.email a:hover{color:var(--gold);}
             </select>
           </div>
         </div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;padding-top:0.75rem;border-top:1px solid var(--border);">
+        <div id="dsTeamNamesGrid" style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;padding-top:0.75rem;border-top:1px solid var(--border);">
           <div class="fg"><label>Team A Name</label><input type="text" id="dsTeamAName" placeholder="Team One" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;"></div>
           <div class="fg"><label>Team B Name</label><input type="text" id="dsTeamBName" placeholder="Team Two" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;"></div>
+          <div class="fg ds-team-extra" style="display:none"><label>Team C Name</label><input type="text" id="dsTeamCName" placeholder="Team Three" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;"></div>
+          <div class="fg ds-team-extra" style="display:none"><label>Team D Name</label><input type="text" id="dsTeamDName" placeholder="Team Four" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;"></div>
+          <div class="fg ds-team-extra" style="display:none"><label>Team E Name</label><input type="text" id="dsTeamEName" placeholder="Team Five" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;"></div>
+          <div class="fg ds-team-extra" style="display:none"><label>Team F Name</label><input type="text" id="dsTeamFName" placeholder="Team Six" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;"></div>
+          <div class="fg ds-team-extra" style="display:none"><label>Team G Name</label><input type="text" id="dsTeamGName" placeholder="Team Seven" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;"></div>
+          <div class="fg ds-team-extra" style="display:none"><label>Team H Name</label><input type="text" id="dsTeamHName" placeholder="Team Eight" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;"></div>
         </div>
         <button class="action-btn" style="padding:0.55rem 1.4rem;font-size:0.6rem;letter-spacing:0.15em;background:var(--gold);color:var(--ink);border-color:var(--gold);font-weight:700;margin-top:0.4rem;" onclick="saveRegistration()">Save Registration</button>
       </div>
@@ -775,10 +781,18 @@ const DEFAULT_FORMATS = {
   day3: { front: 'best_ball', back: 'stroke'    },
 };
 const FORMAT_OPTIONS = [
-  { value: 'stroke',    label: 'Stroke Play' },
-  { value: 'scramble',  label: 'Scramble'    },
-  { value: 'shamble',   label: 'Shambles'    },
-  { value: 'best_ball', label: 'Best Ball'   },
+  { value: 'stroke',         label: 'Stroke Play'         },
+  { value: 'scramble',       label: 'Scramble'            },
+  { value: 'shambles',       label: 'Shambles'            },
+  { value: 'best_ball',      label: 'Best Ball'           },
+  { value: 'stableford',     label: 'Stableford'          },
+  { value: 'mod_stableford', label: 'Modified Stableford' },
+  { value: 'match',          label: 'Match Play'          },
+  { value: 'alt_shot',       label: 'Alternate Shot'      },
+  { value: 'chapman',        label: 'Chapman / Pinehurst' },
+  { value: 'greensomes',     label: 'Greensomes'          },
+  { value: 'nassau',         label: 'Nassau'              },
+  { value: 'skins',          label: 'Skins'               },
 ];
 
 let players = [];
@@ -892,8 +906,8 @@ function renderFormatSection() {
   }));
   const selOpts = FORMAT_OPTIONS.map(o => `<option value="${o.value}">${o.label}</option>`).join('');
   const html = days.map(d => {
-    const front = roundFormats[d.key]?.front || DEFAULT_FORMATS[d.key].front;
-    const back  = roundFormats[d.key]?.back  || DEFAULT_FORMATS[d.key].back;
+    const front = roundFormats[d.key]?.front || DEFAULT_FORMATS[d.key]?.front || 'stroke';
+    const back  = roundFormats[d.key]?.back  || DEFAULT_FORMATS[d.key]?.back || 'stroke';
     const sel = (val, cur) => selOpts.replace(`value="${cur}"`, `value="${cur}" selected`);
     return `<div class="format-row">
       <div class="format-day-label">${d.label}</div>
@@ -924,8 +938,8 @@ async function saveFormats() {
   const days = Array.from({ length: _numDays }, (_, i) => `day${i+1}`);
   days.forEach(d => {
     roundFormats[d] = {
-      front: document.getElementById(`fmt-${d}-front`)?.value || DEFAULT_FORMATS[d].front,
-      back:  document.getElementById(`fmt-${d}-back`)?.value  || DEFAULT_FORMATS[d].back,
+      front: document.getElementById(`fmt-${d}-front`)?.value || DEFAULT_FORMATS[d]?.front || 'stroke',
+      back:  document.getElementById(`fmt-${d}-back`)?.value  || DEFAULT_FORMATS[d]?.back || 'stroke',
     };
   });
   const now = new Date().toISOString();
@@ -2068,6 +2082,12 @@ const DS_FIELD_MAP = {
   reg_show_hat:      'dsShowHat',
   team_a_name:       'dsTeamAName',
   team_b_name:       'dsTeamBName',
+  team_c_name:       'dsTeamCName',
+  team_d_name:       'dsTeamDName',
+  team_e_name:       'dsTeamEName',
+  team_f_name:       'dsTeamFName',
+  team_g_name:       'dsTeamGName',
+  team_h_name:       'dsTeamHName',
 };
 
 async function loadDesignSettings() {
@@ -2086,6 +2106,11 @@ async function loadDesignSettings() {
   if (map.about_photo_url) renderPhotoPreview('aboutPhotoPreview', map.about_photo_url);
   _numDays = parseInt(map.about_stat_days || '3');
   buildScheduleEditor(_numDays, map.schedule_json || '[]');
+  // Show extra team name inputs (C–H) based on team_count
+  const tc = parseInt(map.team_count || '2');
+  document.querySelectorAll('.ds-team-extra').forEach((el, i) => {
+    el.style.display = (i + 3) <= tc ? '' : 'none';
+  });
 }
 
 function renderPhotoPreview(id, url) {
