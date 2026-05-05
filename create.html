@@ -228,10 +228,18 @@
       <div class="fl" style="margin-top:1.75rem;margin-bottom:.5rem">Max Players</div>
       <div class="days-row" id="playersBtns"></div>
 
-      <div class="fl" style="margin-bottom:.65rem">Scoring Format per Nine Holes</div>
+      <div class="fl" style="margin-top:1.75rem;margin-bottom:.65rem">Team Structure</div>
+      <div class="days-row" id="teamCountBtns"></div>
+      <div id="teamSizeWrap" style="margin-top:1rem;display:none">
+        <div class="fl" style="margin-bottom:.5rem">Players per Team</div>
+        <div class="days-row" id="teamSizeBtns"></div>
+      </div>
+
+      <div class="fl" style="margin-top:1.75rem;margin-bottom:.65rem">Scoring Format per Nine Holes</div>
       <div id="fmtRows"></div>
 
       <div class="price-card" id="priceCard">
+        <div style="font-family:'DM Mono',monospace;font-size:.5rem;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);margin-bottom:.6rem;" id="pc-tier">—</div>
         <div class="price-row"><span class="price-lbl">Players</span><span class="price-val" id="pc-players">—</span></div>
         <div class="price-row"><span class="price-lbl">Rounds</span><span class="price-val" id="pc-days">—</span></div>
         <div class="price-total">
@@ -376,19 +384,24 @@
     mode: 'competitive',
     days: 3,
     maxPlayers: 24,
+    teamCount: 2,   // 1 = individual
+    teamSize: 4,    // players per team
     formats: mkFormats(3),
   };
 
-  function calcPrice(players, days) {
-    const base = players <= 12 ? 5 : players <= 24 ? 12 : players <= 36 ? 20 : 30;
-    const mult = days === 1 ? 1 : days <= 3 ? 1.5 : 2;
-    return Math.round(base * mult);
+  function calcTier(players, days) {
+    if (days === 1)                          return { name: 'Round',        price: 9  };
+    if (days <= 3 && players <= 24)          return { name: 'Weekend',      price: 19 };
+    if (days <= 7 && players <= 36)          return { name: 'Invitational', price: 35 };
+    return                                          { name: 'Club',         price: 59 };
   }
 
   function updatePriceCard() {
-    document.getElementById('pc-players').textContent = S.maxPlayers;
-    document.getElementById('pc-days').textContent = S.days + (S.days === 1 ? ' round' : ' rounds');
-    document.getElementById('pc-total').textContent = '$' + calcPrice(S.maxPlayers, S.days);
+    const t = calcTier(S.maxPlayers, S.days);
+    document.getElementById('pc-tier').textContent    = t.name;
+    document.getElementById('pc-players').textContent = S.maxPlayers + ' players';
+    document.getElementById('pc-days').textContent    = S.days + (S.days === 1 ? ' round' : ' rounds');
+    document.getElementById('pc-total').textContent   = '$' + t.price;
   }
 
   function mkFormats(n) {
@@ -523,6 +536,35 @@
       b.onclick = () => { S.maxPlayers = n; renderFormat(); };
       pRow.appendChild(b);
     });
+
+    // Team count buttons: Individual + 2–8 teams
+    const tcRow = document.getElementById('teamCountBtns');
+    tcRow.innerHTML = '';
+    const teamOpts = [{ n:1, label:'Individual' }, {n:2,label:'2'},{n:3,label:'3'},{n:4,label:'4'},{n:5,label:'5'},{n:6,label:'6'},{n:8,label:'8'}];
+    teamOpts.forEach(o => {
+      const b = document.createElement('button');
+      b.className = 'day-btn' + (o.n === S.teamCount ? ' on' : '');
+      b.textContent = o.label;
+      b.style.cssText = 'width:auto;padding:0 .75rem;min-width:2.4rem;';
+      b.onclick = () => { S.teamCount = o.n; renderFormat(); };
+      tcRow.appendChild(b);
+    });
+
+    // Team size buttons (hidden for individual)
+    const tsWrap = document.getElementById('teamSizeWrap');
+    tsWrap.style.display = S.teamCount === 1 ? 'none' : 'block';
+    if (S.teamCount > 1) {
+      const tsRow = document.getElementById('teamSizeBtns');
+      tsRow.innerHTML = '';
+      [{n:2,label:'2-Person'},{n:3,label:'3-Person'},{n:4,label:'4-Person (Foursome)'},{n:5,label:'5-Person'},{n:6,label:'6-Person'}].forEach(o => {
+        const b = document.createElement('button');
+        b.className = 'day-btn' + (o.n === S.teamSize ? ' on' : '');
+        b.textContent = o.label;
+        b.style.cssText = 'width:auto;padding:0 .75rem;min-width:2.4rem;';
+        b.onclick = () => { S.teamSize = o.n; renderFormat(); };
+        tsRow.appendChild(b);
+      });
+    }
 
     updatePriceCard();
 
@@ -719,8 +761,15 @@
         { key:'reg_show_dates',    value: 'false' },
         { key:'reg_show_why_me',   value: 'false' },
         { key:'reg_show_hat',      value: 'false' },
-        { key:'team_a_name',       value: 'Team One' },
-        { key:'team_b_name',       value: 'Team Two' },
+        { key:'team_count',        value: String(S.teamCount) },
+        { key:'team_size',         value: String(S.teamSize) },
+        ...( S.teamCount === 1
+          ? []
+          : Array.from({length: S.teamCount}, (_,i) => ({
+              key: `team_${String.fromCharCode(97+i)}_name`,
+              value: `Team ${String.fromCharCode(65+i)}`
+            }))
+        ),
       ];
       for (let i = 1; i <= S.days; i++) {
         settings.push({ key:`round_day${i}`,       value: 'pending' });
