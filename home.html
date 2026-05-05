@@ -807,7 +807,7 @@ async function submitRsvp() {
     .select('billing_status, billing_expires_at')
     .eq('email', email.toLowerCase())
     .maybeSingle();
-  const isActive = acct?.billing_status === 'active' &&
+  const isActive = (acct?.billing_status === 'active' || acct?.billing_status === 'comped') &&
     (!acct.billing_expires_at || new Date(acct.billing_expires_at) > new Date());
   if (!isActive) {
     showToast('Player Account Required', 'A $2/mo Player Account is required to join. Tap below to get one.');
