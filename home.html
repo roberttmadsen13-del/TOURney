@@ -819,9 +819,10 @@ window.addEventListener('scroll', () => { document.getElementById('mainNav').cla
 
   window._homeTeamAName = map.team_a_name || 'Team A';
   window._homeTeamBName = map.team_b_name || 'Team B';
+  window._homeTeamCount = teamCount;
   window._homeTeamNames = {};
-  ['a','b','c','d','e','f','g','h'].forEach((l,i) => {
-    if (map[`team_${l}_name`]) window._homeTeamNames[l.toUpperCase()] = map[`team_${l}_name`];
+  ['a','b','c','d','e','f','g','h'].forEach(l => {
+    window._homeTeamNames[l.toUpperCase()] = map[`team_${l}_name`] || `Team ${l.toUpperCase()}`;
   });
 
   loadHeroScoreboard(tournament.id);
@@ -1034,32 +1035,30 @@ async function loadHeroScoreboard(tournamentId) {
     return (n > 0 ? '+' : '') + n.toFixed(1).replace(/\.0$/,'');
   }
 
-  const teamA = players.filter(p => teamAssignments[p.id] === 'A');
-  const teamB = players.filter(p => teamAssignments[p.id] === 'B');
-  const totA = teamA.reduce((s,p) => s + playerNet(p).net, 0);
-  const totB = teamB.reduce((s,p) => s + playerNet(p).net, 0);
+  const HERO_TEAM_COLORS = {A:'#c09030',B:'#4a6a8a',C:'#4a8a5a',D:'#7a4a8a',E:'#3a7a8a',F:'#8a5a2a',G:'#5a4a8a',H:'#8a3a5a'};
+  const _htCount = window._homeTeamCount || 2;
+  const _htLetters = ['A','B','C','D','E','F','G','H'].slice(0, _htCount);
+  const _htTeams = _htLetters.map(L => {
+    const ps = players.filter(p => teamAssignments[p.id] === L);
+    return { L, name: (window._homeTeamNames||{})[L] || `Team ${L}`, color: HERO_TEAM_COLORS[L], ps, tot: ps.reduce((s,p) => s + playerNet(p).net, 0) };
+  });
+  const _htMin = Math.min(..._htTeams.map(t => t.tot));
 
   const bannersEl = document.getElementById('heroTeamBanners');
   const lbEl = document.getElementById('heroLeaderboard');
   if (!bannersEl || !lbEl) return;
 
-  const _tAName = window._homeTeamAName || 'Team A';
-  const _tBName = window._homeTeamBName || 'Team B';
-  const _tAWords = _tAName.trim().split(/\s+/); const _tALast = _tAWords.pop();
-  const _tBWords = _tBName.trim().split(/\s+/); const _tBLast = _tBWords.pop();
-  bannersEl.innerHTML = `
-    <div style="background:#0e0b06;padding:1.5rem;border-right:1px solid rgba(192,144,48,0.1);">
-      <div style="font-family:'DM Mono',monospace;font-size:0.45rem;letter-spacing:0.3em;text-transform:uppercase;color:rgba(192,144,48,0.5);margin-bottom:0.3rem;">Team One</div>
-      <div style="font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:900;color:#f0e6cc;">${_tAWords.length?_tAWords.join(' ')+' ':''}<em style="color:#c09030;">${_tALast}</em></div>
-      <div style="font-family:'Playfair Display',serif;font-size:2.2rem;font-weight:900;color:${totA<=totB?'#c09030':'rgba(240,230,204,0.4)'};margin-top:0.5rem;">${fmtNet(totA)}</div>
-      <div style="font-family:'DM Mono',monospace;font-size:0.42rem;letter-spacing:0.15em;text-transform:uppercase;color:rgba(240,230,204,0.3);margin-top:0.2rem;">${teamA.length} players</div>
-    </div>
-    <div style="background:#0e0b06;padding:1.5rem;">
-      <div style="font-family:'DM Mono',monospace;font-size:0.45rem;letter-spacing:0.3em;text-transform:uppercase;color:rgba(74,106,138,0.7);margin-bottom:0.3rem;">Team Two</div>
-      <div style="font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:900;color:#f0e6cc;">${_tBWords.length?_tBWords.join(' ')+' ':''}<em style="color:#4a6a8a;">${_tBLast}</em></div>
-      <div style="font-family:'Playfair Display',serif;font-size:2.2rem;font-weight:900;color:${totB<totA?'#c09030':'rgba(240,230,204,0.4)'};margin-top:0.5rem;">${fmtNet(totB)}</div>
-      <div style="font-family:'DM Mono',monospace;font-size:0.42rem;letter-spacing:0.15em;text-transform:uppercase;color:rgba(240,230,204,0.3);margin-top:0.2rem;">${teamB.length} players · Capt. ${challengersCaptain}</div>
+  bannersEl.style.gridTemplateColumns = `repeat(${_htCount}, 1fr)`;
+  bannersEl.innerHTML = _htTeams.map((t, i) => {
+    const words = t.name.trim().split(/\s+/); const last = words.pop();
+    const isLeading = t.tot <= _htMin;
+    return `<div style="background:#0e0b06;padding:1.5rem;${i < _htCount-1?'border-right:1px solid rgba(192,144,48,0.1);':''}">
+      <div style="font-family:'DM Mono',monospace;font-size:0.45rem;letter-spacing:0.3em;text-transform:uppercase;color:${t.color}80;margin-bottom:0.3rem;">Team ${t.L}</div>
+      <div style="font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:900;color:#f0e6cc;">${words.length?words.join(' ')+' ':''}<em style="color:${t.color};">${last}</em></div>
+      <div style="font-family:'Playfair Display',serif;font-size:2.2rem;font-weight:900;color:${isLeading?t.color:'rgba(240,230,204,0.4)'};margin-top:0.5rem;">${fmtNet(t.tot)}</div>
+      <div style="font-family:'DM Mono',monospace;font-size:0.42rem;letter-spacing:0.15em;text-transform:uppercase;color:rgba(240,230,204,0.3);margin-top:0.2rem;">${t.ps.length} players</div>
     </div>`;
+  }).join('');
 
   const ranked = players
     .map(p => ({ ...p, ...playerNet(p) }))
