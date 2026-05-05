@@ -163,6 +163,21 @@
     <div class="byline">By Greenskeeper Studios</div>
   </header>
 
+  <!-- Invite code gate -->
+  <div id="codeGate" style="max-width:400px;margin:6rem auto 0;padding:2rem 1.5rem;">
+    <div class="step-title" style="margin-bottom:.3rem">Invite Code</div>
+    <div class="step-sub" style="margin-bottom:1.5rem">Enter your invite code to create a tournament</div>
+    <div id="codeAlert" class="alert ae" style="display:none"></div>
+    <div class="field">
+      <label>Code</label>
+      <input type="text" id="codeInput" placeholder="e.g. GKS2026" autocomplete="off" style="text-transform:uppercase;letter-spacing:.18em" onkeydown="if(event.key==='Enter')submitCode()">
+    </div>
+    <button class="btn-next" onclick="submitCode()">Continue →</button>
+  </div>
+
+  <!-- Main flow (hidden until code validated) -->
+  <div id="mainFlow" style="display:none">
+
   <!-- Step dots -->
   <div class="steps" id="steps">
     <div class="dot active" id="dot-1">1</div>
@@ -301,12 +316,34 @@
       </div>
     </div>
 
+  </div><!-- /mainFlow -->
   </main>
 
   <script>
   const SB_URL = 'https://jllugkiojeoopitdvzsa.supabase.co';
   const SB_KEY = 'sb_publishable_DnBMNLaSu61ykJ6P_fI2fw_D9DdAScn';
   const db = supabase.createClient(SB_URL, SB_KEY, { auth: { persistSession: true, autoRefreshToken: true } });
+
+  // ─── Invite code gate ───
+  function unlockFlow() {
+    document.getElementById('codeGate').style.display = 'none';
+    document.getElementById('mainFlow').style.display = 'block';
+  }
+
+  async function submitCode() {
+    const raw = document.getElementById('codeInput').value.trim().toUpperCase();
+    const alrt = document.getElementById('codeAlert');
+    alrt.style.display = 'none';
+    if (!raw) return;
+    const { data } = await db.from('create_codes').select('active').eq('code', raw).maybeSingle();
+    if (!data) { alrt.textContent = 'Invalid code. Contact rob@greenskeeper.studio'; alrt.style.display = 'block'; return; }
+    if (!data.active) { alrt.textContent = 'That code has been deactivated.'; alrt.style.display = 'block'; return; }
+    sessionStorage.setItem('create_code', raw);
+    unlockFlow();
+  }
+
+  // Auto-unlock if already validated this session
+  if (sessionStorage.getItem('create_code')) unlockFlow();
 
   const FMT = [
     { value:'stroke',       label:'Stroke Play' },

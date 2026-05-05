@@ -120,6 +120,23 @@ td{padding:1rem;font-size:0.88rem;vertical-align:middle;}
       <tbody id="compBody"></tbody>
     </table>
     <div class="empty" id="compEmpty" style="display:none;">No comped accounts yet.</div>
+
+    <!-- CREATE CODES -->
+    <div class="page-hd" style="margin-top:3rem;">
+      <div class="page-title">Invite <span>Codes</span></div>
+    </div>
+    <div style="display:flex;gap:0.75rem;margin-bottom:1.5rem;align-items:flex-end;">
+      <div class="field" style="flex:1;margin:0;"><label>Label (who it's for)</label><input type="text" id="codeLabel" placeholder="e.g. Connor O'Keefe"></div>
+      <div class="field" style="flex:1;margin:0;"><label>Code (leave blank = auto)</label><input type="text" id="codeVal" placeholder="e.g. CONNOR2026" style="text-transform:uppercase;letter-spacing:.1em"></div>
+      <button class="btn-login" style="width:auto;margin:0;padding:0.65rem 1.5rem;white-space:nowrap;" onclick="generateCode()">Create Code</button>
+    </div>
+    <div id="codeErr" style="display:none;font-family:'DM Mono',monospace;font-size:0.55rem;color:#c8503c;margin-bottom:1rem;"></div>
+    <div id="codeOk"  style="display:none;font-family:'DM Mono',monospace;font-size:0.55rem;color:#3a9e5f;margin-bottom:1rem;"></div>
+    <table>
+      <thead><tr><th>Code</th><th>Label</th><th>Status</th><th>Created</th><th></th></tr></thead>
+      <tbody id="codesBody"></tbody>
+    </table>
+    <div class="empty" id="codesEmpty" style="display:none;">No codes yet.</div>
   </div>
 </div>
 
@@ -153,6 +170,7 @@ async function showDashboard(email) {
   document.getElementById('authedEmail').textContent = email;
   loadTournaments();
   loadCompAccounts();
+  loadCodes();
 }
 
 function deriveStatus(roundSettings) {
@@ -285,6 +303,45 @@ async function loadCompAccounts() {
   }).join('');
 }
 
+
+async function generateCode() {
+  const label = document.getElementById('codeLabel').value.trim();
+  const raw   = document.getElementById('codeVal').value.trim().toUpperCase();
+  const code  = raw || Math.random().toString(36).slice(2,8).toUpperCase();
+  const errEl = document.getElementById('codeErr');
+  const okEl  = document.getElementById('codeOk');
+  errEl.style.display = 'none'; okEl.style.display = 'none';
+  const { error } = await sb.from('create_codes').insert({ code, label: label || null });
+  if (error) { errEl.textContent = error.message; errEl.style.display = 'block'; return; }
+  okEl.textContent = `✓ Code created: ${code}`; okEl.style.display = 'block';
+  document.getElementById('codeLabel').value = '';
+  document.getElementById('codeVal').value = '';
+  loadCodes();
+}
+
+async function toggleCode(id, active) {
+  await sb.from('create_codes').update({ active: !active }).eq('id', id);
+  loadCodes();
+}
+
+async function loadCodes() {
+  const { data } = await sb.from('create_codes').select('*').order('created_at', { ascending: false });
+  const tbody = document.getElementById('codesBody');
+  const empty = document.getElementById('codesEmpty');
+  if (!data || !data.length) { tbody.innerHTML = ''; empty.style.display = 'block'; return; }
+  empty.style.display = 'none';
+  tbody.innerHTML = data.map(c => {
+    const created = new Date(c.created_at).toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' });
+    const statusColor = c.active ? '#3a9e5f' : 'rgba(240,230,204,0.25)';
+    return `<tr>
+      <td><div class="t-name" style="font-size:.85rem;letter-spacing:.12em;">${esc(c.code)}</div></td>
+      <td><div class="t-owner">${esc(c.label || '—')}</div></td>
+      <td><span class="badge" style="color:${statusColor};border-color:${statusColor}40;">${c.active ? 'Active' : 'Inactive'}</span></td>
+      <td><div class="t-date">${created}</div></td>
+      <td><div class="actions"><button class="btn-action ${c.active ? 'btn-delete' : 'btn-admin'}" onclick="toggleCode('${c.id}',${c.active})">${c.active ? 'Deactivate' : 'Activate'}</button></div></td>
+    </tr>`;
+  }).join('');
+}
 
 (async () => {
   const { data: { session } } = await sb.auth.getSession();
