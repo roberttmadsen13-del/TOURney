@@ -370,6 +370,15 @@ let _teamNames = {A:'Team One',B:'Team Two',C:'Team C',D:'Team D',E:'Team E',F:'
     _teamNames[L] = map[`team_${L.toLowerCase()}_name`] || `Team ${L}`;
   });
 
+  // Hide team UI for individual (no-team) tourneys
+  if (_teamCount <= 1) {
+    const teamTab = document.getElementById('tab-team');
+    if (teamTab) teamTab.style.display = 'none';
+    const bannersEl2 = document.getElementById('teamBanners');
+    if (bannersEl2) bannersEl2.style.display = 'none';
+    if (activeTab === 'team') switchTab('individual');
+  }
+
   // Rebuild team banners dynamically
   const bannersEl = document.getElementById('teamBanners');
   if (bannersEl) {

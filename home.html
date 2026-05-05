@@ -478,7 +478,7 @@ html { scroll-behavior: smooth; }
   <div class="s-inner">
     <div class="s-label">Schedule</div>
     <h2 class="s-title">Three Days of <em>Competition</em></h2>
-    <p class="s-sub">Myrtle Beach, South Carolina</p>
+    <p class="s-sub" id="schedLocationSub"></p>
   </div>
 
   <div class="s-inner">
@@ -749,9 +749,11 @@ window.addEventListener('scroll', () => { document.getElementById('mainNav').cla
   const el_d  = document.getElementById('statDays');       if (el_d  && map.about_stat_days)  el_d.textContent  = map.about_stat_days;
   const el_h  = document.getElementById('statHoles');      if (el_h  && map.about_stat_holes) el_h.textContent  = map.about_stat_holes;
 
-  // Schedule section title
+  // Schedule section title + location subtitle
   const numDays = parseInt(map.about_stat_days || '3');
   const DAY_WORDS = ['One','Two','Three','Four','Five','Six','Seven'];
+  const schedLocSub = document.getElementById('schedLocationSub');
+  if (schedLocSub) schedLocSub.textContent = tournament.location || '';
   const schedTitle = document.querySelector('#schedule .s-title');
   if (schedTitle) {
     const label = DAY_WORDS[numDays-1] ? DAY_WORDS[numDays-1] + ' Day' + (numDays > 1 ? 's' : '') : numDays + ' Days';
@@ -816,6 +818,8 @@ window.addEventListener('scroll', () => { document.getElementById('mainNav').cla
   if (teamsSection) {
     if (teamCount <= 1) {
       teamsSection.style.display = 'none';
+      const teamsNavLi = document.querySelector('.nav-links a[href="#teams"]')?.closest('li');
+      if (teamsNavLi) teamsNavLi.style.display = 'none';
     } else {
       const setTeamName = (id, name) => {
         const el = document.getElementById(id); if (!el || !name) return;
