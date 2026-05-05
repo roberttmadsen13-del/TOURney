@@ -166,6 +166,12 @@ details[open] .explainer summary::after,.explainer details[open]>summary::after{
 .trash-tag-btn:hover{border-color:var(--gold);color:var(--gold);}
 .trash-tag-btn.t-a{border-color:rgba(192,144,48,0.35);color:rgba(192,144,48,0.6);}
 .trash-tag-btn.t-b{border-color:rgba(74,106,138,0.35);color:rgba(74,106,138,0.7);}
+.trash-tag-btn.t-c{border-color:rgba(74,138,90,0.35);color:rgba(74,138,90,0.7);}
+.trash-tag-btn.t-d{border-color:rgba(122,74,138,0.35);color:rgba(122,74,138,0.7);}
+.trash-tag-btn.t-e{border-color:rgba(58,122,138,0.35);color:rgba(58,122,138,0.7);}
+.trash-tag-btn.t-f{border-color:rgba(138,90,42,0.35);color:rgba(138,90,42,0.7);}
+.trash-tag-btn.t-g{border-color:rgba(90,74,138,0.35);color:rgba(90,74,138,0.7);}
+.trash-tag-btn.t-h{border-color:rgba(138,58,90,0.35);color:rgba(138,58,90,0.7);}
 .trash-textarea{width:100%;font-family:'Barlow',sans-serif;font-size:0.92rem;padding:0.75rem 0.9rem;background:var(--bg);border:1px solid var(--border);color:var(--ink);resize:vertical;min-height:72px;max-height:160px;outline:none;line-height:1.55;}
 .trash-textarea:focus{border-color:var(--gold);}
 .trash-textarea::placeholder{color:var(--muted);font-style:italic;}
@@ -180,12 +186,20 @@ details[open] .explainer summary::after,.explainer details[open]>summary::after{
 .trash-post{background:var(--card);border:1px solid var(--border);border-left-width:3px;padding:1rem 1.2rem;}
 .trash-post.t-a{border-left-color:var(--gold);background:linear-gradient(to right,rgba(192,144,48,0.04),var(--card));}
 .trash-post.t-b{border-left-color:#4a6a8a;background:linear-gradient(to right,rgba(74,106,138,0.05),var(--card));}
+.trash-post.t-c{border-left-color:#4a8a5a;background:linear-gradient(to right,rgba(74,138,90,0.04),var(--card));}
+.trash-post.t-d{border-left-color:#7a4a8a;background:linear-gradient(to right,rgba(122,74,138,0.04),var(--card));}
+.trash-post.t-e{border-left-color:#3a7a8a;background:linear-gradient(to right,rgba(58,122,138,0.04),var(--card));}
+.trash-post.t-f{border-left-color:#8a5a2a;background:linear-gradient(to right,rgba(138,90,42,0.04),var(--card));}
+.trash-post.t-g{border-left-color:#5a4a8a;background:linear-gradient(to right,rgba(90,74,138,0.04),var(--card));}
+.trash-post.t-h{border-left-color:#8a3a5a;background:linear-gradient(to right,rgba(138,58,90,0.04),var(--card));}
 .trash-post-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:0.45rem;}
 .trash-post-name{font-family:'Playfair Display',serif;font-size:0.88rem;font-weight:700;}
 .trash-post-time{font-family:'DM Mono',monospace;font-size:0.42rem;letter-spacing:0.08em;color:var(--muted);}
 .trash-post-body{font-family:'Barlow',sans-serif;font-size:0.92rem;line-height:1.55;color:var(--ink);}
 .trash-mention{color:var(--gold);font-weight:600;}
 .trash-empty{text-align:center;padding:2.5rem;font-family:'Playfair Display',serif;font-style:italic;color:var(--muted);}
+.dot-c{background:#4a8a5a;}.dot-d{background:#7a4a8a;}.dot-e{background:#3a7a8a;}.dot-f{background:#8a5a2a;}.dot-g{background:#5a4a8a;}.dot-h{background:#8a3a5a;}
+.tb-label.team-c{color:#4a8a5a;}.tb-label.team-d{color:#7a4a8a;}.tb-label.team-e{color:#3a7a8a;}.tb-label.team-f{color:#8a5a2a;}.tb-label.team-g{color:#5a4a8a;}.tb-label.team-h{color:#8a3a5a;}
 </style>
 <link rel="stylesheet" href="/nav-mobile.css">
 <script defer src="/nav-mobile.js"></script>
@@ -321,6 +335,9 @@ details[open] .explainer summary::after,.explainer details[open]>summary::after{
 <script>
 const sb = window.tourney.db;
 let _tournamentName = 'TOURney';
+let _teamCount = 2;
+const TEAM_LETTERS = ['A','B','C','D','E','F','G','H'];
+let _teamNames = {A:'Team One',B:'Team Two',C:'Team C',D:'Team D',E:'Team E',F:'Team F',G:'Team G',H:'Team H'};
 
 // Populate event header, team names, and notification title from settings
 (async function loadIdentity() {
@@ -328,7 +345,9 @@ let _tournamentName = 'TOURney';
   _tournamentName = tournament.name;
   const { data } = await sb.from('settings').select('key,value')
     .eq('tournament_id', tournament.id)
-    .in('key', ['tourney_name','tourney_year','tourney_location','team_a_name','team_b_name']);
+    .in('key', ['tourney_name','tourney_year','tourney_location','team_count',
+                'team_a_name','team_b_name','team_c_name','team_d_name',
+                'team_e_name','team_f_name','team_g_name','team_h_name']);
   const map = {};
   (data || []).forEach(r => { map[r.key] = r.value; });
 
@@ -344,10 +363,24 @@ let _tournamentName = 'TOURney';
     const last = words.pop();
     titleEl.innerHTML = words.length ? `${words.join(' ')} <em>${last}</em>` : `<em>${raw}</em>`;
   }
-  const aEl = document.getElementById('teamAName');
-  if (aEl) aEl.textContent = map.team_a_name || 'Team One';
-  const bEl = document.getElementById('teamBName');
-  if (bEl) bEl.textContent = map.team_b_name || 'Team Two';
+
+  _teamCount = parseInt(map.team_count) || 2;
+  TEAM_LETTERS.slice(0, _teamCount).forEach(L => {
+    _teamNames[L] = map[`team_${L.toLowerCase()}_name`] || `Team ${L}`;
+  });
+
+  // Rebuild team banners dynamically
+  const bannersEl = document.getElementById('teamBanners');
+  if (bannersEl) {
+    bannersEl.style.gridTemplateColumns = `repeat(${_teamCount}, 1fr)`;
+    bannersEl.innerHTML = TEAM_LETTERS.slice(0, _teamCount).map(L => `
+      <div class="team-banner">
+        <div class="tb-label team-${L.toLowerCase()}">${_teamNames[L]}</div>
+        <div class="tb-name" id="team${L}Name">${_teamNames[L]}</div>
+        <div class="tb-score even" id="team${L}Score">—</div>
+        <div class="tb-score-label">Cumulative To Par</div>
+      </div>`).join('');
+  }
 })();
 
 // ── OPTIONAL AUTH (public page — show user controls if logged in) ─
@@ -634,17 +667,14 @@ function render() {
   const lb = buildLeaderboard();
 
   // Team totals
-  const teamA = lb.filter(p => p.team === 'A');
-  const teamB = lb.filter(p => p.team === 'B');
   const sumTeam = arr => arr.reduce((a, p) => a + (_competitiveMode ? p.totalNet : p.totalRel), 0);
   const thruTeam = arr => arr.reduce((a, p) => a + p.totalThru, 0);
-
-  const teamAEl = document.getElementById('teamAScore');
-  const teamBEl = document.getElementById('teamBScore');
-  teamAEl.textContent = formatScore(sumTeam(teamA), thruTeam(teamA));
-  teamAEl.className = 'tb-score ' + scoreClass(sumTeam(teamA));
-  teamBEl.textContent = formatScore(sumTeam(teamB), thruTeam(teamB));
-  teamBEl.className = 'tb-score ' + scoreClass(sumTeam(teamB));
+  TEAM_LETTERS.slice(0, _teamCount).forEach(L => {
+    const players = lb.filter(p => p.team === L);
+    const sum = sumTeam(players), thru = thruTeam(players);
+    const el = document.getElementById(`team${L}Score`);
+    if (el) { el.textContent = formatScore(sum, thru); el.className = 'tb-score ' + scoreClass(sum); }
+  });
 
   if (!lb.length) {
     document.getElementById('leaderboardBody').innerHTML = '<tr><td colspan="7" class="empty-state">No players registered yet.</td></tr>';
@@ -663,7 +693,7 @@ function render() {
     if (posCounter === 3) return 'pos bronze';
     return 'pos';
   };
-  const dotClass = (team) => team === 'A' ? 'lb-team-dot dot-a' : team === 'B' ? 'lb-team-dot dot-b' : 'lb-team-dot';
+  const dotClass = (team) => team ? `lb-team-dot dot-${team.toLowerCase()}` : 'lb-team-dot';
 
   posCounter = 0;
   const lbRows = lb.map(p => {
@@ -926,7 +956,7 @@ function _renderTrash() {
     return;
   }
   el.innerHTML = _trashPosts.map(p => {
-    const team = p.team === 'A' ? 't-a' : p.team === 'B' ? 't-b' : '';
+    const team = p.team ? `t-${p.team.toLowerCase()}` : '';
     return `<div class="trash-post ${team}">
       <div class="trash-post-hdr">
         <div class="trash-post-name">${_esc(p.player_name)}</div>
@@ -942,7 +972,7 @@ function _buildTagBtns() {
   if (!el || !players.length) return;
   el.innerHTML = players.map(p => {
     const t = teamAssignments[p.id];
-    const cls = t === 'A' ? 't-a' : t === 'B' ? 't-b' : '';
+    const cls = t ? `t-${t.toLowerCase()}` : '';
     return `<button class="trash-tag-btn ${cls}" onclick="_insertTag('@${p.first_name}')">@${_esc(p.first_name)}</button>`;
   }).join('');
 }
