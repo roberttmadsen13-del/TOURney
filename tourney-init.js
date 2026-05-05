@@ -77,8 +77,15 @@
       } else {
         rebaseNavLinks(slug);
       }
-      // FAB may be injected after DOMContentLoaded — patch again after short delay
-      setTimeout(() => rebaseNavLinks(slug), 300);
+      // FAB injected by nav-mobile.js after DOM ready — observe body for it then patch
+      const fabObserver = new MutationObserver(() => {
+        const fab = document.querySelector('.fab-enter-scores');
+        if (fab && fab.getAttribute('href') === '/scorecard') {
+          fab.setAttribute('href', `/t/${slug}/scorecard`);
+          fabObserver.disconnect();
+        }
+      });
+      fabObserver.observe(document.body || document.documentElement, { childList: true, subtree: true });
     }
 
     // Non-blocking brand color injection — all pages get the tournament's colors.

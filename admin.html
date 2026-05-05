@@ -2120,11 +2120,11 @@ function buildScheduleEditor(numDays, schedJson) {
     block.innerHTML = `
       <div style="font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.28em;text-transform:uppercase;color:var(--gold);margin-bottom:0.75rem;">Day ${DAY_WORDS_ADMIN[d-1] || d}</div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;margin-bottom:0.75rem;">
-        <div class="fg"><label>Day Title</label><input type="text" class="sched-title" placeholder="Championship Round" value="${esc(dayData.title||'')}" style="background:rgba(10,6,2,0.5);border:1px solid var(--border);padding:0.5rem 0.75rem;color:var(--cream);font-family:'Barlow',sans-serif;font-size:0.85rem;width:100%;outline:none;"></div>
-        <div class="fg"><label>Subtitle / Format</label><input type="text" class="sched-subtitle" placeholder="Full 18 — Team Scoring" value="${esc(dayData.subtitle||'')}" style="background:rgba(10,6,2,0.5);border:1px solid var(--border);padding:0.5rem 0.75rem;color:var(--cream);font-family:'Barlow',sans-serif;font-size:0.85rem;width:100%;outline:none;"></div>
+        <div class="fg"><label>Day Title</label><input type="text" class="sched-title" placeholder="Championship Round" value="${_esc(dayData.title||'')}" style="background:rgba(10,6,2,0.5);border:1px solid var(--border);padding:0.5rem 0.75rem;color:var(--cream);font-family:'Barlow',sans-serif;font-size:0.85rem;width:100%;outline:none;"></div>
+        <div class="fg"><label>Subtitle / Format</label><input type="text" class="sched-subtitle" placeholder="Full 18 — Team Scoring" value="${_esc(dayData.subtitle||'')}" style="background:rgba(10,6,2,0.5);border:1px solid var(--border);padding:0.5rem 0.75rem;color:var(--cream);font-family:'Barlow',sans-serif;font-size:0.85rem;width:100%;outline:none;"></div>
       </div>
       <div class="sched-entries" style="display:flex;flex-direction:column;gap:0.5rem;margin-bottom:0.75rem;">
-        ${(dayData.entries||[]).map((e,i) => schedEntryHTML(e.time, e.text)).join('')}
+        ${(dayData.entries||[]).map(e => schedEntryHTML(e.time, e.text)).join('')}
       </div>
       <button onclick="addSchedEntry(this)" style="font-family:'DM Mono',monospace;font-size:0.45rem;letter-spacing:0.12em;text-transform:uppercase;padding:0.3rem 0.8rem;border:1px solid var(--border);color:var(--muted);background:transparent;cursor:pointer;">+ Add Entry</button>`;
     container.appendChild(block);
@@ -2133,8 +2133,8 @@ function buildScheduleEditor(numDays, schedJson) {
 
 function schedEntryHTML(time, text) {
   return `<div style="display:grid;grid-template-columns:5rem 1fr auto;gap:0.5rem;align-items:start;">
-    <input type="text" class="sched-entry-time" placeholder="9:00" value="${esc(time||'')}" style="background:rgba(10,6,2,0.5);border:1px solid var(--border);padding:0.4rem 0.6rem;color:var(--cream);font-family:'DM Mono',monospace;font-size:0.72rem;outline:none;">
-    <input type="text" class="sched-entry-text" placeholder="Shotgun start — Front 9 Scramble" value="${esc(text||'')}" style="background:rgba(10,6,2,0.5);border:1px solid var(--border);padding:0.4rem 0.6rem;color:var(--cream);font-family:'Barlow',sans-serif;font-size:0.82rem;outline:none;">
+    <input type="text" class="sched-entry-time" placeholder="9:00" value="${_esc(time||'')}" style="background:rgba(10,6,2,0.5);border:1px solid var(--border);padding:0.4rem 0.6rem;color:var(--cream);font-family:'DM Mono',monospace;font-size:0.72rem;outline:none;">
+    <input type="text" class="sched-entry-text" placeholder="Shotgun start — Front 9 Scramble" value="${_esc(text||'')}" style="background:rgba(10,6,2,0.5);border:1px solid var(--border);padding:0.4rem 0.6rem;color:var(--cream);font-family:'Barlow',sans-serif;font-size:0.82rem;outline:none;">
     <button onclick="this.closest('div').remove()" style="font-family:'DM Mono',monospace;font-size:0.6rem;padding:0.35rem 0.6rem;border:1px solid rgba(138,30,16,0.4);color:var(--red);background:transparent;cursor:pointer;white-space:nowrap;">✕</button>
   </div>`;
 }
