@@ -83,6 +83,7 @@ td{padding:1rem;font-size:0.88rem;vertical-align:middle;}
     <div class="page-hd">
       <div class="page-title">All <span>Tournaments</span></div>
     </div>
+    <input type="text" id="tourneySearch" style="width:100%;max-width:360px;margin-bottom:1.25rem;background:rgba(255,255,255,0.04);border:1px solid rgba(192,144,48,0.2);color:#f0e6cc;font-family:'DM Mono',monospace;font-size:0.72rem;padding:0.55rem 0.8rem;outline:none;" placeholder="Search tournaments…" oninput="filterTourneys(this.value)">
     <div class="stat-row">
       <div class="stat"><div class="stat-val" id="statTotal">—</div><div class="stat-label">Total Tournaments</div></div>
       <div class="stat"><div class="stat-val" id="statPlayers">—</div><div class="stat-label">Total Players</div></div>
@@ -107,6 +108,7 @@ td{padding:1rem;font-size:0.88rem;vertical-align:middle;}
     <div class="page-hd" style="margin-top:3rem;">
       <div class="page-title">Player <span>Accounts</span></div>
     </div>
+    <input type="text" id="compSearch" class="field" style="width:100%;max-width:360px;margin-bottom:1rem;background:rgba(255,255,255,0.04);border:1px solid rgba(192,144,48,0.2);color:#f0e6cc;font-family:'DM Mono',monospace;font-size:0.72rem;padding:0.55rem 0.8rem;outline:none;" placeholder="Search by email…" oninput="filterComps(this.value)">
     <div style="display:flex;gap:0.75rem;margin-bottom:1.5rem;align-items:flex-end;">
       <div class="field" style="flex:1;margin:0;"><label>Email to comp</label><input type="email" id="compEmail" placeholder="player@email.com"></div>
       <button class="btn-login" style="width:auto;margin:0;padding:0.65rem 1.5rem;white-space:nowrap;" onclick="grantComp()">Grant Access</button>
@@ -167,6 +169,22 @@ function statusBadge(status) {
   return '<span class="badge badge-notlive">Not Live</span>';
 }
 
+let _tourneys = [], _counts = {}, _roundsByTourney = {};
+
+function filterTourneys(q) {
+  const rows = document.querySelectorAll('#tourneyBody tr');
+  const lq = q.toLowerCase();
+  rows.forEach(r => { r.style.display = !lq || r.textContent.toLowerCase().includes(lq) ? '' : 'none'; });
+}
+
+let _compData = [];
+
+function filterComps(q) {
+  const rows = document.querySelectorAll('#compBody tr');
+  const lq = q.toLowerCase();
+  rows.forEach(r => { r.style.display = !lq || r.textContent.toLowerCase().includes(lq) ? '' : 'none'; });
+}
+
 async function loadTournaments() {
   const [{ data: tourneys }, { data: players }, { data: rounds }] = await Promise.all([
     sb.from('tournaments').select('*').order('created_at', { ascending: false }),
@@ -216,9 +234,14 @@ async function loadTournaments() {
 
 async function deleteTourney(id, name) {
   if (!confirm(`Delete "${name}"? This cannot be undone.`)) return;
+  // Delete in dependency order to avoid FK violations
+  await sb.from('scores').delete().eq('tournament_id', id);
   await sb.from('players').delete().eq('tournament_id', id);
+  await sb.from('tournament_admins').delete().eq('tournament_id', id);
+  await sb.from('invitations').delete().eq('tournament_id', id);
   await sb.from('settings').delete().eq('tournament_id', id);
-  await sb.from('tournaments').delete().eq('id', id);
+  const { error } = await sb.from('tournaments').delete().eq('id', id);
+  if (error) { alert('Delete failed: ' + error.message); return; }
   loadTournaments();
 }
 

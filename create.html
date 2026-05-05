@@ -162,8 +162,6 @@
     <div class="dot" id="dot-3">3</div>
     <div class="line" id="line-3"></div>
     <div class="dot" id="dot-4">4</div>
-    <div class="line" id="line-4"></div>
-    <div class="dot" id="dot-5">5</div>
   </div>
 
   <main class="main">
@@ -202,9 +200,8 @@
       <div class="fl" style="margin-top:1.75rem;margin-bottom:.75rem">Number of Days</div>
       <div class="days-row" id="daysBtns"></div>
 
-      <div class="fl" style="margin-bottom:.65rem">Scoring Format per Day</div>
+      <div class="fl" style="margin-bottom:.65rem">Scoring Format per Nine Holes</div>
       <div id="fmtRows"></div>
-      <div class="hint" style="margin-top:-.2rem;margin-bottom:1rem">Front & back nine use the same format — split per nine in admin if needed.</div>
 
       <div class="nav">
         <button class="btn-back" onclick="back()">← Back</button>
@@ -274,56 +271,10 @@
         </div>
         <input type="file" id="logoFile" accept="image/*" style="display:none" onchange="uploadLogo(this)">
       </div>
-      <div class="nav">
-        <button class="btn-back" onclick="back()">← Back</button>
-        <button class="btn-next" onclick="next4()">Review & Launch →</button>
-      </div>
-    </div>
-
-    <!-- Step 5: Launch -->
-    <div class="panel" id="s5">
-      <div class="step-title">Go Live</div>
-      <div class="step-sub">Choose your plan — billed monthly, cancel anytime</div>
       <div id="launchAlert" class="alert ae" style="display:none"></div>
-
-      <div class="tier-cards">
-        <div class="tier-card active" id="tc-starter" onclick="pickTier('starter')">
-          <div class="tc-name">Starter</div>
-          <div class="tc-price">$3<span>/mo</span></div>
-          <ul class="tc-features">
-            <li>1 round per tournament</li>
-            <li>5 tournaments / month</li>
-            <li>Custom subdomain</li>
-            <li>All scoring formats</li>
-          </ul>
-        </div>
-        <div class="tier-card" id="tc-pro" onclick="pickTier('pro')">
-          <div class="tc-name">Pro</div>
-          <div class="tc-price">$19<span>/mo</span></div>
-          <ul class="tc-features">
-            <li>3 rounds per tournament</li>
-            <li>15 tournaments / month</li>
-            <li>Everything in Starter</li>
-            <li>Analytics dashboard</li>
-          </ul>
-        </div>
-        <div class="tier-card" id="tc-club" onclick="pickTier('club')">
-          <div class="tc-name">Club</div>
-          <div class="tc-price">$49<span>/mo</span></div>
-          <ul class="tc-features">
-            <li>Unlimited rounds</li>
-            <li>Unlimited tournaments</li>
-            <li>Priority support</li>
-            <li>Custom domain</li>
-          </ul>
-          <div class="tc-carry">★ Historical data carry-forward</div>
-        </div>
-      </div>
-
-      <div id="reviewRows" style="margin-bottom:1.5rem"></div>
       <div class="nav">
         <button class="btn-back" onclick="back()">← Back</button>
-        <button class="btn-next" id="btnLaunch" onclick="launch()">Choose Plan & Pay →</button>
+        <button class="btn-next" id="btnLaunch" onclick="launch()">Create Tournament →</button>
       </div>
     </div>
 
@@ -335,11 +286,18 @@
   const db = supabase.createClient(SB_URL, SB_KEY, { auth: { persistSession: true, autoRefreshToken: true } });
 
   const FMT = [
-    { value:'stroke',    label:'Stroke Play' },
-    { value:'scramble',  label:'Scramble' },
-    { value:'bestball',  label:'Best Ball' },
-    { value:'stableford',label:'Stableford' },
-    { value:'match',     label:'Match Play' },
+    { value:'stroke',       label:'Stroke Play' },
+    { value:'scramble',     label:'Scramble' },
+    { value:'bestball',     label:'Best Ball' },
+    { value:'shambles',     label:'Shambles' },
+    { value:'stableford',   label:'Stableford' },
+    { value:'match',        label:'Match Play' },
+    { value:'alternate',    label:'Alternate Shot' },
+    { value:'chapman',      label:'Chapman / Pinehurst' },
+    { value:'skins',        label:'Skins' },
+    { value:'greensomes',   label:'Greensomes' },
+    { value:'mod_stableford', label:'Modified Stableford' },
+    { value:'nassau',       label:'Nassau' },
   ];
 
   const DAY_DEFAULTS = [
@@ -358,7 +316,6 @@
     mode: 'competitive',
     days: 3,
     formats: mkFormats(3),
-    tier: 'starter',
   };
 
   function mkFormats(n) {
@@ -376,12 +333,13 @@
 
   // ─── Step indicator ───
   function updateDots() {
-    for (let i = 1; i <= 5; i++) {
-      const d = document.getElementById(`dot-${i}`);
-      d.className = 'dot' + (i < S.step ? ' done' : i === S.step ? ' active' : '');
-    }
     for (let i = 1; i <= 4; i++) {
-      document.getElementById(`line-${i}`).className = 'line' + (i < S.step ? ' done' : '');
+      const d = document.getElementById(`dot-${i}`);
+      if (d) d.className = 'dot' + (i < S.step ? ' done' : i === S.step ? ' active' : '');
+    }
+    for (let i = 1; i <= 3; i++) {
+      const l = document.getElementById(`line-${i}`);
+      if (l) l.className = 'line' + (i < S.step ? ' done' : '');
     }
   }
 
@@ -392,7 +350,6 @@
     updateDots();
     window.scrollTo(0, 0);
     if (n === 2) renderFormat();
-    if (n === 5) renderReview();
   }
 
   function back() {
@@ -494,19 +451,27 @@
       const fmt = S.formats[key] || { front:'stroke', back:'stroke' };
       const div = document.createElement('div');
       div.className = 'fmt-row';
+      div.style.cssText = 'display:grid;grid-template-columns:5rem 1fr 1fr;gap:.6rem;align-items:center;';
       div.innerHTML = `
         <div class="fmt-day">Day ${DAY_WORDS[i-1]}</div>
-        <select class="fmt-select" id="fd-${key}">${makeOpts(fmt.front)}</select>`;
+        <div>
+          <div style="font-family:'DM Mono',monospace;font-size:.48rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(245,237,224,0.4);margin-bottom:.25rem">Front 9</div>
+          <select class="fmt-select" id="fd-${key}-front">${makeOpts(fmt.front)}</select>
+        </div>
+        <div>
+          <div style="font-family:'DM Mono',monospace;font-size:.48rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(245,237,224,0.4);margin-bottom:.25rem">Back 9</div>
+          <select class="fmt-select" id="fd-${key}-back">${makeOpts(fmt.back)}</select>
+        </div>`;
       cont.appendChild(div);
     }
   }
 
   function next2() {
-    // Capture single format per day — write as front+back both
     for (let i = 1; i <= S.days; i++) {
       const key = `day${i}`;
-      const val = document.getElementById(`fd-${key}`)?.value || 'stroke';
-      S.formats[key] = { front: val, back: val };
+      const front = document.getElementById(`fd-${key}-front`)?.value || 'stroke';
+      const back  = document.getElementById(`fd-${key}-back`)?.value || 'stroke';
+      S.formats[key] = { front, back };
     }
     go(3);
   }
@@ -597,50 +562,7 @@
     lbl.textContent = '✓ Ready — uploads on create';
   }
 
-  function next4() { go(5); }
-
-  // ─── Tier picker ───
-  function pickTier(t) {
-    S.tier = t;
-    ['starter', 'pro', 'club'].forEach(k => {
-      document.getElementById(`tc-${k}`).classList.toggle('active', k === t);
-    });
-    if (S.step === 5) renderReview();
-  }
-
-  // ─── Step 5: Review & Launch ───
-  function renderReview() {
-    const name   = document.getElementById('tName').value.trim();
-    const slug   = document.getElementById('tSlug').value.trim();
-    const year   = document.getElementById('tYear').value.trim();
-    const loc    = document.getElementById('tLoc').value.trim();
-    const sub    = document.getElementById('tSub').value.trim();
-    const accent = document.getElementById('cPrimary').value;
-
-    const DAY_WORDS = ['One','Two','Three','Four','Five','Six','Seven'];
-    const fmtStr = Object.entries(S.formats)
-      .map(([k,v],i) => `Day ${DAY_WORDS[i]}: ${v.front}`).join(' · ');
-
-    const tierLabel = { starter: 'Starter — $3/mo', pro: 'Pro — $19/mo', club: 'Club — $49/mo' };
-    const rows = [
-      ['Plan',       tierLabel[S.tier]],
-      ['Style',      S.mode.charAt(0).toUpperCase() + S.mode.slice(1)],
-      ['Tournament', name],
-      ['URL',        `tourney.app/t/${slug}/`],
-      ['Year',       year || '—'],
-      ['Location',   loc || '—'],
-      ['Tagline',    sub || '—'],
-      ['Accent',     accent],
-      ['Days',       S.days],
-      ['Format',     fmtStr],
-      ['Logo',       S.logoFile ? `✓ ${S.logoFile.name}` : 'None (add in admin)'],
-      ['Account',    S.user?.email],
-    ];
-
-    document.getElementById('reviewRows').innerHTML = rows.map(([k,v]) =>
-      `<div class="review-item"><span class="rv-k">${k}</span><span class="rv-v">${v}</span></div>`
-    ).join('');
-  }
+  function next4() { launch(); }
 
   async function launch() {
     const btn  = document.getElementById('btnLaunch');
@@ -670,9 +592,12 @@
       if (tErr) throw tErr;
       tid = tourney.id;
 
+      // 2. Add creator as admin
+      await db.from('tournament_admins').insert({ tournament_id: tid, email: S.user.email });
+
       const now = new Date().toISOString();
 
-      // 2. Upload logo
+      // 3. Upload logo
       if (S.logoFile) {
         const ext  = S.logoFile.name.split('.').pop();
         const path = `${slug}/logo.${ext}`;
@@ -683,9 +608,9 @@
         }
       }
 
-      // 3. Seed settings
+      // 4. Seed settings
       const settings = [
-        { key:'tourney_mode',      value: S.mode },
+        { key:'tournament_mode',   value: S.mode },
         { key:'tourney_name',      value: name },
         { key:'tourney_year',      value: year },
         { key:'tourney_location',  value: loc },
@@ -715,6 +640,8 @@
         settings.push({ key:`round_day${i}`,       value: 'pending' });
         settings.push({ key:`course_name_day${i}`, value: '' });
         settings.push({ key:`pars_day${i}`,        value: JSON.stringify(Array(18).fill(4)) });
+        settings.push({ key:`format_day${i}_front`, value: S.formats[`day${i}`]?.front || 'stroke' });
+        settings.push({ key:`format_day${i}_back`,  value: S.formats[`day${i}`]?.back  || 'stroke' });
       }
       if (S.logoUrl) settings.push({ key:'logo_url', value: S.logoUrl });
 
@@ -723,26 +650,7 @@
       );
       if (sErr) throw sErr;
 
-      // 4. Create Stripe Checkout session via edge function
-      const { data: { session: authSession } } = await db.auth.getSession();
-      const res = await fetch(`${SB_URL}/functions/v1/create-checkout`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${authSession.access_token}`,
-          'apikey': SB_KEY,
-        },
-        body: JSON.stringify({
-          tournament_id:   tid,
-          tournament_slug: slug,
-          tier:            S.tier,
-          user_email:      S.user.email,
-        }),
-      });
-      const payload = await res.json();
-      if (payload.error) throw new Error(payload.error);
-
-      window.location.href = payload.url;
+      window.location.href = `/t/${slug}/admin`;
 
     } catch(e) {
       if (tid) {
@@ -750,7 +658,7 @@
         await db.from('tournaments').delete().eq('id', tid);
       }
       showAlert(alrt, e.message || 'Creation failed — please try again.');
-      btn.innerHTML = 'Choose Plan & Pay →';
+      btn.innerHTML = 'Create Tournament →';
       btn.disabled = false;
     }
   }
