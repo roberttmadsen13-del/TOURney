@@ -925,10 +925,15 @@ async function saveFormats() {
       back:  document.getElementById(`fmt-${d}-back`)?.value  || DEFAULT_FORMATS[d].back,
     };
   });
-  await sb.from('settings').upsert(
-    { key: 'round_formats', value: JSON.stringify(roundFormats), updated_at: new Date().toISOString(), tournament_id: _tid },
-    { onConflict: 'tournament_id,key' }
-  );
+  const now = new Date().toISOString();
+  const rows = [
+    { key: 'round_formats', value: JSON.stringify(roundFormats), tournament_id: _tid, updated_at: now },
+    ...days.flatMap(d => [
+      { key: `format_${d}_front`, value: roundFormats[d].front, tournament_id: _tid, updated_at: now },
+      { key: `format_${d}_back`,  value: roundFormats[d].back,  tournament_id: _tid, updated_at: now },
+    ]),
+  ];
+  await sb.from('settings').upsert(rows, { onConflict: 'tournament_id,key' });
   showToast('Round formats saved.');
 }
 
