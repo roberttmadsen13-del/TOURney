@@ -434,9 +434,6 @@ td.email a:hover{color:var(--gold);}
           <div class="par-nine-label" style="margin-top:0;">Round</div>
           <select id="editRoundSelect" class="format-select" onchange="loadScoreEditor()">
             <option value="">Select round...</option>
-            <option value="day1">Day One</option>
-            <option value="day2">Day Two</option>
-            <option value="day3">Day Three</option>
           </select>
         </div>
       </div>
@@ -774,7 +771,7 @@ const DEFAULT_PARS = {
 
 const DEFAULT_FORMATS = {
   day1: { front: 'stroke',    back: 'stroke'    },
-  day2: { front: 'scramble',  back: 'shamble'   },
+  day2: { front: 'scramble',  back: 'shambles'  },
   day3: { front: 'best_ball', back: 'stroke'    },
 };
 const FORMAT_OPTIONS = [
@@ -792,6 +789,7 @@ const TEAM_LETTERS = ['A','B','C','D','E','F','G','H'];
 let _teamNames = ['Team A','Team B','Team C','Team D','Team E','Team F','Team G','Team H'];
 let coursePars = JSON.parse(JSON.stringify(DEFAULT_PARS));
 let roundFormats = JSON.parse(JSON.stringify(DEFAULT_FORMATS));
+let _numDays = 3;
 let sortMode = 'name';
 let _champions = [];
 
@@ -845,6 +843,7 @@ async function loadAll() {
   renderTable();
   buildParEditor();
   renderTeamUI();
+  renderFormatSection();
 }
 
 async function loadTeamNames() {
@@ -883,16 +882,14 @@ async function saveChallengersCaptain() {
 async function loadFormats() {
   const { data } = await sb.from('settings').select('*').eq('tournament_id', _tid).eq('key','round_formats');
   if (data?.[0]) try { roundFormats = { ...DEFAULT_FORMATS, ...JSON.parse(data[0].value) }; } catch {}
-  renderFormatSection();
   renderRounds();
 }
 
 function renderFormatSection() {
-  const days = [
-    { key: 'day1', label: 'Day <em>One</em>'   },
-    { key: 'day2', label: 'Day <em>Two</em>'   },
-    { key: 'day3', label: 'Day <em>Three</em>' },
-  ];
+  const days = Array.from({ length: _numDays }, (_, i) => ({
+    key: `day${i+1}`,
+    label: `Day <em>${DAY_WORDS[i] || (i+1)}</em>`,
+  }));
   const selOpts = FORMAT_OPTIONS.map(o => `<option value="${o.value}">${o.label}</option>`).join('');
   const html = days.map(d => {
     const front = roundFormats[d.key]?.front || DEFAULT_FORMATS[d.key].front;
@@ -915,10 +912,16 @@ function renderFormatSection() {
     </div>`;
   }).join('');
   document.getElementById('formatGrid').innerHTML = html;
+  const roundSel = document.getElementById('editRoundSelect');
+  if (roundSel) {
+    const cur = roundSel.value;
+    roundSel.innerHTML = '<option value="">Select round...</option>' +
+      days.map((d, i) => `<option value="${d.key}"${cur===d.key?' selected':''}>${'Day ' + (DAY_WORDS[i]||i+1)}</option>`).join('');
+  }
 }
 
 async function saveFormats() {
-  const days = ['day1','day2','day3'];
+  const days = Array.from({ length: _numDays }, (_, i) => `day${i+1}`);
   days.forEach(d => {
     roundFormats[d] = {
       front: document.getElementById(`fmt-${d}-front`)?.value || DEFAULT_FORMATS[d].front,
@@ -2081,7 +2084,8 @@ async function loadDesignSettings() {
   if (map.logo_url) renderLogoPreview(map.logo_url);
   if (map.hero_photo_url) renderPhotoPreview('heroPhotoPreview', map.hero_photo_url);
   if (map.about_photo_url) renderPhotoPreview('aboutPhotoPreview', map.about_photo_url);
-  buildScheduleEditor(parseInt(map.about_stat_days || '3'), map.schedule_json || '[]');
+  _numDays = parseInt(map.about_stat_days || '3');
+  buildScheduleEditor(_numDays, map.schedule_json || '[]');
 }
 
 function renderPhotoPreview(id, url) {
