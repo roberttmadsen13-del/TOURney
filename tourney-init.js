@@ -197,7 +197,7 @@
       if (parts.length) {
         const eyebrowText = parts.join(' · ');
         const updateEyebrows = () => {
-          document.querySelectorAll('.page-eyebrow, .hero-eyebrow').forEach(el => el.textContent = eyebrowText);
+          document.querySelectorAll('.page-eyebrow, .hero-eyebrow, .footer-copy').forEach(el => el.textContent = eyebrowText);
         };
         if (document.readyState === 'loading') {
           document.addEventListener('DOMContentLoaded', updateEyebrows);
