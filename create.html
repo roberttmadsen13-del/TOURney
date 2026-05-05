@@ -540,7 +540,7 @@
     // Team count buttons: Individual + 2–8 teams
     const tcRow = document.getElementById('teamCountBtns');
     tcRow.innerHTML = '';
-    const teamOpts = [{ n:1, label:'Individual' }, {n:2,label:'2'},{n:3,label:'3'},{n:4,label:'4'},{n:5,label:'5'},{n:6,label:'6'},{n:8,label:'8'}];
+    const teamOpts = [{ n:1, label:'Individual' }, {n:2,label:'2 Teams'},{n:3,label:'3 Teams'},{n:4,label:'4 Teams'},{n:5,label:'5 Teams'},{n:6,label:'6 Teams'},{n:8,label:'8 Teams'}];
     teamOpts.forEach(o => {
       const b = document.createElement('button');
       b.className = 'day-btn' + (o.n === S.teamCount ? ' on' : '');
