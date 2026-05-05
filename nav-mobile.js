@@ -25,7 +25,7 @@
       if (el.classList.contains('live-dot') || el.classList.contains('nav-round')) return;
       // skip duplicates already in nav-links
       var h = (el.getAttribute('href') || '').replace(/\/$/, '');
-      if (h && _seenHrefs.has(h)) return;
+      if (_seenHrefs.has(h)) return;
       items.push(el);
     });
 

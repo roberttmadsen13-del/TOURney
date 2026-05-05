@@ -18,6 +18,13 @@ a{color:inherit;text-decoration:none;}
 .nav-logo em{font-style:italic;color:var(--gold);}
 .nav-back{font-family:'DM Mono',monospace;font-size:0.48rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);}
 .nav-back:hover{color:var(--gold);}
+.pu-ham{display:none;align-items:center;justify-content:center;background:none;border:none;color:rgba(240,230,204,.7);cursor:pointer;padding:.4rem;flex-shrink:0;}
+.pu-drawer{display:none;position:fixed;left:0;right:0;top:56px;z-index:198;background:rgba(10,6,2,0.97);border-bottom:1px solid rgba(192,144,48,.18);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);}
+.pu-drawer.open{display:block;}
+.pu-drawer-inner{display:flex;flex-direction:column;padding:1rem 2rem 1.5rem;gap:0;}
+.pu-drawer-inner a{display:block;padding:.7rem 0;font-family:'Barlow Condensed',sans-serif;font-size:1rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:rgba(240,230,204,.7);text-decoration:none;border-bottom:1px solid rgba(192,144,48,.08);transition:color .15s;}
+.pu-drawer-inner a:hover{color:var(--gold);}
+@media(max-width:760px){.pu-ham{display:flex;}.nav-back{display:none;}}
 
 .wrap{max-width:480px;margin:0 auto;padding:4rem 2rem;}
 @media(max-width:520px){.wrap{padding:2.5rem 1.25rem;}}
@@ -69,7 +76,16 @@ a{color:inherit;text-decoration:none;}
     TOURney <em>Player</em>
   </div>
   <a href="/player" class="nav-back">← My Golf</a>
+  <button id="puHam" class="pu-ham" aria-label="Menu" aria-expanded="false">
+    <svg width="18" height="14" viewBox="0 0 18 14" fill="none" aria-hidden="true"><line x1="0" y1="1" x2="18" y2="1" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><line x1="0" y1="7" x2="18" y2="7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><line x1="0" y1="13" x2="18" y2="13" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+  </button>
 </nav>
+<div id="puDrawer" class="pu-drawer" role="menu">
+  <div class="pu-drawer-inner">
+    <a href="/player">← My Golf</a>
+    <a href="https://tourney.greenskeeper.studio">← TOURney Platform</a>
+  </div>
+</div>
 
 <div class="wrap">
 
@@ -140,6 +156,24 @@ const sb = supabase.createClient(
   const sp = new URLSearchParams(location.search);
   const e = sp.get('email');
   if (e) document.getElementById('signupEmail').value = e;
+})();
+
+(function () {
+  var btn = document.getElementById('puHam');
+  var drawer = document.getElementById('puDrawer');
+  function close() { drawer.classList.remove('open'); btn.setAttribute('aria-expanded','false'); }
+  btn.addEventListener('click', function(e) {
+    e.stopPropagation();
+    var open = drawer.classList.toggle('open');
+    btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+  drawer.addEventListener('click', function(e) { if (e.target.closest('a')) close(); });
+  document.addEventListener('click', function(e) {
+    if (!drawer.classList.contains('open')) return;
+    if (!drawer.contains(e.target) && !btn.contains(e.target)) close();
+  });
+  document.addEventListener('keydown', function(e) { if (e.key === 'Escape') close(); });
+  window.addEventListener('resize', function() { if (window.innerWidth > 760) close(); });
 })();
 
 document.getElementById('signupForm').addEventListener('submit', async (ev) => {
