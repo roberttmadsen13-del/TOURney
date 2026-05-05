@@ -14,10 +14,18 @@
 
     // Collect links/buttons to mirror into the drawer
     var items = [];
-    nav.querySelectorAll('.nav-links a').forEach(function (el) { items.push(el); });
+    var _seenHrefs = new Set();
+    nav.querySelectorAll('.nav-links a').forEach(function (el) {
+      var h = (el.getAttribute('href') || '').replace(/\/$/, '');
+      _seenHrefs.add(h);
+      items.push(el);
+    });
     nav.querySelectorAll('.nav-right > a, .nav-right > button').forEach(function (el) {
       // skip status-only elements
       if (el.classList.contains('live-dot') || el.classList.contains('nav-round')) return;
+      // skip duplicates already in nav-links
+      var h = (el.getAttribute('href') || '').replace(/\/$/, '');
+      if (h && _seenHrefs.has(h)) return;
       items.push(el);
     });
 
