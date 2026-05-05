@@ -1012,7 +1012,7 @@ async function loadPlayers() {
 
 async function loadRoundStates() {
   const { data } = await sb.from('settings').select('*').eq('tournament_id', _tid).like('key','round_day%');
-  (data || []).forEach(row => { roundStates[row.key.replace('round_','')] = row.value; });
+  roundStates = {}; (data || []).forEach(row => { roundStates[row.key.replace('round_','') ] = row.value; });
   renderRounds();
 }
 
@@ -1022,7 +1022,7 @@ async function loadTeams() {
 }
 
 async function loadPars() {
-  const { data } = await sb.from('settings').select('*').eq('tournament_id', _tid).in('key',['pars_day1','pars_day2','pars_day3']);
+  const { data } = await sb.from('settings').select('*').eq('tournament_id', _tid).like('key','pars_day%');
   (data || []).forEach(row => {
     const day = row.key.replace('pars_','');
     try { coursePars[day] = JSON.parse(row.value); } catch {}
@@ -1575,7 +1575,7 @@ async function saveCourseNameAndPars(day) {
 }
 
 async function loadCourseNames() {
-  const { data } = await sb.from('settings').select('*').eq('tournament_id', _tid).in('key',['course_name_day1','course_name_day2','course_name_day3']);
+  const { data } = await sb.from('settings').select('*').eq('tournament_id', _tid).like('key','course_name_day%');
   if (!window._courseNames) window._courseNames = {};
   (data || []).forEach(row => {
     const day = row.key.replace('course_name_','');
