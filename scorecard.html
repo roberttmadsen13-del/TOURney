@@ -504,7 +504,7 @@ const DEFAULT_PARS = {
 };
 const DEFAULT_FORMATS = {
   day1: { front: 'stroke',    back: 'stroke'    },
-  day2: { front: 'scramble',  back: 'shamble'   },
+  day2: { front: 'scramble',  back: 'shambles'  },
   day3: { front: 'best_ball', back: 'stroke'    },
 };
 
@@ -939,7 +939,7 @@ function isMatchHole(hole)     { return getHoleFormat(hole) === 'match'; }
 const FORMAT_DISPLAY = {
   stroke:         'Stroke Play',
   scramble:       'Scramble',
-  shamble:        'Shambles',
+  shambles:       'Shambles',
   best_ball:      'Best Ball',
   alt_shot:       'Alternate Shot',
   chapman:        'Chapman / Pinehurst',
@@ -947,6 +947,8 @@ const FORMAT_DISPLAY = {
   match:          'Match Play',
   stableford:     'Stableford',
   mod_stableford: 'Mod. Stableford',
+  nassau:         'Nassau',
+  skins:          'Skins',
 };
 function formatLabel(hole) { return FORMAT_DISPLAY[getHoleFormat(hole)] || 'Stroke Play'; }
 
