@@ -26,11 +26,13 @@ body{background:#0d0a06;color:#f0e6cc;font-family:'Barlow',sans-serif;min-height
 .stat{background:#1a1008;border:1px solid rgba(192,144,48,0.12);padding:1.2rem 1.5rem;flex:1;}
 .stat-val{font-family:'Barlow Condensed',sans-serif;font-size:2rem;font-weight:700;color:#c09030;line-height:1;}
 .stat-label{font-family:'DM Mono',monospace;font-size:0.48rem;letter-spacing:0.2em;text-transform:uppercase;color:rgba(240,230,204,0.35);margin-top:0.4rem;}
-table{width:100%;border-collapse:collapse;}
-thead th{font-family:'DM Mono',monospace;font-size:0.48rem;letter-spacing:0.2em;text-transform:uppercase;color:rgba(240,230,204,0.35);text-align:left;padding:0 1rem 0.8rem;border-bottom:1px solid rgba(192,144,48,0.15);}
+.tbl-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;margin-bottom:0.5rem;}
+table{width:100%;border-collapse:collapse;min-width:560px;}
+thead th{font-family:'DM Mono',monospace;font-size:0.48rem;letter-spacing:0.2em;text-transform:uppercase;color:rgba(240,230,204,0.35);text-align:left;padding:0 0.75rem 0.8rem;border-bottom:1px solid rgba(192,144,48,0.15);}
 tbody tr{border-bottom:1px solid rgba(192,144,48,0.06);transition:background 0.15s;}
 tbody tr:hover{background:rgba(192,144,48,0.03);}
-td{padding:1rem;font-size:0.88rem;vertical-align:middle;}
+td{padding:0.75rem;font-size:0.88rem;vertical-align:middle;}
+@media(max-width:640px){.main{padding:1.5rem 1rem;}.stat-row{gap:0.75rem;}.stat{padding:0.9rem 1rem;}.stat-val{font-size:1.5rem;}.page-hd{margin-bottom:1rem;}}
 .t-name{font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:1rem;letter-spacing:0.04em;color:#f0e6cc;}
 .t-slug{font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.1em;color:#c09030;margin-top:2px;}
 .t-owner{font-family:'DM Mono',monospace;font-size:0.55rem;color:rgba(240,230,204,0.45);}
@@ -89,6 +91,7 @@ td{padding:1rem;font-size:0.88rem;vertical-align:middle;}
       <div class="stat"><div class="stat-val" id="statPlayers">—</div><div class="stat-label">Total Players</div></div>
       <div class="stat"><div class="stat-val" id="statOwners">—</div><div class="stat-label">Unique Owners</div></div>
     </div>
+    <div class="tbl-wrap">
     <table>
       <thead>
         <tr>
@@ -102,6 +105,7 @@ td{padding:1rem;font-size:0.88rem;vertical-align:middle;}
       </thead>
       <tbody id="tourneyBody"></tbody>
     </table>
+    </div>
     <div class="empty" id="emptyMsg" style="display:none;">No tournaments yet.</div>
 
     <!-- PLAYER ACCOUNTS -->
@@ -115,27 +119,31 @@ td{padding:1rem;font-size:0.88rem;vertical-align:middle;}
     </div>
     <div class="err" id="compErr" style="margin-bottom:1rem;display:none;"></div>
     <div id="compSuccess" style="display:none;font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.1em;color:#3a9e5f;margin-bottom:1rem;"></div>
+    <div class="tbl-wrap">
     <table>
       <thead><tr><th>Email</th><th>Status</th><th>Granted</th><th></th></tr></thead>
       <tbody id="compBody"></tbody>
     </table>
+    </div>
     <div class="empty" id="compEmpty" style="display:none;">No comped accounts yet.</div>
 
     <!-- CREATE CODES -->
     <div class="page-hd" style="margin-top:3rem;">
       <div class="page-title">Invite <span>Codes</span></div>
     </div>
-    <div style="display:flex;gap:0.75rem;margin-bottom:1.5rem;align-items:flex-end;">
-      <div class="field" style="flex:1;margin:0;"><label>Label (who it's for)</label><input type="text" id="codeLabel" placeholder="e.g. Connor O'Keefe"></div>
-      <div class="field" style="flex:1;margin:0;"><label>Code (leave blank = auto)</label><input type="text" id="codeVal" placeholder="e.g. CONNOR2026" style="text-transform:uppercase;letter-spacing:.1em"></div>
-      <button class="btn-login" style="width:auto;margin:0;padding:0.65rem 1.5rem;white-space:nowrap;" onclick="generateCode()">Create Code</button>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;margin-bottom:0.75rem;">
+      <div class="field" style="margin:0;"><label>Label (who it's for)</label><input type="text" id="codeLabel" placeholder="e.g. Connor O'Keefe"></div>
+      <div class="field" style="margin:0;"><label>Code (blank = auto-generate)</label><input type="text" id="codeVal" placeholder="e.g. CONNOR2026" style="text-transform:uppercase;letter-spacing:.1em"></div>
     </div>
+    <button class="btn-login" style="width:100%;margin-bottom:1.5rem;" onclick="generateCode()">Create Code</button>
     <div id="codeErr" style="display:none;font-family:'DM Mono',monospace;font-size:0.55rem;color:#c8503c;margin-bottom:1rem;"></div>
     <div id="codeOk"  style="display:none;font-family:'DM Mono',monospace;font-size:0.55rem;color:#3a9e5f;margin-bottom:1rem;"></div>
+    <div class="tbl-wrap">
     <table>
       <thead><tr><th>Code</th><th>Label</th><th>Status</th><th>Created</th><th></th></tr></thead>
       <tbody id="codesBody"></tbody>
     </table>
+    </div>
     <div class="empty" id="codesEmpty" style="display:none;">No codes yet.</div>
   </div>
 </div>
