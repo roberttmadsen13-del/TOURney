@@ -460,9 +460,9 @@ html { scroll-behavior: smooth; }
       <div class="about-text">
         <div class="s-label">About</div>
         <h2 class="s-title">A Proper <em>Tournament</em></h2>
-        <p class="s-sub">Two teams. Three days. One winner.</p>
-        <p class="about-body">The Bova Invitational is a private, invitation-only golf tournament held in Myrtle Beach, South Carolina. <strong>Two teams compete across all three days</strong> on three of the best tracks on the Grand Strand.</p>
-        <p class="about-body">Every format — scramble, shambles, best ball, stroke play — feeds the team score. Individual glory exists, but the weekend is decided by which team wins. The field is limited to <strong>24 players</strong> and does not run without 16 confirmed.</p>
+        <p class="s-sub" id="aboutSub"></p>
+        <p class="about-body" id="aboutBody1"></p>
+        <p class="about-body" id="aboutBody2"></p>
         <div class="about-stats">
           <div class="about-stat"><div class="as-val" id="statMaxPlayers">—</div><div class="as-label">Max Players</div></div>
           <div class="about-stat"><div class="as-val" id="statDays">—</div><div class="as-label">Days</div></div>
@@ -691,7 +691,7 @@ window.addEventListener('scroll', () => { document.getElementById('mainNav').cla
     'about_stat_days','about_stat_teams','about_stat_holes','reg_max_players',
     'homepage_format_note','schedule_json',
     'reg_bullet_1','reg_bullet_2','reg_bullet_3',
-    'reg_show_hat','reg_min_players','reg_show_date_picker','team_a_name','team_b_name','team_count',
+    'reg_show_hat','reg_min_players','reg_show_dates','team_a_name','team_b_name','team_count',
     'team_a_captain','challengers_captain',
     ...fmtDayKeys
   ];
@@ -706,11 +706,23 @@ window.addEventListener('scroll', () => { document.getElementById('mainNav').cla
   const heroMeta = document.querySelector('.hero-meta');
   if (heroMeta && map.homepage_details) heroMeta.innerHTML = map.homepage_details;
 
+  // About sub tagline — derive from team/day counts if no explicit setting
+  const aboutSubEl = document.getElementById('aboutSub');
+  if (aboutSubEl) {
+    const tc = parseInt(map.team_count || '2');
+    const dy = parseInt(map.about_stat_days || '3');
+    const teamWord = tc === 1 ? 'One team' : `${['','One','Two','Three','Four','Five','Six','Seven','Eight'][tc] || tc} teams`;
+    const dayWord  = dy === 1 ? 'One day'  : `${['','One','Two','Three','Four','Five','Six','Seven'][dy]  || dy} days`;
+    aboutSubEl.textContent = `${teamWord}. ${dayWord}. One winner.`;
+  }
+
   // About body paragraphs
+  const b1 = document.getElementById('aboutBody1');
+  const b2 = document.getElementById('aboutBody2');
   if (map.homepage_about) {
-    const els = document.querySelectorAll('.about-body');
     const paras = map.homepage_about.split('\n\n').filter(Boolean);
-    els.forEach((el, i) => { el.innerHTML = paras[i] || paras[0] || ''; });
+    if (b1) b1.innerHTML = paras[0] || '';
+    if (b2) b2.innerHTML = paras[1] || '';
   }
 
   // About stats
@@ -733,7 +745,7 @@ window.addEventListener('scroll', () => { document.getElementById('mainNav').cla
       : `${maxP} Maximum — First Come, First In`;
   }
   const dpGroup = document.getElementById('datePickerGroup');
-  if (dpGroup && map.reg_show_date_picker === 'true') dpGroup.style.display = '';
+  if (dpGroup && map.reg_show_dates === 'true') dpGroup.style.display = '';
   const el_d  = document.getElementById('statDays');       if (el_d  && map.about_stat_days)  el_d.textContent  = map.about_stat_days;
   const el_h  = document.getElementById('statHoles');      if (el_h  && map.about_stat_holes) el_h.textContent  = map.about_stat_holes;
 

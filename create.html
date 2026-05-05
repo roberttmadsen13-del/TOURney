@@ -773,6 +773,7 @@
         { key:'about_stat_holes',  value: String(S.days * 18) },
         { key:'reg_open',          value: 'true' },
         { key:'reg_max_players',   value: String(S.maxPlayers) },
+        { key:'reg_min_players',   value: String(Math.max(1, Math.floor(S.maxPlayers * 0.6))) },
         { key:'reg_bullet_1',      value: 'Open to invited players only' },
         { key:'reg_bullet_2',      value: `${S.days}-day tournament · ${S.days*18} holes` },
         { key:'reg_bullet_3',      value: loc || 'Location TBD' },
