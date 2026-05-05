@@ -23,6 +23,9 @@
     .hdr{padding:1.25rem 2rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
     .wordmark{font-weight:700;font-size:1rem;letter-spacing:0.28em;text-transform:uppercase;color:var(--gold)}
     .byline{font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.18em;color:var(--muted)}
+    .hdr-nav{display:flex;align-items:center;gap:1.5rem}
+    .hdr-nav-link{font-family:'DM Mono',monospace;font-size:.55rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(192,144,48,0.45);text-decoration:none;transition:color .15s}
+    .hdr-nav-link:hover{color:rgba(192,144,48,0.85)}
 
     /* ─── Step indicator ─── */
     .steps{display:flex;align-items:center;justify-content:center;padding:2rem 1rem 1rem;gap:0}
@@ -161,7 +164,10 @@
 <body>
   <header class="hdr">
     <div class="wordmark">TOURney</div>
-    <div class="byline">By Greenskeeper Studios</div>
+    <div class="hdr-nav">
+      <a href="/" class="hdr-nav-link">← Platform</a>
+      <a href="/player" class="hdr-nav-link">My Golf</a>
+    </div>
   </header>
 
   <!-- Invite code gate -->
@@ -809,5 +815,6 @@
     }
   }
   </script>
+<script defer src="/nav-platform.js"></script>
 </body>
 </html>

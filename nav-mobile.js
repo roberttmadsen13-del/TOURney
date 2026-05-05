@@ -74,6 +74,13 @@
       inner.appendChild(myGolfLink);
     }
 
+    // Back to platform — always shown so players can switch tournaments
+    var platformLink = document.createElement('a');
+    platformLink.href = 'https://tourney.greenskeeper.studio';
+    platformLink.textContent = '← TOURney Platform';
+    platformLink.style.cssText = 'color:rgba(192,144,48,0.45);font-size:0.6rem;letter-spacing:0.18em;';
+    inner.appendChild(platformLink);
+
     // Allow post-init injection (e.g. platform link for owner, admin link per page)
     window._navInjectLink = function(href, label, style) {
       var a = document.createElement('a');

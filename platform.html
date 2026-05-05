@@ -259,7 +259,22 @@ async function loadTournaments() {
 }
 
 async function deleteTourney(id, name) {
-  if (!confirm(`Delete "${name}"? This cannot be undone.`)) return;
+  if (!confirm(`Delete "${name}"? All players, scores, settings and data will be permanently removed.`)) return;
+  const steps = [
+    sb.from('push_subscriptions').delete().eq('tournament_id', id),
+    sb.from('scores').delete().eq('tournament_id', id),
+    sb.from('trash_talk').delete().eq('tournament_id', id),
+    sb.from('tournament_admins').delete().eq('tournament_id', id),
+    sb.from('invitations').delete().eq('tournament_id', id),
+  ];
+  for (const step of steps) {
+    const { error } = await step;
+    if (error) { alert('Delete failed (child data): ' + error.message); return; }
+  }
+  const { error: pe } = await sb.from('players').delete().eq('tournament_id', id);
+  if (pe) { alert('Delete failed (players): ' + pe.message); return; }
+  const { error: se } = await sb.from('settings').delete().eq('tournament_id', id);
+  if (se) { alert('Delete failed (settings): ' + se.message); return; }
   const { error } = await sb.from('tournaments').delete().eq('id', id);
   if (error) { alert('Delete failed: ' + error.message); return; }
   loadTournaments();

@@ -104,6 +104,16 @@ a{color:inherit;text-decoration:none;}
 .logout-row{display:flex;justify-content:flex-end;margin-top:1rem;}
 .logout-btn{font-family:'DM Mono',monospace;font-size:0.46rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);background:none;border:none;cursor:pointer;padding:0;}
 .logout-btn:hover{color:var(--gold);}
+
+/* PLATFORM HAMBURGER */
+.player-ham{display:none;align-items:center;justify-content:center;background:none;border:none;color:rgba(240,230,204,.7);cursor:pointer;padding:.4rem;flex-shrink:0;}
+.player-drawer{display:none;position:fixed;left:0;right:0;top:56px;z-index:198;background:rgba(10,6,2,0.97);border-bottom:1px solid rgba(192,144,48,.18);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);}
+.player-drawer.open{display:block;}
+.player-drawer-inner{display:flex;flex-direction:column;padding:1rem 2rem 1.5rem;gap:0;}
+.player-drawer-inner a,.player-drawer-inner button{display:block;padding:.7rem 0;font-family:'Barlow Condensed',sans-serif;font-size:1rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:rgba(240,230,204,.7);text-decoration:none;background:none;border:none;border-bottom:1px solid rgba(192,144,48,.08);cursor:pointer;text-align:left;width:100%;transition:color .15s;}
+.player-drawer-inner a:hover,.player-drawer-inner button:hover{color:var(--gold);}
+#drawerSignOut{display:none;}
+@media(max-width:760px){.player-ham{display:flex;}.nav-back{display:none;}}
 </style>
 </head>
 <body>
@@ -114,7 +124,17 @@ a{color:inherit;text-decoration:none;}
     TOURney <em>Player</em>
   </div>
   <a href="https://tourney.greenskeeper.studio" class="nav-back">← Platform</a>
+  <button id="playerHam" class="player-ham" aria-label="Menu" aria-expanded="false">
+    <svg width="18" height="14" viewBox="0 0 18 14" fill="none" aria-hidden="true"><line x1="0" y1="1" x2="18" y2="1" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><line x1="0" y1="7" x2="18" y2="7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><line x1="0" y1="13" x2="18" y2="13" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+  </button>
 </nav>
+<div id="playerDrawer" class="player-drawer" role="menu">
+  <div class="player-drawer-inner">
+    <a href="https://tourney.greenskeeper.studio">← TOURney Platform</a>
+    <a href="/create">Create Tournament</a>
+    <button id="drawerSignOut">Sign Out</button>
+  </div>
+</div>
 
 <!-- LOGIN -->
 <div id="loginWrap" class="login-wrap">
@@ -460,6 +480,46 @@ async function respondInvite(inviteId, status, slug) {
 function esc(s) {
   return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
+
+// ── PLAYER PAGE HAMBURGER ────────────────────────────────────────────
+(function () {
+  var ham = document.getElementById('playerHam');
+  var drawer = document.getElementById('playerDrawer');
+  var drawerSignOut = document.getElementById('drawerSignOut');
+  if (!ham || !drawer) return;
+
+  function closeDrawer() {
+    drawer.classList.remove('open');
+    ham.setAttribute('aria-expanded', 'false');
+  }
+  ham.addEventListener('click', function (e) {
+    e.stopPropagation();
+    var open = drawer.classList.toggle('open');
+    ham.setAttribute('aria-expanded', String(open));
+  });
+  drawer.addEventListener('click', function (e) {
+    if (e.target.closest('a, button')) closeDrawer();
+  });
+  document.addEventListener('click', function (e) {
+    if (!drawer.classList.contains('open')) return;
+    if (drawer.contains(e.target) || ham.contains(e.target)) return;
+    closeDrawer();
+  });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeDrawer(); });
+  window.addEventListener('resize', function () { if (window.innerWidth > 760) closeDrawer(); });
+
+  // Show Sign Out in drawer only when portal is active
+  if (drawerSignOut) {
+    var portal = document.getElementById('portalWrap');
+    new MutationObserver(function () {
+      drawerSignOut.style.display = portal.style.display === 'block' ? 'block' : 'none';
+    }).observe(portal, { attributes: true, attributeFilter: ['style'] });
+    drawerSignOut.addEventListener('click', function () {
+      closeDrawer();
+      document.getElementById('logoutBtn').click();
+    });
+  }
+})();
 
 // ── AUTO-LOGIN if session exists ─────────────────────────────────────
 // Fires on signInWithPassword success, token refresh, or password reset landing

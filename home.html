@@ -542,11 +542,11 @@ html { scroll-behavior: smooth; }
   <div class="s-inner">
     <div class="s-label">Register</div>
     <h2 class="s-title">Secure Your <em>Spot</em></h2>
-    <p class="s-sub">16 Minimum to Confirm &mdash; 24 Maximum &mdash; First Come, First In</p>
+    <p class="s-sub" id="rsvpSub">16 Minimum to Confirm &mdash; 24 Maximum &mdash; First Come, First In</p>
     <div class="rsvp-grid">
       <div class="rsvp-info">
         <div class="rsvp-counter">
-          <div class="rc-main"><span class="rc-num" id="statRegistered">0</span><span class="rc-denom">&thinsp;/ 24</span></div>
+          <div class="rc-main"><span class="rc-num" id="statRegistered">0</span><span class="rc-denom" id="rsvpDenom">&thinsp;/ 24</span></div>
           <div class="rc-label">Players Registered</div>
           <div class="progress-track"><div class="progress-bar" id="progressFill"></div></div>
         </div>
@@ -583,7 +583,7 @@ html { scroll-behavior: smooth; }
               <div class="err" id="errHandicap">Please select a handicap range</div>
             </div>
           </div>
-          <div class="fg" style="margin-bottom:1rem">
+          <div class="fg" id="datePickerGroup" style="display:none;margin-bottom:1rem">
             <label>Available Date Windows &mdash; Select All That Work</label>
             <span class="chips-label">Late August</span>
             <div class="chips"><div class="chip" data-date="aug21">Aug 21&ndash;24</div><div class="chip" data-date="aug28">Aug 28&ndash;31</div></div>
@@ -644,7 +644,7 @@ html { scroll-behavior: smooth; }
   <div class="s-inner">
     <div class="s-label">The Field</div>
     <h2 class="s-title">Registered <em>Players</em></h2>
-    <p class="s-sub"><span id="spotsLeft">24</span> Spots Remaining</p>
+    <p class="s-sub"><span id="spotsLeft">—</span> Spots Remaining</p>
     <div class="field-grid" id="fieldGrid">
       <div class="field-empty">No players registered yet. Be the first to secure your spot.</div>
     </div>
@@ -691,7 +691,7 @@ window.addEventListener('scroll', () => { document.getElementById('mainNav').cla
     'about_stat_days','about_stat_teams','about_stat_holes','reg_max_players',
     'homepage_format_note','schedule_json',
     'reg_bullet_1','reg_bullet_2','reg_bullet_3',
-    'reg_show_hat','team_a_name','team_b_name','team_count',
+    'reg_show_hat','reg_min_players','reg_show_date_picker','team_a_name','team_b_name','team_count',
     'team_a_captain','challengers_captain',
     ...fmtDayKeys
   ];
@@ -715,6 +715,25 @@ window.addEventListener('scroll', () => { document.getElementById('mainNav').cla
 
   // About stats
   const el_mp = document.getElementById('statMaxPlayers'); if (el_mp && map.reg_max_players) el_mp.textContent = map.reg_max_players;
+
+  // RSVP dynamic: max players, min players, date picker visibility
+  if (map.reg_max_players) {
+    MAX = parseInt(map.reg_max_players) || 24;
+    const denom = document.getElementById('rsvpDenom');
+    if (denom) denom.textContent = ' / ' + MAX;
+    const spotsEl = document.getElementById('spotsLeft');
+    if (spotsEl) spotsEl.textContent = MAX;
+  }
+  const minP = parseInt(map.reg_min_players) || null;
+  const rsvpSubEl = document.getElementById('rsvpSub');
+  if (rsvpSubEl) {
+    const maxP = parseInt(map.reg_max_players) || 24;
+    rsvpSubEl.textContent = minP
+      ? `${minP} Minimum to Confirm — ${maxP} Maximum — First Come, First In`
+      : `${maxP} Maximum — First Come, First In`;
+  }
+  const dpGroup = document.getElementById('datePickerGroup');
+  if (dpGroup && map.reg_show_date_picker === 'true') dpGroup.style.display = '';
   const el_d  = document.getElementById('statDays');       if (el_d  && map.about_stat_days)  el_d.textContent  = map.about_stat_days;
   const el_h  = document.getElementById('statHoles');      if (el_h  && map.about_stat_holes) el_h.textContent  = map.about_stat_holes;
 
@@ -797,6 +816,8 @@ window.addEventListener('scroll', () => { document.getElementById('mainNav').cla
       const cap2 = document.getElementById('captain2Name'); if (cap2) cap2.textContent = map.challengers_captain || 'TBD';
       const sTitle = teamsSection.querySelector('.s-title');
       if (sTitle) sTitle.innerHTML = teamCount > 2 ? `${teamCount} Teams. <em>One Trophy.</em>` : `Two Sides. <em>One Trophy.</em>`;
+      const sSub = teamsSection.querySelector('.s-sub');
+      if (sSub) sSub.textContent = `Every stroke across all ${numDays * 18} holes feeds the team score`;
     }
   }
 
@@ -830,7 +851,7 @@ window.addEventListener('scroll', () => { document.getElementById('mainNav').cla
   loadHeroScoreboard(tournament.id);
 })();
 
-const MAX = 24;
+let MAX = 24;
 const TIER_MAP = { scratch:{label:'Scratch',cls:'pc-scratch'}, eagle:{label:'Eagle',cls:'pc-eagle'}, birdie:{label:'Birdie',cls:'pc-birdie'}, bogey:{label:'Bogey',cls:'pc-bogey'}, pretender:{label:'The Pretenders',cls:'pc-pretender'}, hacker:{label:'The Dreamers',cls:'pc-hacker'} };
 const DATE_LABELS = { aug21:'Aug 21-24',aug28:'Aug 28-31',sep4:'Sep 4-7',sep11:'Sep 11-14',sep18:'Sep 18-21',sep25:'Sep 25-28',oct2:'Oct 2-5',oct9:'Oct 9-12' };
 let selectedDates = new Set();
@@ -864,7 +885,10 @@ async function submitRsvp() {
   if (!last)  { setErr('rsvpLast','errLast',true);  ok=false; } else setErr('rsvpLast','errLast',false);
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { setErr('rsvpEmail','errEmail',true); ok=false; } else setErr('rsvpEmail','errEmail',false);
   if (!hcap)  { setErr('rsvpHandicap','errHandicap',true); ok=false; } else setErr('rsvpHandicap','errHandicap',false);
-  if (!selectedDates.size) { document.getElementById('errDates').classList.add('show'); ok=false; } else document.getElementById('errDates').classList.remove('show');
+  const _dpGroup = document.getElementById('datePickerGroup');
+  if (_dpGroup && _dpGroup.style.display !== 'none') {
+    if (!selectedDates.size) { document.getElementById('errDates').classList.add('show'); ok=false; } else document.getElementById('errDates').classList.remove('show');
+  }
   if (!ok) return;
 
   // Gate: require active player_accounts subscription
@@ -890,7 +914,7 @@ async function submitRsvp() {
     email:      email.toLowerCase(),
     phone_number: phone || null,
     handicap:   hcap,
-    available_dates: [...selectedDates],
+    available_dates: (_dpGroup && _dpGroup.style.display !== 'none') ? [...selectedDates] : [],
     why_me:     document.getElementById('rsvpWhyMe').value.trim(),
     trash_talk: document.getElementById('rsvpTrash').value.trim(),
     hat:        wantsHat,
