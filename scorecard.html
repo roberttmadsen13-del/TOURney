@@ -391,13 +391,12 @@ body{background:var(--bg);color:var(--ink);font-family:'Barlow',sans-serif;font-
 <script>
 const sb = window.tourney.db;
 
-let _teamAName = 'Team A';
-let _teamBName = 'Team B';
+const _teamNames = {A:'Team A',B:'Team B',C:'Team C',D:'Team D',E:'Team E',F:'Team F',G:'Team G',H:'Team H'};
 let _slug = 'default';
 let _notifyHio = true;
 
 function _teamLabel(side) {
-  return side === 'A' ? _teamAName : side === 'B' ? _teamBName : 'Unassigned';
+  return _teamNames[side] || 'Unassigned';
 }
 
 // Populate nav logo, team names, and tournament logo
@@ -413,11 +412,12 @@ window.tourney.ready.then(async ({ tournament }) => {
   }
   const { data: sData } = await sb.from('settings').select('key,value')
     .eq('tournament_id', tournament.id)
-    .in('key', ['logo_url','team_a_name','team_b_name']);
+    .or('key.like.team_%_name,key.eq.logo_url');
   const sMap = {};
   (sData || []).forEach(r => { sMap[r.key] = r.value; });
-  if (sMap.team_a_name) _teamAName = sMap.team_a_name;
-  if (sMap.team_b_name) _teamBName = sMap.team_b_name;
+  ['a','b','c','d','e','f','g','h'].forEach(l => {
+    if (sMap[`team_${l}_name`]) _teamNames[l.toUpperCase()] = sMap[`team_${l}_name`];
+  });
   if (sMap.logo_url) {
     const img = document.getElementById('navLogoImg');
     const svg = document.getElementById('navLogoSvg');
@@ -701,7 +701,7 @@ document.getElementById('opp1Select').addEventListener('change', refreshSetupLis
 function refreshSetupLists() {
   const scorerId = document.getElementById('scorerSelect').value;
   const team     = document.getElementById('teamSelect').value;
-  const oppTeam  = team === 'A' ? 'B' : 'A';
+  const oppTeam  = null; // unused — opponent list shows all non-scorer-team players
 
   // Teammate list: same team, not scorer
   const partnerSel = document.getElementById('partnerSelect');
@@ -726,7 +726,7 @@ function refreshSetupLists() {
 
   const oppPool = players.filter(p => {
     if (!team) return p.id !== scorerId;
-    return teamAssignments[p.id] === oppTeam;
+    return teamAssignments[p.id] && teamAssignments[p.id] !== team;
   });
 
   oppPool.forEach(p => {
@@ -845,7 +845,7 @@ async function loadMyTeamScoresFromDb() {
 // ── REALTIME OPPONENT SCORES ──────────────────────────────────────
 function subscribeToFoursome() {
   if (_foursomeChannel) { sb.removeChannel(_foursomeChannel); }
-  const oppTeam = scorerTeam === 'A' ? 'B' : 'A';
+  const oppTeam = opp1Player ? (teamAssignments[opp1Player.id] || null) : null;
   _foursomeChannel = sb.channel('foursome-live')
     .on('postgres_changes', { event: '*', schema: 'public', table: 'scores' }, payload => {
       const s = (payload.eventType === 'DELETE') ? payload.old : payload.new;
@@ -995,7 +995,7 @@ function renderPlayers() {
   const isBestBall = isBestBallHole(currentHole);
 
   const myTeamLabel  = _teamLabel(scorerTeam);
-  const oppTeamLabel = scorerTeam === 'A' ? _teamBName : _teamAName;
+  const oppTeamLabel = opp1Player ? _teamLabel(teamAssignments[opp1Player.id]) : 'Opponents';
   const myColCls     = scorerTeam === 'A' ? 'team-a' : 'team-b';
   const oppColCls    = scorerTeam === 'A' ? 'team-b' : 'team-a';
 
