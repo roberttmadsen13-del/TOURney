@@ -3,195 +3,417 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>TOURney — URL Reference</title>
+<title>TOURney — URL Map</title>
 <style>
-  *{box-sizing:border-box;margin:0;padding:0}
-  :root{--gold:#c09030;--ink:#1a1008;--bg:#f5ede0;--card:#ede2d2;--muted:#7a6a54;--border:rgba(192,144,48,0.28)}
-  body{font-family:'system-ui',-apple-system,sans-serif;background:var(--bg);color:var(--ink);padding:1.25rem;max-width:600px;margin:0 auto;font-size:15px;line-height:1.5}
-  h1{font-size:1.1rem;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:var(--gold);margin-bottom:0.25rem}
-  .meta{font-size:0.72rem;color:var(--muted);margin-bottom:2rem;font-family:monospace;letter-spacing:0.05em}
-  h2{font-size:0.62rem;font-weight:700;letter-spacing:0.24em;text-transform:uppercase;color:var(--gold);margin:1.75rem 0 0.75rem;border-bottom:1px solid var(--border);padding-bottom:0.4rem}
-  table{width:100%;border-collapse:collapse}
-  tr{border-bottom:1px solid var(--border)}
-  tr:last-child{border-bottom:none}
-  td{padding:0.6rem 0.4rem;vertical-align:top}
-  td:first-child{font-family:monospace;font-size:0.8rem;color:var(--ink);word-break:break-all;width:55%}
-  td:last-child{font-size:0.78rem;color:var(--muted);padding-left:0.75rem}
-  .tag{display:inline-block;font-size:0.55rem;font-family:monospace;letter-spacing:0.1em;text-transform:uppercase;padding:0.1em 0.5em;border-radius:3px;margin-bottom:0.2rem}
-  .tag-gold{background:rgba(192,144,48,0.15);color:var(--gold)}
-  .tag-red{background:rgba(180,60,40,0.1);color:#b43c28}
-  .note{font-size:0.72rem;color:var(--muted);background:var(--card);border-left:3px solid var(--gold);padding:0.6rem 0.85rem;margin-top:1.75rem;border-radius:0 4px 4px 0}
-  a{color:var(--gold);text-decoration:none}
-  a:active{opacity:0.7}
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--gold:#c09030;--ink:#1a1008;--bg:#f5ede0;--card:#ede2d2;--dark:#0f0a04;--muted:#7a6a54;--border:rgba(192,144,48,0.25);--red:#b43c28;--green:#2a7a20}
+body{font-family:-apple-system,system-ui,sans-serif;background:var(--bg);color:var(--ink);padding:1rem;max-width:640px;margin:0 auto;font-size:14px;line-height:1.5}
+h1{font-size:1rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--gold);margin-bottom:0.15rem}
+.subtitle{font-size:0.68rem;color:var(--muted);font-family:monospace;letter-spacing:0.05em;margin-bottom:1.75rem}
+/* Section headers */
+.sec{font-size:0.58rem;font-weight:700;letter-spacing:0.26em;text-transform:uppercase;color:var(--gold);margin:1.75rem 0 0.6rem;padding-bottom:0.35rem;border-bottom:1px solid var(--border)}
+/* Flow diagram */
+.flow{display:flex;flex-wrap:wrap;gap:0.5rem;margin-bottom:0.5rem;align-items:center}
+.flow-node{background:var(--dark);color:#f0e6cc;font-family:monospace;font-size:0.72rem;padding:0.3rem 0.65rem;border-radius:4px;border:1px solid var(--border)}
+.flow-node.gold{border-color:var(--gold);color:var(--gold)}
+.flow-node.red{border-color:var(--red);color:var(--red)}
+.arrow{color:var(--muted);font-size:0.9rem;line-height:1}
+/* Page cards */
+details{background:var(--card);border:1px solid var(--border);border-radius:6px;margin-bottom:0.5rem;overflow:hidden}
+details[open]{border-color:var(--gold)}
+summary{padding:0.65rem 0.85rem;cursor:pointer;display:flex;align-items:baseline;gap:0.6rem;list-style:none;user-select:none}
+summary::-webkit-details-marker{display:none}
+.sum-path{font-family:monospace;font-size:0.82rem;color:var(--ink);font-weight:600}
+.sum-desc{font-size:0.72rem;color:var(--muted);flex:1}
+.sum-arrow{color:var(--gold);font-size:0.7rem;margin-left:auto;transition:transform 0.15s}
+details[open] .sum-arrow{transform:rotate(90deg)}
+.card-body{padding:0 0.85rem 0.85rem;display:flex;flex-direction:column;gap:0.85rem}
+/* Link groups */
+.link-group-label{font-size:0.54rem;font-weight:700;letter-spacing:0.22em;text-transform:uppercase;color:var(--gold);margin-bottom:0.35rem}
+.link-list{display:flex;flex-direction:column;gap:0.2rem}
+.link-row{display:flex;align-items:baseline;gap:0.5rem}
+.link-href{font-family:monospace;font-size:0.78rem;color:#2a4870;word-break:break-all}
+.link-label{font-size:0.7rem;color:var(--muted);flex-shrink:0}
+.link-href.ext{color:#4a3080}
+.link-href.anchor{color:var(--muted)}
+.link-href.dynamic{color:var(--muted);font-style:italic}
+/* Shared nav callout */
+.callout{background:rgba(192,144,48,0.08);border:1px solid var(--border);border-radius:6px;padding:0.75rem 0.9rem;margin-bottom:0.5rem}
+.callout-title{font-size:0.55rem;font-weight:700;letter-spacing:0.22em;text-transform:uppercase;color:var(--gold);margin-bottom:0.5rem}
+.nav-chips{display:flex;flex-wrap:wrap;gap:0.35rem}
+.chip{font-family:monospace;font-size:0.7rem;padding:0.2rem 0.55rem;border-radius:3px;background:var(--dark);color:#f0e6cc;border:1px solid var(--border)}
+.chip.auth{border-color:var(--red);color:var(--red)}
+.chip.fab{border-color:var(--gold);color:var(--gold)}
+/* Redirect table */
+table{width:100%;border-collapse:collapse;font-size:0.78rem}
+tr{border-bottom:1px solid var(--border)}
+tr:last-child{border-bottom:none}
+td{padding:0.5rem 0.4rem;vertical-align:top}
+td:first-child{font-family:monospace;font-size:0.75rem;width:45%}
+td:last-child{color:var(--muted);font-size:0.72rem}
+.tag{font-size:0.55rem;font-family:monospace;letter-spacing:0.1em;text-transform:uppercase;padding:0.12em 0.45em;border-radius:3px;white-space:nowrap}
+.tag-admin{background:rgba(180,60,40,0.1);color:var(--red)}
+.tag-rob{background:rgba(192,144,48,0.12);color:var(--gold)}
 </style>
 </head>
 <body>
 
-<h1>TOURney URL Map</h1>
-<div class="meta">tourney.greenskeeper.studio · updated 2026-05-05</div>
+<h1>TOURney — URL Map</h1>
+<div class="subtitle">tourney.greenskeeper.studio · every route · every link · 2026-05-05</div>
 
-<!-- PLATFORM -->
-<h2>Platform — no slug needed</h2>
+<!-- ═══ PLATFORM FLOW ═══ -->
+<div class="sec">Platform Flow</div>
+<div class="flow">
+  <span class="flow-node gold">/</span>
+  <span class="arrow">→</span>
+  <span class="flow-node">/create</span>
+  <span class="arrow">→</span>
+  <span class="flow-node gold">/t/{slug}</span>
+  <span class="arrow">→</span>
+  <span class="flow-node">all pages</span>
+</div>
+<div class="flow">
+  <span class="flow-node">/player</span>
+  <span class="arrow">↔</span>
+  <span class="flow-node">/player-upgrade</span>
+  &nbsp;&nbsp;
+  <span class="flow-node red">/platform</span>
+  <span class="arrow">→</span>
+  <span class="flow-node red">/t/{slug}/admin</span>
+</div>
+
+<!-- ═══ TOURNAMENT NAV (shared) ═══ -->
+<div class="sec">Shared Nav — every tournament page</div>
+<div class="callout">
+  <div class="callout-title">Nav drawer injected by nav-mobile.js on all tourney pages</div>
+  <div class="nav-chips">
+    <span class="chip">/t/{slug}</span>
+    <span class="chip">/scoreboard</span>
+    <span class="chip">/directory</span>
+    <span class="chip">/feed</span>
+    <span class="chip">/profile</span>
+    <span class="chip">/player · ⛳ My Golf</span>
+    <span class="chip">tourney.greenskeeper.studio · ← Platform</span>
+    <span class="chip fab">FAB → /scorecard</span>
+    <span class="chip auth">⚙ Admin → /admin · admins only</span>
+    <span class="chip auth">⬡ Platform → /platform · Rob only</span>
+  </div>
+</div>
+
+<!-- ═══ PLATFORM PAGES ═══ -->
+<div class="sec">Platform Pages</div>
+
+<details>
+  <summary>
+    <span class="sum-path">/</span>
+    <span class="sum-desc">Marketing landing</span>
+    <span class="sum-arrow">›</span>
+  </summary>
+  <div class="card-body">
+    <div>
+      <div class="link-group-label">Page Links</div>
+      <div class="link-list">
+        <div class="link-row"><span class="link-href">#demo</span><span class="link-label">anchor — demo section</span></div>
+        <div class="link-row"><span class="link-href">/create</span><span class="link-label">Create a tournament</span></div>
+        <div class="link-row"><span class="link-href">/player</span><span class="link-label">Player profile</span></div>
+        <div class="link-row"><span class="link-href">/platform</span><span class="link-label tag tag-rob">Rob only</span></div>
+        <div class="link-row"><span class="link-href ext">mailto:rob@greenskeeper.studio</span><span class="link-label">Contact</span></div>
+      </div>
+    </div>
+  </div>
+</details>
+
+<details>
+  <summary>
+    <span class="sum-path">/create</span>
+    <span class="sum-desc">Create new tournament</span>
+    <span class="sum-arrow">›</span>
+  </summary>
+  <div class="card-body">
+    <div>
+      <div class="link-group-label">Page Links</div>
+      <div class="link-list">
+        <div class="link-row"><span class="link-href">/</span><span class="link-label">← Back to platform</span></div>
+        <div class="link-row"><span class="link-href">/player</span><span class="link-label">Player profile</span></div>
+        <div class="link-row"><span class="link-href dynamic">/t/{newSlug} (post-create redirect)</span></div>
+      </div>
+    </div>
+  </div>
+</details>
+
+<details>
+  <summary>
+    <span class="sum-path">/player</span>
+    <span class="sum-desc">Platform player profile</span>
+    <span class="sum-arrow">›</span>
+  </summary>
+  <div class="card-body">
+    <div>
+      <div class="link-group-label">Page Links</div>
+      <div class="link-list">
+        <div class="link-row"><span class="link-href">/create</span><span class="link-label">Create tournament</span></div>
+        <div class="link-row"><span class="link-href">/player</span><span class="link-label">Self (reload)</span></div>
+        <div class="link-row"><span class="link-href">/player-upgrade</span><span class="link-label">Upgrade account</span></div>
+        <div class="link-row"><span class="link-href ext">tourney.greenskeeper.studio</span><span class="link-label">Platform home</span></div>
+        <div class="link-group-label" style="margin-top:0.5rem">Dynamic (per-tourney, injected)</div>
+        <div class="link-row"><span class="link-href dynamic">{tourney}/ · {tourney}/scoreboard · {tourney}/scorecard · {tourney}/feed · {tourney}/admin</span></div>
+      </div>
+    </div>
+  </div>
+</details>
+
+<details>
+  <summary>
+    <span class="sum-path">/player-upgrade</span>
+    <span class="sum-desc">Upgrade player account</span>
+    <span class="sum-arrow">›</span>
+  </summary>
+  <div class="card-body">
+    <div class="link-list">
+      <div class="link-row"><span class="link-href">/player</span><span class="link-label">← Back</span></div>
+    </div>
+  </div>
+</details>
+
+<details>
+  <summary>
+    <span class="sum-path">/platform</span>
+    <span class="sum-desc">Superadmin dashboard <span class="tag tag-rob">Rob only</span></span>
+    <span class="sum-arrow">›</span>
+  </summary>
+  <div class="card-body">
+    <div>
+      <div class="link-group-label">Dynamic Links (per tournament)</div>
+      <div class="link-list">
+        <div class="link-row"><span class="link-href dynamic">/t/{slug}/admin (per tourney row)</span></div>
+      </div>
+    </div>
+  </div>
+</details>
+
+<details>
+  <summary>
+    <span class="sum-path">/login</span>
+    <span class="sum-desc">Auth — platform level</span>
+    <span class="sum-arrow">›</span>
+  </summary>
+  <div class="card-body">
+    <div class="link-list">
+      <div class="link-row"><span class="link-href dynamic">Redirects to originating page after auth</span></div>
+    </div>
+  </div>
+</details>
+
+<!-- ═══ TOURNAMENT PAGES ═══ -->
+<div class="sec">Tournament Pages — /t/{slug}/…</div>
+
+<details>
+  <summary>
+    <span class="sum-path">/t/{slug}</span>
+    <span class="sum-desc">Tournament home</span>
+    <span class="sum-arrow">›</span>
+  </summary>
+  <div class="card-body">
+    <div>
+      <div class="link-group-label">Anchor links (on-page)</div>
+      <div class="link-list">
+        <div class="link-row"><span class="link-href anchor">#about #format #rsvp #schedule #teams</span></div>
+      </div>
+    </div>
+    <div>
+      <div class="link-group-label">Page Links</div>
+      <div class="link-list">
+        <div class="link-row"><span class="link-href">/scoreboard</span><span class="link-label">Leaderboard</span></div>
+        <div class="link-row"><span class="link-href">/directory</span><span class="link-label">Players</span></div>
+        <div class="link-row"><span class="link-href">/feed</span><span class="link-label">Feed</span></div>
+        <div class="link-row"><span class="link-href">/profile</span><span class="link-label">My profile</span></div>
+        <div class="link-row"><span class="link-href">/player-upgrade</span><span class="link-label">Upgrade account</span></div>
+      </div>
+    </div>
+    <div>
+      <div class="link-group-label">+ Shared Nav (see above)</div>
+    </div>
+  </div>
+</details>
+
+<details>
+  <summary>
+    <span class="sum-path">/t/{slug}/scoreboard</span>
+    <span class="sum-desc">Live leaderboard</span>
+    <span class="sum-arrow">›</span>
+  </summary>
+  <div class="card-body">
+    <div>
+      <div class="link-group-label">Page Links</div>
+      <div class="link-list">
+        <div class="link-row"><span class="link-href">/</span><span class="link-label">← Home</span></div>
+        <div class="link-row"><span class="link-href">/scoreboard</span><span class="link-label">Self (active nav)</span></div>
+        <div class="link-row"><span class="link-href">/directory · /feed · /profile</span><span class="link-label">Nav</span></div>
+      </div>
+    </div>
+    <div><div class="link-group-label">+ Shared Nav</div></div>
+  </div>
+</details>
+
+<details>
+  <summary>
+    <span class="sum-path">/t/{slug}/scorecard</span>
+    <span class="sum-desc">Score entry</span>
+    <span class="sum-arrow">›</span>
+  </summary>
+  <div class="card-body">
+    <div>
+      <div class="link-group-label">Page Links</div>
+      <div class="link-list">
+        <div class="link-row"><span class="link-href">/</span><span class="link-label">← Home</span></div>
+        <div class="link-row"><span class="link-href">/scoreboard · /directory · /feed · /profile</span><span class="link-label">Nav</span></div>
+      </div>
+    </div>
+    <div><div class="link-group-label">+ Shared Nav</div></div>
+  </div>
+</details>
+
+<details>
+  <summary>
+    <span class="sum-path">/t/{slug}/directory</span>
+    <span class="sum-desc">Player directory</span>
+    <span class="sum-arrow">›</span>
+  </summary>
+  <div class="card-body">
+    <div>
+      <div class="link-group-label">Page Links</div>
+      <div class="link-list">
+        <div class="link-row"><span class="link-href">/</span><span class="link-label">← Home</span></div>
+        <div class="link-row"><span class="link-href">/scoreboard · /feed · /profile</span><span class="link-label">Nav</span></div>
+        <div class="link-row"><span class="link-href dynamic">mailto:{player email}</span><span class="link-label">Per player</span></div>
+        <div class="link-row"><span class="link-href dynamic">tel:{player phone}</span><span class="link-label">Per player</span></div>
+      </div>
+    </div>
+    <div><div class="link-group-label">+ Shared Nav</div></div>
+  </div>
+</details>
+
+<details>
+  <summary>
+    <span class="sum-path">/t/{slug}/profile</span>
+    <span class="sum-desc">Player profile</span>
+    <span class="sum-arrow">›</span>
+  </summary>
+  <div class="card-body">
+    <div>
+      <div class="link-group-label">Page Links</div>
+      <div class="link-list">
+        <div class="link-row"><span class="link-href">/</span><span class="link-label">← Home</span></div>
+        <div class="link-row"><span class="link-href">/scoreboard · /directory · /feed</span><span class="link-label">Nav</span></div>
+      </div>
+    </div>
+    <div><div class="link-group-label">+ Shared Nav</div></div>
+  </div>
+</details>
+
+<details>
+  <summary>
+    <span class="sum-path">/t/{slug}/feed</span>
+    <span class="sum-desc">Activity feed</span>
+    <span class="sum-arrow">›</span>
+  </summary>
+  <div class="card-body">
+    <div>
+      <div class="link-group-label">Page Links</div>
+      <div class="link-list">
+        <div class="link-row"><span class="link-href">/</span><span class="link-label">← Home</span></div>
+        <div class="link-row"><span class="link-href">/scoreboard · /directory · /profile</span><span class="link-label">Nav</span></div>
+      </div>
+    </div>
+    <div><div class="link-group-label">+ Shared Nav</div></div>
+  </div>
+</details>
+
+<details>
+  <summary>
+    <span class="sum-path">/t/{slug}/admin</span>
+    <span class="sum-desc">Admin dashboard <span class="tag tag-admin">Admin only</span></span>
+    <span class="sum-arrow">›</span>
+  </summary>
+  <div class="card-body">
+    <div>
+      <div class="link-group-label">Page Links</div>
+      <div class="link-list">
+        <div class="link-row"><span class="link-href">/</span><span class="link-label">← Home</span></div>
+        <div class="link-row"><span class="link-href">/scoreboard · /directory · /feed · /profile</span><span class="link-label">Nav</span></div>
+        <div class="link-row"><span class="link-href dynamic">/player?as={email}</span><span class="link-label">View as player (per row)</span></div>
+        <div class="link-row"><span class="link-href dynamic">mailto:{email} · tel:{phone}</span><span class="link-label">Per player row</span></div>
+      </div>
+    </div>
+    <div><div class="link-group-label">+ Shared Nav</div></div>
+  </div>
+</details>
+
+<details>
+  <summary>
+    <span class="sum-path">/t/{slug}/champions</span>
+    <span class="sum-desc">Past champions</span>
+    <span class="sum-arrow">›</span>
+  </summary>
+  <div class="card-body">
+    <div class="link-list">
+      <div class="link-row"><span class="link-href">/</span><span class="link-label">← Home</span></div>
+      <div class="link-row"><span class="link-href">/scoreboard · /directory · /feed · /profile</span><span class="link-label">Nav</span></div>
+    </div>
+    <div style="margin-top:0.5rem"><div class="link-group-label">+ Shared Nav</div></div>
+  </div>
+</details>
+
+<details>
+  <summary>
+    <span class="sum-path">/t/{slug}/course</span>
+    <span class="sum-desc">Course info</span>
+    <span class="sum-arrow">›</span>
+  </summary>
+  <div class="card-body">
+    <div class="link-list">
+      <div class="link-row"><span class="link-href">/</span><span class="link-label">← Home</span></div>
+      <div class="link-row"><span class="link-href">/scoreboard · /directory · /feed · /profile</span><span class="link-label">Nav</span></div>
+    </div>
+    <div style="margin-top:0.5rem"><div class="link-group-label">+ Shared Nav</div></div>
+  </div>
+</details>
+
+<details>
+  <summary>
+    <span class="sum-path">/t/{slug}/login</span>
+    <span class="sum-desc">Auth — tournament level</span>
+    <span class="sum-arrow">›</span>
+  </summary>
+  <div class="card-body">
+    <div class="link-list">
+      <div class="link-row"><span class="link-href dynamic">Redirects back to originating tourney page</span></div>
+    </div>
+  </div>
+</details>
+
+<details>
+  <summary>
+    <span class="sum-path">/t/{slug}/install</span>
+    <span class="sum-desc">PWA install guide</span>
+    <span class="sum-arrow">›</span>
+  </summary>
+  <div class="card-body">
+    <div class="link-list">
+      <div class="link-row"><span class="link-href">/t/{slug}</span><span class="link-label">← Home</span></div>
+    </div>
+  </div>
+</details>
+
+<!-- ═══ REDIRECTS ═══ -->
+<div class="sec">Active Redirects</div>
 <table>
-  <tr>
-    <td>/</td>
-    <td>Marketing landing · <code>marketing.html</code></td>
-  </tr>
-  <tr>
-    <td>/create</td>
-    <td>Create a new tournament · <code>create.html</code></td>
-  </tr>
-  <tr>
-    <td>/platform</td>
-    <td><span class="tag tag-red">Rob only</span><br>Superadmin dashboard · <code>platform.html</code></td>
-  </tr>
-  <tr>
-    <td>/player</td>
-    <td>Platform player profile · <code>player.html</code></td>
-  </tr>
-  <tr>
-    <td>/player-upgrade</td>
-    <td>Upgrade player account · <code>player-upgrade.html</code></td>
-  </tr>
-  <tr>
-    <td>/login</td>
-    <td>Auth (platform-level) · <code>login.html</code></td>
-  </tr>
+  <tr><td>bova-app.vercel.app/*</td><td>→ bova.greenskeeper.studio/t/bova/ (301)</td></tr>
+  <tr><td>/t/bova-2026/*</td><td>→ /t/bova/* (301)</td></tr>
+  <tr><td>bova.greenskeeper.studio</td><td>→ tourney.greenskeeper.studio/t/bova/ (subdomain rewrite)</td></tr>
+  <tr><td>/favicon.ico</td><td>→ /favicon.svg</td></tr>
 </table>
 
-<!-- TOURNAMENT PAGES -->
-<h2>Tournament — replace {slug}</h2>
-<div class="note">Also works as subdomain: <strong>{slug}.greenskeeper.studio</strong> → auto-redirects to /t/{slug}/</div>
-<table>
-  <tr>
-    <td>/t/{slug}</td>
-    <td>Tournament home · <code>home.html</code></td>
-  </tr>
-  <tr>
-    <td>/t/{slug}/scoreboard</td>
-    <td>Live leaderboard · <code>scoreboard.html</code></td>
-  </tr>
-  <tr>
-    <td>/t/{slug}/scorecard</td>
-    <td>Score entry · <code>scorecard.html</code></td>
-  </tr>
-  <tr>
-    <td>/t/{slug}/directory</td>
-    <td>Player directory · <code>directory.html</code></td>
-  </tr>
-  <tr>
-    <td>/t/{slug}/profile</td>
-    <td>Player profile · <code>profile.html</code></td>
-  </tr>
-  <tr>
-    <td>/t/{slug}/feed</td>
-    <td>Activity feed · <code>feed.html</code></td>
-  </tr>
-  <tr>
-    <td>/t/{slug}/champions</td>
-    <td>Past champions · <code>champions.html</code></td>
-  </tr>
-  <tr>
-    <td>/t/{slug}/course</td>
-    <td>Course info · <code>course.html</code></td>
-  </tr>
-  <tr>
-    <td>/t/{slug}/admin</td>
-    <td><span class="tag tag-gold">Admin only</span><br>Admin dashboard · <code>admin.html</code></td>
-  </tr>
-  <tr>
-    <td>/t/{slug}/login</td>
-    <td>Auth (tournament-level) · <code>login.html</code></td>
-  </tr>
-  <tr>
-    <td>/t/{slug}/install</td>
-    <td>PWA install guide · <code>install.html</code></td>
-  </tr>
-</table>
-
-<!-- ROOT SHORTCUTS -->
-<h2>Root shortcuts (no slug — legacy)</h2>
-<div class="note">These work on root domain. No slug = no tourney context, used for testing or direct file access only.</div>
-<table>
-  <tr>
-    <td>/admin</td>
-    <td><code>admin.html</code> (no slug → error state)</td>
-  </tr>
-  <tr>
-    <td>/scoreboard</td>
-    <td><code>scoreboard.html</code></td>
-  </tr>
-  <tr>
-    <td>/scorecard</td>
-    <td><code>scorecard.html</code></td>
-  </tr>
-  <tr>
-    <td>/profile</td>
-    <td><code>profile.html</code></td>
-  </tr>
-  <tr>
-    <td>/directory</td>
-    <td><code>directory.html</code></td>
-  </tr>
-  <tr>
-    <td>/feed</td>
-    <td><code>feed.html</code></td>
-  </tr>
-  <tr>
-    <td>/champions</td>
-    <td><code>champions.html</code></td>
-  </tr>
-  <tr>
-    <td>/course</td>
-    <td><code>course.html</code></td>
-  </tr>
-</table>
-
-<!-- BOVA QUICK LINKS -->
-<h2>Bova Invitational — slug: bova</h2>
-<table>
-  <tr>
-    <td><a href="/t/bova">/t/bova</a></td>
-    <td>Home</td>
-  </tr>
-  <tr>
-    <td><a href="/t/bova/scoreboard">/t/bova/scoreboard</a></td>
-    <td>Leaderboard</td>
-  </tr>
-  <tr>
-    <td><a href="/t/bova/scorecard">/t/bova/scorecard</a></td>
-    <td>Score entry</td>
-  </tr>
-  <tr>
-    <td><a href="/t/bova/admin">/t/bova/admin</a></td>
-    <td>Admin</td>
-  </tr>
-  <tr>
-    <td><a href="/t/bova/directory">/t/bova/directory</a></td>
-    <td>Players</td>
-  </tr>
-  <tr>
-    <td><a href="/t/bova/feed">/t/bova/feed</a></td>
-    <td>Feed</td>
-  </tr>
-</table>
-
-<!-- REDIRECTS -->
-<h2>Active redirects</h2>
-<table>
-  <tr>
-    <td>bova-app.vercel.app/*</td>
-    <td>→ bova.greenskeeper.studio/t/bova/ (permanent)</td>
-  </tr>
-  <tr>
-    <td>/t/bova-2026/*</td>
-    <td>→ /t/bova/* (permanent)</td>
-  </tr>
-  <tr>
-    <td>/favicon.ico</td>
-    <td>→ /favicon.svg</td>
-  </tr>
-</table>
-
+<div style="height:2rem"></div>
 </body>
 </html>
