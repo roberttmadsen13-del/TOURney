@@ -1,7 +1,7 @@
 {
-  "name": "Bova Invitational",
-  "short_name": "Bova",
-  "description": "Inaugural Edition — Myrtle Beach, SC — 2026",
+  "name": "TOURney",
+  "short_name": "TOURney",
+  "description": "Tournament golf platform",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",

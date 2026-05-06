@@ -1,9 +1,9 @@
 {
-  "name": "TOURney Platform",
+  "name": "TOURney",
   "short_name": "TOURney",
-  "description": "Greenskeeper Studios platform admin",
-  "start_url": "/platform",
-  "scope": "/platform",
+  "description": "My Golf — track your game across all your tournaments",
+  "start_url": "/player",
+  "scope": "/",
   "display": "standalone",
   "background_color": "#0d0a06",
   "theme_color": "#1a1008",
