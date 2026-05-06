@@ -414,9 +414,7 @@ html { scroll-behavior: smooth; }
 
 <!-- HERO — aerial coastal course, late afternoon golden light -->
 <section class="hero">
-  <img class="hero-img sepia"
-    src="https://images.unsplash.com/photo-1611374243147-44a702c2d44c?w=1800&q=88&auto=format&fit=crop"
-    alt="Aerial view of a coastal golf course at golden hour">
+  <img class="hero-img sepia" src="" alt="Tournament hero photo" style="display:none;">
   <div class="hero-overlay"></div>
   <div class="hero-inner">
         <div class="hero-logo-wrap">
@@ -452,10 +450,8 @@ html { scroll-behavior: smooth; }
 <section id="about">
   <div class="s-inner">
     <div class="about-grid">
-      <div class="about-photo-wrap">
-        <img id="aboutPhotoImg" class="sepia"
-          src=""
-          alt="Tournament photo">
+      <div id="aboutPhotoWrap" class="about-photo-wrap" style="display:none;">
+        <img id="aboutPhotoImg" class="sepia" src="" alt="Tournament photo">
       </div>
       <div class="about-text">
         <div class="s-label">About</div>
@@ -687,7 +683,7 @@ window.addEventListener('scroll', () => { document.getElementById('mainNav').cla
   const fmtDayKeys = [];
   for (let i = 1; i <= 7; i++) { fmtDayKeys.push(`format_day${i}_front`, `format_day${i}_back`); }
   const keys = [
-    'homepage_subtitle','homepage_details','homepage_about','logo_url','hero_photo_url',
+    'homepage_subtitle','homepage_details','homepage_about','logo_url','hero_photo_url','about_photo_url',
     'about_stat_days','about_stat_teams','about_stat_holes','reg_max_players',
     'homepage_format_note','schedule_json',
     'reg_bullet_1','reg_bullet_2','reg_bullet_3',
@@ -846,8 +842,15 @@ window.addEventListener('scroll', () => { document.getElementById('mainNav').cla
   const hatSec = document.getElementById('hatSection');
   if (hatSec) hatSec.style.display = map.reg_show_hat === 'true' ? '' : 'none';
 
-  // Hero image
-  if (map.hero_photo_url) { const img = document.querySelector('.hero-img'); if (img) img.src = map.hero_photo_url; }
+  // Hero image — hide if no setting, show if present
+  const _heroImg = document.querySelector('.hero-img');
+  if (_heroImg) { if (map.hero_photo_url) { _heroImg.src = map.hero_photo_url; _heroImg.style.display = ''; } else { _heroImg.style.display = 'none'; } }
+
+  // About photo — hide wrap if no setting, show if present
+  const _aboutWrap = document.getElementById('aboutPhotoWrap');
+  const _aboutImg = document.getElementById('aboutPhotoImg');
+  if (_aboutWrap) _aboutWrap.style.display = map.about_photo_url ? '' : 'none';
+  if (_aboutImg && map.about_photo_url) { _aboutImg.src = map.about_photo_url; }
 
   // PWA manifest — always update with tourney name; use logo if available
   const _iconSrc = map.logo_url || '/icon-192.png';

@@ -1,14 +1,19 @@
-# QA Bug Log — TOURney Platform (updated: 2026-05-05)
+# QA Bug Log — TOURney Platform (updated: 2026-05-06)
 
-Last QA pass: hamburger/nav cleanup + billing gate + admin team names (2026-05-05)
+Last QA pass: hero/about photo leak fix (2026-05-06)
 Last commits: 2f0795b (admin team names C-H), c486ac2 (create billing gate), a613da5 (nav-mobile dedup + player-upgrade ham), a567171 (player phone+handicap), 4276116 (logo leak)
 
 ---
 
 ## 🔴 Open Bugs — Must Fix
 
-- **CRITICAL: Bova hero photo leaking to all tourneys**: `hero_photo_url` and `about_photo_url` are hardcoded `<img src="...">` tags in home.html — not loaded from settings. Every tourney shows Bova's golfer photo. Same pattern as logo leak (session 10). Fix: default `display:none`, JS sets `src` from `hero_photo_url` / `about_photo_url` settings keys. If key missing, hide the image entirely. [home.html hero img + about img]
-- **Bova formats unconfirmed**: seeded Day1=stroke, Day2=scramble, Day3=best_ball based on about text ("scramble, shambles, best ball, stroke play"). Shambles not mapped to a day. **Verify with Chris Bova before tournament runs.**
+- **Bova formats unconfirmed**: seeded Day1=stroke, Day2=scramble, Day3=best_ball based on about text ("scramble, shambles, best ball, stroke play"). Shambles not mapped to a day. **Verify with Chris Bova before tournament runs. BLOCKED — human verification required.**
+
+---
+
+## ✅ Fixed — Session 12 (2026-05-06, hero/about photo leak)
+
+- **CRITICAL: Hero/about photo leaking to all tourneys**: `hero_photo_url` hardcoded Unsplash src shown for every tourney; `about_photo_url` had no JS handler at all. Fix: `.hero-img` default `src="" style="display:none"`, `#aboutPhotoWrap` default `display:none`. JS now shows/hides both from settings keys; `about_photo_url` added to settings fetch. [home.html:417, home.html:455, home.html:686, home.html:845-853]
 
 ---
 
