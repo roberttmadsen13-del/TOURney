@@ -53,6 +53,7 @@
     { "source": "/player",            "destination": "/player.html" },
     { "source": "/player-upgrade",    "destination": "/player-upgrade.html" },
     { "source": "/urls",              "destination": "/urls.html" },
-    { "source": "/combos",            "destination": "/combos.html" }
+    { "source": "/combos",            "destination": "/combos.html" },
+    { "source": "/5-6-26-claude-review", "destination": "/5-6-26-claude-review.html" }
   ]
 }
