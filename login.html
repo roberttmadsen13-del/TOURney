@@ -186,6 +186,8 @@ async function doSignIn() {
   }
 
   sb.from('players').update({ has_account: true }).eq('email', email).then(() => {});
+  const _slugM = redirectTo.match(/\/t\/([^/?#]+)/);
+  if (_slugM) localStorage.setItem(`${_slugM[1]}_profile_email`, email);
   window.location.href = redirectTo;
 }
 
@@ -252,6 +254,8 @@ async function doSignUp() {
   } else if (data.session) {
     // Auto-confirmed — redirect
     sb.from('players').update({ has_account: true }).eq('email', email).then(() => {});
+    const _slugM = redirectTo.match(/\/t\/([^/?#]+)/);
+    if (_slugM) localStorage.setItem(`${_slugM[1]}_profile_email`, email);
     window.location.href = redirectTo;
   }
 }

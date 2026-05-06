@@ -445,7 +445,8 @@ function esc(s) {
     return;
   }
   const email = data.session.user.email;
-  if (email) localStorage.setItem(`${_slug}_profile_email`, email);
+  const _authSlug = window.location.pathname.match(/\/t\/([^/?#]+)/)?.[1] || 'default';
+  if (email) localStorage.setItem(`${_authSlug}_profile_email`, email);
   // Add sign out to nav
   const navRight = document.querySelector('.nav-right');
   if (navRight) {
@@ -538,8 +539,8 @@ async function init() {
   const [pRes, tRes, rRes, parRes, fmtRes, notifyRes] = await Promise.all([
     sb.from('players').select('*').eq('tournament_id', tournament.id).order('first_name'),
     sb.from('settings').select('*').eq('tournament_id', tournament.id).eq('key','team_assignments'),
-    sb.from('settings').select('*').eq('tournament_id', tournament.id).in('key',['round_day1','round_day2','round_day3']),
-    sb.from('settings').select('*').eq('tournament_id', tournament.id).in('key',['pars_day1','pars_day2','pars_day3']),
+    sb.from('settings').select('*').eq('tournament_id', tournament.id).like('key','round_day%'),
+    sb.from('settings').select('*').eq('tournament_id', tournament.id).like('key','pars_day%'),
     sb.from('settings').select('*').eq('tournament_id', tournament.id).eq('key','round_formats'),
     sb.from('settings').select('value').eq('tournament_id', tournament.id).eq('key','notify_hole_in_one').maybeSingle(),
   ]);

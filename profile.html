@@ -383,6 +383,7 @@ async function logout() {
   teamAssignments = {};
   const _pM = location.pathname.match(/\/t\/([^/?#]+)/);
   const _pfx = _pM ? `/t/${_pM[1]}` : '';
+  if (_pM) localStorage.removeItem(`${_pM[1]}_profile_email`);
   window.location.href = `${_pfx}/login`;
 }
 // Alias for inline HTML onclick
