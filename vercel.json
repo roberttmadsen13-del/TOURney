@@ -52,6 +52,7 @@
     { "source": "/platform-manifest.json", "destination": "/platform-manifest.json" },
     { "source": "/player",            "destination": "/player.html" },
     { "source": "/player-upgrade",    "destination": "/player-upgrade.html" },
-    { "source": "/urls",              "destination": "/urls.html" }
+    { "source": "/urls",              "destination": "/urls.html" },
+    { "source": "/5-6-26-claude-review", "destination": "/5-6-26-claude-review.html" }
   ]
 }

@@ -362,7 +362,9 @@ let _teamNames = {A:'Team One',B:'Team Two',C:'Team C',D:'Team D',E:'Team E',F:'
     const raw = map.tourney_name || tournament.name;
     const words = raw.trim().split(/\s+/);
     const last = words.pop();
-    titleEl.innerHTML = words.length ? `${words.join(' ')} <em>${last}</em>` : `<em>${raw}</em>`;
+    titleEl.textContent = '';
+    if (words.length) { titleEl.appendChild(document.createTextNode(words.join(' ') + ' ')); }
+    const em = document.createElement('em'); em.textContent = last; titleEl.appendChild(em);
   }
 
   _teamCount = parseInt(map.team_count) || 2;

@@ -407,7 +407,9 @@ window.tourney.ready.then(async ({ tournament }) => {
   if (logoText) {
     const words = tournament.name.trim().split(/\s+/);
     const last = words.pop();
-    logoText.innerHTML = words.length ? `${words.join(' ')} <em>${last}</em>` : `<em>${tournament.name}</em>`;
+    logoText.textContent = '';
+    if (words.length) { logoText.appendChild(document.createTextNode(words.join(' ') + ' ')); }
+    const _em = document.createElement('em'); _em.textContent = last; logoText.appendChild(_em);
   }
   const { data: sData } = await sb.from('settings').select('key,value')
     .eq('tournament_id', tournament.id)

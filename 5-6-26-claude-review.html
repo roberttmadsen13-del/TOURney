@@ -1,0 +1,1156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TOURney — Claude Review · May 6, 2026</title>
+<style>
+  :root {
+    --gold: #c09030;
+    --gold-light: #d4a840;
+    --gold-dim: rgba(192,144,48,0.18);
+    --ink: #1a1008;
+    --bg: #0d0a05;
+    --surface: #151009;
+    --card: #1c140a;
+    --card2: #221a0e;
+    --border: rgba(192,144,48,0.22);
+    --muted: #7a6a54;
+    --text: #e8dcc8;
+    --red: #c0392b;
+    --green: #27ae60;
+    --blue: #2980b9;
+    --orange: #e67e22;
+    --purple: #8e44ad;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: -apple-system, 'Segoe UI', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    font-size: 15px;
+  }
+
+  /* NAV */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(13,10,5,0.96);
+    border-bottom: 1px solid var(--border);
+    backdrop-filter: blur(12px);
+    padding: 0.6rem 1.5rem;
+    display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;
+  }
+  .nav-brand { color: var(--gold); font-weight: 700; font-size: 1rem; letter-spacing: 0.05em; white-space: nowrap; }
+  .nav-brand span { color: var(--muted); font-weight: 400; font-size: 0.8rem; margin-left: 0.4rem; }
+  .nav-links { display: flex; gap: 0.2rem; flex-wrap: wrap; margin-left: auto; }
+  .nav-links a {
+    color: var(--muted); text-decoration: none; font-size: 0.78rem;
+    padding: 0.3rem 0.55rem; border-radius: 4px; transition: all 0.15s;
+    white-space: nowrap;
+  }
+  .nav-links a:hover { color: var(--gold); background: var(--gold-dim); }
+
+  /* HERO */
+  .hero {
+    padding: 3.5rem 1.5rem 2.5rem;
+    text-align: center;
+    border-bottom: 1px solid var(--border);
+    background: linear-gradient(180deg, rgba(192,144,48,0.06) 0%, transparent 100%);
+  }
+  .hero-eyebrow {
+    display: inline-block;
+    font-size: 0.72rem; font-weight: 600; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--gold);
+    border: 1px solid var(--border); border-radius: 20px;
+    padding: 0.25rem 0.85rem; margin-bottom: 1.2rem;
+  }
+  .hero h1 { font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 800; color: #fff; margin-bottom: 0.5rem; }
+  .hero h1 span { color: var(--gold); }
+  .hero-sub { color: var(--muted); max-width: 560px; margin: 0 auto 1.5rem; font-size: 0.95rem; }
+  .hero-meta {
+    display: flex; gap: 1.5rem; justify-content: center; flex-wrap: wrap;
+    font-size: 0.78rem; color: var(--muted);
+  }
+  .hero-meta span { display: flex; align-items: center; gap: 0.35rem; }
+
+  /* LAYOUT */
+  .wrapper { max-width: 1000px; margin: 0 auto; padding: 0 1.5rem; }
+
+  /* SECTION */
+  section { padding: 3rem 0; border-bottom: 1px solid var(--border); }
+  section:last-child { border-bottom: none; }
+  .section-header { margin-bottom: 2rem; }
+  .section-eyebrow {
+    font-size: 0.7rem; font-weight: 700; letter-spacing: 0.14em;
+    text-transform: uppercase; color: var(--gold); margin-bottom: 0.4rem;
+  }
+  .section-title { font-size: 1.5rem; font-weight: 800; color: #fff; margin-bottom: 0.4rem; }
+  .section-desc { color: var(--muted); font-size: 0.88rem; max-width: 600px; }
+
+  /* CARDS */
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.25rem 1.4rem;
+    margin-bottom: 0.75rem;
+  }
+  .card-title {
+    font-size: 0.88rem; font-weight: 700; color: var(--gold);
+    margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;
+  }
+  .card p, .card li { font-size: 0.86rem; color: var(--text); margin-bottom: 0.3rem; }
+  .card ul, .card ol { padding-left: 1.2rem; }
+  .card li { margin-bottom: 0.4rem; }
+
+  /* GRID */
+  .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 0.75rem; }
+  .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 0.75rem; }
+
+  /* TECH STACK */
+  .stack-item {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1rem 1.2rem;
+  }
+  .stack-label { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); margin-bottom: 0.25rem; }
+  .stack-value { font-size: 0.92rem; font-weight: 600; color: #fff; }
+  .stack-note { font-size: 0.75rem; color: var(--muted); margin-top: 0.2rem; }
+
+  /* PILL / BADGE */
+  .pill {
+    display: inline-block;
+    font-size: 0.68rem; font-weight: 700; letter-spacing: 0.06em;
+    padding: 0.18rem 0.55rem; border-radius: 20px;
+    text-transform: uppercase;
+  }
+  .pill-gold { background: rgba(192,144,48,0.18); color: var(--gold); border: 1px solid rgba(192,144,48,0.3); }
+  .pill-green { background: rgba(39,174,96,0.15); color: var(--green); border: 1px solid rgba(39,174,96,0.3); }
+  .pill-red { background: rgba(192,57,43,0.15); color: var(--red); border: 1px solid rgba(192,57,43,0.3); }
+  .pill-orange { background: rgba(230,126,34,0.15); color: var(--orange); border: 1px solid rgba(230,126,34,0.3); }
+  .pill-blue { background: rgba(41,128,185,0.15); color: var(--blue); border: 1px solid rgba(41,128,185,0.3); }
+  .pill-purple { background: rgba(142,68,173,0.15); color: var(--purple); border: 1px solid rgba(142,68,173,0.3); }
+
+  /* PAGES TABLE */
+  .page-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+  .page-table th {
+    text-align: left; padding: 0.6rem 0.8rem;
+    border-bottom: 1px solid var(--border);
+    color: var(--muted); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em;
+    background: var(--surface);
+  }
+  .page-table td {
+    padding: 0.65rem 0.8rem;
+    border-bottom: 1px solid rgba(192,144,48,0.08);
+    vertical-align: top;
+  }
+  .page-table tr:last-child td { border-bottom: none; }
+  .page-table tr:hover td { background: var(--gold-dim); }
+  .page-table .url { font-family: monospace; font-size: 0.78rem; color: var(--gold-light); }
+  .page-table .file { font-family: monospace; font-size: 0.75rem; color: var(--muted); }
+  .table-wrap { background: var(--card); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; overflow-x: auto; }
+
+  /* COUNCIL IDEAS */
+  .idea-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.4rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .idea-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  }
+  .idea-1::before { background: var(--gold); }
+  .idea-2::before { background: var(--blue); }
+  .idea-3::before { background: var(--green); }
+  .idea-4::before { background: var(--orange); }
+  .idea-5::before { background: var(--purple); }
+  .idea-number {
+    font-size: 2rem; font-weight: 900; opacity: 0.07;
+    position: absolute; top: 0.5rem; right: 1rem; line-height: 1;
+    color: #fff;
+  }
+  .idea-tag { margin-bottom: 0.5rem; }
+  .idea-title { font-size: 1rem; font-weight: 700; color: #fff; margin-bottom: 0.5rem; }
+  .idea-body { font-size: 0.84rem; color: var(--muted); line-height: 1.55; margin-bottom: 0.75rem; }
+  .idea-why { font-size: 0.78rem; color: var(--text); }
+  .idea-why strong { color: var(--gold); }
+
+  /* QA STEPS */
+  .qa-flow { counter-reset: qa-step; }
+  .qa-step {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.1rem 1.25rem 1.1rem 4rem;
+    margin-bottom: 0.6rem;
+    position: relative;
+  }
+  .qa-step::before {
+    counter-increment: qa-step;
+    content: counter(qa-step);
+    position: absolute; left: 1.1rem; top: 50%; transform: translateY(-50%);
+    width: 1.8rem; height: 1.8rem;
+    background: var(--gold-dim); color: var(--gold);
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.75rem; font-weight: 700;
+    display: grid; place-items: center;
+  }
+  .qa-step-title { font-size: 0.9rem; font-weight: 700; color: #fff; margin-bottom: 0.3rem; }
+  .qa-step-desc { font-size: 0.82rem; color: var(--muted); }
+  .qa-step-checks { margin-top: 0.5rem; }
+  .qa-step-checks li { font-size: 0.8rem; color: var(--text); margin-bottom: 0.2rem; list-style: none; padding-left: 1.1rem; position: relative; }
+  .qa-step-checks li::before { content: '☐'; position: absolute; left: 0; color: var(--muted); }
+
+  /* BUG TRACKER */
+  .bug-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+  .bug-table th {
+    text-align: left; padding: 0.5rem 0.75rem;
+    border-bottom: 1px solid var(--border);
+    color: var(--muted); font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.08em;
+    background: var(--surface);
+  }
+  .bug-table td { padding: 0.55rem 0.75rem; border-bottom: 1px solid rgba(192,144,48,0.07); vertical-align: middle; }
+  .bug-table tr:last-child td { border-bottom: none; }
+  .bug-sev { width: 70px; }
+  .input-cell { background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 4px; padding: 0.3rem 0.5rem; color: var(--text); font-size: 0.78rem; width: 100%; min-width: 120px; font-family: inherit; }
+  input.input-cell, textarea.input-cell { resize: none; }
+  select.input-cell option { background: var(--card); }
+
+  /* NEXT STEPS / BUSINESS */
+  .roadmap-item {
+    display: flex; gap: 1.2rem; align-items: flex-start;
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 8px; padding: 1.1rem 1.25rem;
+    margin-bottom: 0.6rem;
+  }
+  .roadmap-icon {
+    width: 2.2rem; height: 2.2rem; border-radius: 50%;
+    background: var(--gold-dim); color: var(--gold);
+    display: grid; place-items: center; font-size: 1rem; flex-shrink: 0;
+    border: 1px solid var(--border);
+  }
+  .roadmap-content { flex: 1; }
+  .roadmap-title { font-size: 0.92rem; font-weight: 700; color: #fff; margin-bottom: 0.2rem; }
+  .roadmap-desc { font-size: 0.82rem; color: var(--muted); margin-bottom: 0.4rem; }
+  .roadmap-action { font-size: 0.78rem; color: var(--text); }
+  .roadmap-action strong { color: var(--gold-light); }
+
+  /* SECURITY */
+  .sec-item {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--border);
+    border-radius: 0 8px 8px 0;
+    padding: 1rem 1.25rem;
+    margin-bottom: 0.75rem;
+  }
+  .sec-item.sev-high { border-left-color: var(--red); }
+  .sec-item.sev-med { border-left-color: var(--orange); }
+  .sec-item.sev-low { border-left-color: var(--green); }
+  .sec-item.sev-info { border-left-color: var(--blue); }
+  .sec-header { display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.5rem; }
+  .sec-title { font-size: 0.9rem; font-weight: 700; color: #fff; }
+  .sec-body { font-size: 0.82rem; color: var(--muted); margin-bottom: 0.5rem; }
+  .sec-fix { font-size: 0.8rem; color: var(--text); background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 4px; padding: 0.5rem 0.7rem; }
+  .sec-fix strong { color: var(--gold-light); display: block; margin-bottom: 0.2rem; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; }
+  code { font-family: 'Consolas', 'Monaco', monospace; background: rgba(255,255,255,0.07); padding: 0.1rem 0.3rem; border-radius: 3px; font-size: 0.82em; color: var(--gold-light); }
+
+  /* SCORE CARD SUMMARY */
+  .score-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 0.6rem; margin-bottom: 1.5rem; }
+  .score-cell {
+    background: var(--card); border: 1px solid var(--border); border-radius: 8px;
+    padding: 1rem; text-align: center;
+  }
+  .score-num { font-size: 2rem; font-weight: 900; line-height: 1; margin-bottom: 0.2rem; }
+  .score-label { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); }
+  .score-green { color: var(--green); }
+  .score-gold { color: var(--gold); }
+  .score-red { color: var(--red); }
+  .score-blue { color: var(--blue); }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 1.5rem;
+    text-align: center;
+    color: var(--muted);
+    font-size: 0.75rem;
+  }
+  footer span { color: var(--gold); }
+
+  @media (max-width: 600px) {
+    .nav-links { display: none; }
+    .hero { padding: 2rem 1rem 1.5rem; }
+    section { padding: 2rem 0; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-brand">TOURney <span>by Greenskeeper Studios</span></div>
+  <div class="nav-links">
+    <a href="#review">Review</a>
+    <a href="#council">Council</a>
+    <a href="#qa">QA Test</a>
+    <a href="#business">Business</a>
+    <a href="#security">Security</a>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="hero-eyebrow">Internal Report</div>
+  <h1><span>TOURney</span> — Full Platform Review</h1>
+  <p class="hero-sub">Code-to-business audit, council of ideas, full QA protocol, business roadmap, and security analysis.</p>
+  <div class="hero-meta">
+    <span>📅 May 6, 2026</span>
+    <span>🤖 Claude Sonnet 4.6</span>
+    <span>🏢 Greenskeeper Studios</span>
+    <span>🔒 Internal Only</span>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     SECTION 1 — FULL REVIEW
+     ═══════════════════════════════════════════════════════════════════ -->
+<section id="review">
+<div class="wrapper">
+  <div class="section-header">
+    <div class="section-eyebrow">Section 1 of 5</div>
+    <div class="section-title">Full Platform Review — Code to Business</div>
+    <div class="section-desc">Everything TOURney is right now: stack, architecture, pages, strengths, and gaps.</div>
+  </div>
+
+  <!-- SCORES -->
+  <div class="score-grid">
+    <div class="score-cell"><div class="score-num score-green">A-</div><div class="score-label">Architecture</div></div>
+    <div class="score-cell"><div class="score-num score-green">A-</div><div class="score-label">Feature Depth</div></div>
+    <div class="score-cell"><div class="score-num score-gold">B</div><div class="score-label">UX Polish</div></div>
+    <div class="score-cell"><div class="score-num score-red">D+</div><div class="score-label">Security</div></div>
+    <div class="score-cell"><div class="score-num score-gold">B</div><div class="score-label">Business Ready</div></div>
+    <div class="score-cell"><div class="score-num score-green">A</div><div class="score-label">Deployment</div></div>
+  </div>
+  <p style="font-size:0.78rem; color:var(--muted); margin-bottom:1.5rem; text-align:center; max-width:680px; margin-left:auto; margin-right:auto"><strong style="color:var(--red)">Security drops to D+ </strong>after deeper inspection — two critical RLS holes (<code>player_accounts</code>, <code>invitations</code>) and an XSS vector in <code>admin.html</code>. All fixable in a half-day sprint. Details in §5.</p>
+
+  <!-- TECH STACK -->
+  <div class="card" style="margin-bottom:1.5rem">
+    <div class="card-title">⚙️ Tech Stack</div>
+    <div class="grid-3" style="margin-top:0.5rem">
+      <div class="stack-item">
+        <div class="stack-label">Frontend</div>
+        <div class="stack-value">Vanilla HTML/JS/CSS</div>
+        <div class="stack-note">No framework. Zero build step. ~15 HTML files.</div>
+      </div>
+      <div class="stack-item">
+        <div class="stack-label">Backend / DB</div>
+        <div class="stack-value">Supabase (PostgreSQL)</div>
+        <div class="stack-note">Auth + realtime + RLS. Project: jllugkiojeoopitdvzsa</div>
+      </div>
+      <div class="stack-item">
+        <div class="stack-label">Hosting</div>
+        <div class="stack-value">Vercel</div>
+        <div class="stack-note">Static files, slug routing via rewrites, no-store headers on HTML</div>
+      </div>
+      <div class="stack-item">
+        <div class="stack-label">PWA</div>
+        <div class="stack-value">Service Worker + manifest.json</div>
+        <div class="stack-note">Network-first HTML, cache-first assets. Cache version <code>tourney-v16</code>.</div>
+      </div>
+      <div class="stack-item">
+        <div class="stack-label">Init Layer</div>
+        <div class="stack-value">tourney-init.js</div>
+        <div class="stack-note">Shared bootstrap — slug detection, Supabase client, brand injection</div>
+      </div>
+      <div class="stack-item">
+        <div class="stack-label">Routing</div>
+        <div class="stack-value">/t/{slug}/* pattern</div>
+        <div class="stack-note">Multi-tenant via URL slug. Vercel rewrites handle SPA-like navigation.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- WHAT IT IS -->
+  <div class="card" style="margin-bottom:1.5rem">
+    <div class="card-title">🏌️ What TOURney Is</div>
+    <p>TOURney is a <strong style="color:#fff">multi-tenant golf tournament platform</strong> built for private events (scrambles, stroke play, best-ball, shambles, etc.). Each tournament gets its own branded subdomain-style URL (<code>/t/{slug}/</code>), live scoreboard, scorecard entry, player profiles, activity feed, and admin control panel.</p>
+    <br>
+    <p>The <strong style="color:#fff">platform layer</strong> (<code>tourney.greenskeeper.studio</code>) handles marketing, 5-step tournament creation wizard, and a super-admin panel (Rob only). The <strong style="color:#fff">tournament layer</strong> (<code>/t/{slug}/</code>) is the per-event app — every tournament can be themed (logo, colors, hero photo) and configured (rounds, formats, registration settings) entirely from the admin UI without touching code.</p>
+  </div>
+
+  <!-- PAGES -->
+  <div style="margin-bottom:1.5rem">
+    <div class="card-title" style="margin-bottom:0.75rem; font-size:0.9rem; color:var(--gold)">📄 Platform Pages (tourney.greenskeeper.studio)</div>
+    <div class="table-wrap">
+      <table class="page-table">
+        <thead><tr><th>URL</th><th>File</th><th>Purpose</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td class="url">/</td><td class="file">marketing.html</td><td>Platform landing — pricing tiers, live tourney grid, sign-up CTA</td><td><span class="pill pill-green">Live</span></td></tr>
+          <tr><td class="url">/create</td><td class="file">create.html</td><td>5-step wizard: auth → tournament seed → settings → redirect to admin</td><td><span class="pill pill-green">Live</span></td></tr>
+          <tr><td class="url">/platform</td><td class="file">platform.html</td><td>Rob-only super admin: all tournaments, player counts, delete controls</td><td><span class="pill pill-gold">Rob Only</span></td></tr>
+          <tr><td class="url">/urls</td><td class="file">urls.html</td><td>Internal URL map / developer reference</td><td><span class="pill pill-blue">Internal</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div style="margin-bottom:1.5rem">
+    <div class="card-title" style="margin-bottom:0.75rem; font-size:0.9rem; color:var(--gold)">🏆 Tournament Pages (/t/{slug}/*)</div>
+    <div class="table-wrap">
+      <table class="page-table">
+        <thead><tr><th>URL</th><th>File</th><th>Purpose</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td class="url">/t/{slug}/</td><td class="file">home.html</td><td>Tournament landing — hero, about, RSVP registration</td><td><span class="pill pill-green">Live</span></td></tr>
+          <tr><td class="url">/t/{slug}/admin</td><td class="file">admin.html</td><td>Owner dashboard — rounds, pairings, design, player mgmt</td><td><span class="pill pill-green">Live</span></td></tr>
+          <tr><td class="url">/t/{slug}/scoreboard</td><td class="file">scoreboard.html</td><td>Live leaderboard — team standings, round scores, trash talk</td><td><span class="pill pill-green">Live</span></td></tr>
+          <tr><td class="url">/t/{slug}/scorecard</td><td class="file">scorecard.html</td><td>Score entry — hole-by-hole, format-aware, offline queue</td><td><span class="pill pill-green">Live</span></td></tr>
+          <tr><td class="url">/t/{slug}/feed</td><td class="file">feed.html</td><td>Activity feed — hole-in-ones, highlights, push notifications</td><td><span class="pill pill-green">Live</span></td></tr>
+          <tr><td class="url">/t/{slug}/profile</td><td class="file">profile.html</td><td>Player stats, scores, handicap</td><td><span class="pill pill-green">Live</span></td></tr>
+          <tr><td class="url">/t/{slug}/directory</td><td class="file">directory.html</td><td>Full roster — names, handicaps, team assignments</td><td><span class="pill pill-green">Live</span></td></tr>
+          <tr><td class="url">/t/{slug}/course</td><td class="file">course.html</td><td>Course info — par, yardage, hole layout per round</td><td><span class="pill pill-green">Live</span></td></tr>
+          <tr><td class="url">/t/{slug}/champions</td><td class="file">champions.html</td><td>Hall of fame — past winners by year</td><td><span class="pill pill-green">Live</span></td></tr>
+          <tr><td class="url">/t/{slug}/login</td><td class="file">login.html</td><td>Player auth — email + password via Supabase</td><td><span class="pill pill-green">Live</span></td></tr>
+          <tr><td class="url">/t/{slug}/install</td><td class="file">install.html</td><td>PWA install guide — step-by-step Add to Home Screen</td><td><span class="pill pill-green">Live</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- EDGE FUNCTIONS -->
+  <div class="card" style="margin-bottom:1.5rem">
+    <div class="card-title">⚡ Supabase Edge Functions (server-side, Deno)</div>
+    <div class="grid-2" style="margin-top:0.5rem">
+      <div class="stack-item">
+        <div class="stack-label">create-checkout</div>
+        <div class="stack-value">Stripe Checkout session creator</div>
+        <div class="stack-note">Creates session for /player-upgrade flow. Stripe secret key held server-side.</div>
+      </div>
+      <div class="stack-item">
+        <div class="stack-label">stripe-webhook</div>
+        <div class="stack-value">Stripe → DB sync</div>
+        <div class="stack-note">Updates <code>player_accounts.billing_status</code> on subscription events. Already wired.</div>
+      </div>
+      <div class="stack-item">
+        <div class="stack-label">send-push</div>
+        <div class="stack-value">Web Push dispatcher</div>
+        <div class="stack-note">Used by feed.html / pwa.js for hole-in-one + score-event notifications.</div>
+      </div>
+      <div class="stack-item">
+        <div class="stack-label">send-install-email</div>
+        <div class="stack-value">Transactional email</div>
+        <div class="stack-note">Sends PWA install email after registration. Foundation for more email flows.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DB SCHEMA SUMMARY -->
+  <div class="card" style="margin-bottom:1.5rem">
+    <div class="card-title">🗄️ Database Tables (Supabase Postgres + RLS)</div>
+    <p style="font-size:0.84rem; margin-bottom:0.5rem">Five migrations applied (<code>001</code>–<code>005</code>). Multi-tenant tenancy layer + billing + email-based admin model.</p>
+    <ul style="font-size:0.83rem; padding-left:1.2rem">
+      <li><code>tournaments</code> — anchor table. <code>owner_email</code>, <code>tier</code> (starter/pro/club), <code>stripe_subscription_id</code>, <code>stripe_status</code>, <code>status</code>.</li>
+      <li><code>tournament_admins</code> — email-based admin membership (post-migration 004). Replaces <code>players.is_admin</code> for RLS.</li>
+      <li><code>players</code>, <code>scores</code>, <code>settings</code> — all scoped by <code>tournament_id</code> FK. <code>settings</code> PK is <code>(tournament_id, key)</code>.</li>
+      <li><code>player_accounts</code> — billing identity, <code>billing_status</code> (active/comped/trial/inactive). <strong style="color:var(--red)">RLS hole — see Security §5.</strong></li>
+      <li><code>invitations</code> — invitation flow. <strong style="color:var(--red)">RLS hole — see Security §5.</strong></li>
+      <li><code>trash_talk</code>, <code>push_subscriptions</code> — feed messages + Web Push.</li>
+    </ul>
+  </div>
+
+  <!-- STRENGTHS / GAPS -->
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title">✅ Strengths</div>
+      <ul>
+        <li>Zero-dependency client. No build step. Ships static. Deploy = git push to Vercel.</li>
+        <li>Multi-tenant tenancy fully wired. <code>tournament_id</code> FK + composite PK on <code>settings</code>. Five migrations applied.</li>
+        <li>Email-based <code>tournament_admins</code> + RLS settings policy already done (migration 003+004). Settings writes are RLS-gated.</li>
+        <li>Stripe infrastructure pre-staged: edge functions <code>create-checkout</code> + <code>stripe-webhook</code> live, <code>tournaments.stripe_*</code> columns + <code>player_accounts.billing_status</code> done.</li>
+        <li>Realtime scoreboard via Supabase channels. No polling.</li>
+        <li>PWA: SW <code>tourney-v16</code>, offline score queue, push notifications, network-first HTML.</li>
+        <li>Every render path uses an <code>esc()</code> helper for player names/team names. XSS-conscious in most files.</li>
+        <li>Active QA discipline — 12 tracked sessions, named commits, regression notes.</li>
+        <li>Local localStorage namespaced by slug. No cross-tournament bleed.</li>
+        <li>5-step creation wizard handles auth → billing-gate → DB seed → admin redirect end-to-end.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-title">⚠️ Gaps & Real Bugs</div>
+      <ul>
+        <li><strong style="color:var(--red)">CRITICAL — <code>player_accounts</code> RLS wide open</strong>. Policy: <code>auth manage player_accounts FOR ALL TO authenticated USING (true) WITH CHECK (true)</code>. Any signed-in user can <code>UPDATE</code> any row, set <code>billing_status='comped'</code>, bypass Stripe entirely. <strong>Bypasses your monetization.</strong></li>
+        <li><strong style="color:var(--red)">CRITICAL — <code>invitations</code> RLS open to anon</strong>. <code>anon update own invitation</code> has no <code>email</code>/<code>id</code> filter. Any anon user can <code>UPDATE</code> any invitation. Forgery / status flip possible.</li>
+        <li><strong style="color:var(--red)">XSS in admin.html</strong>. Lines 1169 + 1709: <code>${p.trash_talk}</code> and <code>${p.why_me}</code> rendered to <code>innerHTML</code> without <code>esc()</code>. Both are player-controlled at registration. A malicious player → script in admin's session.</li>
+        <li><strong style="color:var(--orange)">Dual admin source-of-truth</strong>. <code>players.is_admin</code> still written (admin.html:1193, 1845, create.html:771) AND <code>tournament_admins</code> table is canonical for RLS. Drift hazard — UI gates can pass while RLS rejects, or vice-versa. Needs single source.</li>
+        <li><strong style="color:var(--orange)">platform.html gate is client-only</strong>. <code>PLATFORM_EMAIL</code> equality check at line 164. Bypassable in DevTools — but RLS protects DELETE so worst case is reading the dashboard view.</li>
+        <li><strong style="color:var(--orange)">No CSP header</strong>. <code>vercel.json</code> has cache-control only. Adding <code>Content-Security-Policy</code> would harden against the XSS path above.</li>
+        <li><strong style="color:var(--orange)">Bova formats unverified</strong>. Day1/Day2/Day3 = stroke/scramble/best_ball seeded by guess. Chris Bova has not confirmed.</li>
+        <li><strong style="color:var(--orange)">No live test scores</strong>. Leaderboard/scorecard rendering never exercised end-to-end with realistic data. Performance + visual unknowns.</li>
+        <li>HTML files heavy: <code>admin.html</code> 151KB, <code>scorecard.html</code> 87KB, <code>home.html</code> 144KB. First-paint cost is real.</li>
+        <li>No error monitoring (Sentry) — production JS exceptions are invisible.</li>
+        <li>No analytics — funnel drop-off in /create wizard is unknown.</li>
+        <li>Round naming hardcoded <code>day1/day2/day3</code> — known limitation flagged in PHASE2_PLAN.</li>
+      </ul>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     SECTION 2 — COUNCIL OF 5
+     ═══════════════════════════════════════════════════════════════════ -->
+<section id="council">
+<div class="wrapper">
+  <div class="section-header">
+    <div class="section-eyebrow">Section 2 of 5</div>
+    <div class="section-title">Council of Ideas — What's Next for Polish</div>
+    <div class="section-desc">Five engineers around the table. Five ideas to make TOURney feel genuinely professional. Ranked by impact-to-effort ratio.</div>
+  </div>
+
+  <div class="grid-2" style="margin-bottom:0.75rem">
+    <div class="idea-card idea-1">
+      <div class="idea-number">1</div>
+      <div class="idea-tag"><span class="pill pill-gold">UX · High Impact</span></div>
+      <div class="idea-title">Extend Email Beyond /install — Welcome, Round Open, Results Recap</div>
+      <div class="idea-body">The <code>send-install-email</code> edge function already exists, so the email pipeline is half-built. Extend it. Today only one transactional email goes out (PWA install). Players get nothing on registration confirm, nothing when a round opens, nothing when the tournament ends. Add three more templates triggered on database events: <strong>Welcome</strong> (after RSVP confirm), <strong>Round Open</strong> (when admin flips round_state), <strong>Final Recap</strong> (at tournament_end with leaderboard + standout scores). The recap email is the viral moment — it lands in the group chat the night the tournament ends.</div>
+      <div class="idea-why"><strong>Build:</strong> Generalize <code>send-install-email</code> into a <code>send-email</code> edge function with template parameter. Add Postgres triggers (or invoke from admin actions) to fire each template. Ship before Bova 2026.</div>
+    </div>
+
+    <div class="idea-card idea-2">
+      <div class="idea-number">2</div>
+      <div class="idea-tag"><span class="pill pill-blue">Data · High Impact</span></div>
+      <div class="idea-title">Live Score Feed with Animations on Scoreboard</div>
+      <div class="idea-body">The scoreboard has Supabase Realtime wired up — but there's no visual reaction when a score comes in. No row highlight, no rank-change animation, no "just submitted" indicator. A score drops and the board silently re-sorts. That's a missed moment. When someone eagles hole 7 and the leaderboard reshuffles with a subtle animation and a "🦅 Eagle — Team A" toast, everyone in the cart looks up.</div>
+      <div class="idea-why"><strong>Build:</strong> Track previous rank per team in JS. On Realtime update, CSS transition the row, fire a toast for birdie/eagle/hole-in-one events. ~1 day of work, massive perceived quality lift.</div>
+    </div>
+
+    <div class="idea-card idea-3">
+      <div class="idea-number">3</div>
+      <div class="idea-tag"><span class="pill pill-green">Polish · Medium Impact</span></div>
+      <div class="idea-title">Onboarding Checklist in Admin Dashboard</div>
+      <div class="idea-body">A new tournament owner finishes the creation wizard and lands in admin.html staring at a dense UI. There's no "you're 70% set up — here's what's left" moment. An onboarding checklist (Add your logo → Set your course → Open registration → Add players → Open scoring) would make the product feel finished and guide owners to the aha moment faster. Right now they have to figure it out themselves.</div>
+      <div class="idea-why"><strong>Build:</strong> Read settings from Supabase, render a sticky progress bar or collapsible checklist at the top of admin. Each item links to the relevant admin tab. Pure front-end, no schema changes. ~4 hours.</div>
+    </div>
+
+    <div class="idea-card idea-4">
+      <div class="idea-number">4</div>
+      <div class="idea-tag"><span class="pill pill-orange">Business · Medium Impact</span></div>
+      <div class="idea-title">Post-Tournament Recap Page (Auto-Generated)</div>
+      <div class="idea-body">After a tournament ends, there's no canonical "here's what happened" artifact. The champions.html hall of fame is a static list. What if closing a tournament auto-generated a recap page with the final leaderboard, team highlights, round-by-round progression, best scores, and a shareable link? This becomes marketing — organizers share it on social, and it's the best possible ad for TOURney because it shows the product doing real work.</div>
+      <div class="idea-why"><strong>Build:</strong> New <code>recap.html</code> page, same pattern as other pages. Tournament recap is read-only — just queries scores/players. Could be a shareable static URL with no login required. Screenshots automatically become social posts.</div>
+    </div>
+  </div>
+
+  <div class="idea-card idea-5">
+    <div class="idea-number">5</div>
+    <div class="idea-tag"><span class="pill pill-purple">Infrastructure · High Leverage</span></div>
+    <div class="idea-title">Error Monitoring + Lightweight Analytics (Posthog / Sentry)</div>
+    <div class="idea-body">You're flying blind in production. If a player's scorecard crashes on hole 12, you don't know until they text you. If 40% of people drop off on step 3 of the creation wizard, you have no data. Sentry (free tier) catches unhandled JS exceptions with stack traces and the Supabase query that triggered them. Posthog (free tier, self-hostable) tracks page views, funnel conversion, and feature usage — all without violating GDPR if configured correctly. This is the difference between building on feelings and building on facts.</div>
+    <div class="idea-why"><strong>Build:</strong> Drop a Sentry CDN snippet into tourney-init.js (one line). Add Posthog pageview tracking. Both are free, both are 30-minute setups, both pay dividends on every future feature decision. Do this before Bova 2026 runs — you want data from the live event.</div>
+  </div>
+</div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     SECTION 3 — FULL QA TEST PROTOCOL
+     ═══════════════════════════════════════════════════════════════════ -->
+<section id="qa">
+<div class="wrapper">
+  <div class="section-header">
+    <div class="section-eyebrow">Section 3 of 5</div>
+    <div class="section-title">Full QA Test Protocol — User Walkthrough</div>
+    <div class="section-desc">Walk every flow as a real user. Check each box. Log bugs in the tracker below. Zero known issues before tournament day.</div>
+  </div>
+
+  <!-- FLOW A: PLATFORM -->
+  <div style="margin-bottom:1rem">
+    <div class="card-title" style="font-size:1rem; color:#fff; margin-bottom:0.75rem">🌐 Flow A — Platform (tourney.greenskeeper.studio)</div>
+    <div class="qa-flow">
+      <div class="qa-step">
+        <div class="qa-step-title">Marketing Page Load</div>
+        <div class="qa-step-desc">Visit <code>tourney.greenskeeper.studio</code>. Verify no console errors, all assets load, fonts render.</div>
+        <ul class="qa-step-checks">
+          <li>Page loads in &lt;3s on mobile throttled connection</li>
+          <li>Zero console errors or unhandled rejections</li>
+          <li>No failed network requests (4xx/5xx) in DevTools</li>
+          <li>Pricing tiers display correctly with correct tier names/prices</li>
+          <li>Live tournament grid shows active tournaments (not empty)</li>
+          <li>CTA button navigates to /create</li>
+          <li>All images load (hero, logos, screenshots)</li>
+        </ul>
+      </div>
+      <div class="qa-step">
+        <div class="qa-step-title">Tournament Creation Wizard — Full Flow</div>
+        <div class="qa-step-desc">Navigate to <code>/create</code>. Complete all 5 steps as a new tournament owner.</div>
+        <ul class="qa-step-checks">
+          <li>Step 1 (Auth): email + password account creation succeeds</li>
+          <li>Step 2 (Format): format selection saves correctly, back button works</li>
+          <li>Step 3 (Details): name, slug, short_name, dates populate correctly</li>
+          <li>Step 4 (Plan): tier selection updates Plan row in review</li>
+          <li>Step 5 (Review): all values shown match inputs</li>
+          <li>Submit creates tournament in Supabase (verify via platform.html)</li>
+          <li>Redirect to admin.html of new tournament after creation</li>
+          <li>Error states: duplicate slug shows clear error message</li>
+          <li>Error states: invalid email shows clear error message</li>
+        </ul>
+      </div>
+      <div class="qa-step">
+        <div class="qa-step-title">Platform Super Admin</div>
+        <div class="qa-step-desc">Log in as Rob and access <code>/platform</code>.</div>
+        <ul class="qa-step-checks">
+          <li>Page gate works — non-Rob emails cannot access</li>
+          <li>All tournaments listed with correct player counts</li>
+          <li>Status badges render correctly (active / draft / ended)</li>
+          <li>Delete control requires confirmation before executing</li>
+          <li>Delete cascade removes players, scores, settings cleanly (no FK error)</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- FLOW B: PLAYER EXPERIENCE -->
+  <div style="margin-bottom:1rem">
+    <div class="card-title" style="font-size:1rem; color:#fff; margin-bottom:0.75rem">🏌️ Flow B — Player Experience (/t/{slug}/)</div>
+    <div class="qa-flow">
+      <div class="qa-step">
+        <div class="qa-step-title">Tournament Home Page</div>
+        <div class="qa-step-desc">Visit the tournament home page as an unauthenticated visitor.</div>
+        <ul class="qa-step-checks">
+          <li>Hero photo, logo, tournament name all load from tournament settings</li>
+          <li>About section text matches tournament-specific content (not Bova hardcoded)</li>
+          <li>Registration form visible when reg_open = true</li>
+          <li>RSVP max/min player limits reflect tournament settings (not hardcoded 24)</li>
+          <li>Date picker hidden when reg_show_dates = false</li>
+          <li>Nav links all resolve correctly (scoreboard, feed, login)</li>
+        </ul>
+      </div>
+      <div class="qa-step">
+        <div class="qa-step-title">Login Flow</div>
+        <div class="qa-step-desc">Navigate to <code>/t/{slug}/login</code>. Log in as existing player.</div>
+        <ul class="qa-step-checks">
+          <li>Login form renders with tournament branding (logo, colors)</li>
+          <li>Successful login redirects to home (not a generic Supabase page)</li>
+          <li>Wrong password shows clear inline error (not alert())</li>
+          <li>Auth state persists on page refresh (persistSession: true)</li>
+          <li>Logout link appears in nav after auth</li>
+        </ul>
+      </div>
+      <div class="qa-step">
+        <div class="qa-step-title">Scorecard Entry</div>
+        <div class="qa-step-desc">Navigate to <code>/t/{slug}/scorecard</code>. Enter scores for a round.</div>
+        <ul class="qa-step-checks">
+          <li>Format displays correctly (stroke, scramble, best_ball, shambles, etc.)</li>
+          <li>Par values per hole are correct for the selected course</li>
+          <li>Hole-by-hole input works (tap to increment, tap again, etc.)</li>
+          <li>Score submission saves to Supabase successfully</li>
+          <li>Offline mode: airplane mode on, enter scores, reconnect, scores sync</li>
+          <li>Submit confirmation shown after save</li>
+          <li>Already-submitted scores load on re-entry (no duplicate)</li>
+          <li>Format-specific UI: scramble shows team score, stroke shows individual</li>
+        </ul>
+      </div>
+      <div class="qa-step">
+        <div class="qa-step-title">Live Scoreboard</div>
+        <div class="qa-step-desc">Navigate to <code>/t/{slug}/scoreboard</code> and verify leaderboard.</div>
+        <ul class="qa-step-checks">
+          <li>Leaderboard loads with correct team/player standings</li>
+          <li>Scores display correctly by round (day1, day2, day3 columns)</li>
+          <li>Realtime: submit a score in another tab — scoreboard updates without refresh</li>
+          <li>Trash talk section loads (if populated)</li>
+          <li>Competitive vs Casual mode badge visible (if implemented)</li>
+          <li>No scores seeded yet? Empty state message shows cleanly</li>
+        </ul>
+      </div>
+      <div class="qa-step">
+        <div class="qa-step-title">Player Profile, Directory, Feed, Course, Champions</div>
+        <div class="qa-step-desc">Visit each remaining tournament page and verify no errors.</div>
+        <ul class="qa-step-checks">
+          <li>Profile: player stats, scores, handicap all render (logged in vs anonymous)</li>
+          <li>Directory: all players listed with correct team and handicap info</li>
+          <li>Feed: activity items load (hole-in-one alerts, highlights)</li>
+          <li>Course: hole layout, par, yardage correct for active round's course</li>
+          <li>Champions: past winners display (or clean empty state if none yet)</li>
+          <li>All pages: nav hamburger works on mobile, no overlapping elements</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- FLOW C: ADMIN -->
+  <div style="margin-bottom:1rem">
+    <div class="card-title" style="font-size:1rem; color:#fff; margin-bottom:0.75rem">⚙️ Flow C — Admin Dashboard (/t/{slug}/admin)</div>
+    <div class="qa-flow">
+      <div class="qa-step">
+        <div class="qa-step-title">Admin Access Gate</div>
+        <div class="qa-step-desc">Verify admin access control is enforced.</div>
+        <ul class="qa-step-checks">
+          <li>Non-admin player visiting /admin sees access denied (not an empty page)</li>
+          <li>Unauthenticated user visiting /admin redirects to login</li>
+          <li>Admin-gated actions confirm role before executing</li>
+        </ul>
+      </div>
+      <div class="qa-step">
+        <div class="qa-step-title">Admin Tabs — Command Center</div>
+        <div class="qa-step-desc">Walk through all admin tabs and verify each saves correctly.</div>
+        <ul class="qa-step-checks">
+          <li>Round state toggle (open/close) saves and reflects on scoreboard</li>
+          <li>Pairings setup: team assignment saves and shows in directory</li>
+          <li>Course setup: par values save and appear on scorecard</li>
+          <li>Team count save works; team names save correctly</li>
+        </ul>
+      </div>
+      <div class="qa-step">
+        <div class="qa-step-title">Admin Design Tab</div>
+        <div class="qa-step-desc">Update branding and verify it propagates to tournament pages.</div>
+        <ul class="qa-step-checks">
+          <li>Logo URL update reflects on home, nav, and install pages</li>
+          <li>Color picker changes primary color site-wide (injected by tourney-init.js)</li>
+          <li>Hero photo URL update replaces hero image on home page</li>
+          <li>About section text update appears on home page</li>
+        </ul>
+      </div>
+      <div class="qa-step">
+        <div class="qa-step-title">Admin Player Management</div>
+        <div class="qa-step-desc">Add, remove, and manage players from admin.</div>
+        <ul class="qa-step-checks">
+          <li>Player list loads with all registered players</li>
+          <li>Add player creates account and appears in directory</li>
+          <li>Admin grant/revoke updates player's access correctly</li>
+          <li>Clear scores for a round works (verify via scoreboard)</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- FLOW D: PWA + MOBILE -->
+  <div style="margin-bottom:1.5rem">
+    <div class="card-title" style="font-size:1rem; color:#fff; margin-bottom:0.75rem">📱 Flow D — PWA + Mobile</div>
+    <div class="qa-flow">
+      <div class="qa-step">
+        <div class="qa-step-title">PWA Install Flow</div>
+        <div class="qa-step-desc">Visit <code>/t/{slug}/install</code> and install as PWA on iOS/Android.</div>
+        <ul class="qa-step-checks">
+          <li>Install page shows tournament logo and correct name</li>
+          <li>Step-by-step instructions match current browser UI (not outdated screenshots)</li>
+          <li>After install: PWA launches to correct home page (not generic tourney.greenskeeper.studio)</li>
+          <li>PWA name and icon match tournament branding (not generic TOURney)</li>
+        </ul>
+      </div>
+      <div class="qa-step">
+        <div class="qa-step-title">Mobile Viewport — All Pages</div>
+        <div class="qa-step-desc">Test every key page at 375px width (iPhone SE). No horizontal scroll, no overlapping UI.</div>
+        <ul class="qa-step-checks">
+          <li>Home: hero, RSVP form, about section all stack correctly</li>
+          <li>Scorecard: hole inputs are thumb-friendly, no tiny tap targets</li>
+          <li>Scoreboard: leaderboard table scrolls horizontally if needed</li>
+          <li>Admin: all tabs accessible, no cut-off controls</li>
+          <li>Nav hamburger: opens correctly, all links visible, closes on tap-outside</li>
+        </ul>
+      </div>
+      <div class="qa-step">
+        <div class="qa-step-title">Offline Behavior</div>
+        <div class="qa-step-desc">Put device in airplane mode. Navigate between cached pages.</div>
+        <ul class="qa-step-checks">
+          <li>Previously visited pages load from cache (no white screen)</li>
+          <li>Scorecard shows offline indicator when no network</li>
+          <li>Score entry works offline and queues in localStorage</li>
+          <li>On reconnect: offline queue drains and scores submit successfully</li>
+          <li>Non-cached pages: 404 page shown instead of browser error</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- BUG TRACKER -->
+  <div class="card">
+    <div class="card-title">🐛 Bug Tracker — Log Issues During QA</div>
+    <div style="overflow-x:auto; margin-top:0.5rem">
+      <table class="bug-table" id="bugTable">
+        <thead>
+          <tr>
+            <th style="width:40px">#</th>
+            <th class="bug-sev">Severity</th>
+            <th>Page / Flow</th>
+            <th>Description</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="bugRows">
+          <tr>
+            <td style="color:var(--muted);font-size:0.75rem">1</td>
+            <td><select class="input-cell"><option>🔴 Critical</option><option>🟠 High</option><option>🟡 Medium</option><option>🟢 Low</option></select></td>
+            <td><input class="input-cell" type="text" placeholder="e.g. /scorecard"></td>
+            <td><input class="input-cell" type="text" placeholder="Describe the bug..."></td>
+            <td><select class="input-cell"><option>Open</option><option>In Progress</option><option>Fixed</option><option>Won't Fix</option></select></td>
+          </tr>
+          <tr>
+            <td style="color:var(--muted);font-size:0.75rem">2</td>
+            <td><select class="input-cell"><option>🔴 Critical</option><option>🟠 High</option><option>🟡 Medium</option><option>🟢 Low</option></select></td>
+            <td><input class="input-cell" type="text" placeholder="e.g. /admin"></td>
+            <td><input class="input-cell" type="text" placeholder="Describe the bug..."></td>
+            <td><select class="input-cell"><option>Open</option><option>In Progress</option><option>Fixed</option><option>Won't Fix</option></select></td>
+          </tr>
+          <tr>
+            <td style="color:var(--muted);font-size:0.75rem">3</td>
+            <td><select class="input-cell"><option>🔴 Critical</option><option>🟠 High</option><option>🟡 Medium</option><option>🟢 Low</option></select></td>
+            <td><input class="input-cell" type="text" placeholder="e.g. /scoreboard"></td>
+            <td><input class="input-cell" type="text" placeholder="Describe the bug..."></td>
+            <td><select class="input-cell"><option>Open</option><option>In Progress</option><option>Fixed</option><option>Won't Fix</option></select></td>
+          </tr>
+          <tr>
+            <td style="color:var(--muted);font-size:0.75rem">4</td>
+            <td><select class="input-cell"><option>🔴 Critical</option><option>🟠 High</option><option>🟡 Medium</option><option>🟢 Low</option></select></td>
+            <td><input class="input-cell" type="text" placeholder="e.g. /create"></td>
+            <td><input class="input-cell" type="text" placeholder="Describe the bug..."></td>
+            <td><select class="input-cell"><option>Open</option><option>In Progress</option><option>Fixed</option><option>Won't Fix</option></select></td>
+          </tr>
+          <tr>
+            <td style="color:var(--muted);font-size:0.75rem">5</td>
+            <td><select class="input-cell"><option>🔴 Critical</option><option>🟠 High</option><option>🟡 Medium</option><option>🟢 Low</option></select></td>
+            <td><input class="input-cell" type="text" placeholder="Flow / page"></td>
+            <td><input class="input-cell" type="text" placeholder="Describe the bug..."></td>
+            <td><select class="input-cell"><option>Open</option><option>In Progress</option><option>Fixed</option><option>Won't Fix</option></select></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <button onclick="addBugRow()" style="margin-top:0.75rem; background:var(--gold-dim); color:var(--gold); border:1px solid var(--border); border-radius:4px; padding:0.4rem 0.9rem; font-size:0.78rem; cursor:pointer; font-family:inherit; font-weight:600;">+ Add Row</button>
+  </div>
+</div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     SECTION 4 — BUSINESS ROADMAP
+     ═══════════════════════════════════════════════════════════════════ -->
+<section id="business">
+<div class="wrapper">
+  <div class="section-header">
+    <div class="section-eyebrow">Section 4 of 5</div>
+    <div class="section-title">Business Roadmap — Get LLC to First Payment</div>
+    <div class="section-desc">Greenskeeper Studios goes legit. Every step from entity formation to processing your first dollar.</div>
+  </div>
+
+  <div class="roadmap-item">
+    <div class="roadmap-icon">🏛️</div>
+    <div class="roadmap-content">
+      <div class="roadmap-title">1 — Form the LLC</div>
+      <div class="roadmap-desc">Register Greenskeeper Studios LLC in your state. Single-member LLC is simplest — pass-through taxation, limited liability, professional credibility. Wyoming is popular for low fees + no state income tax even if you operate elsewhere.</div>
+      <div class="roadmap-action"><strong>Action:</strong> File Articles of Organization online ($50–$200 depending on state). Use Stripe Atlas ($500) or Northwest Registered Agent if you want a one-stop shop. Get an EIN from IRS.gov immediately after (free, takes 5 min online). <strong>Timeline: 1 week.</strong></div>
+    </div>
+  </div>
+
+  <div class="roadmap-item">
+    <div class="roadmap-icon">🏦</div>
+    <div class="roadmap-content">
+      <div class="roadmap-title">2 — Open a Business Bank Account</div>
+      <div class="roadmap-desc">Never mix personal and business finances. You need a dedicated account the moment you form the LLC. Mercury (mercury.com) is the best option for indie founders — free, no minimums, FDIC insured, integrates directly with Stripe.</div>
+      <div class="roadmap-action"><strong>Action:</strong> Open Mercury account with your LLC docs + EIN. Takes 1 business day to approve. This is where Stripe payouts land. <strong>Do this same week as LLC.</strong></div>
+    </div>
+  </div>
+
+  <div class="roadmap-item">
+    <div class="roadmap-icon">📋</div>
+    <div class="roadmap-content">
+      <div class="roadmap-title">3 — Define Your Pricing + Terms</div>
+      <div class="roadmap-desc">Lock in pricing tiers before wiring Stripe. Current plan appears to have tiers in marketing.html — confirm what's real. You also need Terms of Service and a Privacy Policy before taking money. These are legal requirements, not optional.</div>
+      <div class="roadmap-action"><strong>Action:</strong> Use Termly.io or Iubenda to generate ToS + Privacy Policy ($0–$30/mo). Add links in footer of marketing.html and create.html. Finalize tier pricing (Starter/Pro/Premium) with clear feature gates. <strong>Timeline: 2–3 days.</strong></div>
+    </div>
+  </div>
+
+  <div class="roadmap-item">
+    <div class="roadmap-icon">💳</div>
+    <div class="roadmap-content">
+      <div class="roadmap-title">4 — Select PSP: Stripe (Only Real Answer)</div>
+      <div class="roadmap-desc">Stripe is the PSP. For a software SaaS with subscription billing, no alternatives make sense at this stage. Stripe supports one-time payments (per-tournament), subscriptions (annual plan), and usage-based billing. Their dashboard is also the best for fraud monitoring, refund management, and tax reporting.</div>
+      <div class="roadmap-action">
+        <strong>Sign up at stripe.com with LLC EIN + Mercury bank account.</strong><br>
+        Processing fees: 2.9% + 30¢ per transaction (Stripe Standard). Stripe Radar included for fraud.<br>
+        For TOURney specifically: implement one-time payment per tournament creation (not subscription). Players never pay — organizer pays once to unlock their event.<br>
+        <strong>Timeline: 1 day to set up. Gate the creation wizard behind Stripe Checkout before launch.</strong>
+      </div>
+    </div>
+  </div>
+
+  <div class="roadmap-item">
+    <div class="roadmap-icon">⚖️</div>
+    <div class="roadmap-content">
+      <div class="roadmap-title">5 — Wire Stripe into create.html</div>
+      <div class="roadmap-desc">The create wizard currently creates tournaments for free. The payment gate should fire after Step 4 (Review) and before Step 5 (Seed DB). User pays → Stripe webhook confirms → tournament row seeded. No payment = no tournament.</div>
+      <div class="roadmap-action"><strong>Action:</strong> Create Stripe Checkout session via a Supabase Edge Function (keeps secret key off client). On success, Stripe redirects back with session_id. Verify session server-side before seeding DB. <strong>This is the P4 item in qa-bugs-test-2026.md.</strong></div>
+    </div>
+  </div>
+
+  <div class="roadmap-item">
+    <div class="roadmap-icon">📊</div>
+    <div class="roadmap-content">
+      <div class="roadmap-title">6 — Accounting + Taxes</div>
+      <div class="roadmap-desc">Once money flows, you need bookkeeping. Stripe exports CSV reports. Wave (free) or QuickBooks Simple Start ($15/mo) handle income tracking. As an LLC, file Schedule C with your personal taxes if single-member, or file a separate partnership return if multi-member.</div>
+      <div class="roadmap-action"><strong>Action:</strong> Set up Wave accounting (free) connected to Mercury. At year end, give a CPA the Stripe + Mercury exports. Budget $300–$500 for a CPA to file your first business year. Don't DIY it the first time.</div>
+    </div>
+  </div>
+
+  <div class="roadmap-item">
+    <div class="roadmap-icon">🛡️</div>
+    <div class="roadmap-content">
+      <div class="roadmap-title">7 — Business Insurance (Optional But Smart)</div>
+      <div class="roadmap-desc">An LLC limits personal liability for business debts but not professional negligence (E&O). If an organizer's tournament data is lost/corrupted and they blame you, E&O insurance covers legal costs. Hiscox offers policies starting at ~$250/yr for software companies.</div>
+      <div class="roadmap-action"><strong>Action:</strong> Get a quote from Hiscox or Simply Business once revenue starts. Not urgent pre-launch, but add to the list for Year 1. <strong>Revisit at $1k MRR.</strong></div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:1rem; border-color:rgba(192,144,48,0.4)">
+    <div class="card-title">📅 Realistic Timeline</div>
+    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:0.6rem; margin-top:0.5rem">
+      <div class="stack-item"><div class="stack-label">Week 1</div><div class="stack-value">LLC + EIN + Mercury</div></div>
+      <div class="stack-item"><div class="stack-label">Week 2</div><div class="stack-value">ToS/Privacy + Pricing finalized</div></div>
+      <div class="stack-item"><div class="stack-label">Week 3</div><div class="stack-value">Stripe account + test checkout</div></div>
+      <div class="stack-item"><div class="stack-label">Week 4</div><div class="stack-value">Payment gate live in create.html</div></div>
+      <div class="stack-item"><div class="stack-label">Month 2</div><div class="stack-value">First paying customer</div></div>
+      <div class="stack-item"><div class="stack-label">Month 3</div><div class="stack-value">Email + Sentry live, Bova 2026 runs</div></div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     SECTION 5 — SECURITY REVIEW
+     ═══════════════════════════════════════════════════════════════════ -->
+<section id="security">
+<div class="wrapper">
+  <div class="section-header">
+    <div class="section-eyebrow">Section 5 of 5</div>
+    <div class="section-title">Security Review</div>
+    <div class="section-desc">Full threat model. Every finding rated by severity. Fix plan included for each. Address HIGH before Bova 2026.</div>
+  </div>
+
+  <p style="font-size:0.82rem; color:var(--muted); margin-bottom:1.5rem; padding:0.75rem 1rem; background:var(--card); border-left:3px solid var(--red); border-radius:0 6px 6px 0;"><strong style="color:var(--red)">Methodology:</strong> read every migration SQL, grep'd <code>innerHTML</code> usage with surrounding <code>esc()</code> calls, audited RLS policies in the five applied migrations, and traced the <code>billing_status</code> trust path from create.html → player_accounts → Stripe webhook. Findings below are evidence-based, not theoretical.</p>
+
+  <!-- CRITICAL #1: PLAYER_ACCOUNTS RLS BYPASSES BILLING -->
+  <div class="sec-item sev-high">
+    <div class="sec-header">
+      <span class="pill pill-red">🔴 CRITICAL</span>
+      <span class="sec-title">player_accounts RLS Bypasses the Stripe Billing Gate</span>
+    </div>
+    <div class="sec-body">
+      <strong style="color:#fff">This is the most expensive bug in the codebase.</strong> Migration <code>005_invitations_and_accounts.sql</code> defines:<br>
+      <code style="display:block; margin:0.4rem 0; padding:0.4rem 0.6rem; background:rgba(192,57,43,0.08); border:1px solid rgba(192,57,43,0.3); white-space:pre-wrap">CREATE POLICY "auth manage player_accounts"<br>  ON player_accounts FOR ALL TO authenticated<br>  USING (true) WITH CHECK (true);</code>
+      Any signed-in user can <code>UPDATE player_accounts SET billing_status='comped' WHERE email='attacker@example.com'</code>. The <code>create.html</code> billing gate at line ~145 checks <code>billing_status</code> against <code>BILLING_OK = {'active','comped','trial'}</code>. Self-comp = unlimited free tournament creation. The Stripe webhook is never invoked. <strong>Your monetization is bypassable in three lines of JS in DevTools.</strong>
+    </div>
+    <div class="sec-fix">
+      <strong>Fix Plan — Same Day</strong>
+      <ol style="padding-left:1.2rem; margin-top:0.4rem; font-size:0.78rem">
+        <li>Drop the open policy. Replace with: SELECT — own row only (<code>email = auth.email()</code>). UPDATE/INSERT — service_role only (Stripe webhook).</li>
+        <li>Stripe webhook edge function already runs as <code>service_role</code> via the SUPABASE_SERVICE_ROLE_KEY env var — it bypasses RLS by design. No code change needed there.</li>
+        <li>For Rob's manual <code>comp</code> grants in <code>platform.html</code>, route them through a new <code>grant-comp</code> edge function (gated by email check on <code>auth.jwt()</code>) instead of a direct upsert.</li>
+        <li>Migration <code>006_lock_player_accounts_rls.sql</code> — file the SQL.</li>
+      </ol>
+    </div>
+  </div>
+
+  <!-- CRITICAL #2: INVITATIONS RLS -->
+  <div class="sec-item sev-high">
+    <div class="sec-header">
+      <span class="pill pill-red">🔴 CRITICAL</span>
+      <span class="sec-title">invitations RLS — Anonymous UPDATE on Any Row</span>
+    </div>
+    <div class="sec-body">
+      Same migration:<br>
+      <code style="display:block; margin:0.4rem 0; padding:0.4rem 0.6rem; background:rgba(192,57,43,0.08); border:1px solid rgba(192,57,43,0.3); white-space:pre-wrap">CREATE POLICY "anon update own invitation"<br>  ON invitations FOR UPDATE TO anon<br>  USING (true) WITH CHECK (true);</code>
+      The policy name claims "own invitation" but the predicate is <code>true</code> — there's no <code>email = ...</code> filter, no <code>id = ...</code> match. Any anonymous user can flip any invitation's <code>status</code> to <code>accepted</code> or <code>declined</code>. Worse, they can change the <code>email</code> field on someone else's invitation to redirect it to themselves.
+    </div>
+    <div class="sec-fix">
+      <strong>Fix Plan — Same Day</strong>
+      <ol style="padding-left:1.2rem; margin-top:0.4rem; font-size:0.78rem">
+        <li>Replace anon-write policy with a single-purpose <code>accept-invitation</code> edge function. Function takes <code>{invitation_id, token}</code>, validates a per-invitation token (add <code>access_token</code> column), updates status as <code>service_role</code>.</li>
+        <li>Or: drop UPDATE policy entirely. Use a Postgres function with <code>SECURITY DEFINER</code> + token validation.</li>
+        <li>Add UNIQUE constraint on <code>(tournament_id, email)</code> already exists — good. No further structural change.</li>
+      </ol>
+    </div>
+  </div>
+
+  <!-- HIGH #3: XSS in admin.html -->
+  <div class="sec-item sev-high">
+    <div class="sec-header">
+      <span class="pill pill-red">🔴 HIGH</span>
+      <span class="sec-title">XSS — admin.html Renders trash_talk + why_me Without esc()</span>
+    </div>
+    <div class="sec-body">
+      <code>admin.html:1169</code> and <code>admin.html:1709</code>:<br>
+      <code style="display:block; margin:0.4rem 0; padding:0.4rem 0.6rem; background:rgba(192,57,43,0.08); border:1px solid rgba(192,57,43,0.3); white-space:pre-wrap">&lt;td ...&gt;${p.trash_talk || '—'}&lt;/td&gt;</code>
+      Both <code>trash_talk</code> and <code>why_me</code> are <strong>player-controlled at registration</strong> via the home.html RSVP form. They're rendered into a <code>${...}</code> template literal that's assigned to the player table's <code>innerHTML</code>. No <code>esc()</code> wrapper. A malicious registrant submits <code>&lt;img src=x onerror="..."&gt;</code> as their trash talk. When Rob (or any tournament admin) opens the player tab, the script runs in the admin's authenticated session — they can now write any settings, grant any admin, drop any score row that the admin's RLS allows.<br>
+      <em>Note:</em> Most other render paths in the codebase do use <code>esc()</code> (verified in feed.html, scoreboard.html, directory.html, profile.html, scorecard.html, champions.html, platform.html, player.html). admin.html is the outlier — it defines its own <code>esc()</code> at line 1722 but doesn't apply it to these two fields.
+    </div>
+    <div class="sec-fix">
+      <strong>Fix Plan — 30 minutes</strong>
+      <ol style="padding-left:1.2rem; margin-top:0.4rem; font-size:0.78rem">
+        <li>Wrap both renders: <code>${esc(p.trash_talk || '—')}</code> and <code>${esc(p.why_me || '')}</code>.</li>
+        <li>Grep <code>admin.html</code> for every <code>${p\.</code> pattern in template literals — verify each is wrapped in <code>esc()</code>. Same for any <code>innerHTML</code> assignment that interpolates DB data.</li>
+        <li>Add a CSP header (see #6 below) as defense-in-depth.</li>
+      </ol>
+    </div>
+  </div>
+
+  <!-- MEDIUM: Dual admin source-of-truth -->
+  <div class="sec-item sev-med">
+    <div class="sec-header">
+      <span class="pill pill-orange">🟠 MEDIUM</span>
+      <span class="sec-title">Dual Admin Source-of-Truth — players.is_admin + tournament_admins</span>
+    </div>
+    <div class="sec-body">
+      Migration 003 + 004 made <code>tournament_admins</code> the canonical admin model for RLS — settings writes are gated on <code>tournament_admins.email = auth.email()</code>. But <code>players.is_admin</code> still exists and is still being written to in five places (admin.html lines 1193, 1845, 1856; create.html line 771; champions.html, course.html, directory.html still gate UI on <code>players.is_admin</code> in some flows).<br>
+      The risk is drift: a tournament_admins row gets created without setting players.is_admin (or vice-versa). UI passes the gate but RLS rejects, or RLS passes but UI hides the controls. Mixed-system bugs are the kind that ship to production and only surface during a live tournament under load.
+    </div>
+    <div class="sec-fix">
+      <strong>Fix Plan — 2 hours</strong>
+      <ol style="padding-left:1.2rem; margin-top:0.4rem; font-size:0.78rem">
+        <li>Pick one source. Recommend <code>tournament_admins</code> — already wired into RLS, already email-based.</li>
+        <li>Replace every <code>players.is_admin</code> read in HTML files with a join: <code>EXISTS (SELECT 1 FROM tournament_admins WHERE tournament_id = ? AND email = ?)</code> — or expose via an RPC.</li>
+        <li>Migration <code>007_drop_players_is_admin.sql</code>: <code>ALTER TABLE players DROP COLUMN is_admin;</code> after all reads/writes are converted.</li>
+      </ol>
+    </div>
+  </div>
+
+  <!-- MEDIUM: trash_talk anon-insert flood risk -->
+  <div class="sec-item sev-med">
+    <div class="sec-header">
+      <span class="pill pill-orange">🟠 MEDIUM</span>
+      <span class="sec-title">trash_talk Table — Anonymous INSERT, No Rate Limit</span>
+    </div>
+    <div class="sec-body">
+      feed.html documents the policy: <code>CREATE POLICY "public insert" ON trash_talk FOR INSERT WITH CHECK (true)</code>. Any anon user can post any number of messages to any tournament. Combined with no rate limiting at the Supabase API layer, a bot could flood the feed with thousands of posts. Less severe than the RLS issues above (no privilege escalation), but ugly — and the spam content lands on every player's screen via realtime.
+    </div>
+    <div class="sec-fix">
+      <strong>Fix Plan</strong>
+      <ol style="padding-left:1.2rem; margin-top:0.4rem; font-size:0.78rem">
+        <li>Tighten policy: require auth — <code>FOR INSERT TO authenticated WITH CHECK (player_id = auth.uid())</code>.</li>
+        <li>Add a Postgres trigger: reject if same <code>player_id</code> posted within the last 10 seconds.</li>
+        <li>Add an admin "delete post" UI in admin.html so spam can be wiped fast during a live event.</li>
+      </ol>
+    </div>
+  </div>
+
+  <!-- MEDIUM: CSP missing -->
+  <div class="sec-item sev-med">
+    <div class="sec-header">
+      <span class="pill pill-orange">🟠 MEDIUM</span>
+      <span class="sec-title">No Content-Security-Policy Header</span>
+    </div>
+    <div class="sec-body">
+      <code>vercel.json</code> sets only <code>Cache-Control</code> headers. There's no CSP, no <code>X-Frame-Options</code>, no <code>Referrer-Policy</code>. CSP is the second line of defense against the XSS issue above — even if a script gets injected, CSP can prevent it from making outbound network calls or executing inline.
+    </div>
+    <div class="sec-fix">
+      <strong>Fix Plan — 15 minutes</strong>
+      Add to <code>vercel.json</code>:<br>
+      <code style="display:block; margin:0.4rem 0; padding:0.4rem 0.6rem; background:rgba(255,255,255,0.04); border:1px solid var(--border); white-space:pre-wrap; font-size:0.74rem">"headers": [{<br>  "source": "/(.*)",<br>  "headers": [<br>    { "key": "Content-Security-Policy", "value": "default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://*.supabase.co; connect-src 'self' https://*.supabase.co wss://*.supabase.co; img-src 'self' data: https:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com;" },<br>    { "key": "X-Frame-Options", "value": "DENY" },<br>    { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" }<br>  ]<br>}]</code>
+      <code>'unsafe-inline'</code> stays for now because every page uses inline scripts. Remove it long-term by extracting to external .js files.
+    </div>
+  </div>
+
+  <!-- LOW: platform.html email gate client-only -->
+  <div class="sec-item sev-low">
+    <div class="sec-header">
+      <span class="pill pill-green">🟢 LOW</span>
+      <span class="sec-title">platform.html Gate Is Client-Only</span>
+    </div>
+    <div class="sec-body">
+      <code>platform.html:153</code> hardcodes <code>PLATFORM_EMAIL = 'robert.t.madsen13@gmail.com'</code> and gates UI access on <code>email !== PLATFORM_EMAIL</code> at line 164. Bypassable via DevTools (anyone can flip the boolean). However, the destructive ops are RLS-protected: <code>tournaments</code> DELETE policy requires <code>auth.email() = owner_email</code>, so a bypasser can only see the dashboard view, not actually delete other people's tournaments. <strong>BUT</strong> — the <code>compEmail</code> grant flow (line 296) writes to <code>player_accounts</code> directly. Combined with the player_accounts RLS hole above, anyone who bypasses the UI can grant comp status to anyone. That's why the player_accounts fix is critical.
+    </div>
+    <div class="sec-fix">
+      <strong>Fix Plan</strong>
+      Once <code>player_accounts</code> writes go through the new <code>grant-comp</code> edge function (Critical #1), the platform.html gate becomes purely UX. Add an RLS policy on <code>player_accounts</code> UPDATE that checks <code>auth.email() = 'robert.t.madsen13@gmail.com'</code> as backup defense.
+    </div>
+  </div>
+
+  <!-- LOW: Score submission idempotency -->
+  <div class="sec-item sev-low">
+    <div class="sec-header">
+      <span class="pill pill-green">🟢 LOW</span>
+      <span class="sec-title">Score Submission — UNIQUE Constraint Already Present</span>
+    </div>
+    <div class="sec-body">
+      <code>SETUP.md</code> defines <code>UNIQUE (player_id, round, hole)</code> on the scores table. Combined with <code>scorecard.html:1858</code> using <code>upsert</code> with <code>onConflict: 'player_id,round,hole'</code>, score writes are idempotent — a flood of duplicate submissions can't corrupt the leaderboard. Good.<br>
+      What's missing: rate limiting at the API layer. A malicious player with auth could write valid different scores rapidly to game realtime updates. Low impact for a private-tournament product.
+    </div>
+    <div class="sec-fix">
+      <strong>Fix Plan</strong>
+      Optional. Add Supabase rate-limit (Pro plan supports it) or Postgres trigger that throttles per-player write rate. Defer until a real abuse case appears.
+    </div>
+  </div>
+
+  <!-- INFO: Anon key public -->
+  <div class="sec-item sev-info">
+    <div class="sec-header">
+      <span class="pill pill-blue">ℹ️ INFO</span>
+      <span class="sec-title">Supabase Publishable Key in Client — By Design</span>
+    </div>
+    <div class="sec-body">
+      <code>tourney-init.js</code> exposes <code>sb_publishable_DnBMNLaSu61ykJ6P_fI2fw_D9DdAScn</code>. This is Supabase's <strong>publishable</strong> key — equivalent to Stripe's publishable key. RLS is the enforcement layer, not key secrecy. <strong>Acceptable as-is given correct RLS.</strong> The fixes in Critical #1 and #2 close the actual exposure.
+    </div>
+    <div class="sec-fix">
+      <strong>Fix Plan</strong>
+      No action. Verify no <code>service_role</code> key has ever been committed: <code>git log -p | grep -i service_role</code>. If it has, rotate it in the Supabase dashboard immediately and force-push history rewrite.
+    </div>
+  </div>
+
+  <!-- INFO: secrets in git -->
+  <div class="sec-item sev-info">
+    <div class="sec-header">
+      <span class="pill pill-blue">ℹ️ INFO</span>
+      <span class="sec-title">.gitignore + Edge Function Secrets</span>
+    </div>
+    <div class="sec-body">
+      Edge functions in <code>supabase/functions/</code> reference <code>STRIPE_SECRET_KEY</code> and likely a Resend/Postmark key for emails. Verify these are set as Supabase project secrets (<code>supabase secrets set ...</code>), never in any <code>.ts</code> file in the repo.
+    </div>
+    <div class="sec-fix">
+      <strong>Fix Plan</strong>
+      <code>grep -rn "sk_live\|sk_test\|re_\|pk_secret" supabase/functions/</code> — must return zero. If any results: rotate those keys today, then move them to Supabase secrets via the CLI.
+    </div>
+  </div>
+
+  <!-- PRIORITY MATRIX -->
+  <div class="card" style="margin-top:1.5rem; border-color:rgba(192,57,43,0.4)">
+    <div class="card-title">🎯 Fix Priority Order — Sprint Plan</div>
+    <ol style="padding-left:1.2rem; margin-top:0.5rem">
+      <li style="margin-bottom:0.6rem; font-size:0.85rem"><strong style="color:var(--red)">DAY 1 (4 hours):</strong> Lock <code>player_accounts</code> RLS (Critical #1). Lock <code>invitations</code> RLS (Critical #2). Wrap admin.html trash_talk + why_me in <code>esc()</code> (#3). These three close the exploitable surface.</li>
+      <li style="margin-bottom:0.6rem; font-size:0.85rem"><strong style="color:var(--orange)">DAY 1–2 (2 hours):</strong> Add CSP + security headers to <code>vercel.json</code> (#6). Audit edge functions for hardcoded secrets (#9).</li>
+      <li style="margin-bottom:0.6rem; font-size:0.85rem"><strong style="color:var(--orange)">WEEK 1:</strong> Tighten <code>trash_talk</code> insert policy (#5). Plan dual-admin migration (#4) — collect all <code>is_admin</code> reads, schedule cutover.</li>
+      <li style="margin-bottom:0.6rem; font-size:0.85rem"><strong style="color:var(--green)">PRE-BOVA-2026:</strong> Drop <code>players.is_admin</code> column after dual-source unwind. Verify all RLS policies in production via <code>SELECT * FROM pg_policies</code>.</li>
+      <li style="margin-bottom:0.6rem; font-size:0.85rem"><strong style="color:var(--blue)">POST-LAUNCH:</strong> Sentry for error visibility. Score-write rate limiting if abuse appears.</li>
+    </ol>
+  </div>
+</div>
+</section>
+
+<footer>
+  Generated by <span>Claude Sonnet 4.6</span> · Greenskeeper Studios Internal · May 6, 2026
+  <br style="margin-top:0.3rem">
+  <a href="/" style="color:var(--muted); font-size:0.72rem; text-decoration:none">← tourney.greenskeeper.studio</a>
+</footer>
+
+<script>
+  let bugCount = 5;
+  function addBugRow() {
+    bugCount++;
+    const tbody = document.getElementById('bugRows');
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td style="color:var(--muted);font-size:0.75rem">${bugCount}</td>
+      <td><select class="input-cell"><option>🔴 Critical</option><option>🟠 High</option><option>🟡 Medium</option><option>🟢 Low</option></select></td>
+      <td><input class="input-cell" type="text" placeholder="Flow / page"></td>
+      <td><input class="input-cell" type="text" placeholder="Describe the bug..."></td>
+      <td><select class="input-cell"><option>Open</option><option>In Progress</option><option>Fixed</option><option>Won't Fix</option></select></td>
+    `;
+    tbody.appendChild(tr);
+    tr.querySelector('input').focus();
+  }
+</script>
+
+</body>
+</html>
