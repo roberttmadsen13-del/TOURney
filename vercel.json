@@ -51,6 +51,7 @@
     { "source": "/platform",          "destination": "/platform.html" },
     { "source": "/platform-manifest.json", "destination": "/platform-manifest.json" },
     { "source": "/player",            "destination": "/player.html" },
-    { "source": "/player-upgrade",    "destination": "/player-upgrade.html" }
+    { "source": "/player-upgrade",    "destination": "/player-upgrade.html" },
+    { "source": "/urls",              "destination": "/urls.html" }
   ]
 }

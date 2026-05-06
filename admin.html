@@ -473,16 +473,45 @@ td.email a:hover{color:var(--gold);}
     <!-- ═══ PUSH NOTIFICATIONS ═══ -->
     <div class="section">
       <div class="section-header">
-        <div class="section-title">Push Notification</div>
-        <div class="section-count">Blast to all subscribed players</div>
+        <div class="section-title">Notifications</div>
+        <div class="section-count">Push alerts sent to players' devices</div>
       </div>
-      <div style="display:grid;gap:0.75rem;background:var(--card);border:1px solid var(--border);padding:1.5rem;">
-        <div class="fg"><label>Title</label><input type="text" id="pushTitle" placeholder="Hole in One — Rob Madsen, Hole 7!" maxlength="60" style="background:var(--bg);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;width:100%;outline:none;"></div>
-        <div class="fg"><label>Body <span style="font-weight:300;letter-spacing:0;text-transform:none;font-family:'Barlow',sans-serif;font-size:0.75rem;color:var(--muted);">(optional)</span></label><input type="text" id="pushBody" placeholder="Tap to see the chaos." maxlength="120" style="background:var(--bg);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;width:100%;outline:none;"></div>
-        <div class="fg"><label>Deep Link URL <span style="font-weight:300;letter-spacing:0;text-transform:none;font-family:'Barlow',sans-serif;font-size:0.75rem;color:var(--muted);">(optional, e.g. /feed?post=id)</span></label><input type="text" id="pushUrl" placeholder="/feed" style="background:var(--bg);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;width:100%;outline:none;"></div>
-        <div style="display:flex;align-items:center;gap:1rem;flex-wrap:wrap;">
-          <button class="action-btn" style="padding:0.6rem 1.6rem;font-size:0.65rem;letter-spacing:0.2em;background:var(--gold);color:var(--ink);border-color:var(--gold);font-weight:700;" id="pushBtn" onclick="sendPushNotification()">Send to All Players</button>
-          <span id="pushStatus" style="font-family:'DM Mono',monospace;font-size:0.48rem;letter-spacing:0.12em;color:var(--muted);"></span>
+      <div style="background:var(--card);border:1px solid var(--border);padding:1.5rem;display:flex;flex-direction:column;gap:1.5rem;">
+        <!-- Manual blast -->
+        <div>
+          <div style="font-family:'DM Mono',monospace;font-size:0.46rem;letter-spacing:0.28em;text-transform:uppercase;color:var(--gold);margin-bottom:0.75rem;">Manual Blast</div>
+          <div style="display:grid;gap:0.75rem;">
+            <div class="fg"><label>Title</label><input type="text" id="pushTitle" placeholder="Hole in One — Rob Madsen, Hole 7!" maxlength="60" style="background:var(--bg);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;width:100%;outline:none;"></div>
+            <div class="fg"><label>Body <span style="font-weight:300;letter-spacing:0;text-transform:none;font-family:'Barlow',sans-serif;font-size:0.75rem;color:var(--muted);">(optional)</span></label><input type="text" id="pushBody" placeholder="Tap to see the chaos." maxlength="120" style="background:var(--bg);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;width:100%;outline:none;"></div>
+            <div class="fg"><label>Deep Link URL <span style="font-weight:300;letter-spacing:0;text-transform:none;font-family:'Barlow',sans-serif;font-size:0.75rem;color:var(--muted);">(optional)</span></label><input type="text" id="pushUrl" placeholder="/feed" style="background:var(--bg);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;width:100%;outline:none;"></div>
+            <div style="display:flex;align-items:center;gap:1rem;flex-wrap:wrap;">
+              <button class="action-btn" style="padding:0.6rem 1.6rem;font-size:0.65rem;letter-spacing:0.2em;background:var(--gold);color:var(--ink);border-color:var(--gold);font-weight:700;" id="pushBtn" onclick="sendPushNotification()">Send to All Players</button>
+              <span id="pushStatus" style="font-family:'DM Mono',monospace;font-size:0.48rem;letter-spacing:0.12em;color:var(--muted);"></span>
+            </div>
+          </div>
+        </div>
+        <!-- Auto settings -->
+        <div style="border-top:1px solid var(--border);padding-top:1.25rem;display:flex;flex-direction:column;gap:1.25rem;">
+          <div style="font-family:'DM Mono',monospace;font-size:0.46rem;letter-spacing:0.28em;text-transform:uppercase;color:var(--gold);">Auto Alerts</div>
+          <div style="display:flex;align-items:center;justify-content:space-between;">
+            <div>
+              <div style="font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.28em;text-transform:uppercase;color:var(--gold);">Hole-in-One Alert</div>
+              <div style="font-family:'Barlow',sans-serif;font-size:0.78rem;color:var(--muted);margin-top:0.25rem;">Auto-send push + trigger celebration when an ace is scored</div>
+            </div>
+            <input type="checkbox" id="notifyHio" style="width:20px;height:20px;accent-color:var(--gold);cursor:pointer;flex-shrink:0;">
+          </div>
+          <div>
+            <div style="font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.28em;text-transform:uppercase;color:var(--gold);margin-bottom:0.5rem;">Celebration Style</div>
+            <select id="celebrationStyle" class="format-select">
+              <option value="full">Full Show — Confetti + Lasers + Sound</option>
+              <option value="confetti">Confetti Only</option>
+              <option value="off">Off</option>
+            </select>
+          </div>
+          <div style="display:flex;align-items:center;gap:1rem;">
+            <button class="save-formats-btn" style="margin-top:0;" onclick="saveNotifySettings()">Save Notification Settings</button>
+            <div id="notifySaveMsg" style="font-family:'DM Mono',monospace;font-size:0.48rem;letter-spacing:0.2em;text-transform:uppercase;color:#2a7a20;display:none;">Saved</div>
+          </div>
         </div>
       </div>
     </div>
@@ -708,34 +737,6 @@ td.email a:hover{color:var(--gold);}
           </div>
           <div class="fg"><label>Notes <span style="opacity:0.5">(optional)</span></label><input type="text" id="champNotes" placeholder="Weather, format, memorable moment..." style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;"></div>
           <button class="action-btn" style="padding:0.55rem 1.4rem;font-size:0.6rem;letter-spacing:0.15em;background:var(--gold);color:var(--ink);border-color:var(--gold);font-weight:700;margin-top:0.4rem;" onclick="addChampion()">Add to Hall</button>
-        </div>
-      </div>
-    </div>
-
-    <div class="section" style="margin-top:2rem;">
-      <div class="section-header">
-        <div class="section-title">Notifications</div>
-        <div class="section-count">Push alerts sent to players' devices</div>
-      </div>
-      <div style="background:var(--card);border:1px solid var(--border);padding:1.5rem;display:flex;flex-direction:column;gap:1.25rem;">
-        <div style="display:flex;align-items:center;justify-content:space-between;">
-          <div>
-            <div style="font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.28em;text-transform:uppercase;color:var(--gold);">Hole-in-One Alert</div>
-            <div style="font-family:'Barlow',sans-serif;font-size:0.78rem;color:var(--muted);margin-top:0.25rem;">Send push notification + trigger celebration when an ace is scored</div>
-          </div>
-          <input type="checkbox" id="notifyHio" style="width:20px;height:20px;accent-color:var(--gold);cursor:pointer;flex-shrink:0;">
-        </div>
-        <div>
-          <div style="font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.28em;text-transform:uppercase;color:var(--gold);margin-bottom:0.5rem;">Celebration Style</div>
-          <select id="celebrationStyle" class="format-select">
-            <option value="full">Full Show — Confetti + Lasers + Sound</option>
-            <option value="confetti">Confetti Only</option>
-            <option value="off">Off</option>
-          </select>
-        </div>
-        <div style="display:flex;align-items:center;gap:1rem;">
-          <button class="save-formats-btn" style="margin-top:0;" onclick="saveNotifySettings()">Save Notification Settings</button>
-          <div id="notifySaveMsg" style="font-family:'DM Mono',monospace;font-size:0.48rem;letter-spacing:0.2em;text-transform:uppercase;color:#2a7a20;display:none;">Saved</div>
         </div>
       </div>
     </div>
@@ -1181,6 +1182,14 @@ async function toggleAdmin(id, makeAdmin) {
   if (!confirm(action)) return;
   const { error } = await sb.from('players').update({ is_admin: makeAdmin }).eq('id', id);
   if (error) { showToast('Error: ' + error.message); return; }
+  if (player.email) {
+    const em = player.email.toLowerCase();
+    if (makeAdmin) {
+      await sb.from('tournament_admins').upsert({ tournament_id: _tid, email: em }, { onConflict: 'tournament_id,email' });
+    } else {
+      await sb.from('tournament_admins').delete().eq('tournament_id', _tid).eq('email', em);
+    }
+  }
   player.is_admin = makeAdmin;
   renderTable();
   showToast(`${name} ${makeAdmin ? 'granted' : 'revoked'} admin access.`);
@@ -1815,6 +1824,9 @@ async function addAdmin() {
     return;
   }
 
+  // Sync players.is_admin for any matching player row in this tournament
+  await sb.from('players').update({ is_admin: true }).eq('tournament_id', _tid).eq('email', email);
+
   document.getElementById('newAdminEmail').value = '';
   msg.style.color = '#2a7a20';
   msg.textContent = `${email} added as admin.`;
@@ -1823,10 +1835,8 @@ async function addAdmin() {
 }
 
 async function removeAdmin(email) {
-  await sb.from('tournament_admins')
-    .delete()
-    .eq('tournament_id', _tid)
-    .eq('email', email);
+  await sb.from('tournament_admins').delete().eq('tournament_id', _tid).eq('email', email);
+  await sb.from('players').update({ is_admin: false }).eq('tournament_id', _tid).eq('email', email);
   await loadAdmins();
 }
 

@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TOURney — URL Reference</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  :root{--gold:#c09030;--ink:#1a1008;--bg:#f5ede0;--card:#ede2d2;--muted:#7a6a54;--border:rgba(192,144,48,0.28)}
+  body{font-family:'system-ui',-apple-system,sans-serif;background:var(--bg);color:var(--ink);padding:1.25rem;max-width:600px;margin:0 auto;font-size:15px;line-height:1.5}
+  h1{font-size:1.1rem;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:var(--gold);margin-bottom:0.25rem}
+  .meta{font-size:0.72rem;color:var(--muted);margin-bottom:2rem;font-family:monospace;letter-spacing:0.05em}
+  h2{font-size:0.62rem;font-weight:700;letter-spacing:0.24em;text-transform:uppercase;color:var(--gold);margin:1.75rem 0 0.75rem;border-bottom:1px solid var(--border);padding-bottom:0.4rem}
+  table{width:100%;border-collapse:collapse}
+  tr{border-bottom:1px solid var(--border)}
+  tr:last-child{border-bottom:none}
+  td{padding:0.6rem 0.4rem;vertical-align:top}
+  td:first-child{font-family:monospace;font-size:0.8rem;color:var(--ink);word-break:break-all;width:55%}
+  td:last-child{font-size:0.78rem;color:var(--muted);padding-left:0.75rem}
+  .tag{display:inline-block;font-size:0.55rem;font-family:monospace;letter-spacing:0.1em;text-transform:uppercase;padding:0.1em 0.5em;border-radius:3px;margin-bottom:0.2rem}
+  .tag-gold{background:rgba(192,144,48,0.15);color:var(--gold)}
+  .tag-red{background:rgba(180,60,40,0.1);color:#b43c28}
+  .note{font-size:0.72rem;color:var(--muted);background:var(--card);border-left:3px solid var(--gold);padding:0.6rem 0.85rem;margin-top:1.75rem;border-radius:0 4px 4px 0}
+  a{color:var(--gold);text-decoration:none}
+  a:active{opacity:0.7}
+</style>
+</head>
+<body>
+
+<h1>TOURney URL Map</h1>
+<div class="meta">tourney.greenskeeper.studio · updated 2026-05-05</div>
+
+<!-- PLATFORM -->
+<h2>Platform — no slug needed</h2>
+<table>
+  <tr>
+    <td>/</td>
+    <td>Marketing landing · <code>marketing.html</code></td>
+  </tr>
+  <tr>
+    <td>/create</td>
+    <td>Create a new tournament · <code>create.html</code></td>
+  </tr>
+  <tr>
+    <td>/platform</td>
+    <td><span class="tag tag-red">Rob only</span><br>Superadmin dashboard · <code>platform.html</code></td>
+  </tr>
+  <tr>
+    <td>/player</td>
+    <td>Platform player profile · <code>player.html</code></td>
+  </tr>
+  <tr>
+    <td>/player-upgrade</td>
+    <td>Upgrade player account · <code>player-upgrade.html</code></td>
+  </tr>
+  <tr>
+    <td>/login</td>
+    <td>Auth (platform-level) · <code>login.html</code></td>
+  </tr>
+</table>
+
+<!-- TOURNAMENT PAGES -->
+<h2>Tournament — replace {slug}</h2>
+<div class="note">Also works as subdomain: <strong>{slug}.greenskeeper.studio</strong> → auto-redirects to /t/{slug}/</div>
+<table>
+  <tr>
+    <td>/t/{slug}</td>
+    <td>Tournament home · <code>home.html</code></td>
+  </tr>
+  <tr>
+    <td>/t/{slug}/scoreboard</td>
+    <td>Live leaderboard · <code>scoreboard.html</code></td>
+  </tr>
+  <tr>
+    <td>/t/{slug}/scorecard</td>
+    <td>Score entry · <code>scorecard.html</code></td>
+  </tr>
+  <tr>
+    <td>/t/{slug}/directory</td>
+    <td>Player directory · <code>directory.html</code></td>
+  </tr>
+  <tr>
+    <td>/t/{slug}/profile</td>
+    <td>Player profile · <code>profile.html</code></td>
+  </tr>
+  <tr>
+    <td>/t/{slug}/feed</td>
+    <td>Activity feed · <code>feed.html</code></td>
+  </tr>
+  <tr>
+    <td>/t/{slug}/champions</td>
+    <td>Past champions · <code>champions.html</code></td>
+  </tr>
+  <tr>
+    <td>/t/{slug}/course</td>
+    <td>Course info · <code>course.html</code></td>
+  </tr>
+  <tr>
+    <td>/t/{slug}/admin</td>
+    <td><span class="tag tag-gold">Admin only</span><br>Admin dashboard · <code>admin.html</code></td>
+  </tr>
+  <tr>
+    <td>/t/{slug}/login</td>
+    <td>Auth (tournament-level) · <code>login.html</code></td>
+  </tr>
+  <tr>
+    <td>/t/{slug}/install</td>
+    <td>PWA install guide · <code>install.html</code></td>
+  </tr>
+</table>
+
+<!-- ROOT SHORTCUTS -->
+<h2>Root shortcuts (no slug — legacy)</h2>
+<div class="note">These work on root domain. No slug = no tourney context, used for testing or direct file access only.</div>
+<table>
+  <tr>
+    <td>/admin</td>
+    <td><code>admin.html</code> (no slug → error state)</td>
+  </tr>
+  <tr>
+    <td>/scoreboard</td>
+    <td><code>scoreboard.html</code></td>
+  </tr>
+  <tr>
+    <td>/scorecard</td>
+    <td><code>scorecard.html</code></td>
+  </tr>
+  <tr>
+    <td>/profile</td>
+    <td><code>profile.html</code></td>
+  </tr>
+  <tr>
+    <td>/directory</td>
+    <td><code>directory.html</code></td>
+  </tr>
+  <tr>
+    <td>/feed</td>
+    <td><code>feed.html</code></td>
+  </tr>
+  <tr>
+    <td>/champions</td>
+    <td><code>champions.html</code></td>
+  </tr>
+  <tr>
+    <td>/course</td>
+    <td><code>course.html</code></td>
+  </tr>
+</table>
+
+<!-- BOVA QUICK LINKS -->
+<h2>Bova Invitational — slug: bova</h2>
+<table>
+  <tr>
+    <td><a href="/t/bova">/t/bova</a></td>
+    <td>Home</td>
+  </tr>
+  <tr>
+    <td><a href="/t/bova/scoreboard">/t/bova/scoreboard</a></td>
+    <td>Leaderboard</td>
+  </tr>
+  <tr>
+    <td><a href="/t/bova/scorecard">/t/bova/scorecard</a></td>
+    <td>Score entry</td>
+  </tr>
+  <tr>
+    <td><a href="/t/bova/admin">/t/bova/admin</a></td>
+    <td>Admin</td>
+  </tr>
+  <tr>
+    <td><a href="/t/bova/directory">/t/bova/directory</a></td>
+    <td>Players</td>
+  </tr>
+  <tr>
+    <td><a href="/t/bova/feed">/t/bova/feed</a></td>
+    <td>Feed</td>
+  </tr>
+</table>
+
+<!-- REDIRECTS -->
+<h2>Active redirects</h2>
+<table>
+  <tr>
+    <td>bova-app.vercel.app/*</td>
+    <td>→ bova.greenskeeper.studio/t/bova/ (permanent)</td>
+  </tr>
+  <tr>
+    <td>/t/bova-2026/*</td>
+    <td>→ /t/bova/* (permanent)</td>
+  </tr>
+  <tr>
+    <td>/favicon.ico</td>
+    <td>→ /favicon.svg</td>
+  </tr>
+</table>
+
+</body>
+</html>
