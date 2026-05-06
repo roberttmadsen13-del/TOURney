@@ -395,25 +395,37 @@ td.email a:hover{color:var(--gold);}
       </div>
     </div>
 
-    <!-- TEAM ASSIGNMENT -->
+    <!-- TEAM / PAIR ASSIGNMENT -->
     <div class="section" id="teamAssignSection">
       <div class="section-header">
-        <div class="section-title">Team Assignment</div>
+        <div class="section-title" id="assignSectionTitle">Team Assignment</div>
         <div class="section-count" id="teamCount"></div>
       </div>
-      <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:1.25rem;flex-wrap:wrap;">
-        <span style="font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.14em;color:var(--muted);text-transform:uppercase;">Number of Teams</span>
-        <div id="teamCountBtns" style="display:flex;gap:0.4rem;flex-wrap:wrap;"></div>
+      <!-- Team mode controls -->
+      <div id="teamModeControls">
+        <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:1.25rem;flex-wrap:wrap;">
+          <span style="font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.14em;color:var(--muted);text-transform:uppercase;">Number of Teams</span>
+          <div id="teamCountBtns" style="display:flex;gap:0.4rem;flex-wrap:wrap;"></div>
+        </div>
+        <div id="teamAssignGrid" class="team-assign-grid"></div>
+        <div class="unassigned-pool">
+          <div class="pool-label">Unassigned &mdash; click to assign</div>
+          <div class="pool-chips" id="unassignedPool"></div>
+        </div>
+        <div class="teams-warn" id="teamsWarn">Teams are uneven &mdash; consider balancing before the round.</div>
+        <div style="display:flex;gap:0.6rem;flex-wrap:wrap;">
+          <button class="save-teams-btn" onclick="saveTeams()">Save Team Assignments</button>
+          <button class="save-teams-btn" onclick="autoBalanceTeams()" style="background:transparent;color:var(--gold);border:1px solid var(--gold);">Auto Balance</button>
+        </div>
       </div>
-      <div id="teamAssignGrid" class="team-assign-grid"></div>
-      <div class="unassigned-pool">
-        <div class="pool-label">Unassigned &mdash; click to assign</div>
-        <div class="pool-chips" id="unassignedPool"></div>
-      </div>
-      <div class="teams-warn" id="teamsWarn">Teams are uneven &mdash; consider balancing before the round.</div>
-      <div style="display:flex;gap:0.6rem;flex-wrap:wrap;">
-        <button class="save-teams-btn" onclick="saveTeams()">Save Team Assignments</button>
-        <button class="save-teams-btn" onclick="autoBalanceTeams()" style="background:transparent;color:var(--gold);border:1px solid var(--gold);">Auto Balance</button>
+      <!-- Pairs mode controls -->
+      <div id="pairsModeControls" style="display:none;">
+        <div id="pairNameFields" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:0.75rem;margin-bottom:1.25rem;"></div>
+        <div style="margin-bottom:1rem;">
+          <div class="pool-label">Assign Player to Pair</div>
+          <div id="pairAssignList" style="display:flex;flex-direction:column;gap:0.5rem;margin-top:0.5rem;"></div>
+        </div>
+        <button class="save-teams-btn" onclick="savePairAssignments()">Save Pair Assignments</button>
       </div>
     </div>
 
@@ -817,6 +829,9 @@ let players = [];
 let roundStates = {day1:'pending',day2:'pending',day3:'pending'};
 let teamAssignments = {};
 let _teamCount = 2;
+let _structure = 'team'; // 'individual' | 'team' | 'pairs'
+let _pairCount = 12;
+let _pairNames = {}; // { 1: 'Smith / Jones', 2: '...', ... }
 const TEAM_LETTERS = ['A','B','C','D','E','F','G','H'];
 let _teamNames = ['Team A','Team B','Team C','Team D','Team E','Team F','Team G','Team H'];
 let coursePars = JSON.parse(JSON.stringify(DEFAULT_PARS));
@@ -882,18 +897,30 @@ async function loadAll() {
 
 async function loadTeamNames() {
   const nameKeys = TEAM_LETTERS.map(l => `team_${l.toLowerCase()}_name`);
-  const { data } = await sb.from('settings').select('key,value').eq('tournament_id', _tid).in('key', ['team_count', ...nameKeys]);
+  // Build pair_name keys up to 24
+  const pairNameKeys = Array.from({length:24}, (_,i) => `pair_${i+1}_name`);
+  const { data } = await sb.from('settings').select('key,value').eq('tournament_id', _tid)
+    .in('key', ['team_count','structure','pair_count', ...nameKeys, ...pairNameKeys]);
   if (!data) return;
   data.forEach(r => {
     if (r.key === 'team_count') _teamCount = parseInt(r.value) || 2;
+    if (r.key === 'structure')  _structure = r.value || 'team';
+    if (r.key === 'pair_count') _pairCount = parseInt(r.value) || 12;
     TEAM_LETTERS.forEach((l, i) => {
       if (r.key === `team_${l.toLowerCase()}_name` && r.value) _teamNames[i] = r.value;
     });
+    const pm = r.key.match(/^pair_(\d+)_name$/);
+    if (pm && r.value) _pairNames[parseInt(pm[1])] = r.value;
   });
-  const lA = document.getElementById('statLabelA'); if (lA) lA.textContent = _teamNames[0];
-  const lB = document.getElementById('statLabelB'); if (lB) lB.textContent = _teamNames[1];
+  // Legacy: infer structure from team_count if not explicitly set
+  if (!data.find(r => r.key === 'structure')) {
+    _structure = _teamCount <= 1 ? 'individual' : 'team';
+  }
+  if (_structure === 'pairs') _pairCount = _teamCount;
+  const lA = document.getElementById('statLabelA'); if (lA) lA.textContent = _structure === 'pairs' ? 'Pairs' : _teamNames[0];
+  const lB = document.getElementById('statLabelB'); if (lB) lB.textContent = _structure === 'pairs' ? String(_pairCount) : _teamNames[1];
   const sub = document.getElementById('adminPageSub');
-  if (sub) sub.textContent = _teamCount <= 1 ? 'Individual Format' : _teamNames.slice(0, _teamCount).join(' · ');
+  if (sub) sub.textContent = _structure === 'individual' ? 'Individual Format' : _structure === 'pairs' ? `${_pairCount} Pairs` : _teamNames.slice(0, _teamCount).join(' · ');
 }
 
 
@@ -1153,8 +1180,14 @@ function renderTable() {
 
   tbody.innerHTML = sorted.map((p, i) => {
     const team = teamAssignments[p.id];
-    const teamIdx = TEAM_LETTERS.indexOf(team);
-    const teamLabel = teamIdx >= 0 && teamIdx < _teamCount ? `<span style="color:var(--gold)">${esc(_teamNames[teamIdx])}</span>` : '<span style="color:rgba(240,230,204,0.2)">—</span>';
+    let teamLabel;
+    if (_structure === 'pairs') {
+      const pn = parseInt(team);
+      teamLabel = pn >= 1 ? `<span style="color:var(--gold)">Pair ${pn}</span>` : '<span style="color:rgba(240,230,204,0.2)">—</span>';
+    } else {
+      const teamIdx = TEAM_LETTERS.indexOf(team);
+      teamLabel = teamIdx >= 0 && teamIdx < _teamCount ? `<span style="color:var(--gold)">${esc(_teamNames[teamIdx])}</span>` : '<span style="color:rgba(240,230,204,0.2)">—</span>';
+    }
     const dates = (p.available_dates || []).map(d => DATE_LABELS[d] || d).join(', ');
     // Use original position from created_at order for the # column
     const origPos = players.findIndex(pl => pl.id === p.id) + 1;
@@ -1227,6 +1260,19 @@ function exportCSV() {
 const _esc = s => String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 
 function renderTeamUI() {
+  // Switch section title and visible controls by structure
+  const titleEl = document.getElementById('assignSectionTitle');
+  const teamCtrl = document.getElementById('teamModeControls');
+  const pairsCtrl = document.getElementById('pairsModeControls');
+  if (titleEl) titleEl.textContent = _structure === 'pairs' ? 'Pair Assignment' : 'Team Assignment';
+  if (teamCtrl)  teamCtrl.style.display  = _structure === 'pairs' ? 'none' : '';
+  if (pairsCtrl) pairsCtrl.style.display = _structure === 'pairs' ? '' : 'none';
+
+  if (_structure === 'pairs') {
+    renderPairsUI();
+    return;
+  }
+
   const letters = TEAM_LETTERS.slice(0, _teamCount);
 
   // Team count buttons
@@ -1286,6 +1332,65 @@ function renderTeamUI() {
     : '<span style="color:rgba(240,230,204,0.2);font-size:0.72rem">All players assigned</span>';
 
   renderStats();
+}
+
+function renderPairsUI() {
+  const countEl = document.getElementById('teamCount');
+  const unassigned = players.filter(p => !teamAssignments[p.id] || parseInt(teamAssignments[p.id]) < 1);
+  if (countEl) countEl.textContent = `${players.length - unassigned.length} assigned, ${unassigned.length} unassigned`;
+
+  // Pair name fields
+  const nameFields = document.getElementById('pairNameFields');
+  if (nameFields) {
+    nameFields.innerHTML = Array.from({length: _pairCount}, (_, i) => {
+      const n = i + 1;
+      const val = _esc(_pairNames[n] || '');
+      return `<div style="display:flex;flex-direction:column;gap:0.3rem;">
+        <label style="font-family:'DM Mono',monospace;font-size:0.42rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);">Pair ${n} Name</label>
+        <input type="text" value="${val}" placeholder="e.g. Smith / Jones"
+          style="background:var(--card);border:1px solid var(--border);color:var(--cream);font-family:'DM Mono',monospace;font-size:0.6rem;padding:0.4rem 0.6rem;"
+          onblur="savePairName(${n},this.value)">
+      </div>`;
+    }).join('');
+  }
+
+  // Per-player pair dropdowns
+  const assignList = document.getElementById('pairAssignList');
+  if (assignList) {
+    const pairOpts = `<option value="">— Unassigned —</option>` +
+      Array.from({length: _pairCount}, (_, i) => {
+        const n = i + 1;
+        const label = _pairNames[n] ? `Pair ${n} — ${_pairNames[n]}` : `Pair ${n}`;
+        return `<option value="${n}">${_esc(label)}</option>`;
+      }).join('');
+    assignList.innerHTML = players.map(p => {
+      const cur = teamAssignments[p.id] || '';
+      return `<div style="display:flex;align-items:center;gap:0.75rem;">
+        <span style="font-family:'DM Mono',monospace;font-size:0.6rem;min-width:140px;">${_esc(p.first_name)} ${_esc(p.last_name)}</span>
+        <select style="background:var(--card);border:1px solid var(--border);color:var(--cream);font-family:'DM Mono',monospace;font-size:0.58rem;padding:0.25rem 0.5rem;"
+          onchange="setPairAssignment('${p.id}',this.value)">
+          ${pairOpts.replace(`value="${cur}"`, `value="${cur}" selected`)}
+        </select>
+      </div>`;
+    }).join('');
+  }
+}
+
+async function savePairName(n, name) {
+  name = name.trim();
+  _pairNames[n] = name;
+  await sb.from('settings').upsert({ key: `pair_${n}_name`, tournament_id: _tid, value: name, updated_at: new Date().toISOString() }, { onConflict: 'tournament_id,key' });
+}
+
+function setPairAssignment(playerId, pairNum) {
+  if (pairNum) teamAssignments[playerId] = String(pairNum);
+  else delete teamAssignments[playerId];
+}
+
+async function savePairAssignments() {
+  await sb.from('settings').upsert({ key: 'team_assignments', tournament_id: _tid, value: JSON.stringify(teamAssignments), updated_at: new Date().toISOString() }, { onConflict: 'tournament_id,key' });
+  showToast('Pair assignments saved.');
+  renderTable();
 }
 
 async function saveTeamCount(n) {

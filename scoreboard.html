@@ -337,6 +337,9 @@ details[open] .explainer summary::after,.explainer details[open]>summary::after{
 const sb = window.tourney.db;
 let _tournamentName = 'TOURney';
 let _teamCount = 2;
+let _structure = 'team'; // 'individual' | 'team' | 'pairs'
+let _pairCount = 12;
+let _pairNames = {}; // { 1: 'Smith / Jones', ... }
 const TEAM_LETTERS = ['A','B','C','D','E','F','G','H'];
 let _teamNames = {A:'Team One',B:'Team Two',C:'Team C',D:'Team D',E:'Team E',F:'Team F',G:'Team G',H:'Team H'};
 
@@ -344,11 +347,13 @@ let _teamNames = {A:'Team One',B:'Team Two',C:'Team C',D:'Team D',E:'Team E',F:'
 (async function loadIdentity() {
   const { tournament } = await window.tourney.ready;
   _tournamentName = tournament.name;
+  const pairNameKeys = Array.from({length:24}, (_,i) => `pair_${i+1}_name`);
   const { data } = await sb.from('settings').select('key,value')
     .eq('tournament_id', tournament.id)
-    .in('key', ['tourney_name','tourney_year','tourney_location','team_count',
+    .in('key', ['tourney_name','tourney_year','tourney_location','team_count','structure','pair_count',
                 'team_a_name','team_b_name','team_c_name','team_d_name',
-                'team_e_name','team_f_name','team_g_name','team_h_name']);
+                'team_e_name','team_f_name','team_g_name','team_h_name',
+                ...pairNameKeys]);
   const map = {};
   (data || []).forEach(r => { map[r.key] = r.value; });
 
@@ -368,9 +373,32 @@ let _teamNames = {A:'Team One',B:'Team Two',C:'Team C',D:'Team D',E:'Team E',F:'
   }
 
   _teamCount = parseInt(map.team_count) || 2;
+  _structure = map.structure || (_teamCount <= 1 ? 'individual' : 'team');
+  _pairCount = parseInt(map.pair_count) || _teamCount;
   TEAM_LETTERS.slice(0, _teamCount).forEach(L => {
     _teamNames[L] = map[`team_${L.toLowerCase()}_name`] || `Team ${L}`;
   });
+  pairNameKeys.forEach(k => {
+    const m = k.match(/^pair_(\d+)_name$/);
+    if (m && map[k]) _pairNames[parseInt(m[1])] = map[k];
+  });
+
+  // Pairs mode: rename "Team" tab to "Pairs", rebuild banners as pairs leaderboard
+  if (_structure === 'pairs') {
+    const teamTab = document.getElementById('tab-team');
+    if (teamTab) teamTab.textContent = 'Pairs';
+    const bannersEl = document.getElementById('teamBanners');
+    if (bannersEl) bannersEl.style.display = 'none'; // pairs uses full leaderboard table instead
+    // Inject pairs leaderboard container into view-team
+    const viewTeam = document.getElementById('view-team');
+    if (viewTeam && !document.getElementById('pairsLeaderboard')) {
+      const div = document.createElement('div');
+      div.id = 'pairsLeaderboard';
+      viewTeam.appendChild(div);
+    }
+    if (activeTab !== 'team') switchTab('team');
+    return;
+  }
 
   // Hide team UI for individual (no-team) tourneys
   if (_teamCount <= 1) {
@@ -379,6 +407,7 @@ let _teamNames = {A:'Team One',B:'Team Two',C:'Team C',D:'Team D',E:'Team E',F:'
     const bannersEl2 = document.getElementById('teamBanners');
     if (bannersEl2) bannersEl2.style.display = 'none';
     if (activeTab === 'team') switchTab('individual');
+    return;
   }
 
   // Rebuild team banners dynamically
@@ -679,15 +708,22 @@ function buildLeaderboard() {
 function render() {
   const lb = buildLeaderboard();
 
-  // Team totals
-  const sumTeam = arr => arr.reduce((a, p) => a + (_competitiveMode ? p.totalNet : p.totalRel), 0);
-  const thruTeam = arr => arr.reduce((a, p) => a + p.totalThru, 0);
-  TEAM_LETTERS.slice(0, _teamCount).forEach(L => {
-    const players = lb.filter(p => p.team === L);
-    const sum = sumTeam(players), thru = thruTeam(players);
-    const el = document.getElementById(`team${L}Score`);
-    if (el) { el.textContent = formatScore(sum, thru); el.className = 'tb-score ' + scoreClass(sum); }
-  });
+  // Pairs leaderboard
+  if (_structure === 'pairs') {
+    renderPairsLeaderboard(lb);
+  }
+
+  // Team totals (team mode only)
+  if (_structure === 'team') {
+    const sumTeam = arr => arr.reduce((a, p) => a + (_competitiveMode ? p.totalNet : p.totalRel), 0);
+    const thruTeam = arr => arr.reduce((a, p) => a + p.totalThru, 0);
+    TEAM_LETTERS.slice(0, _teamCount).forEach(L => {
+      const teamPlayers = lb.filter(p => p.team === L);
+      const sum = sumTeam(teamPlayers), thru = thruTeam(teamPlayers);
+      const el = document.getElementById(`team${L}Score`);
+      if (el) { el.textContent = formatScore(sum, thru); el.className = 'tb-score ' + scoreClass(sum); }
+    });
+  }
 
   if (!lb.length) {
     document.getElementById('leaderboardBody').innerHTML = '<tr><td colspan="7" class="empty-state">No players registered yet.</td></tr>';
@@ -778,6 +814,87 @@ function renderRoundSelector() {
   if (!selectedScorecardRound || !roundsWithScores.includes(selectedScorecardRound)) {
     selectedScorecardRound = currentRound || (roundsWithScores.length ? roundsWithScores[roundsWithScores.length - 1] : null);
   }
+}
+
+// ── PAIRS LEADERBOARD ─────────────────────────────────────────────
+function renderPairsLeaderboard(lb) {
+  const el = document.getElementById('pairsLeaderboard');
+  if (!el) return;
+
+  // Build pair scores: best ball per hole across both players in a pair
+  const pairScores = [];
+  for (let n = 1; n <= _pairCount; n++) {
+    const pairPlayers = lb.filter(p => p.team === String(n));
+    const name = _pairNames[n] ? _esc(_pairNames[n]) : `Pair ${n}`;
+    const playerNames = pairPlayers.map(p => _esc(p.first_name) + ' ' + _esc(p.last_name)).join(' &amp; ') || '—';
+
+    // Sum best-ball scores per round across all rounds
+    let totalRel = 0, totalThru = 0;
+    const days = [];
+    ['day1','day2','day3'].forEach(round => {
+      const pars = coursePars[round] || DEFAULT_PARS[round];
+      let rel = 0, thru = 0;
+      for (let h = 1; h <= 18; h++) {
+        const par = pars[h-1] || 4;
+        const hScores = pairPlayers.map(p => {
+          const raw = scores.find(s => s.player_id === p.id && s.round === round && s.hole === h);
+          return raw ? raw.gross_score : null;
+        }).filter(v => v !== null);
+        if (hScores.length) {
+          rel += Math.min(...hScores) - par;
+          thru++;
+        }
+      }
+      days.push({ rel, thru });
+      totalRel += rel;
+      totalThru += thru;
+    });
+    pairScores.push({ n, name, playerNames, totalRel, totalThru, days });
+  }
+
+  // Sort: fewest strokes first; pairs with no scores go last
+  pairScores.sort((a, b) => {
+    if (a.totalThru === 0 && b.totalThru === 0) return 0;
+    if (a.totalThru === 0) return 1;
+    if (b.totalThru === 0) return -1;
+    return a.totalRel - b.totalRel;
+  });
+
+  if (!pairScores.length) { el.innerHTML = '<div class="empty-state">No pairs configured yet.</div>'; return; }
+
+  let pos = 0;
+  const rows = pairScores.map(pair => {
+    if (pair.totalThru > 0) pos++;
+    const posLabel = pair.totalThru === 0 ? '—' : String(pos);
+    const posCls = pos === 1 && pair.totalThru > 0 ? 'pos gold' : pos === 2 ? 'pos silver' : pos === 3 ? 'pos bronze' : 'pos';
+    const sc = formatScore(pair.totalRel, pair.totalThru);
+    const scCls = pair.totalRel < 0 ? 'score-tally under' : pair.totalRel > 0 ? 'score-tally over' : 'score-tally even';
+    return `<tr>
+      <td class="${posCls}" style="${pair.totalThru===0?'color:rgba(240,230,204,0.15)':''}">${posLabel}</td>
+      <td>
+        <div class="lb-name">${pair.name}</div>
+        <div class="lb-tier" style="font-size:0.48rem;color:rgba(240,230,204,0.4)">${pair.playerNames}</div>
+      </td>
+      <td class="score-cell thru">${pair.totalThru > 0 ? (pair.totalThru >= 54 ? 'F' : pair.totalThru) : '—'}</td>
+      <td class="score-cell ${pair.days[0]?.rel < 0 ? 'under' : pair.days[0]?.rel > 0 ? 'over' : ''}">${formatScore(pair.days[0]?.rel, pair.days[0]?.thru)}</td>
+      <td class="score-cell ${pair.days[1]?.rel < 0 ? 'under' : pair.days[1]?.rel > 0 ? 'over' : ''}">${formatScore(pair.days[1]?.rel, pair.days[1]?.thru)}</td>
+      <td class="score-cell ${pair.days[2]?.rel < 0 ? 'under' : pair.days[2]?.rel > 0 ? 'over' : ''}">${formatScore(pair.days[2]?.rel, pair.days[2]?.thru)}</td>
+      <td class="${scCls}">${sc}</td>
+    </tr>`;
+  }).join('');
+
+  el.innerHTML = `<table class="lb-table" style="margin-bottom:1.5rem;">
+    <thead><tr>
+      <th style="width:2.5rem"></th>
+      <th>Pair</th>
+      <th class="center">Thru</th>
+      <th class="center">Day 1</th>
+      <th class="center">Day 2</th>
+      <th class="center">Day 3</th>
+      <th class="right">Total</th>
+    </tr></thead>
+    <tbody>${rows}</tbody>
+  </table>`;
 }
 
 function selectScorecardRound(round) {

@@ -392,10 +392,16 @@ body{background:var(--bg);color:var(--ink);font-family:'Barlow',sans-serif;font-
 const sb = window.tourney.db;
 
 const _teamNames = {A:'Team A',B:'Team B',C:'Team C',D:'Team D',E:'Team E',F:'Team F',G:'Team G',H:'Team H'};
+let _pairNamesMap = {}; // { '1': 'Smith / Jones', ... }
+let _structure = 'team';
 let _slug = 'default';
 let _notifyHio = true;
 
 function _teamLabel(side) {
+  if (_structure === 'pairs') {
+    const n = parseInt(side);
+    return _pairNamesMap[side] || (n >= 1 ? `Pair ${n}` : 'Unassigned');
+  }
   return _teamNames[side] || 'Unassigned';
 }
 
@@ -525,7 +531,7 @@ let scoreHistory = [];
 // ── INIT ──────────────────────────────────────────────────────────
 async function init() {
   const { tournament } = await window.tourney.ready;
-  const [pRes, tRes, rRes, parRes, fmtRes, notifyRes, tcRes] = await Promise.all([
+  const [pRes, tRes, rRes, parRes, fmtRes, notifyRes, tcRes, structRes] = await Promise.all([
     sb.from('players').select('*').eq('tournament_id', tournament.id).order('first_name'),
     sb.from('settings').select('*').eq('tournament_id', tournament.id).eq('key','team_assignments'),
     sb.from('settings').select('*').eq('tournament_id', tournament.id).like('key','round_day%'),
@@ -533,9 +539,19 @@ async function init() {
     sb.from('settings').select('*').eq('tournament_id', tournament.id).eq('key','round_formats'),
     sb.from('settings').select('value').eq('tournament_id', tournament.id).eq('key','notify_hole_in_one').maybeSingle(),
     sb.from('settings').select('value').eq('tournament_id', tournament.id).eq('key','team_count').maybeSingle(),
+    sb.from('settings').select('key,value').eq('tournament_id', tournament.id).in('key', ['structure','pair_count',...Array.from({length:24},(_,i)=>`pair_${i+1}_name`)]),
   ]);
   if (notifyRes.data) _notifyHio = notifyRes.data.value !== 'false';
   const _teamCount = parseInt(tcRes.data?.value || '2');
+  // Load structure and pair names
+  (structRes.data || []).forEach(r => {
+    if (r.key === 'structure') _structure = r.value || 'team';
+    const pm = r.key.match(/^pair_(\d+)_name$/);
+    if (pm && r.value) _pairNamesMap[pm[1]] = r.value;
+  });
+  if (!structRes.data?.find(r => r.key === 'structure')) {
+    _structure = _teamCount <= 1 ? 'individual' : 'team';
+  }
 
   players = pRes.data || [];
 
@@ -600,7 +616,9 @@ async function init() {
     _scoringAsId = detectedPlayer.id;
     const detectedTeam = teamAssignments[detectedPlayer.id] || '';
     // Gate: unassigned players cannot score (skip for individual mode)
-    if (!detectedTeam && _teamCount > 1) {
+    const isPairsUnassigned = _structure === 'pairs' && (!detectedTeam || parseInt(detectedTeam) < 1);
+    const isTeamUnassigned = _structure !== 'pairs' && !detectedTeam && _teamCount > 1;
+    if (isPairsUnassigned || isTeamUnassigned) {
       document.getElementById('unassignedGate').style.display = 'block';
       return;
     }
@@ -613,6 +631,11 @@ async function init() {
       if (teamDisplayEl) teamDisplayEl.closest('.fg')?.style.setProperty('display','none');
     } else {
       if (teamDisplayEl) teamDisplayEl.value = _teamLabel(detectedTeam);
+    }
+    // In pairs mode: hide opponent section (no opposing team concept)
+    if (_structure === 'pairs') {
+      const oppSection = document.getElementById('opponentSection');
+      if (oppSection) oppSection.style.display = 'none';
     }
     document.getElementById('loginPrompt').style.display = 'none';
     document.getElementById('setupForm').style.display = 'block';
@@ -1091,20 +1114,25 @@ function renderPlayers() {
       </div>`;
   }
 
-  const html = `<div class="foursome-cols">
-    <div class="foursome-col">
-      <div class="col-header ${myColCls}">
-        ${myTeamLabel}
-      </div>
-      ${leftHtml}
-    </div>
-    <div class="foursome-col">
-      <div class="col-header ${oppColCls}">
-        ${oppTeamLabel}${hasOpps ? `<span class="col-live-dot"></span>` : ''}
-      </div>
-      ${rightHtml}
-    </div>
-  </div>`;
+  const html = _structure === 'pairs'
+    ? `<div class="foursome-cols">
+        <div class="foursome-col" style="flex:1 1 100%;">
+          <div class="col-header ${myColCls}">${myTeamLabel}</div>
+          ${leftHtml}
+        </div>
+      </div>`
+    : `<div class="foursome-cols">
+        <div class="foursome-col">
+          <div class="col-header ${myColCls}">${myTeamLabel}</div>
+          ${leftHtml}
+        </div>
+        <div class="foursome-col">
+          <div class="col-header ${oppColCls}">
+            ${oppTeamLabel}${hasOpps ? `<span class="col-live-dot"></span>` : ''}
+          </div>
+          ${rightHtml}
+        </div>
+      </div>`;
 
   document.getElementById('foursomeGrid').innerHTML = html;
 }
