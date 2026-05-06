@@ -293,15 +293,24 @@
     const { data } = await db.from('settings')
       .select('key,value')
       .eq('tournament_id', tournamentId)
-      .in('key', ['color_primary', 'color_ink', 'color_bg']);
+      .in('key', ['color_primary','color_ink','color_bg',
+                  'team_a_color','team_b_color','team_c_color','team_d_color',
+                  'team_e_color','team_f_color','team_g_color','team_h_color']);
     if (!data) return;
     let primary = '#c09030', ink = '#1a1008', bg = '#f5ede0';
+    const teamColors = {};
     data.forEach(({ key, value }) => {
       if (key === 'color_primary') primary = value;
       if (key === 'color_ink')     ink     = value;
       if (key === 'color_bg')      bg      = value;
+      const tm = key.match(/^team_([a-h])_color$/);
+      if (tm && value) teamColors[tm[1]] = value;
     });
     applyBrandColors(primary, ink, bg);
+    const root = document.documentElement;
+    'abcdefgh'.split('').forEach(l => {
+      if (teamColors[l]) root.style.setProperty(`--team-${l}`, teamColors[l]);
+    });
   }
 
   window.tourney = { db, ready: init(), applyBrandColors };

@@ -517,24 +517,36 @@ td.email a:hover{color:var(--gold);}
     <!-- SITE COLORS -->
     <div class="section">
       <div class="section-header">
-        <div class="section-title">Site Colors</div>
-        <div class="section-count">Gold, dark, and background theme colors</div>
+        <div class="section-title">Colors</div>
+        <div class="section-count">Brand palette + team colors — live preview updates as you pick</div>
       </div>
-      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;background:var(--card);border:1px solid var(--border);padding:1.5rem;">
-        <div class="fg">
-          <label>Gold / Primary</label>
-          <input type="color" id="dsColorGold" value="#c09030" style="height:44px;width:100%;padding:0.15rem;cursor:pointer;border:1px solid var(--border);background:var(--card);">
+      <div style="background:var(--card);border:1px solid var(--border);padding:1.5rem;">
+        <!-- Brand -->
+        <div style="font-family:'DM Mono',monospace;font-size:0.46rem;letter-spacing:0.28em;text-transform:uppercase;color:var(--gold);margin-bottom:0.75rem;">Brand</div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:1rem;margin-bottom:1.5rem;">
+          <div class="fg"><label>Accent / Gold</label><input type="color" id="dsColorGold" value="#c09030" style="height:44px;width:100%;padding:0.15rem;cursor:pointer;border:1px solid var(--border);background:var(--card);" oninput="onColorPick()"></div>
+          <div class="fg"><label>Ink / Text</label><input type="color" id="dsColorInk" value="#1a1008" style="height:44px;width:100%;padding:0.15rem;cursor:pointer;border:1px solid var(--border);background:var(--card);" oninput="onColorPick()"></div>
+          <div class="fg"><label>Background</label><input type="color" id="dsColorBg" value="#f5ede0" style="height:44px;width:100%;padding:0.15rem;cursor:pointer;border:1px solid var(--border);background:var(--card);" oninput="onColorPick()"></div>
         </div>
-        <div class="fg">
-          <label>Ink / Dark</label>
-          <input type="color" id="dsColorInk" value="#1a1008" style="height:44px;width:100%;padding:0.15rem;cursor:pointer;border:1px solid var(--border);background:var(--card);">
+        <!-- Team colors -->
+        <div id="teamColorBlock">
+          <div style="font-family:'DM Mono',monospace;font-size:0.46rem;letter-spacing:0.28em;text-transform:uppercase;color:var(--gold);margin-bottom:0.75rem;border-top:1px solid var(--border);padding-top:1.25rem;">Team Colors</div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:1rem;margin-bottom:1.5rem;">
+            <div class="fg"><label>Team A</label><input type="color" id="dsColorTeamA" value="#1a3a8f" style="height:44px;width:100%;padding:0.15rem;cursor:pointer;border:1px solid var(--border);background:var(--card);" oninput="onColorPick()"></div>
+            <div class="fg"><label>Team B</label><input type="color" id="dsColorTeamB" value="#8f1a1a" style="height:44px;width:100%;padding:0.15rem;cursor:pointer;border:1px solid var(--border);background:var(--card);" oninput="onColorPick()"></div>
+            <div class="fg ds-tc-extra" style="display:none"><label>Team C</label><input type="color" id="dsColorTeamC" value="#1a6b1a" style="height:44px;width:100%;padding:0.15rem;cursor:pointer;border:1px solid var(--border);background:var(--card);" oninput="onColorPick()"></div>
+            <div class="fg ds-tc-extra" style="display:none"><label>Team D</label><input type="color" id="dsColorTeamD" value="#6b1a6b" style="height:44px;width:100%;padding:0.15rem;cursor:pointer;border:1px solid var(--border);background:var(--card);" oninput="onColorPick()"></div>
+            <div class="fg ds-tc-extra" style="display:none"><label>Team E</label><input type="color" id="dsColorTeamE" value="#1a6b6b" style="height:44px;width:100%;padding:0.15rem;cursor:pointer;border:1px solid var(--border);background:var(--card);" oninput="onColorPick()"></div>
+            <div class="fg ds-tc-extra" style="display:none"><label>Team F</label><input type="color" id="dsColorTeamF" value="#6b6b1a" style="height:44px;width:100%;padding:0.15rem;cursor:pointer;border:1px solid var(--border);background:var(--card);" oninput="onColorPick()"></div>
+            <div class="fg ds-tc-extra" style="display:none"><label>Team G</label><input type="color" id="dsColorTeamG" value="#2a4a2a" style="height:44px;width:100%;padding:0.15rem;cursor:pointer;border:1px solid var(--border);background:var(--card);" oninput="onColorPick()"></div>
+            <div class="fg ds-tc-extra" style="display:none"><label>Team H</label><input type="color" id="dsColorTeamH" value="#4a2a2a" style="height:44px;width:100%;padding:0.15rem;cursor:pointer;border:1px solid var(--border);background:var(--card);" oninput="onColorPick()"></div>
+          </div>
         </div>
-        <div class="fg">
-          <label>Background</label>
-          <input type="color" id="dsColorBg" value="#f5ede0" style="height:44px;width:100%;padding:0.15rem;cursor:pointer;border:1px solid var(--border);background:var(--card);">
-        </div>
+        <!-- Live preview strip -->
+        <div style="font-family:'DM Mono',monospace;font-size:0.46rem;letter-spacing:0.28em;text-transform:uppercase;color:var(--muted);margin-bottom:0.5rem;">Preview</div>
+        <div id="colorPreviewStrip" style="border-radius:4px;overflow:hidden;height:40px;display:flex;margin-bottom:1.25rem;border:1px solid var(--border);"></div>
+        <button class="save-formats-btn" onclick="saveColors()">Save Colors</button>
       </div>
-      <button class="save-formats-btn" style="margin-top:0.75rem;" onclick="saveColors()">Save Colors</button>
     </div>
 
     <!-- LOGO -->
@@ -2042,7 +2054,9 @@ const DS_ALL_KEYS = [
   'reg_open','reg_max_players','reg_min_players','reg_bullet_1','reg_bullet_2','reg_bullet_3',
   'reg_show_dates','reg_show_why_me','reg_show_hat',
   'team_a_name','team_b_name','team_c_name','team_d_name','team_e_name','team_f_name','team_g_name','team_h_name',
-  'schedule_json','about_stat_days',
+  'team_a_color','team_b_color','team_c_color','team_d_color','team_e_color','team_f_color','team_g_color','team_h_color',
+  'team_a_captain','challengers_captain',
+  'schedule_json',
 ];
 
 const DS_FIELD_MAP = {
@@ -2055,6 +2069,14 @@ const DS_FIELD_MAP = {
   tourney_location:  'dsLocation',
   hero_cta_primary:  'dsCtaPrimary',
   color_primary:     'dsColorGold',
+  team_a_color:      'dsColorTeamA',
+  team_b_color:      'dsColorTeamB',
+  team_c_color:      'dsColorTeamC',
+  team_d_color:      'dsColorTeamD',
+  team_e_color:      'dsColorTeamE',
+  team_f_color:      'dsColorTeamF',
+  team_g_color:      'dsColorTeamG',
+  team_h_color:      'dsColorTeamH',
   color_ink:         'dsColorInk',
   color_bg:          'dsColorBg',
   about_stat_days:   'dsStatDays',
@@ -2094,11 +2116,19 @@ async function loadDesignSettings() {
   if (map.about_photo_url) renderPhotoPreview('aboutPhotoPreview', map.about_photo_url);
   _numDays = parseInt(map.about_stat_days || '3');
   buildScheduleEditor(_numDays, map.schedule_json || '[]');
-  // Show extra team name inputs (C–H) based on team_count
+  // Show extra team name + color inputs (C–H) based on team_count
   const tc = parseInt(map.team_count || '2');
   document.querySelectorAll('.ds-team-extra').forEach((el, i) => {
     el.style.display = (i + 3) <= tc ? '' : 'none';
   });
+  document.querySelectorAll('.ds-tc-extra').forEach((el, i) => {
+    el.style.display = (i + 3) <= tc ? '' : 'none';
+  });
+  // Hide team color block entirely for individual mode
+  const tcBlock = document.getElementById('teamColorBlock');
+  if (tcBlock) tcBlock.style.display = tc <= 1 ? 'none' : '';
+  // Render initial preview
+  onColorPick();
 }
 
 function renderPhotoPreview(id, url) {
@@ -2120,14 +2150,47 @@ async function saveIdentity() {
   showToast('Identity saved.');
 }
 
+function onColorPick() {
+  const primary = document.getElementById('dsColorGold')?.value || '#c09030';
+  const ink     = document.getElementById('dsColorInk')?.value  || '#1a1008';
+  const bg      = document.getElementById('dsColorBg')?.value   || '#f5ede0';
+  // Live-apply brand colors to admin page immediately
+  window.tourney?.applyBrandColors?.(primary, ink, bg);
+  // Update preview strip
+  const strip = document.getElementById('colorPreviewStrip');
+  if (!strip) return;
+  const swatches = [
+    { label: 'Accent', color: primary },
+    { label: 'Ink',    color: ink },
+    { label: 'BG',     color: bg },
+  ];
+  ['a','b','c','d','e','f','g','h'].forEach((l, i) => {
+    const el = document.getElementById(`dsColorTeam${l.toUpperCase()}`);
+    const wrap = el?.closest('.fg');
+    if (el && wrap && wrap.style.display !== 'none') {
+      swatches.push({ label: `Team ${l.toUpperCase()}`, color: el.value });
+    }
+  });
+  strip.innerHTML = swatches.map(s =>
+    `<div style="flex:1;background:${s.color};display:flex;align-items:flex-end;padding:0 0.35rem 0.25rem;min-width:0;" title="${s.label}: ${s.color}">
+      <span style="font-family:'DM Mono',monospace;font-size:0.38rem;letter-spacing:0.08em;text-transform:uppercase;color:rgba(255,255,255,0.7);overflow:hidden;white-space:nowrap;">${s.label}</span>
+    </div>`
+  ).join('');
+}
+
 async function saveColors() {
+  const now = new Date().toISOString();
   const rows = [
     { key:'color_primary', value: document.getElementById('dsColorGold')?.value || '#c09030' },
-    { key:'color_ink',     value: document.getElementById('dsColorInk')?.value || '#1a1008' },
-    { key:'color_bg',      value: document.getElementById('dsColorBg')?.value || '#f5ede0' },
-  ].map(r => ({ ...r, tournament_id: _tid, updated_at: new Date().toISOString() }));
+    { key:'color_ink',     value: document.getElementById('dsColorInk')?.value  || '#1a1008' },
+    { key:'color_bg',      value: document.getElementById('dsColorBg')?.value   || '#f5ede0' },
+    ...['a','b','c','d','e','f','g','h'].map(l => ({
+      key: `team_${l}_color`,
+      value: document.getElementById(`dsColorTeam${l.toUpperCase()}`)?.value || '',
+    })).filter((r, i) => (i < 2) || ((i + 3) <= _teamCount && r.value)),
+  ].map(r => ({ ...r, tournament_id: _tid, updated_at: now }));
   await sb.from('settings').upsert(rows, { onConflict: 'tournament_id,key' });
-  showToast('Colors saved. Refresh site to apply.');
+  showToast('Colors saved.');
 }
 
 async function loadNotifySettings() {
