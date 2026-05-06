@@ -396,7 +396,7 @@ td.email a:hover{color:var(--gold);}
     </div>
 
     <!-- TEAM ASSIGNMENT -->
-    <div class="section">
+    <div class="section" id="teamAssignSection">
       <div class="section-header">
         <div class="section-title">Team Assignment</div>
         <div class="section-count" id="teamCount"></div>
@@ -457,9 +457,11 @@ td.email a:hover{color:var(--gold);}
         <div class="section-count">Destructive operations &mdash; cannot be undone</div>
       </div>
       <div style="padding:1.2rem;background:var(--card);border:1px solid rgba(138,30,16,0.35);display:flex;flex-direction:column;gap:0.9rem;">
-        <div style="font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.18em;color:var(--muted);text-transform:uppercase;">Clear scores for a single round</div>
+        <div style="font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.18em;color:var(--muted);text-transform:uppercase;">Clear scores for a round</div>
         <div style="display:flex;gap:0.6rem;flex-wrap:wrap;">
           <button class="action-btn" style="padding:0.5rem 1rem;font-size:0.6rem;letter-spacing:0.15em;" onclick="clearRoundAll('day1')">Clear Day 1 Scores</button>
+        </div>
+        <div id="dangerRoundsExtra" style="display:flex;gap:0.6rem;flex-wrap:wrap;">
           <button class="action-btn" style="padding:0.5rem 1rem;font-size:0.6rem;letter-spacing:0.15em;" onclick="clearRoundAll('day2')">Clear Day 2 Scores</button>
           <button class="action-btn" style="padding:0.5rem 1rem;font-size:0.6rem;letter-spacing:0.15em;" onclick="clearRoundAll('day3')">Clear Day 3 Scores</button>
         </div>
@@ -1085,6 +1087,14 @@ function renderRounds() {
     </div>`;
   }).join('');
   document.getElementById('roundGrid').innerHTML = html;
+  // Sync par editor and danger zone to actual round count
+  const nd = days.length;
+  ['parDay2','parDay3'].forEach((id, i) => {
+    const el = document.getElementById(id);
+    if (el) el.style.display = nd >= i + 2 ? '' : 'none';
+  });
+  const dre = document.getElementById('dangerRoundsExtra');
+  if (dre) dre.style.display = nd >= 2 ? '' : 'none';
 }
 
 async function toggleRound(day) {
@@ -1284,6 +1294,13 @@ async function saveTeamCount(n) {
   const sub = document.getElementById('adminPageSub');
   if (sub) sub.textContent = n <= 1 ? 'Individual Format' : _teamNames.slice(0, n).join(' · ');
   renderTeamUI();
+  // Sync team-dependent UI sections
+  const _ind = n <= 1;
+  const _tng = document.getElementById('dsTeamNamesGrid'); if (_tng) _tng.style.display = _ind ? 'none' : '';
+  const _tas = document.getElementById('teamAssignSection'); if (_tas) _tas.style.display = _ind ? 'none' : '';
+  const _tcb = document.getElementById('teamColorBlock'); if (_tcb) _tcb.style.display = _ind ? 'none' : '';
+  document.querySelectorAll('.ds-team-extra').forEach((el, i) => { el.style.display = (i + 3) <= n ? '' : 'none'; });
+  document.querySelectorAll('.ds-tc-extra').forEach((el, i) => { el.style.display = (i + 3) <= n ? '' : 'none'; });
   showToast(`Team count updated to ${n <= 1 ? 'Individual' : n + ' teams'}.`);
 }
 
@@ -2163,6 +2180,11 @@ async function loadDesignSettings() {
   // Hide team color block entirely for individual mode
   const tcBlock = document.getElementById('teamColorBlock');
   if (tcBlock) tcBlock.style.display = tc <= 1 ? 'none' : '';
+  // Hide team names/captains grid and team assignment section for individual
+  const teamNamesGrid = document.getElementById('dsTeamNamesGrid');
+  if (teamNamesGrid) teamNamesGrid.style.display = tc <= 1 ? 'none' : '';
+  const teamAssignSection = document.getElementById('teamAssignSection');
+  if (teamAssignSection) teamAssignSection.style.display = tc <= 1 ? 'none' : '';
   // Render initial preview
   onColorPick();
 }
