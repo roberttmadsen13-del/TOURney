@@ -274,19 +274,12 @@ body{background:var(--bg);color:var(--ink);font-family:'Barlow',sans-serif;font-
     <div style="font-size:0.85rem;color:var(--muted);line-height:1.7;max-width:320px;margin:0 auto;">Your spot is confirmed — the admin will assign teams before scoring opens. Check back once teams are set.</div>
   </div>
 
-  <!-- Not-logged-in prompt (hidden when player detected) -->
-  <div id="loginPrompt" style="display:none;text-align:center;padding:2rem 1rem;">
-    <div style="font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:700;margin-bottom:0.8rem;">Welcome back</div>
-    <div style="font-size:0.85rem;color:var(--muted);margin-bottom:1.5rem;line-height:1.6;">
-      To auto-fill your info, log in on the <a href="/profile" style="color:var(--gold);text-decoration:underline;">Profile</a> page first.<br>
-      Or select your name below.
-    </div>
-    <div class="fg">
-      <label>Your Name</label>
-      <select id="scorerSelectFallback">
-        <option value="">Select your name...</option>
-      </select>
-    </div>
+  <!-- Player not matched to a row (logged in but email unknown to tournament) -->
+  <div id="loginPrompt" style="display:none;text-align:center;padding:2.5rem 1rem;">
+    <div style="font-size:2rem;margin-bottom:1rem;">⛳</div>
+    <div style="font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:700;margin-bottom:0.8rem;">Player not found</div>
+    <div style="font-size:0.85rem;color:var(--muted);margin-bottom:1rem;line-height:1.6;">Your account wasn't matched to a player in this tournament.</div>
+    <div style="font-size:0.82rem;color:var(--muted);line-height:1.6;">Ask your admin to add <strong id="loginPromptEmail" style="color:var(--gold);word-break:break-all;"></strong> to your player profile.</div>
   </div>
 
   <div id="setupForm">
@@ -623,35 +616,11 @@ async function init() {
     refreshSetupLists();
     _prefillOpponentIfPicked(detectedPlayer.id);
   } else {
-    // No profile — show fallback name picker, hide main form
+    // Logged in but email doesn't match any player row — show actionable error
+    const emailEl = document.getElementById('loginPromptEmail');
+    if (emailEl) emailEl.textContent = profileEmail || 'your account email';
     document.getElementById('loginPrompt').style.display = 'block';
     document.getElementById('setupForm').style.display = 'none';
-    const fallbackSel = document.getElementById('scorerSelectFallback');
-    players.forEach(p => {
-      const o = document.createElement('option');
-      o.value = p.id;
-      o.textContent = `${p.first_name} ${p.last_name}`;
-      fallbackSel.appendChild(o);
-    });
-    fallbackSel.addEventListener('change', function() {
-      const p = players.find(x => x.id === this.value);
-      if (!p) return;
-      _scoringAsId = p.id;
-      const team = teamAssignments[p.id] || '';
-      if (!team) {
-        document.getElementById('loginPrompt').style.display = 'none';
-        document.getElementById('unassignedGate').style.display = 'block';
-        return;
-      }
-      document.getElementById('scorerSelect').value = p.id;
-      document.getElementById('scorerDisplay').value = `${p.first_name} ${p.last_name}`;
-      document.getElementById('teamSelect').value = team;
-      document.getElementById('teamDisplay').value = _teamLabel(team);
-      document.getElementById('loginPrompt').style.display = 'none';
-      document.getElementById('setupForm').style.display = 'block';
-      refreshSetupLists();
-      _prefillOpponentIfPicked(p.id);
-    });
   }
 
   // Restore saved scores
