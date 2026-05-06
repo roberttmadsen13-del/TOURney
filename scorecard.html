@@ -290,7 +290,7 @@ body{background:var(--bg);color:var(--ink);font-family:'Barlow',sans-serif;font-
       <input type="hidden" id="scorerSelect" />
     </div>
     <div class="fg">
-      <label>Your Team</label>
+      <label id="teamSectionLabel">Your Team</label>
       <input type="text" id="teamDisplay" readonly style="background:rgba(192,144,48,0.06);cursor:default;" />
       <input type="hidden" id="teamSelect" />
     </div>
@@ -632,10 +632,12 @@ async function init() {
     } else {
       if (teamDisplayEl) teamDisplayEl.value = _teamLabel(detectedTeam);
     }
-    // In pairs mode: hide opponent section (no opposing team concept)
+    // In pairs mode: hide opponent section, update team label
     if (_structure === 'pairs') {
       const oppSection = document.getElementById('opponentSection');
       if (oppSection) oppSection.style.display = 'none';
+      const lbl = document.getElementById('teamSectionLabel');
+      if (lbl) lbl.textContent = 'Your Pair';
     }
     document.getElementById('loginPrompt').style.display = 'none';
     document.getElementById('setupForm').style.display = 'block';
