@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TOURney QA Checklist</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--gold:#c09030;--ink:#1a1008;--bg:#f5ede0;--card:#ede2d2;--dark:#0f0a04;--muted:#7a6a54;--border:rgba(192,144,48,0.22);--red:#b43c28;--green:#2a7a20}
+body{font-family:-apple-system,system-ui,sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;font-size:14px;padding-bottom:3rem}
+
+/* Header */
+.hdr{background:var(--dark);padding:1rem 1.25rem 0.9rem;border-bottom:1px solid rgba(192,144,48,0.18);position:sticky;top:0;z-index:10}
+h1{font-family:'Barlow Condensed',system-ui,sans-serif;font-size:0.72rem;font-weight:700;letter-spacing:0.28em;text-transform:uppercase;color:var(--gold);margin-bottom:0.65rem}
+.slug-row{display:flex;gap:0.5rem;align-items:center;flex-wrap:wrap}
+.slug-label{font-size:0.52rem;font-weight:700;letter-spacing:0.22em;text-transform:uppercase;color:rgba(192,144,48,0.5)}
+.slug-input{font-family:monospace;font-size:0.72rem;padding:0.3rem 0.6rem;border-radius:3px;background:rgba(255,255,255,0.06);color:#f0e6cc;border:1px solid rgba(192,144,48,0.3);width:180px}
+.slug-input:focus{outline:none;border-color:var(--gold)}
+.progress{font-family:monospace;font-size:0.6rem;color:rgba(192,144,48,0.6);margin-left:auto}
+
+/* Sections */
+.sections{padding:0 1rem;margin-top:1.25rem;display:flex;flex-direction:column;gap:1.25rem}
+.section{background:var(--card);border-radius:6px;border:1px solid var(--border);overflow:hidden}
+.sec-hdr{display:flex;align-items:center;justify-content:space-between;padding:0.75rem 1rem;border-bottom:1px solid var(--border);gap:0.5rem}
+.sec-title{font-family:'Barlow Condensed',system-ui,sans-serif;font-size:0.8rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase}
+.sec-badge{font-family:monospace;font-size:0.55rem;padding:0.15em 0.55em;border-radius:3px;letter-spacing:0.1em;text-transform:uppercase;white-space:nowrap}
+.badge-new{background:rgba(74,48,128,0.12);color:#6a48b8;border:1px solid rgba(74,48,128,0.25)}
+.badge-regression{background:rgba(192,144,48,0.1);color:var(--gold);border:1px solid rgba(192,144,48,0.25)}
+.badge-infra{background:rgba(42,122,32,0.1);color:var(--green);border:1px solid rgba(42,122,32,0.25)}
+.badge-human{background:rgba(180,60,40,0.08);color:var(--red);border:1px solid rgba(180,60,40,0.2)}
+.sec-status{font-family:monospace;font-size:0.58rem;font-weight:700;letter-spacing:0.08em;white-space:nowrap}
+.status-pass{color:var(--green)}
+.status-fail{color:var(--red)}
+.status-pending{color:rgba(192,144,48,0.4)}
+
+/* Steps */
+.steps{list-style:none;padding:0.4rem 0}
+.step{display:flex;align-items:flex-start;gap:0.75rem;padding:0.55rem 1rem;border-bottom:1px solid rgba(192,144,48,0.08);cursor:pointer;transition:background .1s}
+.step:last-child{border-bottom:none}
+.step:hover{background:rgba(192,144,48,0.04)}
+.step.done{opacity:0.55}
+.step.done .step-text{text-decoration:line-through;color:var(--muted)}
+.cb{width:1.1rem;height:1.1rem;border-radius:3px;border:1.5px solid rgba(192,144,48,0.4);flex-shrink:0;margin-top:0.05rem;display:flex;align-items:center;justify-content:center;transition:all .12s}
+.step.done .cb{background:var(--green);border-color:var(--green)}
+.cb-check{display:none;color:#fff;font-size:0.65rem;font-weight:900}
+.step.done .cb-check{display:block}
+.step-body{flex:1;min-width:0}
+.step-text{font-size:0.78rem;line-height:1.4}
+.step-link{display:inline-block;margin-top:0.3rem;font-family:monospace;font-size:0.58rem;color:rgba(192,144,48,0.7);text-decoration:none;padding:0.1rem 0.4rem;border-radius:2px;border:1px solid rgba(192,144,48,0.2);transition:all .1s}
+.step-link:hover{color:var(--gold);border-color:rgba(192,144,48,0.5)}
+.step-note{font-size:0.62rem;color:var(--muted);margin-top:0.2rem;font-style:italic}
+
+/* Reset */
+.reset-btn{font-family:monospace;font-size:0.55rem;letter-spacing:0.1em;text-transform:uppercase;padding:0.25rem 0.65rem;border-radius:3px;background:transparent;color:rgba(192,144,48,0.4);border:1px solid rgba(192,144,48,0.15);cursor:pointer;transition:all .12s;margin-top:0.75rem;display:block;margin-left:auto;margin-right:1rem}
+.reset-btn:hover{color:var(--red);border-color:rgba(180,60,40,0.4)}
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<div class="hdr">
+  <h1>TOURney QA Checklist</h1>
+  <div class="slug-row">
+    <span class="slug-label">Slug</span>
+    <input class="slug-input" id="slugInput" type="text" placeholder="e.g. bova" value="">
+    <span class="progress" id="progressLabel">— / —</span>
+  </div>
+</div>
+
+<div class="sections" id="sections"></div>
+<button class="reset-btn" onclick="resetAll()">Reset all checks</button>
+
+<script>
+const SECTIONS = [
+  {
+    id: 'pairs',
+    title: 'Pairs — New Feature',
+    badge: 'new',
+    steps: [
+      { id:'p1', text:'Go to /create — confirm "Pairs" button appears in Team Structure row', link:'/create' },
+      { id:'p2', text:'Select Pairs — confirm "Number of Pairs" picker appears with options 2–24', link:'/create' },
+      { id:'p3', text:'Pick 4 pairs, 8 players, 2 days — confirm price card updates correctly', link:'/create' },
+      { id:'p4', text:'Complete create wizard — confirm redirects to /admin after creation' },
+      { id:'p5', text:'Admin → Team Assignment section title reads "Pair Assignment"', link:'/admin' },
+      { id:'p6', text:'Admin → pair name fields visible (Pair 1 Name, Pair 2 Name…)', link:'/admin' },
+      { id:'p7', text:'Admin → type a pair name (e.g. "Smith / Jones") — blur field — confirm saves', link:'/admin' },
+      { id:'p8', text:'Admin → assign each player to a pair via dropdown — click Save Pair Assignments', link:'/admin' },
+      { id:'p9', text:'Scorecard → log in → confirm "Your Pair" label (not "Your Team")', link:'/scorecard' },
+      { id:'p10', text:'Scorecard → confirm opponent section is hidden', link:'/scorecard', note:'"Opponents" panel should not be visible at all' },
+      { id:'p11', text:'Scorecard → enter scores for a hole — submit — no console errors' },
+      { id:'p12', text:'Scoreboard → "Pairs" tab visible — click it', link:'/scoreboard' },
+      { id:'p13', text:'Scoreboard → pairs leaderboard renders with pair names + scores', link:'/scoreboard' },
+      { id:'p14', text:'Scoreboard → after submitting scorecard score, leaderboard updates (may need refresh)', link:'/scoreboard' },
+    ]
+  },
+  {
+    id: 'individual',
+    title: 'Individual — Regression',
+    badge: 'regression',
+    steps: [
+      { id:'i1', text:'Create a new Individual tournament via /create', link:'/create' },
+      { id:'i2', text:'Scoreboard → no Team tab visible (or Team tab hidden)', link:'/scoreboard' },
+      { id:'i3', text:'Scorecard → no "Your Team" field visible', link:'/scorecard' },
+      { id:'i4', text:'Scorecard → unassigned gate does NOT appear (individual has no team gate)', link:'/scorecard' },
+    ]
+  },
+  {
+    id: 'team',
+    title: 'Team (2+ Teams) — Regression',
+    badge: 'regression',
+    steps: [
+      { id:'t1', text:'Create a 2-team tournament via /create', link:'/create' },
+      { id:'t2', text:'Admin → Team Assignment section (not Pair Assignment)', link:'/admin' },
+      { id:'t3', text:'Admin → assign players to Team A / Team B — save', link:'/admin' },
+      { id:'t4', text:'Scorecard → "Your Team" label shows (not "Your Pair")', link:'/scorecard' },
+      { id:'t5', text:'Scorecard → opponent section visible', link:'/scorecard' },
+      { id:'t6', text:'Scoreboard → Team tab shows A vs B banners', link:'/scoreboard' },
+    ]
+  },
+  {
+    id: 'nav',
+    title: 'Navigation & Auth',
+    badge: 'infra',
+    steps: [
+      { id:'n1', text:'Hamburger menu opens on mobile viewport — all links present', link:'/scoreboard' },
+      { id:'n2', text:'Admin link appears in nav when logged in as owner', link:'/scoreboard' },
+      { id:'n3', text:'Admin link NOT visible when logged out', link:'/scoreboard' },
+      { id:'n4', text:'All nav links route correctly — no 404s', link:'/directory' },
+    ]
+  },
+  {
+    id: 'llc',
+    title: 'Form LLC — Greenskeeper Studios',
+    badge: 'human',
+    steps: [
+      { id:'llc1', text:'Choose your state — file in your home state (WI?) for simplicity. Delaware only worth it if raising VC.', note:'LLC filing fee varies: WI ~$130, DE ~$90 + $300/yr franchise tax' },
+      { id:'llc2', text:'File Articles of Organization online at your state Secretary of State website', note:'WI: https://www.wdfi.org — takes 1–2 business days online' },
+      { id:'llc3', text:'Get a free EIN (Employer ID Number) from IRS.gov', note:'IRS EIN online application: irs.gov/businesses/small-businesses-self-employed/apply-for-an-employer-identification-number-ein-online — instant' },
+      { id:'llc4', text:'Draft an Operating Agreement (single-member LLC — keep it simple, templates online)', note:'Not legally required in most states but protects limited liability shield' },
+      { id:'llc5', text:'Open a business bank account under the LLC (bring EIN + Articles)', note:'Recommended: Mercury (free, online-first) or your local bank' },
+      { id:'llc6', text:'Register with Stripe under the LLC name + EIN', note:'stripe.com/dashboard — use business bank account for payouts' },
+      { id:'llc7', text:'Update CLAUDE.md with LLC name, EIN (last 4 only), Stripe account ID', note:'So future agents know the business entity is set up' },
+    ]
+  },
+  {
+    id: 'human',
+    title: 'Other Human-Required Items',
+    badge: 'human',
+    steps: [
+      { id:'h1', text:'Confirm Bova tournament formats with Chris Bova', note:'Pending: Day 1 = Stroke? Day 2 = Scramble? Day 3 = Best Ball? Shambles mapping unresolved.' },
+      { id:'h2', text:'Add Chris Bova\'s email as co-admin on the Bova tournament (admin → Access tab)', note:'Required before Chris can manage his own tournament' },
+      { id:'h3', text:'Smoke test PWA install on your phone (iOS Safari: Share → Add to Home Screen)', note:'Ensure manifest, icons, and offline cache all work on real device' },
+      { id:'h4', text:'Buy full US golf course flat-file DB for course selector', note:'Source: Golf-Course-Database.com — discussed in early sessions' },
+      { id:'h5', text:'Enable leaked password protection in Supabase Auth dashboard', note:'Dashboard → Auth → Providers → Enable "Leaked password protection"' },
+    ]
+  },
+  {
+    id: 'console',
+    title: 'Console & Network',
+    badge: 'infra',
+    steps: [
+      { id:'c1', text:'Open DevTools → Console → zero errors on scoreboard load', link:'/scoreboard', note:'F12 → Console tab — red errors = FAIL' },
+      { id:'c2', text:'Open DevTools → Console → zero errors on scorecard load', link:'/scorecard' },
+      { id:'c3', text:'Open DevTools → Network → no 4xx/5xx requests on any page', note:'Filter by "status:4" and "status:5"' },
+    ]
+  }
+];
+
+const STORAGE_KEY = 'qa_checks_v1';
+let slug = '';
+let checked = {};
+
+function load() {
+  try { checked = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'); } catch { checked = {}; }
+  slug = localStorage.getItem('qa_slug') || '';
+}
+
+function save() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(checked));
+  localStorage.setItem('qa_slug', slug);
+}
+
+function url(path) {
+  if (!slug) return '#';
+  return `https://tourney.greenskeeper.studio/t/${slug}${path}`;
+}
+
+function toggle(id) {
+  checked[id] = !checked[id];
+  save();
+  render();
+}
+
+function resetAll() {
+  if (!confirm('Reset all checks?')) return;
+  checked = {};
+  save();
+  render();
+}
+
+function updateProgress() {
+  const all = SECTIONS.flatMap(s => s.steps);
+  const done = all.filter(s => checked[s.id]).length;
+  document.getElementById('progressLabel').textContent = `${done} / ${all.length}`;
+}
+
+function sectionStatus(section) {
+  const total = section.steps.length;
+  const done = section.steps.filter(s => checked[s.id]).length;
+  if (done === 0) return { label: '—', cls: 'status-pending' };
+  if (done === total) return { label: 'PASS', cls: 'status-pass' };
+  return { label: `${done}/${total}`, cls: 'status-pending' };
+}
+
+function badgeCls(b) { return `sec-badge badge-${b}`; }
+function badgeLabel(b) { return b === 'new' ? 'New' : b === 'regression' ? 'Regression' : b === 'human' ? 'Human' : 'Infra'; }
+
+function render() {
+  const container = document.getElementById('sections');
+  container.innerHTML = SECTIONS.map(section => {
+    const { label, cls } = sectionStatus(section);
+    const stepsHtml = section.steps.map(step => {
+      const isDone = !!checked[step.id];
+      const linkHref = step.link ? url(step.link) : null;
+      const linkHtml = linkHref && slug ? `<a class="step-link" href="${linkHref}" target="_blank" onclick="event.stopPropagation()">Open ↗</a>` : '';
+      const noteHtml = step.note ? `<div class="step-note">${step.note}</div>` : '';
+      return `<li class="step${isDone ? ' done' : ''}" onclick="toggle('${step.id}')">
+        <div class="cb"><span class="cb-check">✓</span></div>
+        <div class="step-body">
+          <div class="step-text">${step.text}</div>
+          ${linkHtml}${noteHtml}
+        </div>
+      </li>`;
+    }).join('');
+    return `<div class="section">
+      <div class="sec-hdr">
+        <span class="sec-title">${section.title}</span>
+        <span class="${badgeCls(section.badge)}">${badgeLabel(section.badge)}</span>
+        <span class="sec-status ${cls}">${label}</span>
+      </div>
+      <ul class="steps">${stepsHtml}</ul>
+    </div>`;
+  }).join('');
+  updateProgress();
+}
+
+document.getElementById('slugInput').addEventListener('input', e => {
+  slug = e.target.value.trim();
+  save();
+  render();
+});
+
+load();
+document.getElementById('slugInput').value = slug;
+render();
+</script>
+</body>
+</html>
