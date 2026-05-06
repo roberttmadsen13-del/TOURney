@@ -256,13 +256,6 @@ document.getElementById('editTrash').addEventListener('keyup', () => updateCount
       adminLink.textContent = 'Admin';
       navLinks.appendChild(adminLink);
     }
-    const drawer = document.querySelector('.nav-drawer-inner');
-    if (drawer) {
-      const mobileAdmin = document.createElement('a');
-      mobileAdmin.href = _adminHref;
-      mobileAdmin.textContent = 'Admin';
-      drawer.appendChild(mobileAdmin);
-    }
   }
   await loadProfileByEmail(email);
 })();

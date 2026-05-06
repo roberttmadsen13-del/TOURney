@@ -482,12 +482,6 @@ function esc(s) {
       adminLink.className = 'nav-link';
       navRight.appendChild(adminLink);
     }
-    if (drawer) {
-      const mobileAdmin = document.createElement('a');
-      mobileAdmin.href = _adminHref;
-      mobileAdmin.textContent = 'Admin';
-      drawer.appendChild(mobileAdmin);
-    }
   }
 })();
 

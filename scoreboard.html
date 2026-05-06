@@ -443,12 +443,6 @@ let _teamNames = {A:'Team One',B:'Team Two',C:'Team C',D:'Team D',E:'Team E',F:'
       adminLink.className = 'score-btn';
       navRight.insertBefore(adminLink, navRight.firstChild);
     }
-    if (drawer) {
-      const mobileAdmin = document.createElement('a');
-      mobileAdmin.href = _adminHref;
-      mobileAdmin.textContent = 'Admin';
-      drawer.appendChild(mobileAdmin);
-    }
   }
 })();
 
