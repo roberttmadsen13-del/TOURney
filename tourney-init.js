@@ -71,7 +71,7 @@
     const settingsFetch = db.from('settings')
       .select('key,value')
       .eq('tournament_id', data.id)
-      .in('key', ['tourney_location', 'tourney_year', 'team_a_name', 'team_b_name']);
+      .in('key', ['tourney_location', 'tourney_year', 'team_a_name', 'team_b_name', 'hero_photo_url']);
 
     // Only rebase nav links when on tenant URL — root URL pages stay on root paths.
     if (onTenantUrl) {
@@ -207,7 +207,24 @@
         if (key === 'tourney_year')     data.year        = value;
         if (key === 'team_a_name')      data.team_a_name = value;
         if (key === 'team_b_name')      data.team_b_name = value;
+        if (key === 'hero_photo_url')   data.hero_photo_url = value;
       });
+      // Hero background — use setting if present, hide default stock photo if absent
+      const applyHero = () => {
+        const heroImg = document.querySelector('.hero-img');
+        if (!heroImg) return;
+        if (data.hero_photo_url) {
+          heroImg.src = data.hero_photo_url;
+          heroImg.style.display = '';
+        } else {
+          heroImg.style.display = 'none';
+        }
+      };
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', applyHero);
+      } else {
+        applyHero();
+      }
       const parts = [data.location, data.year].filter(Boolean);
       if (parts.length) {
         const eyebrowText = parts.join(' · ');
