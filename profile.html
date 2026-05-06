@@ -267,12 +267,42 @@ document.getElementById('editTrash').addEventListener('keyup', () => updateCount
   await loadProfileByEmail(email);
 })();
 
+async function claimPlayerRow(email) {
+  const sel = document.getElementById('claimSelect');
+  const id = sel?.value;
+  const msg = document.getElementById('claimMsg');
+  if (!id) { if (msg) msg.textContent = 'Select your name first.'; return; }
+  const { error } = await sb.from('players').update({ email: email.toLowerCase(), has_account: true }).eq('id', id);
+  if (error) { if (msg) msg.textContent = 'Error: ' + error.message; return; }
+  await loadProfileByEmail(email);
+}
+
 async function loadProfileByEmail(email) {
   const { tournament } = await window.tourney.ready;
   const { data: p } = await sb.from('players').select('*').eq('tournament_id', tournament.id).eq('email', email.toLowerCase()).single();
   if (!p) {
-    // User has auth account but no player record — edge case
-    document.getElementById('loadingGate').innerHTML = '<div style="text-align:center;padding:2rem;"><div style="font-family:\'Playfair Display\',serif;font-size:1.3rem;font-weight:700;margin-bottom:0.5rem;">No Player Found</div><div style="font-size:0.85rem;color:var(--muted);margin-bottom:1.5rem;">No player record found for ' + esc(email) + '.</div><button class="btn-primary" style="max-width:200px;" onclick="doLogout()">Sign Out</button></div>';
+    // No email match — check for unclaimed rows (null email) to offer self-serve linking
+    const { data: unclaimed } = await sb.from('players')
+      .select('id,first_name,last_name')
+      .eq('tournament_id', tournament.id)
+      .is('email', null)
+      .order('first_name');
+    const gate = document.getElementById('loadingGate');
+    if (unclaimed?.length) {
+      const opts = unclaimed.map(u => `<option value="${u.id}">${esc(u.first_name)} ${esc(u.last_name)}</option>`).join('');
+      gate.innerHTML = `<div style="text-align:center;padding:2rem 1rem;max-width:340px;margin:0 auto;">
+        <div style="font-size:2rem;margin-bottom:1rem;">⛳</div>
+        <div style="font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:700;margin-bottom:0.75rem;">Link your account</div>
+        <div style="font-size:0.82rem;color:var(--muted);margin-bottom:1.25rem;line-height:1.6;">Your My Golf account (<strong style="color:var(--gold)">${esc(email)}</strong>) isn't linked to a player yet. Select your name to connect.</div>
+        <select id="claimSelect" style="width:100%;padding:0.65rem 0.85rem;background:var(--card);border:1px solid var(--border);color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;margin-bottom:1rem;">
+          <option value="">Select your name…</option>${opts}
+        </select>
+        <button onclick="claimPlayerRow('${esc(email)}')" style="width:100%;padding:0.7rem;background:var(--gold);color:var(--ink);font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:0.8rem;letter-spacing:0.12em;text-transform:uppercase;border:none;border-radius:4px;cursor:pointer;">Link My Account</button>
+        <div id="claimMsg" style="font-size:0.75rem;color:var(--muted);margin-top:0.75rem;"></div>
+      </div>`;
+    } else {
+      gate.innerHTML = `<div style="text-align:center;padding:2rem;"><div style="font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700;margin-bottom:0.5rem;">Not in the field</div><div style="font-size:0.85rem;color:var(--muted);margin-bottom:1.5rem;">No player record found for <strong>${esc(email)}</strong>.<br>Ask your admin to add you.</div><button class="btn-primary" style="max-width:200px;" onclick="doLogout()">Sign Out</button></div>`;
+    }
     return;
   }
   currentPlayer = p;
