@@ -71,7 +71,7 @@
     const settingsFetch = db.from('settings')
       .select('key,value')
       .eq('tournament_id', data.id)
-      .in('key', ['tourney_location', 'tourney_year', 'team_a_name', 'team_b_name', 'hero_photo_url']);
+      .in('key', ['tourney_location', 'tourney_year', 'team_a_name', 'team_b_name', 'hero_photo_url', 'about_photo_url']);
 
     // Only rebase nav links when on tenant URL — root URL pages stay on root paths.
     if (onTenantUrl) {
@@ -207,7 +207,8 @@
         if (key === 'tourney_year')     data.year        = value;
         if (key === 'team_a_name')      data.team_a_name = value;
         if (key === 'team_b_name')      data.team_b_name = value;
-        if (key === 'hero_photo_url')   data.hero_photo_url = value;
+        if (key === 'hero_photo_url')   data.hero_photo_url  = value;
+        if (key === 'about_photo_url')  data.about_photo_url = value;
       });
       // Hero background — use setting if present, hide default stock photo if absent
       const applyHero = () => {
@@ -224,6 +225,21 @@
         document.addEventListener('DOMContentLoaded', applyHero);
       } else {
         applyHero();
+      }
+      const applyAboutPhoto = () => {
+        const aboutImg = document.getElementById('aboutPhotoImg');
+        if (!aboutImg) return;
+        if (data.about_photo_url) {
+          aboutImg.src = data.about_photo_url;
+          aboutImg.style.display = '';
+        } else {
+          aboutImg.style.display = 'none';
+        }
+      };
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', applyAboutPhoto);
+      } else {
+        applyAboutPhoto();
       }
       const parts = [data.location, data.year].filter(Boolean);
       if (parts.length) {

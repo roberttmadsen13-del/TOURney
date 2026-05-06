@@ -453,9 +453,9 @@ html { scroll-behavior: smooth; }
   <div class="s-inner">
     <div class="about-grid">
       <div class="about-photo-wrap">
-        <img class="sepia"
-          src="https://images.unsplash.com/photo-1535131749006-b7f58c99034b?w=1000&q=88&auto=format&fit=crop"
-          alt="Golfer silhouetted at sunrise on a wide fairway">
+        <img id="aboutPhotoImg" class="sepia"
+          src=""
+          alt="Tournament photo">
       </div>
       <div class="about-text">
         <div class="s-label">About</div>
@@ -779,8 +779,8 @@ window.addEventListener('scroll', () => { document.getElementById('mainNav').cla
   }
 
   // Format items
-  const FMT_LABELS = { stroke:'Stroke Play',scramble:'Scramble',bestball:'Best Ball',shambles:'Shambles',stableford:'Stableford',match:'Match Play',alternate:'Alternate Shot',chapman:'Chapman / Pinehurst',skins:'Skins',greensomes:'Greensomes',mod_stableford:'Modified Stableford',nassau:'Nassau' };
-  const FMT_DESC   = { stroke:'Every stroke counts. Lowest total score wins.',scramble:'All players hit, best shot chosen, repeat. Great for mixed-skill groups.',bestball:'Each player plays their own ball; lowest score on each hole counts for the team.',shambles:'Scramble off the tee, then everyone plays their own ball from the best drive.',stableford:'Points per hole vs par. Bogey = 1, par = 2, birdie = 3, eagle = 4. Most points wins.',match:'Hole-by-hole competition. Win the hole, earn a point. Most holes won wins.',alternate:'Partners share one ball and alternate shots every stroke. Pure teamwork.',chapman:'Both players hit drives, swap balls, then choose the best to finish alternate shot.',skins:'Each hole is worth a skin. Ties carry the skin forward. Winner takes the pot.',greensomes:'Both partners drive, best drive chosen, then alternate shots into the hole.',mod_stableford:'Points scale with score vs par — double bogey loses a point, eagle earns 5.',nassau:'Three bets in one: front 9, back 9, and overall. Classic side-bet format.' };
+  const FMT_LABELS = { stroke:'Stroke Play',scramble:'Scramble',best_ball:'Best Ball',shambles:'Shambles',stableford:'Stableford',match:'Match Play',alt_shot:'Alternate Shot',chapman:'Chapman / Pinehurst',skins:'Skins',greensomes:'Greensomes',mod_stableford:'Modified Stableford',nassau:'Nassau' };
+  const FMT_DESC   = { stroke:'Every stroke counts. Lowest total score wins.',scramble:'All players hit, best shot chosen, repeat. Great for mixed-skill groups.',best_ball:'Each player plays their own ball; lowest score on each hole counts for the team.',shambles:'Scramble off the tee, then everyone plays their own ball from the best drive.',stableford:'Points per hole vs par. Bogey = 1, par = 2, birdie = 3, eagle = 4. Most points wins.',match:'Hole-by-hole competition. Win the hole, earn a point. Most holes won wins.',alt_shot:'Partners share one ball and alternate shots every stroke. Pure teamwork.',chapman:'Both players hit drives, swap balls, then choose the best to finish alternate shot.',skins:'Each hole is worth a skin. Ties carry the skin forward. Winner takes the pot.',greensomes:'Both partners drive, best drive chosen, then alternate shots into the hole.',mod_stableford:'Points scale with score vs par — double bogey loses a point, eagle earns 5.',nassau:'Three bets in one: front 9, back 9, and overall. Classic side-bet format.' };
   // Format section title — count unique format values
   const fmtTitle = document.querySelector('#format .s-title');
   if (fmtTitle) {
