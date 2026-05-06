@@ -529,15 +529,17 @@ let scoreHistory = [];
 // ── INIT ──────────────────────────────────────────────────────────
 async function init() {
   const { tournament } = await window.tourney.ready;
-  const [pRes, tRes, rRes, parRes, fmtRes, notifyRes] = await Promise.all([
+  const [pRes, tRes, rRes, parRes, fmtRes, notifyRes, tcRes] = await Promise.all([
     sb.from('players').select('*').eq('tournament_id', tournament.id).order('first_name'),
     sb.from('settings').select('*').eq('tournament_id', tournament.id).eq('key','team_assignments'),
     sb.from('settings').select('*').eq('tournament_id', tournament.id).like('key','round_day%'),
     sb.from('settings').select('*').eq('tournament_id', tournament.id).like('key','pars_day%'),
     sb.from('settings').select('*').eq('tournament_id', tournament.id).eq('key','round_formats'),
     sb.from('settings').select('value').eq('tournament_id', tournament.id).eq('key','notify_hole_in_one').maybeSingle(),
+    sb.from('settings').select('value').eq('tournament_id', tournament.id).eq('key','team_count').maybeSingle(),
   ]);
   if (notifyRes.data) _notifyHio = notifyRes.data.value !== 'false';
+  const _teamCount = parseInt(tcRes.data?.value || '2');
 
   players = pRes.data || [];
 
@@ -601,8 +603,8 @@ async function init() {
   if (detectedPlayer) {
     _scoringAsId = detectedPlayer.id;
     const detectedTeam = teamAssignments[detectedPlayer.id] || '';
-    // Gate: unassigned players cannot score
-    if (!detectedTeam) {
+    // Gate: unassigned players cannot score (skip for individual mode)
+    if (!detectedTeam && _teamCount > 1) {
       document.getElementById('unassignedGate').style.display = 'block';
       return;
     }
@@ -610,7 +612,12 @@ async function init() {
     document.getElementById('scorerSelect').value = detectedPlayer.id;
     document.getElementById('scorerDisplay').value = `${detectedPlayer.first_name} ${detectedPlayer.last_name}`;
     document.getElementById('teamSelect').value = detectedTeam;
-    document.getElementById('teamDisplay').value = _teamLabel(detectedTeam);
+    const teamDisplayEl = document.getElementById('teamDisplay');
+    if (_teamCount <= 1) {
+      if (teamDisplayEl) teamDisplayEl.closest('.fg')?.style.setProperty('display','none');
+    } else {
+      if (teamDisplayEl) teamDisplayEl.value = _teamLabel(detectedTeam);
+    }
     document.getElementById('loginPrompt').style.display = 'none';
     document.getElementById('setupForm').style.display = 'block';
     refreshSetupLists();
