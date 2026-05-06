@@ -189,6 +189,16 @@ document.getElementById('signupForm').addEventListener('submit', async (ev) => {
   btn.textContent = 'Submitting…';
   err.classList.remove('show');
 
+  // Check for existing account first — never overwrite comped/active status
+  const { data: existing } = await sb.from('player_accounts').select('billing_status').eq('email', email).maybeSingle();
+  if (existing && (existing.billing_status === 'comped' || existing.billing_status === 'active')) {
+    document.getElementById('confirmName').textContent  = first + ' ' + last;
+    document.getElementById('confirmEmail').textContent = email;
+    document.getElementById('formState').style.display    = 'none';
+    document.getElementById('confirmState').style.display = 'block';
+    return;
+  }
+
   const { error } = await sb.from('player_accounts').upsert(
     {
       email,
@@ -196,7 +206,7 @@ document.getElementById('signupForm').addEventListener('submit', async (ev) => {
       billing_status: 'pending_payment',
       updated_at: new Date().toISOString(),
     },
-    { onConflict: 'email', ignoreDuplicates: false }
+    { onConflict: 'email', ignoreDuplicates: true }
   );
 
   if (error) {
