@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -8,8 +8,8 @@
 <link rel="manifest" href="/manifest.json">
 <link rel="apple-touch-icon" href="/icon-192.png">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Bova">
-<title>Admin — Bova Invitational</title>
+<meta name="apple-mobile-web-app-title" content="TOURney">
+<title>Admin — TOURney</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Mono:wght@300;400;500&family=Barlow+Condensed:wght@300;400;600;700;800&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
 :root{--ink:#1a1008;--gold:#c09030;--gold-l:#d4aa50;--gold-p:#e8cc80;--cream:#f0e6cc;--red:#8a1e10;--green:#1e3a14;--border:rgba(192,144,48,0.28);--bg:#f5ede0;--card:#fdf8f0;--muted:rgba(26,16,8,0.4);}
@@ -499,7 +499,7 @@ td.email a:hover{color:var(--gold);}
         <div class="section-count">Name, year, location — shown across the site</div>
       </div>
       <div style="display:grid;gap:1rem;background:var(--card);border:1px solid var(--border);padding:1.5rem;">
-        <div class="fg"><label>Tournament Name</label><input type="text" id="dsName" placeholder="The Bova Invitational" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;"></div>
+        <div class="fg"><label>Tournament Name</label><input type="text" id="dsName" placeholder="My Tournament" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;"></div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
           <div class="fg"><label>Year</label><input type="text" id="dsYear" placeholder="2026" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;"></div>
           <div class="fg"><label>Location</label><input type="text" id="dsLocation" placeholder="Myrtle Beach, SC" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;"></div>
@@ -2251,12 +2251,10 @@ async function saveRegistration() {
     { key:'team_b_name',        value: document.getElementById('dsTeamBName')?.value || '' },
     { key:'team_a_captain',     value: document.getElementById('dsTeamACaptain')?.value || '' },
     { key:'challengers_captain',value: document.getElementById('dsTeamBCaptain')?.value || '' },
-    { key:'team_c_name',     value: document.getElementById('dsTeamCName')?.value || '' },
-    { key:'team_d_name',     value: document.getElementById('dsTeamDName')?.value || '' },
-    { key:'team_e_name',     value: document.getElementById('dsTeamEName')?.value || '' },
-    { key:'team_f_name',     value: document.getElementById('dsTeamFName')?.value || '' },
-    { key:'team_g_name',     value: document.getElementById('dsTeamGName')?.value || '' },
-    { key:'team_h_name',     value: document.getElementById('dsTeamHName')?.value || '' },
+    ...['c','d','e','f','g','h'].map((l, i) => ({
+      key: `team_${l}_name`,
+      value: document.getElementById(`dsTeam${l.toUpperCase()}Name`)?.value || '',
+    })).filter((r, i) => (i + 3) <= _teamCount && r.value !== ''),
   ].map(r => ({ ...r, tournament_id: _tid, updated_at: new Date().toISOString() }));
   await sb.from('settings').upsert(rows, { onConflict: 'tournament_id,key' });
   showToast('Registration saved.');
