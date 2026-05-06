@@ -757,6 +757,21 @@
       // 2. Add creator as admin
       await db.from('tournament_admins').insert({ tournament_id: tid, email: S.user.email });
 
+      // 3. Add creator as player — pull name from any existing player row, fallback to email parse
+      const { data: existingP } = await db.from('players').select('first_name,last_name,handicap').eq('email', S.user.email).limit(1).maybeSingle();
+      const emailLocal = S.user.email.split('@')[0].replace(/[._\-\d]+/g, ' ').trim().split(' ');
+      const creatorFirst = existingP?.first_name || (emailLocal[0] ? emailLocal[0].charAt(0).toUpperCase() + emailLocal[0].slice(1) : '');
+      const creatorLast  = existingP?.last_name  || (emailLocal[1] ? emailLocal[1].charAt(0).toUpperCase() + emailLocal[1].slice(1) : '');
+      await db.from('players').insert({
+        tournament_id: tid,
+        email: S.user.email,
+        first_name: creatorFirst,
+        last_name:  creatorLast,
+        handicap:   existingP?.handicap || '',
+        is_admin:   true,
+        has_account: true,
+      });
+
       const now = new Date().toISOString();
 
       // 3. Upload logo
@@ -822,6 +837,7 @@
 
     } catch(e) {
       if (tid) {
+        await db.from('players').delete().eq('tournament_id', tid);
         await db.from('settings').delete().eq('tournament_id', tid);
         await db.from('tournaments').delete().eq('id', tid);
       }
