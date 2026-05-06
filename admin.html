@@ -770,6 +770,7 @@ td.email a:hover{color:var(--gold);}
 const sb = window.tourney.db;
 let _tid = null;   // set at auth time — used by all admin query functions
 let _slug = null;  // tournament slug — used for storage namespacing
+const PLATFORM_OWNER = 'robert.t.madsen13@gmail.com';
 
 const DATE_LABELS = {aug21:'Aug 21-24',aug28:'Aug 28-31',sep4:'Sep 4-7',sep11:'Sep 11-14',sep18:'Sep 18-21',sep25:'Sep 25-28',oct2:'Oct 2-5',oct9:'Oct 9-12'};
 const TIER_MAP = {scratch:'t-scratch',eagle:'t-eagle',birdie:'t-birdie',bogey:'t-bogey',pretender:'t-pretender',hacker:'t-hacker'};
@@ -832,9 +833,11 @@ async function doLogin() {
   const { tournament } = await window.tourney.ready;
   const { data: tRow } = await sb.from('tournaments').select('owner_email').eq('id', tournament.id).maybeSingle();
   const isOwner = tRow?.owner_email?.toLowerCase() === email.toLowerCase();
-  const { data: player } = await sb.from('players').select('is_admin').eq('tournament_id', tournament.id).eq('email', email.toLowerCase()).maybeSingle();
-  const { data: adminRow } = await sb.from('tournament_admins').select('email').eq('tournament_id', tournament.id).eq('email', email.toLowerCase()).maybeSingle();
-  if (!isOwner && !player?.is_admin && !adminRow) { await sb.auth.signOut(); err.classList.add('show'); return; }
+  if (email.toLowerCase() !== PLATFORM_OWNER) {
+    const { data: player } = await sb.from('players').select('is_admin').eq('tournament_id', tournament.id).eq('email', email.toLowerCase()).maybeSingle();
+    const { data: adminRow } = await sb.from('tournament_admins').select('email').eq('tournament_id', tournament.id).eq('email', email.toLowerCase()).maybeSingle();
+    if (!isOwner && !player?.is_admin && !adminRow) { await sb.auth.signOut(); err.classList.add('show'); return; }
+  }
   _tid = tournament.id; _slug = tournament.slug;
   showAdmin(email);
 }
@@ -848,7 +851,7 @@ async function checkSession() {
   const isOwner = tRow?.owner_email?.toLowerCase() === email;
   const { data: player } = await sb.from('players').select('is_admin').eq('tournament_id', tournament.id).eq('email', email).maybeSingle();
   const { data: adminRow } = await sb.from('tournament_admins').select('email').eq('tournament_id', tournament.id).eq('email', email).maybeSingle();
-  if (isOwner || player?.is_admin || adminRow) { _tid = tournament.id; _slug = tournament.slug; showAdmin(email); }
+  if (isOwner || player?.is_admin || adminRow || email === PLATFORM_OWNER) { _tid = tournament.id; _slug = tournament.slug; showAdmin(email); }
 }
 
 async function doLogout() {
@@ -1032,12 +1035,29 @@ function renderStats() {
   const n = players.length;
   document.getElementById('sTotal').textContent = n;
   document.getElementById('sAccounts').textContent = players.filter(p => p.has_account).length;
-  document.getElementById('sHats').textContent = players.filter(p => p.hat).length;
-  const assigned = Object.values(teamAssignments).filter(t => TEAM_LETTERS.slice(0,_teamCount).includes(t)).length;
-  document.getElementById('sTeamA').textContent = assigned;
-  document.getElementById('sTeamB').textContent = n - assigned;
-  const lA = document.getElementById('statLabelA'); if (lA) lA.textContent = _teamCount <= 1 ? 'Individual' : 'Assigned';
-  const lB = document.getElementById('statLabelB'); if (lB) lB.textContent = _teamCount <= 1 ? '—' : 'Unassigned';
+  // Hat Orders: hide card entirely when hat merch is off
+  const hatCard = document.getElementById('sHats')?.closest('.stat-card');
+  const showHat = document.getElementById('dsShowHat')?.value !== 'false';
+  if (hatCard) hatCard.style.display = showHat ? '' : 'none';
+  if (showHat) document.getElementById('sHats').textContent = players.filter(p => p.hat).length;
+  // Assigned/Unassigned: only count assignments belonging to current players
+  const playerIdSet = new Set(players.map(p => p.id));
+  const validLetters = TEAM_LETTERS.slice(0, _teamCount);
+  const assigned = Object.entries(teamAssignments)
+    .filter(([id, t]) => playerIdSet.has(id) && validLetters.includes(t)).length;
+  const teamACard = document.getElementById('sTeamA')?.closest('.stat-card');
+  const teamBCard = document.getElementById('sTeamB')?.closest('.stat-card');
+  if (_teamCount <= 1) {
+    if (teamACard) teamACard.style.display = 'none';
+    if (teamBCard) teamBCard.style.display = 'none';
+  } else {
+    if (teamACard) teamACard.style.display = '';
+    if (teamBCard) teamBCard.style.display = '';
+    document.getElementById('sTeamA').textContent = assigned;
+    document.getElementById('sTeamB').textContent = n - assigned;
+    const lA = document.getElementById('statLabelA'); if (lA) lA.textContent = 'Assigned';
+    const lB = document.getElementById('statLabelB'); if (lB) lB.textContent = 'Unassigned';
+  }
 }
 
 // ── ROUNDS ────────────────────────────────────────────────────────
@@ -1756,7 +1776,12 @@ function renderAdmins() {
     el.innerHTML = '<div style="font-family:\'DM Mono\',monospace;font-size:0.65rem;color:var(--muted);padding:0.5rem 0;">No additional admins. You (owner) always have full access.</div>';
     return;
   }
-  el.innerHTML = _admins.map(a => {
+  const visibleAdmins = _admins.filter(a => a.email.toLowerCase() !== PLATFORM_OWNER);
+  if (!visibleAdmins.length) {
+    el.innerHTML = '<div style="font-family:\'DM Mono\',monospace;font-size:0.65rem;color:var(--muted);padding:0.5rem 0;">No additional admins. You (owner) always have full access.</div>';
+    return;
+  }
+  el.innerHTML = visibleAdmins.map(a => {
     const p = a.players;
     const name = p ? `${esc(p.first_name || '')} ${esc(p.last_name || '')}`.trim() : '';
     return `<div style="display:flex;align-items:center;justify-content:space-between;padding:0.6rem 0.9rem;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:6px;">
@@ -2053,6 +2078,7 @@ const DS_ALL_KEYS = [
   'tournament_mode',
   'reg_open','reg_max_players','reg_min_players','reg_bullet_1','reg_bullet_2','reg_bullet_3',
   'reg_show_dates','reg_show_why_me','reg_show_hat',
+  'team_count',
   'team_a_name','team_b_name','team_c_name','team_d_name','team_e_name','team_f_name','team_g_name','team_h_name',
   'team_a_color','team_b_color','team_c_color','team_d_color','team_e_color','team_f_color','team_g_color','team_h_color',
   'team_a_captain','challengers_captain',
