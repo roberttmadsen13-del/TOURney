@@ -1,0 +1,119 @@
+/* print.css — paper backup for scorecards.
+ * Target: scorecard.html. Hides interactive UI, shows clean grid suitable for B&W laser print.
+ * Activate via <link rel="stylesheet" href="/print.css" media="print">.
+ */
+
+@media print {
+  @page {
+    size: letter portrait;
+    margin: 0.5in;
+  }
+
+  body {
+    background: white !important;
+    color: black !important;
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 11pt;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* Hide interactive chrome */
+  nav,
+  .nav-mobile,
+  .hamburger,
+  .save-btn,
+  .submit-btn,
+  .toast-host,
+  #tourney-toast-host,
+  .footer-cta,
+  footer,
+  button:not(.print-keep) {
+    display: none !important;
+  }
+
+  /* Strip dark theme — print is always B&W */
+  *, *::before, *::after {
+    background: transparent !important;
+    color: black !important;
+    border-color: #888 !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+
+  /* Tournament header for printed scorecard */
+  .scorecard-print-header {
+    display: block !important;
+    text-align: center;
+    margin-bottom: 0.5in;
+    padding-bottom: 0.25in;
+    border-bottom: 2px solid black;
+  }
+  .scorecard-print-header h1 {
+    font-size: 18pt;
+    font-weight: 700;
+    margin-bottom: 0.1in;
+  }
+  .scorecard-print-header .meta {
+    font-size: 10pt;
+    color: #444 !important;
+  }
+
+  /* Scorecard table — clean grid */
+  .scorecard-table {
+    width: 100%;
+    border-collapse: collapse;
+    page-break-inside: avoid;
+  }
+  .scorecard-table th,
+  .scorecard-table td {
+    border: 1px solid #888 !important;
+    padding: 0.12in 0.08in !important;
+    text-align: center;
+    font-size: 11pt;
+  }
+  .scorecard-table th {
+    background: #eee !important;
+    font-weight: 700;
+  }
+
+  /* Score input cells become writable boxes */
+  .scorecard-table input,
+  .scorecard-table .score-cell {
+    border: none !important;
+    background: transparent !important;
+    width: 100%;
+    height: 0.32in;
+  }
+
+  /* Avoid breaking front-9 / back-9 across pages */
+  .holes-1-9, .holes-10-18 {
+    page-break-inside: avoid;
+  }
+
+  /* Footer signature lines */
+  .scorecard-print-sigs {
+    display: block !important;
+    margin-top: 0.6in;
+    page-break-inside: avoid;
+  }
+  .scorecard-print-sigs .sig-row {
+    display: flex;
+    gap: 0.4in;
+    margin-top: 0.5in;
+  }
+  .scorecard-print-sigs .sig-line {
+    flex: 1;
+    border-top: 1px solid black;
+    padding-top: 0.06in;
+    font-size: 9pt;
+    text-align: center;
+  }
+
+  /* Hide elements only meaningful on screen */
+  .screen-only { display: none !important; }
+  .print-only  { display: block !important; }
+}
+
+/* Default: hide the .print-only blocks unless we're printing */
+.print-only { display: none; }
