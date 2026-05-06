@@ -653,6 +653,8 @@ td.email a:hover{color:var(--gold);}
           <div class="fg ds-team-extra" style="display:none"><label>Team F Name</label><input type="text" id="dsTeamFName" placeholder="Team Six" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;"></div>
           <div class="fg ds-team-extra" style="display:none"><label>Team G Name</label><input type="text" id="dsTeamGName" placeholder="Team Seven" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;"></div>
           <div class="fg ds-team-extra" style="display:none"><label>Team H Name</label><input type="text" id="dsTeamHName" placeholder="Team Eight" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;"></div>
+          <div class="fg"><label>Team A Captain</label><input type="text" id="dsTeamACaptain" placeholder="Captain name" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;"></div>
+          <div class="fg"><label>Team B Captain</label><input type="text" id="dsTeamBCaptain" placeholder="Captain name" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;"></div>
         </div>
         <button class="action-btn" style="padding:0.55rem 1.4rem;font-size:0.6rem;letter-spacing:0.15em;background:var(--gold);color:var(--ink);border-color:var(--gold);font-weight:700;margin-top:0.4rem;" onclick="saveRegistration()">Save Registration</button>
       </div>
@@ -853,7 +855,7 @@ function showAdmin(email) {
 
 // ── DATA ──────────────────────────────────────────────────────────
 async function loadAll() {
-  await Promise.all([loadPlayers(), loadRoundStates(), loadTeams(), loadPars(), loadFormats(), loadChallengersCaptain(), loadTeamNames(), loadCourseNames(), loadDesignSettings(), loadChampions(), loadNotifySettings(), loadInvitations()]);
+  await Promise.all([loadPlayers(), loadRoundStates(), loadTeams(), loadPars(), loadFormats(), loadTeamNames(), loadCourseNames(), loadDesignSettings(), loadChampions(), loadNotifySettings(), loadInvitations()]);
   renderTable();
   buildParEditor();
   renderTeamUI();
@@ -876,22 +878,6 @@ async function loadTeamNames() {
   if (sub) sub.textContent = _teamCount <= 1 ? 'Individual Format' : _teamNames.slice(0, _teamCount).join(' · ');
 }
 
-async function loadChallengersCaptain() {
-  const { data } = await sb.from('settings').select('value').eq('tournament_id', _tid).eq('key','challengers_captain').single();
-  const el = document.getElementById('challengersCaptainInput');
-  if (el && data?.value) el.value = data.value;
-}
-
-async function saveChallengersCaptain() {
-  const el = document.getElementById('challengersCaptainInput');
-  const name = el?.value?.trim();
-  if (!name) return;
-  await sb.from('settings').upsert(
-    { key: 'challengers_captain', value: name, updated_at: new Date().toISOString(), tournament_id: _tid },
-    { onConflict: 'tournament_id,key' }
-  );
-  showToast(`Challengers captain set to ${name}.`);
-}
 
 async function loadFormats() {
   const { data } = await sb.from('settings').select('*').eq('tournament_id', _tid).eq('key','round_formats');
@@ -2082,6 +2068,8 @@ const DS_FIELD_MAP = {
   reg_show_hat:      'dsShowHat',
   team_a_name:       'dsTeamAName',
   team_b_name:       'dsTeamBName',
+  team_a_captain:    'dsTeamACaptain',
+  challengers_captain: 'dsTeamBCaptain',
   team_c_name:       'dsTeamCName',
   team_d_name:       'dsTeamDName',
   team_e_name:       'dsTeamEName',
@@ -2259,8 +2247,10 @@ async function saveRegistration() {
     { key:'reg_show_dates',  value: document.getElementById('dsShowDates')?.value || 'true' },
     { key:'reg_show_why_me', value: document.getElementById('dsShowWhyMe')?.value || 'true' },
     { key:'reg_show_hat',    value: document.getElementById('dsShowHat')?.value || 'true' },
-    { key:'team_a_name',     value: document.getElementById('dsTeamAName')?.value || '' },
-    { key:'team_b_name',     value: document.getElementById('dsTeamBName')?.value || '' },
+    { key:'team_a_name',        value: document.getElementById('dsTeamAName')?.value || '' },
+    { key:'team_b_name',        value: document.getElementById('dsTeamBName')?.value || '' },
+    { key:'team_a_captain',     value: document.getElementById('dsTeamACaptain')?.value || '' },
+    { key:'challengers_captain',value: document.getElementById('dsTeamBCaptain')?.value || '' },
     { key:'team_c_name',     value: document.getElementById('dsTeamCName')?.value || '' },
     { key:'team_d_name',     value: document.getElementById('dsTeamDName')?.value || '' },
     { key:'team_e_name',     value: document.getElementById('dsTeamEName')?.value || '' },
