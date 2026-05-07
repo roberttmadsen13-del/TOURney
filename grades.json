@@ -1,0 +1,120 @@
+{
+  "updated_at": "2026-05-07T18:00:00Z",
+  "description": "Per-axis grade history for TOURney platform. Updated automatically by review skills. Operations Action Board reads this file.",
+  "axes": {
+    "architecture": {
+      "label": "Architecture",
+      "cmd": "/tourney-review-architecture",
+      "scores": [
+        {
+          "date": "2026-05-06",
+          "score": "A-",
+          "url": "/platform/5-6-26-claude-review",
+          "review_title": "Full Platform Review · May 6, 2026",
+          "notes": "Clean init layer, sensible MPA routing, good migration hygiene. Main gap: dual is_admin source-of-truth (players.is_admin column vs tournament_admins table). Settings key-value store is flexible but un-typed."
+        }
+      ]
+    },
+    "feature-depth": {
+      "label": "Feature Depth",
+      "cmd": "/tourney-review-feature-depth",
+      "scores": [
+        {
+          "date": "2026-05-06",
+          "score": "B+",
+          "url": "/platform/5-6-26-claude-review",
+          "review_title": "Full Platform Review · May 6, 2026",
+          "notes": "Three tournament structures (individual/team/pairs), 12 scoring formats, multi-day support, PWA install. Gap: round naming hardcoded day1/2/3, no tournament series concept, no score admin-edit UI."
+        }
+      ]
+    },
+    "ux": {
+      "label": "UX Polish",
+      "cmd": "/tourney-review-ux",
+      "scores": [
+        {
+          "date": "2026-05-06",
+          "score": "B",
+          "url": "/platform/5-6-26-claude-review",
+          "review_title": "Full Platform Review · May 6, 2026",
+          "notes": "Consistent dark gold design system, mobile hamburger on all pages. Empty states partially implemented. No loading skeletons — pages blank-flash while fetching. Accessibility not audited."
+        }
+      ]
+    },
+    "security": {
+      "label": "Security",
+      "cmd": "/tourney-review-security",
+      "scores": [
+        {
+          "date": "2026-05-06",
+          "score": "D+",
+          "url": "/platform/5-6-26-claude-review",
+          "review_title": "Full Platform Review · May 6, 2026",
+          "notes": "CRITICAL: player_accounts RLS USING (true) — any authenticated user can set billing_status=comped. CRITICAL: invitations RLS open to anon. XSS in admin.html (p.trash_talk, p.why_me unescaped). CSP header missing from vercel.json."
+        }
+      ]
+    },
+    "business": {
+      "label": "Business Ready",
+      "cmd": "/tourney-review-business",
+      "scores": [
+        {
+          "date": "2026-05-06",
+          "score": "C+",
+          "url": "/platform/5-6-26-claude-review",
+          "review_title": "Full Platform Review · May 6, 2026",
+          "notes": "Stripe edge functions exist (create-checkout, stripe-webhook) and are wired but not live — blocked on LLC formation. No ToS or Privacy Policy pages. Billing gate in /create. player_accounts.billing_status column in place."
+        }
+      ]
+    },
+    "deployment": {
+      "label": "Deployment",
+      "cmd": "/tourney-review-deployment",
+      "scores": [
+        {
+          "date": "2026-05-06",
+          "score": "B+",
+          "url": "/platform/5-6-26-claude-review",
+          "review_title": "Full Platform Review · May 6, 2026",
+          "notes": "Vercel static deploy, clean routing, PWA with service worker. Security headers in vercel.json (HSTS, X-Frame, X-Content-Type). Manual test suite (test.js, 7 checks). Gap: no CI/CD, no Sentry, no analytics, no staging environment."
+        }
+      ]
+    },
+    "performance": {
+      "label": "Performance",
+      "cmd": "/tourney-review-performance",
+      "scores": [
+        {
+          "date": "2026-05-06",
+          "score": "B",
+          "url": "/platform/5-6-26-claude-review",
+          "review_title": "Full Platform Review · May 6, 2026",
+          "notes": "admin.html 151KB, home.html 144KB — heavy inline JS per page (no bundler). External deps: Supabase CDN, Google Fonts. SW precache covers critical path. No image optimization pipeline. Most pages use Promise.all for parallel DB queries."
+        }
+      ]
+    },
+    "data-model": {
+      "label": "Data Model",
+      "cmd": "/tourney-review-data-model",
+      "scores": [
+        {
+          "date": "2026-05-06",
+          "score": "B-",
+          "url": "/platform/5-6-26-claude-review",
+          "review_title": "Full Platform Review · May 6, 2026",
+          "notes": "5 migrations with clean progression. tournament_admins now canonical (is_admin column being deprecated). Settings key-value store flexible but un-typed. RLS gaps: player_accounts and invitations policies too permissive. No created_at/updated_at on all tables."
+        }
+      ]
+    },
+    "marketing": {
+      "label": "Marketing",
+      "cmd": "/tourney-review-marketing",
+      "scores": []
+    },
+    "onboarding": {
+      "label": "Onboarding",
+      "cmd": "/tourney-review-onboarding",
+      "scores": []
+    }
+  }
+}

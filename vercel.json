@@ -28,6 +28,9 @@
     { "source": "/favicon.ico", "destination": "/favicon.svg", "permanent": false },
     { "source": "/qa-checklist", "destination": "/platform", "permanent": true },
     { "source": "/qa", "destination": "/platform", "permanent": true },
+    { "source": "/bugs", "destination": "/platform/bugs", "permanent": true },
+    { "source": "/aaa-plan", "destination": "/platform/aaa-plan", "permanent": true },
+    { "source": "/5-6-26-claude-review", "destination": "/platform/5-6-26-claude-review", "permanent": true },
     { "source": "/t/bova-2026/:path*", "destination": "/t/bova/:path*", "permanent": true },
     {
       "source": "/:path*",
@@ -62,13 +65,13 @@
     { "source": "/login",      "destination": "/login.html" },
     { "source": "/install",    "destination": "/install.html" },
     { "source": "/platform",          "destination": "/platform.html" },
+    { "source": "/platform/:slug",    "destination": "/:slug.html" },
     { "source": "/platform-manifest.json", "destination": "/platform-manifest.json" },
     { "source": "/player",            "destination": "/player.html" },
     { "source": "/player-upgrade",    "destination": "/player-upgrade.html" },
     { "source": "/urls",              "destination": "/urls.html" },
     { "source": "/combos",            "destination": "/combos.html" },
-    { "source": "/5-6-26-claude-review", "destination": "/5-6-26-claude-review.html" },
-    { "source": "/bugs",     "destination": "/bugs.html" },
-    { "source": "/aaa-plan", "destination": "/aaa-plan.html" }
+    { "source": "/5-6-26-claude-review", "destination": "/5-6-26-claude-review.html" }
+
   ]
 }
