@@ -348,7 +348,7 @@ function showProfile() {
   const tierEl = document.getElementById('onFileTier');
   const tierClass = TIER_MAP[p.handicap] || '';
   const tierLabel = TIER_LABELS[p.handicap] || (p.handicap || '—');
-  tierEl.innerHTML = `<span class="tier-pill ${tierClass}">${tierLabel}</span>`;
+  tierEl.innerHTML = `<span class="tier-pill ${esc(tierClass)}">${esc(tierLabel)}</span>`;
 
   // Editable fields
   document.getElementById('editWhyMe').value = p.why_me || '';
