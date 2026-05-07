@@ -852,9 +852,8 @@ async function doLogin() {
   const { data: tRow } = await sb.from('tournaments').select('owner_email').eq('id', tournament.id).maybeSingle();
   const isOwner = tRow?.owner_email?.toLowerCase() === email.toLowerCase();
   if (email.toLowerCase() !== PLATFORM_OWNER) {
-    const { data: player } = await sb.from('players').select('is_admin').eq('tournament_id', tournament.id).eq('email', email.toLowerCase()).maybeSingle();
     const { data: adminRow } = await sb.from('tournament_admins').select('email').eq('tournament_id', tournament.id).eq('email', email.toLowerCase()).maybeSingle();
-    if (!isOwner && !player?.is_admin && !adminRow) { await sb.auth.signOut(); err.classList.add('show'); return; }
+    if (!isOwner && !adminRow) { await sb.auth.signOut(); err.classList.add('show'); return; }
   }
   _tid = tournament.id; _slug = tournament.slug;
   showAdmin(email);
@@ -867,9 +866,8 @@ async function checkSession() {
   const { tournament } = await window.tourney.ready;
   const { data: tRow } = await sb.from('tournaments').select('owner_email').eq('id', tournament.id).maybeSingle();
   const isOwner = tRow?.owner_email?.toLowerCase() === email;
-  const { data: player } = await sb.from('players').select('is_admin').eq('tournament_id', tournament.id).eq('email', email).maybeSingle();
   const { data: adminRow } = await sb.from('tournament_admins').select('email').eq('tournament_id', tournament.id).eq('email', email).maybeSingle();
-  if (isOwner || player?.is_admin || adminRow || email === PLATFORM_OWNER) { _tid = tournament.id; _slug = tournament.slug; showAdmin(email); }
+  if (isOwner || adminRow || email === PLATFORM_OWNER) { _tid = tournament.id; _slug = tournament.slug; showAdmin(email); }
 }
 
 async function doLogout() {
@@ -1191,25 +1189,28 @@ function renderTable() {
     const dates = (p.available_dates || []).map(d => DATE_LABELS[d] || d).join(', ');
     // Use original position from created_at order for the # column
     const origPos = players.findIndex(pl => pl.id === p.id) + 1;
+    const isAdmin = _admins.some(a => a.email?.toLowerCase() === (p.email || '').toLowerCase());
     return `<tr id="row-${p.id}">
       <td style="color:rgba(240,230,204,0.3)">${origPos}</td>
-      <td class="name">${p.first_name} ${p.last_name}</td>
-      <td class="email">${p.email ? `<a href="mailto:${p.email}">${p.email}</a>` : '<span style="color:#e08080;font-size:0.68rem;letter-spacing:0.05em;">⚠ no email</span>'}</td>
-      <td style="font-size:0.7rem;color:rgba(240,230,204,0.5)">${p.phone_number ? `<a href="tel:${p.phone_number}" style="color:inherit;text-decoration:none">${formatPhone(p.phone_number)}</a>` : '—'}</td>
-      <td><span class="tier-pill ${TIER_MAP[p.handicap] || ''}">${TIER_LABELS[p.handicap] || p.handicap}</span></td>
-      <td style="font-size:0.7rem;color:rgba(240,230,204,0.4)">${dates || '—'}</td>
-      <td style="font-size:0.72rem;color:rgba(240,230,204,0.45);max-width:160px">${p.why_me || '—'}</td>
-      <td style="font-size:0.72rem;font-style:italic;color:rgba(192,144,48,0.5);max-width:160px">${p.trash_talk || '—'}</td>
+      <td class="name">${esc(p.first_name)} ${esc(p.last_name)}</td>
+      <td class="email">${p.email ? `<a href="mailto:${esc(p.email)}">${esc(p.email)}</a>` : '<span style="color:#e08080;font-size:0.68rem;letter-spacing:0.05em;">⚠ no email</span>'}</td>
+      <td style="font-size:0.7rem;color:rgba(240,230,204,0.5)">${p.phone_number ? `<a href="tel:${esc(p.phone_number)}" style="color:inherit;text-decoration:none">${esc(formatPhone(p.phone_number))}</a>` : '—'}</td>
+      <td><span class="tier-pill ${TIER_MAP[p.handicap] || ''}">${TIER_LABELS[p.handicap] || esc(p.handicap)}</span></td>
+      <td style="font-size:0.7rem;color:rgba(240,230,204,0.4)">${esc(dates) || '—'}</td>
+      <td style="font-size:0.72rem;color:rgba(240,230,204,0.45);max-width:160px">${esc(p.why_me) || '—'}</td>
+      <td style="font-size:0.72rem;font-style:italic;color:rgba(192,144,48,0.5);max-width:160px">${esc(p.trash_talk) || '—'}</td>
       <td>${p.hat ? '<span class="hat-yes">Yes</span>' : '<span class="hat-no">No</span>'}</td>
       <td>${teamLabel}</td>
       <td>${p.has_account ? '<span style="color:#2a6a28;">&#10003;</span>' : '<span style="color:rgba(26,16,8,0.2);">—</span>'}</td>
-      <td><button class="action-btn" style="color:${p.is_admin ? 'var(--gold)' : 'var(--muted)'};border-color:${p.is_admin ? 'var(--gold)' : 'rgba(26,16,8,0.2)'};" onclick="toggleAdmin('${p.id}',${!p.is_admin})">${p.is_admin ? 'Admin' : 'Grant'}</button></td>
-      <td style="display:flex;gap:0.4rem;"><button class="action-btn" style="color:var(--gold);border-color:var(--gold);" onclick="editPlayer('${p.id}')">Edit</button><a class="action-btn" href="/player?as=${encodeURIComponent(p.email)}" target="_blank" style="display:inline-flex;align-items:center;">Portal</a><button class="action-btn" onclick="removePlayer('${p.id}','${p.first_name} ${p.last_name}')">Remove</button></td>
+      <td><button class="action-btn" style="color:${isAdmin ? 'var(--gold)' : 'var(--muted)'};border-color:${isAdmin ? 'var(--gold)' : 'rgba(26,16,8,0.2)'};" onclick="toggleAdmin('${p.id}',${!isAdmin})">${isAdmin ? 'Admin' : 'Grant'}</button></td>
+      <td style="display:flex;gap:0.4rem;"><button class="action-btn" style="color:var(--gold);border-color:var(--gold);" onclick="editPlayer('${p.id}')">Edit</button><a class="action-btn" href="/player?as=${encodeURIComponent(p.email)}" target="_blank" style="display:inline-flex;align-items:center;">Portal</a><button class="action-btn" onclick="removePlayer('${p.id}')">Remove</button></td>
     </tr>`;
   }).join('');
 }
 
-async function removePlayer(id, name) {
+async function removePlayer(id) {
+  const p = players.find(x => x.id === id);
+  const name = p ? `${p.first_name} ${p.last_name}` : 'this player';
   if (!confirm(`Remove ${name} from the field?`)) return;
   await sb.from('players').delete().eq('id', id);
   delete teamAssignments[id];
@@ -1745,11 +1746,11 @@ function editPlayer(id) {
   overlay.className = 'edit-modal-overlay';
   overlay.innerHTML = `
     <div class="edit-modal">
-      <div class="edit-modal-title">Edit <em>${p.first_name} ${p.last_name}</em></div>
-      <div class="fg"><label>First Name</label><input type="text" id="ep-first" value="${p.first_name || ''}"></div>
-      <div class="fg"><label>Last Name</label><input type="text" id="ep-last" value="${p.last_name || ''}"></div>
-      <div class="fg"><label>Email</label><input type="email" id="ep-email" value="${p.email || ''}"></div>
-      <div class="fg"><label>Phone</label><input type="tel" id="ep-phone" value="${formatPhone(p.phone_number || '')}"></div>
+      <div class="edit-modal-title">Edit <em>${esc(p.first_name)} ${esc(p.last_name)}</em></div>
+      <div class="fg"><label>First Name</label><input type="text" id="ep-first" value="${esc(p.first_name || '')}"></div>
+      <div class="fg"><label>Last Name</label><input type="text" id="ep-last" value="${esc(p.last_name || '')}"></div>
+      <div class="fg"><label>Email</label><input type="email" id="ep-email" value="${esc(p.email || '')}"></div>
+      <div class="fg"><label>Phone</label><input type="tel" id="ep-phone" value="${esc(formatPhone(p.phone_number || ''))}"></div>
       <div class="fg"><label>Handicap Tier</label><select id="ep-tier">${tierOpts}</select></div>
       <div class="fg"><label>Hat</label><select id="ep-hat"><option value="false"${!p.hat?' selected':''}>No</option><option value="true"${p.hat?' selected':''}>Yes</option></select></div>
       <div class="edit-modal-btns">

@@ -674,6 +674,7 @@ html { scroll-behavior: smooth; }
 const SUPABASE_URL = 'https://jllugkiojeoopitdvzsa.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_DnBMNLaSu61ykJ6P_fI2fw_D9DdAScn';
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const esc = s => (s == null ? '' : String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'));
 
 window.addEventListener('scroll', () => { document.getElementById('mainNav').classList.toggle('scrolled', window.scrollY > 40); });
 
@@ -699,9 +700,9 @@ window.addEventListener('scroll', () => { document.getElementById('mainNav').cla
 
   // Hero eyebrow & meta
   const eyebrow = document.querySelector('.hero-eyebrow');
-  if (eyebrow && map.homepage_subtitle) eyebrow.innerHTML = map.homepage_subtitle;
+  if (eyebrow && map.homepage_subtitle) eyebrow.textContent = map.homepage_subtitle;
   const heroMeta = document.querySelector('.hero-meta');
-  if (heroMeta && map.homepage_details) heroMeta.innerHTML = map.homepage_details;
+  if (heroMeta && map.homepage_details) heroMeta.textContent = map.homepage_details;
 
   // About sub tagline — derive from structure/team/pair/day counts
   const aboutSubEl = document.getElementById('aboutSub');
@@ -723,8 +724,8 @@ window.addEventListener('scroll', () => { document.getElementById('mainNav').cla
   const b2 = document.getElementById('aboutBody2');
   if (map.homepage_about) {
     const paras = map.homepage_about.split('\n\n').filter(Boolean);
-    if (b1) b1.innerHTML = paras[0] || '';
-    if (b2) b2.innerHTML = paras[1] || '';
+    if (b1) b1.textContent = paras[0] || '';
+    if (b2) b2.textContent = paras[1] || '';
   }
 
   // About stats
@@ -772,9 +773,9 @@ window.addEventListener('scroll', () => { document.getElementById('mainNav').cla
           <div class="day-block">
             <div class="db-num">${String(day.day||i+1).padStart(2,'0')}</div>
             <div class="db-label">Day ${DAY_WORDS[i]||i+1}</div>
-            ${day.title ? `<div class="db-title">${day.title}</div>` : ''}
-            ${day.subtitle ? `<div class="db-format">${day.subtitle}</div>` : ''}
-            ${(day.entries||[]).map(e=>`<div class="dbe"><div class="dbe-time">${e.time||''}</div><div class="dbe-text">${e.text||''}</div></div>`).join('')}
+            ${day.title ? `<div class="db-title">${esc(day.title)}</div>` : ''}
+            ${day.subtitle ? `<div class="db-format">${esc(day.subtitle)}</div>` : ''}
+            ${(day.entries||[]).map(e=>`<div class="dbe"><div class="dbe-time">${esc(e.time||'')}</div><div class="dbe-text">${esc(e.text||'')}</div></div>`).join('')}
           </div>`).join('');
       }
     } catch {}
@@ -803,16 +804,16 @@ window.addEventListener('scroll', () => { document.getElementById('mainNav').cla
       const front = map[`format_day${i}_front`] || 'stroke';
       const back  = map[`format_day${i}_back`]  || 'stroke';
       if (front === back) {
-        items += `<div class="fi"><div class="fi-head"><div class="fi-day">Day ${DAY_WORDS[i-1]||i} &mdash; Full 18</div><div class="fi-format">${FMT_LABELS[front]||front}</div></div><div class="fi-body">${FMT_DESC[front]||''}</div></div>`;
+        items += `<div class="fi"><div class="fi-head"><div class="fi-day">Day ${DAY_WORDS[i-1]||i} &mdash; Full 18</div><div class="fi-format">${esc(FMT_LABELS[front]||front)}</div></div><div class="fi-body">${esc(FMT_DESC[front]||'')}</div></div>`;
       } else {
-        items += `<div class="fi"><div class="fi-head"><div class="fi-day">Day ${DAY_WORDS[i-1]||i} &mdash; Front</div><div class="fi-format">${FMT_LABELS[front]||front}</div></div><div class="fi-body">${FMT_DESC[front]||''}</div></div>`;
-        items += `<div class="fi"><div class="fi-head"><div class="fi-day">Day ${DAY_WORDS[i-1]||i} &mdash; Back</div><div class="fi-format">${FMT_LABELS[back]||back}</div></div><div class="fi-body">${FMT_DESC[back]||''}</div></div>`;
+        items += `<div class="fi"><div class="fi-head"><div class="fi-day">Day ${DAY_WORDS[i-1]||i} &mdash; Front</div><div class="fi-format">${esc(FMT_LABELS[front]||front)}</div></div><div class="fi-body">${esc(FMT_DESC[front]||'')}</div></div>`;
+        items += `<div class="fi"><div class="fi-head"><div class="fi-day">Day ${DAY_WORDS[i-1]||i} &mdash; Back</div><div class="fi-format">${esc(FMT_LABELS[back]||back)}</div></div><div class="fi-body">${esc(FMT_DESC[back]||'')}</div></div>`;
       }
     }
     if (items) fmtItems.innerHTML = items;
   }
   const fmtNote = document.getElementById('fmtNote');
-  if (fmtNote && map.homepage_format_note) fmtNote.innerHTML = map.homepage_format_note;
+  if (fmtNote && map.homepage_format_note) fmtNote.textContent = map.homepage_format_note;
 
   // Teams section
   const teamCount = parseInt(map.team_count || '2');
@@ -825,7 +826,7 @@ window.addEventListener('scroll', () => { document.getElementById('mainNav').cla
     } else {
       const setTeamName = (id, name) => {
         const el = document.getElementById(id); if (!el || !name) return;
-        const words = name.trim().split(/\s+/); const last = words.pop();
+        const words = name.trim().split(/\s+/).map(esc); const last = words.pop();
         el.innerHTML = (words.length ? words.join(' ') + ' ' : '') + '<em>' + last + '</em>';
       };
       setTeamName('teamADisplayName', map.team_a_name || 'Team A');
@@ -840,9 +841,9 @@ window.addEventListener('scroll', () => { document.getElementById('mainNav').cla
   }
 
   // RSVP bullets
-  if (map.reg_bullet_1) { const el = document.getElementById('rsvpBullet1'); if (el) el.innerHTML = map.reg_bullet_1; }
-  if (map.reg_bullet_2) { const el = document.getElementById('rsvpBullet2'); if (el) el.innerHTML = map.reg_bullet_2; }
-  if (map.reg_bullet_3) { const el = document.getElementById('rsvpBullet3'); if (el) el.innerHTML = map.reg_bullet_3; }
+  if (map.reg_bullet_1) { const el = document.getElementById('rsvpBullet1'); if (el) el.textContent = map.reg_bullet_1; }
+  if (map.reg_bullet_2) { const el = document.getElementById('rsvpBullet2'); if (el) el.textContent = map.reg_bullet_2; }
+  if (map.reg_bullet_3) { const el = document.getElementById('rsvpBullet3'); if (el) el.textContent = map.reg_bullet_3; }
 
   // Hat section
   const hatSec = document.getElementById('hatSection');
@@ -987,7 +988,7 @@ async function refreshField() {
     g.innerHTML = players.map((p, i) => {
       const t = TIER_MAP[p.handicap] || TIER_MAP.hacker;
       const dates = (p.available_dates || []).map(d => DATE_LABELS[d] || d).join(', ');
-      return `<div class="player-card ${t.cls}"><div class="pc-num">${i+1}</div><div class="pc-name">${p.first_name} ${p.last_name}</div><span class="pc-tier">${t.label}</span><div class="pc-dates">${dates}</div>${p.trash_talk ? `<div class="pc-trash">&ldquo;${p.trash_talk}&rdquo;</div>` : ''}${p.hat ? `<div class="pc-hat">Hat &mdash; $55</div>` : ''}</div>`;
+      return `<div class="player-card ${t.cls}"><div class="pc-num">${i+1}</div><div class="pc-name">${esc(p.first_name)} ${esc(p.last_name)}</div><span class="pc-tier">${t.label}</span><div class="pc-dates">${esc(dates)}</div>${p.trash_talk ? `<div class="pc-trash">&ldquo;${esc(p.trash_talk)}&rdquo;</div>` : ''}${p.hat ? `<div class="pc-hat">Hat &mdash; $55</div>` : ''}</div>`;
     }).join('');
   } catch (e) {}
 }
