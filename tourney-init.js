@@ -103,7 +103,7 @@
       if (email === 'robert.t.madsen13@gmail.com' && window._navInjectLink) {
         window._navInjectLink(
           'https://tourney.greenskeeper.studio/platform',
-          '⬡ Platform',
+          '⬡ Operations',
           'border-top:1px solid rgba(192,144,48,0.2);color:rgba(192,144,48,0.7);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;padding:.65rem 1.25rem'
         );
       }

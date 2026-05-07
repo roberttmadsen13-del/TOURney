@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -8,143 +8,286 @@
 <meta name="apple-mobile-web-app-title" content="TOURney">
 <link rel="manifest" href="/platform-manifest.json">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Platform — TOURney</title>
+<title>Operations — TOURney</title>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,400;0,600;0,700;1,400&family=DM+Mono:wght@400;500&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-body{background:#0d0a06;color:#f0e6cc;font-family:'Barlow',sans-serif;min-height:100vh;}
-.topbar{background:#1a1008;border-bottom:1px solid rgba(192,144,48,0.2);padding:0 2rem;display:flex;align-items:center;justify-content:space-between;height:56px;}
-.topbar-brand{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:1rem;letter-spacing:0.2em;text-transform:uppercase;color:#c09030;}
-.topbar-user{font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.12em;color:rgba(240,230,204,0.35);display:flex;align-items:center;gap:1rem;}
-.btn-sm{font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:0.7rem;letter-spacing:0.15em;text-transform:uppercase;padding:0.4rem 0.9rem;border:1px solid rgba(192,144,48,0.4);background:none;color:#c09030;cursor:pointer;transition:all 0.2s;}
-.btn-sm:hover{background:rgba(192,144,48,0.08);}
-.main{max-width:1100px;margin:0 auto;padding:2.5rem 2rem;}
-.page-hd{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:2rem;}
-.page-title{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:1.8rem;letter-spacing:0.06em;text-transform:uppercase;color:#f0e6cc;}
-.page-title span{color:#c09030;}
-.stat-row{display:flex;gap:1.5rem;margin-bottom:2.5rem;}
-.stat{background:#1a1008;border:1px solid rgba(192,144,48,0.12);padding:1.2rem 1.5rem;flex:1;}
-.stat-val{font-family:'Barlow Condensed',sans-serif;font-size:2rem;font-weight:700;color:#c09030;line-height:1;}
-.stat-label{font-family:'DM Mono',monospace;font-size:0.48rem;letter-spacing:0.2em;text-transform:uppercase;color:rgba(240,230,204,0.35);margin-top:0.4rem;}
+:root{
+  --gold:#c09030;--gold-light:#d4a840;--gold-dim:rgba(192,144,48,0.15);
+  --bg:#0d0a06;--surface:#1a1008;--card:#1e1509;--card2:#221a0e;
+  --border:rgba(192,144,48,0.18);--muted:rgba(240,230,204,0.35);--text:#f0e6cc;
+  --red:#c8503c;--green:#3a9e5f;--blue:#2980b9;--orange:#e67e22;--purple:#8e44ad;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;min-height:100vh;}
+
+/* ── Auth wall ── */
+#loginWrap{max-width:400px;margin:8rem auto;padding:2.5rem;background:var(--surface);border:1px solid var(--border);}
+#loginWrap h2{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:1.2rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold);margin-bottom:1.5rem;}
+.field{margin-bottom:1rem;}
+.field label{display:block;font-family:'DM Mono',monospace;font-size:0.48rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);margin-bottom:0.4rem;}
+.field input{width:100%;background:rgba(255,255,255,0.04);border:1px solid var(--border);color:var(--text);font-family:'DM Mono',monospace;font-size:0.75rem;padding:0.65rem 0.8rem;outline:none;}
+.field input:focus{border-color:rgba(192,144,48,0.5);}
+.btn-login{width:100%;background:var(--gold);color:var(--bg);border:none;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:0.85rem;letter-spacing:0.2em;text-transform:uppercase;padding:0.9rem;cursor:pointer;margin-top:0.5rem;transition:background 0.2s;}
+.btn-login:hover{background:var(--gold-light);}
+.err{color:var(--red);font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.1em;margin-top:0.75rem;display:none;}
+.err.show{display:block;}
+
+/* ── Topbar ── */
+.topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:0 1.75rem;display:flex;align-items:center;height:52px;gap:1rem;position:sticky;top:0;z-index:100;}
+.topbar-brand{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:0.95rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);}
+.topbar-brand span{color:var(--muted);font-weight:400;font-size:0.75rem;margin-left:0.4rem;letter-spacing:0.08em;}
+.topbar-user{font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.1em;color:var(--muted);margin-left:auto;display:flex;align-items:center;gap:0.75rem;}
+.btn-sm{font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:0.65rem;letter-spacing:0.14em;text-transform:uppercase;padding:0.35rem 0.8rem;border:1px solid rgba(192,144,48,0.35);background:none;color:var(--gold);cursor:pointer;transition:all 0.2s;}
+.btn-sm:hover{background:var(--gold-dim);}
+
+/* ── Tabs ── */
+.tabs{display:flex;background:var(--surface);border-bottom:1px solid var(--border);}
+.tab-btn{padding:0.7rem 1.4rem;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:0.72rem;letter-spacing:0.15em;text-transform:uppercase;background:none;border:none;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all 0.15s;white-space:nowrap;}
+.tab-btn:hover{color:var(--gold);}
+.tab-btn.active{color:var(--gold);border-bottom-color:var(--gold);}
+
+/* ── Dashboard ── */
+.main{max-width:1100px;margin:0 auto;padding:2.25rem 1.75rem 4rem;}
+.page-hd{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:1.5rem;}
+.page-title{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:1.5rem;letter-spacing:0.06em;text-transform:uppercase;color:var(--text);}
+.page-title span{color:var(--gold);}
+.stat-row{display:flex;gap:1.25rem;margin-bottom:2rem;flex-wrap:wrap;}
+.stat{background:var(--surface);border:1px solid var(--border);padding:1.1rem 1.4rem;flex:1;min-width:120px;}
+.stat-val{font-family:'Barlow Condensed',sans-serif;font-size:2rem;font-weight:700;color:var(--gold);line-height:1;}
+.stat-label{font-family:'DM Mono',monospace;font-size:0.46rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-top:0.35rem;}
 .tbl-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;margin-bottom:0.5rem;}
-table{width:100%;border-collapse:collapse;min-width:560px;}
-thead th{font-family:'DM Mono',monospace;font-size:0.48rem;letter-spacing:0.2em;text-transform:uppercase;color:rgba(240,230,204,0.35);text-align:left;padding:0 0.75rem 0.8rem;border-bottom:1px solid rgba(192,144,48,0.15);}
+table{width:100%;border-collapse:collapse;min-width:500px;}
+thead th{font-family:'DM Mono',monospace;font-size:0.46rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);text-align:left;padding:0 0.75rem 0.75rem;border-bottom:1px solid var(--border);}
 tbody tr{border-bottom:1px solid rgba(192,144,48,0.06);transition:background 0.15s;}
 tbody tr:hover{background:rgba(192,144,48,0.03);}
-td{padding:0.75rem;font-size:0.88rem;vertical-align:middle;}
-@media(max-width:640px){.main{padding:1.5rem 1rem;}.stat-row{gap:0.75rem;}.stat{padding:0.9rem 1rem;}.stat-val{font-size:1.5rem;}.page-hd{margin-bottom:1rem;}}
-.t-name{font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:1rem;letter-spacing:0.04em;color:#f0e6cc;}
-.t-slug{font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.1em;color:#c09030;margin-top:2px;}
-.t-owner{font-family:'DM Mono',monospace;font-size:0.55rem;color:rgba(240,230,204,0.45);}
-.t-count{font-family:'Barlow Condensed',sans-serif;font-size:1.1rem;font-weight:600;color:#c09030;}
-.t-date{font-family:'DM Mono',monospace;font-size:0.5rem;color:rgba(240,230,204,0.3);}
-.actions{display:flex;gap:0.5rem;}
-.btn-action{font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:0.65rem;letter-spacing:0.12em;text-transform:uppercase;padding:0.35rem 0.75rem;border:1px solid;background:none;cursor:pointer;transition:all 0.2s;text-decoration:none;display:inline-block;}
-.btn-admin{color:#c09030;border-color:rgba(192,144,48,0.35);}
-.btn-admin:hover{background:rgba(192,144,48,0.1);}
+td{padding:0.7rem 0.75rem;font-size:0.88rem;vertical-align:middle;}
+.t-name{font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:0.95rem;letter-spacing:0.04em;color:var(--text);}
+.t-slug{font-family:'DM Mono',monospace;font-size:0.48rem;letter-spacing:0.1em;color:var(--gold);margin-top:2px;}
+.t-owner{font-family:'DM Mono',monospace;font-size:0.52rem;color:var(--muted);}
+.t-count{font-family:'Barlow Condensed',sans-serif;font-size:1.05rem;font-weight:600;color:var(--gold);}
+.t-date{font-family:'DM Mono',monospace;font-size:0.48rem;color:rgba(240,230,204,0.25);}
+.actions{display:flex;gap:0.4rem;flex-wrap:wrap;}
+.btn-action{font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:0.62rem;letter-spacing:0.12em;text-transform:uppercase;padding:0.3rem 0.65rem;border:1px solid;background:none;cursor:pointer;transition:all 0.2s;text-decoration:none;display:inline-block;}
+.btn-admin{color:var(--gold);border-color:rgba(192,144,48,0.35);}
+.btn-admin:hover{background:var(--gold-dim);}
 .btn-delete{color:rgba(200,80,60,0.7);border-color:rgba(200,80,60,0.2);}
-.btn-delete:hover{background:rgba(200,80,60,0.08);color:#c8503c;border-color:rgba(200,80,60,0.5);}
-.badge{display:inline-block;font-family:'DM Mono',monospace;font-size:0.44rem;letter-spacing:0.15em;text-transform:uppercase;padding:0.25rem 0.6rem;border:1px solid;}
-.badge-live{color:#3a9e5f;border-color:rgba(58,158,95,0.4);background:rgba(58,158,95,0.08);}
-.badge-notlive{color:rgba(240,230,204,0.25);border-color:rgba(240,230,204,0.08);}
-.badge-complete{color:#c09030;border-color:rgba(192,144,48,0.4);background:rgba(192,144,48,0.06);}
-.empty{text-align:center;padding:4rem;font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.15em;text-transform:uppercase;color:rgba(240,230,204,0.2);}
-#loginWrap{max-width:400px;margin:8rem auto;padding:2.5rem;background:#1a1008;border:1px solid rgba(192,144,48,0.15);}
-#loginWrap h2{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:1.2rem;letter-spacing:0.12em;text-transform:uppercase;color:#c09030;margin-bottom:1.5rem;}
-.field{margin-bottom:1rem;}
-.field label{display:block;font-family:'DM Mono',monospace;font-size:0.48rem;letter-spacing:0.18em;text-transform:uppercase;color:rgba(240,230,204,0.4);margin-bottom:0.4rem;}
-.field input{width:100%;background:rgba(255,255,255,0.04);border:1px solid rgba(192,144,48,0.2);color:#f0e6cc;font-family:'DM Mono',monospace;font-size:0.75rem;padding:0.65rem 0.8rem;outline:none;}
-.field input:focus{border-color:rgba(192,144,48,0.5);}
-.btn-login{width:100%;background:#c09030;color:#1a1008;border:none;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:0.85rem;letter-spacing:0.2em;text-transform:uppercase;padding:0.9rem;cursor:pointer;margin-top:0.5rem;transition:background 0.2s;}
-.btn-login:hover{background:#d4aa50;}
-.err{color:#c8503c;font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.1em;margin-top:0.75rem;display:none;}
-.err.show{display:block;}
+.btn-delete:hover{background:rgba(200,80,60,0.08);color:var(--red);border-color:rgba(200,80,60,0.5);}
+.badge{display:inline-block;font-family:'DM Mono',monospace;font-size:0.42rem;letter-spacing:0.14em;text-transform:uppercase;padding:0.22rem 0.55rem;border:1px solid;}
+.badge-live{color:var(--green);border-color:rgba(58,158,95,0.4);background:rgba(58,158,95,0.08);}
+.badge-notlive{color:rgba(240,230,204,0.2);border-color:rgba(240,230,204,0.07);}
+.badge-complete{color:var(--gold);border-color:rgba(192,144,48,0.4);background:rgba(192,144,48,0.06);}
+.empty{text-align:center;padding:3rem;font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:0.15em;text-transform:uppercase;color:rgba(240,230,204,0.18);}
+.search-field{width:100%;max-width:360px;margin-bottom:1.25rem;background:rgba(255,255,255,0.04);border:1px solid var(--border);color:var(--text);font-family:'DM Mono',monospace;font-size:0.7rem;padding:0.5rem 0.75rem;outline:none;}
+.search-field:focus{border-color:rgba(192,144,48,0.45);}
+.section-gap{margin-top:2.75rem;}
+
+/* ── Artifact Hub ── */
+.hub-wrap{max-width:1100px;margin:0 auto;padding:1.75rem 1.75rem 4rem;}
+.toolbar{display:flex;gap:0.5rem;align-items:center;flex-wrap:wrap;margin-bottom:1.5rem;}
+.filter-btn{background:var(--card);border:1px solid var(--border);color:var(--muted);font-family:'Barlow',sans-serif;font-size:0.72rem;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;padding:0.38rem 0.8rem;border-radius:20px;cursor:pointer;transition:all 0.15s;}
+.filter-btn:hover{border-color:var(--gold);color:var(--gold);}
+.filter-btn.active{background:var(--gold-dim);border-color:var(--gold);color:var(--gold);}
+.filter-btn.archived-toggle{margin-left:auto;}
+.hub-search{flex:1;min-width:180px;background:rgba(255,255,255,0.04);border:1px solid var(--border);color:var(--text);padding:0.45rem 0.8rem;border-radius:20px;font-family:'Barlow',sans-serif;font-size:0.8rem;outline:none;}
+.hub-search:focus{border-color:var(--gold);}
+.hub-search::placeholder{color:var(--muted);}
+.hub-count{font-size:0.68rem;color:var(--muted);font-family:'DM Mono',monospace;white-space:nowrap;}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1rem;}
+.card-link{text-decoration:none;color:inherit;display:block;height:100%;}
+.card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:1.2rem 1.35rem;height:100%;transition:all 0.18s ease;display:flex;flex-direction:column;gap:0.7rem;position:relative;overflow:hidden;}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--gold);opacity:0.45;transition:opacity 0.18s;}
+.card.cat-review::before{background:var(--blue)}.card.cat-plan::before{background:var(--gold)}
+.card.cat-audit::before{background:var(--red)}.card.cat-runbook::before{background:var(--green)}
+.card.cat-postmortem::before{background:var(--orange)}.card.cat-skill::before{background:var(--purple)}
+.card.archived{opacity:0.45;filter:saturate(0.4);}
+.card-link:hover .card{border-color:var(--gold);transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,0.6);}
+.card-link:hover .card::before{opacity:1;}
+.card-head{display:flex;align-items:center;gap:0.45rem;flex-wrap:wrap;}
+.pill{display:inline-block;font-size:0.58rem;font-weight:700;letter-spacing:0.08em;padding:0.16rem 0.48rem;border-radius:20px;text-transform:uppercase;}
+.pill-blue{background:rgba(41,128,185,0.15);color:var(--blue);border:1px solid rgba(41,128,185,0.3);}
+.pill-gold{background:rgba(192,144,48,0.18);color:var(--gold);border:1px solid rgba(192,144,48,0.3);}
+.pill-red{background:rgba(192,57,43,0.15);color:var(--red);border:1px solid rgba(192,57,43,0.3);}
+.pill-green{background:rgba(58,158,95,0.15);color:var(--green);border:1px solid rgba(58,158,95,0.3);}
+.pill-orange{background:rgba(230,126,34,0.15);color:var(--orange);border:1px solid rgba(230,126,34,0.3);}
+.pill-purple{background:rgba(142,68,173,0.15);color:var(--purple);border:1px solid rgba(142,68,173,0.3);}
+.pill-muted{background:rgba(255,255,255,0.04);color:var(--muted);border:1px solid var(--border);}
+.card-date{font-size:0.66rem;color:var(--muted);font-family:'DM Mono',monospace;margin-left:auto;}
+.card-title{font-size:0.98rem;font-weight:700;color:#fff;line-height:1.3;}
+.card-summary{font-size:0.8rem;color:var(--muted);line-height:1.55;flex:1;}
+.card-foot{display:flex;align-items:center;gap:0.4rem;flex-wrap:wrap;font-size:0.66rem;color:var(--muted);font-family:'DM Mono',monospace;margin-top:auto;padding-top:0.55rem;border-top:1px solid rgba(192,144,48,0.08);}
+.card-tags{display:flex;gap:0.25rem;flex-wrap:wrap;}
+.tag{background:rgba(255,255,255,0.04);color:var(--muted);padding:0.08rem 0.35rem;border-radius:3px;font-size:0.6rem;}
+.archive-btn{font-family:'DM Mono',monospace;font-size:0.52rem;padding:0.12rem 0.4rem;background:none;border:1px solid rgba(240,230,204,0.1);color:rgba(240,230,204,0.25);cursor:pointer;border-radius:2px;transition:all .12s;white-space:nowrap;}
+.archive-btn:hover{color:var(--gold);border-color:rgba(192,144,48,0.35);}
+.grid-empty{text-align:center;padding:3rem 1rem;color:var(--muted);font-style:italic;grid-column:1/-1;}
+.add-card{background:var(--card);border:2px dashed var(--border);border-radius:8px;padding:1.2rem;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:var(--muted);font-size:0.82rem;line-height:1.5;min-height:150px;}
+.add-card code{font-size:0.74rem;color:var(--gold-light);background:rgba(255,255,255,0.06);padding:0.08rem 0.28rem;border-radius:3px;}
+.add-card-title{color:var(--gold);font-weight:700;text-transform:uppercase;letter-spacing:0.08em;font-size:0.7rem;margin-bottom:0.35rem;}
+
+/* ── Checklist ── */
+.cl-wrap{max-width:780px;margin:0 auto;padding:1.75rem 1.75rem 4rem;}
+.cl-toolbar{display:flex;gap:0.5rem;align-items:center;margin-bottom:1.25rem;flex-wrap:wrap;}
+.slug-label{font-size:0.48rem;font-weight:700;letter-spacing:0.22em;text-transform:uppercase;color:var(--muted);}
+.slug-input{font-family:'DM Mono',monospace;font-size:0.7rem;padding:0.3rem 0.6rem;background:var(--card);color:var(--text);border:1px solid var(--border);width:180px;outline:none;}
+.slug-input:focus{border-color:rgba(192,144,48,0.45);}
+.cl-progress{font-family:'DM Mono',monospace;font-size:0.58rem;color:rgba(192,144,48,0.45);margin-left:auto;}
+.cl-sections{display:flex;flex-direction:column;gap:0.9rem;}
+.cl-section{background:var(--card);border:1px solid var(--border);overflow:hidden;}
+.cl-sec-hdr{display:flex;align-items:center;gap:0.5rem;padding:0.65rem 1rem;border-bottom:1px solid var(--border);cursor:pointer;user-select:none;transition:background .1s;}
+.cl-sec-hdr:hover{background:rgba(192,144,48,0.04);}
+.cl-sec-title{font-family:'Barlow Condensed',sans-serif;font-size:0.82rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--text);flex:1;}
+.cl-badge{font-family:'DM Mono',monospace;font-size:0.5rem;padding:0.14em 0.48em;letter-spacing:0.1em;text-transform:uppercase;white-space:nowrap;}
+.badge-new{background:rgba(74,48,128,0.15);color:#9b7ee8;border:1px solid rgba(74,48,128,0.3);}
+.badge-regression{background:rgba(192,144,48,0.12);color:var(--gold);border:1px solid rgba(192,144,48,0.3);}
+.badge-infra{background:rgba(58,158,95,0.12);color:var(--green);border:1px solid rgba(58,158,95,0.25);}
+.badge-human{background:rgba(192,57,43,0.1);color:var(--red);border:1px solid rgba(192,57,43,0.25);}
+.cl-sec-status{font-family:'DM Mono',monospace;font-size:0.55rem;font-weight:700;white-space:nowrap;}
+.st-pass{color:var(--green)}.st-pend{color:rgba(192,144,48,0.4)}.st-fail{color:var(--red);}
+.cl-chevron{font-size:0.52rem;color:rgba(192,144,48,0.3);transition:transform .18s;flex-shrink:0;}
+.cl-section.collapsed .cl-chevron{transform:rotate(-90deg);}
+.cl-section.collapsed .cl-sec-hdr{border-bottom:none;}
+.cl-section.collapsed .cl-steps,.cl-section.collapsed .human-banner{display:none;}
+.human-banner{display:flex;align-items:center;gap:0.5rem;padding:0.4rem 1rem;background:rgba(192,57,43,0.05);border-bottom:1px solid rgba(192,57,43,0.14);font-size:0.52rem;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:var(--red);}
+.cl-steps{list-style:none;padding:0.25rem 0;}
+.cl-step{display:flex;align-items:flex-start;gap:0.65rem;padding:0.52rem 1rem;border-bottom:1px solid rgba(192,144,48,0.06);cursor:pointer;transition:background .1s;}
+.cl-step:last-child{border-bottom:none;}
+.cl-step:hover{background:rgba(192,144,48,0.04);}
+.cl-step.done{opacity:0.45;}
+.cl-step.done .step-text{text-decoration:line-through;color:var(--muted);}
+.cb{width:1.05rem;height:1.05rem;border:1.5px solid rgba(192,144,48,0.32);flex-shrink:0;margin-top:0.12rem;display:flex;align-items:center;justify-content:center;transition:all .12s;}
+.cl-step.done .cb{background:var(--green);border-color:var(--green);}
+.cb-chk{display:none;color:#fff;font-size:0.6rem;font-weight:900;}
+.cl-step.done .cb-chk{display:block;}
+.step-body{flex:1;min-width:0;}
+.step-text{font-size:0.78rem;line-height:1.4;color:var(--text);}
+.step-device{display:inline-block;font-size:0.56rem;font-family:'DM Mono',monospace;letter-spacing:0.08em;margin-right:0.3rem;opacity:0.7;}
+.step-link{display:inline-block;margin-top:0.26rem;font-family:'DM Mono',monospace;font-size:0.54rem;color:rgba(192,144,48,0.55);text-decoration:none;padding:0.07rem 0.35rem;border:1px solid rgba(192,144,48,0.16);transition:all .1s;}
+.step-link:hover{color:var(--gold);border-color:rgba(192,144,48,0.42);}
+.step-note{font-size:0.6rem;color:var(--muted);margin-top:0.16rem;font-style:italic;line-height:1.35;}
+.step-how{font-size:0.64rem;color:rgba(240,230,204,0.55);margin-top:0.2rem;line-height:1.4;padding:0.3rem 0.5rem;background:rgba(255,255,255,0.02);border-left:2px solid rgba(192,144,48,0.2);}
+.reset-btn{font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.1em;text-transform:uppercase;padding:0.22rem 0.6rem;background:transparent;color:rgba(240,230,204,0.25);border:1px solid rgba(240,230,204,0.1);cursor:pointer;transition:all .12s;margin-top:0.75rem;display:block;margin-left:auto;}
+.reset-btn:hover{color:var(--red);border-color:rgba(200,80,60,0.35);}
+
+@media(max-width:640px){
+  .main,.hub-wrap,.cl-wrap{padding-left:1rem;padding-right:1rem;}
+  .stat-row{gap:0.6rem;}.stat{padding:0.8rem 0.9rem;}.stat-val{font-size:1.5rem;}
+  .tab-btn{padding:0.6rem 0.9rem;font-size:0.65rem;}
+}
 </style>
 </head>
 <body>
 
-<!-- LOGIN -->
+<!-- ══ LOGIN ══ -->
 <div id="loginWrap">
-  <h2>Platform <span style="color:#f0e6cc">Admin</span></h2>
+  <h2>Operations <span style="color:var(--text)">Hub</span></h2>
   <div class="field"><label>Email</label><input type="email" id="loginEmail" placeholder="rob@greenskeeper.studio"></div>
   <div class="field"><label>Password</label><input type="password" id="loginPass" onkeydown="if(event.key==='Enter')doLogin()"></div>
   <button class="btn-login" onclick="doLogin()">Sign In</button>
   <div class="err" id="loginErr">Access denied.</div>
 </div>
 
-<!-- DASHBOARD (hidden until auth) -->
+<!-- ══ DASHBOARD ══ -->
 <div id="dashboard" style="display:none;">
   <div class="topbar">
-    <div class="topbar-brand">TOURney Platform</div>
+    <div class="topbar-brand">TOURney <span>Operations</span></div>
     <div class="topbar-user">
       <span id="authedEmail"></span>
       <button class="btn-sm" onclick="doSignOut()">Sign Out</button>
     </div>
   </div>
-  <div class="main">
-    <div class="page-hd">
-      <div class="page-title">All <span>Tournaments</span></div>
-    </div>
-    <input type="text" id="tourneySearch" style="width:100%;max-width:360px;margin-bottom:1.25rem;background:rgba(255,255,255,0.04);border:1px solid rgba(192,144,48,0.2);color:#f0e6cc;font-family:'DM Mono',monospace;font-size:0.72rem;padding:0.55rem 0.8rem;outline:none;" placeholder="Search tournaments…" oninput="filterTourneys(this.value)">
-    <div class="stat-row">
-      <div class="stat"><div class="stat-val" id="statTotal">—</div><div class="stat-label">Total Tournaments</div></div>
-      <div class="stat"><div class="stat-val" id="statPlayers">—</div><div class="stat-label">Total Players</div></div>
-      <div class="stat"><div class="stat-val" id="statOwners">—</div><div class="stat-label">Unique Owners</div></div>
-    </div>
-    <div class="tbl-wrap">
-    <table>
-      <thead>
-        <tr>
-          <th>Tournament</th>
-          <th>Owner</th>
-          <th>Status</th>
-          <th>Players</th>
-          <th>Created</th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody id="tourneyBody"></tbody>
-    </table>
-    </div>
-    <div class="empty" id="emptyMsg" style="display:none;">No tournaments yet.</div>
 
-    <!-- PLAYER ACCOUNTS -->
-    <div class="page-hd" style="margin-top:3rem;">
-      <div class="page-title">Player <span>Accounts</span></div>
-    </div>
-    <input type="text" id="compSearch" class="field" style="width:100%;max-width:360px;margin-bottom:1rem;background:rgba(255,255,255,0.04);border:1px solid rgba(192,144,48,0.2);color:#f0e6cc;font-family:'DM Mono',monospace;font-size:0.72rem;padding:0.55rem 0.8rem;outline:none;" placeholder="Search by email…" oninput="filterComps(this.value)">
-    <div style="display:flex;gap:0.75rem;margin-bottom:1.5rem;align-items:flex-end;">
-      <div class="field" style="flex:1;margin:0;"><label>Email to comp</label><input type="email" id="compEmail" placeholder="player@email.com"></div>
-      <button class="btn-login" style="width:auto;margin:0;padding:0.65rem 1.5rem;white-space:nowrap;" onclick="grantComp()">Grant Access</button>
-    </div>
-    <div class="err" id="compErr" style="margin-bottom:1rem;display:none;"></div>
-    <div id="compSuccess" style="display:none;font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.1em;color:#3a9e5f;margin-bottom:1rem;"></div>
-    <div class="tbl-wrap">
-    <table>
-      <thead><tr><th>Email</th><th>Status</th><th>Granted</th><th></th></tr></thead>
-      <tbody id="compBody"></tbody>
-    </table>
-    </div>
-    <div class="empty" id="compEmpty" style="display:none;">No comped accounts yet.</div>
+  <div class="tabs">
+    <button class="tab-btn active" id="tab-dash"      onclick="switchTab('dash')">Dashboard</button>
+    <button class="tab-btn"        id="tab-artifacts" onclick="switchTab('artifacts')">Artifacts</button>
+    <button class="tab-btn"        id="tab-checklist" onclick="switchTab('checklist')">QA Checklist</button>
+  </div>
 
-    <!-- CREATE CODES -->
-    <div class="page-hd" style="margin-top:3rem;">
-      <div class="page-title">Invite <span>Codes</span></div>
+  <!-- ── TAB: DASHBOARD ── -->
+  <div id="panel-dash">
+    <div class="main">
+      <div class="page-hd"><div class="page-title">All <span>Tournaments</span></div></div>
+      <input type="text" class="search-field" placeholder="Search tournaments…" oninput="filterTourneys(this.value)">
+      <div class="stat-row">
+        <div class="stat"><div class="stat-val" id="statTotal">—</div><div class="stat-label">Total Tournaments</div></div>
+        <div class="stat"><div class="stat-val" id="statPlayers">—</div><div class="stat-label">Total Players</div></div>
+        <div class="stat"><div class="stat-val" id="statOwners">—</div><div class="stat-label">Unique Owners</div></div>
+      </div>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>Tournament</th><th>Owner</th><th>Status</th><th>Players</th><th>Created</th><th></th></tr></thead>
+          <tbody id="tourneyBody"></tbody>
+        </table>
+      </div>
+      <div class="empty" id="emptyMsg" style="display:none;">No tournaments yet.</div>
+
+      <div class="section-gap">
+        <div class="page-hd"><div class="page-title">Player <span>Accounts</span></div></div>
+        <input type="text" class="search-field" placeholder="Search by email…" oninput="filterComps(this.value)">
+        <div style="display:flex;gap:0.75rem;margin-bottom:1.5rem;align-items:flex-end;">
+          <div class="field" style="flex:1;margin:0;"><label>Email to comp</label><input type="email" id="compEmail" placeholder="player@email.com"></div>
+          <button class="btn-login" style="width:auto;margin:0;padding:0.65rem 1.5rem;white-space:nowrap;" onclick="grantComp()">Grant Access</button>
+        </div>
+        <div class="err" id="compErr" style="margin-bottom:1rem;display:none;"></div>
+        <div id="compSuccess" style="display:none;font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.1em;color:var(--green);margin-bottom:1rem;"></div>
+        <div class="tbl-wrap">
+          <table>
+            <thead><tr><th>Email</th><th>Status</th><th>Granted</th><th></th></tr></thead>
+            <tbody id="compBody"></tbody>
+          </table>
+        </div>
+        <div class="empty" id="compEmpty" style="display:none;">No comped accounts yet.</div>
+      </div>
+
+      <div class="section-gap">
+        <div class="page-hd"><div class="page-title">Invite <span>Codes</span></div></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;margin-bottom:0.75rem;">
+          <div class="field" style="margin:0;"><label>Label (who it's for)</label><input type="text" id="codeLabel" placeholder="e.g. Connor O'Keefe"></div>
+          <div class="field" style="margin:0;"><label>Code (blank = auto-generate)</label><input type="text" id="codeVal" placeholder="e.g. CONNOR2026" style="text-transform:uppercase;letter-spacing:.1em"></div>
+        </div>
+        <button class="btn-login" style="width:100%;margin-bottom:1.5rem;" onclick="generateCode()">Create Code</button>
+        <div id="codeErr" style="display:none;font-family:'DM Mono',monospace;font-size:0.55rem;color:var(--red);margin-bottom:1rem;"></div>
+        <div id="codeOk"  style="display:none;font-family:'DM Mono',monospace;font-size:0.55rem;color:var(--green);margin-bottom:1rem;"></div>
+        <div class="tbl-wrap">
+          <table>
+            <thead><tr><th>Code</th><th>Label</th><th>Status</th><th>Created</th><th></th></tr></thead>
+            <tbody id="codesBody"></tbody>
+          </table>
+        </div>
+        <div class="empty" id="codesEmpty" style="display:none;">No codes yet.</div>
+      </div>
     </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;margin-bottom:0.75rem;">
-      <div class="field" style="margin:0;"><label>Label (who it's for)</label><input type="text" id="codeLabel" placeholder="e.g. Connor O'Keefe"></div>
-      <div class="field" style="margin:0;"><label>Code (blank = auto-generate)</label><input type="text" id="codeVal" placeholder="e.g. CONNOR2026" style="text-transform:uppercase;letter-spacing:.1em"></div>
+  </div>
+
+  <!-- ── TAB: ARTIFACTS ── -->
+  <div id="panel-artifacts" style="display:none;">
+    <div class="hub-wrap">
+      <div class="toolbar">
+        <button class="filter-btn active" data-filter="all">All</button>
+        <button class="filter-btn" data-filter="review">Reviews</button>
+        <button class="filter-btn" data-filter="plan">Plans</button>
+        <button class="filter-btn" data-filter="audit">Audits</button>
+        <button class="filter-btn" data-filter="runbook">Runbooks</button>
+        <button class="filter-btn" data-filter="postmortem">Postmortems</button>
+        <input id="hubSearch" type="text" class="hub-search" placeholder="Search…">
+        <span class="hub-count" id="hubCount">—</span>
+        <button class="filter-btn archived-toggle" id="archivedToggle" onclick="toggleArchived()">Show Archived</button>
+      </div>
+      <div class="grid" id="cardGrid"><div class="grid-empty">Loading…</div></div>
     </div>
-    <button class="btn-login" style="width:100%;margin-bottom:1.5rem;" onclick="generateCode()">Create Code</button>
-    <div id="codeErr" style="display:none;font-family:'DM Mono',monospace;font-size:0.55rem;color:#c8503c;margin-bottom:1rem;"></div>
-    <div id="codeOk"  style="display:none;font-family:'DM Mono',monospace;font-size:0.55rem;color:#3a9e5f;margin-bottom:1rem;"></div>
-    <div class="tbl-wrap">
-    <table>
-      <thead><tr><th>Code</th><th>Label</th><th>Status</th><th>Created</th><th></th></tr></thead>
-      <tbody id="codesBody"></tbody>
-    </table>
+  </div>
+
+  <!-- ── TAB: CHECKLIST ── -->
+  <div id="panel-checklist" style="display:none;">
+    <div class="cl-wrap">
+      <div class="cl-toolbar">
+        <span class="slug-label">Test Slug</span>
+        <input class="slug-input" id="slugInput" type="text" placeholder="e.g. bova">
+        <span class="cl-progress" id="progressLabel">— / —</span>
+      </div>
+      <div class="cl-sections" id="clSections"></div>
+      <button class="reset-btn" onclick="resetAll()">Reset all checks</button>
     </div>
-    <div class="empty" id="codesEmpty" style="display:none;">No codes yet.</div>
   </div>
 </div>
 
@@ -156,217 +299,427 @@ const sb = supabase.createClient(
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpsbHVna2lvamVvb3BpdGR2enNhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYyNjc2MzYsImV4cCI6MjA5MTg0MzYzNn0.gvvK5IhTYdUPxsdmxq8pFiCD4CAINJ-fmnKuwDN0KLs'
 );
 
+/* ══════════════════════ AUTH ══════════════════════ */
 async function doLogin() {
   const email = document.getElementById('loginEmail').value.trim().toLowerCase();
-  const pass = document.getElementById('loginPass').value;
-  const err = document.getElementById('loginErr');
+  const pass  = document.getElementById('loginPass').value;
+  const err   = document.getElementById('loginErr');
   err.classList.remove('show');
   if (email !== PLATFORM_EMAIL) { err.classList.add('show'); return; }
   const { error } = await sb.auth.signInWithPassword({ email, password: pass });
   if (error) { err.classList.add('show'); return; }
   showDashboard(email);
 }
-
-async function doSignOut() {
-  await sb.auth.signOut();
-  location.reload();
-}
-
-async function showDashboard(email) {
+async function doSignOut() { await sb.auth.signOut(); location.reload(); }
+function showDashboard(email) {
   document.getElementById('loginWrap').style.display = 'none';
   document.getElementById('dashboard').style.display = 'block';
   document.getElementById('authedEmail').textContent = email;
   loadTournaments();
   loadCompAccounts();
   loadCodes();
+  loadArtifacts();
+  const saved = localStorage.getItem('ops_tab') || 'dash';
+  switchTab(saved);
 }
 
-function deriveStatus(roundSettings) {
-  if (!roundSettings.length) return 'notlive';
-  const vals = roundSettings.map(r => (r.value || '').toLowerCase());
-  if (vals.every(v => v === 'complete' || v === 'done')) return 'complete';
-  if (vals.some(v => v === 'active' || v === 'live')) return 'live';
+/* ══════════════════════ TABS ══════════════════════ */
+function switchTab(t) {
+  ['dash','artifacts','checklist'].forEach(id => {
+    document.getElementById(`panel-${id}`).style.display = t === id ? '' : 'none';
+    document.getElementById(`tab-${id}`).classList.toggle('active', t === id);
+  });
+  localStorage.setItem('ops_tab', t);
+}
+
+/* ══════════════════════ DASHBOARD ══════════════════════ */
+function esc(s) {
+  return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function deriveStatus(rounds) {
+  if (!rounds.length) return 'notlive';
+  const vals = rounds.map(r => (r.value||'').toLowerCase());
+  if (vals.every(v => v==='complete'||v==='done')) return 'complete';
+  if (vals.some(v => v==='active'||v==='live')) return 'live';
   return 'notlive';
 }
-
-function statusBadge(status) {
-  if (status === 'live')     return '<span class="badge badge-live">Live</span>';
-  if (status === 'complete') return '<span class="badge badge-complete">Complete</span>';
+function statusBadge(s) {
+  if (s==='live')     return '<span class="badge badge-live">Live</span>';
+  if (s==='complete') return '<span class="badge badge-complete">Complete</span>';
   return '<span class="badge badge-notlive">Not Live</span>';
 }
-
-let _tourneys = [], _counts = {}, _roundsByTourney = {};
-
 function filterTourneys(q) {
-  const rows = document.querySelectorAll('#tourneyBody tr');
-  const lq = q.toLowerCase();
-  rows.forEach(r => { r.style.display = !lq || r.textContent.toLowerCase().includes(lq) ? '' : 'none'; });
-}
-
-let _compData = [];
-
-function filterComps(q) {
-  const rows = document.querySelectorAll('#compBody tr');
-  const lq = q.toLowerCase();
-  rows.forEach(r => { r.style.display = !lq || r.textContent.toLowerCase().includes(lq) ? '' : 'none'; });
-}
-
-async function loadTournaments() {
-  const [{ data: tourneys }, { data: players }, { data: rounds }] = await Promise.all([
-    sb.from('tournaments').select('*').order('created_at', { ascending: false }),
-    sb.from('players').select('tournament_id'),
-    sb.from('settings').select('tournament_id,value').like('key', 'round_day%'),
-  ]);
-
-  if (!tourneys || !tourneys.length) { document.getElementById('emptyMsg').style.display = 'block'; return; }
-
-  const counts = {};
-  (players || []).forEach(p => { counts[p.tournament_id] = (counts[p.tournament_id] || 0) + 1; });
-
-  const roundsByTourney = {};
-  (rounds || []).forEach(r => {
-    if (!roundsByTourney[r.tournament_id]) roundsByTourney[r.tournament_id] = [];
-    roundsByTourney[r.tournament_id].push(r);
+  document.querySelectorAll('#tourneyBody tr').forEach(r => {
+    r.style.display = !q || r.textContent.toLowerCase().includes(q.toLowerCase()) ? '' : 'none';
   });
-
+}
+function filterComps(q) {
+  document.querySelectorAll('#compBody tr').forEach(r => {
+    r.style.display = !q || r.textContent.toLowerCase().includes(q.toLowerCase()) ? '' : 'none';
+  });
+}
+async function loadTournaments() {
+  const [{ data: tourneys },{ data: players },{ data: rounds }] = await Promise.all([
+    sb.from('tournaments').select('*').order('created_at',{ascending:false}),
+    sb.from('players').select('tournament_id'),
+    sb.from('settings').select('tournament_id,value').like('key','round_day%'),
+  ]);
+  if (!tourneys?.length) { document.getElementById('emptyMsg').style.display='block'; return; }
+  const counts={};
+  (players||[]).forEach(p => { counts[p.tournament_id]=(counts[p.tournament_id]||0)+1; });
+  const byT={};
+  (rounds||[]).forEach(r => { if(!byT[r.tournament_id])byT[r.tournament_id]=[]; byT[r.tournament_id].push(r); });
   document.getElementById('statTotal').textContent = tourneys.length;
-  document.getElementById('statPlayers').textContent = (players || []).length;
-  document.getElementById('statOwners').textContent = new Set(tourneys.map(t => t.owner_email)).size;
-
-  const tbody = document.getElementById('tourneyBody');
-  tbody.innerHTML = tourneys.map(t => {
-    const count = counts[t.id] || 0;
-    const created = new Date(t.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-    const status = deriveStatus(roundsByTourney[t.id] || []);
-    const adminUrl = `/t/${t.slug}/admin`;
+  document.getElementById('statPlayers').textContent = (players||[]).length;
+  document.getElementById('statOwners').textContent = new Set(tourneys.map(t=>t.owner_email)).size;
+  document.getElementById('tourneyBody').innerHTML = tourneys.map(t => {
+    const created = new Date(t.created_at).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+    const status = deriveStatus(byT[t.id]||[]);
     return `<tr>
-      <td>
-        <div class="t-name">${esc(t.name || t.short_name || '—')}</div>
-        <div class="t-slug">${esc(t.slug)}</div>
-      </td>
-      <td><div class="t-owner">${esc(t.owner_email || '—')}</div></td>
+      <td><div class="t-name">${esc(t.name||t.short_name||'—')}</div><div class="t-slug">${esc(t.slug)}</div></td>
+      <td><div class="t-owner">${esc(t.owner_email||'—')}</div></td>
       <td>${statusBadge(status)}</td>
-      <td><div class="t-count">${count}</div></td>
+      <td><div class="t-count">${counts[t.id]||0}</div></td>
       <td><div class="t-date">${created}</div></td>
-      <td>
-        <div class="actions">
-          <a class="btn-action btn-admin" href="${esc(adminUrl)}">Admin</a>
-          <button class="btn-action btn-delete" onclick="deleteTourney('${t.id}','${esc(t.name || t.slug)}')">Delete</button>
-        </div>
-      </td>
+      <td><div class="actions">
+        <a class="btn-action btn-admin" href="/t/${esc(t.slug)}/admin">Admin</a>
+        <button class="btn-action btn-delete" onclick="deleteTourney('${t.id}','${esc(t.name||t.slug)}')">Delete</button>
+      </div></td>
     </tr>`;
   }).join('');
 }
-
 async function deleteTourney(id, name) {
-  if (!confirm(`Delete "${name}"? All players, scores, settings and data will be permanently removed.`)) return;
-  const steps = [
-    sb.from('push_subscriptions').delete().eq('tournament_id', id),
-    sb.from('scores').delete().eq('tournament_id', id),
-    sb.from('trash_talk').delete().eq('tournament_id', id),
-    sb.from('tournament_admins').delete().eq('tournament_id', id),
-    sb.from('invitations').delete().eq('tournament_id', id),
-  ];
-  for (const step of steps) {
-    const { error } = await step;
-    if (error) { alert('Delete failed (child data): ' + error.message); return; }
+  if (!confirm(`Delete "${name}"? All data permanently removed.`)) return;
+  for (const tbl of ['push_subscriptions','scores','trash_talk','tournament_admins','invitations']) {
+    const { error } = await sb.from(tbl).delete().eq('tournament_id', id);
+    if (error) { alert(`Delete failed (${tbl}): ${error.message}`); return; }
   }
-  const { error: pe } = await sb.from('players').delete().eq('tournament_id', id);
-  if (pe) { alert('Delete failed (players): ' + pe.message); return; }
-  const { error: se } = await sb.from('settings').delete().eq('tournament_id', id);
-  if (se) { alert('Delete failed (settings): ' + se.message); return; }
+  for (const tbl of ['players','settings']) {
+    const { error } = await sb.from(tbl).delete().eq('tournament_id', id);
+    if (error) { alert(`Delete failed (${tbl}): ${error.message}`); return; }
+  }
   const { error } = await sb.from('tournaments').delete().eq('id', id);
   if (error) { alert('Delete failed: ' + error.message); return; }
   loadTournaments();
 }
-
-function esc(s) {
-  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
-
 async function grantComp() {
   const email = document.getElementById('compEmail').value.trim().toLowerCase();
-  const errEl = document.getElementById('compErr');
-  const okEl  = document.getElementById('compSuccess');
-  errEl.style.display = 'none'; okEl.style.display = 'none';
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    errEl.textContent = 'Invalid email.'; errEl.style.display = 'block'; return;
-  }
-  const { error } = await sb.functions.invoke('platform-action', { body: { action: 'comp', email } });
-  if (error) { errEl.textContent = error.message; errEl.style.display = 'block'; return; }
-  okEl.textContent = `✓ ${email} granted player account`; okEl.style.display = 'block';
-  document.getElementById('compEmail').value = '';
+  const errEl = document.getElementById('compErr'), okEl = document.getElementById('compSuccess');
+  errEl.style.display='none'; okEl.style.display='none';
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { errEl.textContent='Invalid email.'; errEl.style.display='block'; return; }
+  const { error } = await sb.functions.invoke('platform-action', { body:{ action:'comp', email } });
+  if (error) { errEl.textContent=error.message; errEl.style.display='block'; return; }
+  okEl.textContent=`✓ ${email} granted player account`; okEl.style.display='block';
+  document.getElementById('compEmail').value='';
   loadCompAccounts();
 }
-
 async function revokeComp(email) {
   if (!confirm(`Revoke player account for ${email}?`)) return;
-  await sb.functions.invoke('platform-action', { body: { action: 'revoke', email } });
+  await sb.functions.invoke('platform-action', { body:{ action:'revoke', email } });
   loadCompAccounts();
 }
-
 async function loadCompAccounts() {
-  const { data: res } = await sb.functions.invoke('platform-action', { body: { action: 'list' } });
+  const { data: res } = await sb.functions.invoke('platform-action', { body:{ action:'list' } });
   const data = res?.data;
-  const tbody = document.getElementById('compBody');
-  const empty = document.getElementById('compEmpty');
-  if (!data || !data.length) { tbody.innerHTML = ''; empty.style.display = 'block'; return; }
-  empty.style.display = 'none';
+  const tbody = document.getElementById('compBody'), empty = document.getElementById('compEmpty');
+  if (!data?.length) { tbody.innerHTML=''; empty.style.display='block'; return; }
+  empty.style.display='none';
   tbody.innerHTML = data.map(a => {
-    const created = new Date(a.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-    const statusColor = a.billing_status === 'comped' ? '#3a9e5f' : a.billing_status === 'active' ? '#c09030' : 'rgba(240,230,204,0.25)';
+    const created = new Date(a.created_at).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+    const sc = a.billing_status==='comped'?'var(--green)':a.billing_status==='active'?'var(--gold)':'rgba(240,230,204,0.25)';
     return `<tr>
       <td><div class="t-owner">${esc(a.email)}</div></td>
-      <td><span class="badge" style="color:${statusColor};border-color:${statusColor}40;">${esc(a.billing_status)}</span></td>
+      <td><span class="badge" style="color:${sc};border-color:${sc}40;">${esc(a.billing_status)}</span></td>
       <td><div class="t-date">${created}</div></td>
       <td><div class="actions"><button class="btn-action btn-delete" onclick="revokeComp('${esc(a.email)}')">Revoke</button></div></td>
     </tr>`;
   }).join('');
 }
-
-
 async function generateCode() {
-  const label = document.getElementById('codeLabel').value.trim();
-  const raw   = document.getElementById('codeVal').value.trim().toUpperCase();
-  const code  = raw || Math.random().toString(36).slice(2,8).toUpperCase();
-  const errEl = document.getElementById('codeErr');
-  const okEl  = document.getElementById('codeOk');
-  errEl.style.display = 'none'; okEl.style.display = 'none';
-  const { error } = await sb.from('create_codes').insert({ code, label: label || null });
-  if (error) { errEl.textContent = error.message; errEl.style.display = 'block'; return; }
-  okEl.textContent = `✓ Code created: ${code}`; okEl.style.display = 'block';
-  document.getElementById('codeLabel').value = '';
-  document.getElementById('codeVal').value = '';
+  const label=document.getElementById('codeLabel').value.trim();
+  const raw=document.getElementById('codeVal').value.trim().toUpperCase();
+  const code=raw||Math.random().toString(36).slice(2,8).toUpperCase();
+  const errEl=document.getElementById('codeErr'), okEl=document.getElementById('codeOk');
+  errEl.style.display='none'; okEl.style.display='none';
+  const { error } = await sb.from('create_codes').insert({ code, label:label||null });
+  if (error) { errEl.textContent=error.message; errEl.style.display='block'; return; }
+  okEl.textContent=`✓ Code created: ${code}`; okEl.style.display='block';
+  document.getElementById('codeLabel').value=''; document.getElementById('codeVal').value='';
   loadCodes();
 }
-
 async function toggleCode(id, active) {
-  await sb.from('create_codes').update({ active: !active }).eq('id', id);
+  await sb.from('create_codes').update({ active:!active }).eq('id', id);
   loadCodes();
 }
-
 async function loadCodes() {
-  const { data } = await sb.from('create_codes').select('*').order('created_at', { ascending: false });
-  const tbody = document.getElementById('codesBody');
-  const empty = document.getElementById('codesEmpty');
-  if (!data || !data.length) { tbody.innerHTML = ''; empty.style.display = 'block'; return; }
-  empty.style.display = 'none';
+  const { data } = await sb.from('create_codes').select('*').order('created_at',{ascending:false});
+  const tbody=document.getElementById('codesBody'), empty=document.getElementById('codesEmpty');
+  if (!data?.length) { tbody.innerHTML=''; empty.style.display='block'; return; }
+  empty.style.display='none';
   tbody.innerHTML = data.map(c => {
-    const created = new Date(c.created_at).toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' });
-    const statusColor = c.active ? '#3a9e5f' : 'rgba(240,230,204,0.25)';
+    const created=new Date(c.created_at).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+    const sc=c.active?'var(--green)':'rgba(240,230,204,0.25)';
     return `<tr>
-      <td><div class="t-name" style="font-size:.85rem;letter-spacing:.12em;">${esc(c.code)}</div></td>
-      <td><div class="t-owner">${esc(c.label || '—')}</div></td>
-      <td><span class="badge" style="color:${statusColor};border-color:${statusColor}40;">${c.active ? 'Active' : 'Inactive'}</span></td>
+      <td><div class="t-name" style="font-size:.82rem;letter-spacing:.12em;">${esc(c.code)}</div></td>
+      <td><div class="t-owner">${esc(c.label||'—')}</div></td>
+      <td><span class="badge" style="color:${sc};border-color:${sc}40;">${c.active?'Active':'Inactive'}</span></td>
       <td><div class="t-date">${created}</div></td>
-      <td><div class="actions"><button class="btn-action ${c.active ? 'btn-delete' : 'btn-admin'}" onclick="toggleCode('${c.id}',${c.active})">${c.active ? 'Deactivate' : 'Activate'}</button></div></td>
+      <td><div class="actions"><button class="btn-action ${c.active?'btn-delete':'btn-admin'}" onclick="toggleCode('${c.id}',${c.active})">${c.active?'Deactivate':'Activate'}</button></div></td>
     </tr>`;
   }).join('');
 }
 
-(async () => {
-  const { data: { session } } = await sb.auth.getSession();
-  if (session?.user?.email === PLATFORM_EMAIL) showDashboard(session.user.email);
+/* ══════════════════════ ARTIFACTS ══════════════════════ */
+const CAT_META = {
+  review:{pill:'pill-blue',label:'Review'}, plan:{pill:'pill-gold',label:'Plan'},
+  audit:{pill:'pill-red',label:'Audit'}, runbook:{pill:'pill-green',label:'Runbook'},
+  postmortem:{pill:'pill-orange',label:'Postmortem'}, skill:{pill:'pill-purple',label:'Skill'},
+};
+const STATUS_PILL = { shipped:'pill-green','in-progress':'pill-gold',queued:'pill-muted',archived:'pill-muted',critical:'pill-red' };
+let allEntries=[], activeFilter='all', activeSearch='', showArchived=false;
+
+function toggleArchived() {
+  showArchived = !showArchived;
+  document.getElementById('archivedToggle').classList.toggle('active', showArchived);
+  document.getElementById('archivedToggle').textContent = showArchived ? 'Hide Archived' : 'Show Archived';
+  renderHub();
+}
+function fmtDate(iso) {
+  if (!iso) return '';
+  const d=new Date(iso); return isNaN(d.getTime())?iso:d.toLocaleDateString(undefined,{month:'short',day:'numeric',year:'numeric'});
+}
+function archiveEntry(id, val) {
+  // persist archive state in localStorage (qa-index.json is static)
+  const key='qa_archived';
+  let ar={}; try { ar=JSON.parse(localStorage.getItem(key)||'{}'); } catch{}
+  ar[id]=val; localStorage.setItem(key, JSON.stringify(ar));
+  renderHub();
+}
+function getArchived() {
+  try { return JSON.parse(localStorage.getItem('qa_archived')||'{}'); } catch { return {}; }
+}
+function renderHub() {
+  const grid=document.getElementById('cardGrid');
+  const ar=getArchived();
+  const search=activeSearch.trim().toLowerCase();
+  const filtered=allEntries.filter(e => {
+    const isAr=!!(e.archived||ar[e.id]);
+    if (!showArchived && isAr) return false;
+    if (activeFilter!=='all' && e.category!==activeFilter) return false;
+    if (!search) return true;
+    return [e.title,e.summary,e.author,e.id,...(e.tags||[])].filter(Boolean).join(' ').toLowerCase().includes(search);
+  });
+  document.getElementById('hubCount').textContent=`${filtered.length} of ${allEntries.length}`;
+  const sorted=filtered.slice().sort((a,b)=>(b.updated||b.date||'').localeCompare(a.updated||a.date||''));
+  const ar2=getArchived();
+  grid.innerHTML=(filtered.length?sorted.map(e=>{
+    const meta=CAT_META[e.category]||CAT_META.plan;
+    const sp=e.status?(STATUS_PILL[e.status]||'pill-muted'):null;
+    const tags=(e.tags||[]).slice(0,5).map(t=>`<span class="tag">${esc(t)}</span>`).join('');
+    const isAr=!!(e.archived||ar2[e.id]);
+    const displayDate=e.updated&&e.updated!==e.date?`Updated ${fmtDate(e.updated)}`:`${fmtDate(e.date)}`;
+    return `<a class="card-link" href="${esc(e.url||'#')}">
+      <div class="card cat-${esc(e.category||'plan')}${isAr?' archived':''}">
+        <div class="card-head">
+          <span class="pill ${meta.pill}">${esc(meta.label)}</span>
+          ${sp?`<span class="pill ${sp}">${esc(e.status)}</span>`:''}
+          <span class="card-date">${esc(displayDate)}</span>
+        </div>
+        <div class="card-title">${esc(e.title)}</div>
+        <div class="card-summary">${esc(e.summary||'')}</div>
+        <div class="card-foot">
+          ${e.author?`<span>${esc(e.author)}</span>`:''}
+          <div class="card-tags">${tags}</div>
+          <button class="archive-btn" onclick="event.preventDefault();event.stopPropagation();archiveEntry('${esc(e.id)}',${!isAr})">${isAr?'Unarchive':'Archive'}</button>
+        </div>
+      </div></a>`;
+  }).join(''):'<div class="grid-empty">No matches.</div>')+
+  `<div class="add-card"><div class="add-card-title">+ Add an artifact</div>
+  <div>Run <code>/tourney-review</code> or append to <code>qa-index.json</code>.</div></div>`;
+}
+async function loadArtifacts() {
+  try {
+    const r=await fetch('/qa-index.json',{cache:'no-store'});
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    const d=await r.json();
+    allEntries=Array.isArray(d.entries)?d.entries:[];
+    renderHub();
+  } catch(err) {
+    document.getElementById('cardGrid').innerHTML=`<div class="grid-empty">Couldn't load qa-index.json: ${esc(err.message)}</div>`;
+  }
+}
+document.querySelectorAll('.filter-btn:not(.archived-toggle)').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.filter-btn:not(.archived-toggle)').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active'); activeFilter=btn.dataset.filter; renderHub();
+  });
+});
+document.getElementById('hubSearch').addEventListener('input', e => { activeSearch=e.target.value; renderHub(); });
+
+/* ══════════════════════ CHECKLIST ══════════════════════ */
+const CL_SECTIONS = [
+  { id:'pairs', title:'Pairs — New Feature', badge:'new', steps:[
+    { id:'p1',  text:'Go to /create — confirm "Pairs" button in Team Structure row', link:'/create' },
+    { id:'p2',  text:'Select Pairs — "Number of Pairs" picker appears (options 2–24)', link:'/create' },
+    { id:'p3',  text:'Pick 4 pairs, 8 players, 2 days — price card updates correctly', link:'/create' },
+    { id:'p4',  text:'Complete wizard — redirects to /admin after creation' },
+    { id:'p5',  text:'Admin → assignment section reads "Pair Assignment"', link:'/admin' },
+    { id:'p6',  text:'Admin → pair name fields visible (Pair 1 Name, Pair 2 Name…)', link:'/admin' },
+    { id:'p7',  text:'Admin → type a pair name (e.g. "Smith / Jones") → blur → saves', link:'/admin' },
+    { id:'p8',  text:'Admin → assign each player to a pair → Save Pair Assignments', link:'/admin' },
+    { id:'p9',  text:'Scorecard → log in → "Your Pair" label visible (not "Your Team")', link:'/scorecard' },
+    { id:'p10', text:'Scorecard → opponent section hidden', link:'/scorecard', note:'"Opponents" panel should not appear' },
+    { id:'p11', text:'Scorecard → enter scores for a hole → submit → no console errors' },
+    { id:'p12', text:'Scoreboard → "Pairs" tab visible — click it', link:'/scoreboard' },
+    { id:'p13', text:'Scoreboard → pairs leaderboard renders with pair names + scores', link:'/scoreboard' },
+    { id:'p14', text:'Scoreboard → submit a score on scorecard, confirm leaderboard updates', link:'/scoreboard' },
+  ]},
+  { id:'individual', title:'Individual — Regression', badge:'regression', steps:[
+    { id:'i1', text:'Create an Individual tournament via /create', link:'/create' },
+    { id:'i2', text:'Scoreboard → no Team tab', link:'/scoreboard' },
+    { id:'i3', text:'Scorecard → no "Your Team" field', link:'/scorecard' },
+    { id:'i4', text:'Scorecard → unassigned gate does NOT appear', link:'/scorecard' },
+  ]},
+  { id:'team', title:'Team (2+ Teams) — Regression', badge:'regression', steps:[
+    { id:'t1', text:'Create a 2-team tournament via /create', link:'/create' },
+    { id:'t2', text:'Admin → "Team Assignment" section (not Pair)', link:'/admin' },
+    { id:'t3', text:'Admin → assign players to Team A / Team B → save', link:'/admin' },
+    { id:'t4', text:'Scorecard → "Your Team" label (not "Your Pair")', link:'/scorecard' },
+    { id:'t5', text:'Scorecard → opponent section visible', link:'/scorecard' },
+    { id:'t6', text:'Scoreboard → Team tab with A vs B banners', link:'/scoreboard' },
+  ]},
+  { id:'nav', title:'Navigation & Auth', badge:'infra', steps:[
+    { id:'n1', text:'Hamburger opens on mobile — all links present', link:'/scoreboard' },
+    { id:'n2', text:'Admin link in nav when logged in as owner', link:'/scoreboard' },
+    { id:'n3', text:'Admin link NOT visible when logged out', link:'/scoreboard' },
+    { id:'n4', text:'All nav links route correctly — no 404s', link:'/directory' },
+  ]},
+  { id:'console', title:'Console & Network', badge:'infra', steps:[
+    { id:'c1', text:'DevTools Console → zero errors on scoreboard load', link:'/scoreboard', note:'F12 → Console — red errors = FAIL' },
+    { id:'c2', text:'DevTools Console → zero errors on scorecard load', link:'/scorecard' },
+    { id:'c3', text:'DevTools Network → no 4xx/5xx on any page', note:'Filter "status:4" and "status:5"' },
+  ]},
+  { id:'llc', title:'Form LLC — Greenskeeper Studios', badge:'human', steps:[
+    { id:'llc1', text:'Choose your state for filing', device:'💻 Computer',
+      how:'Google "[your state] LLC filing" → go to Secretary of State website. File in your home state (WI = wdfi.org). Delaware only makes sense if raising VC — $300/yr franchise tax otherwise.',
+      note:'WI fee ~$130. Takes 1–2 business days online.' },
+    { id:'llc2', text:'File Articles of Organization online', device:'💻 Computer',
+      how:'WI: wdfi.org → Business → File a New Business → LLC → Articles of Organization. Fill in: name "Greenskeeper Studios LLC", registered agent (yourself), purpose (software/technology services).',
+      note:'Save the confirmation PDF — you\'ll need it to open a bank account.' },
+    { id:'llc3', text:'Get your EIN (free, instant) from IRS.gov', device:'💻 Computer',
+      how:'Go to irs.gov → search "EIN online application" → Apply Online Now → LLC → 1 member → Software/Tech. Takes 5 min. Copy the EIN immediately — you can\'t retrieve it again without calling.',
+      note:'Do NOT use third-party EIN services — IRS.gov is free.' },
+    { id:'llc4', text:'Draft Operating Agreement (single-member)', device:'💻 Computer',
+      how:'Search "single member LLC operating agreement template [your state]" — free templates at Nolo or LegalZoom. Fill in: your name, LLC name, state, EIN, business purpose. Sign and date. No notary needed.',
+      note:'Not legally required in most states but proves liability separation if you\'re ever sued.' },
+    { id:'llc5', text:'Open a business bank account', device:'💻 Computer',
+      how:'Recommended: Mercury (mercury.com) — free, online, no minimums. Sign up with: LLC Articles of Organization + EIN + personal ID. Alternatively, walk into your local bank with the same docs.',
+      note:'Never mix personal and business money — it pierces the liability shield.' },
+    { id:'llc6', text:'Register Greenskeeper Studios LLC on Stripe', device:'💻 Computer',
+      how:'Go to dashboard.stripe.com → Activate account → Business type: Company → LLC → Enter LLC name, EIN, business address. Connect your Mercury business bank account for payouts.',
+      note:'Stripe will do a micro-deposit verification (1–2 days).' },
+    { id:'llc7', text:'Update CLAUDE.md with LLC details', device:'💻 Computer',
+      how:'Open C:\\Users\\Rob\\.claude\\CLAUDE.md → add section: "## Business Entity\\nGreenskeeper Studios LLC\\nState: [WI]\\nEIN: ***-**XXXX\\nStripe: acct_XXXXX"' },
+  ]},
+  { id:'human', title:'Other Human-Required Items', badge:'human', steps:[
+    { id:'h1', text:'Confirm Bova tournament formats with Chris Bova', device:'📱 Phone / Text',
+      how:'Text or call Chris: "Hey, for the Bova Invitational — Day 1 is stroke play, Day 2 is scramble, Day 3 is best ball — does that sound right?" Get written confirmation.',
+      note:'Day 3 was listed as "shambles" in old notes which is an unmapped format. Confirm before tournament runs.' },
+    { id:'h2', text:"Add Chris Bova's email as tournament co-admin", device:'💻 Computer',
+      how:'Go to tourney.greenskeeper.studio/t/bova/admin → Access tab → type Chris\'s email → Add Admin. Confirm he can log in and see the admin panel.',
+      note:'Required before Chris can manage his own tournament independently.' },
+    { id:'h3', text:'Test PWA install on your iPhone', device:'📱 Phone',
+      how:'Open tourney.greenskeeper.studio in Safari on your iPhone → tap the Share button (box with arrow) → tap "Add to Home Screen" → confirm icon appears and app opens full-screen. Test offline: turn off WiFi, open the app.',
+      note:'Must test on real iPhone — iOS simulator doesn\'t simulate service workers accurately.' },
+    { id:'h4', text:'Buy full US golf course database', device:'💻 Computer',
+      how:'Go to Golf-Course-Database.com → purchase their US flat-file database (CSV/JSON). Upload to Supabase: import into a new "golf_courses" table or replace the existing one.',
+      note:'Currently only ~27 SC/Myrtle Beach courses are seeded. Full US coverage needed for product launch.' },
+    { id:'h5', text:'Enable leaked password protection in Supabase', device:'💻 Computer',
+      how:'Go to supabase.com/dashboard → project jllugkiojeoopitdvzsa → Authentication → Sign In Methods → scroll to "Leaked Password Protection" → toggle ON. Also set minimum password length to 8 (currently 6).',
+      note:'Free feature — no reason not to have this on.' },
+  ]},
+  { id:'security', title:'Security Pentesting', badge:'human', steps:[
+    { id:'sec1', text:'Verify security headers are live', device:'💻 Computer',
+      how:'Open Terminal/PowerShell and run: curl -sI https://tourney.greenskeeper.studio | findstr /I "Strict Transport Frame Content-Type"\nExpect: Strict-Transport-Security, X-Frame-Options: DENY, X-Content-Type-Options: nosniff' },
+    { id:'sec2', text:'Pentest: player cannot elevate own billing_status', device:'💻 Computer',
+      how:'Log in to tourney.greenskeeper.studio as a test player account (not rob@) → open DevTools (F12) → Console → paste:\nawait window.tourney.db.from("player_accounts").update({billing_status:"comped"}).eq("email","[your test email]")\nExpect: error with code "42501" (RLS policy violation). If it succeeds = CRITICAL BUG.' },
+    { id:'sec3', text:'Pentest: unauthenticated push function returns 401', device:'💻 Computer',
+      how:'In PowerShell run:\ncurl -X POST https://jllugkiojeoopitdvzsa.supabase.co/functions/v1/send-push -H "Content-Type: application/json" -d "{}"\nExpect: HTTP 401. If 200 = anyone can send push notifications to all players.' },
+    { id:'sec4', text:'Enable Supabase email confirmation', device:'💻 Computer',
+      how:'supabase.com/dashboard → project jllugkiojeoopitdvzsa → Authentication → Email → toggle "Confirm email" ON. This prevents fake-email registrations from grabbing tournament spots.' },
+  ]},
+];
+
+const STORAGE_KEY='qa_checks_v2', COLLAPSE_KEY='qa_collapsed_v2';
+let clSlug='', clChecked={}, clCollapsed={};
+
+function clLoad() {
+  try { clChecked=JSON.parse(localStorage.getItem(STORAGE_KEY)||'{}'); } catch{ clChecked={}; }
+  try { clCollapsed=JSON.parse(localStorage.getItem(COLLAPSE_KEY)||'{}'); } catch{ clCollapsed={}; }
+  clSlug=localStorage.getItem('qa_slug')||'';
+}
+function clSave() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(clChecked));
+  localStorage.setItem(COLLAPSE_KEY, JSON.stringify(clCollapsed));
+  localStorage.setItem('qa_slug', clSlug);
+}
+function clUrl(path) { return clSlug?`https://tourney.greenskeeper.studio/t/${clSlug}${path}`:'#'; }
+function toggleCheck(id) { clChecked[id]=!clChecked[id]; clSave(); renderChecklist(); }
+function toggleSection(id) { clCollapsed[id]=!clCollapsed[id]; clSave(); renderChecklist(); }
+function resetAll() { if(!confirm('Reset all checks?'))return; clChecked={}; clSave(); renderChecklist(); }
+function secStatus(s) {
+  const done=s.steps.filter(x=>clChecked[x.id]).length;
+  if(!done) return {label:'—',cls:'st-pend'};
+  if(done===s.steps.length) return {label:'PASS',cls:'st-pass'};
+  return {label:`${done}/${s.steps.length}`,cls:'st-pend'};
+}
+function badgeLabel(b) { return b==='new'?'New':b==='regression'?'Regression':b==='human'?'Human':'Infra'; }
+function renderChecklist() {
+  const all=CL_SECTIONS.flatMap(s=>s.steps);
+  const done=all.filter(s=>clChecked[s.id]).length;
+  document.getElementById('progressLabel').textContent=`${done} / ${all.length}`;
+  document.getElementById('clSections').innerHTML=CL_SECTIONS.map(sec=>{
+    const {label,cls}=secStatus(sec);
+    const isCol=!!clCollapsed[sec.id];
+    const humanBanner=sec.badge==='human'
+      ?`<div class="human-banner">⚠ Human Required — cannot be automated</div>`:'';
+    const steps=sec.steps.map(step=>{
+      const isDone=!!clChecked[step.id];
+      const linkHtml=step.link&&clSlug?`<a class="step-link" href="${clUrl(step.link)}" target="_blank" onclick="event.stopPropagation()">Open ↗</a>`:'';
+      const deviceHtml=step.device?`<span class="step-device">${step.device} →</span>`:'';
+      const howHtml=step.how?`<div class="step-how">${step.how.replace(/\n/g,'<br>')}</div>`:'';
+      const noteHtml=step.note?`<div class="step-note">${step.note}</div>`:'';
+      return `<li class="cl-step${isDone?' done':''}" onclick="toggleCheck('${step.id}')">
+        <div class="cb"><span class="cb-chk">✓</span></div>
+        <div class="step-body">
+          <div class="step-text">${deviceHtml}${step.text}</div>
+          ${linkHtml}${howHtml}${noteHtml}
+        </div>
+      </li>`;
+    }).join('');
+    return `<div class="cl-section${isCol?' collapsed':''}">
+      <div class="cl-sec-hdr" onclick="toggleSection('${sec.id}')">
+        <span class="cl-sec-title">${sec.title}</span>
+        <span class="cl-badge badge-${sec.badge}">${badgeLabel(sec.badge)}</span>
+        <span class="cl-sec-status ${cls}">${label}</span>
+        <span class="cl-chevron">▼</span>
+      </div>
+      ${humanBanner}
+      <ul class="cl-steps">${steps}</ul>
+    </div>`;
+  }).join('');
+}
+document.getElementById('slugInput').addEventListener('input', e => {
+  clSlug=e.target.value.trim(); clSave(); renderChecklist();
+});
+
+/* ══ INIT ══ */
+clLoad();
+document.getElementById('slugInput').value=clSlug;
+renderChecklist();
+(async()=>{
+  const { data:{ session } } = await sb.auth.getSession();
+  if (session?.user?.email===PLATFORM_EMAIL) showDashboard(session.user.email);
 })();
 </script>
 </body>
