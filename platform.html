@@ -169,6 +169,42 @@ td{padding:0.7rem 0.75rem;font-size:0.88rem;vertical-align:middle;}
 .reset-btn{font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.1em;text-transform:uppercase;padding:0.22rem 0.6rem;background:transparent;color:rgba(240,230,204,0.25);border:1px solid rgba(240,230,204,0.1);cursor:pointer;transition:all .12s;margin-top:0.75rem;display:block;margin-left:auto;}
 .reset-btn:hover{color:var(--red);border-color:rgba(200,80,60,0.35);}
 
+/* ── Reference ── */
+.ref-wrap{max-width:1100px;margin:0 auto;padding:1.75rem 1.75rem 4rem;}
+.ref-section{margin-bottom:2.25rem;}
+.ref-sec-hdr{display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-bottom:1rem;flex-wrap:wrap;}
+.ref-sec-meta{display:flex;flex-direction:column;gap:0.15rem;flex:1;}
+.ref-sec-title{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:1rem;letter-spacing:0.06em;text-transform:uppercase;color:var(--text);}
+.ref-sec-title .ref-count{font-size:0.72rem;font-weight:400;color:var(--red);margin-left:0.35rem;font-family:'DM Mono',monospace;}
+.ref-sec-desc{font-family:'DM Mono',monospace;font-size:0.48rem;letter-spacing:0.1em;color:var(--muted);text-transform:uppercase;}
+.ref-sec-link{font-family:'DM Mono',monospace;font-size:0.55rem;color:rgba(192,144,48,0.55);text-decoration:none;padding:0.2rem 0.5rem;border:1px solid rgba(192,144,48,0.2);flex-shrink:0;transition:all .12s;white-space:nowrap;}
+.ref-sec-link:hover{color:var(--gold);border-color:rgba(192,144,48,0.4);}
+.quick-links{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:0.75rem;}
+.quick-card{display:flex;flex-direction:column;gap:0.4rem;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:1.1rem 1.25rem;text-decoration:none;color:inherit;transition:all .18s;position:relative;overflow:hidden;}
+.quick-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--gold);opacity:0.35;transition:opacity .18s;}
+.quick-card:hover{border-color:var(--gold);transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,0.5);}
+.quick-card:hover::before{opacity:1;}
+.qc-icon{font-size:1.3rem;line-height:1;}
+.qc-title{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:0.9rem;letter-spacing:0.08em;text-transform:uppercase;color:#fff;}
+.qc-desc{font-size:0.74rem;color:var(--muted);line-height:1.4;flex:1;}
+.qc-url{font-family:'DM Mono',monospace;font-size:0.56rem;color:var(--gold);}
+.bug-rows{display:flex;flex-direction:column;gap:0.45rem;}
+.bug-row{background:var(--card);border:1px solid var(--border);border-left:3px solid;border-radius:0 6px 6px 0;padding:0.7rem 1rem;}
+.bug-row.open{border-left-color:var(--red);}
+.bug-row.blocked{border-left-color:var(--orange);}
+.bug-row.pending{border-left-color:var(--blue);}
+.bug-row-text{font-size:0.82rem;color:var(--text);line-height:1.45;}
+.bug-row-meta{font-family:'DM Mono',monospace;font-size:0.52rem;color:var(--muted);margin-top:0.25rem;}
+.skills-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:0.6rem;}
+.skill-card{background:var(--card);border:1px solid var(--border);border-radius:6px;padding:0.85rem 1rem;}
+.skill-cmd{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--gold);font-weight:700;margin-bottom:0.3rem;}
+.skill-desc{font-size:0.76rem;color:var(--muted);line-height:1.4;}
+.ref-table{width:100%;border-collapse:collapse;}
+.ref-table th{font-family:'DM Mono',monospace;font-size:0.46rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);text-align:left;padding:0.55rem 0.75rem;border-bottom:1px solid var(--border);background:var(--surface);}
+.ref-table td{padding:0.55rem 0.75rem;border-bottom:1px solid rgba(192,144,48,0.06);font-size:0.78rem;vertical-align:top;}
+.ref-table tr:last-child td{border-bottom:none;}
+.ref-table code{font-family:'DM Mono',monospace;font-size:0.7rem;background:rgba(192,144,48,0.1);color:var(--gold-light);padding:0.05rem 0.28rem;border-radius:2px;}
+
 @media(max-width:640px){
   .main,.hub-wrap,.cl-wrap{padding-left:1rem;padding-right:1rem;}
   .stat-row{gap:0.6rem;}.stat{padding:0.8rem 0.9rem;}.stat-val{font-size:1.5rem;}
@@ -201,6 +237,7 @@ td{padding:0.7rem 0.75rem;font-size:0.88rem;vertical-align:middle;}
     <button class="tab-btn active" id="tab-dash"      onclick="switchTab('dash')">Dashboard</button>
     <button class="tab-btn"        id="tab-artifacts" onclick="switchTab('artifacts')">Artifacts</button>
     <button class="tab-btn"        id="tab-checklist" onclick="switchTab('checklist')">QA Checklist</button>
+    <button class="tab-btn"        id="tab-reference" onclick="switchTab('reference')">Reference</button>
   </div>
 
   <!-- ── TAB: DASHBOARD ── -->
@@ -269,6 +306,8 @@ td{padding:0.7rem 0.75rem;font-size:0.88rem;vertical-align:middle;}
         <button class="filter-btn" data-filter="audit">Audits</button>
         <button class="filter-btn" data-filter="runbook">Runbooks</button>
         <button class="filter-btn" data-filter="postmortem">Postmortems</button>
+        <button class="filter-btn" data-filter="bugs">Bugs</button>
+        <button class="filter-btn" data-filter="reference">Reference</button>
         <input id="hubSearch" type="text" class="hub-search" placeholder="Search…">
         <span class="hub-count" id="hubCount">—</span>
         <button class="filter-btn archived-toggle" id="archivedToggle" onclick="toggleArchived()">Show Archived</button>
@@ -287,6 +326,113 @@ td{padding:0.7rem 0.75rem;font-size:0.88rem;vertical-align:middle;}
       </div>
       <div class="cl-sections" id="clSections"></div>
       <button class="reset-btn" onclick="resetAll()">Reset all checks</button>
+    </div>
+  </div>
+
+  <!-- ── TAB: REFERENCE ── -->
+  <div id="panel-reference" style="display:none;">
+    <div class="ref-wrap">
+
+      <div class="ref-section">
+        <div class="ref-sec-hdr">
+          <div class="ref-sec-meta"><div class="ref-sec-title">Quick Links</div><div class="ref-sec-desc">Internal tools and reference pages</div></div>
+        </div>
+        <div class="quick-links">
+          <a class="quick-card" href="/urls" target="_blank"><div class="qc-icon">🗺</div><div class="qc-title">URL Map</div><div class="qc-desc">All platform URLs, routes, redirect flows</div><div class="qc-url">/urls</div></a>
+          <a class="quick-card" href="/bugs" target="_blank"><div class="qc-icon">🐛</div><div class="qc-title">Bug Log</div><div class="qc-desc">Open bugs, fix history by session, pending features</div><div class="qc-url">/bugs</div></a>
+          <a class="quick-card" href="/combos" target="_blank"><div class="qc-icon">⚙</div><div class="qc-title">URL Combos</div><div class="qc-desc">Tournament URL pattern combinations</div><div class="qc-url">/combos</div></a>
+          <a class="quick-card" href="/aaa-plan" target="_blank"><div class="qc-icon">🎯</div><div class="qc-title">AAA Roadmap</div><div class="qc-desc">22-sprint plan to A+ Architecture, Features, UX</div><div class="qc-url">/aaa-plan</div></a>
+        </div>
+      </div>
+
+      <div class="ref-section">
+        <div class="ref-sec-hdr">
+          <div class="ref-sec-meta"><div class="ref-sec-title">🔴 Open Bugs<span class="ref-count" id="openBugCount"></span></div><div class="ref-sec-desc">Last updated 2026-05-07 · must fix before launch</div></div>
+          <a class="ref-sec-link" href="/bugs" target="_blank">Full log ↗</a>
+        </div>
+        <div class="bug-rows" id="openBugsList"></div>
+      </div>
+
+      <div class="ref-section">
+        <div class="ref-sec-hdr">
+          <div class="ref-sec-meta"><div class="ref-sec-title">💡 Pending Features</div><div class="ref-sec-desc">Committed items not yet built</div></div>
+        </div>
+        <div class="bug-rows" id="pendingList"></div>
+      </div>
+
+      <div class="ref-section">
+        <div class="ref-sec-hdr">
+          <div class="ref-sec-meta"><div class="ref-sec-title">Review Skills</div><div class="ref-sec-desc">Type in Claude Code → generates live page · appears in Artifacts</div></div>
+        </div>
+        <div class="skills-grid">
+          <div class="skill-card"><div class="skill-cmd">/tourney-review</div><div class="skill-desc">Full platform review — code-to-business, council of 5, QA protocol, business roadmap, security</div></div>
+          <div class="skill-card"><div class="skill-cmd">/tourney-review-architecture</div><div class="skill-desc">Data model, RLS design, routing, init layer, edge functions, code organization</div></div>
+          <div class="skill-card"><div class="skill-cmd">/tourney-review-feature-depth</div><div class="skill-desc">Tournament structures, scoring modes, player/admin flows, what's built vs planned</div></div>
+          <div class="skill-card"><div class="skill-cmd">/tourney-review-ux</div><div class="skill-desc">Design system, mobile, empty/loading/error states, accessibility</div></div>
+          <div class="skill-card"><div class="skill-cmd">/tourney-review-security</div><div class="skill-desc">RLS per table (by policy name), XSS surfaces, auth gates, CSP headers</div></div>
+          <div class="skill-card"><div class="skill-cmd">/tourney-review-business</div><div class="skill-desc">LLC/legal, Stripe wiring, pricing model, ToS/Privacy, go-to-market</div></div>
+          <div class="skill-card"><div class="skill-cmd">/tourney-review-deployment</div><div class="skill-desc">Vercel config, PWA/SW, cache strategy, security headers, monitoring, CI/CD</div></div>
+          <div class="skill-card"><div class="skill-cmd">/tourney-review-performance</div><div class="skill-desc">Page sizes, DB query patterns (N+1/parallel), third-party origins, caching</div></div>
+          <div class="skill-card"><div class="skill-cmd">/tourney-review-data-model</div><div class="skill-desc">Every table, column, RLS policy verbatim, migration quality, schema decisions</div></div>
+        </div>
+      </div>
+
+      <div class="ref-section">
+        <div class="ref-sec-hdr">
+          <div class="ref-sec-meta"><div class="ref-sec-title">Setting Keys — Ground Truth</div><div class="ref-sec-desc">Canonical key names · source: create.html line 759+</div></div>
+        </div>
+        <div class="tbl-wrap">
+          <table class="ref-table">
+            <thead><tr><th>Key</th><th>Values</th><th>Notes</th></tr></thead>
+            <tbody>
+              <tr><td><code>tournament_mode</code></td><td><code>'competitive' | 'casual'</code></td><td>NOT <code>tourney_mode</code></td></tr>
+              <tr><td><code>team_count</code></td><td><code>'1'</code>–<code>'8'</code></td><td></td></tr>
+              <tr><td><code>reg_max_players</code></td><td><code>'24'</code></td><td></td></tr>
+              <tr><td><code>reg_min_players</code></td><td><code>'14'</code></td><td></td></tr>
+              <tr><td><code>reg_show_dates</code></td><td><code>'true' | 'false'</code></td><td>NOT <code>reg_show_date_picker</code></td></tr>
+              <tr><td><code>reg_show_hat</code></td><td><code>'true' | 'false'</code></td><td></td></tr>
+              <tr><td><code>reg_show_why_me</code></td><td><code>'true' | 'false'</code></td><td></td></tr>
+              <tr><td><code>homepage_about</code></td><td>long text, <code>\n\n</code> separated</td><td></td></tr>
+              <tr><td><code>homepage_subtitle</code></td><td>eyebrow text</td><td></td></tr>
+              <tr><td><code>homepage_details</code></td><td>hero meta line</td><td></td></tr>
+              <tr><td><code>format_day{n}_front</code></td><td>format value</td><td>canonical for scoring</td></tr>
+              <tr><td><code>format_day{n}_back</code></td><td>format value</td><td>canonical for scoring</td></tr>
+              <tr><td><code>round_formats</code></td><td>JSON <code>{day1:{front,back},...}</code></td><td>redundant copy for scoreboard/scorecard</td></tr>
+              <tr><td><code>color_primary</code> / <code>color_ink</code> / <code>color_bg</code></td><td>hex</td><td></td></tr>
+              <tr><td><code>about_stat_days</code> / <code>about_stat_teams</code> / <code>about_stat_holes</code></td><td>number string</td><td></td></tr>
+              <tr><td><code>schedule_json</code></td><td>JSON array</td><td></td></tr>
+              <tr><td><code>course_name_day{n}</code></td><td>string</td><td></td></tr>
+              <tr><td><code>pars_day{n}</code></td><td>JSON array of 18 numbers</td><td></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="ref-section">
+        <div class="ref-sec-hdr">
+          <div class="ref-sec-meta"><div class="ref-sec-title">Format Values — Ground Truth</div><div class="ref-sec-desc">Canonical scoring format values · source: create.html</div></div>
+        </div>
+        <div class="tbl-wrap">
+          <table class="ref-table">
+            <thead><tr><th>Value</th><th>Label</th><th>Scorecard behavior</th></tr></thead>
+            <tbody>
+              <tr><td><code>stroke</code></td><td>Stroke Play</td><td>default</td></tr>
+              <tr><td><code>scramble</code></td><td>Scramble</td><td>PAIR_TEAM_FMTS (shared ball)</td></tr>
+              <tr><td><code>best_ball</code></td><td>Best Ball</td><td>isBestBallHole</td></tr>
+              <tr><td><code>shambles</code></td><td>Shambles</td><td>individual (NOT PAIR_TEAM_FMTS)</td></tr>
+              <tr><td><code>stableford</code></td><td>Stableford</td><td>isStablefordHole</td></tr>
+              <tr><td><code>mod_stableford</code></td><td>Modified Stableford</td><td>isStablefordHole</td></tr>
+              <tr><td><code>match</code></td><td>Match Play</td><td>isMatchHole</td></tr>
+              <tr><td><code>alt_shot</code></td><td>Alternate Shot</td><td>PAIR_TEAM_FMTS</td></tr>
+              <tr><td><code>chapman</code></td><td>Chapman / Pinehurst</td><td>PAIR_TEAM_FMTS</td></tr>
+              <tr><td><code>greensomes</code></td><td>Greensomes</td><td>PAIR_TEAM_FMTS</td></tr>
+              <tr><td><code>nassau</code></td><td>Nassau</td><td>stroke play (side bets only)</td></tr>
+              <tr><td><code>skins</code></td><td>Skins</td><td>stroke play (side bets only)</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
     </div>
   </div>
 </div>
@@ -319,13 +465,14 @@ function showDashboard(email) {
   loadCompAccounts();
   loadCodes();
   loadArtifacts();
+  renderReference();
   const saved = localStorage.getItem('ops_tab') || 'dash';
   switchTab(saved);
 }
 
 /* ══════════════════════ TABS ══════════════════════ */
 function switchTab(t) {
-  ['dash','artifacts','checklist'].forEach(id => {
+  ['dash','artifacts','checklist','reference'].forEach(id => {
     document.getElementById(`panel-${id}`).style.display = t === id ? '' : 'none';
     document.getElementById(`tab-${id}`).classList.toggle('active', t === id);
   });
@@ -474,6 +621,7 @@ const CAT_META = {
   review:{pill:'pill-blue',label:'Review'}, plan:{pill:'pill-gold',label:'Plan'},
   audit:{pill:'pill-red',label:'Audit'}, runbook:{pill:'pill-green',label:'Runbook'},
   postmortem:{pill:'pill-orange',label:'Postmortem'}, skill:{pill:'pill-purple',label:'Skill'},
+  bugs:{pill:'pill-red',label:'Bugs'}, reference:{pill:'pill-muted',label:'Reference'},
 };
 const STATUS_PILL = { shipped:'pill-green','in-progress':'pill-gold',queued:'pill-muted',archived:'pill-muted',critical:'pill-red' };
 let allEntries=[], activeFilter='all', activeSearch='', showArchived=false;
@@ -712,6 +860,34 @@ function renderChecklist() {
 document.getElementById('slugInput').addEventListener('input', e => {
   clSlug=e.target.value.trim(); clSave(); renderChecklist();
 });
+
+/* ══════════════════════ REFERENCE ══════════════════════ */
+const OPEN_BUGS = [
+  { type:'open', text:'Bova formats unconfirmed: Day1=stroke, Day2=scramble, Day3=best_ball seeded by guess. Verify with Chris Bova before tournament runs.', meta:'BLOCKED · Human verification required' },
+];
+const PENDING_FEATURES = [
+  { type:'blocked', text:'Stripe payment gate: activate at reg_open flip. BLOCKED — waiting on Rob to form LLC.', meta:'BLOCKED · Waiting on LLC formation' },
+  { type:'pending', text:'RLS hardening: permissive policies on players, scores, push_subscriptions — required before Stripe goes live.', meta:'See SECURITY_PLAN.md for full details' },
+  { type:'pending', text:'Supabase edge functions deploy: create-checkout + send-push security fixes committed but NOT yet deployed to Supabase.', meta:'Run: npx supabase functions deploy create-checkout --project-ref jllugkiojeoopitdvzsa' },
+  { type:'pending', text:'Test scores: other test tourneys need seeded scores for leaderboard/scorecard regression testing.', meta:'Low priority' },
+  { type:'pending', text:'Tournament series concept: one brand → many events/years. Schema + UX TBD.', meta:'Future feature' },
+];
+function renderReference() {
+  const obList = document.getElementById('openBugsList');
+  const countEl = document.getElementById('openBugCount');
+  if (countEl) countEl.textContent = ` (${OPEN_BUGS.length})`;
+  function bugRowHtml(b) {
+    return '<div class="bug-row ' + esc(b.type) + '">'
+      + '<div class="bug-row-text">' + esc(b.text) + '</div>'
+      + (b.meta ? '<div class="bug-row-meta">' + esc(b.meta) + '</div>' : '')
+      + '</div>';
+  }
+  if (obList) obList.innerHTML = OPEN_BUGS.length
+    ? OPEN_BUGS.map(bugRowHtml).join('')
+    : '<div class="bug-row pending"><div class="bug-row-text" style="color:var(--green)">&#x2713; No open bugs.</div></div>';
+  const pfList = document.getElementById('pendingList');
+  if (pfList) pfList.innerHTML = PENDING_FEATURES.map(bugRowHtml).join('');
+}
 
 /* ══ INIT ══ */
 clLoad();

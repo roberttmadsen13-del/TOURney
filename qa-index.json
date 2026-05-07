@@ -1,9 +1,22 @@
 {
   "$schema": "https://tourney.greenskeeper.studio/qa-index-schema.json",
   "version": 1,
-  "updated_at": "2026-05-07T00:00:00Z",
+  "updated_at": "2026-05-07T12:00:00Z",
   "description": "Canonical registry of all TOURney plans, reviews, audits, and QA artifacts. The /qa page renders from this file. Skills (e.g. tourney-review) append new entries when they generate output.",
   "entries": [
+    {
+      "id": "bugs-2026",
+      "category": "bugs",
+      "title": "Bug Log — TOURney Platform",
+      "summary": "Living bug tracker: open bugs, fix history by session (13 sessions), pending features, setting keys ground truth, format values ground truth.",
+      "date": "2026-05-02",
+      "updated": "2026-05-07",
+      "author": "Engineering",
+      "url": "/bugs",
+      "file": "bugs.html",
+      "tags": ["bugs", "qa", "reference"],
+      "status": "in-progress"
+    },
     {
       "id": "review-2026-05-06",
       "category": "review",

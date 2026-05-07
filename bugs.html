@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" href="/icon-192.png" type="image/png">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Bug Log — TOURney</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --gold:#c09030;--gold-light:#d4a840;--gold-dim:rgba(192,144,48,0.15);
+  --bg:#0d0a06;--surface:#1a1008;--card:#1e1509;
+  --border:rgba(192,144,48,0.18);--muted:rgba(240,230,204,0.35);--text:#f0e6cc;
+  --red:#c8503c;--green:#3a9e5f;--blue:#2980b9;--orange:#e67e22;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,'Segoe UI',system-ui,sans-serif;font-size:14px;line-height:1.6;min-height:100vh;}
+.topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:0 1.5rem;display:flex;align-items:center;height:50px;gap:1rem;position:sticky;top:0;z-index:100;}
+.topbar-brand{color:var(--gold);font-weight:700;font-size:0.85rem;letter-spacing:0.18em;text-transform:uppercase;}
+.topbar-brand span{color:var(--muted);font-weight:400;font-size:0.7rem;margin-left:0.4rem;}
+.topbar-back{margin-left:auto;font-size:0.62rem;font-family:monospace;color:rgba(192,144,48,0.5);text-decoration:none;padding:0.2rem 0.5rem;border:1px solid rgba(192,144,48,0.18);transition:all .12s;}
+.topbar-back:hover{color:var(--gold);border-color:rgba(192,144,48,0.4);}
+.wrap{max-width:860px;margin:0 auto;padding:2rem 1.5rem 4rem;}
+.hero{padding:2rem 0 1.5rem;border-bottom:1px solid var(--border);margin-bottom:2rem;}
+.hero-eye{display:inline-block;font-size:0.62rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--gold);border:1px solid var(--border);border-radius:20px;padding:0.18rem 0.7rem;margin-bottom:0.75rem;}
+.hero h1{font-size:1.6rem;font-weight:800;color:#fff;margin-bottom:0.3rem;}
+.hero-meta{font-size:0.68rem;color:var(--muted);font-family:monospace;}
+.section{margin-bottom:2.5rem;}
+.sec-title{font-size:0.62rem;font-weight:700;letter-spacing:0.22em;text-transform:uppercase;color:var(--gold);padding-bottom:0.4rem;border-bottom:1px solid var(--border);margin-bottom:0.85rem;display:flex;align-items:center;justify-content:space-between;}
+.sec-count{font-size:0.55rem;color:var(--muted);font-weight:400;}
+.bug-item{background:var(--card);border:1px solid var(--border);border-left:3px solid;border-radius:0 6px 6px 0;padding:0.75rem 1rem;margin-bottom:0.5rem;}
+.bug-item.open{border-left-color:var(--red);}
+.bug-item.fixed{border-left-color:var(--green);}
+.bug-item.blocked{border-left-color:var(--orange);}
+.bug-item.pending{border-left-color:var(--blue);}
+.bug-item.done{border-left-color:var(--gold);opacity:0.6;}
+.bug-title{font-size:0.82rem;color:var(--text);line-height:1.45;margin-bottom:0.2rem;}
+.bug-title strong{color:#fff;}
+.bug-meta{font-size:0.56rem;font-family:monospace;color:var(--muted);}
+.session-hdr{background:var(--surface);border:1px solid var(--border);padding:0.5rem 0.85rem;margin-bottom:0.5rem;display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none;}
+.session-hdr:hover{border-color:rgba(192,144,48,0.3);}
+.session-title{font-size:0.65rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--text);}
+.session-count{font-size:0.55rem;color:var(--muted);font-family:monospace;}
+.session-body{margin-bottom:1rem;}
+.session-body.collapsed{display:none;}
+.pill{display:inline-block;font-size:0.56rem;font-weight:700;letter-spacing:0.06em;padding:0.12rem 0.42rem;border-radius:20px;text-transform:uppercase;margin-left:0.4rem;}
+.pill-red{background:rgba(200,80,60,0.15);color:var(--red);border:1px solid rgba(200,80,60,0.3);}
+.pill-green{background:rgba(58,158,95,0.15);color:var(--green);border:1px solid rgba(58,158,95,0.3);}
+.pill-orange{background:rgba(230,126,34,0.15);color:var(--orange);border:1px solid rgba(230,126,34,0.3);}
+.pill-blue{background:rgba(41,128,185,0.15);color:var(--blue);border:1px solid rgba(41,128,185,0.3);}
+.pill-gold{background:rgba(192,144,48,0.15);color:var(--gold);border:1px solid rgba(192,144,48,0.3);}
+.ref-section{margin-top:2.5rem;}
+.ref-table{width:100%;border-collapse:collapse;}
+.ref-table th{font-size:0.52rem;font-family:monospace;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);text-align:left;padding:0.5rem 0.65rem;border-bottom:1px solid var(--border);background:var(--surface);}
+.ref-table td{padding:0.5rem 0.65rem;border-bottom:1px solid rgba(192,144,48,0.06);font-size:0.76rem;vertical-align:top;}
+.ref-table tr:last-child td{border-bottom:none;}
+.ref-table code{font-family:monospace;font-size:0.7rem;background:rgba(192,144,48,0.1);color:var(--gold-light);padding:0.04rem 0.25rem;border-radius:2px;}
+.sql-block{background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:4px;padding:0.75rem 1rem;font-family:monospace;font-size:0.72rem;color:var(--gold-light);overflow-x:auto;margin:0.5rem 0;white-space:pre;}
+footer{border-top:1px solid var(--border);padding:1.25rem 1.5rem;text-align:center;font-size:0.62rem;color:var(--muted);}
+footer a{color:rgba(192,144,48,0.5);text-decoration:none;}
+footer a:hover{color:var(--gold);}
+@media(max-width:600px){.wrap{padding:1.25rem 1rem 3rem;}}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-brand">TOURney <span>Bug Log</span></div>
+  <a class="topbar-back" href="/platform">← Operations</a>
+</div>
+
+<div class="wrap">
+
+  <div class="hero">
+    <div class="hero-eye">Internal · Engineering</div>
+    <h1>QA Bug Log</h1>
+    <div class="hero-meta">TOURney Platform · Updated 2026-05-07 · Last QA pass: security hardening + live QA both sites clean</div>
+  </div>
+
+  <!-- OPEN BUGS -->
+  <div class="section">
+    <div class="sec-title">🔴 Open Bugs — Must Fix <span class="sec-count">1 open</span></div>
+    <div class="bug-item open">
+      <div class="bug-title"><strong>Bova formats unconfirmed</strong> — Day1=stroke, Day2=scramble, Day3=best_ball seeded by guess. Shambles not mapped to a day.</div>
+      <div class="bug-meta">BLOCKED · Human verification required · Verify with Chris Bova before tournament runs</div>
+    </div>
+  </div>
+
+  <!-- PENDING FEATURES -->
+  <div class="section">
+    <div class="sec-title">💡 Pending Features <span class="sec-count">5 items</span></div>
+    <div class="bug-item blocked">
+      <div class="bug-title"><strong>Stripe payment gate</strong> — activate at reg_open flip, not at /create. BLOCKED — waiting on Rob to form LLC.</div>
+      <div class="bug-meta">BLOCKED · Waiting on LLC formation</div>
+    </div>
+    <div class="bug-item pending">
+      <div class="bug-title"><strong>Test scores</strong> — solo-stroke-test has 72 seeded scores. Other test tourneys still need scores for leaderboard/scorecard regression testing.</div>
+      <div class="bug-meta">Low priority</div>
+    </div>
+    <div class="bug-item pending">
+      <div class="bug-title"><strong>RLS hardening</strong> — SECURITY_PLAN.md identifies permissive policies on <code>players</code>, <code>scores</code>, <code>push_subscriptions</code>. Needs SQL migrations before Stripe goes live.</div>
+      <div class="bug-meta">Required before launch · See SECURITY_PLAN.md</div>
+    </div>
+    <div class="bug-item pending">
+      <div class="bug-title"><strong>Supabase edge functions deploy</strong> — create-checkout + send-push security fixes committed but NOT yet deployed.</div>
+      <div class="bug-meta">Run: npx supabase functions deploy create-checkout --project-ref jllugkiojeoopitdvzsa (and same for send-push)</div>
+    </div>
+    <div class="bug-item pending">
+      <div class="bug-title"><strong>Tournament series concept</strong> — one brand → many events/years. Schema + UX TBD.</div>
+      <div class="bug-meta">Future feature</div>
+    </div>
+  </div>
+
+  <!-- SESSION HISTORY -->
+  <div class="section">
+    <div class="sec-title">✅ Fix History by Session</div>
+
+    <div class="session-hdr" onclick="toggleSession('s13')">
+      <span class="session-title">Session 13 · 2026-05-07 — Security hardening <span class="pill pill-red">Security</span></span>
+      <span class="session-count">8 fixes ▾</span>
+    </div>
+    <div class="session-body" id="s13">
+      <div class="bug-item fixed"><div class="bug-title">admin auth consolidated to tournament_admins — removed legacy <code>player.is_admin</code> check from <code>doLogin()</code> + <code>checkSession()</code></div><div class="bug-meta">admin.html · commit e477457</div></div>
+      <div class="bug-item fixed"><div class="bug-title">Admin player table admin badge — <code>renderTable()</code> now marks players via <code>_admins</code> array, not stale <code>p.is_admin</code></div><div class="bug-meta">admin.html · commit e477457</div></div>
+      <div class="bug-item fixed"><div class="bug-title">removePlayer name lookup — no longer requires caller to pass name, looks up from local <code>players</code> array</div><div class="bug-meta">admin.html · commit e477457</div></div>
+      <div class="bug-item fixed"><div class="bug-title">home.html XSS helper — added <code>esc()</code> sanitizer for safe DOM interpolation</div><div class="bug-meta">home.html · commit e477457</div></div>
+      <div class="bug-item fixed"><div class="bug-title">create-checkout CORS locked — <code>Access-Control-Allow-Origin: *</code> → only <code>*.greenskeeper.studio</code></div><div class="bug-meta">supabase/functions/create-checkout/index.ts · commit e477457</div></div>
+      <div class="bug-item fixed"><div class="bug-title">create-checkout email from JWT — removed <code>user_email</code> from request body; ownership verified via JWT — prevents email spoofing</div><div class="bug-meta">supabase/functions/create-checkout/index.ts · commit e477457</div></div>
+      <div class="bug-item fixed"><div class="bug-title">send-push CORS locked + auth required — restricted CORS; now requires authenticated owner/admin before sending push notifications</div><div class="bug-meta">supabase/functions/send-push/index.ts · commit e477457</div></div>
+      <div class="bug-item fixed"><div class="bug-title">SECURITY_PLAN.md added — full audit, baseline D+, target A, RLS gaps identified</div><div class="bug-meta">commit e477457</div></div>
+    </div>
+
+    <div class="session-hdr" onclick="toggleSession('s12')">
+      <span class="session-title">Session 12 · 2026-05-06 — Hero/about photo leak <span class="pill pill-red">Critical</span></span>
+      <span class="session-count">1 fix ▾</span>
+    </div>
+    <div class="session-body collapsed" id="s12">
+      <div class="bug-item fixed"><div class="bug-title"><strong>CRITICAL: Hero/about photo leaking to all tourneys</strong> — <code>hero_photo_url</code> hardcoded Unsplash src shown for every tourney; <code>about_photo_url</code> had no JS handler. Fixed: both hidden by default, shown from settings keys.</div><div class="bug-meta">home.html:417/455/686/845-853 · commit 4276116</div></div>
+    </div>
+
+    <div class="session-hdr" onclick="toggleSession('s11')">
+      <span class="session-title">Session 11 · 2026-05-05 — Nav/hamburger + billing gate + admin team names</span>
+      <span class="session-count">7 fixes ▾</span>
+    </div>
+    <div class="session-body collapsed" id="s11">
+      <div class="bug-item fixed"><div class="bug-title">Duplicate HOME in tourney drawer — <code>href="/"</code> normalization bug in dedup logic</div><div class="bug-meta">nav-mobile.js · commit a613da5</div></div>
+      <div class="bug-item fixed"><div class="bug-title">player-upgrade.html no hamburger — added inline hamburger + drawer</div><div class="bug-meta">player-upgrade.html · commit a613da5</div></div>
+      <div class="bug-item fixed"><div class="bug-title">player.html myGolf portal missing phone — <code>phone_number</code> added + <code>tel:</code> link</div><div class="bug-meta">player.html · commit a567171</div></div>
+      <div class="bug-item fixed"><div class="bug-title">player.html myGolf portal missing handicap range — "My Golf Profile" section with tier + avg score after 5+ rounds</div><div class="bug-meta">player.html · commit a567171</div></div>
+      <div class="bug-item fixed"><div class="bug-title">create.html no billing gate — anyone with auth could access /create. Added billing_status check → redirect to /player-upgrade if not billing-ok.</div><div class="bug-meta">create.html · commit c486ac2</div></div>
+      <div class="bug-item fixed"><div class="bug-title">admin Design tab missing team names C–H — only A+B existed. Added C–H inputs with show/hide by team_count.</div><div class="bug-meta">admin.html · commit 2f0795b</div></div>
+    </div>
+
+    <div class="session-hdr" onclick="toggleSession('s10')">
+      <span class="session-title">Session 10 · 2026-05-05 — Logo leak + multi-tenant cleanup <span class="pill pill-red">Critical</span></span>
+      <span class="session-count">9 fixes ▾</span>
+    </div>
+    <div class="session-body collapsed" id="s10">
+      <div class="bug-item fixed"><div class="bug-title"><strong>CRITICAL: All tourneys showing Bova logo</strong> — 3 hardcoded base64 PNG img tags replaced with JS-populated handles</div><div class="bug-meta">home.html:400/423/657 · commit 4276116</div></div>
+      <div class="bug-item fixed"><div class="bug-title">footer-copy hardcoded "Inaugural Edition · Myrtle Beach, SC" — now patched from tourney-init.js</div><div class="bug-meta">tourney-init.js:200 · commit 4276116</div></div>
+      <div class="bug-item fixed"><div class="bug-title">scoreboard.html DEFAULT_FORMATS <code>shamble</code> typo → <code>shambles</code></div><div class="bug-meta">scoreboard.html:463 · commit f0d8f10</div></div>
+      <div class="bug-item fixed"><div class="bug-title"><code>bova_profile_email</code> localStorage dead code — written but never read, deleted</div><div class="bug-meta">login.html:190/257, profile.html:246/383 · commit f0d8f10</div></div>
+      <div class="bug-item fixed"><div class="bug-title"><code>bova_install_dismissed</code> sessionStorage key hardcoded → <code>tourney_install_dismissed</code></div><div class="bug-meta">pwa.js:100/113 · commit f0d8f10</div></div>
+      <div class="bug-item fixed"><div class="bug-title">navLogoImg not set on non-home pages — tourney-init.js now sets <code>#navLogoImg</code> src</div><div class="bug-meta">tourney-init.js · commit f0d8f10</div></div>
+      <div class="bug-item fixed"><div class="bug-title">admin FORMAT_OPTIONS <code>shamble</code> typo → <code>shambles</code>. Expanded from 4 → 12 canonical formats.</div><div class="bug-meta">admin.html · commit 6681b92</div></div>
+      <div class="bug-item fixed"><div class="bug-title">admin renderFormatSection: <code>DEFAULT_FORMATS[d.key].front</code> throws on day4+ — fixed with optional chaining</div><div class="bug-meta">admin.html · commit 6681b92</div></div>
+      <div class="bug-item fixed"><div class="bug-title">admin loadRoundStates: hardcoded day1/2/3 init polluted 1-day tourneys — reset to <code>{}</code> before merge</div><div class="bug-meta">admin.html:1015 · commit fe78ee6</div></div>
+    </div>
+
+    <div class="session-hdr" onclick="toggleSession('s9')">
+      <span class="session-title">Session 9 · 2026-05-05 — Creation flow QA + individual tourney support</span>
+      <span class="session-count">5 fixes ▾</span>
+    </div>
+    <div class="session-body collapsed" id="s9">
+      <div class="bug-item fixed"><div class="bug-title">player.html billing gate blocks tournament admins — admins bypass gate via isAdmin check</div><div class="bug-meta">player.html:356 · commit 2237c4d</div></div>
+      <div class="bug-item fixed"><div class="bug-title">No way to view player portal from admin — added "Portal" button per player row + gold admin-view banner</div><div class="bug-meta">admin.html:1123 · commit 2237c4d</div></div>
+      <div class="bug-item fixed"><div class="bug-title">home.html schedule subtitle hardcoded "Myrtle Beach, SC" → dynamic from tournament.location</div><div class="bug-meta">home.html:481 · commit 3b6c829</div></div>
+      <div class="bug-item fixed"><div class="bug-title">Teams nav link visible for individual tourneys — hides when team_count ≤ 1</div><div class="bug-meta">home.html:819 · commit 3b6c829</div></div>
+      <div class="bug-item fixed"><div class="bug-title">Team tab visible for individual tourneys on scoreboard — hides when team_count ≤ 1</div><div class="bug-meta">scoreboard.html:368 · commit 3b6c829</div></div>
+    </div>
+
+    <div class="session-hdr" onclick="toggleSession('s6')">
+      <span class="session-title">Sessions 1–8 · 2026-05-02–05 — Foundation + content isolation</span>
+      <span class="session-count">28+ fixes ▾</span>
+    </div>
+    <div class="session-body collapsed" id="s6">
+      <div class="bug-item fixed"><div class="bug-title">platform.html cascade delete FK error — correct order: push_subscriptions → scores → trash_talk → tournament_admins → invitations → players → settings → tournaments</div><div class="bug-meta">commit d972fbd</div></div>
+      <div class="bug-item fixed"><div class="bug-title">home.html about section hardcoded Bova text → from <code>homepage_about</code> setting</div><div class="bug-meta">commit 59a18f7</div></div>
+      <div class="bug-item fixed"><div class="bug-title">create.html → scorecard.html format key mismatches: <code>bestball</code> → <code>best_ball</code>, <code>alternate</code> → <code>alt_shot</code></div><div class="bug-meta">commit 96b349d</div></div>
+      <div class="bug-item fixed"><div class="bug-title">No hamburger on platform pages (marketing, create, player) — created <code>nav-platform.js</code> universal hamburger</div><div class="bug-meta">commit baed796</div></div>
+      <div class="bug-item fixed"><div class="bug-title">Opp2/scorecard opponent panel not real-time — live postgres_changes subscription on settings</div><div class="bug-meta">scorecard.html · commit 5784039</div></div>
+      <div class="bug-item fixed"><div class="bug-title">favicon.ico 404 — added link rel="icon" to all HTML files</div><div class="bug-meta">commit d0f0984</div></div>
+      <div class="bug-item fixed"><div class="bug-title">Auth redirect to /t/default/login — slug not initialized when authGuard fires</div><div class="bug-meta">Early session</div></div>
+      <div class="bug-item fixed"><div class="bug-title">SW stale cache — bumped tourney-v10 → tourney-v11</div><div class="bug-meta">sw.js</div></div>
+    </div>
+  </div>
+
+  <!-- CREATION FLOW VERIFICATION -->
+  <div class="section">
+    <div class="sec-title">📊 Creation Flow Verification — 2026-05-05</div>
+    <p style="font-size:0.76rem;color:var(--muted);margin-bottom:0.85rem;">DB check: all 4 test tourneys have zero missing critical keys.</p>
+    <div style="overflow-x:auto;">
+      <table class="ref-table">
+        <thead><tr><th>Slug</th><th>Teams</th><th>Days</th><th>Mode</th><th>Location</th><th>Formats</th></tr></thead>
+        <tbody>
+          <tr><td><code>solo-stroke-test</code></td><td>1</td><td>1</td><td>competitive</td><td>Phoenix, AZ</td><td>stroke</td></tr>
+          <tr><td><code>weekend-scramble-test</code></td><td>2</td><td>2</td><td>casual</td><td>Austin, TX</td><td>scramble + best_ball</td></tr>
+          <tr><td><code>four-team-test</code></td><td>4</td><td>3</td><td>competitive</td><td>Scottsdale, AZ</td><td>stroke / scramble+best_ball / match+mod_stableford</td></tr>
+          <tr><td><code>abt-2026</code></td><td>2</td><td>2</td><td>competitive</td><td>Scottsdale AZ</td><td>stroke + scramble</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="font-size:0.7rem;color:var(--muted);margin-top:0.75rem;">Reusable verification query (run against Supabase jllugkiojeoopitdvzsa):</p>
+    <div class="sql-block">SELECT t.slug, array_agg(required_key) AS missing_keys
+FROM tournaments t
+CROSS JOIN (VALUES
+  ('tournament_mode'),('team_count'),('about_stat_days'),('tourney_location'),
+  ('tourney_name'),('round_formats'),('reg_open'),('color_primary'),('pars_day1')
+) AS req(required_key)
+WHERE NOT EXISTS (
+  SELECT 1 FROM settings s WHERE s.tournament_id = t.id AND s.key = req.required_key
+)
+GROUP BY t.slug;
+-- Empty result = all tourneys have required keys</div>
+  </div>
+
+  <!-- SETTING KEYS -->
+  <div class="section ref-section">
+    <div class="sec-title">📐 Setting Keys — Ground Truth <span class="sec-count">source: create.html line 759+</span></div>
+    <div style="overflow-x:auto;">
+      <table class="ref-table">
+        <thead><tr><th>Key</th><th>Values</th><th>Notes</th></tr></thead>
+        <tbody>
+          <tr><td><code>tournament_mode</code></td><td><code>'competitive' | 'casual'</code></td><td>NOT <code>tourney_mode</code></td></tr>
+          <tr><td><code>team_count</code></td><td><code>'1'</code>–<code>'8'</code></td><td></td></tr>
+          <tr><td><code>reg_max_players</code></td><td><code>'24'</code></td><td></td></tr>
+          <tr><td><code>reg_min_players</code></td><td><code>'14'</code></td><td></td></tr>
+          <tr><td><code>reg_show_dates</code></td><td><code>'true' | 'false'</code></td><td>NOT <code>reg_show_date_picker</code></td></tr>
+          <tr><td><code>reg_show_hat</code></td><td><code>'true' | 'false'</code></td><td></td></tr>
+          <tr><td><code>reg_show_why_me</code></td><td><code>'true' | 'false'</code></td><td></td></tr>
+          <tr><td><code>homepage_about</code></td><td>long text, <code>\n\n</code> separated</td><td></td></tr>
+          <tr><td><code>homepage_subtitle</code></td><td>eyebrow text</td><td></td></tr>
+          <tr><td><code>homepage_details</code></td><td>hero meta line</td><td></td></tr>
+          <tr><td><code>format_day{n}_front</code></td><td>format value</td><td>canonical for scoring</td></tr>
+          <tr><td><code>format_day{n}_back</code></td><td>format value</td><td>canonical for scoring</td></tr>
+          <tr><td><code>round_formats</code></td><td>JSON <code>{day1:{front,back},...}</code></td><td>redundant copy for scoreboard/scorecard</td></tr>
+          <tr><td><code>color_primary</code> / <code>color_ink</code> / <code>color_bg</code></td><td>hex</td><td></td></tr>
+          <tr><td><code>about_stat_days</code> / <code>about_stat_teams</code> / <code>about_stat_holes</code></td><td>number string</td><td></td></tr>
+          <tr><td><code>schedule_json</code></td><td>JSON array</td><td></td></tr>
+          <tr><td><code>course_name_day{n}</code></td><td>string</td><td></td></tr>
+          <tr><td><code>pars_day{n}</code></td><td>JSON array of 18 numbers</td><td></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- FORMAT VALUES -->
+  <div class="section ref-section">
+    <div class="sec-title">📐 Format Values — Ground Truth</div>
+    <div style="overflow-x:auto;">
+      <table class="ref-table">
+        <thead><tr><th>Value</th><th>Label</th><th>Scorecard behavior</th></tr></thead>
+        <tbody>
+          <tr><td><code>stroke</code></td><td>Stroke Play</td><td>default</td></tr>
+          <tr><td><code>scramble</code></td><td>Scramble</td><td>PAIR_TEAM_FMTS (shared ball)</td></tr>
+          <tr><td><code>best_ball</code></td><td>Best Ball</td><td>isBestBallHole</td></tr>
+          <tr><td><code>shambles</code></td><td>Shambles</td><td>individual (NOT PAIR_TEAM_FMTS)</td></tr>
+          <tr><td><code>stableford</code></td><td>Stableford</td><td>isStablefordHole</td></tr>
+          <tr><td><code>mod_stableford</code></td><td>Modified Stableford</td><td>isStablefordHole</td></tr>
+          <tr><td><code>match</code></td><td>Match Play</td><td>isMatchHole</td></tr>
+          <tr><td><code>alt_shot</code></td><td>Alternate Shot</td><td>PAIR_TEAM_FMTS</td></tr>
+          <tr><td><code>chapman</code></td><td>Chapman / Pinehurst</td><td>PAIR_TEAM_FMTS</td></tr>
+          <tr><td><code>greensomes</code></td><td>Greensomes</td><td>PAIR_TEAM_FMTS</td></tr>
+          <tr><td><code>nassau</code></td><td>Nassau</td><td>stroke play (side bets only)</td></tr>
+          <tr><td><code>skins</code></td><td>Skins</td><td>stroke play (side bets only)</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  TOURney · Greenskeeper Studios Internal ·
+  <a href="/platform">← Operations</a>
+</footer>
+
+<script>
+function toggleSession(id) {
+  const el = document.getElementById(id);
+  if (el) el.classList.toggle('collapsed');
+}
+</script>
+
+</body>
+</html>
