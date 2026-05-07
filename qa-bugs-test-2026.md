@@ -1,13 +1,26 @@
-# QA Bug Log — TOURney Platform (updated: 2026-05-06)
+# QA Bug Log — TOURney Platform (updated: 2026-05-07)
 
-Last QA pass: hero/about photo leak fix (2026-05-06)
-Last commits: 2f0795b (admin team names C-H), c486ac2 (create billing gate), a613da5 (nav-mobile dedup + player-upgrade ham), a567171 (player phone+handicap), 4276116 (logo leak)
+Last QA pass: security hardening + live QA both sites clean (2026-05-07)
+Last commits: e477457 (security: admin auth + CORS + push function hardening)
 
 ---
 
 ## 🔴 Open Bugs — Must Fix
 
 - **Bova formats unconfirmed**: seeded Day1=stroke, Day2=scramble, Day3=best_ball based on about text ("scramble, shambles, best ball, stroke play"). Shambles not mapped to a day. **Verify with Chris Bova before tournament runs. BLOCKED — human verification required.**
+
+---
+
+## ✅ Fixed — Session 13 (2026-05-07, security hardening)
+
+- **admin auth consolidated to tournament_admins**: removed legacy `player.is_admin` field check from `doLogin()` + `checkSession()`. Single source of truth: `tournament_admins` table. [admin.html, commit `e477457`]
+- **Admin player table admin badge**: `renderTable()` now marks players who are also admins via `_admins` array (not stale `p.is_admin` field). [admin.html, commit `e477457`]
+- **removePlayer name lookup**: `removePlayer(id)` no longer requires caller to pass name — looks up from local `players` array. [admin.html, commit `e477457`]
+- **home.html XSS helper**: added `esc()` sanitizer (`s.replace(/&/g,'&amp;')...`) for safe DOM interpolation. [home.html, commit `e477457`]
+- **create-checkout CORS locked**: `Access-Control-Allow-Origin: *` → only `*.greenskeeper.studio`. [supabase/functions/create-checkout/index.ts, commit `e477457`]
+- **create-checkout email from JWT**: removed `user_email` from request body; ownership verified via `user.email` from JWT — prevents email spoofing. [supabase/functions/create-checkout/index.ts, commit `e477457`]
+- **send-push CORS locked + auth required**: restricted CORS to `*.greenskeeper.studio`; now requires authenticated user who is owner/admin before sending push notifications (was unauthenticated). [supabase/functions/send-push/index.ts, commit `e477457`]
+- **SECURITY_PLAN.md**: full audit document added — baseline D+, target A, RLS gaps identified for follow-up. [commit `e477457`]
 
 ---
 
@@ -168,11 +181,13 @@ GROUP BY t.slug;
 
 ## 💡 Pending Features
 
-- **Admin inline team name editing**: saveTeamCount ✓ done. Need per-team rename fields in UI.
-- **Admin toggles for RSVP settings**: reg_show_dates, reg_min_players, reg_max_players editable from admin UI.
-- **Competitive/Casual mode badge on scoreboard**: visible pill so players know if scores are handicap-adjusted.
-- **Stripe payment gate**: activate at reg_open flip, not at /create. P4.
-- **Test scores**: seed scores into test tourneys to verify leaderboard + scorecard rendering end-to-end.
+- ~~**Admin inline team name editing**~~: ✅ DONE — Team A-H name inputs exist in Design tab (`dsTeamAName`–`dsTeamHName`), mapped in `DS_FIELD_MAP`, saved by `saveRegistration()`. (verified 2026-05-07)
+- ~~**Admin toggles for RSVP settings**~~: ✅ DONE — `dsMinPlayers`, `dsMaxPlayers`, `dsShowDates`, `dsShowWhyMe`, `dsShowHat` all exist in Design tab HTML + JS. (verified 2026-05-07)
+- ~~**Competitive/Casual mode badge on scoreboard**~~: ✅ DONE — `scoringModeBadge` element in HTML, JS sets text + shows on load. `hdrTotal` switches "Total"↔"Net Total". QA confirmed live on both sites. (verified 2026-05-07)
+- **Stripe payment gate**: activate at reg_open flip, not at /create. **BLOCKED — waiting on Rob to form LLC.**
+- **Test scores**: solo-stroke-test has 72 scores seeded. Other test tourneys still need scores for leaderboard/scorecard regression testing.
+- **RLS hardening**: SECURITY_PLAN.md identifies permissive policies on `players`, `scores`, `push_subscriptions`. Needs SQL migrations before Stripe goes live.
+- **Supabase edge functions deploy**: create-checkout + send-push security fixes committed but NOT yet deployed (no SUPABASE_ACCESS_TOKEN in this session). Rob needs to run: `npx supabase functions deploy create-checkout --project-ref jllugkiojeoopitdvzsa` + same for send-push.
 - **Tournament series concept**: one brand → many events/years. Schema + UX TBD.
 
 ---
