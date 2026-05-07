@@ -21,7 +21,13 @@ h1{font-family:'Barlow Condensed',system-ui,sans-serif;font-size:0.72rem;font-we
 /* Sections */
 .sections{padding:0 1rem;margin-top:1.25rem;display:flex;flex-direction:column;gap:1.25rem}
 .section{background:var(--card);border-radius:6px;border:1px solid var(--border);overflow:hidden}
-.sec-hdr{display:flex;align-items:center;justify-content:space-between;padding:0.75rem 1rem;border-bottom:1px solid var(--border);gap:0.5rem}
+.sec-hdr{display:flex;align-items:center;justify-content:space-between;padding:0.75rem 1rem;border-bottom:1px solid var(--border);gap:0.5rem;cursor:pointer;user-select:none}
+.sec-hdr:hover{background:rgba(192,144,48,0.04)}
+.sec-chevron{font-size:0.6rem;color:rgba(192,144,48,0.4);margin-left:auto;transition:transform .18s;flex-shrink:0}
+.section.collapsed .sec-chevron{transform:rotate(-90deg)}
+.section.collapsed .sec-hdr{border-bottom:none}
+.section.collapsed .steps{display:none}
+.section.collapsed .human-banner{display:none}
 .sec-title{font-family:'Barlow Condensed',system-ui,sans-serif;font-size:0.8rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase}
 .sec-badge{font-family:monospace;font-size:0.55rem;padding:0.15em 0.55em;border-radius:3px;letter-spacing:0.1em;text-transform:uppercase;white-space:nowrap}
 .badge-new{background:rgba(74,48,128,0.12);color:#6a48b8;border:1px solid rgba(74,48,128,0.25)}
@@ -181,17 +187,27 @@ const SECTIONS = [
 ];
 
 const STORAGE_KEY = 'qa_checks_v1';
+const COLLAPSE_KEY = 'qa_collapsed_v1';
 let slug = '';
 let checked = {};
+let collapsed = {};
 
 function load() {
   try { checked = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'); } catch { checked = {}; }
+  try { collapsed = JSON.parse(localStorage.getItem(COLLAPSE_KEY) || '{}'); } catch { collapsed = {}; }
   slug = localStorage.getItem('qa_slug') || '';
 }
 
 function save() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(checked));
+  localStorage.setItem(COLLAPSE_KEY, JSON.stringify(collapsed));
   localStorage.setItem('qa_slug', slug);
+}
+
+function toggleSection(id) {
+  collapsed[id] = !collapsed[id];
+  save();
+  render();
 }
 
 function url(path) {
@@ -246,12 +262,18 @@ function render() {
         </div>
       </li>`;
     }).join('');
-    return `<div class="section">
-      <div class="sec-hdr">
+    const isCollapsed = !!collapsed[section.id];
+    const humanBanner = section.badge === 'human'
+      ? `<div class="human-banner" style="display:flex;align-items:center;gap:0.4rem;padding:0.45rem 1rem;background:rgba(180,60,40,0.06);border-bottom:1px solid rgba(180,60,40,0.15);font-size:0.58rem;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:var(--red);">⚠ Human Required — cannot be automated</div>`
+      : '';
+    return `<div class="section${isCollapsed ? ' collapsed' : ''}">
+      <div class="sec-hdr" onclick="toggleSection('${section.id}')">
         <span class="sec-title">${section.title}</span>
         <span class="${badgeCls(section.badge)}">${badgeLabel(section.badge)}</span>
         <span class="sec-status ${cls}">${label}</span>
+        <span class="sec-chevron">▼</span>
       </div>
+      ${humanBanner}
       <ul class="steps">${stepsHtml}</ul>
     </div>`;
   }).join('');
