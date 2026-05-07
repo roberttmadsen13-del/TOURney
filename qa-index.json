@@ -1,0 +1,32 @@
+{
+  "$schema": "https://tourney.greenskeeper.studio/qa-index-schema.json",
+  "version": 1,
+  "updated_at": "2026-05-07T00:00:00Z",
+  "description": "Canonical registry of all TOURney plans, reviews, audits, and QA artifacts. The /qa page renders from this file. Skills (e.g. tourney-review) append new entries when they generate output.",
+  "entries": [
+    {
+      "id": "review-2026-05-06",
+      "category": "review",
+      "title": "Full Platform Review · May 6, 2026",
+      "summary": "Code-to-business audit, council of 5 polish ideas, full QA protocol, business roadmap (LLC → PSP), security analysis. Security graded D+ — three CRITICAL/HIGH findings (player_accounts RLS, invitations RLS, admin.html XSS). All other axes A-/B+.",
+      "date": "2026-05-06",
+      "author": "Claude Sonnet 4.6",
+      "url": "/5-6-26-claude-review",
+      "file": "5-6-26-claude-review.html",
+      "tags": ["review", "security", "audit"],
+      "status": "shipped"
+    },
+    {
+      "id": "aaa-plan",
+      "category": "plan",
+      "title": "AAA Implementation Plan · A+ across Architecture · Feature Depth · UX Polish",
+      "summary": "22 sequenced sprints, ~38 dev-days, taking three product axes to A+. Foundation sprints already shipped: design tokens, shared util lib, observability stub, empty-state library, copy-link component, offline indicator, print stylesheet, migration drafts (006 drop_is_admin, 007 round_model).",
+      "date": "2026-05-06",
+      "author": "Claude Sonnet 4.6",
+      "url": "/aaa-plan",
+      "file": "aaa-plan.html",
+      "tags": ["plan", "architecture", "features", "ux", "active"],
+      "status": "in-progress"
+    }
+  ]
+}
