@@ -27,6 +27,7 @@
   "redirects": [
     { "source": "/favicon.ico", "destination": "/favicon.svg", "permanent": false },
     { "source": "/qa-checklist", "destination": "/qa", "permanent": true },
+    { "source": "/5-6-26-claude-review", "destination": "/qa", "permanent": true },
     { "source": "/t/bova-2026/:path*", "destination": "/t/bova/:path*", "permanent": true },
     {
       "source": "/:path*",
