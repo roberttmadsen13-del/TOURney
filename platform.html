@@ -292,10 +292,7 @@ async function grantComp() {
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
     errEl.textContent = 'Invalid email.'; errEl.style.display = 'block'; return;
   }
-  const { error } = await sb.from('player_accounts').upsert(
-    { email, plan: 'player', billing_status: 'comped', billing_expires_at: null, updated_at: new Date().toISOString() },
-    { onConflict: 'email' }
-  );
+  const { error } = await sb.functions.invoke('platform-action', { body: { action: 'comp', email } });
   if (error) { errEl.textContent = error.message; errEl.style.display = 'block'; return; }
   okEl.textContent = `✓ ${email} granted player account`; okEl.style.display = 'block';
   document.getElementById('compEmail').value = '';
@@ -304,12 +301,13 @@ async function grantComp() {
 
 async function revokeComp(email) {
   if (!confirm(`Revoke player account for ${email}?`)) return;
-  await sb.from('player_accounts').update({ billing_status: 'inactive', updated_at: new Date().toISOString() }).eq('email', email);
+  await sb.functions.invoke('platform-action', { body: { action: 'revoke', email } });
   loadCompAccounts();
 }
 
 async function loadCompAccounts() {
-  const { data } = await sb.from('player_accounts').select('*').order('created_at', { ascending: false });
+  const { data: res } = await sb.functions.invoke('platform-action', { body: { action: 'list' } });
+  const data = res?.data;
   const tbody = document.getElementById('compBody');
   const empty = document.getElementById('compEmpty');
   if (!data || !data.length) { tbody.innerHTML = ''; empty.style.display = 'block'; return; }

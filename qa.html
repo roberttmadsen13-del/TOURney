@@ -156,6 +156,19 @@ const SECTIONS = [
     ]
   },
   {
+    id: 'security',
+    title: 'Security — Human Required',
+    badge: 'human',
+    steps: [
+      { id:'sec1', text:'Supabase Dashboard → Auth → Password → set minimum length to 8 (currently 6)', note:'supabase.com/dashboard → project jllugkiojeoopitdvzsa → Auth → Sign In Methods → Password → Min length' },
+      { id:'sec2', text:'Supabase Dashboard → Auth → Email → enable "Confirm email" toggle', note:'Prevents anyone from registering with an arbitrary email and immediately accessing their invitation slot' },
+      { id:'sec3', text:'Supabase Dashboard → Auth → Rate Limits → verify signup + login limits are active', note:'Default: 5 emails/hr, 30 signins/5min. If changed, reset to defaults.' },
+      { id:'sec4', text:'Verify curl -I https://tourney.greenskeeper.studio shows Strict-Transport-Security, X-Frame-Options, X-Content-Type-Options headers', note:'All three must be present. Run: curl -sI https://tourney.greenskeeper.studio | grep -E "Strict|Frame|Content-Type"' },
+      { id:'sec5', text:'Pentest: as a normal player, attempt supabase.from("player_accounts").update({billing_status:"comped"}) — must return RLS error', note:'Open browser console on any page while logged in as a test player and run the query' },
+      { id:'sec6', text:'Pentest: unauthenticated POST to send-push edge function must return 401', note:'curl -X POST https://jllugkiojeoopitdvzsa.supabase.co/functions/v1/send-push -d "{}" — expect 401' },
+    ]
+  },
+  {
     id: 'console',
     title: 'Console & Network',
     badge: 'infra',
