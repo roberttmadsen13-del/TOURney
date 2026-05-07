@@ -1224,17 +1224,17 @@ async function toggleAdmin(id, makeAdmin) {
   const name = `${player.first_name} ${player.last_name}`;
   const action = makeAdmin ? `Grant admin access to ${name}?` : `Revoke admin access from ${name}?`;
   if (!confirm(action)) return;
-  const { error } = await sb.from('players').update({ is_admin: makeAdmin }).eq('id', id);
-  if (error) { showToast('Error: ' + error.message); return; }
   if (player.email) {
     const em = player.email.toLowerCase();
     if (makeAdmin) {
-      await sb.from('tournament_admins').upsert({ tournament_id: _tid, email: em }, { onConflict: 'tournament_id,email' });
+      const { error } = await sb.from('tournament_admins').upsert({ tournament_id: _tid, email: em }, { onConflict: 'tournament_id,email' });
+      if (error) { showToast('Error: ' + error.message); return; }
     } else {
-      await sb.from('tournament_admins').delete().eq('tournament_id', _tid).eq('email', em);
+      const { error } = await sb.from('tournament_admins').delete().eq('tournament_id', _tid).eq('email', em);
+      if (error) { showToast('Error: ' + error.message); return; }
     }
   }
-  player.is_admin = makeAdmin;
+  await loadAdmins();
   renderTable();
   showToast(`${name} ${makeAdmin ? 'granted' : 'revoked'} admin access.`);
 }
@@ -1947,9 +1947,6 @@ async function addAdmin() {
     return;
   }
 
-  // Sync players.is_admin for any matching player row in this tournament
-  await sb.from('players').update({ is_admin: true }).eq('tournament_id', _tid).eq('email', email);
-
   document.getElementById('newAdminEmail').value = '';
   msg.style.color = '#2a7a20';
   msg.textContent = `${email} added as admin.`;
@@ -1959,7 +1956,6 @@ async function addAdmin() {
 
 async function removeAdmin(email) {
   await sb.from('tournament_admins').delete().eq('tournament_id', _tid).eq('email', email);
-  await sb.from('players').update({ is_admin: false }).eq('tournament_id', _tid).eq('email', email);
   await loadAdmins();
 }
 

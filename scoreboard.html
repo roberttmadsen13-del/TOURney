@@ -465,8 +465,8 @@ let _teamNames = {A:'Team One',B:'Team Two',C:'Team C',D:'Team D',E:'Team E',F:'
   const { tournament } = await window.tourney.ready;
   const _onTenant = !!location.pathname.match(/\/t\/([^/?#]+)/);
   const _adminHref = _onTenant ? `/t/${tournament.slug}/admin` : '/admin';
-  const { data: adminCheck } = await sb.from('players').select('is_admin').eq('tournament_id', tournament.id).eq('email', email.toLowerCase()).single();
-  if (adminCheck?.is_admin) {
+  const { data: adminCheck } = await sb.from('tournament_admins').select('id').eq('tournament_id', tournament.id).eq('email', email.toLowerCase()).maybeSingle();
+  if (adminCheck) {
     if (navRight) {
       const adminLink = document.createElement('a');
       adminLink.href = _adminHref;
