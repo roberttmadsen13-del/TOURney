@@ -101,6 +101,9 @@ td{padding:0.7rem 0.75rem;font-size:0.88rem;vertical-align:middle;}
 .hub-search:focus{border-color:var(--gold);}
 .hub-search::placeholder{color:var(--muted);}
 .hub-count{font-size:0.68rem;color:var(--muted);font-family:'DM Mono',monospace;white-space:nowrap;}
+.hub-sort{background:rgba(255,255,255,0.04);border:1px solid var(--border);color:var(--muted);padding:0.45rem 0.8rem;border-radius:20px;font-family:'Barlow',sans-serif;font-size:0.75rem;outline:none;cursor:pointer;}
+.hub-sort:focus{border-color:var(--gold);}
+.hub-sort option{background:#1a1008;color:var(--text);}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1rem;}
 .card-link{text-decoration:none;color:inherit;display:block;height:100%;}
 .card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:1.2rem 1.35rem;height:100%;transition:all 0.18s ease;display:flex;flex-direction:column;gap:0.7rem;position:relative;overflow:hidden;}
@@ -390,6 +393,12 @@ td{padding:0.7rem 0.75rem;font-size:0.88rem;vertical-align:middle;}
         <button class="filter-btn" data-filter="postmortem">Postmortems</button>
         <button class="filter-btn" data-filter="bugs">Bugs</button>
         <input id="hubSearch" type="text" class="hub-search" placeholder="Search…">
+        <select id="hubSort" class="hub-sort" onchange="sortMode=this.value;renderHub()">
+          <option value="status">Sort: Status</option>
+          <option value="date-new">Sort: Newest</option>
+          <option value="date-old">Sort: Oldest</option>
+          <option value="alpha">Sort: A→Z</option>
+        </select>
         <span class="hub-count" id="hubCount">—</span>
         <button class="filter-btn" data-filter="favorites" id="favFilterBtn">⭐ Favorites</button>
         <button class="filter-btn archived-toggle" id="archivedToggle" onclick="toggleArchived()">Show Archived</button>
@@ -787,8 +796,10 @@ const CAT_META = {
   postmortem:{pill:'pill-orange',label:'Postmortem'}, skill:{pill:'pill-purple',label:'Skill'},
   bugs:{pill:'pill-red',label:'Bugs'}, reference:{pill:'pill-muted',label:'Reference'},
 };
-const STATUS_PILL = { shipped:'pill-green','in-progress':'pill-gold',active:'pill-gold',queued:'pill-muted',archived:'pill-muted',critical:'pill-red' };
-const STATUS_ORDER = {'in-progress':0,'active':1,'shipped':2};
+const STATUS_PILL  = { active:'pill-gold','in-progress':'pill-gold',queued:'pill-blue',shipped:'pill-green',critical:'pill-red',archived:'pill-muted' };
+const STATUS_LABEL = { active:'Active','in-progress':'Active',queued:'Queued',shipped:'Shipped',critical:'Critical',archived:'Archived' };
+const STATUS_ORDER = { critical:0,active:1,'in-progress':1,queued:2,shipped:3 };
+let sortMode='status';
 const NEXT_STEP = {review:'plan',plan:'runbook',runbook:'audit',audit:'postmortem',postmortem:'bugs'};
 const NEXT_LABEL = {plan:'Plan',runbook:'Runbook',audit:'Audit',postmortem:'Postmortem',bugs:'Bugs'};
 let allEntries=[], activeFilter='all', activeSearch='', showArchived=false;
@@ -864,7 +875,10 @@ function renderHub() {
   });
   document.getElementById('hubCount').textContent=`${filtered.length} of ${allEntries.length}`;
   const sorted=filtered.slice().sort((a,b)=>{
-    const sa=STATUS_ORDER[a.status]??3, sb=STATUS_ORDER[b.status]??3;
+    if(sortMode==='date-new') return (b.updated||b.date||'').localeCompare(a.updated||a.date||'');
+    if(sortMode==='date-old') return (a.updated||a.date||'').localeCompare(b.updated||b.date||'');
+    if(sortMode==='alpha')    return (a.title||'').localeCompare(b.title||'');
+    const sa=STATUS_ORDER[a.status]??4, sb=STATUS_ORDER[b.status]??4;
     if(sa!==sb) return sa-sb;
     return (b.updated||b.date||'').localeCompare(a.updated||a.date||'');
   });
@@ -872,6 +886,7 @@ function renderHub() {
   grid.innerHTML=(filtered.length?sorted.map(e=>{
     const meta=CAT_META[e.category]||CAT_META.plan;
     const sp=e.status?(STATUS_PILL[e.status]||'pill-muted'):null;
+    const sl=e.status?(STATUS_LABEL[e.status]||e.status):null;
     const tags=(e.tags||[]).slice(0,5).map(t=>`<span class="tag">${esc(t)}</span>`).join('');
     const isAr=!!(e.archived||ar2[e.id]);
     const isFav=!!getFavorites()[e.id];
@@ -881,7 +896,7 @@ function renderHub() {
       <div class="card cat-${esc(e.category||'plan')}${isAr?' archived':''}">
         <div class="card-head">
           <span class="pill ${meta.pill}">${esc(meta.label)}</span>
-          ${sp?`<span class="pill ${sp}">${esc(e.status)}</span>`:''}
+          ${sp?`<span class="pill ${sp}">${esc(sl)}</span>`:''}
           <span class="card-date">${esc(displayDate)}</span>
         </div>
         <div class="card-title">${esc(e.title)}</div>
