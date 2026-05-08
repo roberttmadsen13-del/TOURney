@@ -100,12 +100,15 @@
       if (!email) return;
 
       // Platform link for owner
-      if (email === 'robert.t.madsen13@gmail.com' && window._navInjectLink) {
-        window._navInjectLink(
-          'https://tourney.greenskeeper.studio/platform',
-          '⬡ Operations',
-          'border-top:1px solid rgba(192,144,48,0.2);color:rgba(192,144,48,0.7);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;padding:.65rem 1.25rem'
-        );
+      if (email === 'robert.t.madsen13@gmail.com') {
+        if (window._navInjectLink) {
+          window._navInjectLink(
+            'https://tourney.greenskeeper.studio/platform',
+            '⬡ Operations',
+            'border-top:1px solid rgba(192,144,48,0.2);color:rgba(192,144,48,0.7);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;padding:.65rem 1.25rem'
+          );
+        }
+        _injectGlobalBugLog();
       }
 
       // Admin link for tournament owners + admins
@@ -311,6 +314,93 @@
     'abcdefgh'.split('').forEach(l => {
       if (teamColors[l]) root.style.setProperty(`--team-${l}`, teamColors[l]);
     });
+  }
+
+  function _injectGlobalBugLog() {
+    if (document.getElementById('globalBugFab')) return;
+    const style = document.createElement('style');
+    style.textContent = `
+      .gb-fab{position:fixed;bottom:2rem;right:2rem;width:56px;height:56px;border-radius:50%;background:rgba(200,80,60,0.85);color:#fff;display:flex;align-items:center;justify-content:center;font-size:1.6rem;box-shadow:0 4px 16px rgba(200,80,60,0.4);cursor:pointer;z-index:9999;transition:all .2s;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,0.15);}
+      .gb-fab:hover{transform:scale(1.05);background:rgba(220,90,70,0.95);}
+      .gb-modal{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.75);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);z-index:10000;display:none;align-items:center;justify-content:center;padding:1rem;}
+      .gb-content{background:rgba(20,15,10,0.7);border:1px solid rgba(255,255,255,0.1);border-radius:24px;padding:2rem;width:100%;max-width:440px;box-shadow:0 20px 60px rgba(0,0,0,0.6);display:flex;flex-direction:column;gap:1.2rem;}
+      .gb-hdr{display:flex;justify-content:space-between;align-items:center;color:#fff;font-family:'Barlow Condensed',sans-serif;text-transform:uppercase;font-weight:700;letter-spacing:.12em;font-size:1.1rem;}
+      .gb-close{background:rgba(255,255,255,0.1);border:none;border-radius:50%;width:28px;height:28px;color:#fff;font-size:.9rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .2s;}
+      .gb-close:hover{background:rgba(255,255,255,0.2);}
+      .gb-input{background:rgba(0,0,0,0.4);border:1px solid rgba(255,255,255,0.08);color:#fff;padding:.9rem 1rem;font-family:'Barlow',sans-serif;font-size:1rem;border-radius:12px;outline:none;transition:border-color .2s;}
+      .gb-input:focus{border-color:rgba(200,80,60,0.6);}
+      .gb-input::placeholder{color:rgba(255,255,255,0.3);}
+      .gb-ta{min-height:120px;resize:vertical;}
+      .gb-btn{background:#c8503c;color:#fff;border:none;padding:.9rem;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:.9rem;letter-spacing:.12em;text-transform:uppercase;border-radius:12px;cursor:pointer;transition:background .2s;}
+      .gb-btn:hover{background:#e74c3c;}
+    `;
+    document.head.appendChild(style);
+
+    const fab = document.createElement('div');
+    fab.id = 'globalBugFab';
+    fab.className = 'gb-fab';
+    fab.innerHTML = '🐛';
+    document.body.appendChild(fab);
+
+    const modal = document.createElement('div');
+    modal.className = 'gb-modal';
+    modal.innerHTML = `
+      <div class="gb-content" onclick="event.stopPropagation()">
+        <div class="gb-hdr"><span>Log Bug / Note</span><button class="gb-close" onclick="this.closest('.gb-modal').style.display='none'">✕</button></div>
+        <input type="text" id="gbTitle" class="gb-input" placeholder="Title (e.g. Bug on scoring, or Note on UI)">
+        <textarea id="gbDesc" class="gb-input gb-ta" placeholder="Description, steps to reproduce, or notes..."></textarea>
+        <div style="display:flex;align-items:center;gap:1rem;">
+          <label style="cursor:pointer;background:rgba(255,255,255,0.05);padding:.5rem 1rem;border-radius:8px;font-family:'DM Mono',monospace;font-size:.65rem;color:#ccc;border:1px solid rgba(255,255,255,0.1);text-transform:uppercase;letter-spacing:.1em;">
+            + Screenshot
+            <input type="file" id="gbImg" accept="image/*" style="display:none;">
+          </label>
+          <img id="gbImgThumb" style="max-height:44px;border-radius:6px;display:none;border:1px solid rgba(255,255,255,0.1);">
+        </div>
+        <button class="gb-btn" id="gbSubmitBtn">Save to Bug Log</button>
+      </div>
+    `;
+    document.body.appendChild(modal);
+
+    fab.onclick = () => { modal.style.display = 'flex'; document.getElementById('gbTitle').focus(); };
+    modal.onclick = () => { modal.style.display = 'none'; };
+
+    const imgInput = document.getElementById('gbImg');
+    const thumb = document.getElementById('gbImgThumb');
+    let imgData = null;
+    imgInput.onchange = () => {
+      const f = imgInput.files[0];
+      if (!f) return;
+      const r = new FileReader();
+      r.onload = e => { imgData = e.target.result; thumb.src = imgData; thumb.style.display = 'block'; };
+      r.readAsDataURL(f);
+    };
+
+    document.getElementById('gbSubmitBtn').onclick = () => {
+      const t = document.getElementById('gbTitle').value.trim();
+      const d = document.getElementById('gbDesc').value.trim();
+      if (!t && !d) return;
+      
+      const bugs = JSON.parse(localStorage.getItem('gks_bugs') || '[]');
+      bugs.unshift({
+        id: 'bug_' + Date.now(),
+        title: t,
+        desc: d,
+        img: imgData,
+        date: new Date().toISOString(),
+        status: 'open',
+        url: location.href
+      });
+      localStorage.setItem('gks_bugs', JSON.stringify(bugs));
+      
+      document.getElementById('gbTitle').value = '';
+      document.getElementById('gbDesc').value = '';
+      imgInput.value = '';
+      thumb.style.display = 'none';
+      imgData = null;
+      modal.style.display = 'none';
+      
+      if (window.renderBugLog) window.renderBugLog();
+    };
   }
 
   window.tourney = { db, ready: init(), applyBrandColors };

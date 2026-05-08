@@ -42,7 +42,7 @@ body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;min-
 .btn-sm:hover{background:var(--gold-dim);}
 
 /* ── Tabs ── */
-.tabs{display:flex;background:var(--surface);border-bottom:1px solid var(--border);}
+.tabs{display:flex;background:var(--surface);border-bottom:1px solid var(--border);position:sticky;top:52px;z-index:99;overflow-x:auto;-webkit-overflow-scrolling:touch;}
 .tab-btn{padding:0.7rem 1.4rem;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:0.72rem;letter-spacing:0.15em;text-transform:uppercase;background:none;border:none;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all 0.15s;white-space:nowrap;}
 .tab-btn:hover{color:var(--gold);}
 .tab-btn.active{color:var(--gold);border-bottom-color:var(--gold);}
@@ -321,10 +321,11 @@ td{padding:0.7rem 0.75rem;font-size:0.88rem;vertical-align:middle;}
 
   <div class="tabs">
     <button class="tab-btn active" id="tab-dash"      onclick="switchTab('dash')">Dashboard</button>
+    <button class="tab-btn"        id="tab-action"    onclick="switchTab('action')">Action Board</button>
     <button class="tab-btn"        id="tab-artifacts" onclick="switchTab('artifacts')">Artifacts</button>
     <button class="tab-btn"        id="tab-checklist" onclick="switchTab('checklist')">QA Checklist</button>
+    <button class="tab-btn"        id="tab-bugs"      onclick="switchTab('bugs')">Bug Log</button>
     <button class="tab-btn"        id="tab-reference" onclick="switchTab('reference')">Reference</button>
-    <button class="tab-btn"        id="tab-action"    onclick="switchTab('action')">Action Board</button>
   </div>
 
   <!-- ── TAB: DASHBOARD ── -->
@@ -356,7 +357,15 @@ td{padding:0.7rem 0.75rem;font-size:0.88rem;vertical-align:middle;}
         <div id="compSuccess" style="display:none;font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.1em;color:var(--green);margin-bottom:1rem;"></div>
         <div class="tbl-wrap">
           <table>
-            <thead><tr><th>Email</th><th>Status</th><th>Granted</th><th></th></tr></thead>
+            <thead><tr>
+              <th style="cursor:pointer;white-space:nowrap;user-select:none" onclick="sortComps('email')">Email ↕</th>
+              <th style="cursor:pointer;white-space:nowrap;user-select:none" onclick="sortComps('status')">Status ↕</th>
+              <th style="cursor:pointer;white-space:nowrap;user-select:none;text-align:center" onclick="sortComps('tourneys')">Tourneys ↕</th>
+              <th style="cursor:pointer;white-space:nowrap;user-select:none;text-align:center" onclick="sortComps('rounds')">Rounds ↕</th>
+              <th style="cursor:pointer;white-space:nowrap;user-select:none" onclick="sortComps('first_login')">First Login ↕</th>
+              <th style="cursor:pointer;white-space:nowrap;user-select:none" onclick="sortComps('last_login')">Last Login ↕</th>
+              <th></th>
+            </tr></thead>
             <tbody id="compBody"></tbody>
           </table>
         </div>
@@ -436,21 +445,6 @@ td{padding:0.7rem 0.75rem;font-size:0.88rem;vertical-align:middle;}
           <a class="quick-card" href="/combos" target="_blank"><div class="qc-icon">⚙</div><div class="qc-title">URL Combos</div><div class="qc-desc">Tournament URL pattern combinations</div><div class="qc-url">/combos</div></a>
           <a class="quick-card" href="/platform/aaa-plan" target="_blank"><div class="qc-icon">🎯</div><div class="qc-title">AAA Roadmap</div><div class="qc-desc">22-sprint plan to A+ Architecture, Features, UX</div><div class="qc-url">/platform/aaa-plan</div></a>
         </div>
-      </div>
-
-      <div class="ref-section">
-        <div class="ref-sec-hdr">
-          <div class="ref-sec-meta"><div class="ref-sec-title">🔴 Open Bugs<span class="ref-count" id="openBugCount"></span></div><div class="ref-sec-desc">Last updated 2026-05-07 · must fix before launch</div></div>
-          <a class="ref-sec-link" href="/platform/bugs" target="_blank">Full log ↗</a>
-        </div>
-        <div class="bug-rows" id="openBugsList"></div>
-      </div>
-
-      <div class="ref-section">
-        <div class="ref-sec-hdr">
-          <div class="ref-sec-meta"><div class="ref-sec-title">💡 Pending Features</div><div class="ref-sec-desc">Committed items not yet built</div></div>
-        </div>
-        <div class="bug-rows" id="pendingList"></div>
       </div>
 
       <div class="ref-section">
@@ -562,36 +556,36 @@ td{padding:0.7rem 0.75rem;font-size:0.88rem;vertical-align:middle;}
         </div>
         <div class="ceo-list" id="ceoList"></div>
       </div>
+    </div>
+  </div>
 
-      <div class="action-section">
+  <!-- ── TAB: BUG LOG ── -->
+  <div id="panel-bugs" style="display:none;">
+    <div class="action-wrap">
+      <div class="page-hd"><div class="page-title">Global <span>Bug Log</span></div></div>
+      <div style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:1.5rem;">Captured from all properties via floating button</div>
+      
+      <div class="action-section" style="margin-bottom:2rem;">
         <div class="action-hd">
-          <span class="action-title">Notes</span>
-          <span class="action-sub">Auto-saved locally</span>
+          <span class="action-title" style="color:var(--red);">Open Bugs</span>
+          <span class="action-sub" id="openBugLogCount">0</span>
         </div>
-        <textarea class="notes-ta" id="notesArea" placeholder="Thoughts, ideas, session notes…" oninput="autoSaveNotes()"></textarea>
-        <div class="notes-saved" id="notesSaved">Saved</div>
+        <div id="bugLogOpen" style="display:flex;flex-direction:column;gap:1rem;"></div>
       </div>
 
       <div class="action-section">
-        <div class="action-hd">
-          <span class="action-title">Quick Bug Log</span>
-          <span class="action-sub">Stored locally · migrate to /platform/bugs manually</span>
+        <div class="action-hd" style="cursor:pointer;" onclick="document.getElementById('bugLogCompletedWrap').style.display = document.getElementById('bugLogCompletedWrap').style.display==='none'?'block':'none'">
+          <span class="action-title" style="color:var(--green);">Completed <span style="font-size:.6em;color:var(--muted);">[Click to expand/collapse]</span></span>
+          <span class="action-sub" id="compBugLogCount">0</span>
         </div>
-        <div class="bug-form">
-          <input type="text" id="bugTitle" placeholder="Bug title (required)">
-          <textarea id="bugDesc" placeholder="Describe the bug — steps to reproduce, what happened, what you expected…"></textarea>
-          <div class="bug-shot-row">
-            <span class="bug-shot-lbl">Screenshot</span>
-            <input type="file" id="bugShot" accept="image/*" onchange="previewShot(this)">
-            <img id="bugShotThumb" class="bug-shot-thumb" alt="">
-          </div>
-          <button class="btn-bug-log" onclick="logBug()">Log Bug</button>
+        <div id="bugLogCompletedWrap" style="display:none;margin-top:1rem;">
+          <div id="bugLogCompleted" style="display:flex;flex-direction:column;gap:1rem;"></div>
         </div>
-        <div class="quick-bugs-list" id="quickBugsList"></div>
       </div>
     </div>
+  </div>
 
-    <div id="gradeModal" class="modal-overlay" style="display:none;" onclick="if(event.target===this)closeModal()">
+  <div id="gradeModal" class="modal-overlay" style="display:none;" onclick="if(event.target===this)closeModal()">
       <div class="modal-box">
         <div class="modal-hd">
           <div>
@@ -675,10 +669,18 @@ function filterTourneys(q) {
     r.style.display = !q || r.textContent.toLowerCase().includes(q.toLowerCase()) ? '' : 'none';
   });
 }
+let compAccountsData = [];
+let compSortCol = 'first_login';
+let compSortAsc = false;
+
+function sortComps(col) {
+  if (compSortCol === col) compSortAsc = !compSortAsc;
+  else { compSortCol = col; compSortAsc = false; }
+  renderCompAccounts();
+}
+
 function filterComps(q) {
-  document.querySelectorAll('#compBody tr').forEach(r => {
-    r.style.display = !q || r.textContent.toLowerCase().includes(q.toLowerCase()) ? '' : 'none';
-  });
+  renderCompAccounts();
 }
 async function loadTournaments() {
   const [{ data: tourneys },{ data: players },{ data: rounds }] = await Promise.all([
@@ -742,17 +744,45 @@ async function revokeComp(email) {
 }
 async function loadCompAccounts() {
   const { data: res } = await sb.functions.invoke('platform-action', { body:{ action:'list' } });
-  const data = res?.data;
+  compAccountsData = res?.data || [];
+  renderCompAccounts();
+}
+
+function renderCompAccounts() {
   const tbody = document.getElementById('compBody'), empty = document.getElementById('compEmpty');
-  if (!data?.length) { tbody.innerHTML=''; empty.style.display='block'; return; }
+  const searchInput = document.querySelector('input[placeholder="Search by email…"]');
+  const q = searchInput ? searchInput.value.toLowerCase() : '';
+  
+  let data = compAccountsData.filter(a => !q || a.email.toLowerCase().includes(q));
+  
+  data.sort((a, b) => {
+    let va, vb;
+    if (compSortCol === 'email') { va = a.email; vb = b.email; }
+    else if (compSortCol === 'status') { va = a.billing_status; vb = b.billing_status; }
+    else if (compSortCol === 'tourneys') { va = a.tourneys_count || 0; vb = b.tourneys_count || 0; }
+    else if (compSortCol === 'rounds') { va = a.rounds_count || 0; vb = b.rounds_count || 0; }
+    else if (compSortCol === 'first_login') { va = new Date(a.first_login||a.created_at).getTime(); vb = new Date(b.first_login||b.created_at).getTime(); }
+    else if (compSortCol === 'last_login') { va = a.last_login ? new Date(a.last_login).getTime() : 0; vb = b.last_login ? new Date(b.last_login).getTime() : 0; }
+    
+    if (va < vb) return compSortAsc ? -1 : 1;
+    if (va > vb) return compSortAsc ? 1 : -1;
+    return 0;
+  });
+
+  if (!data.length) { tbody.innerHTML=''; empty.style.display='block'; return; }
   empty.style.display='none';
+  
   tbody.innerHTML = data.map(a => {
-    const created = new Date(a.created_at).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+    const firstLogin = new Date(a.first_login||a.created_at).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+    const lastLogin = a.last_login ? new Date(a.last_login).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) : 'Never';
     const sc = a.billing_status==='comped'?'var(--green)':a.billing_status==='active'?'var(--gold)':'rgba(240,230,204,0.25)';
     return `<tr>
       <td><div class="t-owner">${esc(a.email)}</div></td>
       <td><span class="badge" style="color:${sc};border-color:${sc}40;">${esc(a.billing_status)}</span></td>
-      <td><div class="t-date">${created}</div></td>
+      <td><div class="t-owner" style="text-align:center">${a.tourneys_count || 0}</div></td>
+      <td><div class="t-owner" style="text-align:center">${a.rounds_count || 0}</div></td>
+      <td><div class="t-date">${firstLogin}</div></td>
+      <td><div class="t-date">${lastLogin}</div></td>
       <td><div class="actions"><button class="btn-action btn-delete" onclick="revokeComp('${esc(a.email)}')">Revoke</button></div></td>
     </tr>`;
   }).join('');
@@ -1159,31 +1189,8 @@ document.getElementById('slugInput').addEventListener('input', e => {
 });
 
 /* ══════════════════════ REFERENCE ══════════════════════ */
-const OPEN_BUGS = [
-  { type:'open', text:'Bova formats unconfirmed: Day1=stroke, Day2=scramble, Day3=best_ball seeded by guess. Verify with Chris Bova before tournament runs.', meta:'BLOCKED · Human verification required' },
-];
-const PENDING_FEATURES = [
-  { type:'blocked', text:'Stripe payment gate: activate at reg_open flip. BLOCKED — waiting on Rob to form LLC.', meta:'BLOCKED · Waiting on LLC formation' },
-  { type:'pending', text:'RLS hardening: permissive policies on players, scores, push_subscriptions — required before Stripe goes live.', meta:'See SECURITY_PLAN.md for full details' },
-  { type:'pending', text:'Supabase edge functions deploy: create-checkout + send-push security fixes committed but NOT yet deployed to Supabase.', meta:'Run: npx supabase functions deploy create-checkout --project-ref jllugkiojeoopitdvzsa' },
-  { type:'pending', text:'Test scores: other test tourneys need seeded scores for leaderboard/scorecard regression testing.', meta:'Low priority' },
-  { type:'pending', text:'Tournament series concept: one brand → many events/years. Schema + UX TBD.', meta:'Future feature' },
-];
 function renderReference() {
-  const obList = document.getElementById('openBugsList');
-  const countEl = document.getElementById('openBugCount');
-  if (countEl) countEl.textContent = ` (${OPEN_BUGS.length})`;
-  function bugRowHtml(b) {
-    return '<div class="bug-row ' + esc(b.type) + '">'
-      + '<div class="bug-row-text">' + esc(b.text) + '</div>'
-      + (b.meta ? '<div class="bug-row-meta">' + esc(b.meta) + '</div>' : '')
-      + '</div>';
-  }
-  if (obList) obList.innerHTML = OPEN_BUGS.length
-    ? OPEN_BUGS.map(bugRowHtml).join('')
-    : '<div class="bug-row pending"><div class="bug-row-text" style="color:var(--green)">&#x2713; No open bugs.</div></div>';
-  const pfList = document.getElementById('pendingList');
-  if (pfList) pfList.innerHTML = PENDING_FEATURES.map(bugRowHtml).join('');
+  // Empty now, or we can just leave it as a no-op if nothing needs dynamic rendering in Reference
 }
 
 /* ══════════════════════ ACTION BOARD ══════════════════════ */
@@ -1311,52 +1318,71 @@ function toggleCeoTask(id){
   let checked={};try{checked=JSON.parse(localStorage.getItem('ceo_tasks')||'{}');}catch{}
   checked[id]=!checked[id];localStorage.setItem('ceo_tasks',JSON.stringify(checked));loadCeoTasks();
 }
-let notesSaveTimer=null;
-function initNotes(){const ta=document.getElementById('notesArea');if(ta)ta.value=localStorage.getItem('ops_notes')||'';}
-function autoSaveNotes(){
-  clearTimeout(notesSaveTimer);
-  notesSaveTimer=setTimeout(()=>{
-    localStorage.setItem('ops_notes',document.getElementById('notesArea').value);
-    const el=document.getElementById('notesSaved');el.style.display='block';
-    setTimeout(()=>el.style.display='none',1500);
-  },600);
+window.renderBugLog = function() {
+  const openWrap = document.getElementById('bugLogOpen');
+  const compWrap = document.getElementById('bugLogCompleted');
+  const openCount = document.getElementById('openBugLogCount');
+  const compCount = document.getElementById('compBugLogCount');
+  if (!openWrap || !compWrap) return;
+  
+  let bugs = [];
+  try { bugs = JSON.parse(localStorage.getItem('gks_bugs') || '[]'); } catch(e){}
+  
+  // Merge old quick_bugs if they exist, then clear them
+  try {
+    const oldBugs = JSON.parse(localStorage.getItem('quick_bugs') || '[]');
+    if (oldBugs.length) {
+      oldBugs.forEach(b => {
+        bugs.push({ id:'bug_'+b.id, title:b.title, desc:b.desc, img:b.shot, date:new Date(b.date).toISOString(), status:'open', url:'Legacy' });
+      });
+      localStorage.removeItem('quick_bugs');
+      localStorage.setItem('gks_bugs', JSON.stringify(bugs));
+    }
+  } catch(e){}
+  
+  const openBugs = bugs.filter(b => b.status === 'open');
+  const compBugs = bugs.filter(b => b.status === 'completed');
+  
+  if (openCount) openCount.textContent = openBugs.length;
+  if (compCount) compCount.textContent = compBugs.length;
+  
+  const toHtml = (b) => {
+    const d = new Date(b.date).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric',hour:'2-digit',minute:'2-digit'});
+    return '<div class="qb-item" style="background:var(--card);border:1px solid var(--border);border-radius:8px;padding:1rem;display:flex;gap:1rem;align-items:flex-start;">'
+      + '<div style="flex:1;"><div style="font-family:\'Barlow Condensed\',sans-serif;font-weight:700;font-size:1.1rem;color:var(--text);margin-bottom:.3rem;">' + esc(b.title) + '</div>'
+      + (b.desc ? '<div style="font-size:.85rem;color:var(--muted);line-height:1.5;margin-bottom:.75rem;white-space:pre-wrap;">' + esc(b.desc) + '</div>' : '')
+      + '<div style="font-family:\'DM Mono\',monospace;font-size:.6rem;color:rgba(240,230,204,0.3);">' + d + (b.url ? ' · ' + esc(b.url) : '') + '</div>'
+      + (b.img ? '<img src="' + b.img + '" style="max-height:120px;border-radius:6px;margin-top:.75rem;cursor:pointer;border:1px solid rgba(255,255,255,0.1);" onclick="window.open(this.src)">' : '')
+      + '</div>'
+      + '<div style="display:flex;flex-direction:column;gap:.5rem;">'
+      + (b.status === 'open' 
+          ? '<button onclick="toggleBugStatus(\'' + b.id + '\',\'completed\')" style="background:none;border:1px solid rgba(58,158,95,0.4);color:var(--green);padding:.3rem .6rem;border-radius:4px;cursor:pointer;font-family:\'Barlow Condensed\',sans-serif;font-size:.7rem;text-transform:uppercase;">Mark Done</button>' 
+          : '<button onclick="toggleBugStatus(\'' + b.id + '\',\'open\')" style="background:none;border:1px solid rgba(240,230,204,0.2);color:var(--muted);padding:.3rem .6rem;border-radius:4px;cursor:pointer;font-family:\'Barlow Condensed\',sans-serif;font-size:.7rem;text-transform:uppercase;">Reopen</button>')
+      + '<button onclick="deleteBug(\'' + b.id + '\')" style="background:none;border:1px solid rgba(200,80,60,0.3);color:var(--red);padding:.3rem .6rem;border-radius:4px;cursor:pointer;font-family:\'Barlow Condensed\',sans-serif;font-size:.7rem;text-transform:uppercase;">Delete</button>'
+      + '</div>'
+      + '</div>';
+  };
+  
+  openWrap.innerHTML = openBugs.length ? openBugs.map(toHtml).join('') : '<div style="padding:2rem;text-align:center;color:var(--green);font-family:\'DM Mono\',monospace;font-size:.7rem;text-transform:uppercase;letter-spacing:.1em;">&#x2713; All caught up!</div>';
+  compWrap.innerHTML = compBugs.length ? compBugs.map(toHtml).join('') : '<div style="padding:1rem;color:var(--muted);font-family:\'DM Mono\',monospace;font-size:.65rem;">No completed bugs yet.</div>';
 }
-let bugShotData=null;
-function previewShot(input){
-  const file=input.files[0];
-  if(!file){bugShotData=null;document.getElementById('bugShotThumb').style.display='none';return;}
-  const reader=new FileReader();
-  reader.onload=e=>{bugShotData=e.target.result;const t=document.getElementById('bugShotThumb');t.src=bugShotData;t.style.display='block';};
-  reader.readAsDataURL(file);
+
+window.toggleBugStatus = function(id, status) {
+  try {
+    let bugs = JSON.parse(localStorage.getItem('gks_bugs') || '[]');
+    let b = bugs.find(x => x.id === id);
+    if (b) { b.status = status; localStorage.setItem('gks_bugs', JSON.stringify(bugs)); renderBugLog(); }
+  } catch(e){}
 }
-function getQuickBugs(){try{return JSON.parse(localStorage.getItem('quick_bugs')||'[]');}catch{return[];}}
-function logBug(){
-  const title=document.getElementById('bugTitle').value.trim();
-  if(!title){document.getElementById('bugTitle').focus();return;}
-  const desc=document.getElementById('bugDesc').value.trim();
-  const bugs=getQuickBugs();
-  bugs.unshift({id:Date.now(),title,desc,shot:bugShotData||null,
-    date:new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric',hour:'2-digit',minute:'2-digit'})});
-  localStorage.setItem('quick_bugs',JSON.stringify(bugs));
-  document.getElementById('bugTitle').value='';document.getElementById('bugDesc').value='';
-  document.getElementById('bugShot').value='';document.getElementById('bugShotThumb').style.display='none';
-  bugShotData=null;renderQuickBugs();
-}
-function deleteQuickBug(id){
-  localStorage.setItem('quick_bugs',JSON.stringify(getQuickBugs().filter(b=>b.id!==id)));renderQuickBugs();
-}
-function renderQuickBugs(){
-  const list=document.getElementById('quickBugsList');if(!list)return;
-  const bugs=getQuickBugs();
-  if(!bugs.length){list.innerHTML='<div class="qb-empty">No bugs logged.</div>';return;}
-  list.innerHTML=bugs.map(b=>'<div class="qb-item">'
-    +'<div class="qb-body"><div class="qb-title">'+esc(b.title)+'</div>'
-    +(b.desc?'<div class="qb-desc">'+esc(b.desc)+'</div>':'')
-    +'<div class="qb-date">'+esc(b.date)+'</div>'
-    +(b.shot?'<img class="qb-shot" src="'+b.shot+'" alt="screenshot" onclick="window.open(this.src)" title="Click to open full size">':'')
-    +'</div>'
-    +'<button class="qb-del" onclick="deleteQuickBug('+b.id+')" title="Delete">✕</button>'
-    +'</div>').join('');
+
+window.deleteBug = function(id) {
+  if (!confirm('Permanently delete this bug?')) return;
+  try {
+    let bugs = JSON.parse(localStorage.getItem('gks_bugs') || '[]');
+    bugs = bugs.filter(x => x.id !== id);
+    localStorage.setItem('gks_bugs', JSON.stringify(bugs));
+    renderBugLog();
+  } catch(e){}
 }
 
 /* ══ INIT ══ */
@@ -1365,7 +1391,13 @@ document.getElementById('slugInput').value=clSlug;
 renderChecklist();
 (async()=>{
   const { data:{ session } } = await sb.auth.getSession();
-  if (session?.user?.email===PLATFORM_EMAIL) showDashboard(session.user.email);
+  if (session?.user?.email===PLATFORM_EMAIL) {
+    showDashboard(session.user.email);
+    // Poll for changes to keep it seamless
+    setInterval(loadArtifacts, 5000);
+    setInterval(loadGrades, 10000);
+    setInterval(renderBugLog, 2000); // UI poll for bugs logged from FAB
+  }
 })();
 </script>
 </body>
