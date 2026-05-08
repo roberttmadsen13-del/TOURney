@@ -1,7 +1,7 @@
 {
   "$schema": "https://tourney.greenskeeper.studio/qa-index-schema.json",
   "version": 1,
-  "updated_at": "2026-05-07T12:00:00Z",
+  "updated_at": "2026-05-07T18:00:00Z",
   "description": "Canonical registry of all TOURney plans, reviews, audits, and QA artifacts. The /platform Artifacts tab renders from this file. Skills (e.g. tourney-review) append new entries when they generate output.",
   "entries": [
     {
@@ -54,6 +54,19 @@
       "url": "/platform/5-7-26-plan-security",
       "file": "platform/5-7-26-plan-security.html",
       "tags": ["plan", "security"],
+      "status": "active"
+    },
+    {
+      "id": "runbook-security-2026-05-07",
+      "category": "runbook",
+      "title": "Security Runbook · May 7, 2026",
+      "summary": "Step-by-step operational runbook for the 5-7-26 security hardening plan. 9 steps, ~5h. Covers migration 012 (invitations/player_accounts RLS), send-install-email auth gate, accept-invitation edge function, parseMentions XSS fix, safeUrl() admin fix, magic link auth, CSP unsafe-inline removal. Each step includes exact SQL/commands, verification checkpoint, and rollback procedure.",
+      "date": "2026-05-07",
+      "updated": "2026-05-07",
+      "author": "Claude Sonnet 4.6",
+      "url": "/platform/5-7-26-runbook-security",
+      "file": "platform/5-7-26-runbook-security.html",
+      "tags": ["runbook", "security"],
       "status": "active"
     },
     {

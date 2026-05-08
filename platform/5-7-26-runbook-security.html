@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TOURney — Security Runbook · May 7, 2026</title>
+<style>
+  :root {
+    --gold: #c09030; --gold-light: #d4a840; --gold-dim: rgba(192,144,48,0.18);
+    --bg: #0d0a05; --surface: #151009; --card: #1c140a; --card2: #221a0e;
+    --border: rgba(192,144,48,0.22); --muted: #7a6a54; --text: #e8dcc8;
+    --red: #c0392b; --green: #27ae60; --blue: #2980b9; --orange: #e67e22; --purple: #8e44ad;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { font-family: -apple-system,'Segoe UI',system-ui,sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; font-size: 15px; }
+  nav { position: sticky; top: 0; z-index: 100; background: rgba(13,10,5,0.96); border-bottom: 1px solid var(--border); backdrop-filter: blur(12px); padding: 0.6rem 1.5rem; display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
+  .nav-brand { color: var(--gold); font-weight: 700; font-size: 1rem; letter-spacing: 0.05em; white-space: nowrap; }
+  .nav-brand span { color: var(--muted); font-weight: 400; font-size: 0.8rem; margin-left: 0.4rem; }
+  .nav-links { display: flex; gap: 0.2rem; flex-wrap: wrap; margin-left: auto; }
+  .nav-links a { color: var(--muted); text-decoration: none; font-size: 0.78rem; padding: 0.3rem 0.55rem; border-radius: 4px; transition: all 0.15s; white-space: nowrap; }
+  .nav-links a:hover { color: var(--gold); background: var(--gold-dim); }
+  .hero { padding: 3.5rem 1.5rem 2.5rem; text-align: center; border-bottom: 1px solid var(--border); background: linear-gradient(180deg,rgba(192,144,48,0.06) 0%,transparent 100%); }
+  .hero-eyebrow { display: inline-block; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold); border: 1px solid var(--border); border-radius: 20px; padding: 0.25rem 0.85rem; margin-bottom: 1.2rem; }
+  .hero h1 { font-size: clamp(1.8rem,4vw,2.8rem); font-weight: 800; color: #fff; margin-bottom: 0.5rem; }
+  .hero h1 span { color: var(--gold); }
+  .hero-sub { color: var(--muted); max-width: 640px; margin: 0 auto 1.5rem; font-size: 0.95rem; }
+  .hero-meta { display: flex; gap: 1.5rem; justify-content: center; flex-wrap: wrap; font-size: 0.78rem; color: var(--muted); }
+  .wrapper { max-width: 1000px; margin: 0 auto; padding: 0 1.5rem; }
+  section { padding: 3rem 0; border-bottom: 1px solid var(--border); }
+  section:last-child { border-bottom: none; }
+  .section-header { margin-bottom: 2rem; }
+  .section-eyebrow { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.4rem; }
+  .section-title { font-size: 1.5rem; font-weight: 800; color: #fff; margin-bottom: 0.4rem; }
+  .section-desc { color: var(--muted); font-size: 0.88rem; max-width: 660px; }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 1.25rem 1.4rem; margin-bottom: 0.75rem; }
+  .card-title { font-size: 0.88rem; font-weight: 700; color: var(--gold); margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
+  .card p, .card li { font-size: 0.86rem; color: var(--text); margin-bottom: 0.3rem; }
+  .card ul, .card ol { padding-left: 1.2rem; }
+  .card li { margin-bottom: 0.5rem; }
+  .grid-2 { display: grid; grid-template-columns: repeat(auto-fit,minmax(300px,1fr)); gap: 0.75rem; }
+  .pill { display: inline-block; font-size: 0.68rem; font-weight: 700; letter-spacing: 0.06em; padding: 0.18rem 0.55rem; border-radius: 20px; text-transform: uppercase; }
+  .pill-green  { background: rgba(39,174,96,0.15);  color: var(--green);  border: 1px solid rgba(39,174,96,0.3); }
+  .pill-red    { background: rgba(192,57,43,0.15);  color: var(--red);    border: 1px solid rgba(192,57,43,0.3); }
+  .pill-orange { background: rgba(230,126,34,0.15); color: var(--orange); border: 1px solid rgba(230,126,34,0.3); }
+  .pill-blue   { background: rgba(41,128,185,0.15); color: var(--blue);   border: 1px solid rgba(41,128,185,0.3); }
+  .pill-gold   { background: rgba(192,144,48,0.18); color: var(--gold);   border: 1px solid rgba(192,144,48,0.3); }
+  code { font-family: 'Consolas','Monaco',monospace; background: rgba(255,255,255,0.07); padding: 0.1rem 0.3rem; border-radius: 3px; font-size: 0.82em; color: var(--gold-light); }
+  pre  { font-family: 'Consolas','Monaco',monospace; background: rgba(255,255,255,0.04); border: 1px solid var(--border); border-radius: 6px; padding: 0.8rem 1rem; font-size: 0.78rem; color: var(--gold-light); overflow-x: auto; margin: 0.5rem 0; white-space: pre; }
+  .score-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(150px,1fr)); gap: 0.6rem; margin-bottom: 1.5rem; }
+  .score-cell { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 1rem; text-align: center; }
+  .score-num   { font-size: 2rem; font-weight: 900; line-height: 1; margin-bottom: 0.2rem; }
+  .score-label { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); }
+  .score-red    { color: var(--red); }
+  .score-orange { color: var(--orange); }
+  .score-green  { color: var(--green); }
+  .score-gold   { color: var(--gold); }
+  .score-blue   { color: var(--blue); }
+
+  /* Step items */
+  .step { background: var(--card); border: 1px solid var(--border); border-radius: 8px; margin-bottom: 1rem; overflow: hidden; }
+  .step-header { display: flex; align-items: center; gap: 0.8rem; padding: 0.9rem 1.2rem; border-bottom: 1px solid var(--border); background: var(--surface); flex-wrap: wrap; }
+  .step-num { font-size: 0.7rem; font-weight: 800; font-family: 'Consolas',monospace; background: var(--gold-dim); color: var(--gold); border: 1px solid var(--border); border-radius: 4px; padding: 0.15rem 0.45rem; min-width: 2rem; text-align: center; }
+  .step-title { font-size: 0.92rem; font-weight: 700; color: #fff; flex: 1; }
+  .step-time { font-size: 0.72rem; color: var(--muted); font-family: 'Consolas',monospace; margin-left: auto; white-space: nowrap; }
+  .step-body { padding: 1rem 1.2rem; }
+  .step-body p { font-size: 0.84rem; color: var(--text); margin-bottom: 0.5rem; }
+  .step-body ul, .step-body ol { padding-left: 1.2rem; margin-bottom: 0.5rem; }
+  .step-body li { font-size: 0.84rem; color: var(--text); margin-bottom: 0.35rem; }
+  .step-verify { background: rgba(39,174,96,0.06); border: 1px solid rgba(39,174,96,0.2); border-radius: 6px; padding: 0.65rem 0.9rem; margin-top: 0.75rem; }
+  .step-verify-label { font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--green); margin-bottom: 0.3rem; }
+  .step-verify p, .step-verify li { font-size: 0.8rem; color: var(--text); margin-bottom: 0.2rem; }
+  .step-verify ul { padding-left: 1rem; }
+  .step-rollback { background: rgba(192,57,43,0.06); border: 1px solid rgba(192,57,43,0.2); border-radius: 6px; padding: 0.65rem 0.9rem; margin-top: 0.5rem; }
+  .step-rollback-label { font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--red); margin-bottom: 0.3rem; }
+  .step-rollback p, .step-rollback li { font-size: 0.8rem; color: var(--text); margin-bottom: 0.2rem; }
+  .phase-header { font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; padding: 0.4rem 0; margin: 1.5rem 0 0.75rem; border-bottom: 1px solid var(--border); }
+  .phase-critical { color: #c0392b; }
+  .phase-high     { color: var(--orange); }
+  .phase-prelaunch { color: var(--gold); }
+  footer { border-top: 1px solid var(--border); padding: 1.5rem; text-align: center; color: var(--muted); font-size: 0.75rem; }
+  footer span { color: var(--gold); }
+  @media (max-width: 600px) { .nav-links { display: none; } .hero { padding: 2rem 1rem 1.5rem; } section { padding: 2rem 0; } }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-brand">TOURney <span>by Greenskeeper Studios</span></div>
+  <div class="nav-links">
+    <a href="/platform">⬡ Operations</a>
+    <a href="/platform/5-7-26-plan-security">Security Plan</a>
+    <a href="/platform/5-7-26-claude-review-security">Security Review</a>
+    <a href="#prereqs">Prerequisites</a>
+    <a href="#procedure">Procedure</a>
+    <a href="#verify">Verification</a>
+    <a href="#rollback">Rollback</a>
+    <a href="#escalation">Escalation</a>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="hero-eyebrow">Security Operations Runbook</div>
+  <h1><span>TOURney</span> — Security Runbook</h1>
+  <p class="hero-sub">Step-by-step procedure to close all findings from the May 7 security review. Follow in order. Verify each step before proceeding. Rollback SQL provided for every migration.</p>
+  <div class="hero-meta">
+    <span>📅 May 7, 2026</span>
+    <span>🤖 claude-sonnet-4-6</span>
+    <span>⏱ ~5 hours total</span>
+    <span>🔴 Risk: HIGH (production DB + edge functions)</span>
+    <span>📎 <a href="/platform/5-7-26-plan-security" style="color:var(--gold)">Security Plan</a></span>
+  </div>
+</div>
+
+<section id="focus">
+<div class="wrapper">
+
+  <div class="score-grid">
+    <div class="score-cell">
+      <div class="score-num score-red">9</div>
+      <div class="score-label">Total Steps</div>
+    </div>
+    <div class="score-cell">
+      <div class="score-num score-red">3</div>
+      <div class="score-label">Critical Ops</div>
+    </div>
+    <div class="score-cell">
+      <div class="score-num score-orange">3</div>
+      <div class="score-label">High Ops</div>
+    </div>
+    <div class="score-cell">
+      <div class="score-num score-gold">~5h</div>
+      <div class="score-label">Est. Total Time</div>
+    </div>
+    <div class="score-cell">
+      <div class="score-num score-green">YES</div>
+      <div class="score-label">Rollback Ready</div>
+    </div>
+  </div>
+
+  <!-- ── OVERVIEW ── -->
+  <div class="card">
+    <div class="card-title">Operation Scope</div>
+    <p><strong>What this runbook changes:</strong></p>
+    <ul>
+      <li><strong>Supabase DB (production):</strong> Run migration 012 — drops 3 RLS policies on invitations and player_accounts, creates 2 replacement policies</li>
+      <li><strong>Supabase Edge Functions:</strong> Auth-gate <code>send-install-email</code>. Create new <code>accept-invitation</code> function</li>
+      <li><strong>Client code (deployed via Vercel):</strong> Fix <code>_parseMentions</code> XSS in scoreboard.html + feed.html. Add <code>safeUrl()</code> to admin.html</li>
+    </ul>
+    <p style="margin-top:0.75rem"><strong>What does NOT change:</strong> create-checkout (already correct), stripe-webhook (already correct), players/scores RLS (already hardened in migrations 008–011), anon key (publishable by design)</p>
+  </div>
+
+  <!-- ── SECURITY IMPACT ── -->
+  <div class="card">
+    <div class="card-title">Security Impact</div>
+    <div class="grid-2" style="margin-top:0.5rem">
+      <div>
+        <p style="color:var(--green);font-weight:700;margin-bottom:0.4rem">After this runbook completes:</p>
+        <ul>
+          <li>No unauthenticated user can modify any invitation — RSVP tampering closed</li>
+          <li>No authenticated user can manage other tournaments' invitations</li>
+          <li>Billing plan/status no longer readable by unauthenticated callers</li>
+          <li>send-install-email is no longer an open spam relay</li>
+          <li>Trash talk XSS closed — player A cannot execute scripts in player B's browser via scoreboard</li>
+          <li>Logo URL injection closed in admin panel</li>
+        </ul>
+      </div>
+      <div>
+        <p style="color:var(--red);font-weight:700;margin-bottom:0.4rem">Blast radius if migration 012 fails mid-run:</p>
+        <ul>
+          <li>Invitations table could be left with no policies — all access blocked (RLS enabled, no policy = deny all)</li>
+          <li>Invitation accept flow breaks for players — they get 403</li>
+          <li>Migration is wrapped in BEGIN/COMMIT — partial execution shouldn't happen, but verify after run</li>
+          <li>Rollback SQL provided — can restore original policies in 2 minutes</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+</div>
+</section>
+
+<!-- ── PREREQUISITES ── -->
+<section id="prereqs">
+<div class="wrapper">
+  <div class="section-header">
+    <div class="section-eyebrow">Before You Start</div>
+    <div class="section-title">Prerequisites</div>
+    <div class="section-desc">Complete every item before touching the DB. Do not skip.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Access Checklist</div>
+    <ul>
+      <li>✅ Supabase dashboard access: <code>supabase.com/dashboard</code> → bova-invitational project → SQL Editor</li>
+      <li>✅ Supabase CLI installed and authenticated: <code>supabase --version</code> should return a version. If not: <code>npm install -g supabase</code> then <code>supabase login</code></li>
+      <li>✅ Project linked: from repo root, run <code>supabase status</code> — should show project ID. If not: <code>supabase link --project-ref jllugkiojeoopitdvzsa</code></li>
+      <li>✅ Vercel deploy working: last commit visible at tourney.greenskeeper.studio. Check Vercel dashboard for green deploy status</li>
+      <li>✅ Git working directory clean: <code>git status</code> shows no uncommitted changes before you start</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Backup — Read Current Policies Before Dropping Them</div>
+    <p>Run this query in Supabase SQL Editor and save the output BEFORE running migration 012:</p>
+    <pre>SELECT schemaname, tablename, policyname, permissive, roles, cmd, qual, with_check
+FROM pg_policies
+WHERE tablename IN ('invitations', 'player_accounts')
+ORDER BY tablename, policyname;</pre>
+    <p style="font-size:0.82rem;color:var(--muted);margin-top:0.5rem">Copy the output to a notes doc. This is your reference if rollback is needed.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Git History Audit — Do This First</div>
+    <p>Run before any other step:</p>
+    <pre>git log -p | grep -i service_role</pre>
+    <p style="font-size:0.82rem;margin-top:0.4rem"><strong>If output is empty:</strong> clean — proceed.</p>
+    <p style="font-size:0.82rem"><strong>If output shows a key value:</strong> STOP. Go to Supabase → Settings → API → rotate the service_role key NOW before continuing. Then re-link CLI with new key.</p>
+  </div>
+
+</div>
+</section>
+
+<!-- ── PROCEDURE ── -->
+<section id="procedure">
+<div class="wrapper">
+  <div class="section-header">
+    <div class="section-eyebrow">Step-by-Step</div>
+    <div class="section-title">Procedure</div>
+    <div class="section-desc">Execute in order. Verify each step before moving to the next. Do not batch steps.</div>
+  </div>
+
+  <div class="phase-header phase-critical">Phase 1 — Critical (Day 1)</div>
+
+  <div class="step">
+    <div class="step-header">
+      <span class="step-num">01</span>
+      <span class="pill pill-red">CRITICAL</span>
+      <span class="step-title">Git history audit for service_role key</span>
+      <span class="step-time">5 min</span>
+    </div>
+    <div class="step-body">
+      <p>From the repo root:</p>
+      <pre>git log -p | grep -i service_role</pre>
+      <div class="step-verify">
+        <div class="step-verify-label">Verification</div>
+        <p><strong>PASS:</strong> Command returns empty output. Proceed to step 02.</p>
+        <p><strong>FAIL:</strong> Output shows a key string. Rotate immediately in Supabase → Settings → API → Service Role Key → Reveal → Rotate. Update Supabase CLI auth. Do NOT proceed until rotated.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-header">
+      <span class="step-num">02</span>
+      <span class="pill pill-red">CRITICAL</span>
+      <span class="step-title">Create and apply migration 012 — tighten invitations + player_accounts RLS</span>
+      <span class="step-time">15–20 min</span>
+    </div>
+    <div class="step-body">
+      <p><strong>2a.</strong> Create the migration file:</p>
+      <pre>-- File: migrations/012_tighten_invitations_and_accounts_rls.sql
+
+BEGIN;
+
+-- ── INVITATIONS ──────────────────────────────────────────────────────
+-- Add access_token for invite-link validation (accept-invitation edge function)
+ALTER TABLE invitations ADD COLUMN IF NOT EXISTS access_token uuid DEFAULT gen_random_uuid();
+
+-- Generate tokens for existing rows that have none
+UPDATE invitations SET access_token = gen_random_uuid() WHERE access_token IS NULL;
+
+-- Drop all permissive policies
+DROP POLICY IF EXISTS "anon read invitations"          ON invitations;
+DROP POLICY IF EXISTS "anon update own invitation"     ON invitations;
+DROP POLICY IF EXISTS "auth manage invitations"        ON invitations;
+
+-- Restore anon read (metadata not sensitive, needed for accept flow lookup)
+CREATE POLICY "anon read invitations"
+  ON invitations FOR SELECT TO anon
+  USING (true);
+
+-- Authenticated: owner or admin can manage invitations for their tournament only
+CREATE POLICY "owner or admin manage invitations"
+  ON invitations FOR ALL TO authenticated
+  USING (
+    EXISTS (
+      SELECT 1 FROM tournaments t
+      WHERE t.id = invitations.tournament_id
+        AND (
+          t.owner_email = auth.email()
+          OR EXISTS (
+            SELECT 1 FROM tournament_admins ta
+            WHERE ta.tournament_id = t.id
+              AND ta.player_id = auth.uid()
+          )
+        )
+    )
+  )
+  WITH CHECK (
+    EXISTS (
+      SELECT 1 FROM tournaments t
+      WHERE t.id = invitations.tournament_id
+        AND (
+          t.owner_email = auth.email()
+          OR EXISTS (
+            SELECT 1 FROM tournament_admins ta
+            WHERE ta.tournament_id = t.id
+              AND ta.player_id = auth.uid()
+          )
+        )
+    )
+  );
+
+-- ── PLAYER ACCOUNTS ──────────────────────────────────────────────────
+DROP POLICY IF EXISTS "anon read player_accounts"  ON player_accounts;
+DROP POLICY IF EXISTS "auth read player_accounts"  ON player_accounts;
+
+-- Users read only their own account row
+CREATE POLICY "read own account"
+  ON player_accounts FOR SELECT TO authenticated
+  USING (email = auth.email());
+
+-- Service role (Stripe webhook) bypasses RLS — no policy needed for that path.
+
+COMMIT;</pre>
+      <p><strong>2b.</strong> Apply via Supabase SQL Editor (Dashboard method — safer for production):</p>
+      <ol>
+        <li>Open <a href="https://supabase.com/dashboard" style="color:var(--gold)">supabase.com/dashboard</a> → bova-invitational → SQL Editor</li>
+        <li>Paste the full migration SQL above</li>
+        <li>Click "Run" — watch for errors in the output panel</li>
+        <li>Expected output: <code>ALTER TABLE</code>, <code>UPDATE N</code>, <code>DROP POLICY</code> × 3, <code>CREATE POLICY</code> × 3</li>
+      </ol>
+      <p style="margin-top:0.5rem"><strong>2c.</strong> Commit the migration file to git:</p>
+      <pre>git add migrations/012_tighten_invitations_and_accounts_rls.sql
+git commit -m "migration 012: tighten invitations + player_accounts RLS"
+git push</pre>
+      <div class="step-verify">
+        <div class="step-verify-label">Verification</div>
+        <ul>
+          <li>In SQL Editor, run: <code>SELECT policyname, cmd, roles FROM pg_policies WHERE tablename IN ('invitations','player_accounts') ORDER BY tablename;</code></li>
+          <li>invitations should have exactly 2 policies: <code>anon read invitations</code> (SELECT, anon), <code>owner or admin manage invitations</code> (ALL, authenticated)</li>
+          <li>player_accounts should have exactly 1 policy: <code>read own account</code> (SELECT, authenticated)</li>
+          <li>Test blocked path: from a JS console on the site, run: <code>await window.supabase.from('invitations').update({status:'declined'}).eq('id','any-uuid')</code> — should return RLS error (no matching policy for UPDATE as anon)</li>
+        </ul>
+      </div>
+      <div class="step-rollback">
+        <div class="step-rollback-label">Rollback — if migration breaks the invite flow</div>
+        <pre>BEGIN;
+DROP POLICY IF EXISTS "anon read invitations"              ON invitations;
+DROP POLICY IF EXISTS "owner or admin manage invitations"  ON invitations;
+DROP POLICY IF EXISTS "read own account"                   ON player_accounts;
+
+CREATE POLICY "anon read invitations"
+  ON invitations FOR SELECT TO anon USING (true);
+CREATE POLICY "anon update own invitation"
+  ON invitations FOR UPDATE TO anon USING (true) WITH CHECK (true);
+CREATE POLICY "auth manage invitations"
+  ON invitations FOR ALL TO authenticated USING (true) WITH CHECK (true);
+CREATE POLICY "anon read player_accounts"
+  ON player_accounts FOR SELECT TO anon USING (true);
+COMMIT;</pre>
+        <p>Run rollback SQL in Supabase SQL Editor. Invite flow restored in ~30 seconds.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-header">
+      <span class="step-num">03</span>
+      <span class="pill pill-red">CRITICAL</span>
+      <span class="step-title">Auth-gate send-install-email edge function</span>
+      <span class="step-time">30 min</span>
+    </div>
+    <div class="step-body">
+      <p><strong>3a.</strong> Edit <code>supabase/functions/send-install-email/index.ts</code>. Add auth gate immediately after the CORS OPTIONS handler, before any business logic:</p>
+      <pre>import { createClient } from 'https://esm.sh/@supabase/supabase-js@2?target=deno';
+
+Deno.serve(async (req) => {
+  if (req.method === 'OPTIONS') {
+    return new Response(null, {
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Headers': 'authorization, apikey, content-type',
+      },
+    });
+  }
+
+  // ── AUTH GATE ────────────────────────────────────────────────────────
+  const authHeader = req.headers.get('Authorization');
+  if (!authHeader) return new Response('Unauthorized', { status: 401 });
+
+  const supabase = createClient(
+    Deno.env.get('SUPABASE_URL')!,
+    Deno.env.get('SUPABASE_ANON_KEY')!,
+    { global: { headers: { Authorization: authHeader } } }
+  );
+
+  const { data: { user }, error: authErr } = await supabase.auth.getUser();
+  if (authErr || !user) return new Response('Unauthorized', { status: 401 });
+
+  const player = await req.json();
+  if (!player?.email || !player?.tournament_id) {
+    return new Response('Missing email or tournament_id', { status: 400 });
+  }
+
+  // Verify caller owns the tournament
+  const { data: tourney, error: tErr } = await supabase
+    .from('tournaments')
+    .select('owner_email')
+    .eq('id', player.tournament_id)
+    .single();
+
+  if (tErr || !tourney || tourney.owner_email !== user.email) {
+    return new Response('Forbidden', { status: 403 });
+  }
+
+  // ... rest of existing email-sending logic unchanged ...
+});</pre>
+      <p><strong>3b.</strong> Deploy:</p>
+      <pre>supabase functions deploy send-install-email</pre>
+      <div class="step-verify">
+        <div class="step-verify-label">Verification — test both paths</div>
+        <ul>
+          <li><strong>Blocked (no auth):</strong> <code>curl -X POST https://jllugkiojeoopitdvzsa.supabase.co/functions/v1/send-install-email -H "Content-Type: application/json" -d '{"email":"test@test.com","tournament_id":"fake"}'</code> — must return <code>401 Unauthorized</code></li>
+          <li><strong>Allowed (with auth):</strong> From the admin panel, trigger "Send Install Email" for a real player — email should arrive. (Use your own email for the test.)</li>
+        </ul>
+      </div>
+      <div class="step-rollback">
+        <div class="step-rollback-label">Rollback</div>
+        <p>Revert the file to its previous state and redeploy: <code>git checkout HEAD~1 -- supabase/functions/send-install-email/index.ts &amp;&amp; supabase functions deploy send-install-email</code>. The function will be open again — do this only if the auth gate breaks the admin send flow.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-header">
+      <span class="step-num">04</span>
+      <span class="pill pill-red">CRITICAL</span>
+      <span class="step-title">Create accept-invitation edge function</span>
+      <span class="step-time">2 hr</span>
+    </div>
+    <div class="step-body">
+      <p>Migration 012 dropped the anon update policy on invitations. Players accepting invite links now need this edge function as the write path.</p>
+      <p><strong>4a.</strong> Create the function:</p>
+      <pre>mkdir -p supabase/functions/accept-invitation</pre>
+      <p><strong>4b.</strong> Write <code>supabase/functions/accept-invitation/index.ts</code>:</p>
+      <pre>import { createClient } from 'https://esm.sh/@supabase/supabase-js@2?target=deno';
+
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'apikey, content-type',
+};
+
+function json(data: unknown, status = 200) {
+  return new Response(JSON.stringify(data), {
+    status,
+    headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+  });
+}
+
+Deno.serve(async (req) => {
+  if (req.method === 'OPTIONS') return new Response(null, { headers: corsHeaders });
+
+  // No JWT required — access_token IS the auth proof
+  const { invitation_id, access_token } = await req.json();
+
+  if (!invitation_id || !access_token) {
+    return json({ error: 'Missing invitation_id or access_token' }, 400);
+  }
+
+  // Use service role to bypass RLS — but validate token first
+  const supabase = createClient(
+    Deno.env.get('SUPABASE_URL')!,
+    Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
+  );
+
+  const { data: inv, error: fetchErr } = await supabase
+    .from('invitations')
+    .select('id, access_token, status, email')
+    .eq('id', invitation_id)
+    .single();
+
+  if (fetchErr || !inv) return json({ error: 'Invitation not found' }, 404);
+  if (inv.access_token !== access_token) return json({ error: 'Invalid token' }, 403);
+
+  // Idempotent — already accepted/declined, return current status
+  if (inv.status !== 'pending') return json({ status: inv.status });
+
+  const { error: updateErr } = await supabase
+    .from('invitations')
+    .update({ status: 'accepted' })
+    .eq('id', invitation_id);
+
+  if (updateErr) return json({ error: 'Update failed' }, 500);
+
+  return json({ status: 'accepted', email: inv.email });
+});</pre>
+      <p><strong>4c.</strong> Deploy:</p>
+      <pre>supabase functions deploy accept-invitation</pre>
+      <p><strong>4d.</strong> Update invite email link template in <code>send-install-email</code> (or wherever invitations are sent) to include the token:</p>
+      <pre>-- In invite email body: replace any current accept URL with:
+https://tourney.greenskeeper.studio/t/{slug}/login?invitation_id={id}&token={access_token}
+
+-- In the login/accept page: on load, if ?invitation_id + ?token present, call:
+await supabase.functions.invoke('accept-invitation', {
+  body: { invitation_id, access_token: token }
+});</pre>
+      <div class="step-verify">
+        <div class="step-verify-label">Verification</div>
+        <ul>
+          <li><strong>Valid token:</strong> POST to the function with a real invitation_id + its access_token → returns <code>{"status":"accepted"}</code>. Check DB: invitation row shows status = 'accepted'.</li>
+          <li><strong>Invalid token:</strong> POST with wrong access_token → returns <code>403 Invalid token</code></li>
+          <li><strong>Missing fields:</strong> POST empty body → returns <code>400</code></li>
+          <li><strong>Idempotent:</strong> POST valid token a second time → returns <code>{"status":"accepted"}</code> (no error, no duplicate update)</li>
+        </ul>
+      </div>
+      <div class="step-rollback">
+        <div class="step-rollback-label">Rollback</div>
+        <p>If accept flow is broken and rollback migration was applied (restoring anon update policy), delete or disable the function: <code>supabase functions delete accept-invitation</code>. The old anon-update path will work again.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="phase-header phase-high">Phase 2 — High Priority (Week 1)</div>
+
+  <div class="step">
+    <div class="step-header">
+      <span class="step-num">05</span>
+      <span class="pill pill-orange">HIGH</span>
+      <span class="step-title">Fix _parseMentions XSS — scoreboard.html + feed.html</span>
+      <span class="step-time">15 min</span>
+    </div>
+    <div class="step-body">
+      <p>Find <code>_parseMentions</code> function in both files. Current (unsafe):</p>
+      <pre>function _parseMentions(text) {
+  return text.replace(/@([A-Za-z][A-Za-z '.'\-]*[A-Za-z])/g,
+    '&lt;span class="mention"&gt;@$1&lt;/span&gt;');
+}</pre>
+      <p>Replace with (safe):</p>
+      <pre>function _parseMentions(raw) {
+  const safe = _esc(raw); // HTML-encode BEFORE regex runs
+  return safe.replace(/@([A-Za-z][A-Za-z '.'\-]*[A-Za-z])/g,
+    '&lt;span class="mention"&gt;@$1&lt;/span&gt;');
+}</pre>
+      <p>The <code>_esc()</code> helper already exists in both files. Apply in both <code>scoreboard.html</code> and <code>feed.html</code>. Commit:</p>
+      <pre>git add scoreboard.html feed.html
+git commit -m "fix: escape message text before parseMentions to close XSS"
+git push</pre>
+      <div class="step-verify">
+        <div class="step-verify-label">Verification</div>
+        <ul>
+          <li>In Supabase SQL Editor, insert a test trash talk row: <code>INSERT INTO trash_talk (tournament_id, player_id, player_name, message, ...) VALUES (..., '&lt;script&gt;alert("xss")&lt;/script&gt;')</code></li>
+          <li>Open /t/bova/scoreboard → trash talk section → verify the message renders as literal text <code>&lt;script&gt;...&lt;/script&gt;</code>, not an alert dialog</li>
+          <li>Verify @mentions still render with the highlight span (not broken by the change)</li>
+          <li>Delete test row after verification</li>
+        </ul>
+      </div>
+      <div class="step-rollback">
+        <div class="step-rollback-label">Rollback</div>
+        <p><code>git revert HEAD</code> — restores both files. Mention highlighting still works (just without XSS protection). Only roll back if the change breaks rendering.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-header">
+      <span class="step-num">06</span>
+      <span class="pill pill-orange">HIGH</span>
+      <span class="step-title">Add safeUrl() to admin.html — sanitize logo/image URLs before innerHTML</span>
+      <span class="step-time">30 min</span>
+    </div>
+    <div class="step-body">
+      <p><strong>6a.</strong> Add helper near the top of admin.html's script block:</p>
+      <pre>function safeUrl(u) {
+  if (!u) return '';
+  try {
+    const p = new URL(u);
+    return (p.protocol === 'https:' || p.protocol === 'http:') ? u : '';
+  } catch { return ''; }
+}</pre>
+      <p><strong>6b.</strong> Wrap all <code>url</code> variable uses in innerHTML templates at admin.html:2044 and admin.html:2194:</p>
+      <pre>// Before:
+`... src="${url}" ...`
+
+// After:
+`... src="${safeUrl(url)}" ...`</pre>
+      <p><strong>6c.</strong> Commit:</p>
+      <pre>git add admin.html
+git commit -m "fix: safeUrl() sanitizes logo URLs before innerHTML in admin"
+git push</pre>
+      <div class="step-verify">
+        <div class="step-verify-label">Verification</div>
+        <ul>
+          <li>In admin panel → Design tab → set logo URL to <code>javascript:alert('xss')</code> → save → reload admin page → no alert fires, image fails gracefully (empty src)</li>
+          <li>Set logo URL to a valid <code>https://</code> image URL → verify image renders correctly</li>
+        </ul>
+      </div>
+      <div class="step-rollback">
+        <div class="step-rollback-label">Rollback</div>
+        <p><code>git revert HEAD</code>. Image rendering works as before (without protocol check).</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-header">
+      <span class="step-num">07</span>
+      <span class="pill pill-orange">HIGH</span>
+      <span class="step-title">Run node test.js — full static QA pass</span>
+      <span class="step-time">5 min</span>
+    </div>
+    <div class="step-body">
+      <p>After all code changes are committed, run the static QA suite to confirm no regressions:</p>
+      <pre>cd 'C:\Users\Rob\OneDrive\Desktop\Greenskeeper Studios\Bova Invitational'
+node test.js</pre>
+      <div class="step-verify">
+        <div class="step-verify-label">Verification</div>
+        <ul>
+          <li><strong>PASS:</strong> Output shows <code>0 failures</code>. Warnings about <code>url</code> (admin.html:2044/2194) and <code>tierClass/tierLabel</code> (profile.html) should now be gone after step 06. Confirm warnings are 0 or reduced.</li>
+          <li><strong>FAIL:</strong> Any <code>❌ FAIL</code> line = stop and fix before declaring done. Do not push failing QA.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="phase-header phase-prelaunch">Phase 3 — Pre-Launch</div>
+
+  <div class="step">
+    <div class="step-header">
+      <span class="step-num">08</span>
+      <span class="pill pill-gold">PRE-LAUNCH</span>
+      <span class="step-title">Replace PLATFORM_EMAIL with Supabase magic link auth</span>
+      <span class="step-time">2 hr</span>
+    </div>
+    <div class="step-body">
+      <p>Removes the hardcoded email from platform.html source and eliminates the password brute-force surface.</p>
+      <p><strong>8a.</strong> In platform.html, replace the login form + signInWithPassword logic:</p>
+      <pre>// Remove:
+const PLATFORM_EMAIL = 'robert.t.madsen13@gmail.com';
+// ... password field + signInWithPassword call
+
+// Replace with:
+async function doLogin() {
+  const email = document.getElementById('loginEmail').value.trim().toLowerCase();
+  const { error } = await sb.auth.signInWithOtp({ email });
+  if (error) { showErr(error.message); return; }
+  showMagicLinkSent(email); // show "Check your email" message
+}
+
+// On page load, handle magic link callback:
+sb.auth.onAuthStateChange((event, session) => {
+  if (event === 'SIGNED_IN' && session) showDashboard(session.user.email);
+});</pre>
+      <p><strong>8b.</strong> Remove the password input field from the login HTML. Remove the email pre-filter check (<code>if (email !== PLATFORM_EMAIL)</code>).</p>
+      <p><strong>8c.</strong> Enable magic link in Supabase: Dashboard → Authentication → Email → ensure "Enable Email OTP" is on. Set "OTP expiry" to 1 hour.</p>
+      <div class="step-verify">
+        <div class="step-verify-label">Verification</div>
+        <ul>
+          <li>Open /platform → enter your email → click Sign In → check inbox → click magic link → lands on platform dashboard</li>
+          <li>Confirm source code no longer contains <code>robert.t.madsen13@gmail.com</code>: <code>grep -n "madsen" platform.html</code> should return empty</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-header">
+      <span class="step-num">09</span>
+      <span class="pill pill-gold">PRE-LAUNCH</span>
+      <span class="step-title">Remove CSP unsafe-inline — move inline JS to external files</span>
+      <span class="step-time">2 days</span>
+    </div>
+    <div class="step-body">
+      <p>Largest item. Required for CSP to actually protect against XSS.</p>
+      <ol>
+        <li>For each page: cut the inline <code>&lt;script&gt;...&lt;/script&gt;</code> block into a companion <code>.js</code> file (e.g., <code>admin.html</code> → <code>admin.js</code>). Replace with <code>&lt;script src="/admin.js" defer&gt;&lt;/script&gt;</code>.</li>
+        <li>Verify each page still works after extraction. Check console for errors. Run <code>node test.js</code> after each page.</li>
+        <li>After all pages extracted: remove <code>'unsafe-inline'</code> from <code>script-src</code> in vercel.json.</li>
+        <li>Add to vercel.json headers: <code>"Cross-Origin-Opener-Policy": "same-origin"</code> and <code>"Cross-Origin-Resource-Policy": "same-origin"</code></li>
+        <li>Deploy → verify no CSP violations in browser DevTools console → verify all pages function normally</li>
+      </ol>
+      <div class="step-verify">
+        <div class="step-verify-label">Verification</div>
+        <ul>
+          <li>Browser DevTools → Console → no CSP violation messages on any page</li>
+          <li>DevTools → Network → Response Headers for any .html file → Content-Security-Policy does NOT contain <code>unsafe-inline</code></li>
+          <li>Full happy-path test on every tourney page: home, scoreboard, scorecard, admin, profile, feed</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+</div>
+</section>
+
+<!-- ── SECURITY VERIFICATION ── -->
+<section id="verify">
+<div class="wrapper">
+  <div class="section-header">
+    <div class="section-eyebrow">After All Steps Complete</div>
+    <div class="section-title">Security Verification Suite</div>
+    <div class="section-desc">Run every test below. All must pass before marking this runbook done.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">RLS Verification — Run in Supabase SQL Editor</div>
+    <pre>-- 1. Confirm policy state
+SELECT tablename, policyname, cmd, roles
+FROM pg_policies
+WHERE tablename IN ('invitations', 'player_accounts', 'settings', 'tournaments')
+ORDER BY tablename, policyname;
+
+-- 2. Expected invitations policies:
+--    anon read invitations       | SELECT | {anon}
+--    owner or admin manage ...   | ALL    | {authenticated}
+-- NO "anon update own invitation" | NO "auth manage invitations"
+
+-- 3. Expected player_accounts policies:
+--    read own account            | SELECT | {authenticated}
+-- NO "anon read player_accounts"
+
+-- 4. Test anon cannot update invitations (run as anon, expect RLS error):
+-- (Do this from browser console with anon supabase client — not SQL editor)
+-- await window.supabase.from('invitations').update({status:'declined'}).eq('id','any-uuid')
+-- Expected: { error: { code: "42501", message: "new row violates row-level security policy" } }</pre>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Edge Function Verification — curl commands</div>
+    <pre># send-install-email — must reject unauthenticated
+curl -s -o /dev/null -w "%{http_code}" \
+  -X POST https://jllugkiojeoopitdvzsa.supabase.co/functions/v1/send-install-email \
+  -H "Content-Type: application/json" \
+  -d '{"email":"test@test.com","tournament_id":"fake"}'
+# Expected: 401
+
+# accept-invitation — must reject invalid token
+curl -s -o /dev/null -w "%{http_code}" \
+  -X POST https://jllugkiojeoopitdvzsa.supabase.co/functions/v1/accept-invitation \
+  -H "Content-Type: application/json" \
+  -d '{"invitation_id":"00000000-0000-0000-0000-000000000000","access_token":"bad-token"}'
+# Expected: 404 (not found) or 403 (invalid token)</pre>
+  </div>
+
+  <div class="card">
+    <div class="card-title">XSS Verification — Browser Console Tests</div>
+    <pre>// Test 1: parseMentions XSS closed
+// Open /t/bova/scoreboard
+// In Supabase, temporarily insert a trash talk row with message:
+//   '&lt;img src=x onerror="document.title=XSS"&gt; hello @everyone'
+// Expected: renders as literal text, page title does NOT change to "XSS"
+
+// Test 2: safeUrl() working
+// In admin panel, set logo_url to: javascript:void(document.title='XSS')
+// Expected: image src is empty (''), page title does NOT change
+
+// Test 3: esc() still working for player names
+// Verify scoreboard still renders player names correctly (not broken by step 05 change)</pre>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Header Verification</div>
+    <pre>curl -I https://tourney.greenskeeper.studio/t/bova/scoreboard | grep -E "Strict-Transport|X-Frame|X-Content|CSP|Content-Security"
+
+# Expected:
+# Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+# X-Frame-Options: DENY
+# X-Content-Type-Options: nosniff
+# Content-Security-Policy: default-src 'self'; script-src 'self' ... (no 'unsafe-inline' AFTER step 09)</pre>
+  </div>
+
+</div>
+</section>
+
+<!-- ── ROLLBACK ── -->
+<section id="rollback">
+<div class="wrapper">
+  <div class="section-header">
+    <div class="section-eyebrow">If Something Goes Wrong</div>
+    <div class="section-title">Rollback Procedures</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Migration 012 Rollback — invitations + player_accounts</div>
+    <p>Run in Supabase SQL Editor. Restores original (permissive) policies. Invite accept flow works again immediately.</p>
+    <pre>BEGIN;
+-- Restore invitations to original state
+DROP POLICY IF EXISTS "anon read invitations"              ON invitations;
+DROP POLICY IF EXISTS "owner or admin manage invitations"  ON invitations;
+
+CREATE POLICY "anon read invitations"
+  ON invitations FOR SELECT TO anon USING (true);
+CREATE POLICY "anon update own invitation"
+  ON invitations FOR UPDATE TO anon USING (true) WITH CHECK (true);
+CREATE POLICY "auth manage invitations"
+  ON invitations FOR ALL TO authenticated USING (true) WITH CHECK (true);
+
+-- Restore player_accounts anon read
+DROP POLICY IF EXISTS "read own account"            ON player_accounts;
+
+CREATE POLICY "anon read player_accounts"
+  ON player_accounts FOR SELECT TO anon USING (true);
+
+COMMIT;</pre>
+    <p style="color:var(--orange);font-size:0.82rem;margin-top:0.5rem">Note: the <code>access_token</code> column added in migration 012 is left in place (harmless). Do NOT drop it if accept-invitation edge function is deployed — it uses that column.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Edge Function Rollback</div>
+    <ul>
+      <li><strong>send-install-email:</strong> <code>git checkout HEAD~1 -- supabase/functions/send-install-email/index.ts &amp;&amp; supabase functions deploy send-install-email</code></li>
+      <li><strong>accept-invitation:</strong> <code>supabase functions delete accept-invitation</code> — removes function. Clients get 404. Restore RLS rollback migration above to re-enable anon update path.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Code Rollback (XSS fixes)</div>
+    <pre>git revert HEAD      # reverts last commit (single file)
+git push             # deploys revert to Vercel</pre>
+    <p>Or revert specific commits if multiple were made.</p>
+  </div>
+
+</div>
+</section>
+
+<!-- ── ESCALATION ── -->
+<section id="escalation">
+<div class="wrapper">
+  <div class="section-header">
+    <div class="section-eyebrow">Incident Response</div>
+    <div class="section-title">Escalation</div>
+    <div class="section-desc">If data exposure is confirmed before this runbook is applied.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title" style="color:var(--red)">If Invitations Were Tampered (before migration 012)</div>
+    <ol>
+      <li><strong>Preserve evidence:</strong> Run <code>SELECT * FROM invitations WHERE updated_at > 'suspicious-date' ORDER BY updated_at</code> — export results</li>
+      <li><strong>Assess blast radius:</strong> Which invitations changed status? Were they accepted or declined?</li>
+      <li><strong>Apply migration 012 immediately</strong> — closes the hole</li>
+      <li><strong>Notify affected players:</strong> If a player's RSVP was flipped to declined, send them a direct message to re-accept</li>
+      <li><strong>Document timeline:</strong> When was the issue created (migration 005 date), when discovered, when fixed</li>
+    </ol>
+  </div>
+
+  <div class="card">
+    <div class="card-title" style="color:var(--red)">If Email Abuse via send-install-email (before Step 03)</div>
+    <ol>
+      <li><strong>Immediately:</strong> Disable the function via Supabase dashboard → Edge Functions → send-install-email → Pause</li>
+      <li><strong>Check Resend logs:</strong> resend.com/dashboard → Emails — look for sends you didn't trigger</li>
+      <li><strong>Apply Step 03 fix</strong> and redeploy before re-enabling</li>
+      <li><strong>If Resend account is rate-limited or suspended:</strong> contact Resend support with timeline, explain it was an open relay that's now fixed</li>
+    </ol>
+  </div>
+
+  <div class="card">
+    <div class="card-title" style="color:var(--orange)">If XSS Was Exploited (before Steps 05–06)</div>
+    <ol>
+      <li><strong>Identify the payload:</strong> Check trash_talk table for any message containing <code>&lt;script</code>, <code>onerror=</code>, <code>javascript:</code></li>
+      <li><strong>Delete the malicious row immediately</strong> from Supabase SQL Editor</li>
+      <li><strong>Apply Steps 05–06 immediately</strong> — code fix + deploy</li>
+      <li><strong>Assess what was stolen:</strong> Supabase auth tokens are httpOnly-equivalent (not in JS-accessible storage). localStorage: bova_profile_email (low value). No credit card data. Likely low severity even if exploited.</li>
+      <li><strong>Notify players</strong> if any sessions may have been hijacked (rotate Supabase auth secret to invalidate all sessions)</li>
+    </ol>
+  </div>
+
+</div>
+</section>
+
+<footer>
+  Generated by <span>claude-sonnet-4-6</span> · Greenskeeper Studios Internal · May 7, 2026
+  <br style="margin-top:0.3rem">
+  <a href="/platform/5-7-26-plan-security" style="color:var(--muted);font-size:0.72rem;text-decoration:none">← Security Plan</a>
+  &nbsp;·&nbsp;
+  <a href="/platform/5-7-26-claude-review-security" style="color:var(--muted);font-size:0.72rem;text-decoration:none">Security Review</a>
+  &nbsp;·&nbsp;
+  <a href="/platform" style="color:var(--muted);font-size:0.72rem;text-decoration:none">TOURney Operations</a>
+</footer>
+
+</body>
+</html>
