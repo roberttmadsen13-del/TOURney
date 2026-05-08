@@ -1,9 +1,22 @@
 {
   "$schema": "https://tourney.greenskeeper.studio/qa-index-schema.json",
   "version": 1,
-  "updated_at": "2026-05-07T23:45:00Z",
+  "updated_at": "2026-05-08T00:00:00Z",
   "description": "Canonical registry of all TOURney plans, reviews, audits, and QA artifacts. The /platform Artifacts tab renders from this file. Skills (e.g. tourney-review) append new entries when they generate output.",
   "entries": [
+    {
+      "id": "review-2026-05-08",
+      "category": "review",
+      "title": "Full Platform Review · May 8, 2026",
+      "summary": "Weekly scheduled review. Grades: Architecture A, Feature Depth B+, UX B, Security B-, Business Ready C+, Deployment B+, Performance B, Data Model B. Top open issues: send-push zero auth in production (fix committed not deployed), send-install-email no auth fix, CSP unsafe-inline. Business blocked on LLC formation. 11 migrations tracked. Stripe fully wired. Council of 5: loading skeletons, tournament series schema, ToS/Privacy gate, CI on push, handicap-adjusted scoreboard.",
+      "date": "2026-05-08",
+      "updated": "2026-05-08",
+      "author": "Claude Sonnet 4.6",
+      "url": "/platform/5-8-26-claude-review",
+      "file": "5-8-26-claude-review.html",
+      "tags": ["review", "security", "audit"],
+      "status": "shipped"
+    },
     {
       "id": "plan-token-savings-business-2026-05-07",
       "category": "plan",
