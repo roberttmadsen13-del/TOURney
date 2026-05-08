@@ -72,6 +72,7 @@
     { "source": "/install",    "destination": "/install.html" },
     { "source": "/platform",          "destination": "/platform.html" },
     { "source": "/platform/5-7-26-claude-review-security", "destination": "/platform/5-7-26-claude-review-security.html" },
+    { "source": "/platform/5-7-26-plan-security",          "destination": "/platform/5-7-26-plan-security.html" },
     { "source": "/platform/:slug",    "destination": "/:slug.html" },
     { "source": "/platform-manifest.json", "destination": "/platform-manifest.json" },
     { "source": "/player",            "destination": "/player.html" },
