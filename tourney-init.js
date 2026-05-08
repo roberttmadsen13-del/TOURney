@@ -108,7 +108,6 @@
             'border-top:1px solid rgba(192,144,48,0.2);color:rgba(192,144,48,0.7);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;padding:.65rem 1.25rem'
           );
         }
-        _injectGlobalBugLog();
       }
 
       // Admin link for tournament owners + admins
@@ -402,6 +401,20 @@
       if (window.renderBugLog) window.renderBugLog();
     };
   }
+
+  // Owner-only global Bug FAB — runs on every page (platform, home, tenant), independent of tournament context.
+  function _setupOwnerFab() {
+    db.auth.getSession().then((res) => {
+      const email = res.data?.session?.user?.email;
+      if (email !== 'robert.t.madsen13@gmail.com') return;
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', _injectGlobalBugLog);
+      } else {
+        _injectGlobalBugLog();
+      }
+    });
+  }
+  _setupOwnerFab();
 
   window.tourney = { db, ready: init(), applyBrandColors };
 })();
