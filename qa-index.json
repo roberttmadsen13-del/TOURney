@@ -1,9 +1,22 @@
 {
   "$schema": "https://tourney.greenskeeper.studio/qa-index-schema.json",
   "version": 1,
-  "updated_at": "2026-05-07T18:00:00Z",
+  "updated_at": "2026-05-07T23:30:00Z",
   "description": "Canonical registry of all TOURney plans, reviews, audits, and QA artifacts. The /platform Artifacts tab renders from this file. Skills (e.g. tourney-review) append new entries when they generate output.",
   "entries": [
+    {
+      "id": "review-token-burn-2026-05-07",
+      "category": "review",
+      "title": "Claude Token Burn Review · May 7, 2026",
+      "summary": "Why GKS Anthropic spend is too high and the 5-step plan to cut 25-40% without quality loss. Top wins: cache CLAUDE.md breakpoint, demote Opus->Sonnet/Haiku, swap Read->ctx_execute_file. Sourced from claude-code-guide SME brief + this machine's settings.json audit.",
+      "date": "2026-05-07",
+      "updated": "2026-05-07",
+      "author": "Claude Opus 4.7 + Claude Code Guide SME",
+      "url": "/platform/5-7-26-claude-token-burn-claude-review",
+      "file": "5-7-26-claude-token-burn-claude-review.html",
+      "tags": ["review", "cost", "ops", "claude"],
+      "status": "shipped"
+    },
     {
       "id": "bugs-2026",
       "category": "bugs",

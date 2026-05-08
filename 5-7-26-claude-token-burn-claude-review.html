@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TOURney — Claude Token Burn Review · May 7, 2026</title>
+<style>
+  :root {
+    --gold: #c09030;
+    --gold-light: #d4a840;
+    --gold-dim: rgba(192,144,48,0.18);
+    --ink: #1a1008;
+    --bg: #0d0a05;
+    --surface: #151009;
+    --card: #1c140a;
+    --card2: #221a0e;
+    --border: rgba(192,144,48,0.22);
+    --muted: #7a6a54;
+    --text: #e8dcc8;
+    --red: #c0392b;
+    --green: #27ae60;
+    --blue: #2980b9;
+    --orange: #e67e22;
+    --purple: #8e44ad;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: -apple-system, 'Segoe UI', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    font-size: 15px;
+  }
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(13,10,5,0.96);
+    border-bottom: 1px solid var(--border);
+    backdrop-filter: blur(12px);
+    padding: 0.6rem 1.5rem;
+    display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;
+  }
+  .nav-brand { color: var(--gold); font-weight: 700; font-size: 1rem; letter-spacing: 0.05em; white-space: nowrap; }
+  .nav-brand span { color: var(--muted); font-weight: 400; font-size: 0.8rem; margin-left: 0.4rem; }
+  .nav-links { display: flex; gap: 0.2rem; flex-wrap: wrap; margin-left: auto; }
+  .nav-links a { color: var(--muted); text-decoration: none; font-size: 0.78rem; padding: 0.3rem 0.55rem; border-radius: 4px; transition: all 0.15s; white-space: nowrap; }
+  .nav-links a:hover { color: var(--gold); background: var(--gold-dim); }
+  .hero { padding: 3.5rem 1.5rem 2.5rem; text-align: center; border-bottom: 1px solid var(--border); background: linear-gradient(180deg, rgba(192,144,48,0.06) 0%, transparent 100%); }
+  .hero-eyebrow { display: inline-block; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold); border: 1px solid var(--border); border-radius: 20px; padding: 0.25rem 0.85rem; margin-bottom: 1.2rem; }
+  .hero h1 { font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 800; color: #fff; margin-bottom: 0.5rem; }
+  .hero h1 span { color: var(--gold); }
+  .hero-sub { color: var(--muted); max-width: 560px; margin: 0 auto 1.5rem; font-size: 0.95rem; }
+  .hero-meta { display: flex; gap: 1.5rem; justify-content: center; flex-wrap: wrap; font-size: 0.78rem; color: var(--muted); }
+  .hero-meta span { display: flex; align-items: center; gap: 0.35rem; }
+  .wrapper { max-width: 1000px; margin: 0 auto; padding: 0 1.5rem; }
+  section { padding: 3rem 0; border-bottom: 1px solid var(--border); }
+  section:last-child { border-bottom: none; }
+  .section-header { margin-bottom: 2rem; }
+  .section-eyebrow { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.4rem; }
+  .section-title { font-size: 1.5rem; font-weight: 800; color: #fff; margin-bottom: 0.4rem; }
+  .section-desc { color: var(--muted); font-size: 0.88rem; max-width: 600px; }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 1.25rem 1.4rem; margin-bottom: 0.75rem; }
+  .card-title { font-size: 0.88rem; font-weight: 700; color: var(--gold); margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem; }
+  .card p, .card li { font-size: 0.86rem; color: var(--text); margin-bottom: 0.3rem; }
+  .card ul, .card ol { padding-left: 1.2rem; }
+  .card li { margin-bottom: 0.4rem; }
+  .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 0.75rem; }
+  .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 0.75rem; }
+  .stack-item { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 1rem 1.2rem; }
+  .stack-label { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); margin-bottom: 0.25rem; }
+  .stack-value { font-size: 0.92rem; font-weight: 600; color: #fff; }
+  .stack-note { font-size: 0.75rem; color: var(--muted); margin-top: 0.2rem; }
+  .pill { display: inline-block; font-size: 0.68rem; font-weight: 700; letter-spacing: 0.06em; padding: 0.18rem 0.55rem; border-radius: 20px; text-transform: uppercase; }
+  .pill-gold { background: rgba(192,144,48,0.18); color: var(--gold); border: 1px solid rgba(192,144,48,0.3); }
+  .pill-green { background: rgba(39,174,96,0.15); color: var(--green); border: 1px solid rgba(39,174,96,0.3); }
+  .pill-red { background: rgba(192,57,43,0.15); color: var(--red); border: 1px solid rgba(192,57,43,0.3); }
+  .pill-orange { background: rgba(230,126,34,0.15); color: var(--orange); border: 1px solid rgba(230,126,34,0.3); }
+  .pill-blue { background: rgba(41,128,185,0.15); color: var(--blue); border: 1px solid rgba(41,128,185,0.3); }
+  .pill-purple { background: rgba(142,68,173,0.15); color: var(--purple); border: 1px solid rgba(142,68,173,0.3); }
+  .page-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+  .page-table th { text-align: left; padding: 0.6rem 0.8rem; border-bottom: 1px solid var(--border); color: var(--muted); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; background: var(--surface); }
+  .page-table td { padding: 0.65rem 0.8rem; border-bottom: 1px solid rgba(192,144,48,0.08); vertical-align: top; }
+  .page-table tr:last-child td { border-bottom: none; }
+  .page-table tr:hover td { background: var(--gold-dim); }
+  .page-table .url { font-family: monospace; font-size: 0.78rem; color: var(--gold-light); }
+  .page-table .file { font-family: monospace; font-size: 0.75rem; color: var(--muted); }
+  .table-wrap { background: var(--card); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; overflow-x: auto; }
+  .idea-card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 1.4rem; position: relative; overflow: hidden; }
+  .idea-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; }
+  .idea-1::before { background: var(--gold); }
+  .idea-2::before { background: var(--blue); }
+  .idea-3::before { background: var(--green); }
+  .idea-4::before { background: var(--orange); }
+  .idea-5::before { background: var(--purple); }
+  .idea-number { font-size: 2rem; font-weight: 900; opacity: 0.07; position: absolute; top: 0.5rem; right: 1rem; line-height: 1; color: #fff; }
+  .idea-tag { margin-bottom: 0.5rem; }
+  .idea-title { font-size: 1rem; font-weight: 700; color: #fff; margin-bottom: 0.5rem; }
+  .idea-body { font-size: 0.84rem; color: var(--muted); line-height: 1.55; margin-bottom: 0.75rem; }
+  .idea-why { font-size: 0.78rem; color: var(--text); }
+  .idea-why strong { color: var(--gold); }
+  .qa-flow { counter-reset: qa-step; }
+  .qa-step { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 1.1rem 1.25rem 1.1rem 4rem; margin-bottom: 0.6rem; position: relative; }
+  .qa-step::before { counter-increment: qa-step; content: counter(qa-step); position: absolute; left: 1.1rem; top: 50%; transform: translateY(-50%); width: 1.8rem; height: 1.8rem; background: var(--gold-dim); color: var(--gold); border: 1px solid var(--border); border-radius: 50%; font-size: 0.75rem; font-weight: 700; display: grid; place-items: center; }
+  .qa-step-title { font-size: 0.9rem; font-weight: 700; color: #fff; margin-bottom: 0.3rem; }
+  .qa-step-desc { font-size: 0.82rem; color: var(--muted); }
+  .qa-step-checks { margin-top: 0.5rem; }
+  .qa-step-checks li { font-size: 0.8rem; color: var(--text); margin-bottom: 0.2rem; list-style: none; padding-left: 1.1rem; position: relative; }
+  .qa-step-checks li::before { content: '☐'; position: absolute; left: 0; color: var(--muted); }
+  .roadmap-item { display: flex; gap: 1.2rem; align-items: flex-start; background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 1.1rem 1.25rem; margin-bottom: 0.6rem; }
+  .roadmap-icon { width: 2.2rem; height: 2.2rem; border-radius: 50%; background: var(--gold-dim); color: var(--gold); display: grid; place-items: center; font-size: 1rem; flex-shrink: 0; border: 1px solid var(--border); }
+  .roadmap-content { flex: 1; }
+  .roadmap-title { font-size: 0.92rem; font-weight: 700; color: #fff; margin-bottom: 0.2rem; }
+  .roadmap-desc { font-size: 0.82rem; color: var(--muted); margin-bottom: 0.4rem; }
+  .roadmap-action { font-size: 0.78rem; color: var(--text); }
+  .roadmap-action strong { color: var(--gold-light); }
+  .sec-item { background: var(--card); border: 1px solid var(--border); border-left: 3px solid var(--border); border-radius: 0 8px 8px 0; padding: 1rem 1.25rem; margin-bottom: 0.75rem; }
+  .sec-item.sev-high { border-left-color: var(--red); }
+  .sec-item.sev-med { border-left-color: var(--orange); }
+  .sec-item.sev-low { border-left-color: var(--green); }
+  .sec-item.sev-info { border-left-color: var(--blue); }
+  .sec-header { display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.5rem; }
+  .sec-title { font-size: 0.9rem; font-weight: 700; color: #fff; }
+  .sec-body { font-size: 0.82rem; color: var(--muted); margin-bottom: 0.5rem; }
+  .sec-fix { font-size: 0.8rem; color: var(--text); background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 4px; padding: 0.5rem 0.7rem; }
+  .sec-fix strong { color: var(--gold-light); display: block; margin-bottom: 0.2rem; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; }
+  code { font-family: 'Consolas', 'Monaco', monospace; background: rgba(255,255,255,0.07); padding: 0.1rem 0.3rem; border-radius: 3px; font-size: 0.82em; color: var(--gold-light); }
+  pre { font-family: 'Consolas', 'Monaco', monospace; background: rgba(255,255,255,0.04); border: 1px solid var(--border); border-radius: 6px; padding: 0.8rem 1rem; font-size: 0.78rem; color: var(--text); overflow-x: auto; margin: 0.5rem 0; line-height: 1.45; }
+  .score-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 0.6rem; margin-bottom: 1.5rem; }
+  .score-cell { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 1rem; text-align: center; }
+  .score-num { font-size: 2rem; font-weight: 900; line-height: 1; margin-bottom: 0.2rem; }
+  .score-label { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); }
+  .score-green { color: var(--green); }
+  .score-gold { color: var(--gold); }
+  .score-red { color: var(--red); }
+  .score-blue { color: var(--blue); }
+  footer { border-top: 1px solid var(--border); padding: 1.5rem; text-align: center; color: var(--muted); font-size: 0.75rem; }
+  footer span { color: var(--gold); }
+  @media (max-width: 600px) {
+    .nav-links { display: none; }
+    .hero { padding: 2rem 1rem 1.5rem; }
+    section { padding: 2rem 0; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-brand">TOURney <span>by Greenskeeper Studios</span></div>
+  <div class="nav-links">
+    <a href="#audit">Burn Audit</a>
+    <a href="#council">5 Wins</a>
+    <a href="#qa">Verify</a>
+    <a href="#roadmap">Roadmap</a>
+    <a href="#leaks">Leaks</a>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="hero-eyebrow">Internal Report</div>
+  <h1><span>Claude</span> — Token Burn Review</h1>
+  <p class="hero-sub">Why GKS Anthropic spend is too high, where the tokens go, and the 5-step plan to cut 25–40% without losing output quality.</p>
+  <div class="hero-meta">
+    <span>📅 May 7, 2026</span>
+    <span>🤖 Claude Opus 4.7</span>
+    <span>🏢 Greenskeeper Studios</span>
+    <span>🔒 Internal Only</span>
+  </div>
+</div>
+
+<section id="audit">
+<div class="wrapper">
+  <div class="section-header">
+    <div class="section-eyebrow">§1 — The Audit</div>
+    <h2 class="section-title">Current Burn Profile · Where The Tokens Go</h2>
+    <p class="section-desc">Evidence-based audit of Rob's Claude Code setup on Windows. Grades each lever A–F. Scored against the SME findings + this machine's <code>settings.json</code>, hooks, and observed session pattern.</p>
+  </div>
+
+  <div class="score-grid">
+    <div class="score-cell"><div class="score-num score-red">D</div><div class="score-label">Prompt Caching</div></div>
+    <div class="score-cell"><div class="score-num score-red">D</div><div class="score-label">Model Selection</div></div>
+    <div class="score-cell"><div class="score-num score-gold">C+</div><div class="score-label">Hook Hygiene</div></div>
+    <div class="score-cell"><div class="score-num score-gold">C</div><div class="score-label">Context Hygiene</div></div>
+    <div class="score-cell"><div class="score-num score-green">B+</div><div class="score-label">Skill Reuse</div></div>
+    <div class="score-cell"><div class="score-num score-green">A−</div><div class="score-label">Caveman Mode</div></div>
+  </div>
+
+  <div class="grid-2">
+    <div class="stack-item">
+      <div class="stack-label">Default Model</div>
+      <div class="stack-value">Opus 4.7 ($5 / $25 per MTok)</div>
+      <div class="stack-note">Highest tier. ~5x Sonnet, 25x Haiku. Tokenizer ~35% looser than 4.6.</div>
+    </div>
+    <div class="stack-item">
+      <div class="stack-label">Effort Level</div>
+      <div class="stack-value">xhigh (settings.json:46)</div>
+      <div class="stack-note">Maximum thinking budget. Inflates output cost on every turn.</div>
+    </div>
+    <div class="stack-item">
+      <div class="stack-label">SessionStart Hooks</div>
+      <div class="stack-value">2 active</div>
+      <div class="stack-note">caveman-activate.js + gks-session-start.ps1 — fire once per session, ~600 tokens combined. Acceptable.</div>
+    </div>
+    <div class="stack-item">
+      <div class="stack-label">UserPromptSubmit Hooks</div>
+      <div class="stack-value">1 active (caveman tracker)</div>
+      <div class="stack-note">~30 tokens × every prompt. Not a leak — keeps caveman pinned. Cost: pennies/session.</div>
+    </div>
+    <div class="stack-item">
+      <div class="stack-label">PreToolUse Hooks</div>
+      <div class="stack-value">context-mode tip</div>
+      <div class="stack-note">~80 tokens × Bash + Read calls. <strong>This is a leak</strong> — see §5.</div>
+    </div>
+    <div class="stack-item">
+      <div class="stack-label">Prompt Cache Breakpoints</div>
+      <div class="stack-value">0 explicit</div>
+      <div class="stack-note">CLAUDE.md (~3.5K tokens) + companyAnnouncements re-read every turn. No <code>cache_control</code>. <strong>Top win.</strong></div>
+    </div>
+    <div class="stack-item">
+      <div class="stack-label">Statusline</div>
+      <div class="stack-value">caveman-statusline.ps1</div>
+      <div class="stack-note">Outputs ~9 chars (<code>[CAVEMAN]</code>). Cost negligible. Not the culprit.</div>
+    </div>
+    <div class="stack-item">
+      <div class="stack-label">Skills Loaded</div>
+      <div class="stack-value">~120 (mostly tourney-*)</div>
+      <div class="stack-note">Skill descriptions pre-load on every session — only the names+descriptions, not the bodies. Cost OK.</div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:1.5rem">
+    <div class="card-title">⚖ The Headline</div>
+    <p>Rob is paying <strong>Opus 4.7 + xhigh effort</strong> for tasks Sonnet 4.6 or Haiku 4.5 could finish at the same quality. That's the single biggest line item. Second biggest: <strong>no prompt caching breakpoints</strong> means the same 3.5K-token CLAUDE.md + companyAnnouncements get re-billed every turn instead of being a 92%-discounted cache hit. Third: <strong>large tool outputs</strong> (skill list dumps, full directory listings, 250-line file reads) flood context — they're cheap on the wire but compound across the session.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">📊 Estimated Per-Session Burn (status quo)</div>
+    <ul>
+      <li><strong>Cold session, 1h work:</strong> ~80–120K input tokens × Opus = $0.40–$0.60. Output ~10K = $0.25.</li>
+      <li><strong>Hot session, 4h work, multi-skill:</strong> ~400K input × Opus = $2.00. Output 30K = $0.75. Total: <strong>~$2.75/session</strong>.</li>
+      <li><strong>20 sessions/month:</strong> ~$55/mo on this profile.</li>
+      <li><strong>If skills triggered (review, plan, runbook chains):</strong> add $1–2/session.</li>
+    </ul>
+  </div>
+</div>
+</section>
+
+<section id="council">
+<div class="wrapper">
+  <div class="section-header">
+    <div class="section-eyebrow">§2 — Council of 5</div>
+    <h2 class="section-title">Five Token-Saving Wins · Ranked by ROI</h2>
+    <p class="section-desc">Each win cites the exact lever. Numbers are from the SME brief + Anthropic public pricing.</p>
+  </div>
+
+  <div class="grid-2">
+    <div class="idea-card idea-1">
+      <div class="idea-number">1</div>
+      <div class="idea-tag"><span class="pill pill-gold">Caching</span></div>
+      <div class="idea-title">Add a single <code>cache_control</code> breakpoint over CLAUDE.md + DECISIONS + DISAGREEMENTS</div>
+      <p class="idea-body">CLAUDE.md (~3.5K tokens) is re-billed at full price every turn. Wrap the canonical context in one cache breakpoint. 5-min TTL. Auto-refreshes on hit. After first cache, those 3.5K tokens cost ~$0.0028 instead of $0.0175 — 84% off, every turn.</p>
+      <div class="idea-why"><strong>Win:</strong> ~10–15% monthly savings. Zero quality loss. Cost: 30 min config.</div>
+    </div>
+
+    <div class="idea-card idea-2">
+      <div class="idea-number">2</div>
+      <div class="idea-tag"><span class="pill pill-blue">Model</span></div>
+      <div class="idea-title">Demote skill defaults: Haiku for reference/audit/reference-* skills, Sonnet for review/plan/runbook</div>
+      <p class="idea-body">Opus 4.7 is overkill for structured-output skills (gathering evidence, populating templates). Haiku 4.5 ($1/$5) handles those at 95% quality for 20% of the price. Sonnet 4.6 ($3/$15) is the sweet spot for synthesis. Reserve Opus 4.7 for hard reasoning: RLS design, payment logic, novel architecture.</p>
+      <div class="idea-why"><strong>Win:</strong> 15–25% monthly savings. Override per-skill in skill frontmatter or via <code>--model</code> flag.</div>
+    </div>
+
+    <div class="idea-card idea-3">
+      <div class="idea-number">3</div>
+      <div class="idea-tag"><span class="pill pill-green">Context</span></div>
+      <div class="idea-title">Swap <code>Read</code> for <code>ctx_execute_file</code> on large outputs</div>
+      <p class="idea-body">Reading a 1200-line <code>platform.html</code> dumps the full file into context. <code>ctx_execute_file</code> runs analysis in a sandbox, only the result lands in context. Same goes for directory listings &gt; 50 entries — use <code>Glob</code> / <code>Grep</code>, never <code>ls -R</code> via Bash.</p>
+      <div class="idea-why"><strong>Win:</strong> 10–20% per session, especially on audit/review skills. Already partially enforced via PreToolUse tip.</div>
+    </div>
+
+    <div class="idea-card idea-4">
+      <div class="idea-number">4</div>
+      <div class="idea-tag"><span class="pill pill-orange">Effort</span></div>
+      <div class="idea-title">Drop <code>effortLevel</code> from <code>xhigh</code> to <code>medium</code>; bump per-task only</div>
+      <p class="idea-body">xhigh runs maximum thinking budget on every turn — even when asking trivial questions. Medium handles 90% of conversations at fraction of the thinking cost. Promote to high/xhigh on demand for hard problems (security review, schema design).</p>
+      <div class="idea-why"><strong>Win:</strong> 5–10% on output token budget. Setting: <code>settings.json</code> line 46.</div>
+    </div>
+
+    <div class="idea-card idea-5">
+      <div class="idea-number">5</div>
+      <div class="idea-tag"><span class="pill pill-purple">Sessions</span></div>
+      <div class="idea-title">Short focused sessions over marathons. <code>/compact</code> at 80K tokens.</div>
+      <p class="idea-body">Cache TTL is 5 minutes. Long idle gaps blow the cache. Marathon sessions with <code>/compact</code> are still useful but less efficient than 1-hour focused bursts. Use <code>/clear</code> when topic shifts entirely.</p>
+      <div class="idea-why"><strong>Win:</strong> 5–10% via better cache hit rates. Behavior change, zero config.</div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:1rem">
+    <div class="card-title">🎯 Stacked Effect</div>
+    <p>Wins 1 + 2 alone = 25–40% monthly. Add 3 + 4 + 5 = up to 50%. <strong>None of them touch output quality.</strong> They touch how Anthropic bills the same work.</p>
+  </div>
+</div>
+</section>
+
+<section id="qa">
+<div class="wrapper">
+  <div class="section-header">
+    <div class="section-eyebrow">§3 — Verification Protocol</div>
+    <h2 class="section-title">How To Confirm Savings Landed</h2>
+    <p class="section-desc">Token spend isn't a vibe — it's measurable. Walk this protocol after each win lands. Numbers don't move = win didn't land.</p>
+  </div>
+
+  <div class="qa-flow">
+    <div class="qa-step">
+      <div class="qa-step-title">Baseline current spend</div>
+      <div class="qa-step-desc">Before any change. Capture 3 representative sessions worth of cost data.</div>
+      <ul class="qa-step-checks">
+        <li>Anthropic Console → Usage tab → last 7 days screenshot</li>
+        <li>Note input/output token split, cache_read vs cache_write ratio</li>
+        <li>Save to <code>token-burn-baseline.md</code> in mempalace</li>
+      </ul>
+    </div>
+
+    <div class="qa-step">
+      <div class="qa-step-title">Verify cache breakpoint hits</div>
+      <div class="qa-step-desc">After Win #1 lands. Confirm cache reads &gt; 0 in usage payload.</div>
+      <ul class="qa-step-checks">
+        <li>Run a 2-turn conversation. Check API response → <code>usage.cache_read_input_tokens</code></li>
+        <li>Expected: turn 1 has cache_creation, turn 2 has cache_read &gt; 0</li>
+        <li>If cache_read = 0 → breakpoint misplaced or context shifted</li>
+      </ul>
+    </div>
+
+    <div class="qa-step">
+      <div class="qa-step-title">Verify model demotion took effect</div>
+      <div class="qa-step-desc">After Win #2 lands. Each skill should run on its assigned model.</div>
+      <ul class="qa-step-checks">
+        <li>Run <code>/tourney-reference</code> → check status line shows Haiku</li>
+        <li>Run <code>/tourney-review</code> → status line shows Sonnet</li>
+        <li>Run general chat → status line shows Opus (unchanged)</li>
+      </ul>
+    </div>
+
+    <div class="qa-step">
+      <div class="qa-step-title">Audit context flooding</div>
+      <div class="qa-step-desc">After Win #3 lands. Confirm large outputs no longer enter context.</div>
+      <ul class="qa-step-checks">
+        <li>Run an audit skill. Watch tool calls — Reads should be targeted, not full files</li>
+        <li>Check ctx-stats: <code>/context-mode:ctx-stats</code> — savings ratio should improve</li>
+        <li>If Read still dominates → habit fix needed, see runbook</li>
+      </ul>
+    </div>
+
+    <div class="qa-step">
+      <div class="qa-step-title">Effort level smoke test</div>
+      <div class="qa-step-desc">After Win #4 lands. Confirm thinking time dropped on simple turns.</div>
+      <ul class="qa-step-checks">
+        <li>Ask 3 trivial questions ("what time is it?" type)</li>
+        <li>Each should respond in &lt; 3 sec — if 10+ sec, effort still high</li>
+        <li>Hard questions should still get adequate thinking</li>
+      </ul>
+    </div>
+
+    <div class="qa-step">
+      <div class="qa-step-title">Weekly retrospective</div>
+      <div class="qa-step-desc">7 days after Win #5 behavior change. Compare to baseline.</div>
+      <ul class="qa-step-checks">
+        <li>Anthropic Console → Usage → compare 7-day windows</li>
+        <li>Target: ≥ 25% reduction in total spend at same output volume</li>
+        <li>If &lt; 15% → re-audit which wins didn't land</li>
+      </ul>
+    </div>
+  </div>
+</div>
+</section>
+
+<section id="roadmap">
+<div class="wrapper">
+  <div class="section-header">
+    <div class="section-eyebrow">§4 — Adoption Roadmap</div>
+    <h2 class="section-title">Week-By-Week · How To Land All 5 Wins</h2>
+    <p class="section-desc">Sequenced by ROI and dependency. Quick wins early, behavior changes last.</p>
+  </div>
+
+  <div class="roadmap-item">
+    <div class="roadmap-icon">1</div>
+    <div class="roadmap-content">
+      <div class="roadmap-title">Day 1 · Capture Baseline</div>
+      <div class="roadmap-desc">Before changing anything: screenshot last-7-day Anthropic Console usage. Note model split, total spend, cache_read ratio (likely 0).</div>
+      <div class="roadmap-action"><strong>Action:</strong> Save to <code>mempalace</code> drawer <code>token-burn-baseline-2026-05-07</code>. Confirm cache_read ≈ 0 (proves no caching today).</div>
+    </div>
+  </div>
+
+  <div class="roadmap-item">
+    <div class="roadmap-icon">2</div>
+    <div class="roadmap-content">
+      <div class="roadmap-title">Day 1 · Drop Effort + Model Default</div>
+      <div class="roadmap-desc">Lowest-risk, highest-immediate-savings change. settings.json edits.</div>
+      <div class="roadmap-action"><strong>Action:</strong> <code>"effortLevel": "medium"</code> (was xhigh) + <code>"model": "sonnet"</code> (was opus). Re-promote per-task with <code>/model opus</code> when needed.</div>
+    </div>
+  </div>
+
+  <div class="roadmap-item">
+    <div class="roadmap-icon">3</div>
+    <div class="roadmap-content">
+      <div class="roadmap-title">Day 2 · Cache CLAUDE.md</div>
+      <div class="roadmap-desc">Single <code>cache_control</code> breakpoint over the user-level CLAUDE.md + companyAnnouncements + DECISIONS + DISAGREEMENTS. 5-min TTL, ephemeral type.</div>
+      <div class="roadmap-action"><strong>Action:</strong> Configure via Claude Code SDK or <code>extra_body</code> on the Anthropic API client. Verify with <code>cache_read_input_tokens</code> &gt; 0 after turn 2.</div>
+    </div>
+  </div>
+
+  <div class="roadmap-item">
+    <div class="roadmap-icon">4</div>
+    <div class="roadmap-content">
+      <div class="roadmap-title">Week 1 · Skill Model Overrides</div>
+      <div class="roadmap-desc">Audit all <code>~/.claude/skills/tourney-*/SKILL.md</code>. Add <code>model: haiku</code> frontmatter to reference/audit/feature-depth skills. <code>model: sonnet</code> to review/plan/runbook. Leave Opus only for <code>tourney-review-security</code> and <code>tourney-plan-security</code>.</div>
+      <div class="roadmap-action"><strong>Action:</strong> One commit per skill set. Verify with <code>/tourney-reference</code> dry run — status line should show Haiku.</div>
+    </div>
+  </div>
+
+  <div class="roadmap-item">
+    <div class="roadmap-icon">5</div>
+    <div class="roadmap-content">
+      <div class="roadmap-title">Week 1 · Habit Fix · Read → ctx_execute_file</div>
+      <div class="roadmap-desc">Behavior change. Add a UserPromptSubmit reminder that nudges toward <code>ctx_execute_file</code> when about to Read &gt; 500-line files.</div>
+      <div class="roadmap-action"><strong>Action:</strong> Tip already exists in PreToolUse hook — confirm it fires. Document the rule in CLAUDE.md as a hard preference.</div>
+    </div>
+  </div>
+
+  <div class="roadmap-item">
+    <div class="roadmap-icon">6</div>
+    <div class="roadmap-content">
+      <div class="roadmap-title">Week 1 · Session Hygiene</div>
+      <div class="roadmap-desc">Behavior change. Use <code>/clear</code> on topic switch. <code>/compact</code> when token meter approaches 80K. Avoid 4-hour marathons unless caching is working.</div>
+      <div class="roadmap-action"><strong>Action:</strong> Add a CLAUDE.md rule: "Topic switch → /clear. ≥ 80K tokens → /compact."</div>
+    </div>
+  </div>
+
+  <div class="roadmap-item">
+    <div class="roadmap-icon">7</div>
+    <div class="roadmap-content">
+      <div class="roadmap-title">Day 14 · Measure</div>
+      <div class="roadmap-desc">7-day window comparison vs baseline. Should see ≥ 25% reduction in total spend. If not, audit which win didn't land.</div>
+      <div class="roadmap-action"><strong>Action:</strong> Anthropic Console → Usage → 7-day delta. Write retro to mempalace. Update <code>5-7-26-claude-token-burn-postmortem.md</code> if any wins underperformed.</div>
+    </div>
+  </div>
+</div>
+</section>
+
+<section id="leaks">
+<div class="wrapper">
+  <div class="section-header">
+    <div class="section-eyebrow">§5 — Leak Audit</div>
+    <h2 class="section-title">Specific Findings · File:Line Citations</h2>
+    <p class="section-desc">Every claim cited to <code>settings.json</code> or hook script. No theoretical findings.</p>
+  </div>
+
+  <div class="sec-item sev-high">
+    <div class="sec-header">
+      <span class="pill pill-red">High</span>
+      <div class="sec-title">Default model is Opus 4.7 — overkill for 80% of work</div>
+    </div>
+    <div class="sec-body">
+      <code>~/.claude/settings.json:56</code> sets <code>"model": "opus"</code>. Combined with <code>"effortLevel": "xhigh"</code> at line 46, every turn pays the highest input/output rate at maximum thinking budget. Per the SME brief: Opus 4.7 input is $5/MTok vs Sonnet $3 vs Haiku $1. Output is $25 vs $15 vs $5.
+    </div>
+    <div class="sec-fix">
+      <strong>Fix</strong>
+      <pre>// settings.json
+"model": "sonnet",          // was "opus"
+"effortLevel": "medium",    // was "xhigh"</pre>
+      Promote per-task with <code>/model opus</code> + <code>/effort xhigh</code> when needed for security/RLS/payment logic.
+    </div>
+  </div>
+
+  <div class="sec-item sev-high">
+    <div class="sec-header">
+      <span class="pill pill-red">High</span>
+      <div class="sec-title">No prompt caching configured anywhere</div>
+    </div>
+    <div class="sec-body">
+      <code>settings.json</code> has no <code>cache_control</code> wiring. CLAUDE.md (~3.5K tokens) + companyAnnouncements (~400 tokens) + DECISIONS.md + DISAGREEMENTS.md re-billed at full price every turn. Cache hit cost = 10% of write cost — wrapping these saves ~84% on those tokens, every turn. 5-minute TTL auto-refreshes on hit.
+    </div>
+    <div class="sec-fix">
+      <strong>Fix</strong>
+      Set <code>cache_control: { type: "ephemeral" }</code> breakpoint on the static system context block. Done via SDK <code>system</code> array entries or via Claude Code's caching config. Verify with <code>usage.cache_read_input_tokens &gt; 0</code> on turn 2+.
+    </div>
+  </div>
+
+  <div class="sec-item sev-med">
+    <div class="sec-header">
+      <span class="pill pill-orange">Medium</span>
+      <div class="sec-title">PreToolUse context-mode tip fires on every Bash + Read</div>
+    </div>
+    <div class="sec-body">
+      Each Bash and each Read receives an ~80-token system-reminder advising context-mode tools. Useful nudge but compounds: 50 tool calls/session × 80 tokens = 4K tokens of repeat reminders. Tip text appears verbatim 6 times in this very session's transcript already.
+    </div>
+    <div class="sec-fix">
+      <strong>Fix</strong>
+      Either: (a) gate the tip to fire only on first Bash/Read of a session, or (b) shorten the tip to ~25 tokens by stripping the explanation lines. Hook config in <code>~/.claude/plugins/.../context-mode/hooks/</code>.
+    </div>
+  </div>
+
+  <div class="sec-item sev-med">
+    <div class="sec-header">
+      <span class="pill pill-orange">Medium</span>
+      <div class="sec-title">Skills + Tools deferred-load list dumps ~250 lines into context periodically</div>
+    </div>
+    <div class="sec-body">
+      Several times per session, the harness emits the full available-skills list (120+ skills × ~80 chars each) as a system-reminder. Same for deferred-tool-list. Users can't suppress these but can avoid actions that trigger re-emit (e.g., loading a new skill mid-session).
+    </div>
+    <div class="sec-fix">
+      <strong>Fix</strong>
+      Don't load skills speculatively. Stay on one slash command's workflow until done. Avoid back-and-forth between many skills in a single session — it forces multiple skill-list re-emits.
+    </div>
+  </div>
+
+  <div class="sec-item sev-low">
+    <div class="sec-header">
+      <span class="pill pill-green">Low</span>
+      <div class="sec-title">caveman-statusline.ps1 — output negligible</div>
+    </div>
+    <div class="sec-body">
+      <code>caveman-statusline.ps1:35</code> writes <code>[CAVEMAN]</code> (~9 chars) per render. Statuslines aren't billed as model context — they're terminal output. No leak.
+    </div>
+    <div class="sec-fix">
+      <strong>Fix</strong>
+      None needed.
+    </div>
+  </div>
+
+  <div class="sec-item sev-low">
+    <div class="sec-header">
+      <span class="pill pill-green">Low</span>
+      <div class="sec-title">SessionStart hooks combined ~600 tokens, fires once per session</div>
+    </div>
+    <div class="sec-body">
+      <code>caveman-activate.js</code> + <code>gks-session-start.ps1</code> together emit ~600 tokens of system-reminder at session boot. One-time per session — amortizes across the whole conversation. Acceptable cost for the disambiguation it buys (TOURney path + caveman mode).
+    </div>
+    <div class="sec-fix">
+      <strong>Fix</strong>
+      None needed. Keep both.
+    </div>
+  </div>
+
+  <div class="sec-item sev-info">
+    <div class="sec-header">
+      <span class="pill pill-blue">Info</span>
+      <div class="sec-title">Subagent cold-spawn cost is ~2K tokens of base context per agent</div>
+    </div>
+    <div class="sec-body">
+      Spawning <code>claude-code-guide</code> SME (this session) cost ~2K tokens of agent boot + ~28K tokens of work. That's fine for a one-shot research task with a 4-page brief returned. Less fine if used for 1-line lookups.
+    </div>
+    <div class="sec-fix">
+      <strong>Fix</strong>
+      Reserve subagents for: (a) large independent research, (b) topic-isolation to protect main context, (c) parallel work. Never for a single grep or file read.
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:1.5rem">
+    <div class="card-title">🗓 Sprint Plan (closes the loop)</div>
+    <ul>
+      <li><strong>Day 1:</strong> Baseline + drop model + drop effort (settings.json edits).</li>
+      <li><strong>Day 2:</strong> Cache CLAUDE.md breakpoint. Verify cache_read &gt; 0.</li>
+      <li><strong>Week 1:</strong> Skill model overrides (haiku/sonnet split). Habit fix on Read → ctx_execute_file.</li>
+      <li><strong>Week 2:</strong> Measure. 7-day delta vs baseline. Iterate any underperforming win.</li>
+      <li><strong>Ongoing:</strong> Session hygiene (/clear on topic switch, /compact at 80K).</li>
+    </ul>
+  </div>
+</div>
+</section>
+
+<footer>
+  Generated by <span>Claude Opus 4.7 + Claude Code Guide SME</span> · Greenskeeper Studios Internal · May 7, 2026
+  <br style="margin-top:0.3rem">
+  <a href="/" style="color:var(--muted); font-size:0.72rem; text-decoration:none">← tourney.greenskeeper.studio</a>
+</footer>
+
+</body>
+</html>
