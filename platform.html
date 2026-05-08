@@ -822,9 +822,19 @@ function toggleFavorite(id, val) {
 }
 function copyNextStep(cat, url) {
   const next=NEXT_STEP[cat]; if(!next) return;
-  const full='https://tourney.greenskeeper.studio'+url;
   const axis=(url.match(/-(security|architecture|ux|performance|business|data-model|deployment|feature-depth|finance|marketing|onboarding)(?:[^a-z]|$)/)||[])[1]||'';
-  const cmd='/tourney-'+next+(axis?'-'+axis:'')+' '+full;
+  const CHAIN=['review','plan','runbook','audit','postmortem','bugs'];
+  // collect all related entries (same axis) sorted by chain order — gives skill full context
+  const seen=new Set();
+  const urls=allEntries
+    .filter(e=>e.url&&(axis?e.url.includes('-'+axis):e.url===url))
+    .sort((a,b)=>CHAIN.indexOf(a.category)-CHAIN.indexOf(b.category))
+    .map(e=>'https://tourney.greenskeeper.studio'+e.url)
+    .filter(u=>seen.has(u)?false:seen.add(u));
+  // always include the clicked card's url even if axis matching missed it
+  const full='https://tourney.greenskeeper.studio'+url;
+  if(!seen.has(full)) urls.unshift(full);
+  const cmd='/tourney-'+next+(axis?'-'+axis:'')+' '+urls.join(' ');
   navigator.clipboard.writeText(cmd).then(()=>{
     const t=document.createElement('div');
     t.textContent='Copied → '+cmd;
