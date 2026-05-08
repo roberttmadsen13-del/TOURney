@@ -321,17 +321,17 @@
     style.textContent = `
       .gb-fab{position:fixed;bottom:2rem;right:2rem;width:56px;height:56px;border-radius:50%;background:rgba(200,80,60,0.85);color:#fff;display:flex;align-items:center;justify-content:center;font-size:1.6rem;box-shadow:0 4px 16px rgba(200,80,60,0.4);cursor:pointer;z-index:9999;transition:all .2s;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,0.15);}
       .gb-fab:hover{transform:scale(1.05);background:rgba(220,90,70,0.95);}
-      .gb-modal{position:fixed;inset:0;background:rgba(0,0,0,0.75);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);z-index:10000;display:none;align-items:flex-start;justify-content:center;padding:1rem;overflow-y:auto;-webkit-overflow-scrolling:touch;}
-      .gb-content{background:rgba(20,15,10,0.85);border:1px solid rgba(255,255,255,0.1);border-radius:24px;padding:1.5rem;width:100%;max-width:440px;box-shadow:0 20px 60px rgba(0,0,0,0.6);display:flex;flex-direction:column;gap:1rem;margin:auto;}
-      .gb-hdr{display:flex;justify-content:space-between;align-items:center;color:#fff;font-family:'Barlow Condensed',sans-serif;text-transform:uppercase;font-weight:700;letter-spacing:.12em;font-size:1.1rem;}
-      .gb-close{background:rgba(255,255,255,0.1);border:none;border-radius:50%;width:28px;height:28px;color:#fff;font-size:.9rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .2s;}
-      .gb-close:hover{background:rgba(255,255,255,0.2);}
-      .gb-input{background:rgba(0,0,0,0.4);border:1px solid rgba(255,255,255,0.08);color:#fff;padding:.9rem 1rem;font-family:'Barlow',sans-serif;font-size:1rem;border-radius:12px;outline:none;transition:border-color .2s;}
-      .gb-input:focus{border-color:rgba(200,80,60,0.6);}
-      .gb-input::placeholder{color:rgba(255,255,255,0.3);}
-      .gb-ta{min-height:120px;resize:vertical;}
-      .gb-btn{background:#c8503c;color:#fff;border:none;padding:.9rem;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:.9rem;letter-spacing:.12em;text-transform:uppercase;border-radius:12px;cursor:pointer;transition:background .2s;}
-      .gb-btn:hover{background:#e74c3c;}
+      .gb-modal{position:fixed;inset:0;background:rgba(0,0,0,0.45);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);z-index:10000;display:none;align-items:flex-start;justify-content:center;padding:.5rem;overflow-y:auto;-webkit-overflow-scrolling:touch;}
+      .gb-content{background:rgba(20,15,10,0.35);border:1px solid rgba(255,255,255,0.08);border-radius:18px;padding:.85rem;width:100%;max-width:440px;box-shadow:0 12px 40px rgba(0,0,0,0.5);display:flex;flex-direction:column;gap:.55rem;margin:auto;}
+      .gb-hdr{display:flex;justify-content:space-between;align-items:center;color:rgba(255,255,255,0.8);font-family:'Barlow Condensed',sans-serif;text-transform:uppercase;font-weight:700;letter-spacing:.12em;font-size:.85rem;}
+      .gb-close{background:rgba(255,255,255,0.06);border:none;border-radius:50%;width:24px;height:24px;color:rgba(255,255,255,0.7);font-size:.8rem;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+      .gb-close:hover{background:rgba(255,255,255,0.18);}
+      .gb-input{background:rgba(0,0,0,0.6);border:1px solid rgba(255,255,255,0.12);color:#fff;padding:.6rem .8rem;font-family:'Barlow',sans-serif;font-size:.95rem;border-radius:10px;outline:none;transition:border-color .2s;}
+      .gb-input:focus{border-color:rgba(200,80,60,0.7);background:rgba(0,0,0,0.75);}
+      .gb-input::placeholder{color:rgba(255,255,255,0.35);}
+      .gb-ta{min-height:64px;resize:vertical;}
+      .gb-btn{background:rgba(200,80,60,0.55);color:#fff;border:1px solid rgba(200,80,60,0.4);padding:.55rem;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:.8rem;letter-spacing:.12em;text-transform:uppercase;border-radius:10px;cursor:pointer;backdrop-filter:blur(4px);transition:background .2s;}
+      .gb-btn:hover{background:rgba(220,90,70,0.75);}
     `;
     document.head.appendChild(style);
 
@@ -349,7 +349,7 @@
         <input type="text" id="gbTitle" class="gb-input" placeholder="Title (e.g. Bug on scoring, or Note on UI)">
         <textarea id="gbDesc" class="gb-input gb-ta" placeholder="Description, steps to reproduce, or notes..."></textarea>
         <div style="display:flex;align-items:center;gap:1rem;">
-          <label style="cursor:pointer;background:rgba(255,255,255,0.05);padding:.5rem 1rem;border-radius:8px;font-family:'DM Mono',monospace;font-size:.65rem;color:#ccc;border:1px solid rgba(255,255,255,0.1);text-transform:uppercase;letter-spacing:.1em;">
+          <label style="cursor:pointer;background:rgba(255,255,255,0.04);padding:.35rem .7rem;border-radius:6px;font-family:'DM Mono',monospace;font-size:.55rem;color:rgba(255,255,255,0.6);border:1px solid rgba(255,255,255,0.08);text-transform:uppercase;letter-spacing:.1em;">
             + Screenshot
             <input type="file" id="gbImg" accept="image/*" style="display:none;">
           </label>
@@ -360,7 +360,12 @@
     `;
     document.body.appendChild(modal);
 
-    fab.onclick = () => { modal.style.display = 'flex'; document.getElementById('gbTitle').focus(); };
+    fab.onclick = () => {
+      modal.style.display = 'flex';
+      const title = document.getElementById('gbTitle');
+      title.focus();
+      setTimeout(() => title.scrollIntoView({block:'center',behavior:'smooth'}), 250);
+    };
     modal.onclick = () => { modal.style.display = 'none'; };
 
     const imgInput = document.getElementById('gbImg');
