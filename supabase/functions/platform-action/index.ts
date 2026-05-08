@@ -24,7 +24,7 @@ Deno.serve(async (req: Request) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: {
       "Access-Control-Allow-Origin": origin,
-      "Access-Control-Allow-Headers": "authorization, apikey, content-type",
+      "Access-Control-Allow-Headers": "authorization, apikey, content-type, x-client-info",
       "Access-Control-Allow-Methods": "POST, OPTIONS",
       "Vary": "Origin",
     }});
@@ -42,11 +42,62 @@ Deno.serve(async (req: Request) => {
   const { action, email } = await req.json();
 
   if (action === "list") {
-    const { data, error } = await sb.from("player_accounts")
-      .select("email, plan, billing_status, billing_expires_at, created_at")
-      .order("created_at", { ascending: false });
+    const { data: accounts, error } = await sb.from("player_accounts").select("*");
     if (error) return json({ error: error.message }, 500, origin);
-    return json({ data }, 200, origin);
+
+    const { data: authUsers } = await sb.auth.admin.listUsers();
+    
+    const { data: players } = await sb.from("players").select("id, email");
+    const { data: scores } = await sb.from("scores").select("player_id, round");
+
+    const emailByPlayerId = new Map();
+    const tourneysMap = new Map();
+    if (players) {
+      players.forEach((p: any) => {
+        const e = p.email?.toLowerCase();
+        if (e) {
+          emailByPlayerId.set(p.id, e);
+          tourneysMap.set(e, (tourneysMap.get(e) || 0) + 1);
+        }
+      });
+    }
+
+    const roundsMap = new Map();
+    if (scores) {
+      const distinctRounds = new Set();
+      scores.forEach((s: any) => {
+        distinctRounds.add(`${s.player_id}-${s.round}`);
+      });
+      distinctRounds.forEach((key: string) => {
+        const pid = key.split("-")[0];
+        const e = emailByPlayerId.get(pid);
+        if (e) roundsMap.set(e, (roundsMap.get(e) || 0) + 1);
+      });
+    }
+
+    const usersMap = new Map();
+    if (authUsers?.users) {
+      authUsers.users.forEach((u: any) => {
+        usersMap.set(u.email?.toLowerCase(), {
+          created_at: u.created_at,
+          last_sign_in_at: u.last_sign_in_at
+        });
+      });
+    }
+
+    const enriched = (accounts || []).map((a: any) => {
+      const e = a.email?.toLowerCase();
+      const u = usersMap.get(e);
+      return {
+        ...a,
+        first_login: u?.created_at || a.created_at,
+        last_login: u?.last_sign_in_at || null,
+        tourneys_count: tourneysMap.get(e) || 0,
+        rounds_count: roundsMap.get(e) || 0
+      };
+    });
+
+    return json({ data: enriched }, 200, origin);
   }
 
   if (action === "comp") {

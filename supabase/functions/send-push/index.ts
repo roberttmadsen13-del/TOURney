@@ -17,7 +17,7 @@ Deno.serve(async (req) => {
   const origin = allowedOrigin(req);
 
   if (req.method === 'OPTIONS') {
-    return new Response(null, { headers: { 'Access-Control-Allow-Origin': origin, 'Access-Control-Allow-Headers': 'authorization,content-type,apikey' } });
+    return new Response(null, { headers: { 'Access-Control-Allow-Origin': origin, 'Access-Control-Allow-Headers': 'authorization,content-type,apikey,x-client-info' } });
   }
   if (req.method !== 'POST') return new Response('Method not allowed', { status: 405 });
 
