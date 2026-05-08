@@ -89,6 +89,14 @@ td{padding:0.7rem 0.75rem;font-size:0.88rem;vertical-align:middle;}
 .filter-btn:hover{border-color:var(--gold);color:var(--gold);}
 .filter-btn.active{background:var(--gold-dim);border-color:var(--gold);color:var(--gold);}
 .filter-btn.archived-toggle{margin-left:auto;}
+.fav-btn{background:none;border:none;color:rgba(212,175,55,0.25);cursor:pointer;font-size:1.05rem;line-height:1;padding:0 0.15rem;transition:color 0.15s;}
+.fav-btn:hover,.fav-btn.fav-active{color:var(--gold);}
+.nxt-btn{background:rgba(192,144,48,0.12);border:1px solid rgba(192,144,48,0.28);color:var(--gold);font-family:'Barlow Condensed',sans-serif;font-size:0.65rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:0.2rem 0.55rem;border-radius:4px;cursor:pointer;transition:all 0.15s;white-space:nowrap;}
+.nxt-btn:hover{background:var(--gold-dim);border-color:var(--gold);}
+.ref-artifact-link{display:flex;flex-direction:column;gap:.2rem;padding:.75rem 1rem;background:var(--card);border:1px solid var(--border);border-radius:6px;margin-bottom:.5rem;text-decoration:none;color:inherit;transition:border-color .15s;}
+.ref-artifact-link:hover{border-color:rgba(192,144,48,0.4);}
+.ref-artifact-title{font-size:.85rem;font-weight:600;color:var(--text);}
+.ref-artifact-sum{font-size:.75rem;color:var(--muted);}
 .hub-search{flex:1;min-width:180px;background:rgba(255,255,255,0.04);border:1px solid var(--border);color:var(--text);padding:0.45rem 0.8rem;border-radius:20px;font-family:'Barlow',sans-serif;font-size:0.8rem;outline:none;}
 .hub-search:focus{border-color:var(--gold);}
 .hub-search::placeholder{color:var(--muted);}
@@ -381,9 +389,9 @@ td{padding:0.7rem 0.75rem;font-size:0.88rem;vertical-align:middle;}
         <button class="filter-btn" data-filter="runbook">Runbooks</button>
         <button class="filter-btn" data-filter="postmortem">Postmortems</button>
         <button class="filter-btn" data-filter="bugs">Bugs</button>
-        <button class="filter-btn" data-filter="reference">Reference</button>
         <input id="hubSearch" type="text" class="hub-search" placeholder="Search…">
         <span class="hub-count" id="hubCount">—</span>
+        <button class="filter-btn" data-filter="favorites" id="favFilterBtn">⭐ Favorites</button>
         <button class="filter-btn archived-toggle" id="archivedToggle" onclick="toggleArchived()">Show Archived</button>
       </div>
       <div class="grid" id="cardGrid"><div class="grid-empty">Loading…</div></div>
@@ -451,6 +459,13 @@ td{padding:0.7rem 0.75rem;font-size:0.88rem;vertical-align:middle;}
           <div class="skill-card"><div class="skill-cmd">/tourney-review-marketing</div><div class="skill-desc">Landing page messaging, SEO meta, brand positioning, CTA clarity, pricing, competitive differentiation</div></div>
           <div class="skill-card"><div class="skill-cmd">/tourney-review-onboarding</div><div class="skill-desc">New user journey from landing page through first tournament creation — conversion flow quality</div></div>
         </div>
+      </div>
+
+      <div class="ref-section">
+        <div class="ref-sec-hdr">
+          <div class="ref-sec-meta"><div class="ref-sec-title">Reference Artifacts</div><div class="ref-sec-desc">Reference-category documents from the QA hub</div></div>
+        </div>
+        <div id="refArtifactsList"><div style="padding:.75rem;color:var(--muted);font-size:.8rem;">Loading…</div></div>
       </div>
 
       <div class="ref-section">
@@ -774,6 +789,8 @@ const CAT_META = {
 };
 const STATUS_PILL = { shipped:'pill-green','in-progress':'pill-gold',active:'pill-gold',queued:'pill-muted',archived:'pill-muted',critical:'pill-red' };
 const STATUS_ORDER = {'in-progress':0,'active':1,'shipped':2};
+const NEXT_STEP = {review:'plan',plan:'runbook',runbook:'audit',audit:'postmortem',postmortem:'bugs'};
+const NEXT_LABEL = {plan:'Plan',runbook:'Runbook',audit:'Audit',postmortem:'Postmortem',bugs:'Bugs'};
 let allEntries=[], activeFilter='all', activeSearch='', showArchived=false;
 
 function toggleArchived() {
@@ -796,6 +813,33 @@ function archiveEntry(id, val) {
 function getArchived() {
   try { return JSON.parse(localStorage.getItem('qa_archived')||'{}'); } catch { return {}; }
 }
+function getFavorites() {
+  try { return JSON.parse(localStorage.getItem('qa_favorites')||'{}'); } catch { return {}; }
+}
+function toggleFavorite(id, val) {
+  let f=getFavorites(); val?f[id]=true:delete f[id];
+  localStorage.setItem('qa_favorites', JSON.stringify(f)); renderHub();
+}
+function copyNextStep(cat, url) {
+  const next=NEXT_STEP[cat]; if(!next) return;
+  const full='https://tourney.greenskeeper.studio'+url;
+  const axis=(url.match(/-(security|architecture|ux|performance|business|data-model|deployment|feature-depth|finance|marketing|onboarding)(?:[^a-z]|$)/)||[])[1]||'';
+  const cmd='/tourney-'+next+(axis?'-'+axis:'')+' '+full;
+  navigator.clipboard.writeText(cmd).then(()=>{
+    const t=document.createElement('div');
+    t.textContent='Copied → '+cmd;
+    t.style.cssText='position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);background:var(--gold);color:#111;padding:.5rem 1.1rem;border-radius:6px;font-size:.78rem;font-weight:700;z-index:9999;pointer-events:none;max-width:90vw;text-align:center;';
+    document.body.appendChild(t); setTimeout(()=>t.remove(),2800);
+  }).catch(()=>{});
+}
+function renderRefArtifacts() {
+  const el=document.getElementById('refArtifactsList'); if(!el) return;
+  const refs=allEntries.filter(e=>e.category==='reference');
+  el.innerHTML=refs.length?refs.map(e=>`<a class="ref-artifact-link" href="${esc(e.url||'#')}" target="_blank">
+    <div class="ref-artifact-title">${esc(e.title)}</div>
+    <div class="ref-artifact-sum">${esc(e.summary||'')}</div>
+  </a>`).join(''):'<div style="padding:.75rem;color:var(--muted);font-size:.8rem;">No reference artifacts yet — run /tourney-reference to generate one.</div>';
+}
 function renderHub() {
   const grid=document.getElementById('cardGrid');
   const ar=getArchived();
@@ -803,7 +847,8 @@ function renderHub() {
   const filtered=allEntries.filter(e => {
     const isAr=!!(e.archived||ar[e.id]);
     if (!showArchived && isAr) return false;
-    if (activeFilter!=='all' && e.category!==activeFilter) return false;
+    if (activeFilter==='favorites') { if(!getFavorites()[e.id]) return false; }
+    else if (activeFilter!=='all' && e.category!==activeFilter) return false;
     if (!search) return true;
     return [e.title,e.summary,e.author,e.id,...(e.tags||[])].filter(Boolean).join(' ').toLowerCase().includes(search);
   });
@@ -819,7 +864,9 @@ function renderHub() {
     const sp=e.status?(STATUS_PILL[e.status]||'pill-muted'):null;
     const tags=(e.tags||[]).slice(0,5).map(t=>`<span class="tag">${esc(t)}</span>`).join('');
     const isAr=!!(e.archived||ar2[e.id]);
+    const isFav=!!getFavorites()[e.id];
     const displayDate=e.updated&&e.updated!==e.date?`Updated ${fmtDate(e.updated)}`:`${fmtDate(e.date)}`;
+    const nextCat=NEXT_STEP[e.category];
     return `<a class="card-link" href="${esc(e.url||'#')}">
       <div class="card cat-${esc(e.category||'plan')}${isAr?' archived':''}">
         <div class="card-head">
@@ -832,6 +879,8 @@ function renderHub() {
         <div class="card-foot">
           ${e.author?`<span>${esc(e.author)}</span>`:''}
           <div class="card-tags">${tags}</div>
+          ${nextCat?`<button class="nxt-btn" onclick="event.preventDefault();event.stopPropagation();copyNextStep('${esc(e.category)}','${esc(e.url||'')}')" title="Copy next step command">→ ${esc(NEXT_LABEL[nextCat])}</button>`:''}
+          <button class="fav-btn${isFav?' fav-active':''}" onclick="event.preventDefault();event.stopPropagation();toggleFavorite('${esc(e.id)}',${!isFav})" title="${isFav?'Remove from favorites':'Add to favorites'}">${isFav?'★':'☆'}</button>
           <button class="archive-btn" onclick="event.preventDefault();event.stopPropagation();archiveEntry('${esc(e.id)}',${!isAr})">${isAr?'Unarchive':'Archive'}</button>
         </div>
       </div></a>`;
@@ -866,6 +915,7 @@ async function loadArtifacts() {
       }
     }
     if(current) localStorage.setItem(SEEN_KEY, current);
+    renderRefArtifacts();
 
     // ── Enable-notifications prompt (one-time, dismissible) ────────────────
     if('Notification' in window && Notification.permission==='default') {
