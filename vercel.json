@@ -11,6 +11,12 @@
       ]
     },
     {
+      "source": "/(.*\\.json)",
+      "headers": [
+        { "key": "Cache-Control", "value": "no-store, must-revalidate" }
+      ]
+    },
+    {
       "source": "/(.*\\.html)",
       "headers": [
         { "key": "Cache-Control", "value": "no-store, must-revalidate" },
