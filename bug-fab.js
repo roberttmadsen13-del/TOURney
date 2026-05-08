@@ -15,7 +15,7 @@
     document.head.appendChild(s);
   }
 
-  function inject() {
+  function inject(db, email) {
     if (document.getElementById('globalBugFab')) return;
 
     const css = document.createElement('style');
@@ -80,27 +80,39 @@
       r.readAsDataURL(f);
     };
 
-    document.getElementById('gbSubmitBtn').onclick = () => {
+    const submitBtn = document.getElementById('gbSubmitBtn');
+    submitBtn.onclick = async () => {
       const t = document.getElementById('gbTitle').value.trim();
       const d = document.getElementById('gbDesc').value.trim();
       if (!t && !d) return;
-      const bugs = JSON.parse(localStorage.getItem('gks_bugs') || '[]');
-      bugs.unshift({
-        id: 'bug_' + Date.now(),
-        title: t,
-        desc: d,
-        img: imgData,
-        date: new Date().toISOString(),
-        status: 'open',
-        url: location.href
+      const origLabel = submitBtn.textContent;
+      submitBtn.textContent = 'Saving…';
+      submitBtn.disabled = true;
+      const { error } = await db.from('platform_bugs').insert({
+        email: email,
+        title: t || null,
+        description: d || null,
+        url: location.href,
+        image_data: imgData,
+        status: 'open'
       });
-      localStorage.setItem('gks_bugs', JSON.stringify(bugs));
-      document.getElementById('gbTitle').value = '';
-      document.getElementById('gbDesc').value = '';
-      imgInput.value = '';
-      thumb.style.display = 'none';
-      imgData = null;
-      modal.style.display = 'none';
+      submitBtn.disabled = false;
+      if (error) {
+        submitBtn.textContent = 'Error — try again';
+        console.error('platform_bugs insert error:', error);
+        setTimeout(() => { submitBtn.textContent = origLabel; }, 2500);
+        return;
+      }
+      submitBtn.textContent = '✓ Saved';
+      setTimeout(() => {
+        submitBtn.textContent = origLabel;
+        document.getElementById('gbTitle').value = '';
+        document.getElementById('gbDesc').value = '';
+        imgInput.value = '';
+        thumb.style.display = 'none';
+        imgData = null;
+        modal.style.display = 'none';
+      }, 600);
     };
   }
 
@@ -111,10 +123,11 @@
       db.auth.getSession().then(({ data }) => {
         const email = data?.session?.user?.email?.toLowerCase();
         if (!email || !ALLOWED.includes(email)) return;
+        const run = () => inject(db, email);
         if (document.readyState === 'loading') {
-          document.addEventListener('DOMContentLoaded', inject);
+          document.addEventListener('DOMContentLoaded', run);
         } else {
-          inject();
+          run();
         }
       });
     });
