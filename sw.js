@@ -1,4 +1,4 @@
-const CACHE = 'tourney-v23';
+const CACHE = 'tourney-v24';
 const PRECACHE = [
   '/',
   '/celebrate.js',
@@ -22,6 +22,7 @@ const PRECACHE = [
   '/nav-mobile.css',
   '/nav-mobile.js',
   '/tourney-init.js',
+  '/bug-fab.js',
 ];
 
 self.addEventListener('push', (event) => {

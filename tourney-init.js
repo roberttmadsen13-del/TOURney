@@ -315,7 +315,7 @@
     });
   }
 
-  function _injectGlobalBugLog() {
+  function _injectGlobalBugLog_DEPRECATED() { /* superseded by /bug-fab.js */ return;
     if (document.getElementById('globalBugFab')) return;
     const style = document.createElement('style');
     style.textContent = `
@@ -407,19 +407,7 @@
     };
   }
 
-  // Owner-only global Bug FAB — runs on every page (platform, home, tenant), independent of tournament context.
-  function _setupOwnerFab() {
-    db.auth.getSession().then((res) => {
-      const email = res.data?.session?.user?.email;
-      if (email !== 'robert.t.madsen13@gmail.com') return;
-      if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', _injectGlobalBugLog);
-      } else {
-        _injectGlobalBugLog();
-      }
-    });
-  }
-  _setupOwnerFab();
+  // Bug FAB now provided by /bug-fab.js (works across all pages, owner-allowlist).
 
   window.tourney = { db, ready: init(), applyBrandColors };
 })();
