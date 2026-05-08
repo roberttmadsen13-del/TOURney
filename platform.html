@@ -772,7 +772,8 @@ const CAT_META = {
   postmortem:{pill:'pill-orange',label:'Postmortem'}, skill:{pill:'pill-purple',label:'Skill'},
   bugs:{pill:'pill-red',label:'Bugs'}, reference:{pill:'pill-muted',label:'Reference'},
 };
-const STATUS_PILL = { shipped:'pill-green','in-progress':'pill-gold',queued:'pill-muted',archived:'pill-muted',critical:'pill-red' };
+const STATUS_PILL = { shipped:'pill-green','in-progress':'pill-gold',active:'pill-gold',queued:'pill-muted',archived:'pill-muted',critical:'pill-red' };
+const STATUS_ORDER = {'in-progress':0,'active':1,'shipped':2};
 let allEntries=[], activeFilter='all', activeSearch='', showArchived=false;
 
 function toggleArchived() {
@@ -807,7 +808,11 @@ function renderHub() {
     return [e.title,e.summary,e.author,e.id,...(e.tags||[])].filter(Boolean).join(' ').toLowerCase().includes(search);
   });
   document.getElementById('hubCount').textContent=`${filtered.length} of ${allEntries.length}`;
-  const sorted=filtered.slice().sort((a,b)=>(b.updated||b.date||'').localeCompare(a.updated||a.date||''));
+  const sorted=filtered.slice().sort((a,b)=>{
+    const sa=STATUS_ORDER[a.status]??3, sb=STATUS_ORDER[b.status]??3;
+    if(sa!==sb) return sa-sb;
+    return (b.updated||b.date||'').localeCompare(a.updated||a.date||'');
+  });
   const ar2=getArchived();
   grid.innerHTML=(filtered.length?sorted.map(e=>{
     const meta=CAT_META[e.category]||CAT_META.plan;
@@ -840,6 +845,49 @@ async function loadArtifacts() {
     if (!r.ok) throw new Error(`HTTP ${r.status}`);
     const d=await r.json();
     allEntries=Array.isArray(d.entries)?d.entries:[];
+
+    // ── Artifact change notifications ──────────────────────────────────────
+    const SEEN_KEY='platform_last_updated';
+    const lastSeen=localStorage.getItem(SEEN_KEY)||'';
+    const current=d.updated_at||'';
+    if(current && lastSeen && current>lastSeen) {
+      // count entries newer than last visit (compare date portion only)
+      const cutoff=lastSeen.substring(0,10);
+      const newCount=allEntries.filter(e=>(e.updated||e.date||'')>cutoff).length;
+      if(newCount>0) {
+        if('Notification' in window && Notification.permission==='granted') {
+          navigator.serviceWorker.ready.then(reg=>reg.showNotification('TOURney Platform',{
+            body:`${newCount} new artifact${newCount===1?'':'s'} — tap to view`,
+            icon:'/icon-192.png', badge:'/icon-192.png',
+            tag:'platform-update', renotify:true,
+            data:{url:'/platform'},
+          })).catch(()=>{});
+        }
+      }
+    }
+    if(current) localStorage.setItem(SEEN_KEY, current);
+
+    // ── Enable-notifications prompt (one-time, dismissible) ────────────────
+    if('Notification' in window && Notification.permission==='default') {
+      const bannerKey='platform_notif_dismissed';
+      if(!localStorage.getItem(bannerKey)) {
+        const banner=document.createElement('div');
+        banner.id='notif-banner';
+        banner.style.cssText='display:flex;align-items:center;gap:.75rem;background:rgba(212,175,55,.12);border:1px solid rgba(212,175,55,.3);border-radius:8px;padding:.6rem 1rem;margin-bottom:1rem;font-size:.8rem;';
+        banner.innerHTML=`<span style="flex:1">Enable notifications to get alerted when new artifacts are added.</span>
+          <button id="notif-enable" style="background:var(--gold);color:#111;border:none;border-radius:5px;padding:.3rem .7rem;font-size:.75rem;cursor:pointer;font-weight:700;">Enable</button>
+          <button id="notif-dismiss" style="background:none;border:none;color:rgba(240,230,204,.4);cursor:pointer;font-size:1rem;line-height:1;">✕</button>`;
+        const grid=document.getElementById('cardGrid');
+        grid.parentNode.insertBefore(banner, grid);
+        document.getElementById('notif-enable').onclick=async()=>{
+          const perm=await Notification.requestPermission();
+          banner.remove();
+          if(perm==='denied') localStorage.setItem(bannerKey,'1');
+        };
+        document.getElementById('notif-dismiss').onclick=()=>{ banner.remove(); localStorage.setItem(bannerKey,'1'); };
+      }
+    }
+
     renderHub();
   } catch(err) {
     document.getElementById('cardGrid').innerHTML=`<div class="grid-empty">Couldn't load qa-index.json: ${esc(err.message)}</div>`;

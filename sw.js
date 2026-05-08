@@ -1,4 +1,4 @@
-const CACHE = 'tourney-v16';
+const CACHE = 'tourney-v17';
 const PRECACHE = [
   '/',
   '/celebrate.js',
@@ -83,6 +83,10 @@ self.addEventListener('fetch', (event) => {
 
   // Never intercept Supabase API/realtime — let the app talk to the network directly.
   if (url.hostname.endsWith('supabase.co') || url.hostname.endsWith('supabase.in')) return;
+
+  // JSON data files (qa-index, grades, manifests) must always hit the network.
+  // SW cache would override Cache-Control: no-store and serve stale data.
+  if (url.pathname.endsWith('.json')) return;
 
   // HTML navigations: network-first with cache fallback so updates propagate when online.
   if (req.mode === 'navigate' || (req.destination === 'document')) {
