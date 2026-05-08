@@ -31,6 +31,19 @@
       "status": "shipped"
     },
     {
+      "id": "review-security-2026-05-07",
+      "category": "review",
+      "title": "Security Review · May 7, 2026",
+      "summary": "Full security audit. Grade: B−. 2 critical findings (invitations anon-update USING true, send-install-email no auth). 2 high (auth manage invitations open, player_accounts billing data exposed to anon). CSP unsafe-inline nullifies XSS protection. _parseMentions XSS surface in trash talk. Stripe webhook and create-checkout correctly auth-gated. No key leaks. 10-item remediation sprint.",
+      "date": "2026-05-07",
+      "updated": "2026-05-07",
+      "author": "Claude Sonnet 4.6",
+      "url": "/platform/5-7-26-claude-review-security",
+      "file": "platform/5-7-26-claude-review-security.html",
+      "tags": ["review", "security", "audit"],
+      "status": "shipped"
+    },
+    {
       "id": "aaa-plan",
       "category": "plan",
       "title": "AAA Implementation Plan · A+ across Architecture · Feature Depth · UX Polish",

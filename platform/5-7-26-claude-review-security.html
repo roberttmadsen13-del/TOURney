@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TOURney — Security Review · May 7, 2026</title>
+<style>
+  :root {
+    --gold: #c09030;
+    --gold-light: #d4a840;
+    --gold-dim: rgba(192,144,48,0.18);
+    --ink: #1a1008;
+    --bg: #0d0a05;
+    --surface: #151009;
+    --card: #1c140a;
+    --card2: #221a0e;
+    --border: rgba(192,144,48,0.22);
+    --muted: #7a6a54;
+    --text: #e8dcc8;
+    --red: #c0392b;
+    --green: #27ae60;
+    --blue: #2980b9;
+    --orange: #e67e22;
+    --purple: #8e44ad;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { font-family: -apple-system, 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; font-size: 15px; }
+  nav { position: sticky; top: 0; z-index: 100; background: rgba(13,10,5,0.96); border-bottom: 1px solid var(--border); backdrop-filter: blur(12px); padding: 0.6rem 1.5rem; display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
+  .nav-brand { color: var(--gold); font-weight: 700; font-size: 1rem; letter-spacing: 0.05em; white-space: nowrap; }
+  .nav-brand span { color: var(--muted); font-weight: 400; font-size: 0.8rem; margin-left: 0.4rem; }
+  .nav-links { display: flex; gap: 0.2rem; flex-wrap: wrap; margin-left: auto; }
+  .nav-links a { color: var(--muted); text-decoration: none; font-size: 0.78rem; padding: 0.3rem 0.55rem; border-radius: 4px; transition: all 0.15s; white-space: nowrap; }
+  .nav-links a:hover { color: var(--gold); background: var(--gold-dim); }
+  .hero { padding: 3.5rem 1.5rem 2.5rem; text-align: center; border-bottom: 1px solid var(--border); background: linear-gradient(180deg, rgba(192,144,48,0.06) 0%, transparent 100%); }
+  .hero-eyebrow { display: inline-block; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold); border: 1px solid var(--border); border-radius: 20px; padding: 0.25rem 0.85rem; margin-bottom: 1.2rem; }
+  .hero h1 { font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 800; color: #fff; margin-bottom: 0.5rem; }
+  .hero h1 span { color: var(--gold); }
+  .hero-sub { color: var(--muted); max-width: 560px; margin: 0 auto 1.5rem; font-size: 0.95rem; }
+  .hero-meta { display: flex; gap: 1.5rem; justify-content: center; flex-wrap: wrap; font-size: 0.78rem; color: var(--muted); }
+  .hero-meta span { display: flex; align-items: center; gap: 0.35rem; }
+  .wrapper { max-width: 1000px; margin: 0 auto; padding: 0 1.5rem; }
+  section { padding: 3rem 0; border-bottom: 1px solid var(--border); }
+  section:last-child { border-bottom: none; }
+  .section-header { margin-bottom: 2rem; }
+  .section-eyebrow { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.4rem; }
+  .section-title { font-size: 1.5rem; font-weight: 800; color: #fff; margin-bottom: 0.4rem; }
+  .section-desc { color: var(--muted); font-size: 0.88rem; max-width: 600px; }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 1.25rem 1.4rem; margin-bottom: 0.75rem; }
+  .card-title { font-size: 0.88rem; font-weight: 700; color: var(--gold); margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem; }
+  .card p, .card li { font-size: 0.86rem; color: var(--text); margin-bottom: 0.3rem; }
+  .card ul, .card ol { padding-left: 1.2rem; }
+  .card li { margin-bottom: 0.4rem; }
+  .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 0.75rem; }
+  .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 0.75rem; }
+  .stack-item { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 1rem 1.2rem; }
+  .stack-label { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); margin-bottom: 0.25rem; }
+  .stack-value { font-size: 0.92rem; font-weight: 600; color: #fff; }
+  .stack-note { font-size: 0.75rem; color: var(--muted); margin-top: 0.2rem; }
+  .pill { display: inline-block; font-size: 0.68rem; font-weight: 700; letter-spacing: 0.06em; padding: 0.18rem 0.55rem; border-radius: 20px; text-transform: uppercase; }
+  .pill-gold { background: rgba(192,144,48,0.18); color: var(--gold); border: 1px solid rgba(192,144,48,0.3); }
+  .pill-green { background: rgba(39,174,96,0.15); color: var(--green); border: 1px solid rgba(39,174,96,0.3); }
+  .pill-red { background: rgba(192,57,43,0.15); color: var(--red); border: 1px solid rgba(192,57,43,0.3); }
+  .pill-orange { background: rgba(230,126,34,0.15); color: var(--orange); border: 1px solid rgba(230,126,34,0.3); }
+  .pill-blue { background: rgba(41,128,185,0.15); color: var(--blue); border: 1px solid rgba(41,128,185,0.3); }
+  .pill-purple { background: rgba(142,68,173,0.15); color: var(--purple); border: 1px solid rgba(142,68,173,0.3); }
+  .sec-item { background: var(--card); border: 1px solid var(--border); border-left: 3px solid var(--border); border-radius: 0 8px 8px 0; padding: 1rem 1.25rem; margin-bottom: 0.75rem; }
+  .sec-item.sev-critical { border-left-color: #8b0000; }
+  .sec-item.sev-high { border-left-color: var(--red); }
+  .sec-item.sev-med { border-left-color: var(--orange); }
+  .sec-item.sev-low { border-left-color: var(--green); }
+  .sec-item.sev-info { border-left-color: var(--blue); }
+  .sec-header { display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.5rem; }
+  .sec-title { font-size: 0.9rem; font-weight: 700; color: #fff; }
+  .sec-body { font-size: 0.82rem; color: var(--muted); margin-bottom: 0.5rem; }
+  .sec-fix { font-size: 0.8rem; color: var(--text); background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 4px; padding: 0.5rem 0.7rem; }
+  .sec-fix strong { color: var(--gold-light); display: block; margin-bottom: 0.2rem; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; }
+  code { font-family: 'Consolas', 'Monaco', monospace; background: rgba(255,255,255,0.07); padding: 0.1rem 0.3rem; border-radius: 3px; font-size: 0.82em; color: var(--gold-light); }
+  pre { font-family: 'Consolas', 'Monaco', monospace; background: rgba(255,255,255,0.04); border: 1px solid var(--border); border-radius: 6px; padding: 0.8rem 1rem; font-size: 0.78rem; color: var(--gold-light); overflow-x: auto; margin: 0.5rem 0; }
+  .score-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 0.6rem; margin-bottom: 1.5rem; }
+  .score-cell { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 1rem; text-align: center; }
+  .score-num { font-size: 2rem; font-weight: 900; line-height: 1; margin-bottom: 0.2rem; }
+  .score-label { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); }
+  .score-green { color: var(--green); }
+  .score-gold { color: var(--gold); }
+  .score-red { color: var(--red); }
+  .score-blue { color: var(--blue); }
+  .score-orange { color: var(--orange); }
+  .roadmap-item { display: flex; gap: 1.2rem; align-items: flex-start; background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 1.1rem 1.25rem; margin-bottom: 0.6rem; }
+  .roadmap-icon { width: 2.2rem; height: 2.2rem; border-radius: 50%; background: var(--gold-dim); color: var(--gold); display: grid; place-items: center; font-size: 1rem; flex-shrink: 0; border: 1px solid var(--border); }
+  .roadmap-content { flex: 1; }
+  .roadmap-title { font-size: 0.92rem; font-weight: 700; color: #fff; margin-bottom: 0.2rem; }
+  .roadmap-desc { font-size: 0.82rem; color: var(--muted); margin-bottom: 0.4rem; }
+  .roadmap-action { font-size: 0.78rem; color: var(--text); }
+  .roadmap-action strong { color: var(--gold-light); }
+  .table-wrap { background: var(--card); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; overflow-x: auto; margin-bottom: 1rem; }
+  .page-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+  .page-table th { text-align: left; padding: 0.6rem 0.8rem; border-bottom: 1px solid var(--border); color: var(--muted); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; background: var(--surface); }
+  .page-table td { padding: 0.65rem 0.8rem; border-bottom: 1px solid rgba(192,144,48,0.08); vertical-align: top; }
+  .page-table tr:last-child td { border-bottom: none; }
+  .page-table tr:hover td { background: var(--gold-dim); }
+  footer { border-top: 1px solid var(--border); padding: 1.5rem; text-align: center; color: var(--muted); font-size: 0.75rem; }
+  footer span { color: var(--gold); }
+  @media (max-width: 600px) {
+    .nav-links { display: none; }
+    .hero { padding: 2rem 1rem 1.5rem; }
+    section { padding: 2rem 0; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-brand">TOURney <span>by Greenskeeper Studios</span></div>
+  <div class="nav-links">
+    <a href="/platform">⬡ Operations</a>
+    <a href="#focus">Security</a>
+    <a href="#rls">RLS Audit</a>
+    <a href="#xss">XSS</a>
+    <a href="#auth">Auth Gates</a>
+    <a href="#headers">Headers</a>
+    <a href="#functions">Edge Functions</a>
+    <a href="#sprint">Sprint Plan</a>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="hero-eyebrow">Focused Review — Security</div>
+  <h1><span>TOURney</span> — Security Review</h1>
+  <p class="hero-sub">Full security audit: RLS policies read from raw SQL, XSS surfaces grep-catalogued, edge function auth verified, headers checked. Evidence-cited findings only.</p>
+  <div class="hero-meta">
+    <span>📅 May 7, 2026</span>
+    <span>🤖 claude-sonnet-4-6</span>
+    <span>🏢 Greenskeeper Studios</span>
+    <span>🔒 Internal Only</span>
+  </div>
+</div>
+
+<section id="focus">
+<div class="wrapper">
+
+  <!-- ── SCORE GRID ── -->
+  <div class="score-grid">
+    <div class="score-cell">
+      <div class="score-num score-orange">B−</div>
+      <div class="score-label">Overall Grade</div>
+    </div>
+    <div class="score-cell">
+      <div class="score-num score-red">4</div>
+      <div class="score-label">Open RLS Policies</div>
+    </div>
+    <div class="score-cell">
+      <div class="score-num score-orange">3</div>
+      <div class="score-label">XSS Surfaces (warn)</div>
+    </div>
+    <div class="score-cell">
+      <div class="score-num score-orange">1</div>
+      <div class="score-label">Missing CSP control</div>
+    </div>
+    <div class="score-cell">
+      <div class="score-num score-red">2</div>
+      <div class="score-label">Critical Findings</div>
+    </div>
+    <div class="score-cell">
+      <div class="score-num score-green">✓</div>
+      <div class="score-label">No Key Leaks</div>
+    </div>
+  </div>
+
+  <!-- ── METHODOLOGY ── -->
+  <div class="section-header">
+    <div class="section-eyebrow">Methodology</div>
+    <div class="section-title">What Was Inspected</div>
+  </div>
+
+  <div class="card" style="margin-bottom:2rem">
+    <div class="card-title">Evidence Base</div>
+    <p><strong>Migrations read (SQL, line by line):</strong> 001_add_tournaments.sql, 002_add_billing.sql, 003_tighten_settings_rls.sql, 004_tournament_admins_email_based.sql, 005_invitations_and_accounts.sql, 006_drop_is_admin.sql, 006_multi_tourney_players.sql, 007_round_model.sql, 008_security_rls_hardening.sql, 009_fix_rls_self_join_bugs.sql, 010_tighten_push_subscriptions_and_tournament_admins_rls.sql, 011_trash_talk_rate_limit_and_player_scoped_insert.sql — every <code>CREATE POLICY</code> name, <code>USING</code> clause, and <code>WITH CHECK</code> clause extracted.</p>
+    <p style="margin-top:0.5rem"><strong>Edge functions scanned:</strong> <code>create-checkout/index.ts</code>, <code>stripe-webhook/index.ts</code>, <code>send-install-email/index.ts</code> — full source read, auth pattern extracted.</p>
+    <p style="margin-top:0.5rem"><strong>Client-side greps across all .html files:</strong> <code>innerHTML</code> (every assignment), <code>esc(</code> (helper presence + call sites), <code>PLATFORM_EMAIL</code>, <code>service_role</code>, <code>sb_publishable</code>, <code>localStorage</code>, <code>eval(</code>, <code>document.write(</code>, <code>USING (true)</code>.</p>
+    <p style="margin-top:0.5rem"><strong>vercel.json:</strong> Full header set read — CSP value extracted verbatim, HSTS, X-Frame-Options, Referrer-Policy, Permissions-Policy.</p>
+    <p style="margin-top:0.5rem"><strong>Static QA suite run:</strong> <code>node test.js</code> — 0 hard failures, 4 warnings. XSS section uses <code>RISKY_SOURCES</code> regex list to flag unescaped DB-sourced interpolation into innerHTML. Results cross-referenced below.</p>
+  </div>
+
+  <!-- ── RLS AUDIT ── -->
+  <div id="rls" class="section-header">
+    <div class="section-eyebrow">Row Level Security</div>
+    <div class="section-title">Every Table, Every Policy</div>
+    <div class="section-desc">Policy clauses cited verbatim from migration SQL. Severity = worst policy on that table.</div>
+  </div>
+
+  <div class="sec-item sev-info">
+    <div class="sec-header">
+      <span class="pill pill-green">SAFE</span>
+      <span class="sec-title">tournaments — public read + owner write</span>
+      <span class="pill pill-blue">migration 001</span>
+    </div>
+    <div class="sec-body">
+      Two policies. SELECT: <code>"public read tournaments"</code> — <code>TO anon USING (true)</code> — all tournaments visible to everyone. Intentional: tournament discovery is public. Write: <code>"owner manage tournament"</code> — <code>TO authenticated USING (auth.email() = owner_email)</code> — scoped to owner email. Solid.
+    </div>
+    <div class="sec-fix"><strong>Risk</strong>Public tournament data readable by anon. Intended. No sensitive fields on this table. No action needed.</div>
+  </div>
+
+  <div class="sec-item sev-info">
+    <div class="sec-header">
+      <span class="pill pill-green">SAFE</span>
+      <span class="sec-title">tournament_admins — public read</span>
+      <span class="pill pill-blue">migration 001 + 004</span>
+    </div>
+    <div class="sec-body">
+      <code>"public read tournament_admins"</code> — <code>TO anon USING (true)</code>. Needed for client-side admin gate checks. Migration 004 added email-based admin write: <code>auth.email() = owner_email OR EXISTS(tournament_admins WHERE player_id = auth.uid())</code>. Write properly scoped.
+    </div>
+    <div class="sec-fix"><strong>Risk</strong>Player IDs + tournament IDs visible to public. Acceptable — these aren't secret. Write path locked down correctly.</div>
+  </div>
+
+  <div class="sec-item sev-info">
+    <div class="sec-header">
+      <span class="pill pill-green">SAFE</span>
+      <span class="sec-title">settings — owner or admin write only</span>
+      <span class="pill pill-blue">migration 003 + 004</span>
+    </div>
+    <div class="sec-body">
+      Migration 003 dropped all prior wide-open write policies and replaced with: <code>"owner or admin write settings"</code> — <code>TO authenticated USING (auth.email() = (SELECT owner_email FROM tournaments WHERE id = settings.tournament_id) OR EXISTS (SELECT 1 FROM tournament_admins ta WHERE ta.tournament_id = settings.tournament_id AND ta.player_id = auth.uid()))</code>. Migration 004 re-applied same pattern after email-based admin model. Read policy not visible in migrations — likely anon read (course pars, round state are public anyway).
+    </div>
+    <div class="sec-fix"><strong>Risk</strong>None. Write scoped correctly. Read is public settings data.</div>
+  </div>
+
+  <div class="sec-item sev-critical">
+    <div class="sec-header">
+      <span class="pill pill-red">CRITICAL</span>
+      <span class="sec-title">invitations — anon update owns nothing</span>
+      <span class="pill pill-blue">migration 005</span>
+    </div>
+    <div class="sec-body">
+      <code>"anon update own invitation"</code> — <code>FOR UPDATE TO anon USING (true) WITH CHECK (true)</code>. Despite the name "own invitation," there is <strong>no ownership predicate</strong>. Any unauthenticated user can UPDATE any row in the invitations table — any tournament, any player. Attack: enumerate invitation IDs (readable via <code>"anon read invitations"</code> which is also <code>USING (true)</code>), then update <code>status = 'declined'</code> for all of a rival's invitees, or flip <code>status = 'accepted'</code> for uninvited emails.
+    </div>
+    <div class="sec-fix">
+      <strong>Fix — Day 1</strong>
+      Option A (quick): Add <code>USING (email = current_setting('request.jwt.claims', true)::json->>'email')</code> — only works if anon callers pass a JWT with their email, which they don't. Option B (right): Replace with an edge function <code>accept-invitation</code> that takes <code>{invitation_id, token}</code>, validates a per-invitation <code>access_token</code> column (UUID generated on invite creation), and performs the update as <code>service_role</code>. Drop the anon update policy entirely. 2-hour fix.
+    </div>
+  </div>
+
+  <div class="sec-item sev-high">
+    <div class="sec-header">
+      <span class="pill pill-red">HIGH</span>
+      <span class="sec-title">invitations — authenticated users manage all invitations</span>
+      <span class="pill pill-blue">migration 005</span>
+    </div>
+    <div class="sec-body">
+      <code>"auth manage invitations"</code> — <code>FOR ALL TO authenticated USING (true) WITH CHECK (true)</code>. Any logged-in user (a player who signed up for any tournament) can INSERT, UPDATE, or DELETE any invitation across all tournaments. Attack: authenticated player A deletes all invitations for tournament B. Or inserts fake invitations to collect RSVPs.
+    </div>
+    <div class="sec-fix">
+      <strong>Fix — Day 1</strong>
+      Replace <code>USING (true)</code> with <code>USING (EXISTS (SELECT 1 FROM tournaments t WHERE t.id = invitations.tournament_id AND (t.owner_email = auth.email() OR EXISTS (SELECT 1 FROM tournament_admins ta WHERE ta.tournament_id = t.id AND ta.player_id = auth.uid()))))</code>. Same pattern already proven in settings migration 003.
+    </div>
+  </div>
+
+  <div class="sec-item sev-high">
+    <div class="sec-header">
+      <span class="pill pill-red">HIGH</span>
+      <span class="sec-title">player_accounts — billing data open to anon</span>
+      <span class="pill pill-blue">migration 005</span>
+    </div>
+    <div class="sec-body">
+      <code>"anon read player_accounts"</code> — <code>FOR SELECT TO anon USING (true)</code>. The <code>player_accounts</code> table stores <code>plan</code>, <code>billing_status</code>, <code>billing_expires_at</code>, <code>billing_ref</code>. All rows readable by unauthenticated users. Any visitor to the site can query Supabase with the anon key and enumerate every player's subscription tier and billing status.
+    </div>
+    <div class="sec-fix">
+      <strong>Fix — This Week</strong>
+      Replace anon read with: <code>FOR SELECT TO authenticated USING (email = auth.email())</code> — users see only their own row. For the player upgrade flow, use a server-side lookup or pass the tier via the JWT claim. The Stripe webhook (already <code>service_role</code>) is unaffected.
+    </div>
+  </div>
+
+  <div class="sec-item sev-info">
+    <div class="sec-header">
+      <span class="pill pill-green">SAFE</span>
+      <span class="sec-title">players + scores — hardened per migrations 008–011</span>
+      <span class="pill pill-blue">migrations 008, 009, 011</span>
+    </div>
+    <div class="sec-body">
+      Migration 008 (<code>security_rls_hardening</code>) and 009 (<code>fix_rls_self_join_bugs</code>) tightened players and scores. Migration 011 (<code>trash_talk_rate_limit_and_player_scoped_insert</code>) added player-scoped INSERT — players can only insert scores for their own player record. Migration 010 tightened push_subscriptions and tournament_admins. These were the right moves.
+    </div>
+    <div class="sec-fix"><strong>Status</strong>No action needed. The hardening migration chain (008→011) addressed the main write-path issues on core game tables.</div>
+  </div>
+
+  <!-- ── XSS SURFACES ── -->
+  <div id="xss" class="section-header" style="margin-top:2rem">
+    <div class="section-eyebrow">XSS Surfaces</div>
+    <div class="section-title">Every innerHTML Assignment</div>
+    <div class="section-desc">grep -rn 'innerHTML' across all .html files. test.js XSS suite: 0 failures, 4 warnings. esc() helper (feed.html:658) uses DOM entity-encode pattern — safe.</div>
+  </div>
+
+  <div class="sec-item sev-med">
+    <div class="sec-header">
+      <span class="pill pill-orange">MEDIUM</span>
+      <span class="sec-title">scoreboard.html:1096 — _parseMentions(p.message) to innerHTML</span>
+    </div>
+    <div class="sec-body">
+      <code>el.innerHTML = _trashPosts.map(p =&gt; `&lt;div class="trash-post-body"&gt;${_parseMentions(p.message)}&lt;/div&gt;`)</code>. <code>p.message</code> is DB-sourced trash talk (user-submitted text). <code>_parseMentions</code> applies a regex to wrap <code>@mentions</code> in <code>&lt;span class="mention"&gt;</code> tags — but it does NOT escape the base text before the regex runs. A player who submits <code>&lt;img src=x onerror=alert(document.cookie)&gt;</code> as a trash talk message would have that rendered verbatim into innerHTML for every player viewing the scoreboard.
+    </div>
+    <div class="sec-fix">
+      <strong>Fix — This Week</strong>
+      Escape before parsing: <code>function _parseMentions(raw) { const safe = esc(raw); return safe.replace(/@([A-Za-z][A-Za-z '.'-]*[A-Za-z])/g, '&lt;span class="mention"&gt;@$1&lt;/span&gt;'); }</code>. The esc() helper already exists. One line change.
+    </div>
+  </div>
+
+  <div class="sec-item sev-med">
+    <div class="sec-header">
+      <span class="pill pill-orange">MEDIUM</span>
+      <span class="sec-title">admin.html:2044 + 2194 — url variable to innerHTML</span>
+    </div>
+    <div class="sec-body">
+      test.js flags both lines: <code>innerHTML interpolates url — verify safe</code>. The <code>url</code> variable at these lines likely references a tournament logo URL or image URL sourced from the <code>settings</code> table. If admin-editable (they are — settings are writable by admins), an admin could set a logo_url to <code>javascript:alert(1)</code>. HTML renders it into an <code>&lt;img src&gt;</code> or similar. <code>javascript:</code> in src/href attributes bypasses most sanitizers.
+    </div>
+    <div class="sec-fix">
+      <strong>Fix — This Week</strong>
+      At both sites: validate URL before interpolation. <code>function safeUrl(u) { try { const p = new URL(u); return (p.protocol === 'https:' || p.protocol === 'http:') ? u : ''; } catch { return ''; } }</code>. Or use <code>setAttribute('src', url)</code> instead of innerHTML — browser won't execute javascript: in src attributes set programmatically.
+    </div>
+  </div>
+
+  <div class="sec-item sev-low">
+    <div class="sec-header">
+      <span class="pill pill-green">LOW</span>
+      <span class="sec-title">course.html:377 — list (local rules) to innerHTML</span>
+    </div>
+    <div class="sec-body">
+      <code>document.getElementById('localRulesContent').innerHTML = `&lt;ul class="rule-list"&gt;${list}&lt;/ul&gt;`</code>. <code>list</code> is built from settings table (local rules text). This is admin-controlled input — if an admin injects HTML, they're XSSing themselves. Not a meaningful attack vector for a single-owner platform. No external attacker path.
+    </div>
+    <div class="sec-fix"><strong>Risk</strong>Self-inflicted admin XSS only. Low priority. Could sanitize with DOMPurify if the field becomes user-facing. No action needed pre-launch.</div>
+  </div>
+
+  <div class="sec-item sev-info">
+    <div class="sec-header">
+      <span class="pill pill-green">SAFE</span>
+      <span class="sec-title">profile.html:351 — tierClass, tierLabel to innerHTML</span>
+    </div>
+    <div class="sec-body">
+      <code>tierEl.innerHTML = `&lt;span class="tier-pill ${tierClass}"&gt;${tierLabel}&lt;/span&gt;`</code>. test.js warns because it sees variable interpolation. Both <code>tierClass</code> and <code>tierLabel</code> are derived from <code>TIER_MAP</code> — a hardcoded local constant object, not DB data. Not a real XSS surface.
+    </div>
+    <div class="sec-fix"><strong>Status</strong>False positive from test.js pattern matching. No action needed. Could add to SAFE_PATTERNS list in test.js to suppress the warning.</div>
+  </div>
+
+  <div class="sec-item sev-info">
+    <div class="sec-header">
+      <span class="pill pill-green">CLEAN</span>
+      <span class="sec-title">Player name fields — esc() consistently applied</span>
+    </div>
+    <div class="sec-body">
+      grep confirms: feed.html, scoreboard.html, admin.html, profile.html all wrap DB-sourced player names (<code>p.first_name</code>, <code>p.last_name</code>, <code>post.player_name</code>) with <code>esc()</code> before innerHTML. The esc() helper at feed.html:658 uses the standard <code>d.innerHTML = str; return d.innerHTML</code> DOM encode pattern — converts &lt;, &gt;, &amp;, &quot; to HTML entities. test.js XSS suite: 0 hard failures. Good discipline here.
+    </div>
+    <div class="sec-fix"><strong>Status</strong>No action needed. The pattern is consistent and correct.</div>
+  </div>
+
+  <div class="sec-item sev-info">
+    <div class="sec-header">
+      <span class="pill pill-green">CLEAN</span>
+      <span class="sec-title">No eval(), document.write(), or new Function()</span>
+    </div>
+    <div class="sec-body">
+      grep across all .html files: zero matches for <code>eval(</code>, <code>document.write(</code>, <code>new Function(</code>. High-risk JS injection patterns absent entirely.
+    </div>
+    <div class="sec-fix"><strong>Status</strong>Clean. No action needed.</div>
+  </div>
+
+  <!-- ── AUTH GATES ── -->
+  <div id="auth" class="section-header" style="margin-top:2rem">
+    <div class="section-eyebrow">Auth Gates</div>
+    <div class="section-title">Platform / Admin / Player</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Platform Gate (platform.html:153)</div>
+    <p><code>const PLATFORM_EMAIL = 'robert.t.madsen13@gmail.com'</code> hardcoded client-side. The gate logic: check email against constant, then call <code>sb.auth.signInWithPassword({ email, password })</code>. The client-side email check is a cosmetic pre-filter — an attacker can remove it in DevTools and call signInWithPassword directly with any email. However: the actual Supabase auth still requires the correct password. Any DB queries in platform.html run under the authenticated session, so RLS applies. The risk is: someone could attempt to brute-force the Supabase account password now that the email is known. Email is in plaintext in the HTML source.</p>
+    <p style="margin-top:0.5rem;color:var(--orange)"><strong>Risk: LOW-MEDIUM.</strong> Supabase rate-limits signInWithPassword. Real attack surface is the exposed email enabling targeted phishing / credential stuffing. Consider: move to magic link auth for platform, removing password attack surface entirely. Not blocking pre-launch.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Admin Gate (tournament_admins table)</div>
+    <p>Admin access checks against <code>tournament_admins</code> table — populated by owner, verified against <code>auth.uid()</code> in RLS. Migration 004 replaced the old <code>is_admin</code> boolean on the players table (migration 006 dropped it). The current model is solid: admin status lives in a separate table, write-protected by owner/admin RLS, and verified server-side. Client-side <code>is_admin</code> checks are for UX gating only (hide/show UI). Actual data writes go through Supabase RLS.</p>
+    <p style="margin-top:0.5rem;color:var(--green)"><strong>Risk: LOW.</strong> Architecture is correct. No action needed.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Player Score Submission Gate</div>
+    <p>Migration 011 (<code>player_scoped_insert</code>) added a <code>WITH CHECK</code> that binds score INSERTs to the authenticated user's player record. Players cannot submit scores for other players at the DB level. Offline score queue (<code>localStorage bova_offline_queue</code>) could be tampered client-side — a player could modify stored scores before sync. However, on sync the INSERT hits RLS which validates <code>player_id = auth.uid()</code> mapping. The tampering risk is: a player modifying their own queued scores (changing gross_score values). That's a data integrity issue, not a security breach — and it's only their own scores.</p>
+    <p style="margin-top:0.5rem;color:var(--orange)"><strong>Risk: MEDIUM (integrity, not security).</strong> Pre-launch: consider server-side score validation (reject scores outside reasonable range, reject backdated submissions past round close). Post-launch item.</p>
+  </div>
+
+  <!-- ── HEADERS ── -->
+  <div id="headers" class="section-header" style="margin-top:2rem">
+    <div class="section-eyebrow">HTTP Headers</div>
+    <div class="section-title">vercel.json Security Header Audit</div>
+  </div>
+
+  <div class="table-wrap">
+    <table class="page-table">
+      <thead>
+        <tr>
+          <th>Header</th>
+          <th>Value</th>
+          <th>Grade</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>Strict-Transport-Security</code></td>
+          <td style="font-size:0.78rem;color:var(--text)"><code>max-age=63072000; includeSubDomains; preload</code></td>
+          <td><span class="pill pill-green">A+</span></td>
+        </tr>
+        <tr>
+          <td><code>X-Frame-Options</code></td>
+          <td style="font-size:0.78rem;color:var(--text)"><code>DENY</code> (+ CSP <code>frame-ancestors 'none'</code>)</td>
+          <td><span class="pill pill-green">A+</span></td>
+        </tr>
+        <tr>
+          <td><code>X-Content-Type-Options</code></td>
+          <td style="font-size:0.78rem;color:var(--text)"><code>nosniff</code></td>
+          <td><span class="pill pill-green">A</span></td>
+        </tr>
+        <tr>
+          <td><code>Referrer-Policy</code></td>
+          <td style="font-size:0.78rem;color:var(--text)"><code>strict-origin-when-cross-origin</code></td>
+          <td><span class="pill pill-green">A</span></td>
+        </tr>
+        <tr>
+          <td><code>Permissions-Policy</code></td>
+          <td style="font-size:0.78rem;color:var(--text)"><code>camera=(), microphone=(), geolocation=(), payment=(self)</code></td>
+          <td><span class="pill pill-green">A</span></td>
+        </tr>
+        <tr>
+          <td><code>Content-Security-Policy</code></td>
+          <td style="font-size:0.78rem;color:var(--text)"><code>script-src 'self' <strong style="color:var(--red)">'unsafe-inline'</strong> https://cdn.jsdelivr.net</code></td>
+          <td><span class="pill pill-orange">C</span></td>
+        </tr>
+        <tr>
+          <td><code>Cross-Origin-Opener-Policy</code></td>
+          <td style="font-size:0.78rem;color:var(--muted)">Missing</td>
+          <td><span class="pill pill-gold">WARN</span></td>
+        </tr>
+        <tr>
+          <td><code>Cross-Origin-Resource-Policy</code></td>
+          <td style="font-size:0.78rem;color:var(--muted)">Missing</td>
+          <td><span class="pill pill-gold">WARN</span></td>
+        </tr>
+        <tr>
+          <td><code>CSP report-uri</code></td>
+          <td style="font-size:0.78rem;color:var(--muted)">Missing — no violation reporting</td>
+          <td><span class="pill pill-gold">WARN</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="sec-item sev-med">
+    <div class="sec-header">
+      <span class="pill pill-orange">MEDIUM</span>
+      <span class="sec-title">CSP unsafe-inline in script-src nullifies XSS protection</span>
+    </div>
+    <div class="sec-body">
+      Current CSP verbatim: <code>default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://*.supabase.co wss://*.supabase.co; frame-ancestors 'none';</code>. The <code>'unsafe-inline'</code> in <code>script-src</code> means the browser will execute any inline <code>&lt;script&gt;</code> tag, including ones injected by XSS. CSP provides zero protection against script injection while this flag is set. Reason it exists: all JS is inline in .html files (no bundler), so nonces/hashes would require a build step.
+    </div>
+    <div class="sec-fix">
+      <strong>Fix — Pre-Launch</strong>
+      Move all JS to external .js files (one per page or a shared bundle). Then: remove <code>'unsafe-inline'</code> and add a deployment-time nonce via Vercel Edge Middleware. Or: generate SHA-256 hashes for each script block at build time and add to CSP. The nonce approach requires Vercel Pro (edge functions on every request). The hash approach works on free tier but breaks whenever JS changes. Recommendation: external JS files + remove unsafe-inline. 2-day refactor.
+    </div>
+  </div>
+
+  <!-- ── KEY EXPOSURE ── -->
+  <div class="section-header" style="margin-top:2rem">
+    <div class="section-eyebrow">Supabase Keys</div>
+    <div class="section-title">Key Exposure Audit</div>
+  </div>
+
+  <div class="sec-item sev-info">
+    <div class="sec-header">
+      <span class="pill pill-green">SAFE</span>
+      <span class="sec-title">Anon key is publishable by design — no leak</span>
+    </div>
+    <div class="sec-body">
+      Key found in source: <code>sb_publishable_DnBMNLaSu61ykJ6P_fI2fw_D9DdAScn</code>. This is correctly labeled <code>sb_publishable_*</code> — Supabase's naming convention for the anon/public key. It is designed to be public; RLS is the enforcement layer. Security model is correct: key visible in client code, RLS prevents unauthorized access. No service_role key appears in any .html or .js file. Stripe keys not in client code (only in Supabase secrets, referenced via <code>Deno.env.get()</code> in edge functions). git log confirms no secrets committed in recent history.
+    </div>
+    <div class="sec-fix"><strong>Status</strong>Clean. Verify periodically: <code>git log -p | grep -i service_role</code>. If ever committed, rotate immediately in Supabase dashboard.</div>
+  </div>
+
+  <!-- ── EDGE FUNCTIONS ── -->
+  <div id="functions" class="section-header" style="margin-top:2rem">
+    <div class="section-eyebrow">Edge Functions</div>
+    <div class="section-title">supabase/functions/ — Auth Pattern Audit</div>
+  </div>
+
+  <div class="sec-item sev-info">
+    <div class="sec-header">
+      <span class="pill pill-green">SAFE</span>
+      <span class="sec-title">create-checkout — auth-gated correctly</span>
+    </div>
+    <div class="sec-body">
+      Reads <code>Authorization</code> header, returns 401 if absent. Creates Supabase client with caller's auth header, calls <code>supabase.auth.getUser()</code>, returns 401 if no valid user. Only proceeds to Stripe session creation for verified authenticated users. CORS OPTIONS handled with <code>Access-Control-Allow-Origin: *</code> — acceptable for a public-facing API that requires auth tokens anyway.
+    </div>
+    <div class="sec-fix"><strong>Status</strong>Solid. No action needed.</div>
+  </div>
+
+  <div class="sec-item sev-info">
+    <div class="sec-header">
+      <span class="pill pill-green">SAFE</span>
+      <span class="sec-title">stripe-webhook — signature verified</span>
+    </div>
+    <div class="sec-body">
+      Reads <code>stripe-signature</code> header, returns 400 if absent. Calls <code>stripe.webhooks.constructEventAsync(body, sig, webhookSecret)</code> — cryptographic signature verification. Event must be signed by Stripe's private key. DB writes use <code>SUPABASE_SERVICE_ROLE_KEY</code> (bypasses RLS by design — webhook writes billing status directly). Handles <code>checkout.session.completed</code> and <code>customer.subscription.*</code> events.
+    </div>
+    <div class="sec-fix"><strong>Status</strong>Correct pattern. Service role usage is appropriate here — webhook is the authoritative billing source.</div>
+  </div>
+
+  <div class="sec-item sev-high">
+    <div class="sec-header">
+      <span class="pill pill-red">HIGH</span>
+      <span class="sec-title">send-install-email — no auth check whatsoever</span>
+    </div>
+    <div class="sec-body">
+      Function reads <code>player.email</code> and <code>player.tournament_id</code> from the POST body and sends an email via Resend API. No <code>Authorization</code> header check. No Supabase auth validation. Any HTTP caller who knows the function URL can send an install email to any address with any tournament context. Attack vectors: (1) spam — send thousands of emails through your Resend account, burning your sending reputation and quota. (2) Phishing — craft a malicious install email that links to a fake PWA. (3) Harassment — spam specific players.
+    </div>
+    <div class="sec-fix">
+      <strong>Fix — Day 1</strong>
+      Add auth check at the top (same pattern as create-checkout):
+      <pre>const authHeader = req.headers.get('Authorization');
+if (!authHeader) return new Response('Unauthorized', { status: 401 });
+const supabase = createClient(url, anonKey, { global: { headers: { Authorization: authHeader } } });
+const { data: { user }, error } = await supabase.auth.getUser();
+if (error || !user) return new Response('Unauthorized', { status: 401 });</pre>
+      Then verify the caller is the tournament owner or admin before allowing the send. 30-minute fix.
+    </div>
+  </div>
+
+  <!-- ── localStorage ── -->
+  <div class="section-header" style="margin-top:2rem">
+    <div class="section-eyebrow">Client Storage</div>
+    <div class="section-title">localStorage Usage</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">What's Stored</div>
+    <ul>
+      <li><code>bova_profile_email</code> / <code>{slug}_profile_email</code> — player email for UX persistence (auto-fill login). Low risk — publicly derivable from player's own auth session.</li>
+      <li><code>bova_scores_{round}</code> / <code>{slug}_scores_{round}</code> — in-progress hole scores for offline scorecard. Tamper risk: player edits scores in DevTools before sync. Mitigated by: RLS player_scoped_insert (can only sync as own player_id). Score values could be faked — see integrity note above.</li>
+      <li><code>bova_offline_queue</code> / <code>{slug}_offline_queue</code> — queued score submissions for offline play. Same tamper risk as above.</li>
+      <li><code>{slug}_scorecard_session</code> — scorecard session state. UI state only, not security-relevant.</li>
+    </ul>
+    <p style="margin-top:0.6rem;color:var(--muted);font-size:0.82rem">No auth tokens, no session credentials, no sensitive PII stored in localStorage. Supabase auth tokens stored in Supabase's own storage (httpOnly equivalent). Clean.</p>
+  </div>
+
+</div>
+</section>
+
+<!-- ── SPRINT PLAN ── -->
+<section id="sprint">
+<div class="wrapper">
+  <div class="section-header">
+    <div class="section-eyebrow">Remediation Roadmap</div>
+    <div class="section-title">Sprint Plan</div>
+    <div class="section-desc">Prioritized by exploitability × impact. Day 1 = ship blockers.</div>
+  </div>
+
+  <div style="margin-bottom:1rem;font-size:0.8rem;font-weight:700;color:var(--red);text-transform:uppercase;letter-spacing:0.08em">Day 1 — Critical</div>
+
+  <div class="roadmap-item">
+    <div class="roadmap-icon">🔴</div>
+    <div class="roadmap-content">
+      <div class="roadmap-title">1 — Fix invitations anon update policy</div>
+      <div class="roadmap-desc">Add access_token column to invitations table. Create accept-invitation edge function that validates token. Drop <code>"anon update own invitation"</code> policy. Also scope <code>"auth manage invitations"</code> to tournament owner/admin only.</div>
+      <div class="roadmap-action"><strong>Migration + edge function. 2–3 hours.</strong> File: migrations/012_invitation_token_auth.sql + supabase/functions/accept-invitation/index.ts</div>
+    </div>
+  </div>
+
+  <div class="roadmap-item">
+    <div class="roadmap-icon">🔴</div>
+    <div class="roadmap-content">
+      <div class="roadmap-title">2 — Add auth to send-install-email edge function</div>
+      <div class="roadmap-desc">Add Authorization header check + getUser() validation at function entry. Verify caller is tournament owner or admin before sending. Same pattern as create-checkout.</div>
+      <div class="roadmap-action"><strong>30-minute fix.</strong> File: supabase/functions/send-install-email/index.ts</div>
+    </div>
+  </div>
+
+  <div style="margin-top:1.5rem;margin-bottom:1rem;font-size:0.8rem;font-weight:700;color:var(--orange);text-transform:uppercase;letter-spacing:0.08em">This Week — High</div>
+
+  <div class="roadmap-item">
+    <div class="roadmap-icon">🟠</div>
+    <div class="roadmap-content">
+      <div class="roadmap-title">3 — Scope player_accounts read to own row</div>
+      <div class="roadmap-desc">Replace <code>"anon read player_accounts" USING (true)</code> with authenticated own-row read. Update player upgrade flow to work with scoped read. Stripe webhook (service_role) unaffected.</div>
+      <div class="roadmap-action"><strong>Migration + test player upgrade flow. 1 hour.</strong> File: migrations/012 or 013.</div>
+    </div>
+  </div>
+
+  <div class="roadmap-item">
+    <div class="roadmap-icon">🟠</div>
+    <div class="roadmap-content">
+      <div class="roadmap-title">4 — Fix _parseMentions XSS (scoreboard.html:1096)</div>
+      <div class="roadmap-desc">Escape base message text before regex transform. One-line fix: <code>const safe = esc(raw); return safe.replace(/@.../)</code>. Prevents injected HTML in trash talk from executing.</div>
+      <div class="roadmap-action"><strong>15-minute fix.</strong> File: scoreboard.html (also check feed.html for same pattern)</div>
+    </div>
+  </div>
+
+  <div class="roadmap-item">
+    <div class="roadmap-icon">🟠</div>
+    <div class="roadmap-content">
+      <div class="roadmap-title">5 — Sanitize url variable before innerHTML (admin.html:2044, 2194)</div>
+      <div class="roadmap-desc">Add URL scheme validation before interpolating any URL into innerHTML. Accept only http/https. Reject javascript:, data:, and anything unparseable.</div>
+      <div class="roadmap-action"><strong>1 hour including testing.</strong> File: admin.html. Add safeUrl() helper, apply at both sites.</div>
+    </div>
+  </div>
+
+  <div style="margin-top:1.5rem;margin-bottom:1rem;font-size:0.8rem;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:0.08em">Pre-Launch</div>
+
+  <div class="roadmap-item">
+    <div class="roadmap-icon">🟡</div>
+    <div class="roadmap-content">
+      <div class="roadmap-title">6 — Remove CSP unsafe-inline (requires external JS)</div>
+      <div class="roadmap-desc">Move per-page JS into external .js files. Then remove 'unsafe-inline' from script-src. Add CORP/COOP headers. This is the largest refactor but makes CSP actually protective against XSS.</div>
+      <div class="roadmap-action"><strong>2-day refactor. Pre-launch milestone.</strong> Worth doing before Bova 2026 runs with real player data.</div>
+    </div>
+  </div>
+
+  <div class="roadmap-item">
+    <div class="roadmap-icon">🟡</div>
+    <div class="roadmap-content">
+      <div class="roadmap-title">7 — Verify git history for any past service_role key commits</div>
+      <div class="roadmap-desc">Run: <code>git log -p | grep -i service_role</code>. If any found, rotate the key in Supabase dashboard immediately. One-time audit.</div>
+      <div class="roadmap-action"><strong>5 minutes.</strong> Do it now before you forget.</div>
+    </div>
+  </div>
+
+  <div style="margin-top:1.5rem;margin-bottom:1rem;font-size:0.8rem;font-weight:700;color:var(--blue);text-transform:uppercase;letter-spacing:0.08em">Post-Launch</div>
+
+  <div class="roadmap-item">
+    <div class="roadmap-icon">🔵</div>
+    <div class="roadmap-content">
+      <div class="roadmap-title">8 — Score integrity: server-side validation</div>
+      <div class="roadmap-desc">Add CHECK constraints for gross_score range (1–20 already exists). Add round_closed_at to prevent score submission after round close. Add last_modified audit trail to scores table.</div>
+      <div class="roadmap-action"><strong>Migration + edge function. Post-launch.</strong></div>
+    </div>
+  </div>
+
+  <div class="roadmap-item">
+    <div class="roadmap-icon">🔵</div>
+    <div class="roadmap-content">
+      <div class="roadmap-title">9 — Replace PLATFORM_EMAIL with magic link auth</div>
+      <div class="roadmap-desc">Remove hardcoded email from platform.html source. Use Supabase magic link — no password, no exposed email, same security posture. Eliminates brute-force and credential-stuffing surface.</div>
+      <div class="roadmap-action"><strong>2-hour change. Post-launch improvement.</strong></div>
+    </div>
+  </div>
+
+  <div class="roadmap-item">
+    <div class="roadmap-icon">🔵</div>
+    <div class="roadmap-content">
+      <div class="roadmap-title">10 — Add CSP report-uri + violation monitoring</div>
+      <div class="roadmap-desc">Point <code>report-uri</code> at a simple Supabase edge function that logs CSP violations to a DB table. Gives early warning if XSS ever lands in production.</div>
+      <div class="roadmap-action"><strong>4-hour setup. Post-launch.</strong></div>
+    </div>
+  </div>
+
+</div>
+</section>
+
+<footer>
+  Generated by <span>claude-sonnet-4-6</span> · Greenskeeper Studios Internal · May 7, 2026
+  <br style="margin-top:0.3rem">
+  <a href="/platform" style="color:var(--muted);font-size:0.72rem;text-decoration:none">← TOURney Operations</a>
+</footer>
+
+</body>
+</html>

@@ -51,6 +51,13 @@
           "url": "/platform/5-6-26-claude-review",
           "review_title": "Full Platform Review · May 6, 2026",
           "notes": "CRITICAL: player_accounts RLS USING (true) — any authenticated user can set billing_status=comped. CRITICAL: invitations RLS open to anon. XSS in admin.html (p.trash_talk, p.why_me unescaped). CSP header missing from vercel.json."
+        },
+        {
+          "date": "2026-05-07",
+          "score": "B-",
+          "url": "/platform/5-7-26-claude-review-security",
+          "review_title": "Security Review · May 7, 2026",
+          "notes": "CRITICAL: invitations 'anon update own invitation' has USING(true) — no ownership predicate, any anon can update any invitation. CRITICAL: send-install-email edge function has zero auth check. HIGH: invitations 'auth manage invitations' USING(true) — any authenticated user manages all invitations. HIGH: player_accounts anon read exposes billing data. MEDIUM: _parseMentions(p.message) to innerHTML without escaping. MEDIUM: admin.html:2044/2194 url in innerHTML. CSP has unsafe-inline (nullifies XSS protection). Positives: stripe-webhook sig-verified, create-checkout auth-gated, no key leaks, esc() used consistently on player names, HSTS/X-Frame/nosniff all correct."
         }
       ]
     },
