@@ -91,8 +91,10 @@ td{padding:0.7rem 0.75rem;font-size:0.88rem;vertical-align:middle;}
 .filter-btn.archived-toggle{margin-left:auto;}
 .fav-btn{background:none;border:none;color:rgba(212,175,55,0.25);cursor:pointer;font-size:1.5rem;line-height:1;padding:0.1rem 0.35rem;min-width:2.4rem;min-height:2.4rem;display:inline-flex;align-items:center;justify-content:center;transition:color 0.15s;}
 .fav-btn:hover,.fav-btn.fav-active{color:var(--gold);}
-.nxt-btn{background:rgba(192,144,48,0.12);border:1px solid rgba(192,144,48,0.28);color:var(--gold);font-family:'Barlow Condensed',sans-serif;font-size:0.65rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:0.2rem 0.55rem;border-radius:4px;cursor:pointer;transition:all 0.15s;white-space:nowrap;}
+.nxt-btn{background:rgba(192,144,48,0.12);border:1px solid rgba(192,144,48,0.28);color:var(--gold);font-family:'Barlow Condensed',sans-serif;font-size:0.88rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;padding:0.5rem 1.1rem;border-radius:7px;cursor:pointer;transition:all 0.15s;white-space:nowrap;min-height:2.4rem;display:inline-flex;align-items:center;gap:0.3rem;}
 .nxt-btn:hover{background:var(--gold-dim);border-color:var(--gold);}
+.status-sel{background:rgba(255,255,255,0.05);border:1px solid var(--border);color:var(--muted);font-size:0.72rem;padding:0.25rem 0.5rem;border-radius:12px;cursor:pointer;outline:none;font-family:'Barlow',sans-serif;transition:border-color 0.15s;}
+.status-sel:focus,.status-sel:hover{border-color:var(--gold);color:var(--text);}
 .ref-artifact-link{display:flex;flex-direction:column;gap:.2rem;padding:.75rem 1rem;background:var(--card);border:1px solid var(--border);border-radius:6px;margin-bottom:.5rem;text-decoration:none;color:inherit;transition:border-color .15s;}
 .ref-artifact-link:hover{border-color:rgba(192,144,48,0.4);}
 .ref-artifact-title{font-size:.85rem;font-weight:600;color:var(--text);}
@@ -800,8 +802,8 @@ const STATUS_PILL  = { active:'pill-gold','in-progress':'pill-gold',queued:'pill
 const STATUS_LABEL = { active:'Active','in-progress':'Active',queued:'Queued',shipped:'Shipped',critical:'Critical',archived:'Archived' };
 const STATUS_ORDER = { critical:0,active:1,'in-progress':1,queued:2,shipped:3 };
 let sortMode='status';
-const NEXT_STEP = {review:'plan',plan:'runbook',runbook:'audit',audit:'postmortem',postmortem:'bugs'};
-const NEXT_LABEL = {plan:'Plan',runbook:'Runbook',audit:'Audit',postmortem:'Postmortem',bugs:'Bugs'};
+const NEXT_STEP = {review:'plan',plan:'runbook',runbook:'audit',audit:'postmortem',postmortem:'bugs',bugs:'fix'};
+const NEXT_LABEL = {plan:'Plan',runbook:'Runbook',audit:'Audit',postmortem:'Postmortem',bugs:'Bugs',fix:'Debug'};
 let allEntries=[], activeFilter='all', activeSearch='', showArchived=false;
 
 function toggleArchived() {
@@ -831,6 +833,8 @@ function toggleFavorite(id, val) {
   let f=getFavorites(); val?f[id]=true:delete f[id];
   localStorage.setItem('qa_favorites', JSON.stringify(f)); renderHub();
 }
+function getStatusOverrides(){try{return JSON.parse(localStorage.getItem('qa_status_overrides')||'{}')}catch{return {}}}
+function setStatusOverride(id,status){const o=getStatusOverrides();if(status==='__clear__')delete o[id];else o[id]=status;localStorage.setItem('qa_status_overrides',JSON.stringify(o));renderHub();}
 function copyNextStep(cat, url) {
   const next=NEXT_STEP[cat]; if(!next) return;
   const axis=(url.match(/-(security|architecture|ux|performance|business|data-model|deployment|feature-depth|finance|marketing|onboarding)(?:[^a-z]|$)/)||[])[1]||'';
@@ -845,10 +849,18 @@ function copyNextStep(cat, url) {
   // always include the clicked card's url even if axis matching missed it
   const full='https://tourney.greenskeeper.studio'+url;
   if(!seen.has(full)) urls.unshift(full);
-  const cmd='/tourney-'+next+(axis?'-'+axis:'')+' '+urls.join(' ');
+  let cmd;
+  if(next==='fix') {
+    // bugs → debug prompt (plain text, not a skill command)
+    const ctx=urls.filter(u=>u!==full).join(' ');
+    cmd=`Diagnose and fix the open bugs documented at ${full}. Work through each issue: identify root cause, implement the fix, verify resolution. ${ctx?'Prior context: '+ctx:''}`.trim();
+  } else {
+    cmd='/tourney-'+next+(axis?'-'+axis:'')+' '+urls.join(' ');
+  }
   navigator.clipboard.writeText(cmd).then(()=>{
+    const label=next==='fix'?'Debug prompt copied':'Copied → '+cmd;
     const t=document.createElement('div');
-    t.textContent='Copied → '+cmd;
+    t.textContent=label;
     t.style.cssText='position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);background:var(--gold);color:#111;padding:.5rem 1.1rem;border-radius:6px;font-size:.78rem;font-weight:700;z-index:9999;pointer-events:none;max-width:90vw;text-align:center;';
     document.body.appendChild(t); setTimeout(()=>t.remove(),2800);
   }).catch(()=>{});
@@ -883,15 +895,19 @@ function renderHub() {
     return (b.updated||b.date||'').localeCompare(a.updated||a.date||'');
   });
   const ar2=getArchived();
+  const stOverrides=getStatusOverrides();
+  const STATUS_OPTS=['active','in-progress','queued','shipped','critical','archived'];
   grid.innerHTML=(filtered.length?sorted.map(e=>{
     const meta=CAT_META[e.category]||CAT_META.plan;
-    const sp=e.status?(STATUS_PILL[e.status]||'pill-muted'):null;
-    const sl=e.status?(STATUS_LABEL[e.status]||e.status):null;
+    const effStatus=stOverrides[e.id]||e.status;
+    const sp=effStatus?(STATUS_PILL[effStatus]||'pill-muted'):null;
+    const sl=effStatus?(STATUS_LABEL[effStatus]||effStatus):null;
     const tags=(e.tags||[]).slice(0,5).map(t=>`<span class="tag">${esc(t)}</span>`).join('');
     const isAr=!!(e.archived||ar2[e.id]);
     const isFav=!!getFavorites()[e.id];
     const displayDate=e.updated&&e.updated!==e.date?`Updated ${fmtDate(e.updated)}`:`${fmtDate(e.date)}`;
     const nextCat=NEXT_STEP[e.category];
+    const statusOpts=STATUS_OPTS.map(s=>`<option value="${s}"${effStatus===s?' selected':''}>${s}</option>`).join('');
     return `<a class="card-link" href="${esc(e.url||'#')}">
       <div class="card cat-${esc(e.category||'plan')}${isAr?' archived':''}">
         <div class="card-head">
@@ -904,6 +920,7 @@ function renderHub() {
         <div class="card-foot">
           ${e.author?`<span>${esc(e.author)}</span>`:''}
           <div class="card-tags">${tags}</div>
+          <select class="status-sel" onclick="event.preventDefault();event.stopPropagation();" onchange="event.preventDefault();event.stopPropagation();setStatusOverride('${esc(e.id)}',this.value)">${statusOpts}</select>
           ${nextCat?`<button class="nxt-btn" onclick="event.preventDefault();event.stopPropagation();copyNextStep('${esc(e.category)}','${esc(e.url||'')}')" title="Copy next step command">→ ${esc(NEXT_LABEL[nextCat])}</button>`:''}
           <button class="fav-btn${isFav?' fav-active':''}" onclick="event.preventDefault();event.stopPropagation();toggleFavorite('${esc(e.id)}',${!isFav})" title="${isFav?'Remove from favorites':'Add to favorites'}">${isFav?'★':'☆'}</button>
           <button class="archive-btn" onclick="event.preventDefault();event.stopPropagation();archiveEntry('${esc(e.id)}',${!isAr})">${isAr?'Unarchive':'Archive'}</button>
