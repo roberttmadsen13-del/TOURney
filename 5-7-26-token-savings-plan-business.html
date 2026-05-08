@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TOURney — Business Plan: Claude Token Spend · May 7, 2026</title>
+<style>
+  :root {
+    --gold: #c09030; --gold-light: #d4a840; --gold-dim: rgba(192,144,48,0.18);
+    --bg: #0d0a05; --surface: #151009; --card: #1c140a;
+    --border: rgba(192,144,48,0.22); --muted: #7a6a54; --text: #e8dcc8;
+    --red: #c0392b; --green: #27ae60; --blue: #2980b9; --orange: #e67e22; --purple: #8e44ad;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { font-family: -apple-system, 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; font-size: 15px; }
+  nav { position: sticky; top: 0; z-index: 100; background: rgba(13,10,5,0.96); border-bottom: 1px solid var(--border); backdrop-filter: blur(12px); padding: 0.6rem 1.5rem; display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
+  .nav-brand { color: var(--gold); font-weight: 700; font-size: 1rem; letter-spacing: 0.05em; }
+  .nav-brand span { color: var(--muted); font-weight: 400; font-size: 0.8rem; margin-left: 0.4rem; }
+  .nav-links { display: flex; gap: 0.2rem; flex-wrap: wrap; margin-left: auto; }
+  .nav-links a { color: var(--muted); text-decoration: none; font-size: 0.78rem; padding: 0.3rem 0.55rem; border-radius: 4px; transition: all 0.15s; }
+  .nav-links a:hover { color: var(--gold); background: var(--gold-dim); }
+  .hero { padding: 3.5rem 1.5rem 2.5rem; text-align: center; border-bottom: 1px solid var(--border); background: linear-gradient(180deg, rgba(192,144,48,0.06) 0%, transparent 100%); }
+  .hero-eyebrow { display: inline-block; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold); border: 1px solid var(--border); border-radius: 20px; padding: 0.25rem 0.85rem; margin-bottom: 1.2rem; }
+  .hero h1 { font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 800; color: #fff; margin-bottom: 0.5rem; }
+  .hero h1 span { color: var(--gold); }
+  .hero-sub { color: var(--muted); max-width: 620px; margin: 0 auto 1.5rem; font-size: 0.95rem; }
+  .hero-meta { display: flex; gap: 1.5rem; justify-content: center; flex-wrap: wrap; font-size: 0.78rem; color: var(--muted); }
+  .wrapper { max-width: 1000px; margin: 0 auto; padding: 0 1.5rem; }
+  section { padding: 3rem 0; border-bottom: 1px solid var(--border); }
+  section:last-child { border-bottom: none; }
+  .section-header { margin-bottom: 2rem; }
+  .section-eyebrow { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.4rem; }
+  .section-title { font-size: 1.5rem; font-weight: 800; color: #fff; margin-bottom: 0.4rem; }
+  .section-desc { color: var(--muted); font-size: 0.88rem; max-width: 700px; }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 1.25rem 1.4rem; margin-bottom: 0.75rem; }
+  .card-title { font-size: 0.88rem; font-weight: 700; color: var(--gold); margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem; }
+  .card p, .card li { font-size: 0.86rem; color: var(--text); margin-bottom: 0.3rem; }
+  .card ul, .card ol { padding-left: 1.2rem; }
+  .card li { margin-bottom: 0.4rem; }
+  .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 0.75rem; }
+  .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 0.75rem; }
+  .pill { display: inline-block; font-size: 0.68rem; font-weight: 700; letter-spacing: 0.06em; padding: 0.18rem 0.55rem; border-radius: 20px; text-transform: uppercase; }
+  .pill-gold { background: rgba(192,144,48,0.18); color: var(--gold); border: 1px solid rgba(192,144,48,0.3); }
+  .pill-green { background: rgba(39,174,96,0.15); color: var(--green); border: 1px solid rgba(39,174,96,0.3); }
+  .pill-red { background: rgba(192,57,43,0.15); color: var(--red); border: 1px solid rgba(192,57,43,0.3); }
+  .pill-orange { background: rgba(230,126,34,0.15); color: var(--orange); border: 1px solid rgba(230,126,34,0.3); }
+  .pill-blue { background: rgba(41,128,185,0.15); color: var(--blue); border: 1px solid rgba(41,128,185,0.3); }
+  .pill-purple { background: rgba(142,68,173,0.15); color: var(--purple); border: 1px solid rgba(142,68,173,0.3); }
+  .roadmap-item { display: flex; gap: 1.2rem; align-items: flex-start; background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 1.1rem 1.25rem; margin-bottom: 0.6rem; }
+  .roadmap-icon { width: 2.2rem; height: 2.2rem; border-radius: 50%; background: var(--gold-dim); color: var(--gold); display: grid; place-items: center; font-size: 1rem; flex-shrink: 0; border: 1px solid var(--border); }
+  .roadmap-content { flex: 1; }
+  .roadmap-title { font-size: 0.92rem; font-weight: 700; color: #fff; margin-bottom: 0.2rem; }
+  .roadmap-desc { font-size: 0.82rem; color: var(--muted); margin-bottom: 0.4rem; }
+  .roadmap-action { font-size: 0.78rem; color: var(--text); }
+  .roadmap-action strong { color: var(--gold-light); }
+  code { font-family: 'Consolas', 'Monaco', monospace; background: rgba(255,255,255,0.07); padding: 0.1rem 0.3rem; border-radius: 3px; font-size: 0.82em; color: var(--gold-light); }
+  pre { font-family: 'Consolas', 'Monaco', monospace; background: rgba(255,255,255,0.04); border: 1px solid var(--border); border-radius: 6px; padding: 0.8rem 1rem; font-size: 0.78rem; color: var(--text); overflow-x: auto; margin: 0.5rem 0; line-height: 1.45; }
+  .score-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 0.6rem; margin-bottom: 1.5rem; }
+  .score-cell { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 1rem; text-align: center; }
+  .score-num { font-size: 2rem; font-weight: 900; line-height: 1; margin-bottom: 0.2rem; }
+  .score-label { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); }
+  .score-green { color: var(--green); } .score-gold { color: var(--gold); } .score-red { color: var(--red); } .score-blue { color: var(--blue); } .score-orange { color: var(--orange); }
+  .matrix-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+  .matrix-table th { text-align: left; padding: 0.6rem 0.85rem; border-bottom: 1px solid var(--border); color: var(--muted); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; background: var(--surface); }
+  .matrix-table td { padding: 0.55rem 0.85rem; border-bottom: 1px solid rgba(192,144,48,0.07); vertical-align: middle; }
+  .matrix-table tr:last-child td { border-bottom: none; }
+  .matrix-table .num { text-align: right; font-family: 'Consolas', monospace; color: var(--gold-light); }
+  .table-wrap { background: var(--card); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; overflow-x: auto; }
+  footer { border-top: 1px solid var(--border); padding: 1.5rem; text-align: center; color: var(--muted); font-size: 0.75rem; }
+  footer span { color: var(--gold); }
+  @media (max-width: 600px) {
+    .nav-links { display: none; }
+    .hero { padding: 2rem 1rem 1.5rem; }
+    section { padding: 2rem 0; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-brand">TOURney <span>by Greenskeeper Studios</span></div>
+  <div class="nav-links">
+    <a href="/platform">⬡ Operations</a>
+    <a href="#focus">Business Plan</a>
+    <a href="#decision">Decision Framework</a>
+    <a href="#sprint">Sprint Plan</a>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="hero-eyebrow">Business Plan — Claude Token Spend</div>
+  <h1><span>Cut</span> Anthropic Spend 25–40% · Zero Quality Loss</h1>
+  <p class="hero-sub">Greenskeeper Studios is paying Opus 4.7 + xhigh effort + zero caching for work that Sonnet/Haiku could finish identically. Here's the financial case + adoption plan.</p>
+  <div class="hero-meta">
+    <span>📅 May 7, 2026</span>
+    <span>🤖 Claude Opus 4.7 + Claude Code Guide SME</span>
+    <span>🏢 Greenskeeper Studios</span>
+    <span>🔒 Internal Only</span>
+  </div>
+</div>
+
+<section id="focus">
+<div class="wrapper">
+  <div class="section-header">
+    <div class="section-eyebrow">§1 — Financial Snapshot</div>
+    <h2 class="section-title">Where We Are Today · Where We Could Be Tomorrow</h2>
+    <p class="section-desc">Status quo is ~$55/mo for 20 sessions. Stacked wins land us at ~$33–41/mo at the same output. Annual: $660 → $396–492. Savings reinvested into TOURney customer-facing infra (Vercel scaling, Supabase tier upgrade, monitoring).</p>
+  </div>
+
+  <div class="score-grid">
+    <div class="score-cell"><div class="score-num score-red">$55</div><div class="score-label">Today /mo</div></div>
+    <div class="score-cell"><div class="score-num score-gold">$41</div><div class="score-label">Conservative /mo</div></div>
+    <div class="score-cell"><div class="score-num score-green">$33</div><div class="score-label">Aggressive /mo</div></div>
+    <div class="score-cell"><div class="score-num score-blue">$264</div><div class="score-label">Annual Savings</div></div>
+    <div class="score-cell"><div class="score-num score-green">30 min</div><div class="score-label">Setup Cost</div></div>
+    <div class="score-cell"><div class="score-num score-gold">Day 1</div><div class="score-label">Break-even</div></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">💰 The Bottom Line</div>
+    <p>Conservative case (3 of 5 wins land): <strong>$14/mo saved = $168/year</strong>. Aggressive case (all 5 + sustained behavior change): <strong>$22/mo saved = $264/year</strong>. Investment: 30 min config + a few weeks of habit forming. <strong>Payback period: same day.</strong></p>
+    <p style="margin-top:0.5rem">At 100 sessions/month (when TOURney has paying customers + agents running on Rob's behalf), savings scale linearly — same %, larger absolute. <strong>$110/mo @ 100 sessions becomes $66–82/mo</strong>.</p>
+  </div>
+</div>
+</section>
+
+<section id="breakdown">
+<div class="wrapper">
+  <div class="section-header">
+    <div class="section-eyebrow">§2 — Monthly Burn Breakdown</div>
+    <h2 class="section-title">Where The $55 Goes Today</h2>
+    <p class="section-desc">Per-session cost analysis. Numbers from Anthropic Console pricing × observed token volumes from this session class.</p>
+  </div>
+
+  <div class="table-wrap">
+    <table class="matrix-table">
+      <thead>
+        <tr><th>Cost Driver</th><th>Mechanism</th><th class="num">$/Session</th><th class="num">$/Month (×20)</th><th>% of Total</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Opus 4.7 input tokens</strong></td>
+          <td>~400K input/session × $5/MTok</td>
+          <td class="num">$2.00</td>
+          <td class="num">$40.00</td>
+          <td><span class="pill pill-red">73%</span></td>
+        </tr>
+        <tr>
+          <td><strong>Opus 4.7 output tokens</strong></td>
+          <td>~30K output × $25/MTok</td>
+          <td class="num">$0.75</td>
+          <td class="num">$15.00</td>
+          <td><span class="pill pill-orange">27%</span></td>
+        </tr>
+        <tr>
+          <td><strong>System reminders + hooks</strong></td>
+          <td>Embedded in input — no separate billing</td>
+          <td class="num">—</td>
+          <td class="num">(in input)</td>
+          <td><span class="pill pill-blue">~10%</span></td>
+        </tr>
+        <tr>
+          <td><strong>Tool calls</strong></td>
+          <td>Tool results land in input on next turn</td>
+          <td class="num">—</td>
+          <td class="num">(in input)</td>
+          <td><span class="pill pill-blue">~30%</span></td>
+        </tr>
+        <tr>
+          <td><strong>Skill/subagent spawns</strong></td>
+          <td>Cold context init + result returns</td>
+          <td class="num">$0.05</td>
+          <td class="num">$1.00</td>
+          <td><span class="pill pill-blue">2%</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card" style="margin-top:1rem">
+    <div class="card-title">📊 Read</div>
+    <p>Input dominates output ~3:1 in dollars. <strong>Input is where the cuts happen.</strong> Output reduction = lower thinking budget (effortLevel). Input reduction = caching + smaller context + cheaper model tier.</p>
+  </div>
+</div>
+</section>
+
+<section id="stacked">
+<div class="wrapper">
+  <div class="section-header">
+    <div class="section-eyebrow">§3 — Stacked Savings Model</div>
+    <h2 class="section-title">Apply Each Win · Watch The Cost Curve Drop</h2>
+    <p class="section-desc">Each row = applying one win on top of all rows above. % savings compound multiplicatively, not additively.</p>
+  </div>
+
+  <div class="table-wrap">
+    <table class="matrix-table">
+      <thead>
+        <tr><th>State</th><th>Change Applied</th><th class="num">$/mo</th><th class="num">Saved</th><th>Cumulative Saved</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Status quo</strong></td><td>Opus 4.7 + xhigh, no cache</td>
+          <td class="num">$55.00</td><td class="num">—</td><td><span class="pill pill-red">0%</span></td>
+        </tr>
+        <tr>
+          <td><strong>+ Effort drop</strong></td><td>xhigh → medium</td>
+          <td class="num">$50.50</td><td class="num">$4.50</td><td><span class="pill pill-orange">8%</span></td>
+        </tr>
+        <tr>
+          <td><strong>+ Default model</strong></td><td>Opus → Sonnet 4.6</td>
+          <td class="num">$40.40</td><td class="num">$10.10</td><td><span class="pill pill-orange">27%</span></td>
+        </tr>
+        <tr>
+          <td><strong>+ Cache breakpoint</strong></td><td>CLAUDE.md cached</td>
+          <td class="num">$36.36</td><td class="num">$4.04</td><td><span class="pill pill-gold">34%</span></td>
+        </tr>
+        <tr>
+          <td><strong>+ Skill model overrides</strong></td><td>Haiku for reference/audit/feature-depth</td>
+          <td class="num">$32.72</td><td class="num">$3.64</td><td><span class="pill pill-green">41%</span></td>
+        </tr>
+        <tr>
+          <td><strong>+ Context hygiene</strong></td><td>Read → ctx_execute_file</td>
+          <td class="num">$29.45</td><td class="num">$3.27</td><td><span class="pill pill-green">46%</span></td>
+        </tr>
+        <tr>
+          <td><strong>+ Session hygiene</strong></td><td>/clear on topic switch, /compact at 80K</td>
+          <td class="num">$27.50</td><td class="num">$1.95</td><td><span class="pill pill-green">50%</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card" style="margin-top:1rem">
+    <div class="card-title">🎯 Realistic Target</div>
+    <p>Not all wins land equally. <strong>Conservative ROI (Days 1–2 only): $40/mo → 27% saved.</strong> Without behavior change but with caching + model demotion. <strong>Aggressive ROI (Week 1 + sustained): $30/mo → 45% saved.</strong> Requires habit formation around session hygiene + Read avoidance.</p>
+  </div>
+</div>
+</section>
+
+<section id="decision">
+<div class="wrapper">
+  <div class="section-header">
+    <div class="section-eyebrow">§4 — Decision Framework</div>
+    <h2 class="section-title">When To Pay Premium · When To Save</h2>
+    <p class="section-desc">Don't abandon Opus — use it where it earns its price. Cheap models for structured tasks, premium for novel reasoning.</p>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title">🟢 Use Haiku 4.5 ($1/$5)</div>
+      <ul>
+        <li><code>/tourney-reference</code> — structured doc generation from existing data</li>
+        <li><code>/tourney-audit</code> — evidence-cited inspection (search + cite)</li>
+        <li><code>/tourney-feature-depth</code> review — flagging shipped/partial/missing</li>
+        <li>Bulk file searches (Grep across many files)</li>
+        <li>Simple Q&A / lookups in mempalace</li>
+        <li>Routine commit message generation</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <div class="card-title">🟡 Use Sonnet 4.6 ($3/$15)</div>
+      <ul>
+        <li><code>/tourney-review</code> (full or focused, non-security)</li>
+        <li><code>/tourney-plan</code> (most axes)</li>
+        <li><code>/tourney-runbook</code> (most axes)</li>
+        <li>Bug investigation + fix</li>
+        <li>UI changes / CSS work</li>
+        <li>Default for ambiguous tasks</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <div class="card-title">🔴 Use Opus 4.7 ($5/$25)</div>
+      <ul>
+        <li><code>/tourney-review-security</code> — RLS analysis, threat modeling</li>
+        <li><code>/tourney-plan-security</code> — auth hardening design</li>
+        <li>Stripe/payment logic correctness checks</li>
+        <li>Novel architecture decisions (new schema, new edge function design)</li>
+        <li>Multi-step debugging where reasoning depth matters</li>
+        <li>"It's giving me wrong answers on Sonnet" → escalate</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <div class="card-title">⚙ Effort Level Rules</div>
+      <ul>
+        <li><strong>medium</strong> = default. Conversational + most coding tasks.</li>
+        <li><strong>high</strong> = audits, multi-file refactors, security-adjacent.</li>
+        <li><strong>xhigh</strong> = security review, payment correctness, RLS design. Not for daily.</li>
+        <li>Override per-prompt via slash commands (when supported), or update <code>settings.json</code> for the session.</li>
+      </ul>
+    </div>
+  </div>
+</div>
+</section>
+
+<section id="risks">
+<div class="wrapper">
+  <div class="section-header">
+    <div class="section-eyebrow">§5 — Risk Register</div>
+    <h2 class="section-title">What Could Go Wrong</h2>
+    <p class="section-desc">Pre-mortem each win. Mitigations spelled out.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">⚠ Risk: Sonnet/Haiku produces lower quality on a task</div>
+    <p><strong>Mitigation:</strong> per-task escalation. If Sonnet output feels weak, manually re-run with <code>/model opus</code>. Track which task types underperform on cheaper models — adjust skill defaults accordingly. Failsafe: keep Opus available as the "if quality bad, retry on this" lever.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">⚠ Risk: Cache breakpoint placed wrong → cache misses on every turn</div>
+    <p><strong>Mitigation:</strong> verify <code>cache_read_input_tokens</code> after first 2 turns. If still 0, cache key shifted (likely tool definitions changing per turn or system context is dynamic). Move breakpoint to genuinely-static prefix only.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">⚠ Risk: Effort drop missed something on a complex task</div>
+    <p><strong>Mitigation:</strong> the model usually surfaces "I should think harder" signals. If output looks shallow on a hard problem, retry at <code>/effort xhigh</code>. Cost of one retry &lt;&lt; cost of always running xhigh.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">⚠ Risk: Habit fix doesn't stick — keep Reading large files</div>
+    <p><strong>Mitigation:</strong> the existing PreToolUse tip already nudges. Add to CLAUDE.md as a hard rule. Run <code>/context-mode:ctx-stats</code> weekly — if savings ratio dropped, audit recent Reads.</p>
+  </div>
+</div>
+</section>
+
+<section id="sprint">
+<div class="wrapper">
+  <div class="section-header">
+    <div class="section-eyebrow">§6 — Sprint Plan</div>
+    <h2 class="section-title">Adoption Order · By ROI + Risk</h2>
+    <p class="section-desc">Lowest-risk highest-ROI first. Each step has a verification check before proceeding.</p>
+  </div>
+
+  <div class="roadmap-item">
+    <div class="roadmap-icon">1</div>
+    <div class="roadmap-content">
+      <div class="roadmap-title">Day 1 (15 min) · Baseline + Effort Drop</div>
+      <div class="roadmap-desc">Capture current spend, then drop effort to medium. Zero risk — just lower default thinking.</div>
+      <div class="roadmap-action"><strong>Action:</strong> Anthropic Console → Usage screenshot. Edit <code>~/.claude/settings.json</code> line 46: <code>"effortLevel": "medium"</code>. <strong>Verify:</strong> next session feels snappier on simple turns, no degradation on complex.</div>
+    </div>
+  </div>
+
+  <div class="roadmap-item">
+    <div class="roadmap-icon">2</div>
+    <div class="roadmap-content">
+      <div class="roadmap-title">Day 1 (10 min) · Default Model → Sonnet</div>
+      <div class="roadmap-desc">Drop default model. Keep Opus as opt-in via <code>/model opus</code>. Largest single $$$ win.</div>
+      <div class="roadmap-action"><strong>Action:</strong> <code>~/.claude/settings.json</code> line 56: <code>"model": "sonnet"</code>. <strong>Verify:</strong> 1-week of normal work. Compare output quality memory. Should be indistinguishable on 90% of tasks.</div>
+    </div>
+  </div>
+
+  <div class="roadmap-item">
+    <div class="roadmap-icon">3</div>
+    <div class="roadmap-content">
+      <div class="roadmap-title">Day 2 (45 min) · Cache CLAUDE.md + companyAnnouncements</div>
+      <div class="roadmap-desc">Wrap user-level CLAUDE.md (~3.5K tokens) + companyAnnouncements + DECISIONS + DISAGREEMENTS in single <code>cache_control</code> breakpoint. 5-min TTL ephemeral.</div>
+      <div class="roadmap-action"><strong>Action:</strong> Configure via Claude Code SDK system block or <code>extra_body</code>. <strong>Verify:</strong> <code>usage.cache_read_input_tokens &gt; 0</code> on turn 2+ of a fresh session. Should see ~3.5K cached tokens billed at 10% of normal rate.</div>
+    </div>
+  </div>
+
+  <div class="roadmap-item">
+    <div class="roadmap-icon">4</div>
+    <div class="roadmap-content">
+      <div class="roadmap-title">Week 1 (2 h) · Skill Model Overrides</div>
+      <div class="roadmap-desc">Edit each <code>~/.claude/skills/tourney-*/SKILL.md</code> frontmatter to add <code>model:</code> field. Haiku for reference/audit/feature-depth. Sonnet for review/plan/runbook. Opus for security skills only.</div>
+      <div class="roadmap-action"><strong>Action:</strong> One commit. Test 3 skills (1 per tier). <strong>Verify:</strong> running <code>/tourney-reference</code> shows Haiku in status, <code>/tourney-review-security</code> shows Opus.</div>
+    </div>
+  </div>
+
+  <div class="roadmap-item">
+    <div class="roadmap-icon">5</div>
+    <div class="roadmap-content">
+      <div class="roadmap-title">Week 1 (ongoing) · Habit · Read → ctx_execute_file</div>
+      <div class="roadmap-desc">Behavior change. When about to Read a file &gt; 500 lines for analysis, switch to <code>ctx_execute_file</code>. Read still correct for files about to Edit.</div>
+      <div class="roadmap-action"><strong>Action:</strong> Add hard rule to CLAUDE.md: "Analysis ≥ 500 lines → ctx_execute_file. Edit any size → Read." <strong>Verify:</strong> weekly <code>/context-mode:ctx-stats</code> — savings ratio should rise from current to ≥ 60%.</div>
+    </div>
+  </div>
+
+  <div class="roadmap-item">
+    <div class="roadmap-icon">6</div>
+    <div class="roadmap-content">
+      <div class="roadmap-title">Week 1 (ongoing) · Session Hygiene</div>
+      <div class="roadmap-desc">Behavior. <code>/clear</code> on topic switch. <code>/compact</code> at 80K tokens. Avoid 4h+ marathons.</div>
+      <div class="roadmap-action"><strong>Action:</strong> CLAUDE.md rule. <strong>Verify:</strong> session count goes up, avg session size goes down. Cache hit rate should improve as sessions stay cleaner.</div>
+    </div>
+  </div>
+
+  <div class="roadmap-item">
+    <div class="roadmap-icon">7</div>
+    <div class="roadmap-content">
+      <div class="roadmap-title">Day 14 · Measure + Iterate</div>
+      <div class="roadmap-desc">7-day delta vs baseline. Target: ≥ 27% reduction (conservative). Stretch: 45%.</div>
+      <div class="roadmap-action"><strong>Action:</strong> Anthropic Console 7-day comparison. Mempalace diary entry. If &lt; 25%, audit which win didn't land — likely #5 or #6 (behavior changes). <strong>Verify:</strong> writeup published as <code>5-21-26-token-savings-postmortem.html</code> in artifacts hub.</div>
+    </div>
+  </div>
+</div>
+</section>
+
+<footer>
+  Generated by <span>Claude Opus 4.7 + Claude Code Guide SME</span> · Greenskeeper Studios Internal · May 7, 2026
+  <br style="margin-top:0.3rem">
+  <a href="/platform" style="color:var(--muted); font-size:0.72rem; text-decoration:none">← TOURney Operations</a>
+</footer>
+
+</body>
+</html>

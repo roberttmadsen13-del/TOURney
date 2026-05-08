@@ -1,9 +1,22 @@
 {
   "$schema": "https://tourney.greenskeeper.studio/qa-index-schema.json",
   "version": 1,
-  "updated_at": "2026-05-07T23:30:00Z",
+  "updated_at": "2026-05-07T23:45:00Z",
   "description": "Canonical registry of all TOURney plans, reviews, audits, and QA artifacts. The /platform Artifacts tab renders from this file. Skills (e.g. tourney-review) append new entries when they generate output.",
   "entries": [
+    {
+      "id": "plan-token-savings-business-2026-05-07",
+      "category": "plan",
+      "title": "Business Plan: Claude Token Spend · May 7, 2026",
+      "summary": "Financial case for cutting GKS Anthropic spend 25-50%. Status quo $55/mo -> conservative $41/mo (27% saved) or aggressive $30/mo (45% saved). Stacked savings model, decision framework (Haiku/Sonnet/Opus by task class), risk register, 7-step adoption sprint with verification gates. Annual savings $264 reinvested into TOURney customer infra.",
+      "date": "2026-05-07",
+      "updated": "2026-05-07",
+      "author": "Claude Opus 4.7 + Claude Code Guide SME",
+      "url": "/platform/5-7-26-token-savings-plan-business",
+      "file": "5-7-26-token-savings-plan-business.html",
+      "tags": ["plan", "business", "cost", "claude"],
+      "status": "shipped"
+    },
     {
       "id": "review-token-burn-2026-05-07",
       "category": "review",
