@@ -783,7 +783,7 @@ function toggleArchived() {
 }
 function fmtDate(iso) {
   if (!iso) return '';
-  const d=new Date(iso); return isNaN(d.getTime())?iso:d.toLocaleDateString(undefined,{month:'short',day:'numeric',year:'numeric'});
+  const d=new Date(iso); return isNaN(d.getTime())?iso:d.toLocaleDateString(undefined,{month:'short',day:'numeric',year:'numeric',timeZone:'UTC'});
 }
 function archiveEntry(id, val) {
   // persist archive state in localStorage (qa-index.json is static)
