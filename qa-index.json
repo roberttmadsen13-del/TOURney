@@ -1,9 +1,22 @@
 {
   "$schema": "https://tourney.greenskeeper.studio/qa-index-schema.json",
   "version": 1,
-  "updated_at": "2026-05-08T00:00:00Z",
+  "updated_at": "2026-05-08T01:00:00Z",
   "description": "Canonical registry of all TOURney plans, reviews, audits, and QA artifacts. The /platform Artifacts tab renders from this file. Skills (e.g. tourney-review) append new entries when they generate output.",
   "entries": [
+    {
+      "id": "meeting-notes-2026-05-08",
+      "category": "reference",
+      "title": "Leadership Meeting Notes · May 8, 2026",
+      "summary": "Automated weekly review drop. Team consensus: LLC formation is the single unblocking action (C+ Business Ready 3rd week). send-push deploy is Day 1 (auth fix committed, not live). send-install-email needs auth fix written first. Sprint order: deploy send-push → fix send-install-email → loading skeletons → LLC → ToS/Privacy. Handicap net score flagged as table stakes by CMO.",
+      "date": "2026-05-08",
+      "updated": "2026-05-08",
+      "author": "Leadership Team (Marcus, Rory, Cam, Jordan, Sloane)",
+      "url": "/platform/leadership-meeting-notes-2026-05-08",
+      "file": "platform/leadership-meeting-notes-2026-05-08.md",
+      "tags": ["reference", "leadership", "meeting"],
+      "status": "shipped"
+    },
     {
       "id": "review-2026-05-08",
       "category": "review",
