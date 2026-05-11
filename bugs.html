@@ -77,6 +77,17 @@ footer a:hover{color:var(--gold);}
     <div class="hero-meta">TOURney Platform · Updated 2026-05-07 · Last QA pass: security hardening + live QA both sites clean</div>
   </div>
 
+  <!-- LIVE LOGGED BUGS (from FAB across all properties) -->
+  <div id="loggedBugsSection" class="section" style="display:none;">
+    <div class="sec-title">🐛 Logged via FAB <span class="sec-count" id="loggedOpenCount">0 open</span></div>
+    <div id="loggedOpen" style="display:flex;flex-direction:column;gap:.4rem;"></div>
+    <div class="session-hdr" id="loggedCompletedHdr" style="cursor:pointer;margin-top:.75rem;display:none;" onclick="toggleSession('loggedCompletedBody')">
+      <span class="session-title">✅ Completed <span class="pill pill-green">FAB</span></span>
+      <span class="session-count" id="loggedCompletedCount">0 ▾</span>
+    </div>
+    <div class="session-body collapsed" id="loggedCompletedBody" style="margin-top:.5rem;"></div>
+  </div>
+
   <!-- OPEN BUGS -->
   <div class="section">
     <div class="sec-title">🔴 Open Bugs — Must Fix <span class="sec-count">1 open</span></div>
@@ -285,11 +296,99 @@ GROUP BY t.slug;
   <a href="/platform">← Operations</a>
 </footer>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.105.3/dist/umd/supabase.min.js" integrity="sha384-iWpUQPQzWsFiosLgsS8o+e6E8y3Gm+EW2m/vAAo7A2H3fuc4KOKEx+5CAord2H2z" crossorigin="anonymous"></script>
 <script>
 function toggleSession(id) {
   const el = document.getElementById(id);
   if (el) el.classList.toggle('collapsed');
 }
+
+(function(){
+  const ALLOWED = ['robert.t.madsen13@gmail.com','jmalber2021@gmail.com'];
+  const db = window.supabase.createClient(
+    'https://jllugkiojeoopitdvzsa.supabase.co',
+    'sb_publishable_DnBMNLaSu61ykJ6P_fI2fw_D9DdAScn',
+    { auth: { persistSession: true } }
+  );
+  function esc(s){ return String(s||'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+  function fmtDate(s){
+    const d = new Date(s);
+    return d.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric',hour:'2-digit',minute:'2-digit'});
+  }
+  const btnStyle = 'background:none;padding:.2rem .5rem;border-radius:4px;cursor:pointer;font-family:monospace;font-size:.55rem;text-transform:uppercase;';
+  function rowHtml(b, isOpen){
+    return '<div class="bug-item ' + (isOpen?'open':'fixed') + '" id="lbug-' + b.id + '">'
+      + '<div class="bug-title">' + (b.title?'<strong>'+esc(b.title)+'</strong>':'<em>(no title)</em>')
+      + (b.description?' — '+esc(b.description):'')+'</div>'
+      + '<div class="bug-meta">' + fmtDate(b.created_at) + ' · ' + esc(b.email)
+      + (b.url?' · <a href="'+esc(b.url)+'" target="_blank" style="color:rgba(192,144,48,0.5);">'+esc(b.url)+'</a>':'')
+      + '</div>'
+      + (b.image_data?'<img src="'+esc(b.image_data)+'" style="max-height:180px;margin-top:.5rem;border-radius:6px;cursor:pointer;border:1px solid rgba(255,255,255,0.1);" onclick="window.open(this.src)">':'')
+      + '<div style="margin-top:.5rem;display:flex;gap:.4rem;flex-wrap:wrap;">'
+      + (b.url?'<button onclick="lbugCopyUrl(this,\''+esc(b.url).replace(/\\/g,"\\\\").replace(/\x27/g,"\\\x27")+'\')" style="'+btnStyle+'border:1px solid rgba(41,128,185,0.4);color:var(--blue);">📋 Copy URL</button>':'')
+      + '<button onclick="lbugCopyShare(\''+b.id+'\')" style="'+btnStyle+'border:1px solid rgba(192,144,48,0.4);color:var(--gold);">📋 Copy for AI</button>'
+      + (isOpen
+          ? '<button onclick="lbugSet(\''+b.id+'\',\'completed\')" style="'+btnStyle+'border:1px solid rgba(58,158,95,0.4);color:var(--green);">Mark Done</button>'
+          : '<button onclick="lbugSet(\''+b.id+'\',\'open\')" style="'+btnStyle+'border:1px solid rgba(192,144,48,0.3);color:var(--muted);">Reopen</button>')
+      + '<button onclick="lbugDel(\''+b.id+'\')" style="'+btnStyle+'border:1px solid rgba(200,80,60,0.3);color:var(--red);">Delete</button>'
+      + '</div></div>';
+  }
+  let cache = [];
+  async function load(){
+    const { data: { session } } = await db.auth.getSession();
+    const email = session?.user?.email?.toLowerCase();
+    if (!email || !ALLOWED.includes(email)) return;
+    const { data, error } = await db.from('platform_bugs').select('*').order('created_at', { ascending: false });
+    if (error) { console.error(error); return; }
+    cache = data || [];
+    const open = cache.filter(b => b.status === 'open');
+    const done = cache.filter(b => b.status === 'completed');
+    document.getElementById('loggedBugsSection').style.display = '';
+    document.getElementById('loggedOpenCount').textContent = open.length + ' open';
+    document.getElementById('loggedOpen').innerHTML = open.length
+      ? open.map(b => rowHtml(b, true)).join('')
+      : '<div style="font-family:monospace;font-size:.62rem;color:var(--muted);padding:.4rem 0;">No open bugs logged yet.</div>';
+    if (done.length) {
+      document.getElementById('loggedCompletedHdr').style.display = '';
+      document.getElementById('loggedCompletedCount').textContent = done.length + ' ▾';
+      document.getElementById('loggedCompletedBody').innerHTML = done.map(b => rowHtml(b, false)).join('');
+    }
+  }
+  function flash(btn, msg){
+    const o = btn.textContent;
+    btn.textContent = msg;
+    setTimeout(() => { btn.textContent = o; }, 1200);
+  }
+  window.lbugCopyUrl = (btn, url) => {
+    navigator.clipboard.writeText(url).then(() => flash(btn, '✓ Copied'));
+  };
+  window.lbugCopyShare = (id) => {
+    const b = cache.find(x => x.id === id);
+    if (!b) return;
+    const txt = [
+      'Bug logged on TOURney:',
+      'URL: ' + (b.url || '(unknown)'),
+      'Title: ' + (b.title || '(none)'),
+      'Description: ' + (b.description || '(none)'),
+      'When: ' + fmtDate(b.created_at),
+      'Logged by: ' + b.email
+    ].join('\n');
+    navigator.clipboard.writeText(txt).then(() => {
+      const btn = event.target;
+      flash(btn, '✓ Copied');
+    });
+  };
+  window.lbugSet = async (id, status) => {
+    await db.from('platform_bugs').update({ status }).eq('id', id);
+    load();
+  };
+  window.lbugDel = async (id) => {
+    if (!confirm('Delete this bug permanently?')) return;
+    await db.from('platform_bugs').delete().eq('id', id);
+    load();
+  };
+  load();
+})();
 </script>
 
 <script src="/bug-fab.js" defer></script>
