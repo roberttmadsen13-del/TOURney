@@ -1,0 +1,29 @@
+name: Weekly DB Backup
+
+on:
+  schedule:
+    - cron: '0 6 * * 1'  # Mondays 06:00 UTC
+  workflow_dispatch:       # allow manual trigger for drill
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Dump Supabase DB
+        env:
+          SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+        run: |
+          DATE=$(date +%Y-%m-%d)
+          pg_dump "$SUPABASE_DB_URL" | gzip > tourney-${DATE}.sql.gz
+          echo "BACKUP_FILE=tourney-${DATE}.sql.gz" >> $GITHUB_ENV
+
+      - name: Upload to S3
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.BACKUP_S3_KEY }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.BACKUP_S3_SECRET }}
+          AWS_DEFAULT_REGION: us-west-2
+          BUCKET: ${{ secrets.BACKUP_S3_BUCKET }}
+        run: |
+          aws s3 cp "$BACKUP_FILE" "s3://${BUCKET}/${BACKUP_FILE}"
+          echo "Uploaded $BACKUP_FILE to s3://${BUCKET}"
+          aws s3 ls "s3://${BUCKET}/" | tail -5
