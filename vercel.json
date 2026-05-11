@@ -85,7 +85,8 @@
     { "source": "/5-11-26-token-savings-runbook-business", "destination": "/5-11-26-token-savings-runbook-business.html" },
     { "source": "/platform/5-11-26-token-savings-runbook-business", "destination": "/5-11-26-token-savings-runbook-business.html" },
     { "source": "/5-11-26-claude-review-onboarding", "destination": "/5-11-26-claude-review-onboarding.html" },
-    { "source": "/5-11-26-claude-review-marketing", "destination": "/5-11-26-claude-review-marketing.html" }
+    { "source": "/5-11-26-claude-review-marketing", "destination": "/5-11-26-claude-review-marketing.html" },
+    { "source": "/5-11-26-claude-review-finance", "destination": "/5-11-26-claude-review-finance.html" }
 
   ]
 }

@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TOURney — Finance Review · May 11, 2026</title>
+<style>
+  :root {
+    --gold: #c09030;
+    --gold-light: #d4a840;
+    --gold-dim: rgba(192,144,48,0.18);
+    --ink: #1a1008;
+    --bg: #0d0a05;
+    --surface: #151009;
+    --card: #1c140a;
+    --card2: #221a0e;
+    --border: rgba(192,144,48,0.22);
+    --muted: #7a6a54;
+    --text: #e8dcc8;
+    --red: #c0392b;
+    --green: #27ae60;
+    --blue: #2980b9;
+    --orange: #e67e22;
+    --purple: #8e44ad;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { font-family: -apple-system, 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; font-size: 15px; }
+  nav { position: sticky; top: 0; z-index: 100; background: rgba(13,10,5,0.96); border-bottom: 1px solid var(--border); backdrop-filter: blur(12px); padding: 0.6rem 1.5rem; display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
+  .nav-brand { color: var(--gold); font-weight: 700; font-size: 1rem; letter-spacing: 0.05em; white-space: nowrap; }
+  .nav-brand span { color: var(--muted); font-weight: 400; font-size: 0.8rem; margin-left: 0.4rem; }
+  .nav-links { display: flex; gap: 0.2rem; flex-wrap: wrap; margin-left: auto; }
+  .nav-links a { color: var(--muted); text-decoration: none; font-size: 0.78rem; padding: 0.3rem 0.55rem; border-radius: 4px; transition: all 0.15s; white-space: nowrap; }
+  .nav-links a:hover { color: var(--gold); background: var(--gold-dim); }
+  .hero { padding: 3.5rem 1.5rem 2.5rem; text-align: center; border-bottom: 1px solid var(--border); background: linear-gradient(180deg, rgba(192,144,48,0.06) 0%, transparent 100%); }
+  .hero-eyebrow { display: inline-block; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold); border: 1px solid var(--border); border-radius: 20px; padding: 0.25rem 0.85rem; margin-bottom: 1.2rem; }
+  .hero h1 { font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 800; color: #fff; margin-bottom: 0.5rem; }
+  .hero h1 span { color: var(--gold); }
+  .hero-sub { color: var(--muted); max-width: 560px; margin: 0 auto 1.5rem; font-size: 0.95rem; }
+  .hero-meta { display: flex; gap: 1.5rem; justify-content: center; flex-wrap: wrap; font-size: 0.78rem; color: var(--muted); }
+  .hero-meta span { display: flex; align-items: center; gap: 0.35rem; }
+  .wrapper { max-width: 1000px; margin: 0 auto; padding: 0 1.5rem; }
+  section { padding: 3rem 0; border-bottom: 1px solid var(--border); }
+  section:last-child { border-bottom: none; }
+  .section-header { margin-bottom: 2rem; }
+  .section-eyebrow { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.4rem; }
+  .section-title { font-size: 1.5rem; font-weight: 800; color: #fff; margin-bottom: 0.4rem; }
+  .section-desc { color: var(--muted); font-size: 0.88rem; max-width: 600px; }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 1.25rem 1.4rem; margin-bottom: 0.75rem; }
+  .card-title { font-size: 0.88rem; font-weight: 700; color: var(--gold); margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem; }
+  .card p, .card li { font-size: 0.86rem; color: var(--text); margin-bottom: 0.3rem; }
+  .card ul, .card ol { padding-left: 1.2rem; }
+  .card li { margin-bottom: 0.4rem; }
+  .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 0.75rem; }
+  .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 0.75rem; }
+  .stack-item { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 1rem 1.2rem; }
+  .stack-label { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); margin-bottom: 0.25rem; }
+  .stack-value { font-size: 0.92rem; font-weight: 600; color: #fff; }
+  .stack-note { font-size: 0.75rem; color: var(--muted); margin-top: 0.2rem; }
+  .pill { display: inline-block; font-size: 0.68rem; font-weight: 700; letter-spacing: 0.06em; padding: 0.18rem 0.55rem; border-radius: 20px; text-transform: uppercase; }
+  .pill-gold { background: rgba(192,144,48,0.18); color: var(--gold); border: 1px solid rgba(192,144,48,0.3); }
+  .pill-green { background: rgba(39,174,96,0.15); color: var(--green); border: 1px solid rgba(39,174,96,0.3); }
+  .pill-red { background: rgba(192,57,43,0.15); color: var(--red); border: 1px solid rgba(192,57,43,0.3); }
+  .pill-orange { background: rgba(230,126,34,0.15); color: var(--orange); border: 1px solid rgba(230,126,34,0.3); }
+  .pill-blue { background: rgba(41,128,185,0.15); color: var(--blue); border: 1px solid rgba(41,128,185,0.3); }
+  .pill-purple { background: rgba(142,68,173,0.15); color: var(--purple); border: 1px solid rgba(142,68,173,0.3); }
+  .page-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+  .page-table th { text-align: left; padding: 0.6rem 0.8rem; border-bottom: 1px solid var(--border); color: var(--muted); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; background: var(--surface); }
+  .page-table td { padding: 0.65rem 0.8rem; border-bottom: 1px solid rgba(192,144,48,0.08); vertical-align: top; }
+  .page-table tr:last-child td { border-bottom: none; }
+  .page-table tr:hover td { background: var(--gold-dim); }
+  .table-wrap { background: var(--card); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; overflow-x: auto; }
+  .sec-item { background: var(--card); border: 1px solid var(--border); border-left: 3px solid var(--border); border-radius: 0 8px 8px 0; padding: 1rem 1.25rem; margin-bottom: 0.75rem; }
+  .sec-item.sev-critical { border-left-color: #8b0000; }
+  .sec-item.sev-high { border-left-color: var(--red); }
+  .sec-item.sev-med { border-left-color: var(--orange); }
+  .sec-item.sev-low { border-left-color: var(--green); }
+  .sec-header { display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.5rem; }
+  .sec-title { font-size: 0.9rem; font-weight: 700; color: #fff; }
+  .sec-body { font-size: 0.82rem; color: var(--muted); margin-bottom: 0.5rem; }
+  .sec-fix { font-size: 0.8rem; color: var(--text); background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 4px; padding: 0.5rem 0.7rem; }
+  .sec-fix strong { color: var(--gold-light); display: block; margin-bottom: 0.2rem; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; }
+  code { font-family: 'Consolas', 'Monaco', monospace; background: rgba(255,255,255,0.07); padding: 0.1rem 0.3rem; border-radius: 3px; font-size: 0.82em; color: var(--gold-light); }
+  pre { font-family: 'Consolas', 'Monaco', monospace; background: rgba(255,255,255,0.04); border: 1px solid var(--border); border-radius: 6px; padding: 0.8rem 1rem; font-size: 0.78rem; color: var(--gold-light); overflow-x: auto; margin: 0.5rem 0; }
+  .score-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 0.6rem; margin-bottom: 1.5rem; }
+  .score-cell { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 1rem; text-align: center; }
+  .score-num { font-size: 2rem; font-weight: 900; line-height: 1; margin-bottom: 0.2rem; }
+  .score-label { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); }
+  .score-green { color: var(--green); }
+  .score-gold { color: var(--gold); }
+  .score-red { color: var(--red); }
+  .score-blue { color: var(--blue); }
+  .score-orange { color: var(--orange); }
+  .roadmap-item { display: flex; gap: 1.2rem; align-items: flex-start; background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 1.1rem 1.25rem; margin-bottom: 0.6rem; }
+  .roadmap-icon { width: 2.2rem; height: 2.2rem; border-radius: 50%; background: var(--gold-dim); color: var(--gold); display: grid; place-items: center; font-size: 1rem; flex-shrink: 0; border: 1px solid var(--border); }
+  .roadmap-content { flex: 1; }
+  .roadmap-title { font-size: 0.92rem; font-weight: 700; color: #fff; margin-bottom: 0.2rem; }
+  .roadmap-desc { font-size: 0.82rem; color: var(--muted); margin-bottom: 0.4rem; }
+  .roadmap-action { font-size: 0.78rem; color: var(--text); }
+  .roadmap-action strong { color: var(--gold-light); }
+  footer { border-top: 1px solid var(--border); padding: 1.5rem; text-align: center; color: var(--muted); font-size: 0.75rem; }
+  footer span { color: var(--gold); }
+  .next-step-bar { background: rgba(192,144,48,0.07); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+  .next-step-inner { max-width: 1000px; margin: 0 auto; padding: 1rem 1.5rem; display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
+  .next-step-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); white-space: nowrap; }
+  .next-step-strong { color: var(--gold); font-size: 0.95rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; white-space: nowrap; }
+  .next-step-cmd { font-family: 'Consolas','Monaco',monospace; font-size: 0.78rem; color: var(--gold-light); background: rgba(255,255,255,0.04); border: 1px solid var(--border); border-radius: 4px; padding: 0.28rem 0.6rem; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  @media (max-width: 600px) {
+    .nav-links { display: none; }
+    .hero { padding: 2rem 1rem 1.5rem; }
+    section { padding: 2rem 0; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-brand">TOURney <span>by Greenskeeper Studios</span></div>
+  <div class="nav-links">
+    <a href="/platform">Operations</a>
+    <a href="#focus">Finance</a>
+    <a href="#risks">Risks</a>
+    <a href="#actions">Actions</a>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="hero-eyebrow">Focused Review — Finance</div>
+  <h1><span>TOURney</span> — Finance Review</h1>
+  <p class="hero-sub">Deep-dive audit scoped to Finance only. Legal entity, Stripe wiring, revenue posture, operating costs, runway, and risk register. Evidence-cited findings with letter grade.</p>
+  <div class="hero-meta">
+    <span>May 11, 2026</span>
+    <span>Claude Sonnet 4.6</span>
+    <span>Greenskeeper Studios</span>
+    <span>Internal Only</span>
+  </div>
+</div>
+
+<section id="focus">
+<div class="wrapper">
+
+  <!-- GRADE CARD -->
+  <div class="section-header">
+    <div class="section-eyebrow">Finance Health</div>
+    <div class="section-title">Overall Grade</div>
+    <div class="section-desc">Scored across legal entity, payment infrastructure, revenue posture, cost management, and runway visibility.</div>
+  </div>
+
+  <div class="score-grid">
+    <div class="score-cell">
+      <div class="score-num score-orange">C+</div>
+      <div class="score-label">Finance Overall</div>
+    </div>
+    <div class="score-cell">
+      <div class="score-num score-red">D</div>
+      <div class="score-label">Legal Entity</div>
+    </div>
+    <div class="score-cell">
+      <div class="score-num score-gold">B+</div>
+      <div class="score-label">Stripe Wiring</div>
+    </div>
+    <div class="score-cell">
+      <div class="score-num score-red">D+</div>
+      <div class="score-label">Revenue</div>
+    </div>
+    <div class="score-cell">
+      <div class="score-num score-gold">B</div>
+      <div class="score-label">Cost Visibility</div>
+    </div>
+    <div class="score-cell">
+      <div class="score-num score-orange">C</div>
+      <div class="score-label">Runway</div>
+    </div>
+  </div>
+
+  <div class="card" style="border-left: 3px solid var(--orange);">
+    <div class="card-title">Finance C+ — Rationale</div>
+    <p>Stripe integration is well-architected (edge functions, webhook, DB schema all wired) but the LLC isn't formed, no live keys are set, zero revenue has transacted, and runway depends entirely on Rob's personal spend tolerance with no formal accounting or tax posture. The technical plumbing is A-quality; the business scaffolding is pre-launch D.</p>
+  </div>
+
+  <!-- LEGAL ENTITY CARD -->
+  <div class="section-header" style="margin-top: 2.5rem;">
+    <div class="section-eyebrow">Legal Entity</div>
+    <div class="section-title">Entity Status</div>
+  </div>
+
+  <div class="grid-2">
+    <div class="stack-item">
+      <div class="stack-label">LLC Formed</div>
+      <div class="stack-value" style="color:var(--red);">NOT YET</div>
+      <div class="stack-note">Every review since 5-6-26 cites LLC formation as the single unblocking action. Still pending as of 5-11-26.</div>
+    </div>
+    <div class="stack-item">
+      <div class="stack-label">EIN</div>
+      <div class="stack-value" style="color:var(--red);">Unknown</div>
+      <div class="stack-note">No EIN without LLC. Required for Stripe business account + tax filings.</div>
+    </div>
+    <div class="stack-item">
+      <div class="stack-label">Business Bank Account</div>
+      <div class="stack-value" style="color:var(--red);">Not opened</div>
+      <div class="stack-note">5-6-26 review recommended Mercury. Requires LLC to open. Mixing personal/business funds is the primary liability risk.</div>
+    </div>
+    <div class="stack-item">
+      <div class="stack-label">Operating Entity</div>
+      <div class="stack-value" style="color:var(--orange);">Greenskeeper Studios (sole proprietor)</div>
+      <div class="stack-note">Rob Madsen trading informally as GKS. No LLC protection — personal assets exposed.</div>
+    </div>
+    <div class="stack-item">
+      <div class="stack-label">ToS / Privacy Policy</div>
+      <div class="stack-value" style="color:var(--red);">Not deployed</div>
+      <div class="stack-note">Flagged as sprint item. Required before collecting payments. Legal exposure without it.</div>
+    </div>
+    <div class="stack-item">
+      <div class="stack-label">Accounting Tooling</div>
+      <div class="stack-value" style="color:var(--red);">None identified</div>
+      <div class="stack-note">No Quickbooks, Wave, or equivalent. No separation of business expenses. Tax prep will be manual reconstruction.</div>
+    </div>
+  </div>
+
+  <!-- STRIPE WIRING CARD -->
+  <div class="section-header" style="margin-top: 2.5rem;">
+    <div class="section-eyebrow">Payment Infrastructure</div>
+    <div class="section-title">Stripe Wiring</div>
+  </div>
+
+  <div class="card" style="border-left: 3px solid var(--green);">
+    <div class="card-title">What's Built</div>
+    <ul>
+      <li><code>supabase/functions/stripe-webhook/index.ts</code> — handles <code>checkout.session.completed</code>, <code>customer.subscription.updated</code>, <code>customer.subscription.deleted</code>, <code>invoice.payment_failed</code>. Signature verification via <code>STRIPE_WEBHOOK_SECRET</code>. Returns 200 on handler errors (correct Stripe pattern).</li>
+      <li><code>supabase/functions/create-checkout/index.ts</code> and <code>create-player-checkout/index.ts</code> — checkout session creation edge functions exist.</li>
+      <li><code>migrations/002_add_billing.sql</code> — <code>stripe_customer_id</code>, <code>stripe_subscription_id</code>, <code>stripe_status</code> on tournaments table.</li>
+      <li><code>migrations/005_invitations_and_accounts.sql</code> — <code>billing_status</code>, <code>billing_expires_at</code>, <code>billing_ref</code> on player_accounts.</li>
+      <li><code>lib/tier-config.js</code> — binary <code>free</code>/<code>pro</code> tier gating, <code>canAccess(plan, feature)</code> exported for both Node and browser.</li>
+    </ul>
+  </div>
+
+  <div class="card" style="border-left: 3px solid var(--red);">
+    <div class="card-title">What's Missing</div>
+    <ul>
+      <li><strong>No live Stripe account</strong> — no LLC = no business Stripe. All keys are placeholders; <code>STRIPE_SECRET_KEY</code>, <code>STRIPE_WEBHOOK_SECRET</code>, <code>STRIPE_PRICE_PLAYER</code> are read from env but not set in Supabase secrets. (<code>stripe-webhook/index.ts:3-5</code>)</li>
+      <li><strong>Price IDs not created</strong> — <code>STRIPE_PRICE_PLAYER</code> resolves to undefined; <code>PRICE_TO_PLAN</code> map will be empty at runtime. (<code>stripe-webhook/index.ts:14-19</code>)</li>
+      <li><strong>Only one price tier</strong> — webhook maps one price ID to <code>'pro'</code>. The 5-8-26 review referenced STARTER/PRO/CLUB but tier-config only has free/pro. Schema is ahead of config.</li>
+      <li><strong>Webhook endpoint not registered</strong> — <code>platform.html:1410</code> lists webhook URL as a pending task: <code>jllugkiojeoopitdvzsa.supabase.co/functions/v1/stripe-webhook</code> not registered in Stripe dashboard.</li>
+      <li><strong>reg_open = false</strong> — registration is closed; no player can reach checkout. Must flip to true after LLC + Stripe setup.</li>
+    </ul>
+  </div>
+
+  <div class="grid-3" style="margin-top: 0.75rem;">
+    <div class="stack-item">
+      <div class="stack-label">Stripe Mode</div>
+      <div class="stack-value" style="color:var(--orange);">Not configured</div>
+      <div class="stack-note">No account. Target: test mode first, live after LLC.</div>
+    </div>
+    <div class="stack-item">
+      <div class="stack-label">Key Storage</div>
+      <div class="stack-value" style="color:var(--green);">Env-only (correct)</div>
+      <div class="stack-note">No hardcoded keys in repo. All via <code>Deno.env.get()</code>. Grep confirms zero <code>sk_live</code>/<code>sk_test</code> in source.</div>
+    </div>
+    <div class="stack-item">
+      <div class="stack-label">Stripe Fee</div>
+      <div class="stack-value">2.9% + 30c</div>
+      <div class="stack-note">Standard Stripe rate. Radar fraud included. No negotiated rate yet.</div>
+    </div>
+  </div>
+
+  <!-- REVENUE POSTURE CARD -->
+  <div class="section-header" style="margin-top: 2.5rem;">
+    <div class="section-eyebrow">Revenue</div>
+    <div class="section-title">Revenue Posture</div>
+  </div>
+
+  <div class="card" style="border-left: 3px solid var(--red);">
+    <div class="card-title">Current State: $0 MRR</div>
+    <p>No revenue has transacted. Registration is closed (<code>reg_open = false</code>). No Stripe account exists. The product is technically capable of billing but commercially inert.</p>
+  </div>
+
+  <div class="grid-2">
+    <div class="stack-item">
+      <div class="stack-label">Billable Today</div>
+      <div class="stack-value" style="color:var(--red);">Nothing</div>
+      <div class="stack-note">Gated by LLC (no Stripe account), no ToS, reg_open=false.</div>
+    </div>
+    <div class="stack-item">
+      <div class="stack-label">Target Price Point</div>
+      <div class="stack-value" style="color:var(--gold);">$2/mo per player</div>
+      <div class="stack-note">Per <code>platform.html:1410</code> — "TOURney Player Account $2/mo recurring."</div>
+    </div>
+    <div class="stack-item">
+      <div class="stack-label">Tenant Count</div>
+      <div class="stack-value">1 (Bova Invitational)</div>
+      <div class="stack-note">v1 PoC tenant. Multi-tenant schema exists. No paid tenants.</div>
+    </div>
+    <div class="stack-item">
+      <div class="stack-label">Tier Model</div>
+      <div class="stack-value">free / pro</div>
+      <div class="stack-note"><code>lib/tier-config.js</code> — pro unlocks design + access. No per-tenant pricing yet.</div>
+    </div>
+    <div class="stack-item">
+      <div class="stack-label">MRR at 20 Pro Players</div>
+      <div class="stack-value" style="color:var(--gold);">~$40/mo gross</div>
+      <div class="stack-note">After 2.9%+30c Stripe fee: ~$33/mo net. Covers hosting at launch scale.</div>
+    </div>
+    <div class="stack-item">
+      <div class="stack-label">Breakeven Players</div>
+      <div class="stack-value">~30 pro players</div>
+      <div class="stack-note">At $2/mo covers ~$55/mo ops cost. Assumes Vercel free tier + Supabase free tier hold.</div>
+    </div>
+  </div>
+
+  <!-- OPERATING COSTS TABLE -->
+  <div class="section-header" style="margin-top: 2.5rem;">
+    <div class="section-eyebrow">Operating Costs</div>
+    <div class="section-title">Monthly Cost Stack</div>
+    <div class="section-desc">Best estimates from platform docs. Token savings plan (5-7-26) targets Anthropic spend reduction.</div>
+  </div>
+
+  <div class="table-wrap">
+    <table class="page-table">
+      <thead>
+        <tr>
+          <th>Service</th>
+          <th>Current Plan</th>
+          <th>Monthly Cost</th>
+          <th>Status</th>
+          <th>Notes</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Anthropic (Claude)</strong></td>
+          <td>Pay-as-you-go</td>
+          <td style="color:var(--orange);">~$55/mo</td>
+          <td><span class="pill pill-orange">Active</span></td>
+          <td>5-7-26 plan targets $33-41/mo post-optimization</td>
+        </tr>
+        <tr>
+          <td><strong>Vercel</strong></td>
+          <td>Hobby (free)</td>
+          <td style="color:var(--green);">$0</td>
+          <td><span class="pill pill-green">Active</span></td>
+          <td>Static hosting. Pro tier $20/mo if traffic grows.</td>
+        </tr>
+        <tr>
+          <td><strong>Supabase</strong></td>
+          <td>Free tier</td>
+          <td style="color:var(--green);">$0</td>
+          <td><span class="pill pill-green">Active</span></td>
+          <td>Staging project (mmennowtnfexvqnyyain) + prod. May 2 projects on free. Pro is $25/mo each.</td>
+        </tr>
+        <tr>
+          <td><strong>Stripe</strong></td>
+          <td>N/A — not live</td>
+          <td style="color:var(--muted);">0% of $0</td>
+          <td><span class="pill pill-red">Not active</span></td>
+          <td>2.9% + 30c per transaction when live.</td>
+        </tr>
+        <tr>
+          <td><strong>Domain / DNS</strong></td>
+          <td>greenskeeper.studio</td>
+          <td style="color:var(--muted);">~$2/mo</td>
+          <td><span class="pill pill-green">Active</span></td>
+          <td>Estimate ~$24/yr.</td>
+        </tr>
+        <tr>
+          <td><strong>AWS S3</strong></td>
+          <td>Not yet provisioned</td>
+          <td style="color:var(--muted);">~$1/mo est.</td>
+          <td><span class="pill pill-orange">Pending</span></td>
+          <td>AAA runbook P3: backup bucket. Negligible at current data volume.</td>
+        </tr>
+        <tr>
+          <td colspan="2" style="text-align:right; font-weight:700; color:var(--gold);">Total (current)</td>
+          <td style="color:var(--orange); font-weight:700;">~$57/mo</td>
+          <td colspan="2" style="color:var(--muted); font-size:0.78rem;">~$41/mo post token-savings sprint</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- RUNWAY CARD -->
+  <div class="section-header" style="margin-top: 2.5rem;">
+    <div class="section-eyebrow">Runway</div>
+    <div class="section-title">Runway &amp; Financial Posture</div>
+  </div>
+
+  <div class="card" style="border-left: 3px solid var(--orange);">
+    <div class="card-title">Runway Assessment</div>
+    <p><strong>Formal runway: undefined.</strong> GKS is a sole proprietorship with no separate business bank account. Operating costs (~$57/mo) are paid from Rob's personal funds. There is no capitalization event, no investor, no revenue. Runway is functionally "as long as Rob can sustain personal subsidy" — which is not a measurable number.</p>
+    <p style="margin-top:0.5rem;">At launch with 30 paying pro players ($60 gross, ~$49 net after Stripe), the product reaches near-breakeven on ops. At 50 players (~$82 net), the product generates modest positive cash flow.</p>
+    <p style="margin-top:0.5rem;"><strong>Owner draws / tax posture:</strong> No formal draws since no entity. Dev costs (Anthropic, Vercel, Supabase) are deductible business expenses but not being tracked in any accounting tool — reconstruction at tax time is a real risk. No quarterly estimated tax payments documented.</p>
+  </div>
+
+  <div class="grid-3">
+    <div class="stack-item">
+      <div class="stack-label">Formal Runway</div>
+      <div class="stack-value" style="color:var(--red);">Undefined</div>
+      <div class="stack-note">No business entity, no capital account, no measured burn rate.</div>
+    </div>
+    <div class="stack-item">
+      <div class="stack-label">Effective Burn Rate</div>
+      <div class="stack-value" style="color:var(--orange);">~$57/mo</div>
+      <div class="stack-note">All operating costs. Target $41/mo post-optimization.</div>
+    </div>
+    <div class="stack-item">
+      <div class="stack-label">Breakeven MRR</div>
+      <div class="stack-value" style="color:var(--gold);">~$60 gross</div>
+      <div class="stack-note">~30 pro players @ $2/mo. Achievable in first Bova season.</div>
+    </div>
+  </div>
+
+  <!-- RISK REGISTER -->
+  <div class="section-header" style="margin-top: 2.5rem;" id="risks">
+    <div class="section-eyebrow">Risk Register</div>
+    <div class="section-title">Financial Risks</div>
+  </div>
+
+  <div class="sec-item sev-critical">
+    <div class="sec-header">
+      <span class="pill pill-red">Critical</span>
+      <span class="sec-title">No LLC — Personal Asset Exposure</span>
+    </div>
+    <div class="sec-body">Operating as a sole proprietor with paying customers creates unlimited personal liability. A billing dispute, data breach, or contract claim has no LLC shield. Every day of operation without LLC is unacceptable risk escalation.</div>
+    <div class="sec-fix"><strong>Fix</strong>File LLC in your state (Wyoming or Delaware recommended for single-member). ~$50-200 one-time. Open Mercury business checking same day. EIN is free from IRS (online, 10 min). Timeline: 3 days of actual work.</div>
+  </div>
+
+  <div class="sec-item sev-critical">
+    <div class="sec-header">
+      <span class="pill pill-red">Critical</span>
+      <span class="sec-title">No ToS / Privacy Policy Before Revenue</span>
+    </div>
+    <div class="sec-body">Collecting payments without a Terms of Service and Privacy Policy is a legal and Stripe compliance risk. Stripe's acceptable use policy requires ToS be presented at checkout. GDPR/CCPA requirements for data collection also apply. This is not optional at go-live.</div>
+    <div class="sec-fix"><strong>Fix</strong>Use a generator (Termly, Iubenda, or legal counsel). Deploy at <code>/terms</code> and <code>/privacy</code>. Gate checkout flow to require acceptance. Sprint item exists — execute it before flipping reg_open.</div>
+  </div>
+
+  <div class="sec-item sev-high">
+    <div class="sec-header">
+      <span class="pill pill-orange">High</span>
+      <span class="sec-title">Stripe Not Configured — Revenue Blocked</span>
+    </div>
+    <div class="sec-body">All Stripe env vars (<code>STRIPE_SECRET_KEY</code>, <code>STRIPE_WEBHOOK_SECRET</code>, <code>STRIPE_PRICE_PLAYER</code>) are unset in Supabase secrets. The webhook is not registered in Stripe dashboard. <code>PRICE_TO_PLAN</code> map will be empty at runtime. No transaction can complete. Source: <code>stripe-webhook/index.ts:3-19</code>.</div>
+    <div class="sec-fix"><strong>Fix</strong>Post-LLC: (1) Create Stripe account with EIN. (2) Create "TOURney Player Account" $2/mo recurring product — copy price ID. (3) <code>supabase secrets set STRIPE_SECRET_KEY=... STRIPE_WEBHOOK_SECRET=... STRIPE_PRICE_PLAYER=...</code>. (4) Register webhook endpoint in Stripe dashboard. (5) Test with Stripe CLI in test mode. (6) Flip reg_open → true.</div>
+  </div>
+
+  <div class="sec-item sev-high">
+    <div class="sec-header">
+      <span class="pill pill-orange">High</span>
+      <span class="sec-title">No Accounting Tooling — Tax Reconstruction Risk</span>
+    </div>
+    <div class="sec-body">Business expenses (Anthropic ~$55/mo, domain, etc.) are not tracked in any accounting system. Year-end tax reconstruction from credit card statements is error-prone and misses deduction categories. No quarterly estimated tax payments are documented for self-employment income.</div>
+    <div class="sec-fix"><strong>Fix</strong>Open Wave (free) or QuickBooks Self-Employed ($15/mo). Backfill 2026 YTD expenses. Set calendar reminder for quarterly estimated tax payment (June 15, Sept 15, Jan 15). All SaaS infrastructure costs are deductible as business expenses.</div>
+  </div>
+
+  <div class="sec-item sev-med">
+    <div class="sec-header">
+      <span class="pill pill-gold">Medium</span>
+      <span class="sec-title">Supabase Free Tier Limits — Surprise Upgrade Cost</span>
+    </div>
+    <div class="sec-body">Two Supabase projects (prod + staging) on free tier. Free tier pauses projects after 1 week inactivity, has 500MB DB limit, and 2GB bandwidth. At launch with active users, auto-pause is a service outage risk. Upgrade to Pro ($25/mo each = $50/mo) would double the current burn rate.</div>
+    <div class="sec-fix"><strong>Fix</strong>Disable auto-pause on prod project now (free setting). Budget Supabase Pro ($25/mo) into financial model for launch milestone. Consider dropping staging to one project to reduce cost exposure.</div>
+  </div>
+
+  <div class="sec-item sev-low">
+    <div class="sec-header">
+      <span class="pill pill-green">Low</span>
+      <span class="sec-title">Single Price Tier — Revenue Ceiling</span>
+    </div>
+    <div class="sec-body"><code>lib/tier-config.js</code> only has free/pro. The 5-8-26 review referenced STARTER/PRO/CLUB tiers. A single $2/mo flat price limits ARPU expansion. Tournament organizer (admin) pricing is not modeled at all — organizers likely have higher willingness-to-pay than players.</div>
+    <div class="sec-fix"><strong>Fix</strong>Not urgent at 0 MRR. Design organizer-tier pricing (e.g., $10-20/mo per active tournament) before scaling beyond Bova. The DB schema supports it; tier-config.js needs extension.</div>
+  </div>
+
+  <!-- NEXT 3 ACTIONS -->
+  <div class="section-header" style="margin-top: 2.5rem;" id="actions">
+    <div class="section-eyebrow">Sprint</div>
+    <div class="section-title">Next 3 Actions</div>
+    <div class="section-desc">Sequenced. Each unblocks the next. Week 1 target: LLC formed and Stripe in test mode.</div>
+  </div>
+
+  <div class="roadmap-item">
+    <div class="roadmap-icon">1</div>
+    <div class="roadmap-content">
+      <div class="roadmap-title">Form LLC + Open Mercury Business Account</div>
+      <div class="roadmap-desc">The single blocking action for all revenue. Removes personal liability, enables Stripe business account, enables EIN, makes expenses properly deductible.</div>
+      <div class="roadmap-action"><strong>How:</strong> File single-member LLC in Wyoming (cheapest, no state income tax) or your home state. $50-200 filing fee. IRS EIN online (free, 10 min). Open Mercury business checking (free, no minimums, tech-friendly). Estimated time: 1-3 business days. <strong>Do this first — nothing else unblocks until this is done.</strong></div>
+    </div>
+  </div>
+
+  <div class="roadmap-item">
+    <div class="roadmap-icon">2</div>
+    <div class="roadmap-content">
+      <div class="roadmap-title">Wire Stripe End-to-End in Test Mode</div>
+      <div class="roadmap-desc">Create Stripe account (with LLC EIN), create $2/mo player product, set Supabase secrets, register webhook, test full checkout flow with Stripe test cards. Deploy ToS/Privacy at same time.</div>
+      <div class="roadmap-action"><strong>Commands:</strong><br>
+        <code>supabase secrets set STRIPE_SECRET_KEY=[REDACTED — env STRIPE_SECRET_KEY]</code><br>
+        <code>supabase secrets set STRIPE_WEBHOOK_SECRET=[REDACTED — env STRIPE_WEBHOOK_SECRET]</code><br>
+        <code>supabase secrets set STRIPE_PRICE_PLAYER=[price_id from dashboard]</code><br>
+        Then register webhook URL in Stripe: <code>jllugkiojeoopitdvzsa.supabase.co/functions/v1/stripe-webhook</code><br>
+        Test with <code>stripe trigger checkout.session.completed</code>. Verify <code>player_accounts</code> billing_status flips to active.
+      </div>
+    </div>
+  </div>
+
+  <div class="roadmap-item">
+    <div class="roadmap-icon">3</div>
+    <div class="roadmap-content">
+      <div class="roadmap-title">Set Up Basic Accounting + Flip reg_open</div>
+      <div class="roadmap-desc">Open Wave or QuickBooks Self-Employed. Backfill 2026 YTD expenses. Once Stripe test mode is verified clean, flip reg_open to true and open Bova Invitational for paid registrations.</div>
+      <div class="roadmap-action"><strong>Accounting:</strong> Wave is free, exports IRS-ready reports. Categorize Anthropic + Vercel + Supabase as "Software/SaaS - Business." Set quarterly estimated tax reminder.<br><strong>Go-live gate:</strong> ToS live, Privacy live, Stripe live-mode keys set, reg_open = true in Supabase settings table, smoke-test one real $2 charge. Done.</div>
+    </div>
+  </div>
+
+</div>
+</section>
+
+<div class="next-step-bar">
+  <div class="next-step-inner">
+    <div class="next-step-label">Immediate Next Step</div>
+    <div class="next-step-strong">Form LLC</div>
+    <div class="next-step-cmd">wyoming.gov/business → file single-member LLC → IRS EIN online → Mercury business account</div>
+  </div>
+</div>
+
+<footer>
+  Generated by <span>Claude Sonnet 4.6</span> · Greenskeeper Studios Internal · May 11, 2026
+  <br style="margin-top:0.3rem">
+  <a href="/platform" style="color:var(--muted);font-size:0.72rem;text-decoration:none">← TOURney Operations</a>
+</footer>
+
+</body>
+</html>

@@ -5,6 +5,19 @@
   "description": "Canonical registry of all TOURney plans, reviews, audits, and QA artifacts. The /platform Artifacts tab renders from this file. Skills (e.g. tourney-review) append new entries when they generate output.",
   "entries": [
     {
+      "id": "review-finance-2026-05-11",
+      "category": "review",
+      "title": "Finance Review · May 11, 2026",
+      "summary": "Finance graded C+ overall: Stripe wiring is B+ (edge functions, webhook, DB schema fully built, no hardcoded keys) but zero revenue due to LLC not formed, no live Stripe keys set, reg_open=false, and no ToS/Privacy. Operating costs ~$57/mo (Anthropic dominant). Breakeven at ~30 pro players at $2/mo. Top risks: no LLC (personal liability), no ToS before revenue, Stripe env vars unset. Three actions: form LLC, wire Stripe in test mode, open accounting + flip reg_open.",
+      "date": "2026-05-11",
+      "updated": "2026-05-11",
+      "author": "Claude Sonnet 4.6",
+      "url": "/platform/5-11-26-claude-review-finance",
+      "file": "5-11-26-claude-review-finance.html",
+      "tags": ["review", "finance", "money"],
+      "status": "shipped"
+    },
+    {
       "id": "review-marketing-2026-05-11",
       "category": "review",
       "title": "Marketing Review · May 11, 2026",
