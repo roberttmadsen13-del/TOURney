@@ -5,6 +5,19 @@
   "description": "Canonical registry of all TOURney plans, reviews, audits, and QA artifacts. The /platform Artifacts tab renders from this file. Skills (e.g. tourney-review) append new entries when they generate output.",
   "entries": [
     {
+      "id": "review-onboarding-2026-05-11",
+      "category": "review",
+      "title": "Onboarding Review · May 11, 2026",
+      "summary": "End-to-end new user journey audit: discovery to sign-up to first tournament to first score. Grade: B−. Top findings: invite code gate kills cold-traffic conversion, login.html signup requires pre-existing RSVP (conversion bug), PWA install orphaned from player journey. 9-item sprint prioritized by conversion impact. Key wins available: fix signup error message, add request-access to invite gate, surface PWA install post-RSVP.",
+      "date": "2026-05-11",
+      "updated": "2026-05-11",
+      "author": "Claude Sonnet 4.6",
+      "url": "/5-11-26-claude-review-onboarding",
+      "file": "5-11-26-claude-review-onboarding.html",
+      "tags": ["review", "onboarding", "ux"],
+      "status": "shipped"
+    },
+    {
       "id": "runbook-token-savings-business-2026-05-11",
       "category": "runbook",
       "title": "Token Savings Business Runbook · May 11, 2026",

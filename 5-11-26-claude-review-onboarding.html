@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TOURney — Onboarding Review · May 11, 2026</title>
+<style>
+  :root {
+    --gold: #c09030;
+    --gold-light: #d4a840;
+    --gold-dim: rgba(192,144,48,0.18);
+    --ink: #1a1008;
+    --bg: #0d0a05;
+    --surface: #151009;
+    --card: #1c140a;
+    --card2: #221a0e;
+    --border: rgba(192,144,48,0.22);
+    --muted: #7a6a54;
+    --text: #e8dcc8;
+    --red: #c0392b;
+    --green: #27ae60;
+    --blue: #2980b9;
+    --orange: #e67e22;
+    --purple: #8e44ad;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { font-family: -apple-system, 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; font-size: 15px; }
+  nav { position: sticky; top: 0; z-index: 100; background: rgba(13,10,5,0.96); border-bottom: 1px solid var(--border); backdrop-filter: blur(12px); padding: 0.6rem 1.5rem; display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
+  .nav-brand { color: var(--gold); font-weight: 700; font-size: 1rem; letter-spacing: 0.05em; white-space: nowrap; }
+  .nav-brand span { color: var(--muted); font-weight: 400; font-size: 0.8rem; margin-left: 0.4rem; }
+  .nav-links { display: flex; gap: 0.2rem; flex-wrap: wrap; margin-left: auto; }
+  .nav-links a { color: var(--muted); text-decoration: none; font-size: 0.78rem; padding: 0.3rem 0.55rem; border-radius: 4px; transition: all 0.15s; white-space: nowrap; }
+  .nav-links a:hover { color: var(--gold); background: var(--gold-dim); }
+  .hero { padding: 3.5rem 1.5rem 2.5rem; text-align: center; border-bottom: 1px solid var(--border); background: linear-gradient(180deg, rgba(192,144,48,0.06) 0%, transparent 100%); }
+  .hero-eyebrow { display: inline-block; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold); border: 1px solid var(--border); border-radius: 20px; padding: 0.25rem 0.85rem; margin-bottom: 1.2rem; }
+  .hero h1 { font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 800; color: #fff; margin-bottom: 0.5rem; }
+  .hero h1 span { color: var(--gold); }
+  .hero-sub { color: var(--muted); max-width: 560px; margin: 0 auto 1.5rem; font-size: 0.95rem; }
+  .hero-meta { display: flex; gap: 1.5rem; justify-content: center; flex-wrap: wrap; font-size: 0.78rem; color: var(--muted); }
+  .hero-meta span { display: flex; align-items: center; gap: 0.35rem; }
+  .wrapper { max-width: 1000px; margin: 0 auto; padding: 0 1.5rem; }
+  section { padding: 3rem 0; border-bottom: 1px solid var(--border); }
+  section:last-child { border-bottom: none; }
+  .section-header { margin-bottom: 2rem; }
+  .section-eyebrow { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.4rem; }
+  .section-title { font-size: 1.5rem; font-weight: 800; color: #fff; margin-bottom: 0.4rem; }
+  .section-desc { color: var(--muted); font-size: 0.88rem; max-width: 600px; }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 1.25rem 1.4rem; margin-bottom: 0.75rem; }
+  .card-title { font-size: 0.88rem; font-weight: 700; color: var(--gold); margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem; }
+  .card p, .card li { font-size: 0.86rem; color: var(--text); margin-bottom: 0.3rem; }
+  .card ul, .card ol { padding-left: 1.2rem; }
+  .card li { margin-bottom: 0.4rem; }
+  .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 0.75rem; }
+  .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 0.75rem; }
+  .stack-item { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 1rem 1.2rem; }
+  .stack-label { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); margin-bottom: 0.25rem; }
+  .stack-value { font-size: 0.92rem; font-weight: 600; color: #fff; }
+  .stack-note { font-size: 0.75rem; color: var(--muted); margin-top: 0.2rem; }
+  .pill { display: inline-block; font-size: 0.68rem; font-weight: 700; letter-spacing: 0.06em; padding: 0.18rem 0.55rem; border-radius: 20px; text-transform: uppercase; }
+  .pill-gold { background: rgba(192,144,48,0.18); color: var(--gold); border: 1px solid rgba(192,144,48,0.3); }
+  .pill-green { background: rgba(39,174,96,0.15); color: var(--green); border: 1px solid rgba(39,174,96,0.3); }
+  .pill-red { background: rgba(192,57,43,0.15); color: var(--red); border: 1px solid rgba(192,57,43,0.3); }
+  .pill-orange { background: rgba(230,126,34,0.15); color: var(--orange); border: 1px solid rgba(230,126,34,0.3); }
+  .pill-blue { background: rgba(41,128,185,0.15); color: var(--blue); border: 1px solid rgba(41,128,185,0.3); }
+  .pill-purple { background: rgba(142,68,173,0.15); color: var(--purple); border: 1px solid rgba(142,68,173,0.3); }
+  .page-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+  .page-table th { text-align: left; padding: 0.6rem 0.8rem; border-bottom: 1px solid var(--border); color: var(--muted); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; background: var(--surface); }
+  .page-table td { padding: 0.65rem 0.8rem; border-bottom: 1px solid rgba(192,144,48,0.08); vertical-align: top; }
+  .page-table tr:last-child td { border-bottom: none; }
+  .page-table tr:hover td { background: var(--gold-dim); }
+  .page-table .url { font-family: monospace; font-size: 0.78rem; color: var(--gold-light); }
+  .page-table .file { font-family: monospace; font-size: 0.75rem; color: var(--muted); }
+  .table-wrap { background: var(--card); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; overflow-x: auto; }
+  .score-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 0.6rem; margin-bottom: 1.5rem; }
+  .score-cell { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 1rem; text-align: center; }
+  .score-num { font-size: 2rem; font-weight: 900; line-height: 1; margin-bottom: 0.2rem; }
+  .score-label { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); }
+  .score-green { color: var(--green); }
+  .score-gold { color: var(--gold); }
+  .score-red { color: var(--red); }
+  .score-blue { color: var(--blue); }
+  .score-orange { color: var(--orange); }
+  .roadmap-item { display: flex; gap: 1.2rem; align-items: flex-start; background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 1.1rem 1.25rem; margin-bottom: 0.6rem; }
+  .roadmap-icon { width: 2.2rem; height: 2.2rem; border-radius: 50%; background: var(--gold-dim); color: var(--gold); display: grid; place-items: center; font-size: 1rem; flex-shrink: 0; border: 1px solid var(--border); }
+  .roadmap-content { flex: 1; }
+  .roadmap-title { font-size: 0.92rem; font-weight: 700; color: #fff; margin-bottom: 0.2rem; }
+  .roadmap-desc { font-size: 0.82rem; color: var(--muted); margin-bottom: 0.4rem; }
+  .roadmap-action { font-size: 0.78rem; color: var(--text); }
+  .roadmap-action strong { color: var(--gold-light); }
+  code { font-family: 'Consolas', 'Monaco', monospace; background: rgba(255,255,255,0.07); padding: 0.1rem 0.3rem; border-radius: 3px; font-size: 0.82em; color: var(--gold-light); }
+  footer { border-top: 1px solid var(--border); padding: 1.5rem; text-align: center; color: var(--muted); font-size: 0.75rem; }
+  footer span { color: var(--gold); }
+  @media (max-width: 600px) {
+    .nav-links { display: none; }
+    .hero { padding: 2rem 1rem 1.5rem; }
+    section { padding: 2rem 0; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-brand">TOURney <span>by Greenskeeper Studios</span></div>
+  <div class="nav-links">
+    <a href="/platform">Operations</a>
+    <a href="#focus">Onboarding</a>
+    <a href="#sprint">Sprint Plan</a>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="hero-eyebrow">Focused Review — Onboarding</div>
+  <h1><span>TOURney</span> — Onboarding Review</h1>
+  <p class="hero-sub">End-to-end new user journey audit: discovery to sign-up to first tournament to first score. Evidence-cited findings, letter grade, and sprint plan.</p>
+  <div class="hero-meta">
+    <span>📅 May 11, 2026</span>
+    <span>🤖 Claude Sonnet 4.6</span>
+    <span>🏢 Greenskeeper Studios</span>
+    <span>🔒 Internal Only</span>
+  </div>
+</div>
+
+<section id="focus">
+<div class="wrapper">
+
+  <!-- 1. GRADE + METRICS -->
+  <div class="section-header">
+    <div class="section-eyebrow">Overall Assessment</div>
+    <div class="section-title">Grade: B−</div>
+    <div class="section-desc">Solid bones, real friction points. The create wizard and player join flow both have avoidable drop-off risks. Core onboarding can reach A− with targeted fixes.</div>
+  </div>
+
+  <div class="score-grid">
+    <div class="score-cell">
+      <div class="score-num score-gold">B−</div>
+      <div class="score-label">Overall Grade</div>
+    </div>
+    <div class="score-cell">
+      <div class="score-num score-orange">4</div>
+      <div class="score-label">Create Wizard Steps</div>
+    </div>
+    <div class="score-cell">
+      <div class="score-num score-orange">~8 min</div>
+      <div class="score-label">Organizer Time-to-Live</div>
+    </div>
+    <div class="score-cell">
+      <div class="score-num score-red">HIGH</div>
+      <div class="score-label">Invite Code Friction</div>
+    </div>
+    <div class="score-cell">
+      <div class="score-num score-orange">Dedicated Page</div>
+      <div class="score-label">PWA Install Timing</div>
+    </div>
+    <div class="score-cell">
+      <div class="score-num score-gold">~3 min</div>
+      <div class="score-label">Player Register Time</div>
+    </div>
+  </div>
+
+  <!-- 2. JOURNEY MAP -->
+  <div class="section-header" style="margin-top:2rem">
+    <div class="section-eyebrow">Full Journey Map</div>
+    <div class="section-title">Organizer + Player Paths</div>
+    <div class="section-desc">Every touchpoint from cold landing to live scorecard, with friction ratings.</div>
+  </div>
+
+  <div class="table-wrap" style="margin-bottom:1.5rem">
+    <table class="page-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Actor</th>
+          <th>Step</th>
+          <th>Page / File</th>
+          <th>Friction</th>
+          <th>Notes</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="color:var(--muted)">1</td>
+          <td><span class="pill pill-blue">Organizer</span></td>
+          <td>Lands on marketing page</td>
+          <td class="url">/</td>
+          <td><span class="pill pill-green">LOW</span></td>
+          <td>Strong headline, demo screens rotating. Value prop clear. Nav CTA to /create present.</td>
+        </tr>
+        <tr>
+          <td style="color:var(--muted)">2</td>
+          <td><span class="pill pill-blue">Organizer</span></td>
+          <td>Clicks "Get Started" CTA</td>
+          <td class="url">/create</td>
+          <td><span class="pill pill-red">HIGH</span></td>
+          <td>First thing: <strong>invite code gate</strong>. Organizer must have a code before seeing any of the wizard. No self-serve path documented on the page.</td>
+        </tr>
+        <tr>
+          <td style="color:var(--muted)">3</td>
+          <td><span class="pill pill-blue">Organizer</span></td>
+          <td>Step 1: Account</td>
+          <td class="file">create.html:205</td>
+          <td><span class="pill pill-orange">MED</span></td>
+          <td>Sign up (email + password) or sign in. Password auth only — no magic link. New users must create a password and confirm it.</td>
+        </tr>
+        <tr>
+          <td style="color:var(--muted)">4</td>
+          <td><span class="pill pill-blue">Organizer</span></td>
+          <td>Step 2: Tournament Basics</td>
+          <td class="file">create.html:~s2 panel</td>
+          <td><span class="pill pill-orange">MED</span></td>
+          <td>Name, slug (URL), year, colors, logo upload. Slug auto-generates but requires availability check — adds latency perception. Logo upload optional but prominent.</td>
+        </tr>
+        <tr>
+          <td style="color:var(--muted)">5</td>
+          <td><span class="pill pill-blue">Organizer</span></td>
+          <td>Step 3: Format + Days</td>
+          <td class="file">create.html:~s3 panel</td>
+          <td><span class="pill pill-orange">MED</span></td>
+          <td>Number of days, format per day (12 options), team config. High cognitive load for a first-time organizer. No format recommendation or "most popular" callout.</td>
+        </tr>
+        <tr>
+          <td style="color:var(--muted)">6</td>
+          <td><span class="pill pill-blue">Organizer</span></td>
+          <td>Step 4: Launch</td>
+          <td class="file">create.html:329</td>
+          <td><span class="pill pill-orange">MED</span></td>
+          <td>Final review + create. launchAlert shown on error. No intermediate save — abandon mid-wizard means starting over. Post-creation redirect: needs investigation (likely /admin).</td>
+        </tr>
+        <tr>
+          <td style="color:var(--muted)">7</td>
+          <td><span class="pill pill-blue">Organizer</span></td>
+          <td>Lands in admin panel</td>
+          <td class="url">/t/:slug/admin</td>
+          <td><span class="pill pill-orange">MED</span></td>
+          <td>Organizer must figure out how to invite players from here. No onboarding checklist or "next steps" prompt visible at top of admin.</td>
+        </tr>
+        <tr>
+          <td style="color:var(--muted)">8</td>
+          <td><span class="pill pill-blue">Organizer</span></td>
+          <td>Shares tournament URL with players</td>
+          <td class="url">/t/:slug/</td>
+          <td><span class="pill pill-orange">MED</span></td>
+          <td>Share mechanism is manual (organizer copies link from admin or browser). No built-in "copy invite link" CTA on post-create screen.</td>
+        </tr>
+        <tr>
+          <td style="color:var(--muted)">9</td>
+          <td><span class="pill pill-gold">Player</span></td>
+          <td>Opens tournament home link</td>
+          <td class="url">/t/:slug/</td>
+          <td><span class="pill pill-green">LOW</span></td>
+          <td>home.html renders beautifully — hero, about, field, RSVP form all visible without auth. Good cold start for players.</td>
+        </tr>
+        <tr>
+          <td style="color:var(--muted)">10</td>
+          <td><span class="pill pill-gold">Player</span></td>
+          <td>Fills RSVP form</td>
+          <td class="file">home.html RSVP section</td>
+          <td><span class="pill pill-orange">MED</span></td>
+          <td>Fields: first name, last name, email, phone, handicap, available dates (conditional), why_me, trash_talk. 7+ fields is high for registration. Several are optional but not clearly labeled as such.</td>
+        </tr>
+        <tr>
+          <td style="color:var(--muted)">11</td>
+          <td><span class="pill pill-gold">Player</span></td>
+          <td>Creates account (login.html)</td>
+          <td class="url">/t/:slug/login</td>
+          <td><span class="pill pill-red">HIGH</span></td>
+          <td>Sign-up flow requires player email exists in <code>players</code> table first. New players who haven't RSVPed yet get "This email isn't registered as a player" error. Login-before-RSVP fails completely. login.html:doSignUp()</td>
+        </tr>
+        <tr>
+          <td style="color:var(--muted)">12</td>
+          <td><span class="pill pill-gold">Player</span></td>
+          <td>First login — player home / portal</td>
+          <td class="url">/t/:slug/ or /player</td>
+          <td><span class="pill pill-orange">MED</span></td>
+          <td>Player lands on tournament home. Scorecard link visible in nav. No explicit "you're in — here's what to do next" moment.</td>
+        </tr>
+        <tr>
+          <td style="color:var(--muted)">13</td>
+          <td><span class="pill pill-gold">Player</span></td>
+          <td>Finds scorecard</td>
+          <td class="url">/t/:slug/scorecard</td>
+          <td><span class="pill pill-orange">MED</span></td>
+          <td>Scorecard accessible from nav. No prominent prompt on home.html pointing player to scorecard when scoring is open.</td>
+        </tr>
+        <tr>
+          <td style="color:var(--muted)">14</td>
+          <td><span class="pill pill-gold">Player</span></td>
+          <td>PWA install prompt</td>
+          <td class="url">/t/:slug/install</td>
+          <td><span class="pill pill-orange">MED</span></td>
+          <td>install.html is a dedicated page — not proactively surfaced. Player must navigate to it or be linked by organizer. No automatic banner on first visit.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 3. CREATE FLOW -->
+  <div class="section-header">
+    <div class="section-eyebrow">Tournament Creation</div>
+    <div class="section-title">Create Flow Deep-Dive</div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title">⛳ 4-Step Wizard — What's in Each Step</div>
+      <ul>
+        <li><strong>Pre-step: Invite Code Gate</strong> — must enter a valid code before wizard renders. This is the #1 conversion killer for any cold traffic. No self-serve explanation. <code>create.html:175-182</code></li>
+        <li><strong>Step 1 — Account:</strong> sign in or sign up with email + password. New organizers need to create account here. No magic link option. <code>create.html:203-207</code></li>
+        <li><strong>Step 2 — Tournament Basics:</strong> name, slug, year, brand colors, logo. Slug availability async check. Logo optional. <code>create.html:739-747</code></li>
+        <li><strong>Step 3 — Format + Days:</strong> day count, format per day (12 options: stroke, scramble, best ball, shambles, stableford, match, alt shot, chapman, skins, greensomes, mod stableford, nassau). No "most popular" hint. High cognitive load for first-timers.</li>
+        <li><strong>Step 4 — Launch:</strong> final review, create tournament. <code>create.html:797-888</code> inserts tournament + settings to Supabase. launchAlert on error. No draft save.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-title">🚨 Friction Points — Create Flow</div>
+      <ul>
+        <li><span class="pill pill-red">HIGH</span> Invite code gate before anything — no self-serve, no explanation, no "request access" fallback. Organizers who find the product organically hit a dead end.</li>
+        <li><span class="pill pill-orange">MED</span> Password auth on step 1 — new users must set and confirm a password. Magic link would eliminate this friction and the "forgot password" loop.</li>
+        <li><span class="pill pill-orange">MED</span> No wizard progress save — abandon at step 3 means full restart. Browser refresh = lost state.</li>
+        <li><span class="pill pill-orange">MED</span> 12 format options in step 3 with no guidance. "Stroke play" is the right default for most, but nothing indicates that.</li>
+        <li><span class="pill pill-green">LOW</span> Slug auto-generation is smart, but the async availability check adds perceived latency without a clear loading indicator description in code.</li>
+        <li><span class="pill pill-green">LOW</span> Error handling is present (<code>launchAlert</code>, <code>authAlert</code>, <code>codeAlert</code>) but relies on native <code>alert()</code> calls for slug validation errors — jarring UX.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">What Could Be Removed or Deferred</div>
+    <ul>
+      <li><strong>Invite code gate</strong> — if this is intentional closed beta, add a "request access" form so cold traffic converts to a waitlist instead of bouncing. If beta is over, remove entirely.</li>
+      <li><strong>Logo upload on step 2</strong> — can be deferred to admin panel post-creation. Removes a step 2 blocker for organizers without a logo ready.</li>
+      <li><strong>Brand color picker on step 2</strong> — same deferral opportunity. Default theme works fine; let organizers customize later.</li>
+      <li><strong>Format picker in step 3</strong> — could default to "Stroke" with an optional override. Eliminates 90% of step 3 cognitive load.</li>
+      <li><strong>Replace step 1 password auth with magic link</strong> — organizer enters email, gets a link, clicks it, continues wizard. No password to forget.</li>
+    </ul>
+  </div>
+
+  <!-- 4. PLAYER JOIN FLOW -->
+  <div class="section-header" style="margin-top:2rem">
+    <div class="section-eyebrow">Player Onboarding</div>
+    <div class="section-title">Player Join Flow — Friction Audit</div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title">How Players Join</div>
+      <ul>
+        <li><strong>Invite mechanism:</strong> organizer shares the tournament URL manually (copy/paste from browser or admin). No built-in "invite player" button that generates a personalized link. <code>home.html</code> is the landing point.</li>
+        <li><strong>Player RSVP form fields:</strong> first name, last name, email, phone, handicap, available dates (conditional on <code>reg_show_dates</code> setting), why_me (essay field), trash_talk. Up to 8 fields. <code>home.html:insert block</code></li>
+        <li><strong>Required vs optional:</strong> not clearly differentiated in the UI. Players may not know what they can skip.</li>
+        <li><strong>Account creation:</strong> separate step — player must then go to <code>/login</code> and create an account. This is a second distinct registration step after RSVP.</li>
+        <li><strong>Critical bug:</strong> <code>login.html:doSignUp()</code> checks <code>players</code> table for the email before allowing account creation. A player who tries to sign up BEFORE submitting the RSVP form gets a hard error: "This email isn't registered as a player." Order dependency is invisible to the user.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-title">Player Join Friction Ratings</div>
+      <ul>
+        <li><span class="pill pill-green">LOW</span> Tournament home page is publicly visible — no auth to see the event, read about it, view the field.</li>
+        <li><span class="pill pill-orange">MED</span> 7-8 RSVP fields is above industry average (typically 3-4 for event registration). "Why me" and "trash talk" are fun but add time.</li>
+        <li><span class="pill pill-orange">MED</span> Two-phase registration (RSVP then account creation) is non-standard. Most platforms combine these into one flow.</li>
+        <li><span class="pill pill-red">HIGH</span> RSVP-before-account ordering is not communicated anywhere. Players who attempt login first hit a confusing hard error.</li>
+        <li><span class="pill pill-orange">MED</span> Password auth — golfers (often 40-60 demographic) have high password friction. Magic link or Google auth would significantly improve conversion.</li>
+        <li><span class="pill pill-green">LOW</span> Post-RSVP confirmation is shown inline with a toast notification — good feedback, no page redirect needed.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 5. FIRST SCORING EXPERIENCE -->
+  <div class="section-header" style="margin-top:2rem">
+    <div class="section-eyebrow">First Use</div>
+    <div class="section-title">First Scoring Experience</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Scorecard Discoverability + Clarity</div>
+    <ul>
+      <li><strong>Discoverability:</strong> Scorecard is accessible from the nav (<code>/t/:slug/scorecard</code>) and linked from <code>home.html</code> nav. However, there is no prominent "Scoring is open — enter your scores" call-to-action on the home page when a round is active. A player landing on home during tournament day has to find the scorecard in the nav.</li>
+      <li><strong>Scoreboard link:</strong> <code>home.html:407</code> has a leaderboard link in nav and a "Full Leaderboard" gold button in the live-scores section. Leaderboard is well surfaced; scorecard entry is less so.</li>
+      <li><strong>First-use clarity:</strong> Players who have never used TOURney need to understand format (stroke, scramble, etc.) before scoring. The format descriptions exist in the create flow but it's unclear if they're shown to players on the scorecard page itself.</li>
+      <li><strong>Organizer awareness:</strong> No push notification or admin alert when a player starts entering scores — organizer visibility into "who's scored" relies on checking the leaderboard manually.</li>
+      <li><strong>Hero scoreboard:</strong> <code>home.html</code> loads a live hero scoreboard pulling from <code>scores</code> + <code>players</code> tables — this is a great "scoring is happening" signal, but only after scores exist.</li>
+    </ul>
+  </div>
+
+  <!-- 6. PWA INSTALL -->
+  <div class="section-header" style="margin-top:2rem">
+    <div class="section-eyebrow">PWA Experience</div>
+    <div class="section-title">Install Timing + Quality</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">PWA Install Analysis — install.html</div>
+    <ul>
+      <li><strong>Timing problem:</strong> <code>install.html</code> is a standalone dedicated page at <code>/t/:slug/install</code>. It is NOT automatically surfaced. Players must navigate to it intentionally or be linked by the organizer. This means most players never see the install prompt unless the organizer explicitly tells them to go there.</li>
+      <li><strong>Prompt quality:</strong> The page correctly uses <code>beforeinstallprompt</code> to capture and defer the native browser prompt. Falls back to manual instructions after a delay if no prompt fires (correct for iOS). <code>install.html:JS block</code></li>
+      <li><strong>Already-installed detection:</strong> Checks <code>display-mode: standalone</code> and hides the install button if already installed. Smart.</li>
+      <li><strong>What's missing:</strong> No automatic install banner or bottom sheet on first player visit to tournament home. No install prompt woven into the RSVP confirmation flow ("Get the app to track your scores"). The install page exists but is orphaned from the natural player journey.</li>
+      <li><strong>Recommendation:</strong> Add a dismissible install banner to <code>home.html</code> after RSVP success — "Add TOURney to your home screen for instant scorecard access." Wire it to the same <code>beforeinstallprompt</code> event capture already in <code>pwa.js</code>.</li>
+    </ul>
+  </div>
+
+  <!-- 7. COLD START ANALYSIS -->
+  <div class="section-header" style="margin-top:2rem">
+    <div class="section-eyebrow">Cold Start</div>
+    <div class="section-title">Can You Understand TOURney Without an Account?</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Pre-auth Product Clarity — marketing.html</div>
+    <ul>
+      <li><strong>Headline:</strong> "TOURney — Run Your Golf Tournament Like a Pro" — clear, audience-specific, benefit-oriented. Title tag matches.</li>
+      <li><strong>Demo screens:</strong> <code>marketing.html</code> includes animated rotating demo screens (`.demo-screens`, `.demo-screen`) showing what the product looks like. This is a strong cold-start win — product is shown before any sign-up.</li>
+      <li><strong>Feature presentation:</strong> Features section exists. Copy leans toward features (what it does) rather than pure benefits (what it means for you), but golf organizers are technical enough that this is acceptable.</li>
+      <li><strong>Pricing visibility:</strong> No pricing visible on marketing page from what's indexed. First mention of billing/pricing appears at the invite code gate on <code>/create</code>. This is a gap — organizers don't know what they're buying into before starting the creation flow.</li>
+      <li><strong>Social proof:</strong> No testimonials, no customer count, no "X tournaments run" stat visible in the evidence gathered. The stats section exists (`.stat-num`, `.stat-label`) but populates dynamically — may be empty on cold load.</li>
+      <li><strong>Nav link to /platform:</strong> Exists but styled as near-invisible (very low opacity gold) — intentionally hidden from public? Fine for now but means no way for a prospect to see the platform dashboard.</li>
+    </ul>
+  </div>
+
+  <!-- 8. SPRINT PLAN -->
+  <div class="section-header" style="margin-top:2rem" id="sprint">
+    <div class="section-eyebrow">Friction Removal Sprint</div>
+    <div class="section-title">Sprint Plan — Prioritized by Conversion Impact</div>
+    <div class="section-desc">Ordered: highest abandonment risk first. Most items are day-of fixes, not architectural rewrites.</div>
+  </div>
+
+  <div class="roadmap-item">
+    <div class="roadmap-icon">1</div>
+    <div class="roadmap-content">
+      <div class="roadmap-title">Fix: Login signup requires pre-existing RSVP — add clear error guidance</div>
+      <div class="roadmap-desc">login.html:doSignUp() returns a hard error if email not in players table. Players who try to create an account before RSVPing get confused and abandon. This is a conversion-critical bug.</div>
+      <div class="roadmap-action"><strong>Fix:</strong> Replace generic error with "You need to register for the tournament first — scroll down on the event page to RSVP, then come back to create your account." Add a link back to the tournament home. Alternatively, allow account creation first and link it to the RSVP on submission.</div>
+    </div>
+  </div>
+
+  <div class="roadmap-item">
+    <div class="roadmap-icon">2</div>
+    <div class="roadmap-content">
+      <div class="roadmap-title">Add "Request Access" to invite code gate on /create</div>
+      <div class="roadmap-desc">Any organizer who discovers TOURney organically and clicks "Get Started" hits the invite code wall with no explanation and no exit path. 100% bounce rate for cold traffic.</div>
+      <div class="roadmap-action"><strong>Fix:</strong> Below the invite code field, add: "Don't have a code? Request early access →" linking to a simple Typeform, Google Form, or email mailto. Converts bounces to leads.</div>
+    </div>
+  </div>
+
+  <div class="roadmap-item">
+    <div class="roadmap-icon">3</div>
+    <div class="roadmap-content">
+      <div class="roadmap-title">Surface PWA install after RSVP confirmation</div>
+      <div class="roadmap-desc">install.html exists but is never surfaced in the natural player journey. Most players never install the PWA. Peak install intent is immediately after successful RSVP — player is excited, they're in.</div>
+      <div class="roadmap-action"><strong>Fix:</strong> After <code>successRsvp</code> shows, fire a dismissible install banner or modal: "Add TOURney to your home screen for instant scorecard access." Reuse the deferred prompt already captured in pwa.js.</div>
+    </div>
+  </div>
+
+  <div class="roadmap-item">
+    <div class="roadmap-icon">4</div>
+    <div class="roadmap-content">
+      <div class="roadmap-title">Add "Next Steps" panel in admin after tournament creation</div>
+      <div class="roadmap-desc">Post-creation, the organizer lands in admin with no guidance on what to do next. No onboarding checklist: add players, configure scoring, share the link.</div>
+      <div class="roadmap-action"><strong>Fix:</strong> First-time admin view (check localStorage flag <code>gks_new_tournament</code>) shows a 3-step checklist: (1) Copy & share your tournament link, (2) Configure scoring when ready, (3) Open scoring on tournament day. Dismiss once acknowledged.</div>
+    </div>
+  </div>
+
+  <div class="roadmap-item">
+    <div class="roadmap-icon">5</div>
+    <div class="roadmap-content">
+      <div class="roadmap-title">Add scoring CTA to home.html when a round is active</div>
+      <div class="roadmap-desc">Players landing on home during tournament day have no prominent signal that scoring is open and where to go. Leaderboard is surfaced; scorecard entry is not.</div>
+      <div class="roadmap-action"><strong>Fix:</strong> When <code>play_status = 'active'</code>, show a sticky gold banner or hero button on home.html: "Scoring is Open — Enter Your Scores →" linking to /scorecard. Conditional on tournament status already available in the tourney context.</div>
+    </div>
+  </div>
+
+  <div class="roadmap-item">
+    <div class="roadmap-icon">6</div>
+    <div class="roadmap-content">
+      <div class="roadmap-title">Reduce RSVP form to essential fields; mark optional fields clearly</div>
+      <div class="roadmap-desc">7-8 fields in the RSVP form is above average for event registration and increases form abandonment. "Why me" and "trash talk" are delightful but optional — they're not labeled as such.</div>
+      <div class="roadmap-action"><strong>Fix:</strong> Add <code>(optional)</code> label to why_me, trash_talk, phone fields. Consider collapsing optional fields behind a "Add more info" expander. Required minimum: first name, last name, email.</div>
+    </div>
+  </div>
+
+  <div class="roadmap-item">
+    <div class="roadmap-icon">7</div>
+    <div class="roadmap-content">
+      <div class="roadmap-title">Add format recommendation to create step 3</div>
+      <div class="roadmap-desc">12 format options with no guidance creates decision paralysis. Most first-time organizers want stroke play. Nothing signals this.</div>
+      <div class="roadmap-action"><strong>Fix:</strong> Mark "Stroke" with a <span class="pill pill-green">Most Popular</span> badge. Add a one-line description under each selected format (already exists in <code>FMT_DESC</code> on home.html — port to create.html). Default selection to Stroke.</div>
+    </div>
+  </div>
+
+  <div class="roadmap-item">
+    <div class="roadmap-icon">8</div>
+    <div class="roadmap-content">
+      <div class="roadmap-title">Add pricing transparency to marketing.html</div>
+      <div class="roadmap-desc">No pricing is visible before starting the create flow. Organizers don't know what they're committing to. Trust gap.</div>
+      <div class="roadmap-action"><strong>Fix:</strong> Add a simple pricing section to marketing.html: "First tournament free during beta — then $X/tournament or $Y/year." Even a "Pricing" link in the nav that scrolls to a brief callout removes the ambiguity.</div>
+    </div>
+  </div>
+
+  <div class="roadmap-item">
+    <div class="roadmap-icon">9</div>
+    <div class="roadmap-content">
+      <div class="roadmap-title">Replace password auth with magic link (organizer + player)</div>
+      <div class="roadmap-desc">Password auth is the highest-friction login pattern. Golf organizers (and golfers) are not known for password hygiene. Magic link removes the "forgot password" loop entirely. Both login.html and create.html step 1 use password.</div>
+      <div class="roadmap-action"><strong>Fix:</strong> Supabase supports <code>auth.signInWithOtp()</code> — swap both flows to magic link. Keep password as fallback for users who've already set one. This is a 1-day migration with high conversion impact.</div>
+    </div>
+  </div>
+
+</div>
+</section>
+
+<footer>
+  Generated by <span>Claude Sonnet 4.6</span> · Greenskeeper Studios Internal · May 11, 2026
+  <br style="margin-top:0.3rem">
+  <a href="/platform" style="color:var(--muted);font-size:0.72rem;text-decoration:none">← TOURney Operations</a>
+</footer>
+
+</body>
+</html>
