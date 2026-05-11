@@ -10,6 +10,19 @@ const supabase = createClient(
   Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
 );
 
+// Stripe price ID → internal plan name.
+// Add entries when Stripe products/prices are created.
+// e.g. 'price_abc123': 'pro'
+const PRICE_TO_PLAN: Record<string, string> = {};
+
+async function setPlan(email: string, plan: string, billingRef: string, billingStatus: string, expiresAt: string | null) {
+  const { error } = await supabase.from('player_accounts').upsert(
+    { email, plan, billing_status: billingStatus, billing_ref: billingRef, billing_expires_at: expiresAt, updated_at: new Date().toISOString() },
+    { onConflict: 'email' }
+  );
+  if (error) throw new Error(`player_accounts upsert failed: ${error.message}`);
+}
+
 Deno.serve(async (req) => {
   const sig = req.headers.get('stripe-signature');
   if (!sig) return new Response('Missing signature', { status: 400 });
@@ -27,58 +40,51 @@ Deno.serve(async (req) => {
     switch (event.type) {
       case 'checkout.session.completed': {
         const session = event.data.object as Stripe.Checkout.Session;
-        const { tournament_id, tier } = session.metadata ?? {};
-        if (!tournament_id || !tier) break;
-
-        await supabase.from('tournaments').update({
-          status:                'active',
-          tier,
-          stripe_customer_id:    session.customer as string,
-          stripe_subscription_id: session.subscription as string,
-          stripe_status:         'active',
-          carry_forward_enabled: tier === 'club',
-        }).eq('id', tournament_id);
+        const email = session.metadata?.email ?? session.customer_email ?? session.customer_details?.email;
+        const plan = session.metadata?.plan ?? 'pro';
+        if (!email) { console.warn('checkout.session.completed: no email in metadata or session'); break; }
+        const expiresAt = session.expires_at ? new Date(session.expires_at * 1000).toISOString() : null;
+        await setPlan(email, plan, session.subscription as string ?? session.id, 'active', expiresAt);
+        console.log(`checkout complete: ${email} → ${plan}`);
         break;
       }
 
       case 'customer.subscription.updated': {
         const sub = event.data.object as Stripe.Subscription;
-        const { tournament_id, tier } = sub.metadata ?? {};
-        if (!tournament_id) break;
-
-        const newTier = tier ?? 'starter';
-        await supabase.from('tournaments').update({
-          stripe_status:         sub.status,
-          tier:                  newTier,
-          carry_forward_enabled: newTier === 'club',
-          // Reactivate if subscription comes back from past_due
-          ...(sub.status === 'active' ? { status: 'active' } : {}),
-        }).eq('stripe_subscription_id', sub.id);
+        const email = sub.metadata?.email;
+        if (!email) { console.warn('subscription.updated: no email in metadata'); break; }
+        const priceId = sub.items.data[0]?.price?.id ?? '';
+        const plan = PRICE_TO_PLAN[priceId] ?? sub.metadata?.plan ?? 'pro';
+        const expiresAt = sub.current_period_end ? new Date(sub.current_period_end * 1000).toISOString() : null;
+        const billingStatus = sub.status === 'active' ? 'active' : sub.status === 'past_due' ? 'past_due' : 'inactive';
+        await setPlan(email, sub.status === 'canceled' ? 'free' : plan, sub.id, billingStatus, expiresAt);
+        console.log(`subscription updated: ${email} → ${plan} (${sub.status})`);
         break;
       }
 
       case 'customer.subscription.deleted': {
         const sub = event.data.object as Stripe.Subscription;
-        await supabase.from('tournaments').update({
-          stripe_status:         'canceled',
-          status:                'suspended',
-          carry_forward_enabled: false,
-        }).eq('stripe_subscription_id', sub.id);
+        const email = sub.metadata?.email;
+        if (!email) { console.warn('subscription.deleted: no email in metadata'); break; }
+        await setPlan(email, 'free', sub.id, 'inactive', null);
+        console.log(`subscription canceled: ${email} → free`);
         break;
       }
 
       case 'invoice.payment_failed': {
         const invoice = event.data.object as Stripe.Invoice;
-        if (!invoice.subscription) break;
-        await supabase.from('tournaments').update({
-          stripe_status: 'past_due',
-        }).eq('stripe_subscription_id', invoice.subscription as string);
+        const email = invoice.customer_email;
+        if (!email || !invoice.subscription) break;
+        await supabase.from('player_accounts')
+          .update({ billing_status: 'past_due', updated_at: new Date().toISOString() })
+          .eq('email', email);
+        console.log(`payment failed: ${email} → past_due`);
         break;
       }
     }
   } catch (e) {
     console.error(`Handler error for ${event.type}:`, e);
-    // Still return 200 — Stripe retries on non-2xx, causing duplicate events
+    // Return 200 — Stripe retries on non-2xx causing duplicate events
   }
 
   return new Response('ok', { status: 200 });
