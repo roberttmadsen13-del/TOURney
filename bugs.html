@@ -387,6 +387,10 @@ function toggleSession(id) {
     await db.from('platform_bugs').delete().eq('id', id);
     load();
   };
+  // Realtime: re-fetch on any change to platform_bugs.
+  db.channel('platform_bugs_live')
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'platform_bugs' }, () => load())
+    .subscribe();
   load();
 })();
 </script>
