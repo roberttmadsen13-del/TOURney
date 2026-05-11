@@ -852,26 +852,92 @@ function copyNextStep(cat, url) {
   const next=NEXT_STEP[cat]; if(!next) return;
   const axis=(url.match(/-(security|architecture|ux|performance|business|data-model|deployment|feature-depth|finance|marketing|onboarding)(?:[^a-z]|$)/)||[])[1]||'';
   const CHAIN=['review','plan','runbook','audit','postmortem','bugs'];
-  // collect all related entries (same axis) sorted by chain order — gives skill full context
+  // Collect related entries (same axis) sorted by chain order — gives the skill full context.
   const seen=new Set();
   const urls=allEntries
     .filter(e=>e.url&&(axis?e.url.includes('-'+axis):e.url===url))
     .sort((a,b)=>CHAIN.indexOf(a.category)-CHAIN.indexOf(b.category))
     .map(e=>'https://tourney.greenskeeper.studio'+e.url)
     .filter(u=>seen.has(u)?false:seen.add(u));
-  // always include the clicked card's url even if axis matching missed it
   const full='https://tourney.greenskeeper.studio'+url;
   if(!seen.has(full)) urls.unshift(full);
-  let cmd;
-  if(next==='fix') {
-    // bugs → debug prompt (plain text, not a skill command)
-    const ctx=urls.filter(u=>u!==full).join(' ');
-    cmd=`Diagnose and fix the open bugs documented at ${full}. Work through each issue: identify root cause, implement the fix, verify resolution. ${ctx?'Prior context: '+ctx:''}`.trim();
-  } else {
-    cmd='/tourney-'+next+(axis?'-'+axis:'')+' '+urls.join(' ');
-  }
+  const prior=urls.filter(u=>u!==full);
+  const ctxBlock=prior.length?'\n\nPrior context (read in order):\n'+prior.map(u=>'- '+u).join('\n'):'';
+  const axisLabel=axis?axis.replace(/-/g,' '):'TOURney';
+  const axisFlag=axis?'-'+axis:'';
+  const TEMPLATES={
+    plan:()=>`/tourney-plan${axisFlag} ${urls.join(' ')}
+
+Source: ${full}
+Goal: Generate a focused ${axisLabel} plan that closes every open issue, gap, and sub-B grade from the source review/audit.
+
+Required:
+- Sequence work by dependency and deploy risk (DB/schema first, edge fns next, client last)
+- Crisp acceptance criteria per item (testable, observable)
+- Flag blockers explicitly (LLC, third-party, schema migration, vendor)
+- Mark each item P0/P1/P2 with rationale
+- Honest about what is already shipped vs aspirational${ctxBlock}`,
+
+    runbook:()=>`/tourney-runbook${axisFlag} ${urls.join(' ')}
+
+Source plan: ${full}
+Goal: Step-by-step operational runbook to execute the plan safely in production.
+
+Each step MUST include:
+- Exact command or SQL (copy-paste ready)
+- Expected output (so you can tell if it worked)
+- Verification checkpoint (query, URL, log line)
+- Rollback procedure (if step fails or post-deploy regression)
+
+Order steps by safe-deploy sequence. Insert explicit go/no-go gates between phases.${ctxBlock}`,
+
+    audit:()=>`/tourney-audit${axisFlag} ${urls.join(' ')}
+
+Source runbook/plan: ${full}
+Goal: Audit live production against the runbook. No speculation — evidence only.
+
+Required per runbook step:
+- Verify it actually shipped (cite file:line, commit SHA, deployed URL, SQL row, edge fn version)
+- Grade A-D for each sub-axis with reasoning
+- Flag regressions, partial deploys, or skipped steps with severity (P0/P1/P2)
+- Include screenshots or query output where visual/data proof helps${ctxBlock}`,
+
+    postmortem:()=>`/tourney-postmortem${axisFlag} ${urls.join(' ')}
+
+Source audit: ${full}
+Goal: Blameless postmortem of any regression, incident, or silent failure surfaced by the audit.
+
+Required:
+- Precise timeline in UTC (event → detection → mitigation → resolution)
+- Root cause isolated to file:line + commit SHA
+- Impact quantified (users affected, data integrity, downtime minutes, revenue)
+- Contributing factors (process, monitoring, test gaps) — blameless
+- Action items with owners, severity, and target date${ctxBlock}`,
+
+    bugs:()=>`/tourney-bug${axisFlag} ${urls.join(' ')}
+
+Source postmortem: ${full}
+Goal: Extract every open action item into structured, fixable bug entries.
+
+Per bug:
+- Reproduction steps (numbered, deterministic)
+- Expected vs actual behavior
+- Root cause with file:line citation
+- Proposed minimal fix (no scope creep)
+- Severity (P0/P1/P2) and rationale${ctxBlock}`,
+
+    fix:()=>`Read the open bugs documented at ${full}. For each:
+
+1. Reproduce or trace the issue in the canonical TOURney repo (Bova Invitational workspace).
+2. Identify root cause with file:line citation — no guessing.
+3. Implement a minimal, targeted fix. No scope creep, no premature abstraction, no "while I'm here" cleanups.
+4. Verify the golden path + obvious edge cases still work (run dev server, exercise the flow as a real user).
+5. Commit with a concise message describing the fix. Push to origin.
+6. Mark the bug completed in /platform/bugs.${ctxBlock}`
+  };
+  const cmd=(TEMPLATES[next]||(()=>urls.join(' ')))();
   navigator.clipboard.writeText(cmd).then(()=>{
-    const label=next==='fix'?'Debug prompt copied':'Copied → '+cmd;
+    const label=next==='fix'?'✓ Debug prompt copied':'✓ Skill prompt copied';
     const t=document.createElement('div');
     t.textContent=label;
     t.style.cssText='position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);background:var(--gold);color:#111;padding:.5rem 1.1rem;border-radius:6px;font-size:.78rem;font-weight:700;z-index:9999;pointer-events:none;max-width:90vw;text-align:center;';
