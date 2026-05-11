@@ -80,6 +80,12 @@ footer a:hover{color:var(--gold);}
   <!-- LIVE LOGGED BUGS (from FAB across all properties) -->
   <div id="loggedBugsSection" class="section" style="display:none;">
     <div class="sec-title">🐛 Logged via FAB <span class="sec-count" id="loggedOpenCount">0 open</span></div>
+    <div id="sprintActions" style="display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:.85rem;">
+      <button onclick="copyTriagePrompt()" style="background:rgba(192,144,48,0.12);border:1px solid rgba(192,144,48,0.35);color:var(--gold);padding:.45rem .9rem;border-radius:6px;cursor:pointer;font-family:monospace;font-size:.65rem;text-transform:uppercase;letter-spacing:.08em;">🗂️ Organize into Sprints</button>
+      <button onclick="copyRunSprintPrompt()" style="background:rgba(39,174,96,0.12);border:1px solid rgba(39,174,96,0.4);color:var(--green);padding:.45rem .9rem;border-radius:6px;cursor:pointer;font-family:monospace;font-size:.65rem;text-transform:uppercase;letter-spacing:.08em;">▶ Run Next Sprint</button>
+      <button onclick="copyTopBugPrompt()" style="background:rgba(192,57,43,0.12);border:1px solid rgba(192,57,43,0.4);color:var(--red);padding:.45rem .9rem;border-radius:6px;cursor:pointer;font-family:monospace;font-size:.65rem;text-transform:uppercase;letter-spacing:.08em;">⚡ Fix Top P0 Now</button>
+      <button onclick="copyExportPrompt()" style="background:rgba(41,128,185,0.12);border:1px solid rgba(41,128,185,0.4);color:var(--blue);padding:.45rem .9rem;border-radius:6px;cursor:pointer;font-family:monospace;font-size:.65rem;text-transform:uppercase;letter-spacing:.08em;">📋 Export All Open</button>
+    </div>
     <div id="loggedOpen" style="display:flex;flex-direction:column;gap:.4rem;"></div>
     <div class="session-hdr" id="loggedCompletedHdr" style="cursor:pointer;margin-top:.75rem;display:none;" onclick="toggleSession('loggedCompletedBody')">
       <span class="session-title">✅ Completed <span class="pill pill-green">FAB</span></span>
@@ -386,6 +392,111 @@ function toggleSession(id) {
     if (!confirm('Delete this bug permanently?')) return;
     await db.from('platform_bugs').delete().eq('id', id);
     load();
+  };
+  function buildBugDump(){
+    const open = cache.filter(b => b.status === 'open');
+    return open.map((b,i) => ({
+      idx: i+1,
+      id: b.id,
+      title: b.title || '(no title)',
+      description: b.description || '',
+      url: b.url || '',
+      logged_at: b.created_at,
+      logged_by: b.email
+    }));
+  }
+  function flashFloater(msg){
+    const t = document.createElement('div');
+    t.textContent = msg;
+    t.style.cssText='position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);background:var(--gold);color:#111;padding:.5rem 1.1rem;border-radius:6px;font-size:.78rem;font-weight:700;z-index:9999;pointer-events:none;max-width:90vw;text-align:center;';
+    document.body.appendChild(t);
+    setTimeout(() => t.remove(), 2800);
+  }
+  window.copyTriagePrompt = () => {
+    const bugs = buildBugDump();
+    if (!bugs.length) return flashFloater('No open bugs to organize');
+    const cmd = `You are a senior product engineer triaging the open bug backlog for TOURney (Bova Invitational — a multi-tenant tournament SaaS PWA).
+
+Below is the live dump of every open bug logged via the platform FAB. Each entry includes the URL where the bug was reported, the title, and the description.
+
+Your job: organize ALL of these bugs into 3-5 cohesive, shippable sprints.
+
+For each sprint, output:
+- **Sprint name** (3-5 words, descriptive of theme)
+- **Theme / why these bugs cluster** (one sentence)
+- **Priority** P0 / P1 / P2 with rationale
+- **Estimated effort** in dev-days
+- **Dependency** on prior sprints (none, or "after Sprint N")
+- **Acceptance criteria** (testable, observable, what "done" means)
+- **Included bug IDs** (use the \`id\` field from the JSON below)
+
+Bias toward:
+- Grouping by axis (security, UX, scoring, billing, etc.) so each sprint touches a single area of the codebase
+- P0 sprints first (blocks revenue, breaks core flow, or causes data loss)
+- Sequencing so later sprints depend on earlier ones, never the reverse
+- Small enough to ship in 1-3 days each
+
+Finish with a 5-line executive summary: what should ship this week, what next week, what to defer.
+
+Canonical repo: \`C:\\Users\\Rob\\OneDrive\\Desktop\\Greenskeeper Studios\\Bova Invitational\\\`
+
+Live bug backlog (${bugs.length} open):
+\`\`\`json
+${JSON.stringify(bugs, null, 2)}
+\`\`\``;
+    navigator.clipboard.writeText(cmd).then(() => flashFloater('✓ Triage prompt copied (' + bugs.length + ' bugs)'));
+  };
+  window.copyRunSprintPrompt = () => {
+    const bugs = buildBugDump();
+    if (!bugs.length) return flashFloater('No open bugs to run');
+    const cmd = `Execute the highest-priority cohesive cluster of TOURney bugs from the backlog below.
+
+Procedure for each bug you address:
+1. **Reproduce or trace** the issue against the canonical repo (\`C:\\Users\\Rob\\OneDrive\\Desktop\\Greenskeeper Studios\\Bova Invitational\\\`). Visit the URL where it was logged.
+2. **Root cause** with file:line citation — do not guess.
+3. **Minimal targeted fix** — no scope creep, no premature abstraction, no "while I'm here" cleanups.
+4. **Verify** golden path + obvious edge cases still work (console clean, network clean, mobile viewport OK).
+5. **Commit** with concise message. Push to origin (auto-mirrors to tourney remote).
+6. **Mark the bug completed** in Supabase: \`update platform_bugs set status='completed' where id='<bug-id>'\` (use the Supabase MCP \`execute_sql\` tool).
+7. If the bug is deferred or out of scope: skip it, leave status='open', note why in your report.
+
+Pick the most cohesive 3-6 bugs that touch the same area of code or the same user flow. Ship them as one logical sprint. Stop after the cluster — do not span the entire backlog.
+
+After the cluster ships, report: which bugs closed, which deferred + why, what regressed (if anything), what's the next cluster to target.
+
+Bump SW cache if any client-side asset changed.
+
+Live bug backlog (${bugs.length} open):
+\`\`\`json
+${JSON.stringify(bugs, null, 2)}
+\`\`\``;
+    navigator.clipboard.writeText(cmd).then(() => flashFloater('✓ Sprint runner prompt copied'));
+  };
+  window.copyTopBugPrompt = () => {
+    const bugs = buildBugDump();
+    if (!bugs.length) return flashFloater('No open bugs');
+    const cmd = `Fix the single most critical open bug below. Steps:
+
+1. Scan the backlog. Pick the one bug with the highest user impact OR data integrity risk OR revenue blocker — judge based on title, description, URL surface.
+2. State your pick with a one-line rationale.
+3. Reproduce the issue against the canonical repo (\`C:\\Users\\Rob\\OneDrive\\Desktop\\Greenskeeper Studios\\Bova Invitational\\\`).
+4. Cite root cause file:line.
+5. Implement minimal targeted fix.
+6. Verify golden path. Commit + push.
+7. Mark this bug completed in Supabase platform_bugs.
+
+Do not fan out to other bugs. One bug, fix, ship, report.
+
+Live bug backlog (${bugs.length} open):
+\`\`\`json
+${JSON.stringify(bugs, null, 2)}
+\`\`\``;
+    navigator.clipboard.writeText(cmd).then(() => flashFloater('✓ Top-P0 prompt copied'));
+  };
+  window.copyExportPrompt = () => {
+    const bugs = buildBugDump();
+    if (!bugs.length) return flashFloater('No open bugs');
+    navigator.clipboard.writeText(JSON.stringify(bugs, null, 2)).then(() => flashFloater('✓ Raw JSON copied (' + bugs.length + ' bugs)'));
   };
   // Realtime: re-fetch on any change to platform_bugs.
   db.channel('platform_bugs_live')
