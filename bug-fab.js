@@ -1,7 +1,9 @@
 // Owner-only floating bug-log button. Included on every page across all
 // tourney.greenskeeper.studio properties. Self-contained: loads supabase
 // only if absent. Auth-gated to ALLOWED list. Captures location.href.
+// v3 — persists to Supabase platform_bugs table (was localStorage in v1/v2).
 (function () {
+  console.log('[bug-fab] v3 loaded');
   const ALLOWED = ['robert.t.madsen13@gmail.com', 'jmalber2021@gmail.com'];
   const SUPABASE_URL = 'https://jllugkiojeoopitdvzsa.supabase.co';
   const SUPABASE_KEY = 'sb_publishable_DnBMNLaSu61ykJ6P_fI2fw_D9DdAScn';

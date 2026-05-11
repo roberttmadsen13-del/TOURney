@@ -1,4 +1,4 @@
-const CACHE = 'tourney-v26';
+const CACHE = 'tourney-v27';
 const PRECACHE = [
   '/',
   '/celebrate.js',
@@ -88,6 +88,22 @@ self.addEventListener('fetch', (event) => {
   // JSON data files (qa-index, grades, manifests) must always hit the network.
   // SW cache would override Cache-Control: no-store and serve stale data.
   if (url.pathname.endsWith('.json')) return;
+
+  // Frequently-changing app scripts: network-first so fixes propagate without cache busting.
+  if (url.pathname === '/bug-fab.js' || url.pathname === '/tourney-init.js') {
+    event.respondWith(
+      fetch(req)
+        .then((res) => {
+          if (res && res.ok) {
+            const copy = res.clone();
+            caches.open(CACHE).then((c) => c.put(req, copy)).catch(() => {});
+          }
+          return res;
+        })
+        .catch(() => caches.match(req))
+    );
+    return;
+  }
 
   // HTML navigations: network-first with cache fallback so updates propagate when online.
   if (req.mode === 'navigate' || (req.destination === 'document')) {
