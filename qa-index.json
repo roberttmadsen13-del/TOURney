@@ -21,14 +21,14 @@
       "id": "runbook-aaa-2026-05-11",
       "category": "runbook",
       "title": "AAA Implementation Runbook · May 11, 2026",
-      "summary": "Step-by-step operational procedure executing the AAA plan: A1 shared lib finish, A3 typecheck CI, A8 weekly pg_dump, A7 migrations 006+007, A4 Vitest/Playwright scaffold, A5 staging env, F7 tier gating. 9 phases, each with go/no-go gate. Every step has exact command, expected output, verification checkpoint, and rollback procedure. Safe-deploy order: foundation -> schema (gated on backups) -> testing -> staging -> revenue gating.",
+      "summary": "COMPLETE (2026-05-11). All 9 phases executed: A1 shared lib wiring, A3 typecheck CI, A8 backup workflow, A7 migrations 006+007, P5 rounds read-side, A4 Vitest/Playwright scaffold, A5 staging env (mmennowtnfexvqnyyain + staging branch), F7 tier gating (lib/tier-config.js, admin gates, stripe-webhook edge fn deployed). Pending manual: AWS S3 bucket + GitHub secrets (P3), Stripe product setup (F7).",
       "date": "2026-05-11",
       "updated": "2026-05-11",
       "author": "Claude Opus 4.7",
       "url": "/platform/5-11-26-aaa-runbook",
       "file": "5-11-26-aaa-runbook.html",
       "tags": ["runbook", "architecture", "aaa", "deployment"],
-      "status": "active"
+      "status": "done"
     },
     {
       "id": "meeting-notes-2026-05-08",
