@@ -5,6 +5,19 @@
   "description": "Canonical registry of all TOURney plans, reviews, audits, and QA artifacts. The /platform Artifacts tab renders from this file. Skills (e.g. tourney-review) append new entries when they generate output.",
   "entries": [
     {
+      "id": "review-marketing-2026-05-11",
+      "category": "review",
+      "title": "Marketing Review · May 11, 2026",
+      "summary": "Full marketing audit of tourney.greenskeeper.studio. Overall grade B−. Strengths: premium brand, clear pricing, embedded live demo, strong H1. Critical gaps: no OG/Twitter card meta tags (zero social unfurl), zero social proof/testimonials, PWA install differentiator not headlined. Top 3 actions: add OG tags, add Bova social proof callout, rewrite meta description to benefit-first. 9-item sprint ordered by impact/effort.",
+      "date": "2026-05-11",
+      "updated": "2026-05-11",
+      "author": "Claude Sonnet 4.6",
+      "url": "/5-11-26-claude-review-marketing",
+      "file": "5-11-26-claude-review-marketing.html",
+      "tags": ["review", "marketing", "growth"],
+      "status": "shipped"
+    },
+    {
       "id": "review-onboarding-2026-05-11",
       "category": "review",
       "title": "Onboarding Review · May 11, 2026",

@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TOURney — Marketing Review · May 11, 2026</title>
+<style>
+  :root {
+    --gold: #c09030;
+    --gold-light: #d4a840;
+    --gold-dim: rgba(192,144,48,0.18);
+    --ink: #1a1008;
+    --bg: #0d0a05;
+    --surface: #151009;
+    --card: #1c140a;
+    --card2: #221a0e;
+    --border: rgba(192,144,48,0.22);
+    --muted: #7a6a54;
+    --text: #e8dcc8;
+    --red: #c0392b;
+    --green: #27ae60;
+    --blue: #2980b9;
+    --orange: #e67e22;
+    --purple: #8e44ad;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { font-family: -apple-system, 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; font-size: 15px; }
+  nav { position: sticky; top: 0; z-index: 100; background: rgba(13,10,5,0.96); border-bottom: 1px solid var(--border); backdrop-filter: blur(12px); padding: 0.6rem 1.5rem; display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
+  .nav-brand { color: var(--gold); font-weight: 700; font-size: 1rem; letter-spacing: 0.05em; white-space: nowrap; }
+  .nav-brand span { color: var(--muted); font-weight: 400; font-size: 0.8rem; margin-left: 0.4rem; }
+  .nav-links { display: flex; gap: 0.2rem; flex-wrap: wrap; margin-left: auto; }
+  .nav-links a { color: var(--muted); text-decoration: none; font-size: 0.78rem; padding: 0.3rem 0.55rem; border-radius: 4px; transition: all 0.15s; white-space: nowrap; }
+  .nav-links a:hover { color: var(--gold); background: var(--gold-dim); }
+  .hero { padding: 3.5rem 1.5rem 2.5rem; text-align: center; border-bottom: 1px solid var(--border); background: linear-gradient(180deg, rgba(192,144,48,0.06) 0%, transparent 100%); }
+  .hero-eyebrow { display: inline-block; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold); border: 1px solid var(--border); border-radius: 20px; padding: 0.25rem 0.85rem; margin-bottom: 1.2rem; }
+  .hero h1 { font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 800; color: #fff; margin-bottom: 0.5rem; }
+  .hero h1 span { color: var(--gold); }
+  .hero-sub { color: var(--muted); max-width: 560px; margin: 0 auto 1.5rem; font-size: 0.95rem; }
+  .hero-meta { display: flex; gap: 1.5rem; justify-content: center; flex-wrap: wrap; font-size: 0.78rem; color: var(--muted); }
+  .hero-meta span { display: flex; align-items: center; gap: 0.35rem; }
+  .wrapper { max-width: 1000px; margin: 0 auto; padding: 0 1.5rem; }
+  section { padding: 3rem 0; border-bottom: 1px solid var(--border); }
+  section:last-child { border-bottom: none; }
+  .section-header { margin-bottom: 2rem; }
+  .section-eyebrow { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.4rem; }
+  .section-title { font-size: 1.5rem; font-weight: 800; color: #fff; margin-bottom: 0.4rem; }
+  .section-desc { color: var(--muted); font-size: 0.88rem; max-width: 600px; }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 1.25rem 1.4rem; margin-bottom: 0.75rem; }
+  .card-title { font-size: 0.88rem; font-weight: 700; color: var(--gold); margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem; }
+  .card p, .card li { font-size: 0.86rem; color: var(--text); margin-bottom: 0.3rem; }
+  .card ul, .card ol { padding-left: 1.2rem; }
+  .card li { margin-bottom: 0.4rem; }
+  .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 0.75rem; }
+  .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 0.75rem; }
+  .stack-item { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 1rem 1.2rem; }
+  .stack-label { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); margin-bottom: 0.25rem; }
+  .stack-value { font-size: 0.92rem; font-weight: 600; color: #fff; }
+  .stack-note { font-size: 0.75rem; color: var(--muted); margin-top: 0.2rem; }
+  .pill { display: inline-block; font-size: 0.68rem; font-weight: 700; letter-spacing: 0.06em; padding: 0.18rem 0.55rem; border-radius: 20px; text-transform: uppercase; }
+  .pill-gold { background: rgba(192,144,48,0.18); color: var(--gold); border: 1px solid rgba(192,144,48,0.3); }
+  .pill-green { background: rgba(39,174,96,0.15); color: var(--green); border: 1px solid rgba(39,174,96,0.3); }
+  .pill-red { background: rgba(192,57,43,0.15); color: var(--red); border: 1px solid rgba(192,57,43,0.3); }
+  .pill-orange { background: rgba(230,126,34,0.15); color: var(--orange); border: 1px solid rgba(230,126,34,0.3); }
+  .pill-blue { background: rgba(41,128,185,0.15); color: var(--blue); border: 1px solid rgba(41,128,185,0.3); }
+  .pill-purple { background: rgba(142,68,173,0.15); color: var(--purple); border: 1px solid rgba(142,68,173,0.3); }
+  .page-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+  .page-table th { text-align: left; padding: 0.6rem 0.8rem; border-bottom: 1px solid var(--border); color: var(--muted); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; background: var(--surface); }
+  .page-table td { padding: 0.65rem 0.8rem; border-bottom: 1px solid rgba(192,144,48,0.08); vertical-align: top; }
+  .page-table tr:last-child td { border-bottom: none; }
+  .page-table tr:hover td { background: var(--gold-dim); }
+  .page-table .url { font-family: monospace; font-size: 0.78rem; color: var(--gold-light); }
+  .page-table .file { font-family: monospace; font-size: 0.75rem; color: var(--muted); }
+  .table-wrap { background: var(--card); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; overflow-x: auto; }
+  .sec-item { background: var(--card); border: 1px solid var(--border); border-left: 3px solid var(--border); border-radius: 0 8px 8px 0; padding: 1rem 1.25rem; margin-bottom: 0.75rem; }
+  .sec-item.sev-critical { border-left-color: #8b0000; }
+  .sec-item.sev-high { border-left-color: var(--red); }
+  .sec-item.sev-med { border-left-color: var(--orange); }
+  .sec-item.sev-low { border-left-color: var(--green); }
+  .sec-item.sev-info { border-left-color: var(--blue); }
+  .sec-header { display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.5rem; }
+  .sec-title { font-size: 0.9rem; font-weight: 700; color: #fff; }
+  .sec-body { font-size: 0.82rem; color: var(--muted); margin-bottom: 0.5rem; }
+  .sec-fix { font-size: 0.8rem; color: var(--text); background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 4px; padding: 0.5rem 0.7rem; }
+  .sec-fix strong { color: var(--gold-light); display: block; margin-bottom: 0.2rem; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; }
+  code { font-family: 'Consolas', 'Monaco', monospace; background: rgba(255,255,255,0.07); padding: 0.1rem 0.3rem; border-radius: 3px; font-size: 0.82em; color: var(--gold-light); }
+  pre { font-family: 'Consolas', 'Monaco', monospace; background: rgba(255,255,255,0.04); border: 1px solid var(--border); border-radius: 6px; padding: 0.8rem 1rem; font-size: 0.78rem; color: var(--gold-light); overflow-x: auto; margin: 0.5rem 0; }
+  .score-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 0.6rem; margin-bottom: 1.5rem; }
+  .score-cell { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 1rem; text-align: center; }
+  .score-num { font-size: 2rem; font-weight: 900; line-height: 1; margin-bottom: 0.2rem; }
+  .score-label { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); }
+  .score-green { color: var(--green); }
+  .score-gold { color: var(--gold); }
+  .score-red { color: var(--red); }
+  .score-blue { color: var(--blue); }
+  .score-orange { color: var(--orange); }
+  .roadmap-item { display: flex; gap: 1.2rem; align-items: flex-start; background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 1.1rem 1.25rem; margin-bottom: 0.6rem; }
+  .roadmap-icon { width: 2.2rem; height: 2.2rem; border-radius: 50%; background: var(--gold-dim); color: var(--gold); display: grid; place-items: center; font-size: 1rem; flex-shrink: 0; border: 1px solid var(--border); }
+  .roadmap-content { flex: 1; }
+  .roadmap-title { font-size: 0.92rem; font-weight: 700; color: #fff; margin-bottom: 0.2rem; }
+  .roadmap-desc { font-size: 0.82rem; color: var(--muted); margin-bottom: 0.4rem; }
+  .roadmap-action { font-size: 0.78rem; color: var(--text); }
+  .roadmap-action strong { color: var(--gold-light); }
+  footer { border-top: 1px solid var(--border); padding: 1.5rem; text-align: center; color: var(--muted); font-size: 0.75rem; }
+  footer span { color: var(--gold); }
+  .next-step-bar { background: rgba(192,144,48,0.07); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+  .next-step-inner { max-width: 1000px; margin: 0 auto; padding: 1rem 1.5rem; display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
+  .next-step-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); white-space: nowrap; }
+  .next-step-strong { color: var(--gold); font-size: 0.95rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; white-space: nowrap; }
+  .next-step-cmd { font-family: 'Consolas','Monaco',monospace; font-size: 0.78rem; color: var(--gold-light); background: rgba(255,255,255,0.04); border: 1px solid var(--border); border-radius: 4px; padding: 0.28rem 0.6rem; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .next-step-copy { background: var(--gold); color: #111; border: none; border-radius: 5px; padding: 0.38rem 1rem; font-size: 0.72rem; font-weight: 700; cursor: pointer; font-family: inherit; letter-spacing: 0.06em; text-transform: uppercase; white-space: nowrap; transition: opacity 0.15s; }
+  .next-step-copy:hover { opacity: 0.82; }
+  blockquote { background: rgba(255,255,255,0.03); border-left: 3px solid var(--gold); border-radius: 0 6px 6px 0; padding: 0.7rem 1rem; margin: 0.5rem 0; font-size: 0.85rem; color: var(--gold-light); font-style: italic; }
+  @media (max-width: 600px) {
+    .nav-links { display: none; }
+    .hero { padding: 2rem 1rem 1.5rem; }
+    section { padding: 2rem 0; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-brand">TOURney <span>by Greenskeeper Studios</span></div>
+  <div class="nav-links">
+    <a href="/platform">⬡ Operations</a>
+    <a href="#focus">Marketing</a>
+    <a href="#sprint">Sprint Plan</a>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="hero-eyebrow">Focused Review — Marketing</div>
+  <h1><span>TOURney</span> — Marketing Review</h1>
+  <p class="hero-sub">Deep-dive audit scoped to Marketing only. Evidence-cited findings, letter grade, and sprint plan.</p>
+  <div class="hero-meta">
+    <span>📅 May 11, 2026</span>
+    <span>🤖 Claude Sonnet 4.6</span>
+    <span>🏢 Greenskeeper Studios</span>
+    <span>🔒 Internal Only</span>
+  </div>
+</div>
+
+<section id="focus">
+<div class="wrapper">
+
+  <!-- 1. Score Grid -->
+  <div class="section-header">
+    <div class="section-eyebrow">Overall Assessment</div>
+    <div class="section-title">Marketing Grade: B−</div>
+    <div class="section-desc">The landing page is visually premium and has the right bones — clear audience, real pricing, embedded demo. What's missing: OG tags, social proof, and the copy leans feature-list over outcome-driven benefits.</div>
+  </div>
+
+  <div class="score-grid">
+    <div class="score-cell">
+      <div class="score-num score-gold">B−</div>
+      <div class="score-label">Overall Grade</div>
+    </div>
+    <div class="score-cell">
+      <div class="score-num score-green">A−</div>
+      <div class="score-label">Headline Clarity</div>
+    </div>
+    <div class="score-cell">
+      <div class="score-num score-gold">B+</div>
+      <div class="score-label">CTA Effectiveness</div>
+    </div>
+    <div class="score-cell">
+      <div class="score-num score-red">D</div>
+      <div class="score-label">SEO / Social Meta</div>
+    </div>
+    <div class="score-cell">
+      <div class="score-num score-orange">C+</div>
+      <div class="score-label">Trust / Social Proof</div>
+    </div>
+    <div class="score-cell">
+      <div class="score-num score-green">A</div>
+      <div class="score-label">Brand Consistency</div>
+    </div>
+    <div class="score-cell">
+      <div class="score-num score-gold">B</div>
+      <div class="score-label">Feature Presentation</div>
+    </div>
+    <div class="score-cell">
+      <div class="score-num score-gold">B+</div>
+      <div class="score-label">Pricing Clarity</div>
+    </div>
+  </div>
+
+  <!-- 2. Headline + Messaging -->
+  <div class="section-header" style="margin-top:2rem;">
+    <div class="section-eyebrow">Section 1</div>
+    <div class="section-title">Headline + Messaging</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Current Copy — marketing.html</div>
+    <blockquote>Eyebrow: "Golf Tournament Platform · By Greenskeeper Studios"</blockquote>
+    <blockquote>H1: "Your Tournament. Your Brand. One Platform."</blockquote>
+    <blockquote>Hero sub: "Live scoring, player registration, team management, and a branded PWA — for any golf tournament."</blockquote>
+    <blockquote>Bottom CTA headline: "Stop Running Your Tournament on a Spreadsheet."</blockquote>
+    <blockquote>CTA sub: "Starts at $3/month. Up and running in 15 minutes. Less than a sleeve of balls."</blockquote>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Analysis</div>
+    <ul>
+      <li><strong>H1 is strong.</strong> "Your Tournament. Your Brand. One Platform." is punchy, audience-specific, and passes the 5-second test. Grade: A.</li>
+      <li><strong>Eyebrow nails the positioning.</strong> "Golf Tournament Platform" removes ambiguity immediately. No "Bova Invitational" branding leak — the page correctly presents TOURney as a platform, not a single-event site.</li>
+      <li><strong>Meta description is feature-list, not benefit-first.</strong> <code>marketing.html:15</code>: "Live scoring, player registration, team management, and a branded PWA" tells what it does, not what the organizer gains (time saved, player experience, professional look).</li>
+      <li><strong>Bottom CTA headline is the best line on the page.</strong> "Stop Running Your Tournament on a Spreadsheet" is direct pain-point marketing. It should be closer to the hero or tested as the H1.</li>
+      <li><strong>Missing:</strong> No tagline that lives independently of the H1. Nothing quotable on social. "Less than a sleeve of balls" is fun but buried in the bottom CTA where few visitors scroll.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Recommendations</div>
+    <ol>
+      <li>Swap hero sub to outcome-first: "Your players get a live-scoring PWA with your logo. You get an admin panel that runs the whole thing from your phone."</li>
+      <li>Move "Stop Running Your Tournament on a Spreadsheet" up — either as an eyebrow variant or a section header between hero and features.</li>
+      <li>Add a tagline beneath the TOURney wordmark in the nav: "Golf Tournament Software" — helps SEO and scanner comprehension.</li>
+    </ol>
+  </div>
+
+  <!-- 3. Feature Presentation -->
+  <div class="section-header" style="margin-top:2rem;">
+    <div class="section-eyebrow">Section 2</div>
+    <div class="section-title">Feature Presentation</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">What's Shown (marketing.html feature grid)</div>
+    <ul>
+      <li>Live Leaderboard — "Real-time hole-by-hole scoring… Scramble, stroke play, best ball, stableford"</li>
+      <li>100% Your Brand — "Your logo, your colors, your tournament name on every screen"</li>
+      <li>Multi-Day Events — "Up to 7 days. Different format each day."</li>
+      <li>Player Registration — "Waitlist, player directory. Your players sign up, you manage the list."</li>
+      <li>Demo section — embedded live app (Leaderboard / Scorecard / Feed tabs) with animated phone in hero</li>
+      <li>How It Works — 3-step wizard (Build → Share → Play)</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Features vs Benefits Ratio</div>
+    <p>~70% feature statements, ~30% benefit framing. The feature grid titles are noun-based ("Live Leaderboard", "Multi-Day Events") rather than outcome-based ("Players know the standings in real time", "Run a week-long event without a spreadsheet").</p>
+    <p style="margin-top:0.5rem"><strong>What's NOT called out (but should be):</strong></p>
+    <ul>
+      <li>PWA install — players add it to their home screen, zero app store friction. This is a huge differentiator vs Golf Genius but never named as "installable app."</li>
+      <li>Admin panel from phone — the organizer never needs a laptop. Not mentioned.</li>
+      <li>Teams/pairs/individual in same tournament — genuinely rare. Buried in feature body copy, not headline.</li>
+      <li>White-label ("players never see TOURney") — mentioned but undersold. This is a premium signal.</li>
+      <li>Scoring format flexibility (stableford, stroke, scramble, best ball) — mentioned once inline, not a headline feature.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Demo Section — Strength</div>
+    <p>The embedded live demo (marketing.html "See It In Action") is a genuine differentiator. "No redirects. No sign-up required. This is the actual app your players will use." This should be promoted harder — it's the single best trust-builder on the page and most visitors probably miss it below the fold.</p>
+    <p style="margin-top:0.4rem">No static screenshots or hero product shot — the animated phone mock is CSS-only, not a real screenshot. This is acceptable for MVP but a real screenshot at key resolution (375px iPhone) would convert better.</p>
+  </div>
+
+  <!-- 4. CTA Analysis -->
+  <div class="section-header" style="margin-top:2rem;">
+    <div class="section-eyebrow">Section 3</div>
+    <div class="section-title">CTA Analysis</div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title">Primary CTAs</div>
+      <ul>
+        <li><strong>Nav:</strong> "Get Started →" → <code>/create</code></li>
+        <li><strong>Hero:</strong> "Build Your Tournament →" (gold button) + "See It in Action ↓" (ghost)</li>
+        <li><strong>Bottom:</strong> "Build Your Tournament →"</li>
+      </ul>
+      <p style="margin-top:0.5rem">Three CTA placements, consistent destination (<code>/create</code>). "Build Your Tournament" is specific and action-oriented — strong. "Get Started" in nav is generic but acceptable for nav real estate.</p>
+    </div>
+    <div class="card">
+      <div class="card-title">Friction Assessment</div>
+      <ul>
+        <li><span class="pill pill-green">Low</span> No login required to browse or demo</li>
+        <li><span class="pill pill-green">Low</span> Pricing visible before signup</li>
+        <li><span class="pill pill-orange">Medium</span> /create requires account creation before seeing the wizard — no preview mode</li>
+        <li><span class="pill pill-orange">Medium</span> No "See a sample tournament" link from the landing page</li>
+        <li><span class="pill pill-red">Missing</span> No secondary CTA for "not ready yet" visitors (email capture, waitlist)</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Recommendations</div>
+    <ol>
+      <li>Add a direct link to a live sample tournament (e.g., <code>tourney.greenskeeper.studio/t/bova/</code>) as a secondary CTA: "See a real tournament →"</li>
+      <li>Add email capture for visitors not ready to create: "Get notified when we add [feature]" or just "Stay in the loop"</li>
+      <li>The "See It in Action" ghost button in the hero is underused — consider making it anchor to the live demo section with a scroll highlight</li>
+    </ol>
+  </div>
+
+  <!-- 5. Pricing + Funnel -->
+  <div class="section-header" style="margin-top:2rem;">
+    <div class="section-eyebrow">Section 4</div>
+    <div class="section-title">Pricing + Conversion Funnel</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Pricing Visibility</div>
+    <ul>
+      <li><strong>Landing page:</strong> "Starts at $3/month" in the bottom CTA sub. Pricing section exists on the page with tier cards. <span class="pill pill-green">Good</span></li>
+      <li><strong>Comparison callout:</strong> "Golf Genius charges $1,300/year. TOURney is a fraction of the cost and fully self-serve." — direct and effective. <span class="pill pill-green">Strong</span></li>
+      <li><strong>create.html:</strong> Tier cards shown in the creation wizard with pricing and features. <span class="pill pill-green">Present</span></li>
+      <li><strong>Free tier:</strong> Not mentioned on the landing page. If one exists, it needs prominent placement. If not, "15-minute setup" + low price point softens the commitment.</li>
+      <li><strong>Annual vs monthly toggle:</strong> Not seen on landing page. If annual discount exists, show it — reduces perceived price.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Funnel Steps</div>
+    <ol>
+      <li>Landing page (<code>/</code>) → Browse features + pricing</li>
+      <li>"Build Your Tournament →" → <code>/create</code> wizard</li>
+      <li>Account creation (friction point — Supabase auth)</li>
+      <li>Tier selection (pricing shown again)</li>
+      <li>Stripe checkout</li>
+      <li>Admin panel + share URL</li>
+    </ol>
+    <p style="margin-top:0.5rem">The funnel is clean at 6 steps. Step 3 (account creation before any product preview) is the highest drop-off risk. Consider showing the wizard UI before auth, then requiring signup to save/publish.</p>
+  </div>
+
+  <!-- 6. SEO Audit -->
+  <div class="section-header" style="margin-top:2rem;">
+    <div class="section-eyebrow">Section 5</div>
+    <div class="section-title">SEO Audit</div>
+  </div>
+
+  <div class="sec-item sev-low">
+    <div class="sec-header">
+      <span class="pill pill-green">Good</span>
+      <span class="sec-title">&lt;title&gt; Tag</span>
+    </div>
+    <div class="sec-body"><code>marketing.html:14</code> — "TOURney — Run Your Golf Tournament Like a Pro". Descriptive, keyword-targeted (golf tournament), under 60 chars. Strong.</div>
+  </div>
+
+  <div class="sec-item sev-med">
+    <div class="sec-header">
+      <span class="pill pill-orange">Needs Work</span>
+      <span class="sec-title">Meta Description</span>
+    </div>
+    <div class="sec-body"><code>marketing.html:15</code> — "Live scoring, player registration, team management, and a branded PWA — for any golf tournament." 100 chars, within limit. Present but feature-list focused rather than outcome/benefit. Missing price signal or "free" hook.</div>
+    <div class="sec-fix"><strong>Fix:</strong> "Run your golf tournament like a pro. Live scoring, branded app, and full player management — starting at $3/month. Up in 15 minutes."</div>
+  </div>
+
+  <div class="sec-item sev-high">
+    <div class="sec-header">
+      <span class="pill pill-red">Missing</span>
+      <span class="sec-title">Open Graph Tags (og:title, og:description, og:image)</span>
+    </div>
+    <div class="sec-body"><code>marketing.html</code> — No og:title, og:description, og:image, or og:url tags present. When shared on X/Twitter, LinkedIn, iMessage, Slack — the URL unfurls with no preview. This is a critical gap for any social sharing or word-of-mouth link drops.</div>
+    <div class="sec-fix"><strong>Fix (add to &lt;head&gt;):</strong><br>
+      &lt;meta property="og:title" content="TOURney — Golf Tournament Software"&gt;<br>
+      &lt;meta property="og:description" content="Live scoring, branded player app, full admin — starting at $3/month."&gt;<br>
+      &lt;meta property="og:image" content="https://tourney.greenskeeper.studio/og-image.png"&gt;<br>
+      &lt;meta property="og:url" content="https://tourney.greenskeeper.studio/"&gt;<br>
+      &lt;meta property="og:type" content="website"&gt;
+    </div>
+  </div>
+
+  <div class="sec-item sev-high">
+    <div class="sec-header">
+      <span class="pill pill-red">Missing</span>
+      <span class="sec-title">Twitter Card Tags</span>
+    </div>
+    <div class="sec-body"><code>marketing.html</code> — No twitter:card, twitter:title, twitter:description, or twitter:image tags. X/Twitter will show a bare URL with no card when organizers share links.</div>
+    <div class="sec-fix"><strong>Fix:</strong><br>
+      &lt;meta name="twitter:card" content="summary_large_image"&gt;<br>
+      &lt;meta name="twitter:title" content="TOURney — Golf Tournament Software"&gt;<br>
+      &lt;meta name="twitter:description" content="Live scoring, branded player app, full admin — starting at $3/month."&gt;<br>
+      &lt;meta name="twitter:image" content="https://tourney.greenskeeper.studio/og-image.png"&gt;
+    </div>
+  </div>
+
+  <div class="sec-item sev-low">
+    <div class="sec-header">
+      <span class="pill pill-green">Good</span>
+      <span class="sec-title">Page Weight / Load Speed</span>
+    </div>
+    <div class="sec-body">marketing.html is a single self-contained file with inlined CSS. External deps: Google Fonts only (2 families). No third-party scripts. No tracking pixels. Page should load in under 1s on 3G. This is solid for a marketing page.</div>
+  </div>
+
+  <div class="sec-item sev-med">
+    <div class="sec-header">
+      <span class="pill pill-orange">Missing</span>
+      <span class="sec-title">Canonical Tag + Structured Data</span>
+    </div>
+    <div class="sec-body">No &lt;link rel="canonical"&gt; tag. No JSON-LD structured data (SoftwareApplication or Product schema). Missing structured data means Google can't surface rich results (star ratings, pricing) in SERPs. Low priority for MVP but worth adding pre-launch.</div>
+  </div>
+
+  <!-- 7. Brand Consistency -->
+  <div class="section-header" style="margin-top:2rem;">
+    <div class="section-eyebrow">Section 6</div>
+    <div class="section-title">Brand Consistency</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Palette + Typography</div>
+    <p>marketing.html uses: <code>--gold:#c09030</code>, <code>--ink:#0a0703</code>, <code>--cream:#f5ede0</code>. App pages use same gold token. Barlow Condensed + DM Mono carry through nav, hero, feature cards, and footer. <span class="pill pill-green">Coherent</span></p>
+    <p style="margin-top:0.4rem">The dark-ink background, gold accent, condensed uppercase typography creates a premium, sporty aesthetic that feels appropriate for competitive golf. Not generic SaaS.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Tagline Consistency</div>
+    <p>The H1 "Your Tournament. Your Brand. One Platform." functions as a de facto tagline but isn't surfaced consistently. The nav logo shows only "TOURney" with no supporting descriptor. The footer shows "© 2026 Greenskeeper Studios" — no tagline.</p>
+    <p style="margin-top:0.4rem">Recommendation: lock in a single tagline ("Golf Tournament Software" or "Run Your Tournament Like a Pro") and place it consistently in the nav wordmark, footer, og:title, and any print/email assets.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Premium Feel Rating</div>
+    <p><strong>8/10.</strong> The page feels like a real SaaS product. The animated phone mock, dark premium palette, and embedded live demo all signal quality. What drops it from 10: no product screenshots (real pixels), no social proof, no "built by a real person" moment. The contact email (<code>rob@greenskeeper.studio</code>) in the pricing section is a personal touch but also signals solo founder — could cut both ways.</p>
+  </div>
+
+  <!-- 8. Competitive Positioning -->
+  <div class="section-header" style="margin-top:2rem;">
+    <div class="section-eyebrow">Section 7</div>
+    <div class="section-title">Competitive Positioning</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">The Competitive Landscape</div>
+    <div class="table-wrap" style="margin-top:0.75rem;">
+      <table class="page-table">
+        <thead><tr><th>Competitor</th><th>Price</th><th>Self-serve</th><th>PWA</th><th>White-label</th><th>Differentiator gap</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Golf Genius</strong></td><td>~$1,300/yr</td><td>Partial</td><td>No</td><td>Partial</td><td>Enterprise-only, complex setup</td></tr>
+          <tr><td><strong>GolfNow Events</strong></td><td>Per-event fees</td><td>Limited</td><td>No</td><td>No</td><td>Tee-time focused, not scoring</td></tr>
+          <tr><td><strong>Custom Spreadsheets</strong></td><td>$0</td><td>Yes</td><td>No</td><td>n/a</td><td>No live scoring, manual updates</td></tr>
+          <tr><td><strong>GOLFBERT / APIs</strong></td><td>Dev tool</td><td>Dev-only</td><td>No</td><td>n/a</td><td>Requires custom build</td></tr>
+          <tr><td><strong>TOURney</strong></td><td>$3/mo</td><td>Full</td><td>Yes</td><td>Full</td><td>15-min setup, phone admin</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Positioning on the Page</div>
+    <p>The Golf Genius price comparison at <code>marketing.html</code> (pricing section) is the only explicit competitive mention. "Golf Genius charges $1,300/year. TOURney is a fraction of the cost and fully self-serve." This is good — direct and credible.</p>
+    <p style="margin-top:0.4rem"><strong>Missing differentiators not called out on the page:</strong></p>
+    <ul>
+      <li>PWA install (players add to home screen — no App Store needed). This is the #1 differentiator vs every competitor and is never stated as a headline feature.</li>
+      <li>"Admin from your phone" — zero laptop required. Unique.</li>
+      <li>True white-label: players never see "TOURney." Mentioned in feature copy but not positioned as a premium differentiator.</li>
+      <li>Mixed format per round (scramble day 1, stroke day 2). No competitor does this out of the box.</li>
+    </ul>
+  </div>
+
+  <!-- 9. Trust + Social Proof -->
+  <div class="section-header" style="margin-top:2rem;">
+    <div class="section-eyebrow">Section 8</div>
+    <div class="section-title">Trust + Social Proof</div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title">What's Present</div>
+      <ul>
+        <li>Stat block: "7 days", "4 formats", "100% branded" (stats about the product, not customers)</li>
+        <li>Live embedded demo — real app, no signup. This is credibility.</li>
+        <li>Founder email (<code>rob@greenskeeper.studio</code>) in pricing section — transparency</li>
+        <li>Price comparison vs Golf Genius — anchoring</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-title">What's Missing <span class="pill pill-red">Gaps</span></div>
+      <ul>
+        <li>Zero testimonials — not one quote from an organizer</li>
+        <li>No tournament count ("X tournaments run on TOURney")</li>
+        <li>No player count ("X players scored")</li>
+        <li>No named customers or case studies</li>
+        <li>No "About" or founder story section</li>
+        <li>No trust badges (SSL, security, uptime)</li>
+        <li>No press mentions or awards</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">The Bova Angle</div>
+    <p>The Bova Invitational is a real tournament that ran on this platform. That's the single most powerful social proof asset available — and it's invisible on the landing page. A one-line callout ("Used by the Bova Invitational — a 4-day, 40-player competitive golf event") plus a link to the live tournament would convert skeptics immediately.</p>
+    <p style="margin-top:0.4rem">Even better: a short case study card ("How the Bova Invitational replaced their spreadsheet in 15 minutes") with a real quote from an organizer.</p>
+  </div>
+
+  <!-- 10. Sprint Plan -->
+  <div class="section-header" style="margin-top:2rem;" id="sprint">
+    <div class="section-eyebrow">Sprint Plan</div>
+    <div class="section-title">Marketing Sprint: Quick Wins → Launch → Growth</div>
+    <div class="section-desc">Ordered by impact-to-effort ratio. Quick wins are 1-2 line HTML edits. Before-launch items are required to not embarrass on social share. Post-launch are growth plays.</div>
+  </div>
+
+  <div style="margin-bottom:0.5rem;font-size:0.78rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--muted);">Quick Wins — This Week (1–2 hrs total)</div>
+
+  <div class="roadmap-item">
+    <div class="roadmap-icon">1</div>
+    <div class="roadmap-content">
+      <div class="roadmap-title">Add Open Graph + Twitter Card meta tags</div>
+      <div class="roadmap-desc">Zero links unfurl properly right now. Every share on X, LinkedIn, iMessage shows a bare URL. This is table stakes.</div>
+      <div class="roadmap-action"><strong>File:</strong> marketing.html &lt;head&gt; — add 8 meta tags. Also create og-image.png (1200×630, dark gold, TOURney wordmark + tagline). ~1 hr including image creation.</div>
+    </div>
+  </div>
+
+  <div class="roadmap-item">
+    <div class="roadmap-icon">2</div>
+    <div class="roadmap-content">
+      <div class="roadmap-title">Add Bova Invitational social proof callout</div>
+      <div class="roadmap-desc">One card or banner: "Used by the Bova Invitational — 4 days, 40 players, zero spreadsheets." Link to the live tournament. Costs zero effort, adds massive credibility.</div>
+      <div class="roadmap-action"><strong>File:</strong> marketing.html — insert after the stats block or before features. 15 minutes.</div>
+    </div>
+  </div>
+
+  <div class="roadmap-item">
+    <div class="roadmap-icon">3</div>
+    <div class="roadmap-content">
+      <div class="roadmap-title">Rewrite meta description to benefit-first</div>
+      <div class="roadmap-desc">Current reads like a feature checklist. New: "Run your golf tournament like a pro — live scoring, branded player app, and full admin from your phone. Starting at $3/month."</div>
+      <div class="roadmap-action"><strong>File:</strong> marketing.html:15 — single line edit. 5 minutes.</div>
+    </div>
+  </div>
+
+  <div style="margin-top:1.5rem;margin-bottom:0.5rem;font-size:0.78rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--muted);">Before Launch (1–2 sprint days)</div>
+
+  <div class="roadmap-item">
+    <div class="roadmap-icon">4</div>
+    <div class="roadmap-content">
+      <div class="roadmap-title">Promote PWA install as headline feature</div>
+      <div class="roadmap-desc">"Players install it like an app — no App Store, no download" is the single biggest competitive differentiator and is buried in feature body copy. Make it a feature card title and a hero bullet.</div>
+      <div class="roadmap-action"><strong>File:</strong> marketing.html feature grid — rename/reframe one card. Also add a hero pill or bullet: "📲 Installs as a native app — no App Store required."</div>
+    </div>
+  </div>
+
+  <div class="roadmap-item">
+    <div class="roadmap-icon">5</div>
+    <div class="roadmap-content">
+      <div class="roadmap-title">Add "Sample Tournament" secondary CTA</div>
+      <div class="roadmap-desc">Not everyone is ready to create. A direct link to a live sample tournament (Bova or a demo slug) lets skeptical visitors kick the tires before committing. Reduces bounce.</div>
+      <div class="roadmap-action"><strong>File:</strong> marketing.html hero — add ghost button "See a real tournament →" linking to /t/bova/ or a demo tenant.</div>
+    </div>
+  </div>
+
+  <div class="roadmap-item">
+    <div class="roadmap-icon">6</div>
+    <div class="roadmap-content">
+      <div class="roadmap-title">Reframe feature cards as outcomes, not capabilities</div>
+      <div class="roadmap-desc">Replace "Live Leaderboard" with "Players see every score as it happens." Replace "Multi-Day Events" with "Run a week-long event without a single spreadsheet." Benefits sell; features just describe.</div>
+      <div class="roadmap-action"><strong>File:</strong> marketing.html feat-grid — 6 card titles + body rewrites. ~1 hr.</div>
+    </div>
+  </div>
+
+  <div style="margin-top:1.5rem;margin-bottom:0.5rem;font-size:0.78rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--muted);">Post-Launch Growth</div>
+
+  <div class="roadmap-item">
+    <div class="roadmap-icon">7</div>
+    <div class="roadmap-content">
+      <div class="roadmap-title">Add a real product screenshot to the hero</div>
+      <div class="roadmap-desc">The CSS phone mock is clever but not a substitute for a real pixel-perfect screenshot. One real screenshot of the leaderboard on a 375px iPhone builds trust instantly. "Show don't tell."</div>
+      <div class="roadmap-action">Take screenshot at 375×812 of /t/bova/ leaderboard. Place in hero or demo section alongside the embedded iframe.</div>
+    </div>
+  </div>
+
+  <div class="roadmap-item">
+    <div class="roadmap-icon">8</div>
+    <div class="roadmap-content">
+      <div class="roadmap-title">Email capture for non-converting visitors</div>
+      <div class="roadmap-desc">Visitors who don't hit "Build Your Tournament" are lost forever. A simple "Get launch updates" form (Mailchimp / Resend) in the footer or as an exit-intent prompt recovers a slice of those visits.</div>
+      <div class="roadmap-action">Add a Resend-connected form to the footer. "Organizing a tournament in 2026? Get early access pricing." One input, one button.</div>
+    </div>
+  </div>
+
+  <div class="roadmap-item">
+    <div class="roadmap-icon">9</div>
+    <div class="roadmap-content">
+      <div class="roadmap-title">Bova case study card or page</div>
+      <div class="roadmap-desc">A 200-word case study ("How Bova replaced their spreadsheet") with a real organizer quote, player count, and day count is the strongest conversion tool available. Costs nothing to write, earns trust from every visitor who scrolls.</div>
+      <div class="roadmap-action">Write marketing.html case-study section OR create /case-study/bova landing page. Get one quote from the actual tournament organizer.</div>
+    </div>
+  </div>
+
+</div>
+</section>
+
+<div class="next-step-bar">
+  <div class="next-step-inner">
+    <span class="next-step-label">Immediate action</span>
+    <span class="next-step-strong">Add OG Tags + Bova Social Proof</span>
+    <span class="next-step-cmd">marketing.html &lt;head&gt; — 8 meta tags + og-image.png (1200×630)</span>
+    <button class="next-step-copy" onclick="navigator.clipboard.writeText('marketing.html — add og:title, og:description, og:image, og:url, twitter:card, twitter:title, twitter:description, twitter:image')">Copy</button>
+  </div>
+</div>
+
+<footer>
+  Generated by <span>Claude Sonnet 4.6</span> · Greenskeeper Studios Internal · May 11, 2026
+  <br style="margin-top:0.3rem">
+  <a href="/platform" style="color:var(--muted);font-size:0.72rem;text-decoration:none">← TOURney Operations</a>
+</footer>
+
+</body>
+</html>
