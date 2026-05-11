@@ -4,8 +4,8 @@
 //   const { db, tournament } = await window.tourney.ready;
 
 (() => {
-  const SUPABASE_URL = 'https://jllugkiojeoopitdvzsa.supabase.co';
-  const SUPABASE_KEY = 'sb_publishable_DnBMNLaSu61ykJ6P_fI2fw_D9DdAScn';
+  const SUPABASE_URL = 'https://mmennowtnfexvqnyyain.supabase.co';
+  const SUPABASE_KEY = 'sb_publishable__3jr30B-PaLEe4bSdlnhhw_RsBDkPn5';
 
   const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
     auth: { persistSession: true, autoRefreshToken: true }

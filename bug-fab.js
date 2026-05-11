@@ -5,8 +5,8 @@
 (function () {
   console.log('[bug-fab] v3 loaded');
   const ALLOWED = ['robert.t.madsen13@gmail.com', 'jmalber2021@gmail.com'];
-  const SUPABASE_URL = 'https://jllugkiojeoopitdvzsa.supabase.co';
-  const SUPABASE_KEY = 'sb_publishable_DnBMNLaSu61ykJ6P_fI2fw_D9DdAScn';
+  const SUPABASE_URL = 'https://mmennowtnfexvqnyyain.supabase.co';
+  const SUPABASE_KEY = 'sb_publishable__3jr30B-PaLEe4bSdlnhhw_RsBDkPn5';
 
   function ensureSupabase(cb) {
     if (window.supabase && window.supabase.createClient) return cb();
