@@ -402,7 +402,6 @@ td{padding:0.7rem 0.75rem;font-size:0.88rem;vertical-align:middle;}
         <button class="filter-btn" data-filter="plan">Plans</button>
         <button class="filter-btn" data-filter="audit">Audits</button>
         <button class="filter-btn" data-filter="runbook">Runbooks</button>
-        <button class="filter-btn" data-filter="postmortem">Postmortems</button>
         <button class="filter-btn" data-filter="bugs">Bugs</button>
         <input id="hubSearch" type="text" class="hub-search" placeholder="Search…">
         <select id="hubSort" class="hub-sort" onchange="sortMode=this.value;renderHub()">
@@ -798,15 +797,15 @@ async function loadCodes() {
 const CAT_META = {
   review:{pill:'pill-blue',label:'Review'}, plan:{pill:'pill-gold',label:'Plan'},
   audit:{pill:'pill-red',label:'Audit'}, runbook:{pill:'pill-green',label:'Runbook'},
-  postmortem:{pill:'pill-orange',label:'Postmortem'}, skill:{pill:'pill-purple',label:'Skill'},
+  postmortem:{pill:'pill-orange',label:'Audit'}, skill:{pill:'pill-purple',label:'Skill'},
   bugs:{pill:'pill-red',label:'Bugs'}, reference:{pill:'pill-muted',label:'Reference'},
 };
 const STATUS_PILL  = { active:'pill-gold','in-progress':'pill-gold',queued:'pill-blue',shipped:'pill-green',critical:'pill-red',archived:'pill-muted' };
 const STATUS_LABEL = { active:'Active','in-progress':'Active',queued:'Queued',shipped:'Shipped',critical:'Critical',archived:'Archived' };
 const STATUS_ORDER = { critical:0,active:1,'in-progress':1,queued:2,shipped:3 };
 let sortMode='status';
-const NEXT_STEP = {review:'plan',plan:'runbook',runbook:'audit',audit:'postmortem',postmortem:'bugs',bugs:'fix'};
-const NEXT_LABEL = {plan:'Plan',runbook:'Runbook',audit:'Audit',postmortem:'Postmortem',bugs:'Bugs',fix:'Debug'};
+const NEXT_STEP = {review:'plan',plan:'runbook',runbook:'audit',audit:'bugs',postmortem:'bugs',bugs:'fix'};
+const NEXT_LABEL = {plan:'Plan',runbook:'Runbook',audit:'Audit',bugs:'Bugs',fix:'Debug'};
 let allEntries=[], activeFilter='all', activeSearch='', showArchived=false;
 
 function toggleArchived() {
@@ -884,7 +883,7 @@ Do NOT skip phases. Do NOT bypass gates. Do NOT --no-verify. If you are unsure a
 function copyNextStep(cat, url) {
   const next=NEXT_STEP[cat]; if(!next) return;
   const axis=(url.match(/-(security|architecture|ux|performance|business|data-model|deployment|feature-depth|finance|marketing|onboarding)(?:[^a-z]|$)/)||[])[1]||'';
-  const CHAIN=['review','plan','runbook','audit','postmortem','bugs'];
+  const CHAIN=['review','plan','runbook','audit','postmortem','bugs']; // postmortem aliased to audit tier
   // Collect related entries (same axis) sorted by chain order — gives the skill full context.
   const seen=new Set();
   const urls=allEntries
@@ -985,10 +984,10 @@ function renderRefArtifacts() {
     <div class="ref-artifact-sum">${esc(e.summary||'')}</div>
   </a>`).join(''):'<div style="padding:.75rem;color:var(--muted);font-size:.8rem;">No reference artifacts yet — run /tourney-reference to generate one.</div>';
 }
-// Lifecycle auto-archive: review → audit → plan → runbook → postmortem.
+// Lifecycle auto-archive: review → plan → runbook → audit (postmortem = same rank as audit).
 // When a higher-rank artifact exists for the same topic (shared non-stage tag),
 // older-stage artifacts are auto-archived. Manual unarchive overrides this.
-const STAGE_RANK={review:1,audit:2,plan:3,runbook:4,postmortem:5};
+const STAGE_RANK={review:1,plan:2,runbook:3,audit:4,postmortem:4};
 const _STAGE_TAGS=new Set(['review','audit','plan','runbook','postmortem','reference','bug','meeting','leadership','active','shipped','queued','critical']);
 function _topicAxis(e){return (e.tags||[]).filter(t=>!_STAGE_TAGS.has(String(t).toLowerCase()));}
 function computeAutoArchive(entries){
@@ -1020,6 +1019,7 @@ function renderHub() {
     const isAr=isArchived(e);
     if (!showArchived && isAr) return false;
     if (activeFilter==='favorites') { if(!getFavorites()[e.id]) return false; }
+    else if (activeFilter==='audit') { if (e.category!=='audit' && e.category!=='postmortem') return false; }
     else if (activeFilter!=='all' && e.category!==activeFilter) return false;
     if (!search) return true;
     return [e.title,e.summary,e.author,e.id,...(e.tags||[])].filter(Boolean).join(' ').toLowerCase().includes(search);
