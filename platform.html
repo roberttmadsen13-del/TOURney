@@ -1406,6 +1406,9 @@ const CEO_TASKS=[
   {id:'leaked_pw',text:'Enable leaked password protection in Supabase',why:'Dashboard-only. Authentication → Sign In Methods → Leaked Password Protection → toggle ON. 30 seconds.'},
   {id:'tos',text:'Write Terms of Service and Privacy Policy pages',why:'Legal documents represent your actual business practices and must be written/approved by you — AI can draft but you own them.'},
   {id:'golf_db',text:'Purchase full US golf course database',why:'Purchasing business assets is a founder decision. golf-course-database.com — buy US flat file CSV/JSON.'},
+  {id:'aws_s3_backup',text:'Set up AWS S3 backup (bucket + IAM + 4 GitHub secrets)',why:'Requires AWS account access and GitHub repo secrets. Create bucket tourney-pg-backups (us-west-2), IAM user with s3:PutObject + s3:ListBucket, then add SUPABASE_DB_URL, BACKUP_S3_KEY, BACKUP_S3_SECRET, BACKUP_S3_BUCKET to GitHub secrets. Then manually trigger "Weekly DB Backup" workflow to verify.'},
+  {id:'stripe_price_player',text:'Create Stripe player product + set 3 Supabase secrets',why:'Requires Stripe dashboard access after LLC activation. Create "TOURney Player Account" $2/mo recurring product → copy price ID → set STRIPE_SECRET_KEY, STRIPE_WEBHOOK_SECRET, STRIPE_PRICE_PLAYER in Supabase edge fn secrets → register webhook endpoint: jllugkiojeoopitdvzsa.supabase.co/functions/v1/stripe-webhook.'},
+  {id:'gh_actions_verify',text:'Verify GitHub Actions green on aee0393 + e10a10d',why:'Requires checking the GitHub Actions dashboard. Go to github.com/roberttmadsen13-del/bova-invt/actions and confirm both the test scaffold (aee0393) and tier gating (e10a10d) CI runs passed.'},
 ];
 function loadCeoTasks(){
   let checked={};try{checked=JSON.parse(localStorage.getItem('ceo_tasks')||'{}');}catch{}
