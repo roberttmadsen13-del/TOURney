@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<script src="/lib/util.js"></script>
 <link rel="icon" href="/icon-192.png" type="image/png">
 <link rel="apple-touch-icon" href="/platform-icon-192.png">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -621,9 +622,6 @@ function switchTab(t) {
 }
 
 /* ══════════════════════ DASHBOARD ══════════════════════ */
-function esc(s) {
-  return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
 function deriveStatus(rounds) {
   if (!rounds.length) return 'notlive';
   const vals = rounds.map(r => (r.value||'').toLowerCase());
@@ -813,10 +811,6 @@ function toggleArchived() {
   document.getElementById('archivedToggle').classList.toggle('active', showArchived);
   document.getElementById('archivedToggle').textContent = showArchived ? 'Hide Archived' : 'Show Archived';
   renderHub();
-}
-function fmtDate(iso) {
-  if (!iso) return '';
-  const d=new Date(iso); return isNaN(d.getTime())?iso:d.toLocaleDateString(undefined,{month:'short',day:'numeric',year:'numeric',timeZone:'UTC'});
 }
 function archiveEntry(id, val) {
   // persist archive state in localStorage (qa-index.json is static)

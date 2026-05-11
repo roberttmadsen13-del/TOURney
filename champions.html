@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<script src="/lib/util.js"></script>
 <link rel="icon" href="/icon-192.png" type="image/png">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#f5ede0">
@@ -254,15 +255,6 @@ async function init() {
       ${c.notes ? `<div class="card-notes">${esc(c.notes)}</div>` : ''}
     </div>
   `).join('');
-}
-
-function esc(str) {
-  if (str == null) return '';
-  return String(str)
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;');
 }
 
 async function loadNavLogo() {

@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<script src="/lib/util.js"></script>
 <link rel="icon" href="/icon-192.png" type="image/png">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#f5ede0">
@@ -139,10 +140,6 @@ a{color:inherit;text-decoration:none;}
 <script src="/tourney-init.js"></script>
 <script>
 const sb = window.tourney.db;
-
-function esc(s) {
-  return String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
-}
 
 function formatPhone(raw) {
   if (!raw) return '';

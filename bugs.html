@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<script src="/lib/util.js"></script>
 <link rel="icon" href="/icon-192.png" type="image/png">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Bug Log — TOURney</title>
@@ -316,7 +317,6 @@ function toggleSession(id) {
     'sb_publishable_DnBMNLaSu61ykJ6P_fI2fw_D9DdAScn',
     { auth: { persistSession: true } }
   );
-  function esc(s){ return String(s||'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
   function fmtDate(s){
     const d = new Date(s);
     return d.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric',hour:'2-digit',minute:'2-digit'});

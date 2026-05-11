@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<script src="/lib/util.js"></script>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>TOURney — QA Hub</title>
 <style>
@@ -208,15 +209,6 @@ const STATUS_PILL = { 'shipped':'pill-green','in-progress':'pill-gold','queued':
 
 let allEntries = [], activeFilter = 'all', activeSearch = '';
 
-function esc(s) {
-  if (s == null) return '';
-  const d = document.createElement('div'); d.textContent = String(s); return d.innerHTML;
-}
-function fmtDate(iso) {
-  if (!iso) return '';
-  const d = new Date(iso);
-  return isNaN(d.getTime()) ? iso : d.toLocaleDateString(undefined, { month:'short', day:'numeric', year:'numeric' });
-}
 function renderHub() {
   const grid = document.getElementById('cardGrid');
   const search = activeSearch.trim().toLowerCase();

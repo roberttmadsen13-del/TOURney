@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<script src="/lib/util.js"></script>
 <link rel="icon" href="/platform-icon-192.png" type="image/png">
 <link rel="manifest" href="/platform-manifest.json">
 <meta name="mobile-web-app-capable" content="yes">
@@ -543,10 +544,6 @@ async function respondInvite(inviteId, status, slug) {
   const { data: { session } } = await sb.auth.getSession();
   const email = session?.user?.email || sessionStorage.getItem(SESSION_KEY);
   if (email) loadPortal(email).catch(() => {});
-}
-
-function esc(s) {
-  return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
 // ── PLAYER PAGE HAMBURGER ────────────────────────────────────────────

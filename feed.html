@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<script src="/lib/util.js"></script>
 <link rel="icon" href="/icon-192.png" type="image/png">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#f5ede0">
@@ -653,12 +654,6 @@ function formatTime(ts) {
   if (diff < 3600) return `${Math.floor(diff / 60)}m ago`;
   if (diff < 86400) return d.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit', hour12: true });
   return d.toLocaleDateString([], { month: 'short', day: 'numeric' });
-}
-
-function esc(str) {
-  const d = document.createElement('div');
-  d.textContent = str;
-  return d.innerHTML;
 }
 
 let _toastTimer;
