@@ -1,0 +1,28 @@
+{
+  "name": "bova-invitational",
+  "version": "1.0.0",
+  "description": "",
+  "main": "bug-fab.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/roberttmadsen13-del/bova-invt.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/roberttmadsen13-del/bova-invt/issues"
+  },
+  "homepage": "https://github.com/roberttmadsen13-del/bova-invt#readme",
+  "devDependencies": {
+    "typescript": "^6.0.3"
+  }
+}

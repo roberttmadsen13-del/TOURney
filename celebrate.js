@@ -46,11 +46,11 @@
   function _resize() {
     var w = window.innerWidth, h = window.innerHeight;
     ['_cel_lc', '_cel_cc'].forEach(function (id) {
-      var c = document.getElementById(id);
+      var c = /** @type {HTMLCanvasElement|null} */ (document.getElementById(id));
       if (c) { c.width = w; c.height = h; }
     });
-    _lCtx = document.getElementById('_cel_lc').getContext('2d');
-    _cCtx = document.getElementById('_cel_cc').getContext('2d');
+    _lCtx = /** @type {HTMLCanvasElement} */ (document.getElementById('_cel_lc')).getContext('2d');
+    _cCtx = /** @type {HTMLCanvasElement} */ (document.getElementById('_cel_cc')).getContext('2d');
   }
 
   function _initParticles() {

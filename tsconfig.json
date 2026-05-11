@@ -21,12 +21,9 @@
     "types": []
   },
   "include": [
+    "globals.d.ts",
     "lib/**/*.js",
     "components/**/*.js",
-    "tourney-init.js",
-    "pwa.js",
-    "nav-mobile.js",
-    "nav-platform.js",
     "celebrate.js",
     "courses-db.js"
   ],
