@@ -823,7 +823,17 @@ function archiveEntry(id, val) {
   // persist archive state in localStorage (qa-index.json is static)
   const key='qa_archived';
   let ar={}; try { ar=JSON.parse(localStorage.getItem(key)||'{}'); } catch{}
-  ar[id]=val; localStorage.setItem(key, JSON.stringify(ar));
+  if (val) {
+    ar[id]=true; localStorage.setItem(key, JSON.stringify(ar));
+    // clear any unarchive override so it stays archived
+    const u=getUnarchiveOverrides(); delete u[id];
+    localStorage.setItem('qa_unarchive_overrides', JSON.stringify(u));
+  } else {
+    delete ar[id]; localStorage.setItem(key, JSON.stringify(ar));
+    // record explicit unarchive so auto-archive lifecycle won't re-archive it
+    const u=getUnarchiveOverrides(); u[id]=true;
+    localStorage.setItem('qa_unarchive_overrides', JSON.stringify(u));
+  }
   renderHub();
 }
 function getArchived() {
@@ -876,12 +886,39 @@ function renderRefArtifacts() {
     <div class="ref-artifact-sum">${esc(e.summary||'')}</div>
   </a>`).join(''):'<div style="padding:.75rem;color:var(--muted);font-size:.8rem;">No reference artifacts yet — run /tourney-reference to generate one.</div>';
 }
+// Lifecycle auto-archive: review → audit → plan → runbook → postmortem.
+// When a higher-rank artifact exists for the same topic (shared non-stage tag),
+// older-stage artifacts are auto-archived. Manual unarchive overrides this.
+const STAGE_RANK={review:1,audit:2,plan:3,runbook:4,postmortem:5};
+const _STAGE_TAGS=new Set(['review','audit','plan','runbook','postmortem','reference','bug','meeting','leadership','active','shipped','queued','critical']);
+function _topicAxis(e){return (e.tags||[]).filter(t=>!_STAGE_TAGS.has(String(t).toLowerCase()));}
+function computeAutoArchive(entries){
+  const arch=new Set();
+  for(const high of entries){
+    const rh=STAGE_RANK[high.category]; if(!rh) continue;
+    const th=_topicAxis(high); if(!th.length) continue;
+    for(const low of entries){
+      if(low.id===high.id) continue;
+      const rl=STAGE_RANK[low.category]; if(!rl||rl>=rh) continue;
+      const tl=_topicAxis(low);
+      if(tl.some(t=>th.includes(t))) arch.add(low.id);
+    }
+  }
+  return arch;
+}
+function getUnarchiveOverrides(){try{return JSON.parse(localStorage.getItem('qa_unarchive_overrides')||'{}')}catch{return {}}}
 function renderHub() {
   const grid=document.getElementById('cardGrid');
   const ar=getArchived();
+  const auto=computeAutoArchive(allEntries);
+  const unar=getUnarchiveOverrides();
+  const isArchived=(e)=>{
+    if(unar[e.id]) return false;
+    return !!(e.archived||ar[e.id]||auto.has(e.id));
+  };
   const search=activeSearch.trim().toLowerCase();
   const filtered=allEntries.filter(e => {
-    const isAr=!!(e.archived||ar[e.id]);
+    const isAr=isArchived(e);
     if (!showArchived && isAr) return false;
     if (activeFilter==='favorites') { if(!getFavorites()[e.id]) return false; }
     else if (activeFilter!=='all' && e.category!==activeFilter) return false;
@@ -897,7 +934,6 @@ function renderHub() {
     if(sa!==sb) return sa-sb;
     return (b.updated||b.date||'').localeCompare(a.updated||a.date||'');
   });
-  const ar2=getArchived();
   const stOverrides=getStatusOverrides();
   const STATUS_OPTS=['active','in-progress','queued','shipped','critical','archived'];
   grid.innerHTML=(filtered.length?sorted.map(e=>{
@@ -906,7 +942,8 @@ function renderHub() {
     const sp=effStatus?(STATUS_PILL[effStatus]||'pill-muted'):null;
     const sl=effStatus?(STATUS_LABEL[effStatus]||effStatus):null;
     const tags=(e.tags||[]).slice(0,5).map(t=>`<span class="tag">${esc(t)}</span>`).join('');
-    const isAr=!!(e.archived||ar2[e.id]);
+    const isAr=isArchived(e);
+    const isAutoArch=auto.has(e.id)&&!unar[e.id];
     const isFav=!!getFavorites()[e.id];
     const displayDate=e.updated&&e.updated!==e.date?`Updated ${fmtDate(e.updated)}`:`${fmtDate(e.date)}`;
     const nextCat=NEXT_STEP[e.category];
