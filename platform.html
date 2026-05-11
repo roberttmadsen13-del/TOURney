@@ -848,6 +848,39 @@ function toggleFavorite(id, val) {
 }
 function getStatusOverrides(){try{return JSON.parse(localStorage.getItem('qa_status_overrides')||'{}')}catch{return {}}}
 function setStatusOverride(id,status){const o=getStatusOverrides();if(status==='__clear__')delete o[id];else o[id]=status;localStorage.setItem('qa_status_overrides',JSON.stringify(o));renderHub();}
+function copyExecuteRunbook(url) {
+  const full='https://tourney.greenskeeper.studio'+url;
+  const axis=(url.match(/-(security|architecture|ux|performance|business|data-model|deployment|feature-depth|finance|marketing|onboarding|aaa)(?:[^a-z]|$)/)||[])[1]||'';
+  const related=allEntries
+    .filter(e=>e.url&&e.url!==url&&axis&&e.url.includes('-'+axis))
+    .map(e=>'https://tourney.greenskeeper.studio'+e.url);
+  const ctxBlock=related.length?'\n\nRelated context:\n'+related.map(u=>'- '+u).join('\n'):'';
+  const cmd=`Execute the operational runbook at ${full}. This is a real production change — follow the procedure exactly.
+
+Procedure:
+1. Read the entire runbook first. Note the phase count, go/no-go gates, and rollback section.
+2. Verify every prerequisite checkbox in Section 2 before touching any code. If any prereq fails, stop and report.
+3. For each phase in order:
+   a. Run each step exactly as written (copy-paste the command block, do not improvise).
+   b. After each step, confirm the "Expected" block matches reality. If it does not, run that step's rollback and stop.
+   c. After completing all steps in a phase, run every "Verify" check in that phase.
+   d. At each "🚦 Gate" between phases: report results to me and WAIT for explicit go-ahead before continuing to the next phase.
+4. After the final gate, run the Verification Checklist (Section 4). Report any failed items.
+5. If anything regresses at any point: stop, run the matching Rollback Procedure (Section 5), log a bug via the Bug FAB, then report.
+
+Working directory: C:\\Users\\Rob\\OneDrive\\Desktop\\Greenskeeper Studios\\Bova Invitational (canonical, not the stale source/repos clone).
+Remotes: origin (bova-invt, Vercel-deployed) and tourney (mirror) — push to origin auto-mirrors.
+Supabase project: jllugkiojeoopitdvzsa. Use the Supabase MCP for migrations and edge function deploys.
+Commit cadence: one commit per logical step. Concise commit messages. Always push to origin after each commit.
+
+Do NOT skip phases. Do NOT bypass gates. Do NOT --no-verify. If you are unsure about a step, ask before running it.${ctxBlock}`;
+  navigator.clipboard.writeText(cmd).then(()=>{
+    const t=document.createElement('div');
+    t.textContent='✓ Execute prompt copied';
+    t.style.cssText='position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);background:var(--gold);color:#111;padding:.5rem 1.1rem;border-radius:6px;font-size:.78rem;font-weight:700;z-index:9999;pointer-events:none;max-width:90vw;text-align:center;';
+    document.body.appendChild(t); setTimeout(()=>t.remove(),2800);
+  }).catch(()=>{});
+}
 function copyNextStep(cat, url) {
   const next=NEXT_STEP[cat]; if(!next) return;
   const axis=(url.match(/-(security|architecture|ux|performance|business|data-model|deployment|feature-depth|finance|marketing|onboarding)(?:[^a-z]|$)/)||[])[1]||'';
@@ -1027,6 +1060,7 @@ function renderHub() {
           ${e.author?`<span>${esc(e.author)}</span>`:''}
           <div class="card-tags">${tags}</div>
           <select class="status-sel" onclick="event.preventDefault();event.stopPropagation();" onchange="event.preventDefault();event.stopPropagation();setStatusOverride('${esc(e.id)}',this.value)">${statusOpts}</select>
+          ${e.category==='runbook'?`<button class="nxt-btn" onclick="event.preventDefault();event.stopPropagation();copyExecuteRunbook('${esc(e.url||'')}')" title="Copy AI execution prompt for this runbook" style="background:rgba(39,174,96,0.12);border-color:rgba(39,174,96,0.35);color:var(--green);">▶ Execute</button>`:''}
           ${nextCat?`<button class="nxt-btn" onclick="event.preventDefault();event.stopPropagation();copyNextStep('${esc(e.category)}','${esc(e.url||'')}')" title="Copy next step command">→ ${esc(NEXT_LABEL[nextCat])}</button>`:''}
           <button class="fav-btn${isFav?' fav-active':''}" onclick="event.preventDefault();event.stopPropagation();toggleFavorite('${esc(e.id)}',${!isFav})" title="${isFav?'Remove from favorites':'Add to favorites'}">${isFav?'★':'☆'}</button>
           <button class="archive-btn" onclick="event.preventDefault();event.stopPropagation();archiveEntry('${esc(e.id)}',${!isAr})">${isAr?'Unarchive':'Archive'}</button>
