@@ -81,7 +81,9 @@
     { "source": "/urls",              "destination": "/urls.html" },
     { "source": "/combos",            "destination": "/combos.html" },
     { "source": "/5-6-26-claude-review", "destination": "/5-6-26-claude-review.html" },
-    { "source": "/5-11-26-aaa-runbook",  "destination": "/5-11-26-aaa-runbook.html" }
+    { "source": "/5-11-26-aaa-runbook",  "destination": "/5-11-26-aaa-runbook.html" },
+    { "source": "/5-11-26-token-savings-runbook-business", "destination": "/5-11-26-token-savings-runbook-business.html" },
+    { "source": "/platform/5-11-26-token-savings-runbook-business", "destination": "/5-11-26-token-savings-runbook-business.html" }
 
   ]
 }

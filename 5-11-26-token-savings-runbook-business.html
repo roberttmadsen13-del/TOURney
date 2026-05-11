@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TOURney — Business Runbook · Token Savings · May 11, 2026</title>
+<style>
+  :root {
+    --gold: #c09030;
+    --gold-light: #d4a840;
+    --gold-dim: rgba(192,144,48,0.18);
+    --ink: #1a1008;
+    --bg: #0d0a05;
+    --surface: #151009;
+    --card: #1c140a;
+    --card2: #221a0e;
+    --border: rgba(192,144,48,0.22);
+    --muted: #7a6a54;
+    --text: #e8dcc8;
+    --red: #c0392b;
+    --green: #27ae60;
+    --blue: #2980b9;
+    --orange: #e67e22;
+    --purple: #8e44ad;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { font-family: -apple-system, 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; font-size: 15px; }
+  nav { position: sticky; top: 0; z-index: 100; background: rgba(13,10,5,0.96); border-bottom: 1px solid var(--border); backdrop-filter: blur(12px); padding: 0.6rem 1.5rem; display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
+  .nav-brand { color: var(--gold); font-weight: 700; font-size: 1rem; letter-spacing: 0.05em; white-space: nowrap; }
+  .nav-brand span { color: var(--muted); font-weight: 400; font-size: 0.8rem; margin-left: 0.4rem; }
+  .nav-links { display: flex; gap: 0.2rem; flex-wrap: wrap; margin-left: auto; }
+  .nav-links a { color: var(--muted); text-decoration: none; font-size: 0.78rem; padding: 0.3rem 0.55rem; border-radius: 4px; transition: all 0.15s; white-space: nowrap; }
+  .nav-links a:hover { color: var(--gold); background: var(--gold-dim); }
+  .hero { padding: 3.5rem 1.5rem 2.5rem; text-align: center; border-bottom: 1px solid var(--border); background: linear-gradient(180deg, rgba(192,144,48,0.06) 0%, transparent 100%); }
+  .hero-eyebrow { display: inline-block; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold); border: 1px solid var(--border); border-radius: 20px; padding: 0.25rem 0.85rem; margin-bottom: 1.2rem; }
+  .hero h1 { font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 800; color: #fff; margin-bottom: 0.5rem; }
+  .hero h1 span { color: var(--gold); }
+  .hero-sub { color: var(--muted); max-width: 620px; margin: 0 auto 1.5rem; font-size: 0.95rem; }
+  .hero-meta { display: flex; gap: 1.5rem; justify-content: center; flex-wrap: wrap; font-size: 0.78rem; color: var(--muted); }
+  .hero-meta span { display: flex; align-items: center; gap: 0.35rem; }
+  .wrapper { max-width: 1000px; margin: 0 auto; padding: 0 1.5rem; }
+  section { padding: 3rem 0; border-bottom: 1px solid var(--border); }
+  section:last-child { border-bottom: none; }
+  .section-header { margin-bottom: 2rem; }
+  .section-eyebrow { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.4rem; }
+  .section-title { font-size: 1.5rem; font-weight: 800; color: #fff; margin-bottom: 0.4rem; }
+  .section-desc { color: var(--muted); font-size: 0.88rem; max-width: 600px; }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 1.25rem 1.4rem; margin-bottom: 0.75rem; }
+  .card-title { font-size: 0.88rem; font-weight: 700; color: var(--gold); margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem; }
+  .card p, .card li { font-size: 0.86rem; color: var(--text); margin-bottom: 0.3rem; }
+  .card ul, .card ol { padding-left: 1.2rem; }
+  .card li { margin-bottom: 0.4rem; }
+  .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 0.75rem; }
+  .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 0.75rem; }
+  .stack-item { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 1rem 1.2rem; margin-bottom: 0.6rem; }
+  .stack-label { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); margin-bottom: 0.25rem; }
+  .stack-value { font-size: 0.92rem; font-weight: 600; color: #fff; }
+  .stack-note { font-size: 0.78rem; color: var(--muted); margin-top: 0.3rem; }
+  .pill { display: inline-block; font-size: 0.68rem; font-weight: 700; letter-spacing: 0.06em; padding: 0.18rem 0.55rem; border-radius: 20px; text-transform: uppercase; }
+  .pill-gold { background: rgba(192,144,48,0.18); color: var(--gold); border: 1px solid rgba(192,144,48,0.3); }
+  .pill-green { background: rgba(39,174,96,0.15); color: var(--green); border: 1px solid rgba(39,174,96,0.3); }
+  .pill-red { background: rgba(192,57,43,0.15); color: var(--red); border: 1px solid rgba(192,57,43,0.3); }
+  .pill-orange { background: rgba(230,126,34,0.15); color: var(--orange); border: 1px solid rgba(230,126,34,0.3); }
+  .pill-blue { background: rgba(41,128,185,0.15); color: var(--blue); border: 1px solid rgba(41,128,185,0.3); }
+  code { font-family: 'Consolas', 'Monaco', monospace; background: rgba(255,255,255,0.07); padding: 0.1rem 0.3rem; border-radius: 3px; font-size: 0.82em; color: var(--gold-light); }
+  pre { font-family: 'Consolas', 'Monaco', monospace; background: rgba(255,255,255,0.04); border: 1px solid var(--border); border-radius: 6px; padding: 0.8rem 1rem; font-size: 0.78rem; color: var(--gold-light); overflow-x: auto; margin: 0.5rem 0; white-space: pre-wrap; word-break: break-word; }
+  .step { background: var(--card); border: 1px solid var(--border); border-left: 3px solid var(--gold); border-radius: 0 8px 8px 0; padding: 1.2rem 1.4rem; margin-bottom: 1rem; }
+  .step-head { display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; margin-bottom: 0.7rem; }
+  .step-num { background: var(--gold); color: #111; width: 1.9rem; height: 1.9rem; border-radius: 50%; display: grid; place-items: center; font-weight: 800; font-size: 0.85rem; flex-shrink: 0; }
+  .step-title { font-size: 1rem; font-weight: 700; color: #fff; }
+  .step-meta { font-size: 0.72rem; color: var(--muted); margin-left: auto; }
+  .step-body { font-size: 0.85rem; color: var(--text); margin-bottom: 0.6rem; }
+  .step-block { margin-top: 0.7rem; }
+  .step-block-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--gold-light); margin-bottom: 0.3rem; font-weight: 700; }
+  .gate { background: rgba(230,126,34,0.08); border: 1px dashed var(--orange); border-radius: 8px; padding: 1rem 1.25rem; margin: 1.2rem 0; }
+  .gate-title { font-size: 0.82rem; font-weight: 800; color: var(--orange); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.4rem; }
+  .gate-body { font-size: 0.84rem; color: var(--text); }
+  footer { border-top: 1px solid var(--border); padding: 1.5rem; text-align: center; color: var(--muted); font-size: 0.75rem; }
+  footer span { color: var(--gold); }
+  @media (max-width: 600px) {
+    .nav-links { display: none; }
+    .hero { padding: 2rem 1rem 1.5rem; }
+    section { padding: 2rem 0; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-brand">TOURney <span>by Greenskeeper Studios</span></div>
+  <div class="nav-links">
+    <a href="/platform">⬡ Operations</a>
+    <a href="/platform/5-7-26-token-savings-plan-business">← Source Plan</a>
+    <a href="#overview">Overview</a>
+    <a href="#prereqs">Prereqs</a>
+    <a href="#procedure">Procedure</a>
+    <a href="#verification">Verification</a>
+    <a href="#rollback">Rollback</a>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="hero-eyebrow">Business Runbook — Token Savings Adoption</div>
+  <h1><span>TOURney</span> — Token Savings Runbook</h1>
+  <p class="hero-sub">Step-by-step operational execution of the 5-7-26 token savings plan. Each step ships exact commands, expected output, verification checkpoint, and rollback path. Phase gates separate low-risk config from behavior change.</p>
+  <div class="hero-meta">
+    <span>📅 May 11, 2026</span>
+    <span>🤖 Claude Opus 4.7</span>
+    <span>🏢 Greenskeeper Studios</span>
+    <span>🔒 Internal Only</span>
+  </div>
+</div>
+
+<section id="overview">
+<div class="wrapper">
+  <div class="section-header">
+    <div class="section-eyebrow">§1 — Overview</div>
+    <div class="section-title">What This Runbook Executes</div>
+    <div class="section-desc">Operational playbook for the token savings plan. Target: cut $55/mo → $33–41/mo with zero output quality loss. Six steps, two phase gates.</div>
+  </div>
+
+  <div class="grid-3">
+    <div class="stack-item">
+      <div class="stack-label">Operation</div>
+      <div class="stack-value">Anthropic spend reduction</div>
+      <div class="stack-note">Settings + caching + behavior change</div>
+    </div>
+    <div class="stack-item">
+      <div class="stack-label">Business Outcome</div>
+      <div class="stack-value">$168–$264 / yr saved</div>
+      <div class="stack-note">Reinvest into Vercel + Supabase tier upgrades</div>
+    </div>
+    <div class="stack-item">
+      <div class="stack-label">Risk Level</div>
+      <div class="stack-value"><span class="pill pill-green">LOW</span> config &nbsp; <span class="pill pill-orange">MED</span> caching</div>
+      <div class="stack-note">All steps reversible. No customer-facing surface touched.</div>
+    </div>
+    <div class="stack-item">
+      <div class="stack-label">Total Time</div>
+      <div class="stack-value">~30 min config + 2h skills + ongoing habits</div>
+      <div class="stack-note">Day 1: phases 1–2. Day 2: phase 3. Week 1: phases 4–6.</div>
+    </div>
+    <div class="stack-item">
+      <div class="stack-label">Surface Touched</div>
+      <div class="stack-value">Local dev tooling only</div>
+      <div class="stack-note">No production code, no DB, no Vercel, no Supabase</div>
+    </div>
+    <div class="stack-item">
+      <div class="stack-label">Source Plan</div>
+      <div class="stack-value"><a href="/platform/5-7-26-token-savings-plan-business" style="color:var(--gold-light)">5-7-26 plan</a></div>
+      <div class="stack-note">All claims and ROI math originate there</div>
+    </div>
+  </div>
+</div>
+</section>
+
+<section id="prereqs">
+<div class="wrapper">
+  <div class="section-header">
+    <div class="section-eyebrow">§2 — Prerequisites</div>
+    <div class="section-title">Before You Start</div>
+    <div class="section-desc">Confirm each before any edit. Missing any = stop, gather first.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">✅ Required Access</div>
+    <ul>
+      <li><strong>Anthropic Console</strong> — usage screen access (<code>console.anthropic.com/usage</code>) to capture baseline burn.</li>
+      <li><strong>Filesystem write</strong> to <code>~/.claude/settings.json</code>, <code>~/.claude/CLAUDE.md</code>, <code>~/.claude/skills/tourney-*/SKILL.md</code>.</li>
+      <li><strong>Claude Code CLI</strong> installed and the harness restartable (close + reopen session to apply settings).</li>
+      <li><strong>context-mode plugin</strong> installed and reporting via <code>/context-mode:ctx-stats</code> (already shipped this machine).</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <div class="card-title">📸 Baseline Capture (do this FIRST)</div>
+    <ul>
+      <li>Screenshot Anthropic Console usage for prior 7 days. Note: total spend, input tokens, output tokens, cache_read_input_tokens (should be ~0 today).</li>
+      <li>Save baseline as <code>C:\Users\Rob\.claude\baselines\2026-05-11-anthropic-baseline.png</code>. Future weekly check compares against this.</li>
+      <li>Note current settings: <code>cat ~/.claude/settings.json | grep -E "model|effortLevel"</code></li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <div class="card-title">⚠ Hold Conditions — Do Not Proceed If</div>
+    <ul>
+      <li>Active production incident on TOURney. Finish incident first; this work is non-urgent.</li>
+      <li>Mid-task in a long Claude session you cannot afford to restart. Run after session close.</li>
+      <li>Within 24h of a critical demo. Cheaper model switch needs a quality validation window.</li>
+    </ul>
+  </div>
+</div>
+</section>
+
+<section id="procedure">
+<div class="wrapper">
+  <div class="section-header">
+    <div class="section-eyebrow">§3 — Procedure</div>
+    <div class="section-title">Step-by-Step Execution</div>
+    <div class="section-desc">Lowest-risk highest-ROI first. Phase gates separate config (Day 1–2) from behavior change (Week 1).</div>
+  </div>
+
+  <h3 style="color:var(--gold);font-size:0.85rem;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:0.8rem;">Phase A — Day 1 · Config (Low Risk, 25 min)</h3>
+
+  <div class="step">
+    <div class="step-head">
+      <div class="step-num">1</div>
+      <div class="step-title">Capture baseline + drop effort to <code>medium</code></div>
+      <div class="step-meta">15 min · <span class="pill pill-green">ZERO RISK</span></div>
+    </div>
+    <div class="step-body">Lower default thinking budget. No model swap yet. Simple turns become snappier; complex turns get same output (model self-escalates when needed).</div>
+
+    <div class="step-block">
+      <div class="step-block-label">Action — exact edit</div>
+<pre>// Open: C:\Users\Rob\.claude\settings.json
+// Locate the "effortLevel" key (around line 46) and change:
+"effortLevel": "xhigh"
+// to:
+"effortLevel": "medium"</pre>
+    </div>
+
+    <div class="step-block">
+      <div class="step-block-label">Expected output</div>
+      <div class="step-body">File saves cleanly. No JSON parse error on next Claude Code start. Status line on next session shows <code>medium</code>.</div>
+    </div>
+
+    <div class="step-block">
+      <div class="step-block-label">Verification checkpoint</div>
+<pre>grep effortLevel ~/.claude/settings.json
+# Expected:  "effortLevel": "medium",</pre>
+      <div class="step-body" style="margin-top:0.4rem;">Then run one simple turn (e.g. "list files in this dir"). Should respond near-instantly with no extended thinking block.</div>
+    </div>
+
+    <div class="step-block">
+      <div class="step-block-label">Rollback</div>
+<pre>// Revert settings.json effortLevel back to "xhigh"
+// No state to clean up — change applies on next session start.</pre>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-head">
+      <div class="step-num">2</div>
+      <div class="step-title">Default model → <code>sonnet</code></div>
+      <div class="step-meta">10 min · <span class="pill pill-green">LOW RISK</span></div>
+    </div>
+    <div class="step-body">Largest single $$$ win (~$10/mo). Opus stays opt-in via <code>/model opus</code> on any session.</div>
+
+    <div class="step-block">
+      <div class="step-block-label">Action — exact edit</div>
+<pre>// In C:\Users\Rob\.claude\settings.json (around line 56):
+"model": "opus"
+// → change to:
+"model": "sonnet"</pre>
+    </div>
+
+    <div class="step-block">
+      <div class="step-block-label">Expected output</div>
+      <div class="step-body">Next session header shows <code>Sonnet 4.6</code> instead of <code>Opus 4.7</code>. Same tool list, same skills.</div>
+    </div>
+
+    <div class="step-block">
+      <div class="step-block-label">Verification checkpoint</div>
+<pre>grep model ~/.claude/settings.json
+# Expected:  "model": "sonnet",</pre>
+      <div class="step-body" style="margin-top:0.4rem;">Run one normal coding task end-to-end (e.g. a small Edit + commit). Output quality should match Opus on ~90% of tasks. If shallow on a hard task, manually escalate with <code>/model opus</code> for that turn.</div>
+    </div>
+
+    <div class="step-block">
+      <div class="step-block-label">Rollback</div>
+<pre>// Revert settings.json model back to "opus"
+// Or per-session: /model opus  (keeps default sonnet, opts in for this run)</pre>
+    </div>
+  </div>
+
+  <div class="gate">
+    <div class="gate-title">⚠ Phase Gate A → B</div>
+    <div class="gate-body"><strong>Stop. Run 24 hours of normal work with phases 1–2 applied before proceeding.</strong> If Sonnet output quality holds on real tasks, GO. If any task feels measurably weaker than Opus baseline, log the task type and re-evaluate before phase 3. Conservative ROI ($14/mo saved) already realized — no need to rush.</div>
+  </div>
+
+  <h3 style="color:var(--gold);font-size:0.85rem;text-transform:uppercase;letter-spacing:0.1em;margin:1.5rem 0 0.8rem;">Phase B — Day 2 · Caching (Medium Risk, 45 min)</h3>
+
+  <div class="step">
+    <div class="step-head">
+      <div class="step-num">3</div>
+      <div class="step-title">Cache <code>CLAUDE.md</code> + shared context via <code>cache_control</code></div>
+      <div class="step-meta">45 min · <span class="pill pill-orange">MED RISK</span></div>
+    </div>
+    <div class="step-body">Wrap user-level <code>CLAUDE.md</code> (~3.5K tok) + <code>DECISIONS.md</code> + <code>DISAGREEMENTS.md</code> in a single <code>cache_control</code> ephemeral breakpoint (5-min TTL). Cached prefix bills at 10% of normal input rate on every cache hit.</div>
+
+    <div class="step-block">
+      <div class="step-block-label">Action — Claude Code SDK system block</div>
+<pre>// In your Claude Code SDK invocation (settings.json "systemPrompt" or extra_body):
+{
+  "system": [
+    {
+      "type": "text",
+      "text": "&lt;contents of CLAUDE.md + DECISIONS.md + DISAGREEMENTS.md concatenated&gt;",
+      "cache_control": { "type": "ephemeral" }
+    }
+  ]
+}
+// Breakpoint MUST be at the end of the genuinely-static prefix.
+// Do NOT include dynamic content (timestamps, session IDs, tool results) before it.</pre>
+    </div>
+
+    <div class="step-block">
+      <div class="step-block-label">Expected output</div>
+      <div class="step-body">First turn of a fresh session: <code>cache_creation_input_tokens</code> ≈ 3500, <code>cache_read_input_tokens</code> = 0. <strong>Turn 2+:</strong> <code>cache_read_input_tokens</code> ≈ 3500, <code>cache_creation_input_tokens</code> = 0. Per-turn input bill drops ~$0.015.</div>
+    </div>
+
+    <div class="step-block">
+      <div class="step-block-label">Verification checkpoint</div>
+<pre>// Check Anthropic Console → Usage → token breakdown after a 3-turn session.
+// Expected: cache_read_input_tokens &gt; 0 on turns 2 and 3.
+// If still 0 after turn 2: cache key shifted — see Rollback.</pre>
+    </div>
+
+    <div class="step-block">
+      <div class="step-block-label">Rollback</div>
+<pre>// If cache misses on every turn (cache_read=0 turn 2+):
+//   1. Remove cache_control breakpoint from SDK config.
+//   2. Re-test with a smaller, purely-static prefix (just CLAUDE.md, no DECISIONS.md).
+//   3. Likely cause: tool definitions or system context changing per turn — move
+//      breakpoint to before the dynamic content.
+// No data loss possible. Removing cache_control restores pre-caching behavior.</pre>
+    </div>
+  </div>
+
+  <div class="gate">
+    <div class="gate-title">⚠ Phase Gate B → C</div>
+    <div class="gate-body"><strong>Confirm cache hits before adding skill-level model overrides.</strong> If <code>cache_read_input_tokens</code> not climbing on turn 2+, do not stack phase 4 changes on top — they will obscure root cause of the cache miss. Fix caching first, then proceed.</div>
+  </div>
+
+  <h3 style="color:var(--gold);font-size:0.85rem;text-transform:uppercase;letter-spacing:0.1em;margin:1.5rem 0 0.8rem;">Phase C — Week 1 · Skills + Habits (Medium Risk, 2h + ongoing)</h3>
+
+  <div class="step">
+    <div class="step-head">
+      <div class="step-num">4</div>
+      <div class="step-title">Skill model overrides — Haiku / Sonnet / Opus by class</div>
+      <div class="step-meta">2 h · <span class="pill pill-orange">MED RISK</span></div>
+    </div>
+    <div class="step-body">Add <code>model:</code> frontmatter to each <code>~/.claude/skills/tourney-*/SKILL.md</code>. Class assignment per source plan.</div>
+
+    <div class="step-block">
+      <div class="step-block-label">Action — assignment matrix</div>
+<pre>// Haiku 4.5 (cheapest, fast):
+//   tourney-reference*, tourney-audit*, tourney-review-feature-depth,
+//   tourney-runbook-deployment, tourney-runbook-feature-depth
+//
+// Sonnet 4.6 (default):
+//   tourney-review*, tourney-plan*, tourney-runbook-business,
+//   tourney-runbook-data-model, tourney-bug*, tourney-postmortem*
+//
+// Opus 4.7 (only when stakes high):
+//   tourney-review-security, tourney-plan-security,
+//   tourney-runbook-security, tourney-postmortem-security
+
+// In each SKILL.md frontmatter, add the "model:" line:
+---
+name: tourney-reference-data-model
+description: ...
+model: haiku
+---</pre>
+    </div>
+
+    <div class="step-block">
+      <div class="step-block-label">Expected output</div>
+      <div class="step-body">Invoking a tagged skill shows the assigned model in the status line. <code>/tourney-reference-data-model</code> → Haiku. <code>/tourney-review-security</code> → Opus. Output quality of cheap-tier skills matches old Opus output on these doc-generation tasks.</div>
+    </div>
+
+    <div class="step-block">
+      <div class="step-block-label">Verification checkpoint</div>
+<pre>// Run 3 test skills, one per tier:
+/tourney-reference-data-model        # → status line: Haiku
+/tourney-plan-business              # → status line: Sonnet
+/tourney-review-security            # → status line: Opus
+
+// Spot-check output quality on each. If Haiku output materially weaker
+// on reference/audit skills, demote that skill back to Sonnet.</pre>
+    </div>
+
+    <div class="step-block">
+      <div class="step-block-label">Rollback</div>
+<pre>// Per-skill: remove the "model:" line from the SKILL.md frontmatter.
+//   That skill reverts to the global default (sonnet, after phase 2).
+// Global: git revert the commit if all overrides need to back out.</pre>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-head">
+      <div class="step-num">5</div>
+      <div class="step-title">Habit — <code>Read</code> → <code>ctx_execute_file</code> on large files</div>
+      <div class="step-meta">Ongoing · <span class="pill pill-green">LOW RISK</span></div>
+    </div>
+    <div class="step-body">Behavior change. When about to <code>Read</code> a file ≥ 500 lines for analysis only (no Edit follow-up), switch to <code>ctx_execute_file</code>. Read stays correct for files about to be Edited.</div>
+
+    <div class="step-block">
+      <div class="step-block-label">Action — add hard rule to CLAUDE.md</div>
+<pre>// Append to ~/.claude/CLAUDE.md under "Engineering" or new "Context hygiene" section:
+
+## Context hygiene (hard rule)
+- Analysis only, file ≥ 500 lines  →  ctx_execute_file
+- Edit any size                    →  Read (Edit needs content in context)
+- Multiple file lookups            →  ctx_batch_execute, not serial Reads
+- Web pages                        →  ctx_fetch_and_index, not WebFetch</pre>
+    </div>
+
+    <div class="step-block">
+      <div class="step-block-label">Expected output</div>
+      <div class="step-body">PreToolUse hook already nudges this. After CLAUDE.md hard rule lands, Claude self-routes large analytical reads to <code>ctx_execute_file</code>. Weekly stats ratio climbs.</div>
+    </div>
+
+    <div class="step-block">
+      <div class="step-block-label">Verification checkpoint</div>
+<pre>// Weekly cadence:
+/context-mode:ctx-stats
+
+// Compare savings ratio to baseline.
+// Target: ratio ≥ 60% within 2 weeks of rule landing.
+// If ratio flat or dropping, audit recent Read tool uses — find which ones
+// could have been ctx_execute_file.</pre>
+    </div>
+
+    <div class="step-block">
+      <div class="step-block-label">Rollback</div>
+<pre>// Pure behavior rule. Remove the section from CLAUDE.md to revert.
+// No code or config to undo.</pre>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-head">
+      <div class="step-num">6</div>
+      <div class="step-title">Habit — <code>/clear</code> on topic switch, <code>/compact</code> at 80K</div>
+      <div class="step-meta">Ongoing · <span class="pill pill-green">LOW RISK</span></div>
+    </div>
+    <div class="step-body">Session hygiene. <code>/clear</code> drops accumulated context when switching from (e.g.) TOURney to linkSmith. <code>/compact</code> at 80K tokens trims before auto-compression kicks in suboptimally.</div>
+
+    <div class="step-block">
+      <div class="step-block-label">Action — add habit rule to CLAUDE.md</div>
+<pre>## Session hygiene (hard rule)
+- Topic/project switch  →  /clear (drop unrelated context)
+- Context ≥ 80K tokens  →  /compact (preempt auto-compression)
+- After /clear or /compact  →  context-mode KB persists; re-search if needed</pre>
+    </div>
+
+    <div class="step-block">
+      <div class="step-block-label">Expected output</div>
+      <div class="step-body">Cleaner sessions, lower average tokens-per-turn. Cache hits more reliable (clearing resets context but keeps the cached static prefix valid).</div>
+    </div>
+
+    <div class="step-block">
+      <div class="step-block-label">Verification checkpoint</div>
+<pre>// Anthropic Console weekly: average input tokens per session.
+// Target: 15–25% lower than baseline once habits stick (week 3+).</pre>
+    </div>
+
+    <div class="step-block">
+      <div class="step-block-label">Rollback</div>
+<pre>// Behavior rule only. Remove section from CLAUDE.md to revert.</pre>
+    </div>
+  </div>
+</div>
+</section>
+
+<section id="verification">
+<div class="wrapper">
+  <div class="section-header">
+    <div class="section-eyebrow">§4 — End-to-End Verification</div>
+    <div class="section-title">Did The Plan Land?</div>
+    <div class="section-desc">Two-week check. If targets miss, return to phase gates and re-test.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Day 3 check — Phases 1–3 landed</div>
+    <ul>
+      <li><code>grep -E "model|effortLevel" ~/.claude/settings.json</code> → <code>sonnet</code> + <code>medium</code></li>
+      <li>Anthropic Console: <code>cache_read_input_tokens > 0</code> on turn 2+ of new sessions</li>
+      <li>Daily burn rate dropped vs. baseline screenshot (allow noise — look at 3-day rolling)</li>
+      <li>No regressions reported on TOURney or linkSmith work delivered in this window</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Week 2 check — Phases 4–6 landed</div>
+    <ul>
+      <li>Skill frontmatter has <code>model:</code> field on every <code>tourney-*</code> skill</li>
+      <li><code>/context-mode:ctx-stats</code> savings ratio ≥ 60%</li>
+      <li>Average input tokens per session 15–25% below baseline</li>
+      <li>Weekly Anthropic spend tracking toward conservative ($41/mo) or aggressive ($33/mo) target</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Acceptance criteria — success</div>
+    <ul>
+      <li><strong>Financial:</strong> Anthropic monthly bill ≤ $41 after 30 days (conservative case)</li>
+      <li><strong>Quality:</strong> No reported "had to re-run on Opus" events in last 7 days</li>
+      <li><strong>Reliability:</strong> Cache hit rate ≥ 85% on multi-turn sessions</li>
+      <li><strong>Adoption:</strong> Read vs. ctx_execute_file ratio shows context-mode dominant on analytical reads</li>
+    </ul>
+  </div>
+</div>
+</section>
+
+<section id="rollback">
+<div class="wrapper">
+  <div class="section-header">
+    <div class="section-eyebrow">§5 — Rollback</div>
+    <div class="section-title">If This Regresses Output Quality</div>
+    <div class="section-desc">All changes local + reversible. No production surface touched. Granular rollback per phase.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Per-step rollback (already cited in §3)</div>
+    <ul>
+      <li><strong>Step 1 (effort):</strong> set <code>effortLevel</code> back to <code>"xhigh"</code> in settings.json</li>
+      <li><strong>Step 2 (model):</strong> set <code>model</code> back to <code>"opus"</code> OR keep default sonnet + run <code>/model opus</code> per session</li>
+      <li><strong>Step 3 (cache):</strong> remove <code>cache_control</code> block from SDK config — cache simply stops being used</li>
+      <li><strong>Step 4 (skills):</strong> remove <code>model:</code> line from any skill frontmatter — that skill reverts to global default</li>
+      <li><strong>Step 5–6 (habits):</strong> delete the "Context hygiene" / "Session hygiene" sections from CLAUDE.md</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Full rollback — nuke everything (5 min)</div>
+<pre># 1. Restore settings.json from baseline
+cp ~/.claude/baselines/2026-05-11-settings.json.bak ~/.claude/settings.json
+
+# 2. Restore CLAUDE.md from baseline
+cp ~/.claude/baselines/2026-05-11-CLAUDE.md.bak ~/.claude/CLAUDE.md
+
+# 3. Drop skill model overrides
+cd ~/.claude/skills
+git checkout HEAD -- tourney-*/SKILL.md   # if tracked in git
+# Or manually delete the "model:" line from each frontmatter.
+
+# 4. Verify
+grep -E "model|effortLevel" ~/.claude/settings.json
+# Expected:  "model": "opus",  "effortLevel": "xhigh",</pre>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Take a backup BEFORE step 1</div>
+<pre>mkdir -p ~/.claude/baselines
+cp ~/.claude/settings.json  ~/.claude/baselines/2026-05-11-settings.json.bak
+cp ~/.claude/CLAUDE.md      ~/.claude/baselines/2026-05-11-CLAUDE.md.bak</pre>
+  </div>
+</div>
+</section>
+
+<section id="escalation">
+<div class="wrapper">
+  <div class="section-header">
+    <div class="section-eyebrow">§6 — Escalation</div>
+    <div class="section-title">When Something Looks Off</div>
+    <div class="section-desc">Triage in this order. Stop at the first one that explains the symptom.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Symptom: Anthropic spend not dropping after 1 week</div>
+    <ol>
+      <li>Anthropic Console → Usage → verify <code>cache_read_input_tokens</code> climbing on multi-turn sessions. If still 0, cache breakpoint wrong — see step 3 rollback.</li>
+      <li>Check status line shows <code>Sonnet 4.6</code> by default. If Opus, settings.json didn't reload — restart Claude Code.</li>
+      <li><code>/context-mode:ctx-stats</code> — if savings ratio &lt; 40%, habits not sticking. Audit recent Read calls.</li>
+    </ol>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Symptom: Output feels weaker than before</div>
+    <ol>
+      <li>Identify the task class (review? plan? security?). If security or audit, that skill should be on Opus — check its SKILL.md frontmatter.</li>
+      <li>Re-run that one task with <code>/model opus</code>. If output materially better, log task type and consider promoting that skill back to Opus.</li>
+      <li>If complex task on default Sonnet feels shallow, retry with <code>/effort xhigh</code> for that turn.</li>
+    </ol>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Symptom: Cache misses on every turn</div>
+    <ol>
+      <li>Confirm prefix is genuinely static — no timestamps, no per-turn tool definitions, no rotating session ID before the breakpoint.</li>
+      <li>Shrink the cached block to just <code>CLAUDE.md</code> alone. Re-test. If hits resume, add files back one at a time until the miss returns.</li>
+      <li>Check 5-min TTL — if sessions span longer idle gaps, hits will look sporadic. That's expected, not broken.</li>
+    </ol>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Last resort</div>
+    <ul>
+      <li>Full rollback (§5) takes 5 min and restores pre-runbook state exactly. No data loss possible — all changes are local config.</li>
+      <li>Re-read source plan: <a href="/platform/5-7-26-token-savings-plan-business" style="color:var(--gold-light)">5-7-26 token savings plan</a> — risk register pre-mortems every failure mode here.</li>
+    </ul>
+  </div>
+</div>
+</section>
+
+<footer>
+  Generated by <span>Claude Opus 4.7</span> · Greenskeeper Studios Internal · May 11, 2026
+  <br style="margin-top:0.3rem">
+  <a href="/platform" style="color:var(--muted);font-size:0.72rem;text-decoration:none">← TOURney Operations</a>
+</footer>
+
+</body>
+</html>

@@ -5,6 +5,19 @@
   "description": "Canonical registry of all TOURney plans, reviews, audits, and QA artifacts. The /platform Artifacts tab renders from this file. Skills (e.g. tourney-review) append new entries when they generate output.",
   "entries": [
     {
+      "id": "runbook-token-savings-business-2026-05-11",
+      "category": "runbook",
+      "title": "Token Savings Business Runbook · May 11, 2026",
+      "summary": "Step-by-step operational execution of the 5-7-26 token savings plan. 6 steps across 3 phases (Day 1 config, Day 2 caching, Week 1 skills+habits). Each step ships exact command/edit, expected output, verification checkpoint, and rollback. Two phase gates: validate Sonnet output quality before caching, confirm cache hits before skill overrides. Target: $55/mo -> $33-41/mo. All changes local + reversible, no production surface touched.",
+      "date": "2026-05-11",
+      "updated": "2026-05-11",
+      "author": "Claude Opus 4.7",
+      "url": "/platform/5-11-26-token-savings-runbook-business",
+      "file": "5-11-26-token-savings-runbook-business.html",
+      "tags": ["runbook", "business", "cost", "claude"],
+      "status": "active"
+    },
+    {
       "id": "runbook-aaa-2026-05-11",
       "category": "runbook",
       "title": "AAA Implementation Runbook · May 11, 2026",
