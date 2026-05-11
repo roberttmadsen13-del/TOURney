@@ -11,9 +11,12 @@ const supabase = createClient(
 );
 
 // Stripe price ID → internal plan name.
-// Add entries when Stripe products/prices are created.
-// e.g. 'price_abc123': 'pro'
-const PRICE_TO_PLAN: Record<string, string> = {};
+// Populated from env vars — set STRIPE_PRICE_PLAYER in Supabase dashboard once product is created.
+const PRICE_TO_PLAN: Record<string, string> = Object.fromEntries(
+  [
+    [Deno.env.get('STRIPE_PRICE_PLAYER'), 'pro'],
+  ].filter(([id]) => !!id) as [string, string][]
+);
 
 async function setPlan(email: string, plan: string, billingRef: string, billingStatus: string, expiresAt: string | null) {
   const { error } = await supabase.from('player_accounts').upsert(
