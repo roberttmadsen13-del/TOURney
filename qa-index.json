@@ -1,9 +1,22 @@
 {
   "$schema": "https://tourney.greenskeeper.studio/qa-index-schema.json",
   "version": 1,
-  "updated_at": "2026-05-08T01:00:00Z",
+  "updated_at": "2026-05-11T22:00:00Z",
   "description": "Canonical registry of all TOURney plans, reviews, audits, and QA artifacts. The /platform Artifacts tab renders from this file. Skills (e.g. tourney-review) append new entries when they generate output.",
   "entries": [
+    {
+      "id": "runbook-aaa-2026-05-11",
+      "category": "runbook",
+      "title": "AAA Implementation Runbook · May 11, 2026",
+      "summary": "Step-by-step operational procedure executing the AAA plan: A1 shared lib finish, A3 typecheck CI, A8 weekly pg_dump, A7 migrations 006+007, A4 Vitest/Playwright scaffold, A5 staging env, F7 tier gating. 9 phases, each with go/no-go gate. Every step has exact command, expected output, verification checkpoint, and rollback procedure. Safe-deploy order: foundation -> schema (gated on backups) -> testing -> staging -> revenue gating.",
+      "date": "2026-05-11",
+      "updated": "2026-05-11",
+      "author": "Claude Opus 4.7",
+      "url": "/platform/5-11-26-aaa-runbook",
+      "file": "5-11-26-aaa-runbook.html",
+      "tags": ["runbook", "architecture", "aaa", "deployment"],
+      "status": "active"
+    },
     {
       "id": "meeting-notes-2026-05-08",
       "category": "reference",

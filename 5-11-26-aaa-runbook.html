@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TOURney — AAA Implementation Runbook · May 11, 2026</title>
+<style>
+  :root {
+    --gold: #c09030;
+    --gold-light: #d4a840;
+    --gold-dim: rgba(192,144,48,0.18);
+    --ink: #1a1008;
+    --bg: #0d0a05;
+    --surface: #151009;
+    --card: #1c140a;
+    --card2: #221a0e;
+    --border: rgba(192,144,48,0.22);
+    --muted: #7a6a54;
+    --text: #e8dcc8;
+    --red: #c0392b;
+    --green: #27ae60;
+    --blue: #2980b9;
+    --orange: #e67e22;
+    --purple: #8e44ad;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { font-family: -apple-system, 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; font-size: 15px; }
+  nav { position: sticky; top: 0; z-index: 100; background: rgba(13,10,5,0.96); border-bottom: 1px solid var(--border); backdrop-filter: blur(12px); padding: 0.6rem 1.5rem; display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
+  .nav-brand { color: var(--gold); font-weight: 700; font-size: 1rem; letter-spacing: 0.05em; white-space: nowrap; }
+  .nav-brand span { color: var(--muted); font-weight: 400; font-size: 0.8rem; margin-left: 0.4rem; }
+  .nav-links { display: flex; gap: 0.2rem; flex-wrap: wrap; margin-left: auto; }
+  .nav-links a { color: var(--muted); text-decoration: none; font-size: 0.78rem; padding: 0.3rem 0.55rem; border-radius: 4px; transition: all 0.15s; white-space: nowrap; }
+  .nav-links a:hover { color: var(--gold); background: var(--gold-dim); }
+  .hero { padding: 3.5rem 1.5rem 2.5rem; text-align: center; border-bottom: 1px solid var(--border); background: linear-gradient(180deg, rgba(192,144,48,0.06) 0%, transparent 100%); }
+  .hero-eyebrow { display: inline-block; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold); border: 1px solid var(--border); border-radius: 20px; padding: 0.25rem 0.85rem; margin-bottom: 1.2rem; }
+  .hero h1 { font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 800; color: #fff; margin-bottom: 0.5rem; }
+  .hero h1 span { color: var(--gold); }
+  .hero-sub { color: var(--muted); max-width: 640px; margin: 0 auto 1.5rem; font-size: 0.95rem; }
+  .hero-meta { display: flex; gap: 1.5rem; justify-content: center; flex-wrap: wrap; font-size: 0.78rem; color: var(--muted); }
+  .hero-meta span { display: flex; align-items: center; gap: 0.35rem; }
+  .wrapper { max-width: 1000px; margin: 0 auto; padding: 0 1.5rem; }
+  section { padding: 3rem 0; border-bottom: 1px solid var(--border); }
+  section:last-child { border-bottom: none; }
+  .section-header { margin-bottom: 1.4rem; }
+  .section-eyebrow { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.4rem; }
+  .section-title { font-size: 1.5rem; font-weight: 800; color: #fff; margin-bottom: 0.4rem; }
+  .section-desc { color: var(--muted); font-size: 0.88rem; max-width: 700px; }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 1.1rem 1.3rem; margin-bottom: 0.7rem; }
+  .card-title { font-size: 0.88rem; font-weight: 700; color: var(--gold); margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
+  .card p, .card li { font-size: 0.86rem; color: var(--text); margin-bottom: 0.3rem; }
+  .card ul, .card ol { padding-left: 1.2rem; }
+  .card li { margin-bottom: 0.35rem; }
+  .pill { display: inline-block; font-size: 0.62rem; font-weight: 700; letter-spacing: 0.06em; padding: 0.16rem 0.5rem; border-radius: 20px; text-transform: uppercase; }
+  .pill-gold { background: rgba(192,144,48,0.18); color: var(--gold); border: 1px solid rgba(192,144,48,0.3); }
+  .pill-green { background: rgba(39,174,96,0.15); color: var(--green); border: 1px solid rgba(39,174,96,0.3); }
+  .pill-red { background: rgba(192,57,43,0.15); color: var(--red); border: 1px solid rgba(192,57,43,0.3); }
+  .pill-orange { background: rgba(230,126,34,0.15); color: var(--orange); border: 1px solid rgba(230,126,34,0.3); }
+  .pill-blue { background: rgba(41,128,185,0.15); color: var(--blue); border: 1px solid rgba(41,128,185,0.3); }
+  .pill-purple { background: rgba(142,68,173,0.15); color: var(--purple); border: 1px solid rgba(142,68,173,0.3); }
+  code { font-family: 'Consolas', 'Monaco', monospace; background: rgba(255,255,255,0.07); padding: 0.1rem 0.3rem; border-radius: 3px; font-size: 0.82em; color: var(--gold-light); }
+  pre { font-family: 'Consolas', 'Monaco', monospace; background: rgba(255,255,255,0.04); border: 1px solid var(--border); border-radius: 6px; padding: 0.75rem 1rem; font-size: 0.78rem; color: var(--gold-light); overflow-x: auto; margin: 0.5rem 0; white-space: pre; }
+  .step { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 1rem 1.25rem; margin-bottom: 0.7rem; }
+  .step-head { display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.6rem; flex-wrap: wrap; }
+  .step-id { font-family: 'Consolas','Monaco',monospace; font-size: 0.72rem; color: var(--gold); background: rgba(192,144,48,0.12); border: 1px solid var(--border); padding: 0.1rem 0.5rem; border-radius: 4px; }
+  .step-title { font-size: 0.95rem; font-weight: 700; color: #fff; }
+  .step-sub { font-size: 0.78rem; color: var(--muted); margin-bottom: 0.5rem; }
+  .lbl { font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--gold-light); font-weight: 700; margin-top: 0.6rem; margin-bottom: 0.2rem; }
+  .expected { background: rgba(39,174,96,0.05); border-left: 2px solid var(--green); padding: 0.4rem 0.7rem; font-size: 0.78rem; color: var(--text); margin: 0.3rem 0; border-radius: 0 4px 4px 0; }
+  .verify { background: rgba(41,128,185,0.05); border-left: 2px solid var(--blue); padding: 0.4rem 0.7rem; font-size: 0.78rem; color: var(--text); margin: 0.3rem 0; border-radius: 0 4px 4px 0; }
+  .rollback { background: rgba(192,57,43,0.06); border-left: 2px solid var(--red); padding: 0.4rem 0.7rem; font-size: 0.78rem; color: var(--text); margin: 0.3rem 0; border-radius: 0 4px 4px 0; }
+  .gate { background: linear-gradient(135deg, rgba(230,126,34,0.1), rgba(192,57,43,0.08)); border: 1px solid var(--orange); border-radius: 8px; padding: 1rem 1.3rem; margin: 1.2rem 0; }
+  .gate-head { font-size: 0.78rem; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: var(--orange); margin-bottom: 0.4rem; }
+  .checklist { list-style: none; padding-left: 0; }
+  .checklist li { padding-left: 1.6rem; position: relative; margin-bottom: 0.35rem; font-size: 0.84rem; }
+  .checklist li::before { content: "☐"; position: absolute; left: 0; color: var(--gold); font-size: 1rem; line-height: 1; }
+  .checklist li.done::before { content: "☑"; color: var(--green); }
+  .phase-banner { background: var(--card2); border: 1px solid var(--border); border-radius: 8px; padding: 0.9rem 1.2rem; margin-bottom: 1rem; display: flex; gap: 1rem; align-items: center; flex-wrap: wrap; }
+  .phase-num { font-family: 'Consolas','Monaco',monospace; font-size: 1.4rem; font-weight: 900; color: var(--gold); }
+  .phase-name { font-size: 0.95rem; font-weight: 700; color: #fff; }
+  .phase-meta { font-size: 0.74rem; color: var(--muted); margin-left: auto; }
+  footer { border-top: 1px solid var(--border); padding: 1.5rem; text-align: center; color: var(--muted); font-size: 0.75rem; }
+  footer span { color: var(--gold); }
+  @media (max-width: 600px) {
+    .nav-links { display: none; }
+    .hero { padding: 2rem 1rem 1.5rem; }
+    section { padding: 2rem 0; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-brand">TOURney <span>by Greenskeeper Studios</span></div>
+  <div class="nav-links">
+    <a href="/platform">⬡ Operations</a>
+    <a href="#scope">Scope</a>
+    <a href="#prereq">Prereqs</a>
+    <a href="#steps">Steps</a>
+    <a href="#verify">Verify</a>
+    <a href="#rollback">Rollback</a>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="hero-eyebrow">AAA Implementation Runbook</div>
+  <h1><span>TOURney</span> — AAA Execution Plan</h1>
+  <p class="hero-sub">Step-by-step operational procedure to ship the next 8 highest-priority queued AAA sprints safely to production. Foundation first (shared lib, CI, backups) → schema → testing → staging → tier gating. Every phase has a go/no-go gate.</p>
+  <div class="hero-meta">
+    <span>📅 May 11, 2026</span>
+    <span>🤖 Claude Opus 4.7</span>
+    <span>🏢 Greenskeeper Studios</span>
+    <span>🔒 Internal Only</span>
+  </div>
+</div>
+
+<section id="scope">
+<div class="wrapper">
+  <div class="section-header">
+    <div class="section-eyebrow">Section 1 of 6</div>
+    <div class="section-title">Scope &amp; Overview</div>
+    <div class="section-desc">What this runbook covers, when to use it, and what counts as "done".</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Trigger Conditions</div>
+    <p>Use this runbook when executing the AAA plan (<code>/platform/aaa-plan</code>). Runbook covers sprints <code>A1 finish</code>, <code>A3 wire</code>, <code>A4</code>, <code>A5</code>, <code>A7</code>, <code>A8</code>, <code>F7</code> in safe-deploy order. Sprints not yet listed here (F1–F6, F8–F10, U1–U12) get their own future runbooks once their prereqs land.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Estimated Duration</div>
+    <ul>
+      <li><strong>Phase 0 (Pre-flight):</strong> 15 min</li>
+      <li><strong>Phase 1 (A1 shared lib finish):</strong> ~6 hours of refactor work, spread over 1–2 sessions</li>
+      <li><strong>Phase 2 (A3 CI wiring):</strong> 1 hour</li>
+      <li><strong>Phase 3 (A8 backup drill):</strong> 1 hour setup + weekly automation</li>
+      <li><strong>Phase 4–5 (A7 migrations 006 + 007):</strong> 30 min each, gated on full <code>tournament_admins</code> rollout</li>
+      <li><strong>Phase 6 (A4 test scaffold):</strong> ~4 hours initial scaffold (deeper backfill is a follow-up sprint)</li>
+      <li><strong>Phase 7 (A5 staging env):</strong> ~2 hours</li>
+      <li><strong>Phase 8 (F7 tier gating):</strong> ~6 hours (depends on A5 staging)</li>
+    </ul>
+    <p><strong>Total wall-clock</strong>: ~3–4 calendar days of focused work, dependent on Stripe Phase 8 being last so failures don't block revenue.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Owner &amp; Tooling</div>
+    <ul>
+      <li><strong>Owner:</strong> Rob (Greenskeeper Studios)</li>
+      <li><strong>Repo:</strong> <code>C:\Users\Rob\OneDrive\Desktop\Greenskeeper Studios\Bova Invitational\</code></li>
+      <li><strong>Remotes:</strong> <code>origin</code> = bova-invt (Vercel-deployed), <code>tourney</code> = TOURney mirror</li>
+      <li><strong>Supabase project:</strong> <code>jllugkiojeoopitdvzsa</code> (prod) — staging project created in Phase 7</li>
+      <li><strong>Deploy:</strong> Vercel auto-deploys on push to <code>main</code></li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Source Plan</div>
+    <p>This runbook executes the plan at <a href="/platform/aaa-plan" style="color:var(--gold-light)"><code>/platform/aaa-plan</code></a>. Plan sprint IDs (A1, A7, F7, etc.) are referenced in step headers.</p>
+  </div>
+</div>
+</section>
+
+<section id="prereq">
+<div class="wrapper">
+  <div class="section-header">
+    <div class="section-eyebrow">Section 2 of 6</div>
+    <div class="section-title">Prerequisites</div>
+    <div class="section-desc">Before running any step, verify each item. Stop if any prereq fails.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Access &amp; Environment</div>
+    <ul class="checklist">
+      <li>Logged into Supabase CLI (<code>npx supabase login</code>) — required for migrations + edge fn deploys</li>
+      <li>GitHub push access on <code>roberttmadsen13-del/bova-invt</code> (origin) + <code>/TOURney</code> (mirror)</li>
+      <li>Vercel project connected to bova-invt main → auto-deploys</li>
+      <li>Node 20+ installed locally (<code>node -v</code>)</li>
+      <li>Git working tree clean (<code>git status</code> returns nothing)</li>
+      <li>On <code>main</code> branch, up to date with <code>origin/main</code></li>
+      <li>Stripe Dashboard access (Phase 8 only): test mode keys available</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Snapshot Prior State</div>
+    <p>Before kicking off Phase 1, snapshot the things that will change so rollback is fast.</p>
+<pre>cd "C:/Users/Rob/OneDrive/Desktop/Greenskeeper Studios/Bova Invitational"
+git log --oneline -1 &gt; .runbook-start.txt
+git tag aaa-runbook-start-$(date +%Y%m%d-%H%M)</pre>
+    <div class="expected"><strong>Expected:</strong> Tag created locally. <code>.runbook-start.txt</code> contains current HEAD SHA.</div>
+  </div>
+</div>
+</section>
+
+<section id="steps">
+<div class="wrapper">
+  <div class="section-header">
+    <div class="section-eyebrow">Section 3 of 6</div>
+    <div class="section-title">Execution Steps</div>
+    <div class="section-desc">Numbered, atomic, copy-paste ready. Order is the safe-deploy sequence. Do not skip phases — each gates the next.</div>
+  </div>
+
+  <!-- ─────────── PHASE 0 ─────────── -->
+  <div class="phase-banner"><span class="phase-num">P0</span><span class="phase-name">Pre-flight Verification</span><span class="phase-meta">15 min · zero risk</span></div>
+
+  <div class="step">
+    <div class="step-head"><span class="step-id">0.1</span><span class="step-title">Pull latest, verify clean tree</span><span class="pill pill-blue">read-only</span></div>
+<pre>cd "C:/Users/Rob/OneDrive/Desktop/Greenskeeper Studios/Bova Invitational"
+git pull origin main --ff-only
+git status</pre>
+    <div class="expected"><strong>Expected:</strong> "Already up to date" or fast-forward. Working tree clean.</div>
+    <div class="verify"><strong>Verify:</strong> <code>git rev-parse HEAD</code> matches <code>git rev-parse origin/main</code>.</div>
+    <div class="rollback"><strong>Rollback:</strong> N/A (no changes made). If pull fails due to local changes, stop and stash before continuing.</div>
+  </div>
+
+  <div class="step">
+    <div class="step-head"><span class="step-id">0.2</span><span class="step-title">Verify prod Supabase reachable</span><span class="pill pill-blue">read-only</span></div>
+<pre>npx supabase projects list</pre>
+    <div class="expected"><strong>Expected:</strong> Table shows <code>jllugkiojeoopitdvzsa</code> bova-invitational.</div>
+    <div class="verify"><strong>Verify:</strong> Visit <code>https://supabase.com/dashboard/project/jllugkiojeoopitdvzsa</code>, confirm green status.</div>
+    <div class="rollback"><strong>Rollback:</strong> If CLI fails, run <code>npx supabase login</code>. Do not proceed without CLI access.</div>
+  </div>
+
+  <div class="step">
+    <div class="step-head"><span class="step-id">0.3</span><span class="step-title">Snapshot current grades</span><span class="pill pill-blue">read-only</span></div>
+    <p>Open <a href="/platform" style="color:var(--gold-light)">/platform</a> Dashboard, record current grades into <code>.runbook-start.txt</code> for after-comparison.</p>
+    <div class="expected"><strong>Expected:</strong> Architecture A, Feature Depth B+, UX B, Security B-, Business C+, Deployment B+, Performance B, Data Model B (per <code>5-8-26-claude-review</code>).</div>
+    <div class="verify"><strong>Verify:</strong> Grades captured. After-runbook target: each grade improves by 0.5 letter or more.</div>
+    <div class="rollback"><strong>Rollback:</strong> N/A.</div>
+  </div>
+
+  <div class="gate">
+    <div class="gate-head">🚦 Gate P0 → P1</div>
+    <p>Proceed only if: tree clean, on main, Supabase CLI works, grade snapshot recorded. If any item failed, fix it before continuing.</p>
+  </div>
+
+  <!-- ─────────── PHASE 1 ─────────── -->
+  <div class="phase-banner"><span class="phase-num">P1</span><span class="phase-name">A1: Finish Shared Module Layer</span><span class="phase-meta">~6 hours · refactor only</span></div>
+
+  <div class="step">
+    <div class="step-head"><span class="step-id">1.1</span><span class="step-title">Inventory duplicates</span><span class="pill pill-blue">read-only</span></div>
+<pre>grep -rn "function esc(" --include="*.html" | wc -l
+grep -rn "function fmt" --include="*.html" | wc -l
+grep -rn "showToast\|copyToClipboard" --include="*.html" | wc -l</pre>
+    <div class="expected"><strong>Expected:</strong> Each count &gt; 1 (confirms duplication).</div>
+    <div class="verify"><strong>Verify:</strong> Capture counts in <code>.runbook-p1-before.txt</code>.</div>
+    <div class="rollback"><strong>Rollback:</strong> N/A.</div>
+  </div>
+
+  <div class="step">
+    <div class="step-head"><span class="step-id">1.2</span><span class="step-title">Create lib/util.js</span><span class="pill pill-orange">write</span></div>
+    <p>Extract <code>esc()</code>, date formatters, <code>showToast()</code>, <code>copyToClipboard()</code>, status constants into <code>lib/util.js</code>. Export each as named export. JSDoc every export.</p>
+<pre>mkdir -p lib
+# Edit lib/util.js with extracted helpers</pre>
+    <div class="expected"><strong>Expected:</strong> <code>lib/util.js</code> exists with ~10 exported helpers, each with JSDoc.</div>
+    <div class="verify"><strong>Verify:</strong> <code>node -e "import('./lib/util.js').then(m =&gt; console.log(Object.keys(m)))"</code> prints exports.</div>
+    <div class="rollback"><strong>Rollback:</strong> <code>rm lib/util.js</code>. No HTML touched yet, no callers depend on it.</div>
+  </div>
+
+  <div class="step">
+    <div class="step-head"><span class="step-id">1.3</span><span class="step-title">Migrate one page (admin.html) as smoke test</span><span class="pill pill-orange">write</span></div>
+    <p>Add <code>&lt;script type="module" src="/lib/util.js"&gt;</code> to admin.html. Replace inline <code>function esc</code> with import. Test that admin loads + scoring works.</p>
+    <div class="expected"><strong>Expected:</strong> admin.html drops ~3KB. No console errors. Admin tab navigation, player table, format selectors all work.</div>
+    <div class="verify"><strong>Verify:</strong> Open <code>https://bova.greenskeeper.studio/admin</code>, exercise: add player, change format, save. Console clean.</div>
+    <div class="rollback"><strong>Rollback:</strong> <code>git checkout admin.html</code>. lib/util.js can stay unused.</div>
+  </div>
+
+  <div class="step">
+    <div class="step-head"><span class="step-id">1.4</span><span class="step-title">Roll out to remaining pages</span><span class="pill pill-orange">write</span></div>
+    <p>Once 1.3 is green, repeat for: home.html, scoreboard.html, scorecard.html, feed.html, profile.html, directory.html, login.html, champions.html, platform.html, bugs.html, create.html, player.html, player-upgrade.html. One PR per page or one bundled — Rob's call.</p>
+    <div class="expected"><strong>Expected:</strong> All pages drop in size. <code>grep -c "function esc" *.html</code> returns 0.</div>
+    <div class="verify"><strong>Verify:</strong> Full QA loop per CLAUDE.md (console, network, happy path, edge cases, visual, regression) on each migrated page.</div>
+    <div class="rollback"><strong>Rollback:</strong> <code>git revert</code> per-page commits. Each commit must be standalone.</div>
+  </div>
+
+  <div class="step">
+    <div class="step-head"><span class="step-id">1.5</span><span class="step-title">Bump SW cache, commit, push</span><span class="pill pill-red">deploy</span></div>
+<pre># bump CACHE in sw.js (vNN → vNN+1)
+git add -A
+git commit -m "refactor: extract shared helpers to lib/util.js (A1)"
+git push origin main</pre>
+    <div class="expected"><strong>Expected:</strong> Push succeeds (origin auto-mirrors to tourney remote). Vercel build green in ~60s.</div>
+    <div class="verify"><strong>Verify:</strong> <code>https://tourney.greenskeeper.studio/admin</code> loads in fresh incognito window. Console clean. No 404 on /lib/util.js.</div>
+    <div class="rollback"><strong>Rollback:</strong> <code>git revert &lt;sha&gt;; git push origin main</code>. Vercel redeploys within 60s.</div>
+  </div>
+
+  <div class="gate">
+    <div class="gate-head">🚦 Gate P1 → P2</div>
+    <p>Proceed only if: all migrated pages load cleanly in prod, no console errors, scoring + admin flows verified. <strong>Wait 24 hours</strong> with prod traffic before continuing — if no bug reports surface, advance.</p>
+  </div>
+
+  <!-- ─────────── PHASE 2 ─────────── -->
+  <div class="phase-banner"><span class="phase-num">P2</span><span class="phase-name">A3: Wire Type-Checked CI</span><span class="phase-meta">~1 hour · CI only, no runtime impact</span></div>
+
+  <div class="step">
+    <div class="step-head"><span class="step-id">2.1</span><span class="step-title">Create tsconfig.json</span><span class="pill pill-orange">write</span></div>
+<pre>cat &gt; tsconfig.json &lt;&lt;'JSON'
+{
+  "compilerOptions": {
+    "allowJs": true,
+    "checkJs": true,
+    "noEmit": true,
+    "target": "es2022",
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "strict": false,
+    "skipLibCheck": true,
+    "resolveJsonModule": true
+  },
+  "include": ["lib/**/*.js"]
+}
+JSON</pre>
+    <div class="expected"><strong>Expected:</strong> File exists. <code>npx tsc</code> runs.</div>
+    <div class="verify"><strong>Verify:</strong> <code>npx tsc --noEmit</code> returns zero errors against current <code>lib/</code>.</div>
+    <div class="rollback"><strong>Rollback:</strong> <code>rm tsconfig.json</code>.</div>
+  </div>
+
+  <div class="step">
+    <div class="step-head"><span class="step-id">2.2</span><span class="step-title">Add GitHub Action</span><span class="pill pill-orange">write</span></div>
+<pre>mkdir -p .github/workflows
+# Create .github/workflows/typecheck.yml</pre>
+    <p>Action: runs on PR + push to main. Steps: <code>actions/checkout@v4</code> → <code>setup-node</code> v20 → <code>npx tsc --noEmit</code>. Fails PR on type errors.</p>
+    <div class="expected"><strong>Expected:</strong> File exists, syntax valid YAML.</div>
+    <div class="verify"><strong>Verify:</strong> Open a throwaway PR with intentional type error. Action fails red. Close PR.</div>
+    <div class="rollback"><strong>Rollback:</strong> <code>rm .github/workflows/typecheck.yml</code>.</div>
+  </div>
+
+  <div class="step">
+    <div class="step-head"><span class="step-id">2.3</span><span class="step-title">Commit + push</span><span class="pill pill-red">deploy</span></div>
+<pre>git add tsconfig.json .github/workflows/typecheck.yml
+git commit -m "ci: typecheck lib/ on PR (A3)"
+git push origin main</pre>
+    <div class="expected"><strong>Expected:</strong> First Action run green.</div>
+    <div class="verify"><strong>Verify:</strong> GitHub → Actions tab shows green ✓ on the commit.</div>
+    <div class="rollback"><strong>Rollback:</strong> <code>git revert &lt;sha&gt;; git push</code>.</div>
+  </div>
+
+  <div class="gate">
+    <div class="gate-head">🚦 Gate P2 → P3</div>
+    <p>Proceed only if: Action runs green on a fresh commit. No tsc errors against committed <code>lib/util.js</code>.</p>
+  </div>
+
+  <!-- ─────────── PHASE 3 ─────────── -->
+  <div class="phase-banner"><span class="phase-num">P3</span><span class="phase-name">A8: Weekly Backup Drill</span><span class="phase-meta">~1 hour · defensive, prereq for risky migrations</span></div>
+
+  <div class="step">
+    <div class="step-head"><span class="step-id">3.1</span><span class="step-title">Provision backup storage</span><span class="pill pill-orange">setup</span></div>
+    <p>Create private S3 bucket (or Cloudflare R2) <code>tourney-pg-backups</code>. Lifecycle policy: delete objects older than 90 days. Add IAM user with put-only access; store key in GitHub repo Secrets as <code>BACKUP_S3_KEY</code> / <code>BACKUP_S3_SECRET</code> / <code>BACKUP_S3_BUCKET</code>.</p>
+    <div class="expected"><strong>Expected:</strong> Bucket exists. Secrets visible in Settings → Secrets.</div>
+    <div class="verify"><strong>Verify:</strong> <code>aws s3 ls s3://tourney-pg-backups/</code> succeeds (empty).</div>
+    <div class="rollback"><strong>Rollback:</strong> Delete bucket. Revoke IAM user. Remove secrets.</div>
+  </div>
+
+  <div class="step">
+    <div class="step-head"><span class="step-id">3.2</span><span class="step-title">Add GitHub Action for weekly pg_dump</span><span class="pill pill-orange">write</span></div>
+    <p>Create <code>.github/workflows/backup.yml</code>. Schedule: <code>cron: '0 6 * * 1'</code> (Mondays 06:00 UTC). Steps: pg_dump via Supabase connection string (env <code>SUPABASE_DB_URL</code>) → gzip → upload to S3 with date-stamped key.</p>
+    <div class="expected"><strong>Expected:</strong> Workflow file syntactically valid.</div>
+    <div class="verify"><strong>Verify:</strong> Trigger manually via "Run workflow". Logs show dump completed + S3 upload 200. Check bucket has <code>tourney-2026-05-11.sql.gz</code>.</div>
+    <div class="rollback"><strong>Rollback:</strong> <code>rm .github/workflows/backup.yml</code>. Existing dumps stay in S3.</div>
+  </div>
+
+  <div class="step">
+    <div class="step-head"><span class="step-id">3.3</span><span class="step-title">Monthly restore drill</span><span class="pill pill-blue">verify</span></div>
+    <p>Once per month: download latest dump, restore to scratch Supabase project, run smoke query (<code>select count(*) from tournaments</code>). Record drill outcome in <code>.runbook-backup-drills.md</code>.</p>
+    <div class="expected"><strong>Expected:</strong> Restore completes. Count matches prod ±recent inserts.</div>
+    <div class="verify"><strong>Verify:</strong> Drill log committed with date + outcome.</div>
+    <div class="rollback"><strong>Rollback:</strong> N/A (read-only against prod).</div>
+  </div>
+
+  <div class="gate">
+    <div class="gate-head">🚦 Gate P3 → P4</div>
+    <p>Proceed only if: at least ONE successful backup uploaded to S3 AND restore drill passed. <strong>Do not run migrations without verified backups.</strong></p>
+  </div>
+
+  <!-- ─────────── PHASE 4 ─────────── -->
+  <div class="phase-banner"><span class="phase-num">P4</span><span class="phase-name">A7: Apply Migration 006 — drop is_admin</span><span class="phase-meta">30 min · schema, gated</span></div>
+
+  <div class="step">
+    <div class="step-head"><span class="step-id">4.1</span><span class="step-title">Audit code for residual is_admin references</span><span class="pill pill-blue">read-only</span></div>
+<pre>grep -rn "is_admin\|isAdmin" --include="*.html" --include="*.js" --include="*.ts" .</pre>
+    <div class="expected"><strong>Expected:</strong> Zero hits in client code or edge functions. Per <code>5-7-26-runbook-security</code>, the cutover already moved everything to <code>tournament_admins</code>.</div>
+    <div class="verify"><strong>Verify:</strong> If any hits found, STOP. Migrate that code first, redeploy, wait 24h, then return here.</div>
+    <div class="rollback"><strong>Rollback:</strong> N/A (read-only).</div>
+  </div>
+
+  <div class="step">
+    <div class="step-head"><span class="step-id">4.2</span><span class="step-title">Apply migration 006</span><span class="pill pill-red">schema</span></div>
+<pre>cat supabase/migrations/006_drop_is_admin.sql
+npx supabase db push --linked</pre>
+    <p>Migration drops <code>players.is_admin</code> column (already nulled out by prior security work).</p>
+    <div class="expected"><strong>Expected:</strong> CLI reports "Applied migration 006...".</div>
+    <div class="verify"><strong>Verify:</strong> <code>select column_name from information_schema.columns where table_name='players' and column_name='is_admin'</code> returns zero rows.</div>
+    <div class="rollback"><strong>Rollback:</strong> Restore from S3 dump (Phase 3.2). <code>alter table players add column is_admin boolean default false</code> as immediate hot-fix if rollback needed before restore.</div>
+  </div>
+
+  <div class="gate">
+    <div class="gate-head">🚦 Gate P4 → P5</div>
+    <p>Proceed only if: column dropped, no admin features regressed in QA. <strong>Wait 24 hours</strong> with prod traffic. If anyone reports admin access broken, halt and investigate.</p>
+  </div>
+
+  <!-- ─────────── PHASE 5 ─────────── -->
+  <div class="phase-banner"><span class="phase-num">P5</span><span class="phase-name">A7: Apply Migration 007 — rounds table</span><span class="phase-meta">30 min · schema, gated</span></div>
+
+  <div class="step">
+    <div class="step-head"><span class="step-id">5.1</span><span class="step-title">Review migration 007</span><span class="pill pill-blue">read-only</span></div>
+<pre>cat supabase/migrations/007_rounds_table.sql</pre>
+    <p>Creates <code>rounds</code> table with FK to <code>tournaments</code>. Backfills from settings (<code>round_day{n}</code> keys).</p>
+    <div class="expected"><strong>Expected:</strong> SQL declares table, indexes, RLS, backfill block in a transaction.</div>
+    <div class="verify"><strong>Verify:</strong> Backfill block uses <code>INSERT ... ON CONFLICT DO NOTHING</code> for idempotency.</div>
+    <div class="rollback"><strong>Rollback:</strong> N/A (read-only).</div>
+  </div>
+
+  <div class="step">
+    <div class="step-head"><span class="step-id">5.2</span><span class="step-title">Apply migration 007</span><span class="pill pill-red">schema</span></div>
+<pre>npx supabase db push --linked</pre>
+    <div class="expected"><strong>Expected:</strong> Migration applied. Backfill query reports N rows inserted.</div>
+    <div class="verify"><strong>Verify:</strong> <code>select tournament_id, count(*) from rounds group by tournament_id</code> matches expected per-tournament day count.</div>
+    <div class="rollback"><strong>Rollback:</strong> <code>drop table rounds cascade</code>. Settings-based <code>round_day{n}</code> reads still work since not removed by this migration.</div>
+  </div>
+
+  <div class="gate">
+    <div class="gate-head">🚦 Gate P5 → P6</div>
+    <p>Proceed only if: rounds populated, no scoreboard regression (admin/scoreboard/scorecard still read from settings). <strong>Wait 48 hours</strong> before any code migrates to read from <code>rounds</code> table — observability first.</p>
+  </div>
+
+  <!-- ─────────── PHASE 6 ─────────── -->
+  <div class="phase-banner"><span class="phase-num">P6</span><span class="phase-name">A4: Test Suite Scaffold</span><span class="phase-meta">~4 hours · setup only, deeper backfill is its own sprint</span></div>
+
+  <div class="step">
+    <div class="step-head"><span class="step-id">6.1</span><span class="step-title">Install Vitest + Playwright</span><span class="pill pill-orange">setup</span></div>
+<pre>npm init -y  # if package.json missing
+npm i -D vitest @playwright/test
+npx playwright install chromium</pre>
+    <div class="expected"><strong>Expected:</strong> <code>package.json</code> has both deps. Playwright downloads chromium.</div>
+    <div class="verify"><strong>Verify:</strong> <code>npx vitest --version</code> and <code>npx playwright --version</code> both print versions.</div>
+    <div class="rollback"><strong>Rollback:</strong> <code>npm uninstall vitest @playwright/test; rm -rf node_modules/.playwright</code>.</div>
+  </div>
+
+  <div class="step">
+    <div class="step-head"><span class="step-id">6.2</span><span class="step-title">Write smoke tests</span><span class="pill pill-orange">write</span></div>
+    <p>Minimum viable scaffold:</p>
+    <ul>
+      <li><code>tests/unit/util.test.js</code> — Vitest, 3 tests on <code>esc()</code></li>
+      <li><code>tests/e2e/score-submit.spec.js</code> — Playwright, fills scorecard for one hole on a test tournament</li>
+      <li><code>tests/e2e/admin-grant.spec.js</code> — Playwright, owner grants tournament_admin to a test email</li>
+    </ul>
+    <div class="expected"><strong>Expected:</strong> All three tests pass locally.</div>
+    <div class="verify"><strong>Verify:</strong> <code>npx vitest run &amp;&amp; npx playwright test</code> exit 0.</div>
+    <div class="rollback"><strong>Rollback:</strong> <code>rm -rf tests/</code>.</div>
+  </div>
+
+  <div class="step">
+    <div class="step-head"><span class="step-id">6.3</span><span class="step-title">Add CI workflow</span><span class="pill pill-orange">write</span></div>
+    <p>Create <code>.github/workflows/test.yml</code>. Runs on PR + push: <code>npm ci</code> → <code>npx vitest run</code> → <code>npx playwright install --with-deps chromium</code> → <code>npx playwright test</code>. Cache <code>node_modules</code> and Playwright browsers.</p>
+    <div class="expected"><strong>Expected:</strong> Workflow file valid. First run green.</div>
+    <div class="verify"><strong>Verify:</strong> Action shows test count in summary.</div>
+    <div class="rollback"><strong>Rollback:</strong> <code>rm .github/workflows/test.yml</code>.</div>
+  </div>
+
+  <div class="gate">
+    <div class="gate-head">🚦 Gate P6 → P7</div>
+    <p>Proceed only if: full test pipeline green in CI. If e2e flakes on Playwright, fix flakiness before P7 (staging will magnify flakes).</p>
+  </div>
+
+  <!-- ─────────── PHASE 7 ─────────── -->
+  <div class="phase-banner"><span class="phase-num">P7</span><span class="phase-name">A5: Staging Environment</span><span class="phase-meta">~2 hours · isolated from prod</span></div>
+
+  <div class="step">
+    <div class="step-head"><span class="step-id">7.1</span><span class="step-title">Create staging Supabase project</span><span class="pill pill-orange">setup</span></div>
+    <p>Supabase Dashboard → New Project → name <code>tourney-staging</code> → same region as prod (West US Oregon) → strong password. Capture project ref + anon key + service_role.</p>
+    <div class="expected"><strong>Expected:</strong> Project status green. URL <code>https://&lt;staging-ref&gt;.supabase.co</code>.</div>
+    <div class="verify"><strong>Verify:</strong> <code>curl https://&lt;staging-ref&gt;.supabase.co/rest/v1/ -H "apikey: &lt;anon&gt;"</code> returns OpenAPI doc.</div>
+    <div class="rollback"><strong>Rollback:</strong> Delete project from dashboard (free tier — no cost lost).</div>
+  </div>
+
+  <div class="step">
+    <div class="step-head"><span class="step-id">7.2</span><span class="step-title">Apply all migrations to staging</span><span class="pill pill-red">schema</span></div>
+<pre>npx supabase link --project-ref &lt;staging-ref&gt;
+npx supabase db push --linked</pre>
+    <div class="expected"><strong>Expected:</strong> Migrations 001 through 007 apply cleanly. Empty data.</div>
+    <div class="verify"><strong>Verify:</strong> <code>select count(*) from information_schema.tables where table_schema='public'</code> matches prod table count.</div>
+    <div class="rollback"><strong>Rollback:</strong> Delete + recreate staging project. Zero prod impact.</div>
+  </div>
+
+  <div class="step">
+    <div class="step-head"><span class="step-id">7.3</span><span class="step-title">Wire Vercel preview to staging</span><span class="pill pill-orange">setup</span></div>
+    <p>Vercel project → Settings → Environment Variables → add <code>SUPABASE_URL</code> + <code>SUPABASE_ANON_KEY</code> scoped to "Preview" only (Production keeps prod values). Push a branch <code>staging</code> → preview URL uses staging Supabase.</p>
+    <div class="expected"><strong>Expected:</strong> Preview deployment lands on staging-ref Supabase. Prod unaffected.</div>
+    <div class="verify"><strong>Verify:</strong> Visit preview URL, open DevTools, network tab shows requests to <code>staging-ref.supabase.co</code> not <code>jllugkiojeoopitdvzsa</code>.</div>
+    <div class="rollback"><strong>Rollback:</strong> Delete preview env vars in Vercel.</div>
+  </div>
+
+  <div class="gate">
+    <div class="gate-head">🚦 Gate P7 → P8</div>
+    <p>Proceed only if: staging preview loads + reads from staging Supabase, prod still reads from prod, no env var bleed. <strong>This gate is mandatory for Phase 8</strong> — Stripe gating WILL be tested on staging before prod flip.</p>
+  </div>
+
+  <!-- ─────────── PHASE 8 ─────────── -->
+  <div class="phase-banner"><span class="phase-num">P8</span><span class="phase-name">F7: Tier Gating (Stripe → Revenue)</span><span class="phase-meta">~6 hours · revenue-affecting, staging-first</span></div>
+
+  <div class="step">
+    <div class="step-head"><span class="step-id">8.1</span><span class="step-title">Define tier config</span><span class="pill pill-orange">write</span></div>
+    <p>Create <code>lib/tier-config.js</code> exporting per-tier feature flags. Schema:</p>
+<pre>export const TIERS = {
+  starter: { tournaments: 1, players: 24, series: false, achievements: false, recap: false },
+  pro:     { tournaments: 5, players: 96, series: true,  achievements: true,  recap: true  },
+  club:    { tournaments: Infinity, players: Infinity, series: true, achievements: true, recap: true }
+};
+export function canAccess(plan, feature) { return TIERS[plan]?.[feature]; }</pre>
+    <div class="expected"><strong>Expected:</strong> File created, JSDoc'd, tsc green.</div>
+    <div class="verify"><strong>Verify:</strong> Vitest unit: <code>canAccess('starter','series')===false</code> &amp; <code>canAccess('pro','series')===true</code>.</div>
+    <div class="rollback"><strong>Rollback:</strong> <code>rm lib/tier-config.js</code>.</div>
+  </div>
+
+  <div class="step">
+    <div class="step-head"><span class="step-id">8.2</span><span class="step-title">Wire admin UI gates (staging only)</span><span class="pill pill-orange">write</span></div>
+    <p>In admin.html, before showing Series tab, call <code>canAccess(currentPlan,'series')</code>. If false → render disabled tab with upgrade modal CTA linking to <code>/player-upgrade?from=series</code>. Same pattern for Achievements + Recap.</p>
+    <div class="expected"><strong>Expected:</strong> Starter-tier owner sees disabled tab with lock icon + "Upgrade to Pro" link.</div>
+    <div class="verify"><strong>Verify:</strong> On staging preview: log in as starter test account → Series tab disabled. Switch to pro test account → tab enabled.</div>
+    <div class="rollback"><strong>Rollback:</strong> <code>git revert</code> the admin.html commit on preview branch. Prod untouched.</div>
+  </div>
+
+  <div class="step">
+    <div class="step-head"><span class="step-id">8.3</span><span class="step-title">Stripe checkout: pass tier into metadata</span><span class="pill pill-red">edge fn</span></div>
+    <p><code>create-checkout</code> edge function already accepts <code>tier</code> in body and stores in subscription metadata. Add server-side validation: confirm <code>tier in PRICE_IDS</code> before creating session (already in place).</p>
+    <div class="expected"><strong>Expected:</strong> No edge fn change required beyond audit confirming existing code path.</div>
+    <div class="verify"><strong>Verify:</strong> Test checkout from staging preview → Stripe test mode → confirm <code>tier</code> appears in subscription metadata on Stripe Dashboard.</div>
+    <div class="rollback"><strong>Rollback:</strong> N/A (no change deployed).</div>
+  </div>
+
+  <div class="step">
+    <div class="step-head"><span class="step-id">8.4</span><span class="step-title">Webhook: write plan back to player_accounts</span><span class="pill pill-red">edge fn</span></div>
+    <p><code>stripe-webhook</code> on <code>customer.subscription.created/updated</code>: extract <code>metadata.tier</code> → upsert <code>player_accounts.plan = tier, billing_status = 'active'</code>. Deploy via Supabase MCP to staging first.</p>
+    <div class="expected"><strong>Expected:</strong> Webhook logs show plan update. <code>select email, plan from player_accounts where email='&lt;test&gt;'</code> shows correct tier.</div>
+    <div class="verify"><strong>Verify:</strong> Run staging end-to-end: signup → upgrade → check plan in DB. Run Playwright e2e.</div>
+    <div class="rollback"><strong>Rollback:</strong> Redeploy prior version of stripe-webhook via Supabase MCP (versions retained).</div>
+  </div>
+
+  <div class="step">
+    <div class="step-head"><span class="step-id">8.5</span><span class="step-title">Promote staging → prod</span><span class="pill pill-red">deploy</span></div>
+<pre># Merge staging branch into main
+git checkout main
+git pull origin main --ff-only
+git merge --no-ff staging -m "feat: tier gating (F7) — promoted from staging"
+git push origin main</pre>
+    <p>Deploy <code>stripe-webhook</code> to prod via Supabase MCP.</p>
+    <div class="expected"><strong>Expected:</strong> Vercel deploys main. Webhook version v+1 active on prod.</div>
+    <div class="verify"><strong>Verify:</strong> Run one real-money test purchase ($1 sandbox Stripe product if possible). Confirm plan upgrade end-to-end.</div>
+    <div class="rollback"><strong>Rollback:</strong> <code>git revert &lt;sha&gt;; git push</code>. Redeploy prior stripe-webhook version.</div>
+  </div>
+
+  <div class="gate">
+    <div class="gate-head">🚦 Final Gate — Runbook Complete</div>
+    <p>Done only when: prod webhook upgrades a real account, tier-gated features render correctly per plan, all CI green, snapshot tag <code>aaa-runbook-start-*</code> still exists for diff baseline. Update <code>/platform/aaa-plan</code> sprint statuses from queued → done for A1, A3, A4, A5, A7, A8, F7.</p>
+  </div>
+</div>
+</section>
+
+<section id="verify">
+<div class="wrapper">
+  <div class="section-header">
+    <div class="section-eyebrow">Section 4 of 6</div>
+    <div class="section-title">Verification Checklist</div>
+    <div class="section-desc">Run this AFTER the runbook is complete. Each item is a separate, independently verifiable claim.</div>
+  </div>
+
+  <div class="card">
+    <ul class="checklist">
+      <li><code>grep -c "function esc" *.html</code> returns 0 (A1 done)</li>
+      <li><code>npx tsc --noEmit</code> exits 0 in CI (A3 done)</li>
+      <li>Latest backup &lt; 7 days old in S3 (A8 done)</li>
+      <li>One successful monthly restore drill logged (A8 done)</li>
+      <li><code>players.is_admin</code> column does not exist (A7 partial)</li>
+      <li><code>rounds</code> table populated for every tournament (A7 partial)</li>
+      <li>Vitest + Playwright pass in CI (A4 partial)</li>
+      <li>Vercel preview branch reads from staging Supabase (A5 done)</li>
+      <li>Starter-tier owner sees disabled Series/Achievements/Recap tabs (F7 done)</li>
+      <li>Pro-tier owner sees enabled gated features (F7 done)</li>
+      <li>Stripe checkout writes <code>tier</code> to subscription metadata (F7 done)</li>
+      <li>Webhook upgrades <code>player_accounts.plan</code> on subscription event (F7 done)</li>
+      <li>Grade snapshot improved by 0.5 letter or more on Architecture + Feature Depth axes</li>
+    </ul>
+  </div>
+</div>
+</section>
+
+<section id="rollback">
+<div class="wrapper">
+  <div class="section-header">
+    <div class="section-eyebrow">Section 5 of 6</div>
+    <div class="section-title">Rollback Procedures</div>
+    <div class="section-desc">Per-phase rollback. Stop and roll back at first sign of regression. Lower phase rollbacks do not undo higher phases.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Phase 1 (Shared lib refactor)</div>
+    <p><code>git revert &lt;p1-commits&gt;; git push origin main</code>. lib/util.js may remain unused without harm.</p>
+  </div>
+  <div class="card">
+    <div class="card-title">Phase 2 (Typecheck CI)</div>
+    <p><code>rm tsconfig.json .github/workflows/typecheck.yml; git commit -am "revert: typecheck CI"; git push</code>.</p>
+  </div>
+  <div class="card">
+    <div class="card-title">Phase 3 (Backup automation)</div>
+    <p>Disable workflow in Actions UI. Bucket + backups remain (defensive — keep them).</p>
+  </div>
+  <div class="card">
+    <div class="card-title">Phase 4 (drop is_admin)</div>
+    <p>Hot-fix: <code>alter table players add column is_admin boolean default false</code>. Long-term: restore from latest pre-migration S3 dump using Phase 3 procedures.</p>
+  </div>
+  <div class="card">
+    <div class="card-title">Phase 5 (rounds table)</div>
+    <p><code>drop table rounds cascade</code> in Supabase SQL editor. Code never reads from rounds yet (per Gate P5 → P6), so zero client impact.</p>
+  </div>
+  <div class="card">
+    <div class="card-title">Phase 6 (Test suite)</div>
+    <p><code>rm -rf tests/ .github/workflows/test.yml; npm uninstall vitest @playwright/test; git commit -am "revert: test scaffold"; git push</code>.</p>
+  </div>
+  <div class="card">
+    <div class="card-title">Phase 7 (Staging env)</div>
+    <p>Delete Vercel preview env vars. Delete staging Supabase project. Zero prod impact.</p>
+  </div>
+  <div class="card">
+    <div class="card-title">Phase 8 (Tier gating)</div>
+    <p><code>git revert</code> the F7 commits on main. Redeploy prior stripe-webhook version via Supabase MCP. <strong>Do not delete subscriptions in Stripe</strong> — leave existing customers on their current plan until next runbook.</p>
+  </div>
+</div>
+</section>
+
+<section id="escalation">
+<div class="wrapper">
+  <div class="section-header">
+    <div class="section-eyebrow">Section 6 of 6</div>
+    <div class="section-title">Escalation</div>
+    <div class="section-desc">When to stop, who to contact, what to read next.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Halt conditions</div>
+    <ul>
+      <li>Any phase gate fails after two attempts → halt, file a bug via the FAB, write a postmortem before retrying</li>
+      <li>Prod console errors on a page that previously loaded clean → revert most recent push immediately</li>
+      <li>Stripe webhook returns 5xx for &gt; 3 events in a row → revert Phase 8.4 and investigate Stripe Dashboard event log</li>
+      <li>Backup workflow fails 3 weeks in a row → halt all migration phases; backups are a hard prereq</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Contacts</div>
+    <ul>
+      <li><strong>Owner:</strong> Rob Madsen — sole operator</li>
+      <li><strong>Stripe:</strong> dashboard.stripe.com → Support → Chat (live mode incidents only)</li>
+      <li><strong>Supabase:</strong> support@supabase.com (paid plan response within 24h)</li>
+      <li><strong>Vercel:</strong> vercel.com/help (community + chat on Pro plan)</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Related Artifacts</div>
+    <ul>
+      <li><a href="/platform/aaa-plan" style="color:var(--gold-light)">/platform/aaa-plan</a> — source plan for this runbook</li>
+      <li><a href="/platform/5-7-26-runbook-security" style="color:var(--gold-light)">/platform/5-7-26-runbook-security</a> — security hardening runbook (prereq for Phase 4)</li>
+      <li><a href="/platform/5-8-26-claude-review" style="color:var(--gold-light)">/platform/5-8-26-claude-review</a> — most recent full platform review (grade baseline)</li>
+      <li><a href="/platform/bugs" style="color:var(--gold-light)">/platform/bugs</a> — log any runbook-discovered issues here</li>
+    </ul>
+  </div>
+</div>
+</section>
+
+<footer>
+  Generated by <span>Claude Opus 4.7</span> · Greenskeeper Studios Internal · May 11, 2026
+  <br style="margin-top:0.3rem">
+  <a href="/platform" style="color:var(--muted);font-size:0.72rem;text-decoration:none">← TOURney Operations</a>
+</footer>
+
+<script src="/bug-fab.js?v=3" defer></script>
+</body>
+</html>
