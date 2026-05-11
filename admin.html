@@ -983,8 +983,7 @@ async function loadTeamNames() {
 
 
 async function loadFormats() {
-  const { data } = await sb.from('settings').select('*').eq('tournament_id', _tid).eq('key','round_formats');
-  if (data?.[0]) try { roundFormats = { ...DEFAULT_FORMATS, ...JSON.parse(data[0].value) }; } catch {}
+  // Formats now loaded from rounds table in loadRoundStates() — no-op here
   renderRounds();
 }
 
@@ -1032,14 +1031,10 @@ async function saveFormats() {
     };
   });
   const now = new Date().toISOString();
-  const rows = [
-    { key: 'round_formats', value: JSON.stringify(roundFormats), tournament_id: _tid, updated_at: now },
-    ...days.flatMap(d => [
-      { key: `format_${d}_front`, value: roundFormats[d].front, tournament_id: _tid, updated_at: now },
-      { key: `format_${d}_back`,  value: roundFormats[d].back,  tournament_id: _tid, updated_at: now },
-    ]),
-  ];
-  await sb.from('settings').upsert(rows, { onConflict: 'tournament_id,key' });
+  await Promise.all(days.map(d => {
+    const n = parseInt(d.replace('day', ''));
+    return sb.from('rounds').update({ format_front: roundFormats[d].front, format_back: roundFormats[d].back, updated_at: now }).eq('tournament_id', _tid).eq('day_number', n);
+  }));
   showToast('Round formats saved.');
 }
 
@@ -1100,8 +1095,13 @@ async function loadPlayers() {
 }
 
 async function loadRoundStates() {
-  const { data } = await sb.from('settings').select('*').eq('tournament_id', _tid).like('key','round_day%');
-  roundStates = {}; (data || []).forEach(row => { roundStates[row.key.replace('round_','') ] = row.value; });
+  const { data } = await sb.from('rounds').select('day_number,status,format_front,format_back').eq('tournament_id', _tid).order('day_number');
+  roundStates = {};
+  (data || []).forEach(r => {
+    const key = `day${r.day_number}`;
+    roundStates[key] = r.status;
+    if (r.format_front) roundFormats[key] = { front: r.format_front, back: r.format_back || r.format_front };
+  });
   renderRounds();
 }
 
@@ -1194,18 +1194,18 @@ async function toggleRound(day) {
     }
   }
 
+  const dayNum = parseInt(day.replace('day', ''));
   if (next === 'open') {
     // Auto-close any other open round
-    const upserts = [{ key: `round_${day}`, value: 'open', updated_at: new Date().toISOString(), tournament_id: _tid }];
-    for (const d of Object.keys(roundStates)) {
-      if (d !== day && roundStates[d] === 'open') {
-        roundStates[d] = 'closed';
-        upserts.push({ key: `round_${d}`, value: 'closed', updated_at: new Date().toISOString(), tournament_id: _tid });
-      }
+    const otherOpenDays = Object.entries(roundStates).filter(([d, v]) => d !== day && v === 'open').map(([d]) => parseInt(d.replace('day','')));
+    const updates = [sb.from('rounds').update({ status: 'open', updated_at: new Date().toISOString() }).eq('tournament_id', _tid).eq('day_number', dayNum)];
+    for (const n of otherOpenDays) {
+      roundStates[`day${n}`] = 'closed';
+      updates.push(sb.from('rounds').update({ status: 'closed', updated_at: new Date().toISOString() }).eq('tournament_id', _tid).eq('day_number', n));
     }
-    await sb.from('settings').upsert(upserts, { onConflict: 'tournament_id,key' });
+    await Promise.all(updates);
   } else {
-    await sb.from('settings').upsert({ key: `round_${day}`, value: next, updated_at: new Date().toISOString(), tournament_id: _tid }, { onConflict: 'tournament_id,key' });
+    await sb.from('rounds').update({ status: next, updated_at: new Date().toISOString() }).eq('tournament_id', _tid).eq('day_number', dayNum);
   }
 
   roundStates[day] = next;

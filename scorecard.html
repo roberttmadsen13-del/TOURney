@@ -528,12 +528,11 @@ let scoreHistory = [];
 // ── INIT ──────────────────────────────────────────────────────────
 async function init() {
   const { tournament } = await window.tourney.ready;
-  const [pRes, tRes, rRes, parRes, fmtRes, notifyRes, tcRes, structRes] = await Promise.all([
+  const [pRes, tRes, roundsRes, parRes, notifyRes, tcRes, structRes] = await Promise.all([
     sb.from('players').select('*').eq('tournament_id', tournament.id).order('first_name'),
     sb.from('settings').select('*').eq('tournament_id', tournament.id).eq('key','team_assignments'),
-    sb.from('settings').select('*').eq('tournament_id', tournament.id).like('key','round_day%'),
+    sb.from('rounds').select('day_number,status,format_front,format_back').eq('tournament_id', tournament.id).order('day_number'),
     sb.from('settings').select('*').eq('tournament_id', tournament.id).like('key','pars_day%'),
-    sb.from('settings').select('*').eq('tournament_id', tournament.id).eq('key','round_formats'),
     sb.from('settings').select('value').eq('tournament_id', tournament.id).eq('key','notify_hole_in_one').maybeSingle(),
     sb.from('settings').select('value').eq('tournament_id', tournament.id).eq('key','team_count').maybeSingle(),
     sb.from('settings').select('key,value').eq('tournament_id', tournament.id).in('key', ['structure','pair_count',...Array.from({length:24},(_,i)=>`pair_${i+1}_name`)]),
@@ -555,14 +554,18 @@ async function init() {
   if (tRes.data?.[0]) try { teamAssignments = JSON.parse(tRes.data[0].value); } catch {}
 
   const roundStates = {};
-  (rRes.data || []).forEach(r => { roundStates[r.key.replace('round_','')] = r.value; });
+  (roundsRes.data || []).forEach(r => {
+    const key = `day${r.day_number}`;
+    roundStates[key] = r.status;
+    if (r.format_front) roundFormats[key] = { front: r.format_front, back: r.format_back || r.format_front };
+  });
   currentRound = Object.entries(roundStates).find(([,v]) => v === 'open')?.[0] || null;
 
   const parOverrides = {};
   (parRes.data || []).forEach(r => { try { parOverrides[r.key.replace('pars_','')] = JSON.parse(r.value); } catch {} });
   coursePars = parOverrides[currentRound] || DEFAULT_PARS[currentRound] || DEFAULT_PARS.day2;
 
-  if (fmtRes.data?.[0]) try { roundFormats = { ...DEFAULT_FORMATS, ...JSON.parse(fmtRes.data[0].value) }; } catch {}
+  // roundFormats already populated from rounds table above
 
   if (!currentRound) {
     document.getElementById('noRoundMsg').style.display = 'block';
