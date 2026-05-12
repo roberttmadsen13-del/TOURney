@@ -1141,7 +1141,7 @@ function renderHub() {
   const unar=getUnarchiveOverrides();
   const isArchived=(e)=>{
     if(unar[e.id]) return false;
-    return !!(e.archived||ar[e.id]||auto.has(e.id));
+    return !!(e.archived||e.status==='archived'||ar[e.id]||auto.has(e.id));
   };
   const search=activeSearch.trim().toLowerCase();
   const filtered=allEntries.filter(e => {
