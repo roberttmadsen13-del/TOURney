@@ -1584,20 +1584,34 @@ const CEO_TASKS=[
   {id:'anthropic_baseline',text:'Screenshot Anthropic Console usage baseline (prior 7 days)',why:'Required for token savings runbook tracking. Go to console.anthropic.com/usage → screenshot prior 7 days (total spend, input tokens, output tokens, cache_read_input_tokens) → save to C:\\Users\\Rob\\.claude\\baselines\\2026-05-11-anthropic-baseline.png. Placeholder text file exists — replace with real screenshot.'},
   {id:'send_install_email_secret',text:'Set SEND_INSTALL_EMAIL_SECRET in Supabase + update DB webhook',why:'send-install-email v4 is deployed with webhook secret gate — but the secret env var is not set yet, so every player registration silently 401s the email. Dashboard-only: supabase.com → project jllugkiojeoopitdvzsa → Project Settings → Edge Functions → Add secret: SEND_INSTALL_EMAIL_SECRET=<random strong string>. Then update the players INSERT database webhook to send header: Authorization: Bearer <that same secret>.'},
 ];
+let _ceoChecked = {};
+async function _initCeoTasks(session) {
+  const meta = session?.user?.user_metadata?.ceo_tasks;
+  if (meta && typeof meta === 'object') {
+    _ceoChecked = meta;
+    localStorage.setItem('ceo_tasks', JSON.stringify(meta));
+  } else {
+    try { _ceoChecked = JSON.parse(localStorage.getItem('ceo_tasks')||'{}'); } catch{}
+  }
+}
+async function _saveCeoTasks() {
+  localStorage.setItem('ceo_tasks', JSON.stringify(_ceoChecked));
+  try { await sb.auth.updateUser({ data: { ceo_tasks: _ceoChecked } }); } catch(e){}
+}
 function loadCeoTasks(){
-  let checked={};try{checked=JSON.parse(localStorage.getItem('ceo_tasks')||'{}');}catch{}
   const list=document.getElementById('ceoList');if(!list)return;
   list.innerHTML=CEO_TASKS.map(t=>{
-    const done=!!checked[t.id];
+    const done=!!_ceoChecked[t.id];
     return'<div class="ceo-item'+(done?' done':'')+'">'
       +'<div class="ceo-cb'+(done?' checked':'')+'" onclick="toggleCeoTask(\''+t.id+'\')"></div>'
       +'<div class="ceo-body"><div class="ceo-text">'+esc(t.text)+'</div>'
       +'<div class="ceo-why">Why AI can\'t: '+esc(t.why)+'</div></div></div>';
   }).join('');
 }
-function toggleCeoTask(id){
-  let checked={};try{checked=JSON.parse(localStorage.getItem('ceo_tasks')||'{}');}catch{}
-  checked[id]=!checked[id];localStorage.setItem('ceo_tasks',JSON.stringify(checked));loadCeoTasks();renderTodayQueue();
+async function toggleCeoTask(id){
+  _ceoChecked[id]=!_ceoChecked[id];
+  loadCeoTasks();renderTodayQueue();
+  await _saveCeoTasks();
 }
 
 /* ══════════════════════ MISSION CONTROL ══════════════════════ */
@@ -1617,7 +1631,7 @@ function _mcGradeCls(g){
 }
 function renderLaunchStrip(){
   const ax=mcAxisData?.axes||{};
-  const chk=(()=>{try{return JSON.parse(localStorage.getItem('ceo_tasks')||'{}')}catch{return{}}})();
+  const chk=_ceoChecked;
   const pillars=[
     {id:'revenue',  get:()=>ax.business?.blocking?['BLOCKED','ls-red']:[(ax.business?.grade||'—'),_mcGradeCls(ax.business?.grade)]},
     {id:'security', get:()=>[(ax.security?.grade||'—'),_mcGradeCls(ax.security?.grade)]},
@@ -1637,7 +1651,7 @@ function renderLaunchStrip(){
 }
 function renderTodayQueue(){
   const ax=mcAxisData?.axes||{};
-  const chk=(()=>{try{return JSON.parse(localStorage.getItem('ceo_tasks')||'{}')}catch{return{}}})();
+  const chk=_ceoChecked;
   const NEXT={review:'plan',plan:'runbook',runbook:'executing',executing:'audit',audit:'concluded'};
   const NEXT_LABEL={plan:'Generate Plan',runbook:'Generate Runbook',executing:'Execute (Manual)',audit:'Run Audit'};
   const NEXT_SKILL={plan:'/tourney-plan-',runbook:'/tourney-runbook-',executing:null,audit:'/tourney-audit-'};
@@ -1863,6 +1877,7 @@ renderChecklist();
 (async()=>{
   const { data:{ session } } = await sb.auth.getSession();
   if (session?.user?.email===PLATFORM_EMAIL) {
+    await _initCeoTasks(session);
     showDashboard(session.user.email);
     // Poll for changes to keep it seamless
     setInterval(loadArtifacts, 5000);
