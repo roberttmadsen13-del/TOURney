@@ -75,7 +75,7 @@ footer a:hover{color:var(--gold);}
   <div class="hero">
     <div class="hero-eye">Internal · Engineering</div>
     <h1>QA Bug Log</h1>
-    <div class="hero-meta">TOURney Platform · Updated 2026-05-07 · Last QA pass: security hardening + live QA both sites clean</div>
+    <div class="hero-meta">TOURney Platform · Updated 2026-05-12 · Last fix: scoreboard rounds table migration</div>
   </div>
 
   <!-- LIVE LOGGED BUGS (from FAB across all properties) -->
@@ -120,8 +120,8 @@ footer a:hover{color:var(--gold);}
       <div class="bug-meta">Required before launch · See SECURITY_PLAN.md</div>
     </div>
     <div class="bug-item pending">
-      <div class="bug-title"><strong>Supabase edge functions deploy</strong> — create-checkout + send-push security fixes committed but NOT yet deployed.</div>
-      <div class="bug-meta">Run: npx supabase functions deploy create-checkout --project-ref jllugkiojeoopitdvzsa (and same for send-push)</div>
+      <div class="bug-title"><strong>Supabase edge functions deploy</strong> — send-push (auth+CORS) and send-install-email (webhook secret) security fixes are in code but NOT deployed to production.</div>
+      <div class="bug-meta">Rob must run: npx supabase functions deploy send-push --project-ref jllugkiojeoopitdvzsa && npx supabase functions deploy send-install-email --project-ref jllugkiojeoopitdvzsa · Also set SEND_INSTALL_EMAIL_SECRET in Supabase dashboard + wire it to DB webhook Authorization header</div>
     </div>
     <div class="bug-item pending">
       <div class="bug-title"><strong>Tournament series concept</strong> — one brand → many events/years. Schema + UX TBD.</div>
@@ -132,6 +132,14 @@ footer a:hover{color:var(--gold);}
   <!-- SESSION HISTORY -->
   <div class="section">
     <div class="sec-title">✅ Fix History by Session</div>
+
+    <div class="session-hdr" onclick="toggleSession('s14')">
+      <span class="session-title">Session 14 · 2026-05-12 — Rounds table migration <span class="pill pill-gold">Schema</span></span>
+      <span class="session-count">1 fix ▾</span>
+    </div>
+    <div class="session-body" id="s14">
+      <div class="bug-item fixed"><div class="bug-title"><strong>scoreboard.html reading stale settings keys</strong> — <code>round_day%</code> + <code>round_formats</code> from settings was the old source of truth. scorecard.html + admin.html were already on the <code>rounds</code> table; scoreboard was the last holdout. Fixed: dropped both settings queries, now reads <code>rounds</code> table directly (day_number, status, format_front, format_back).</div><div class="bug-meta">scoreboard.html:508–532 · 2026-05-12</div></div>
+    </div>
 
     <div class="session-hdr" onclick="toggleSession('s13')">
       <span class="session-title">Session 13 · 2026-05-07 — Security hardening <span class="pill pill-red">Security</span></span>

@@ -505,13 +505,12 @@ let selectedScorecardRound = null;
 async function init() {
   const { tournament } = await window.tourney.ready;
   _slug = tournament.slug;
-  const [pRes, sRes, tRes, rRes, parRes, fmtRes, modeRes] = await Promise.all([
+  const [pRes, sRes, tRes, roundsRes, parRes, modeRes] = await Promise.all([
     sb.from('players').select('*').eq('tournament_id', tournament.id),
     sb.from('scores').select('*').eq('tournament_id', tournament.id),
     sb.from('settings').select('*').eq('tournament_id', tournament.id).eq('key','team_assignments'),
-    sb.from('settings').select('*').eq('tournament_id', tournament.id).like('key','round_day%'),
+    sb.from('rounds').select('day_number,status,format_front,format_back').eq('tournament_id', tournament.id).order('day_number'),
     sb.from('settings').select('*').eq('tournament_id', tournament.id).like('key','pars_day%'),
-    sb.from('settings').select('*').eq('tournament_id', tournament.id).eq('key','round_formats'),
     sb.from('settings').select('value').eq('tournament_id', tournament.id).eq('key','tournament_mode').maybeSingle(),
   ]);
 
@@ -520,16 +519,16 @@ async function init() {
 
   if (tRes.data?.[0]) try { teamAssignments = JSON.parse(tRes.data[0].value); } catch {}
 
-  (rRes.data || []).forEach(r => {
-    roundStates[r.key.replace('round_','')] = r.value;
+  (roundsRes.data || []).forEach(r => {
+    const key = `day${r.day_number}`;
+    roundStates[key] = r.status;
+    if (r.format_front) roundFormats[key] = { front: r.format_front, back: r.format_back || r.format_front };
   });
 
   (parRes.data || []).forEach(r => {
     const day = r.key.replace('pars_','');
     try { coursePars[day] = JSON.parse(r.value); } catch {}
   });
-
-  if (fmtRes.data?.[0]) try { roundFormats = { ...DEFAULT_FORMATS, ...JSON.parse(fmtRes.data[0].value) }; } catch {}
   _competitiveMode = modeRes.data?.value === 'competitive';
   const _modeBadge = document.getElementById('scoringModeBadge');
   if (_modeBadge) {
