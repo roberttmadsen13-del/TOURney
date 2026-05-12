@@ -1,13 +1,22 @@
-# QA Bug Log — TOURney Platform (updated: 2026-05-07)
+# QA Bug Log — TOURney Platform (updated: 2026-05-12)
 
 Last QA pass: security hardening + live QA both sites clean (2026-05-07)
-Last commits: e477457 (security: admin auth + CORS + push function hardening)
+Last commits: 997b043 (sec: send-install-email webhook secret gate)
 
 ---
 
 ## 🔴 Open Bugs — Must Fix
 
 - **Bova formats unconfirmed**: seeded Day1=stroke, Day2=scramble, Day3=best_ball based on about text ("scramble, shambles, best ball, stroke play"). Shambles not mapped to a day. **Verify with Chris Bova before tournament runs. BLOCKED — human verification required.**
+
+---
+
+## ✅ Fixed — Session 14 (2026-05-12, edge function security deploys)
+
+- **send-push zero auth in prod**: fix was committed in session 13 but never deployed. Deployed v7 via Supabase MCP — now requires valid JWT (owner or admin of tournament). [supabase/functions/send-push/index.ts, commit `997b043`-adjacent, deployed v7]
+- **send-install-email no auth gate**: anyone could POST to it and spam emails via Resend. Added `SEND_INSTALL_EMAIL_SECRET` webhook secret check — rejects any caller without `Authorization: Bearer <secret>`. Deployed v4. [supabase/functions/send-install-email/index.ts, commit `997b043`]
+
+⚠️ **MANUAL REQUIRED (Rob)**: Set `SEND_INSTALL_EMAIL_SECRET` env var in Supabase dashboard → Project Settings → Edge Functions. Then update the `players` INSERT database webhook to send `Authorization: Bearer <your-secret>` header. Until done, send-install-email will 401 on every player registration.
 
 ---
 
@@ -187,7 +196,7 @@ GROUP BY t.slug;
 - **Stripe payment gate**: activate at reg_open flip, not at /create. **BLOCKED — waiting on Rob to form LLC.**
 - **Test scores**: solo-stroke-test has 72 scores seeded. Other test tourneys still need scores for leaderboard/scorecard regression testing.
 - **RLS hardening**: SECURITY_PLAN.md identifies permissive policies on `players`, `scores`, `push_subscriptions`. Needs SQL migrations before Stripe goes live.
-- **Supabase edge functions deploy**: create-checkout + send-push security fixes committed but NOT yet deployed (no SUPABASE_ACCESS_TOKEN in this session). Rob needs to run: `npx supabase functions deploy create-checkout --project-ref jllugkiojeoopitdvzsa` + same for send-push.
+- ~~**Supabase edge functions deploy**~~: ✅ DONE — send-push v7 + send-install-email v4 deployed via Supabase MCP (2026-05-12). **MANUAL STILL NEEDED**: set `SEND_INSTALL_EMAIL_SECRET` in Supabase dashboard + update DB webhook header.
 - **Tournament series concept**: one brand → many events/years. Schema + UX TBD.
 
 ---
