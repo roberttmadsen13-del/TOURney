@@ -100,6 +100,22 @@ td{padding:0.7rem 0.75rem;font-size:0.88rem;vertical-align:middle;}
 .ref-artifact-link:hover{border-color:rgba(192,144,48,0.4);}
 .ref-artifact-title{font-size:.85rem;font-weight:600;color:var(--text);}
 .ref-artifact-sum{font-size:.75rem;color:var(--muted);}
+/* ── Axis Ticket Board ── */
+.axis-board{margin-bottom:1.5rem;}
+.axis-board-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:.6rem;}
+.axis-board-title{font-size:.72rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;}
+.axis-row{display:grid;grid-template-columns:130px 44px 52px 1fr 200px;align-items:center;gap:.6rem;padding:.55rem .75rem;background:var(--card);border:1px solid var(--border);border-radius:6px;margin-bottom:.3rem;text-decoration:none;color:inherit;transition:border-color .15s;}
+.axis-row:hover{border-color:rgba(192,144,48,0.4);}
+.axis-row.blocking{border-left:3px solid rgba(217,74,74,0.6);}
+.axis-label{font-size:.8rem;font-weight:600;color:var(--text);}
+.axis-grade{font-size:.85rem;font-weight:700;text-align:center;}
+.axis-open{font-size:.7rem;color:var(--muted);text-align:center;}
+.axis-summary{font-size:.72rem;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.axis-stages{display:flex;gap:3px;align-items:center;}
+.axis-stage-pip{flex:1;height:5px;border-radius:2px;background:var(--border);}
+.axis-stage-pip.done{background:#2a4a2a;}
+.axis-stage-pip.active{background:var(--gold);}
+.axis-stage-pip.concluded{background:#2a2a5a;}
 .hub-search{flex:1;min-width:180px;background:rgba(255,255,255,0.04);border:1px solid var(--border);color:var(--text);padding:0.45rem 0.8rem;border-radius:20px;font-family:'Barlow',sans-serif;font-size:0.8rem;outline:none;}
 .hub-search:focus{border-color:var(--gold);}
 .hub-search::placeholder{color:var(--muted);}
@@ -397,6 +413,13 @@ td{padding:0.7rem 0.75rem;font-size:0.88rem;vertical-align:middle;}
   <!-- ── TAB: ARTIFACTS ── -->
   <div id="panel-artifacts" style="display:none;">
     <div class="hub-wrap">
+      <div class="axis-board">
+        <div class="axis-board-hdr">
+          <span class="axis-board-title">Axis Tickets</span>
+          <span id="axisLastUpdated" style="font-size:.7rem;color:var(--muted);"></span>
+        </div>
+        <div id="axisBoard"><div style="color:var(--muted);font-size:.8rem;padding:.5rem 0;">Loading…</div></div>
+      </div>
       <div class="toolbar">
         <button class="filter-btn active" data-filter="all">All</button>
         <button class="filter-btn" data-filter="review">Reviews</button>
@@ -1115,9 +1138,39 @@ async function loadArtifacts() {
     }
 
     renderHub();
+    loadAxisBoard();
   } catch(err) {
     document.getElementById('cardGrid').innerHTML=`<div class="grid-empty">Couldn't load qa-index.json: ${esc(err.message)}</div>`;
   }
+}
+async function loadAxisBoard() {
+  try {
+    const r=await fetch('/axis-status.json',{cache:'no-store'});
+    if(!r.ok) return;
+    const d=await r.json();
+    const stages=['review','plan','runbook','executing','audit','concluded'];
+    const gradeColor=g=>({'A+':'#4aaa4a','A':'#4aaa4a','A-':'#6aba6a','B+':'#c09030','B':'#c09030','B-':'#c07020','C+':'#d06030','C':'#d05020','C-':'#d04020','D':'#d03010'})[g]||'var(--muted)';
+    const el=document.getElementById('axisBoard');
+    if(!el) return;
+    const upd=(d.updated_at||'').substring(0,10);
+    const lu=document.getElementById('axisLastUpdated');
+    if(lu) lu.textContent=upd?`Updated ${upd}`:'';
+    const axes=Object.entries(d.axes||{});
+    el.innerHTML=axes.map(([key,a])=>{
+      const ci=stages.indexOf(a.status||'review');
+      const pips=stages.map((s,i)=>{
+        const cls=a.status==='concluded'?' concluded':i<ci?' done':i===ci?' active':'';
+        return `<div class="axis-stage-pip${cls}"></div>`;
+      }).join('');
+      return `<a class="axis-row${a.blocking?' blocking':''}" href="${esc(a.artifact||'#')}" target="_blank">
+        <div class="axis-label">${esc(key)}</div>
+        <div class="axis-grade" style="color:${gradeColor(a.grade||'')}">${esc(a.grade||'—')}</div>
+        <div class="axis-open">${esc(String(a.open_items||0))} open</div>
+        <div class="axis-summary" title="${esc(a.summary||'')}">${esc(a.summary||'')}</div>
+        <div class="axis-stages">${pips}</div>
+      </a>`;
+    }).join('');
+  } catch(e){/* silent */}
 }
 document.querySelectorAll('.filter-btn:not(.archived-toggle)').forEach(btn => {
   btn.addEventListener('click', () => {

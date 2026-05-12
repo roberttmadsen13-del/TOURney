@@ -1,0 +1,106 @@
+{
+  "updated_at": "2026-05-12T00:00:00Z",
+  "description": "Living state for all TOURney platform axes. One entry per axis. Updated by every tourney-* skill. Agents read this for context (50 tokens) instead of parsing HTML artifacts.",
+  "stages": ["review", "plan", "runbook", "executing", "audit", "concluded"],
+  "axes": {
+    "architecture": {
+      "status": "review",
+      "grade": "A",
+      "artifact": "/platform/architecture",
+      "last_updated": "2026-05-08",
+      "summary": "Clean init layer, tournament_admins canonical, 11 versioned migrations. Settings store un-typed.",
+      "open_items": 1,
+      "blocking": false
+    },
+    "feature-depth": {
+      "status": "review",
+      "grade": "B+",
+      "artifact": "/platform/feature-depth",
+      "last_updated": "2026-05-08",
+      "summary": "3 structures, 12 scoring formats, realtime, HIO. No score admin-edit UI, no tournament series.",
+      "open_items": 2,
+      "blocking": false
+    },
+    "ux": {
+      "status": "review",
+      "grade": "B",
+      "artifact": "/platform/ux",
+      "last_updated": "2026-05-08",
+      "summary": "Consistent dark-gold system, mobile nav. No loading skeletons, empty states partial, a11y unaudited.",
+      "open_items": 3,
+      "blocking": false
+    },
+    "security": {
+      "status": "review",
+      "grade": "B",
+      "artifact": "/platform/security",
+      "last_updated": "2026-05-12",
+      "summary": "send-push JWT live, install-email webhook gate deployed. Open: CSP unsafe-inline, RLS permissive players/scores/push_subscriptions.",
+      "open_items": 4,
+      "blocking": false
+    },
+    "business": {
+      "status": "review",
+      "grade": "C+",
+      "artifact": "/platform/business",
+      "last_updated": "2026-05-08",
+      "summary": "Stripe fully wired in code. BLOCKED: LLC not formed, no live keys, no ToS/Privacy.",
+      "open_items": 5,
+      "blocking": true
+    },
+    "deployment": {
+      "status": "review",
+      "grade": "B+",
+      "artifact": "/platform/deployment",
+      "last_updated": "2026-05-08",
+      "summary": "Vercel static, full security headers, SW v17. No CI/CD, no staging, no monitoring.",
+      "open_items": 3,
+      "blocking": false
+    },
+    "performance": {
+      "status": "review",
+      "grade": "B",
+      "artifact": "/platform/performance",
+      "last_updated": "2026-05-08",
+      "summary": "SW cache-first, realtime scorecard, DB indexes. No loading skeletons, no perf monitoring.",
+      "open_items": 2,
+      "blocking": false
+    },
+    "data-model": {
+      "status": "review",
+      "grade": "B",
+      "artifact": "/platform/data-model",
+      "last_updated": "2026-05-08",
+      "summary": "11 migrations clean. Settings un-typed, player_accounts anon read still open.",
+      "open_items": 2,
+      "blocking": false
+    },
+    "marketing": {
+      "status": "review",
+      "grade": "B-",
+      "artifact": "/platform/marketing",
+      "last_updated": "2026-05-11",
+      "summary": "Premium brand, clear pricing, live demo. No OG tags, no social proof, PWA differentiator buried.",
+      "open_items": 3,
+      "blocking": false
+    },
+    "onboarding": {
+      "status": "review",
+      "grade": "B-",
+      "artifact": "/platform/onboarding",
+      "last_updated": "2026-05-11",
+      "summary": "Invite gate kills cold traffic. Signup requires pre-existing RSVP. PWA install orphaned.",
+      "open_items": 3,
+      "blocking": false
+    },
+    "finance": {
+      "status": "review",
+      "grade": "C+",
+      "artifact": "/platform/finance",
+      "last_updated": "2026-05-11",
+      "summary": "Stripe wiring B+. Zero revenue — LLC not formed, no live keys, reg_open=false, no ToS.",
+      "open_items": 4,
+      "blocking": true
+    }
+  }
+}
