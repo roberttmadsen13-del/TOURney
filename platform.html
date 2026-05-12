@@ -224,6 +224,20 @@ td{padding:0.7rem 0.75rem;font-size:0.88rem;vertical-align:middle;}
 .add-card code{font-size:0.74rem;color:var(--gold-light);background:rgba(255,255,255,0.06);padding:0.08rem 0.28rem;border-radius:3px;}
 .add-card-title{color:var(--gold);font-weight:700;text-transform:uppercase;letter-spacing:0.08em;font-size:0.7rem;margin-bottom:0.35rem;}
 
+/* ── QA Run History ── */
+.qa-runs{margin-top:1.5rem;border-top:1px solid var(--border);padding-top:1rem;}
+.qa-runs-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:.6rem;}
+.qa-runs-title{font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);}
+.qa-run-item{display:flex;align-items:center;gap:.65rem;padding:.4rem .6rem;border:1px solid var(--border);border-radius:6px;margin-bottom:.35rem;font-size:.75rem;background:var(--card);}
+.qa-run-date{color:var(--muted);font-size:.62rem;min-width:9rem;flex-shrink:0;}
+.qa-run-slug{color:var(--gold);font-size:.65rem;min-width:3.5rem;flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.qa-run-bar{height:4px;border-radius:2px;background:var(--border);flex:1;overflow:hidden;}
+.qa-run-fill{height:100%;border-radius:2px;transition:width .3s;}
+.qa-run-pct{font-family:'DM Mono',monospace;font-size:.65rem;font-weight:700;min-width:2.5rem;text-align:right;flex-shrink:0;}
+.qa-run-del{background:none;border:none;color:var(--muted);cursor:pointer;font-size:.75rem;padding:.1rem .25rem;opacity:.4;flex-shrink:0;}
+.qa-run-del:hover{color:#d94a4a;opacity:1;}
+.btn-log-run{background:var(--gold);color:#111;border:none;border-radius:5px;padding:.35rem .8rem;font-size:.68rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;cursor:pointer;white-space:nowrap;flex-shrink:0;}
+.btn-log-run:hover{opacity:.85;}
 /* ── Checklist ── */
 .cl-wrap{max-width:780px;margin:0 auto;padding:1.75rem 1.75rem 4rem;}
 .cl-toolbar{display:flex;gap:0.5rem;align-items:center;margin-bottom:1.25rem;flex-wrap:wrap;}
@@ -559,9 +573,11 @@ td{padding:0.7rem 0.75rem;font-size:0.88rem;vertical-align:middle;}
         <span class="slug-label">Test Slug</span>
         <input class="slug-input" id="slugInput" type="text" placeholder="e.g. bova">
         <span class="cl-progress" id="progressLabel">— / —</span>
-        <a href="/platform/bugs" style="margin-left:auto;background:rgba(192,144,48,.12);border:1px solid rgba(192,144,48,.3);color:var(--gold);font-family:'Barlow Condensed',sans-serif;font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:.35rem .85rem;border-radius:5px;text-decoration:none;white-space:nowrap;">Bug Log →</a>
+        <button class="btn-log-run" onclick="logQaRun()" style="margin-left:auto;">Log Run</button>
+        <a href="/platform/bugs" style="background:rgba(192,144,48,.12);border:1px solid rgba(192,144,48,.3);color:var(--gold);font-family:'Barlow Condensed',sans-serif;font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:.35rem .85rem;border-radius:5px;text-decoration:none;white-space:nowrap;">Bug Log →</a>
       </div>
       <div class="cl-sections" id="clSections"></div>
+      <div class="qa-runs" id="qaRunHistory"></div>
       <button class="reset-btn" onclick="resetAll()">Reset all checks</button>
     </div>
   </div>
@@ -1415,6 +1431,48 @@ function clSave() {
   localStorage.setItem('qa_slug', clSlug);
 }
 function clUrl(path) { return clSlug?`https://tourney.greenskeeper.studio/t/${clSlug}${path}`:'#'; }
+const QA_RUNS_KEY='gks_qa_runs';
+function logQaRun(){
+  const all=CL_SECTIONS.flatMap(s=>s.steps);
+  const passed=all.filter(s=>clChecked[s.id]).length;
+  const total=all.length;
+  const sections={};
+  CL_SECTIONS.forEach(sec=>{
+    const sp=sec.steps.filter(x=>clChecked[x.id]).length;
+    sections[sec.id]={passed:sp,total:sec.steps.length};
+  });
+  let runs=[];try{runs=JSON.parse(localStorage.getItem(QA_RUNS_KEY)||'[]');}catch{}
+  runs.unshift({id:'run_'+Date.now(),date:new Date().toISOString(),slug:clSlug||'—',passed,total,sections});
+  if(runs.length>25)runs=runs.slice(0,25);
+  localStorage.setItem(QA_RUNS_KEY,JSON.stringify(runs));
+  renderQaRuns();
+}
+function renderQaRuns(){
+  const el=document.getElementById('qaRunHistory');if(!el)return;
+  let runs=[];try{runs=JSON.parse(localStorage.getItem(QA_RUNS_KEY)||'[]');}catch{}
+  if(!runs.length){el.innerHTML='';return;}
+  const pctColor=p=>p>=90?'#4aaa4a':p>=70?'var(--gold)':'#d94a4a';
+  el.innerHTML=`<div class="qa-runs-hdr"><span class="qa-runs-title">Run History (${runs.length})</span><button onclick="if(confirm('Clear all run history?')){localStorage.removeItem('${QA_RUNS_KEY}');renderQaRuns();}" style="background:none;border:none;color:var(--muted);font-size:.62rem;cursor:pointer;letter-spacing:.05em;">Clear all</button></div>`
+    +runs.map(r=>{
+      const pct=r.total?Math.round(r.passed/r.total*100):0;
+      const d=new Date(r.date);
+      const ds=d.toLocaleDateString('en-US',{month:'short',day:'numeric'})+' '+d.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'});
+      return `<div class="qa-run-item">
+        <span class="qa-run-date">${esc(ds)}</span>
+        <span class="qa-run-slug">${esc(r.slug)}</span>
+        <div class="qa-run-bar"><div class="qa-run-fill" style="width:${pct}%;background:${pctColor(pct)};"></div></div>
+        <span class="qa-run-pct" style="color:${pctColor(pct)}">${pct}%</span>
+        <span style="font-size:.62rem;color:var(--muted);">${r.passed}/${r.total}</span>
+        <button class="qa-run-del" onclick="deleteQaRun('${esc(r.id)}')" title="Delete">✕</button>
+      </div>`;
+    }).join('');
+}
+function deleteQaRun(id){
+  let runs=[];try{runs=JSON.parse(localStorage.getItem(QA_RUNS_KEY)||'[]');}catch{}
+  runs=runs.filter(r=>r.id!==id);
+  localStorage.setItem(QA_RUNS_KEY,JSON.stringify(runs));
+  renderQaRuns();
+}
 function toggleCheck(id) { clChecked[id]=!clChecked[id]; clSave(); renderChecklist(); }
 function toggleSection(id) { clCollapsed[id]=!clCollapsed[id]; clSave(); renderChecklist(); }
 function resetAll() { if(!confirm('Reset all checks?'))return; clChecked={}; clSave(); renderChecklist(); }
@@ -1874,6 +1932,7 @@ function renderTimeline() {
 clLoad();
 document.getElementById('slugInput').value=clSlug;
 renderChecklist();
+renderQaRuns();
 (async()=>{
   const { data:{ session } } = await sb.auth.getSession();
   if (session?.user?.email===PLATFORM_EMAIL) {
