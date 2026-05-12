@@ -1223,9 +1223,13 @@ const CL_SECTIONS = [
     { id:'sec2', text:'Pentest: player cannot elevate own billing_status', device:'💻 Computer',
       how:'Log in to tourney.greenskeeper.studio as a test player account (not rob@) → open DevTools (F12) → Console → paste:\nawait window.tourney.db.from("player_accounts").update({billing_status:"comped"}).eq("email","[your test email]")\nExpect: error with code "42501" (RLS policy violation). If it succeeds = CRITICAL BUG.' },
     { id:'sec3', text:'Pentest: unauthenticated push function returns 401', device:'💻 Computer',
-      how:'In PowerShell run:\ncurl -X POST https://jllugkiojeoopitdvzsa.supabase.co/functions/v1/send-push -H "Content-Type: application/json" -d "{}"\nExpect: HTTP 401. If 200 = anyone can send push notifications to all players.' },
+      how:'In PowerShell run:\ncurl -X POST https://jllugkiojeoopitdvzsa.supabase.co/functions/v1/send-push -H "Content-Type: application/json" -d "{}"\nExpect: HTTP 401. If 200 = anyone can send push notifications to all players.',
+      note:'Fixed session 14 — send-push v7 deployed with JWT auth.' },
     { id:'sec4', text:'Enable Supabase email confirmation', device:'💻 Computer',
       how:'supabase.com/dashboard → project jllugkiojeoopitdvzsa → Authentication → Email → toggle "Confirm email" ON. This prevents fake-email registrations from grabbing tournament spots.' },
+    { id:'sec5', text:'Pentest: unauthenticated install-email function returns 401', device:'💻 Computer',
+      how:'In PowerShell run:\ncurl -X POST https://jllugkiojeoopitdvzsa.supabase.co/functions/v1/send-install-email -H "Content-Type: application/json" -d "{}"\nExpect: HTTP 401. If 200 = anyone can spam install emails via Resend.',
+      note:'Fixed session 14 (997b043) — requires SEND_INSTALL_EMAIL_SECRET to be set in Supabase dashboard first or all calls will 401 including legit ones.' },
   ]},
 ];
 
@@ -1410,6 +1414,7 @@ const CEO_TASKS=[
   {id:'stripe_price_player',text:'Create Stripe player product + set 3 Supabase secrets',why:'Requires Stripe dashboard access after LLC activation. Create "TOURney Player Account" $2/mo recurring product → copy price ID → set STRIPE_SECRET_KEY, STRIPE_WEBHOOK_SECRET, STRIPE_PRICE_PLAYER in Supabase edge fn secrets → register webhook endpoint: jllugkiojeoopitdvzsa.supabase.co/functions/v1/stripe-webhook.'},
   {id:'gh_actions_verify',text:'Verify GitHub Actions green on aee0393 + e10a10d',why:'Requires checking the GitHub Actions dashboard. Go to github.com/roberttmadsen13-del/bova-invt/actions and confirm both the test scaffold (aee0393) and tier gating (e10a10d) CI runs passed.'},
   {id:'anthropic_baseline',text:'Screenshot Anthropic Console usage baseline (prior 7 days)',why:'Required for token savings runbook tracking. Go to console.anthropic.com/usage → screenshot prior 7 days (total spend, input tokens, output tokens, cache_read_input_tokens) → save to C:\\Users\\Rob\\.claude\\baselines\\2026-05-11-anthropic-baseline.png. Placeholder text file exists — replace with real screenshot.'},
+  {id:'send_install_email_secret',text:'Set SEND_INSTALL_EMAIL_SECRET in Supabase + update DB webhook',why:'send-install-email v4 is deployed with webhook secret gate — but the secret env var is not set yet, so every player registration silently 401s the email. Dashboard-only: supabase.com → project jllugkiojeoopitdvzsa → Project Settings → Edge Functions → Add secret: SEND_INSTALL_EMAIL_SECRET=<random strong string>. Then update the players INSERT database webhook to send header: Authorization: Bearer <that same secret>.'},
 ];
 function loadCeoTasks(){
   let checked={};try{checked=JSON.parse(localStorage.getItem('ceo_tasks')||'{}');}catch{}

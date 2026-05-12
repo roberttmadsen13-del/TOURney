@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-05-08T00:00:00Z",
+  "updated_at": "2026-05-12T00:00:00Z",
   "description": "Per-axis grade history for TOURney platform. Updated automatically by review skills. Operations Action Board reads this file.",
   "axes": {
     "architecture": {
@@ -66,6 +66,13 @@
       "label": "Security",
       "cmd": "/tourney-review-security",
       "scores": [
+        {
+          "date": "2026-05-12",
+          "score": "B",
+          "url": "/platform/5-8-26-claude-review",
+          "review_title": "Session 14 Security Fixes",
+          "notes": "✅ send-push v7 deployed — JWT auth + owner/admin check live in prod. ✅ send-install-email v4 deployed — SEND_INSTALL_EMAIL_SECRET webhook gate. MANUAL PENDING: Rob must set SEND_INSTALL_EMAIL_SECRET env var in Supabase dashboard + update DB webhook header. Remaining open: CSP unsafe-inline, RLS permissive on players/scores/push_subscriptions, _parseMentions XSS in feed.html."
+        },
         {
           "date": "2026-05-06",
           "score": "D+",
@@ -172,17 +179,41 @@
     "marketing": {
       "label": "Marketing",
       "cmd": "/tourney-review-marketing",
-      "scores": []
+      "scores": [
+        {
+          "date": "2026-05-11",
+          "score": "B-",
+          "url": "/5-11-26-claude-review-marketing",
+          "review_title": "Marketing Review · May 11, 2026",
+          "notes": "Premium brand, clear pricing, embedded live demo, strong H1. Critical gaps: no OG/Twitter card meta tags (zero social unfurl), zero social proof/testimonials, PWA install differentiator not headlined. Top 3 actions: add OG tags, add Bova social proof callout, rewrite meta description to benefit-first."
+        }
+      ]
     },
     "onboarding": {
       "label": "Onboarding",
       "cmd": "/tourney-review-onboarding",
-      "scores": []
+      "scores": [
+        {
+          "date": "2026-05-11",
+          "score": "B-",
+          "url": "/5-11-26-claude-review-onboarding",
+          "review_title": "Onboarding Review · May 11, 2026",
+          "notes": "Invite code gate kills cold-traffic conversion. login.html signup requires pre-existing RSVP (conversion bug). PWA install orphaned from player journey. Key wins: fix signup error message, add request-access to invite gate, surface PWA install post-RSVP."
+        }
+      ]
     },
     "finance": {
       "label": "Finance",
       "cmd": "/tourney-review-finance",
-      "scores": []
+      "scores": [
+        {
+          "date": "2026-05-11",
+          "score": "C+",
+          "url": "/platform/5-11-26-claude-review-finance",
+          "review_title": "Finance Review · May 11, 2026",
+          "notes": "Stripe wiring B+ (edge functions, webhook, DB schema built, no hardcoded keys). Zero revenue — LLC not formed, no live Stripe keys, reg_open=false, no ToS/Privacy. Operating costs ~$57/mo (Anthropic dominant). Breakeven ~30 pro players at $2/mo. Three actions: form LLC, wire Stripe in test mode, open accounting + flip reg_open."
+        }
+      ]
     }
   }
 }
