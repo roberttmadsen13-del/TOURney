@@ -341,8 +341,7 @@ td{padding:0.7rem 0.75rem;font-size:0.88rem;vertical-align:middle;}
     <button class="tab-btn active" id="tab-dash"      data-short="Dash"   onclick="switchTab('dash')">Dashboard</button>
     <button class="tab-btn"        id="tab-action"    data-short="Action" onclick="switchTab('action')">Action Board</button>
     <button class="tab-btn"        id="tab-artifacts" data-short="Files"  onclick="switchTab('artifacts')">Artifacts</button>
-    <button class="tab-btn"        id="tab-checklist" data-short="QA"     onclick="switchTab('checklist')">QA Checklist</button>
-    <a class="tab-btn"             id="tab-bugs"      data-short="Bugs"   href="/platform/bugs" style="display:flex;align-items:center;justify-content:center;text-decoration:none;">Bug Log</a>
+    <button class="tab-btn"        id="tab-checklist" data-short="QA"     onclick="switchTab('checklist')">QA</button>
     <button class="tab-btn"        id="tab-reference" data-short="Ref"    onclick="switchTab('reference')">Reference</button>
   </div>
 
@@ -449,6 +448,7 @@ td{padding:0.7rem 0.75rem;font-size:0.88rem;vertical-align:middle;}
         <span class="slug-label">Test Slug</span>
         <input class="slug-input" id="slugInput" type="text" placeholder="e.g. bova">
         <span class="cl-progress" id="progressLabel">— / —</span>
+        <a href="/platform/bugs" style="margin-left:auto;background:rgba(192,144,48,.12);border:1px solid rgba(192,144,48,.3);color:var(--gold);font-family:'Barlow Condensed',sans-serif;font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:.35rem .85rem;border-radius:5px;text-decoration:none;white-space:nowrap;">Bug Log →</a>
       </div>
       <div class="cl-sections" id="clSections"></div>
       <button class="reset-btn" onclick="resetAll()">Reset all checks</button>
