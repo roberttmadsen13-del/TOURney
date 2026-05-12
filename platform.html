@@ -145,7 +145,46 @@ td{padding:0.7rem 0.75rem;font-size:0.88rem;vertical-align:middle;}
 .tq-tag-green{background:rgba(74,170,74,.15);color:#4aaa4a;}
 .tq-tag-gray{background:rgba(255,255,255,.06);color:var(--muted);}
 .tq-empty{padding:.7rem .9rem;font-size:.75rem;color:var(--muted);font-style:italic;}
-@media(max-width:640px){.launch-strip{grid-template-columns:repeat(3,1fr);}.today-queue{grid-template-columns:1fr;}}
+@media(max-width:640px){.launch-strip{grid-template-columns:repeat(3,1fr);}.today-queue{grid-template-columns:1fr;}.axis-row{grid-template-columns:120px 40px 40px;}.axis-summary,.axis-stages{display:none;}.tq-item-title{white-space:normal;}}
+/* ── Axis Drawer ── */
+#axisDrawer{position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:1000;display:flex;justify-content:flex-end;backdrop-filter:blur(2px);}
+.drawer-panel{width:min(480px,100vw);background:var(--surface);border-left:1px solid var(--border);height:100%;overflow-y:auto;display:flex;flex-direction:column;}
+.drawer-hdr{padding:1.25rem 1.25rem .75rem;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;justify-content:space-between;gap:.75rem;background:rgba(255,255,255,.02);}
+.drawer-title-row{display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;}
+.drawer-axis-name{font-size:1rem;font-weight:700;color:var(--text);text-transform:capitalize;}
+.drawer-d-grade{font-size:1.1rem;font-weight:700;}
+.drawer-status-pill{font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;padding:.18rem .45rem;border-radius:4px;background:rgba(192,144,48,.15);color:var(--gold);}
+.drawer-close{background:none;border:1px solid var(--border);color:var(--muted);border-radius:5px;width:2rem;height:2rem;cursor:pointer;font-size:.9rem;flex-shrink:0;transition:border-color .15s;}
+.drawer-close:hover{border-color:var(--gold);color:var(--gold);}
+.drawer-lifecycle{padding:.6rem 1.25rem;border-bottom:1px solid var(--border);display:flex;gap:3px;}
+.drawer-lc-stage{flex:1;text-align:center;}
+.drawer-lc-pip{height:6px;border-radius:2px;background:var(--border);margin-bottom:.2rem;}
+.drawer-lc-pip.done{background:#2a4a2a;}.drawer-lc-pip.active{background:var(--gold);}
+.drawer-lc-label{font-size:.5rem;color:var(--muted);text-transform:uppercase;letter-spacing:.03em;}
+.drawer-body{padding:1.25rem;flex:1;}
+.drawer-summary{font-size:.83rem;color:var(--text);line-height:1.5;margin-bottom:.5rem;}
+.drawer-meta{font-size:.7rem;color:var(--muted);margin-bottom:1.25rem;}
+.drawer-sec{font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin:.75rem 0 .4rem;border-top:1px solid var(--border);padding-top:.75rem;}
+.drawer-grade-row{display:flex;align-items:flex-start;gap:.6rem;padding:.4rem 0;border-bottom:1px solid var(--border);font-size:.78rem;}
+.drawer-grade-row:last-child{border:none;}
+.drawer-gval{font-weight:700;min-width:2rem;}
+.drawer-gdate{color:var(--muted);font-size:.65rem;min-width:5rem;padding-top:.1rem;}
+.drawer-gnotes{color:var(--muted);font-size:.7rem;line-height:1.4;flex:1;}
+.drawer-next-cmd{background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:6px;padding:.7rem .9rem;display:flex;align-items:center;justify-content:space-between;gap:.75rem;margin-bottom:.75rem;}
+.drawer-next-text{font-family:'DM Mono',monospace;font-size:.75rem;color:var(--text);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.drawer-copy-btn{background:var(--gold);color:#111;border:none;border-radius:5px;padding:.35rem .7rem;font-size:.68rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;cursor:pointer;white-space:nowrap;flex-shrink:0;}
+.drawer-copy-btn:hover{opacity:.85;}
+.drawer-artifact-btn{display:inline-block;padding:.45rem .9rem;border:1px solid rgba(192,144,48,.35);border-radius:6px;color:var(--gold);font-size:.75rem;text-decoration:none;transition:border-color .15s;}
+.drawer-artifact-btn:hover{border-color:var(--gold);}
+/* ── Ops Timeline ── */
+.timeline-feed{display:flex;flex-direction:column;background:var(--card);border:1px solid var(--border);border-radius:8px;overflow:hidden;}
+.tl-item{display:flex;gap:.75rem;padding:.5rem .9rem;border-bottom:1px solid var(--border);font-size:.78rem;align-items:flex-start;}
+.tl-item:last-child{border:none;}
+.tl-dot{width:.5rem;height:.5rem;border-radius:50%;flex-shrink:0;margin-top:.28rem;}
+.tl-dot-green{background:#4aaa4a;}.tl-dot-gold{background:var(--gold);}.tl-dot-red{background:#d94a4a;}.tl-dot-gray{background:var(--muted);}
+.tl-date{font-size:.64rem;color:var(--muted);min-width:5.5rem;flex-shrink:0;padding-top:.05rem;}
+.tl-text{color:var(--text);}
+.tl-sub{font-size:.67rem;color:var(--muted);margin-top:.1rem;}
 .hub-search{flex:1;min-width:180px;background:rgba(255,255,255,0.04);border:1px solid var(--border);color:var(--text);padding:0.45rem 0.8rem;border-radius:20px;font-family:'Barlow',sans-serif;font-size:0.8rem;outline:none;}
 .hub-search:focus{border-color:var(--gold);}
 .hub-search::placeholder{color:var(--muted);}
@@ -412,6 +451,8 @@ td{padding:0.7rem 0.75rem;font-size:0.88rem;vertical-align:middle;}
           </div>
         </div>
       </div>
+      <div class="mc-hdr" style="margin-top:1.5rem;">Recent Activity</div>
+      <div class="timeline-feed" id="timelineFeed"><div style="padding:.75rem .9rem;font-size:.75rem;color:var(--muted);">Loading…</div></div>
     </div>
   </div>
 
@@ -1211,6 +1252,7 @@ async function loadArtifacts() {
     renderHub();
     loadAxisBoard();
     renderTodayQueue();
+    renderTimeline();
   } catch(err) {
     document.getElementById('cardGrid').innerHTML=`<div class="grid-empty">Couldn't load qa-index.json: ${esc(err.message)}</div>`;
   }
@@ -1228,19 +1270,20 @@ async function loadAxisBoard() {
     const lu=document.getElementById('axisLastUpdated');
     if(lu) lu.textContent=upd?`Updated ${upd}`:'';
     const axes=Object.entries(d.axes||{});
+    _axisDrawerData = d.axes||{};
     el.innerHTML=axes.map(([key,a])=>{
       const ci=stages.indexOf(a.status||'review');
       const pips=stages.map((s,i)=>{
         const cls=a.status==='concluded'?' concluded':i<ci?' done':i===ci?' active':'';
         return `<div class="axis-stage-pip${cls}"></div>`;
       }).join('');
-      return `<a class="axis-row${a.blocking?' blocking':''}" href="${esc(a.artifact||'#')}" target="_blank">
+      return `<div class="axis-row${a.blocking?' blocking':''}" onclick="openAxisDrawer('${esc(key)}')" style="cursor:pointer;">
         <div class="axis-label">${esc(key)}</div>
         <div class="axis-grade" style="color:${gradeColor(a.grade||'')}">${esc(a.grade||'—')}</div>
         <div class="axis-open">${esc(String(a.open_items||0))} open</div>
         <div class="axis-summary" title="${esc(a.summary||'')}">${esc(a.summary||'')}</div>
         <div class="axis-stages">${pips}</div>
-      </a>`;
+      </div>`;
     }).join('');
   } catch(e){/* silent */}
 }
@@ -1719,6 +1762,100 @@ window.deleteBug = function(id) {
   } catch(e){}
 }
 
+/* ── Axis Drawer ── */
+let _axisDrawerData = {};
+function _mcGradeColor(g){
+  return ({'A+':'#4aaa4a','A':'#4aaa4a','A-':'#6aba6a','B+':'#c09030','B':'#c09030','B-':'#c07020','C+':'#d06030','C':'#d05020','C-':'#d04020','D':'#d03010'})[g]||'var(--muted)';
+}
+function openAxisDrawer(key) {
+  const d = _axisDrawerData[key];
+  if (!d) return;
+  const stages = ['review','plan','runbook','executing','audit','concluded'];
+  const cur = d.status || 'review';
+  const ci = stages.indexOf(cur);
+
+  document.getElementById('drawerAxisName').textContent = key;
+  const gEl = document.getElementById('drawerGrade');
+  gEl.textContent = d.grade || '—';
+  gEl.style.color = _mcGradeColor(d.grade||'');
+  document.getElementById('drawerStatus').textContent = cur;
+  document.getElementById('drawerMeta').textContent = (d.open_items||0) + ' open items · updated ' + (d.last_updated||'');
+  document.getElementById('drawerSummary').textContent = d.summary || '';
+  document.getElementById('drawerArtifactBtn').href = d.artifact || '#';
+
+  // Lifecycle bar
+  document.getElementById('drawerLifecycle').innerHTML = stages.map((s,i)=>{
+    const pipCls = cur==='concluded'?' done': i<ci?' done': i===ci?' active':'';
+    return `<div class="drawer-lc-stage"><div class="drawer-lc-pip${pipCls}"></div><div class="drawer-lc-label">${s}</div></div>`;
+  }).join('');
+
+  // Next step command
+  const nextStage = stages[Math.min(ci+1, stages.length-1)];
+  const cmd = `/tourney-${nextStage}-${key}`;
+  document.getElementById('drawerNextCmd').innerHTML = ci < stages.length-1
+    ? `<div class="drawer-next-cmd"><span class="drawer-next-text">${esc(cmd)}</span><button class="drawer-copy-btn" onclick="navigator.clipboard.writeText('${esc(cmd)}').then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy',1200)})">Copy</button></div>`
+    : '<div style="font-size:.75rem;color:#4aaa4a;padding:.5rem 0;">✓ Concluded</div>';
+
+  // Grade history from gradesData
+  const scores = (gradesData?.axes?.[key]?.scores) || [];
+  document.getElementById('drawerGradeHistory').innerHTML = scores.length
+    ? scores.slice(0,6).map(s=>`<div class="drawer-grade-row"><span class="drawer-gval" style="color:${_mcGradeColor(s.score)}">${esc(s.score||'—')}</span><span class="drawer-gdate">${esc((s.date||'').substring(0,10))}</span><span class="drawer-gnotes">${esc(s.notes||'')}</span></div>`).join('')
+    : '<div style="font-size:.75rem;color:var(--muted);">No history yet.</div>';
+
+  const el = document.getElementById('axisDrawer');
+  el.style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+}
+function closeAxisDrawer() {
+  document.getElementById('axisDrawer').style.display = 'none';
+  document.body.style.overflow = '';
+}
+
+/* ── Ops Timeline ── */
+function renderTimeline() {
+  const el = document.getElementById('timelineFeed');
+  if (!el) return;
+  const events = [];
+
+  // From qa-index entries
+  (allEntries||[]).forEach(e => {
+    if (!e.date) return;
+    events.push({
+      date: e.updated || e.date,
+      text: (e.title||e.id),
+      sub: e.summary||'',
+      dot: e.category==='review'?'gold': e.stage==='concluded'?'green':'gray',
+      url: e.url||''
+    });
+  });
+
+  // From grades scores
+  if (gradesData?.axes) {
+    Object.entries(gradesData.axes).forEach(([axis, ad])=>{
+      (ad.scores||[]).forEach(s=>{
+        events.push({
+          date: s.date,
+          text: axis.charAt(0).toUpperCase()+axis.slice(1) + ' — ' + (s.score||'?'),
+          sub: s.review_title||'',
+          dot: s.score&&s.score[0]==='A'?'green': s.score&&s.score[0]==='C'?'red':'gold',
+          url: s.url||''
+        });
+      });
+    });
+  }
+
+  // Sort newest first
+  events.sort((a,b)=>b.date.localeCompare(a.date));
+  const recent = events.slice(0,20);
+
+  if (!recent.length) { el.innerHTML='<div style="padding:.75rem .9rem;font-size:.75rem;color:var(--muted);">No activity yet.</div>'; return; }
+
+  el.innerHTML = recent.map(ev=>{
+    const inner = `<div class="tl-dot tl-dot-${esc(ev.dot)}"></div><div class="tl-date">${esc(ev.date.substring(0,10))}</div><div><div class="tl-text">${ev.url?`<a href="${esc(ev.url)}" target="_blank" style="color:inherit;text-decoration:none;">${esc(ev.text)}</a>`:esc(ev.text)}</div>${ev.sub?`<div class="tl-sub">${esc(ev.sub)}</div>`:''}</div>`;
+    return `<div class="tl-item">${inner}</div>`;
+  }).join('');
+}
+
 /* ══ INIT ══ */
 clLoad();
 document.getElementById('slugInput').value=clSlug;
@@ -1734,6 +1871,33 @@ renderChecklist();
   }
 })();
 </script>
+<!-- ── AXIS DRAWER ── -->
+<div id="axisDrawer" style="display:none;" onclick="if(event.target===this)closeAxisDrawer()">
+  <div class="drawer-panel">
+    <div class="drawer-hdr">
+      <div>
+        <div class="drawer-title-row">
+          <span class="drawer-axis-name" id="drawerAxisName">—</span>
+          <span class="drawer-d-grade" id="drawerGrade">—</span>
+          <span class="drawer-status-pill" id="drawerStatus">review</span>
+        </div>
+        <div style="font-size:.68rem;color:var(--muted);margin-top:.3rem;" id="drawerMeta"></div>
+      </div>
+      <button class="drawer-close" onclick="closeAxisDrawer()">✕</button>
+    </div>
+    <div class="drawer-lifecycle" id="drawerLifecycle"></div>
+    <div class="drawer-body">
+      <div class="drawer-summary" id="drawerSummary"></div>
+      <div id="drawerNextCmd"></div>
+      <div class="drawer-sec">Grade History</div>
+      <div id="drawerGradeHistory"></div>
+      <div style="margin-top:1rem;">
+        <a class="drawer-artifact-btn" id="drawerArtifactBtn" href="#" target="_blank">View Full Artifact →</a>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script src="/bug-fab.js?v=3" defer></script>
 </body>
 </html>
