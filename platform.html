@@ -116,6 +116,36 @@ td{padding:0.7rem 0.75rem;font-size:0.88rem;vertical-align:middle;}
 .axis-stage-pip.done{background:#2a4a2a;}
 .axis-stage-pip.active{background:var(--gold);}
 .axis-stage-pip.concluded{background:#2a2a5a;}
+/* ── Mission Control ── */
+.mc-wrap{max-width:1100px;margin:0 auto;padding:1.75rem 1.75rem 4rem;}
+.mc-hdr{font-size:.72rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin:1.5rem 0 .75rem;}
+.mc-hdr:first-child{margin-top:0;}
+.launch-strip{display:grid;grid-template-columns:repeat(6,1fr);gap:.5rem;margin-bottom:2rem;}
+.ls-pill{background:var(--card);border:1px solid var(--border);border-radius:6px;padding:.6rem .75rem;display:flex;flex-direction:column;gap:.2rem;}
+.ls-label{font-size:.65rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;}
+.ls-val{font-size:.78rem;font-weight:700;color:var(--muted);}
+.ls-green{border-color:rgba(74,170,74,.35);}.ls-green .ls-val{color:#4aaa4a;}
+.ls-yellow{border-color:rgba(192,144,48,.4);}.ls-yellow .ls-val{color:var(--gold);}
+.ls-red{border-color:rgba(217,74,74,.4);}.ls-red .ls-val{color:#d94a4a;}
+.today-queue{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+.tq-section{background:var(--card);border:1px solid var(--border);border-radius:8px;overflow:hidden;margin-bottom:1rem;}
+.tq-hdr{display:flex;align-items:center;justify-content:space-between;padding:.55rem .9rem;border-bottom:1px solid var(--border);background:rgba(255,255,255,.02);}
+.tq-title{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text);}
+.tq-badge{font-size:.62rem;font-weight:700;background:rgba(217,74,74,.15);color:#d94a4a;border:1px solid rgba(217,74,74,.3);border-radius:10px;padding:.1rem .4rem;}
+.tq-item{padding:.55rem .9rem;border-bottom:1px solid var(--border);font-size:.8rem;display:flex;gap:.55rem;align-items:flex-start;}
+.tq-item:last-child{border:none;}
+.tq-item-body{flex:1;min-width:0;}
+.tq-item-title{font-weight:600;color:var(--text);margin-bottom:.1rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.tq-item-sub{font-size:.68rem;color:var(--muted);}
+.tq-copy{background:rgba(192,144,48,.12);border:1px solid rgba(192,144,48,.3);color:var(--gold);font-size:.62rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:.2rem .45rem;border-radius:4px;cursor:pointer;white-space:nowrap;flex-shrink:0;}
+.tq-copy:hover{background:rgba(192,144,48,.22);}
+.tq-tag{font-size:.58rem;font-weight:700;padding:.1rem .32rem;border-radius:3px;text-transform:uppercase;letter-spacing:.04em;flex-shrink:0;margin-top:.15rem;}
+.tq-tag-red{background:rgba(217,74,74,.15);color:#d94a4a;}
+.tq-tag-gold{background:rgba(192,144,48,.15);color:var(--gold);}
+.tq-tag-green{background:rgba(74,170,74,.15);color:#4aaa4a;}
+.tq-tag-gray{background:rgba(255,255,255,.06);color:var(--muted);}
+.tq-empty{padding:.7rem .9rem;font-size:.75rem;color:var(--muted);font-style:italic;}
+@media(max-width:640px){.launch-strip{grid-template-columns:repeat(3,1fr);}.today-queue{grid-template-columns:1fr;}}
 .hub-search{flex:1;min-width:180px;background:rgba(255,255,255,0.04);border:1px solid var(--border);color:var(--text);padding:0.45rem 0.8rem;border-radius:20px;font-family:'Barlow',sans-serif;font-size:0.8rem;outline:none;}
 .hub-search:focus{border-color:var(--gold);}
 .hub-search::placeholder{color:var(--muted);}
@@ -339,6 +369,7 @@ td{padding:0.7rem 0.75rem;font-size:0.88rem;vertical-align:middle;}
 
   <div class="tabs">
     <button class="tab-btn active" id="tab-dash"      data-short="Dash"   onclick="switchTab('dash')">Dashboard</button>
+    <button class="tab-btn"        id="tab-tenants"   data-short="Ops"    onclick="switchTab('tenants')">Tenants</button>
     <button class="tab-btn"        id="tab-action"    data-short="Action" onclick="switchTab('action')">Action Board</button>
     <button class="tab-btn"        id="tab-artifacts" data-short="Files"  onclick="switchTab('artifacts')">Artifacts</button>
     <button class="tab-btn"        id="tab-checklist" data-short="QA"     onclick="switchTab('checklist')">QA</button>
@@ -346,7 +377,46 @@ td{padding:0.7rem 0.75rem;font-size:0.88rem;vertical-align:middle;}
   </div>
 
   <!-- ── TAB: DASHBOARD ── -->
+  <!-- ── MISSION CONTROL (Dashboard) ── -->
   <div id="panel-dash">
+    <div class="mc-wrap">
+      <div class="mc-hdr">Launch Readiness</div>
+      <div class="launch-strip">
+        <div class="ls-pill ls-gray" id="ls-revenue-pill"><span class="ls-label">Revenue</span><span class="ls-val" id="ls-revenue">—</span></div>
+        <div class="ls-pill ls-gray" id="ls-security-pill"><span class="ls-label">Security</span><span class="ls-val" id="ls-security">—</span></div>
+        <div class="ls-pill ls-gray" id="ls-qa-pill"><span class="ls-label">QA</span><span class="ls-val" id="ls-qa">—</span></div>
+        <div class="ls-pill ls-gray" id="ls-deployment-pill"><span class="ls-label">Deployment</span><span class="ls-val" id="ls-deployment">—</span></div>
+        <div class="ls-pill ls-gray" id="ls-legal-pill"><span class="ls-label">Legal</span><span class="ls-val" id="ls-legal">—</span></div>
+        <div class="ls-pill ls-gray" id="ls-product-pill"><span class="ls-label">Product</span><span class="ls-val" id="ls-product">—</span></div>
+      </div>
+      <div class="mc-hdr">Today — <span id="mcTodayDate"></span></div>
+      <div class="today-queue">
+        <div>
+          <div class="tq-section">
+            <div class="tq-hdr"><span class="tq-title">Do Now</span><span class="tq-badge" id="doNowBadge">0</span></div>
+            <div id="tqDoNow"><div class="tq-empty">Loading…</div></div>
+          </div>
+          <div class="tq-section">
+            <div class="tq-hdr"><span class="tq-title">Agent Can Do</span></div>
+            <div id="tqAgent"><div class="tq-empty">Loading…</div></div>
+          </div>
+        </div>
+        <div>
+          <div class="tq-section">
+            <div class="tq-hdr"><span class="tq-title">Waiting on Rob</span></div>
+            <div id="tqWaiting"><div class="tq-empty">Loading…</div></div>
+          </div>
+          <div class="tq-section">
+            <div class="tq-hdr"><span class="tq-title">Recently Shipped</span></div>
+            <div id="tqShipped"><div class="tq-empty">Loading…</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── TAB: TENANTS ── -->
+  <div id="panel-tenants" style="display:none;">
     <div class="main">
       <div class="page-hd"><div class="page-title">All <span>Tournaments</span></div></div>
       <input type="text" class="search-field" placeholder="Search tournaments…" oninput="filterTourneys(this.value)">
@@ -631,13 +701,14 @@ function showDashboard(email) {
   renderReference();
   loadGrades();
   loadCeoTasks();
+  loadMissionControl();
   const saved = localStorage.getItem('ops_tab') || 'dash';
   switchTab(saved);
 }
 
 /* ══════════════════════ TABS ══════════════════════ */
 function switchTab(t) {
-  ['dash','artifacts','checklist','reference','action'].forEach(id => {
+  ['dash','tenants','artifacts','checklist','reference','action'].forEach(id => {
     document.getElementById(`panel-${id}`).style.display = t === id ? '' : 'none';
     document.getElementById(`tab-${id}`).classList.toggle('active', t === id);
   });
@@ -1139,6 +1210,7 @@ async function loadArtifacts() {
 
     renderHub();
     loadAxisBoard();
+    renderTodayQueue();
   } catch(err) {
     document.getElementById('cardGrid').innerHTML=`<div class="grid-empty">Couldn't load qa-index.json: ${esc(err.message)}</div>`;
   }
@@ -1482,7 +1554,103 @@ function loadCeoTasks(){
 }
 function toggleCeoTask(id){
   let checked={};try{checked=JSON.parse(localStorage.getItem('ceo_tasks')||'{}');}catch{}
-  checked[id]=!checked[id];localStorage.setItem('ceo_tasks',JSON.stringify(checked));loadCeoTasks();
+  checked[id]=!checked[id];localStorage.setItem('ceo_tasks',JSON.stringify(checked));loadCeoTasks();renderTodayQueue();
+}
+
+/* ══════════════════════ MISSION CONTROL ══════════════════════ */
+let mcAxisData=null;
+async function loadMissionControl(){
+  try{const r=await fetch('/axis-status.json',{cache:'no-store'});if(r.ok)mcAxisData=await r.json();}catch(e){}
+  const el=document.getElementById('mcTodayDate');
+  if(el)el.textContent=new Date().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'});
+  renderLaunchStrip();
+  renderTodayQueue();
+}
+function _mcGradeCls(g){
+  if(!g)return'ls-gray';
+  if(g[0]==='A')return'ls-green';
+  if(g==='B+'||g==='B'||g==='B-')return'ls-yellow';
+  return'ls-red';
+}
+function renderLaunchStrip(){
+  const ax=mcAxisData?.axes||{};
+  const chk=(()=>{try{return JSON.parse(localStorage.getItem('ceo_tasks')||'{}')}catch{return{}}})();
+  const pillars=[
+    {id:'revenue',  get:()=>ax.business?.blocking?['BLOCKED','ls-red']:[(ax.business?.grade||'—'),_mcGradeCls(ax.business?.grade)]},
+    {id:'security', get:()=>[(ax.security?.grade||'—'),_mcGradeCls(ax.security?.grade)]},
+    {id:'qa',       get:()=>{const d=mcAxisData?.updated_at?.substring(0,10);if(!d)return['Unknown','ls-gray'];const days=Math.floor((Date.now()-new Date(d))/86400000);return days<=3?['Fresh','ls-green']:days<=7?['Aging','ls-yellow']:['Stale','ls-red'];}},
+    {id:'deployment',get:()=>[(ax.deployment?.grade||'—'),_mcGradeCls(ax.deployment?.grade)]},
+    {id:'legal',    get:()=>(!chk.llc||!chk.tos)?['BLOCKED','ls-red']:['Clear','ls-green']},
+    {id:'product',  get:()=>[(ax['feature-depth']?.grade||'—'),_mcGradeCls(ax['feature-depth']?.grade)]},
+  ];
+  pillars.forEach(p=>{
+    const valEl=document.getElementById('ls-'+p.id);
+    const pill=document.getElementById('ls-'+p.id+'-pill');
+    if(!valEl)return;
+    const[val,cls]=p.get();
+    valEl.textContent=val;
+    if(pill)pill.className='ls-pill '+cls;
+  });
+}
+function renderTodayQueue(){
+  const ax=mcAxisData?.axes||{};
+  const chk=(()=>{try{return JSON.parse(localStorage.getItem('ceo_tasks')||'{}')}catch{return{}}})();
+  const NEXT={review:'plan',plan:'runbook',runbook:'executing',executing:'audit',audit:'concluded'};
+  const NEXT_LABEL={plan:'Generate Plan',runbook:'Generate Runbook',executing:'Execute (Manual)',audit:'Run Audit'};
+  const NEXT_SKILL={plan:'/tourney-plan-',runbook:'/tourney-runbook-',executing:null,audit:'/tourney-audit-'};
+  const URGENT_IDS=['send_install_email_secret','gh_actions_verify','supabase_email','leaked_pw'];
+
+  // DO NOW
+  const doNow=[];
+  Object.entries(ax).forEach(([k,a])=>{
+    if(a.blocking&&a.status!=='concluded')
+      doNow.push({title:k+' axis — blocked',sub:a.summary,tag:'BLOCKING',tagCls:'tq-tag-red',cmd:null});
+  });
+  URGENT_IDS.forEach(id=>{
+    const t=CEO_TASKS.find(c=>c.id===id);
+    if(t&&!chk[id])doNow.push({title:t.text,sub:'Human required',tag:'URGENT',tagCls:'tq-tag-red',cmd:null});
+  });
+
+  // AGENT
+  const stageOrder=['review','plan','runbook','executing','audit','concluded'];
+  const agentItems=Object.entries(ax)
+    .filter(([,a])=>a.status!=='concluded'&&NEXT[a.status]&&NEXT[a.status]!=='concluded')
+    .sort((a,b)=>stageOrder.indexOf(a[1].status)-stageOrder.indexOf(b[1].status))
+    .map(([k,a])=>{
+      const next=NEXT[a.status];
+      const skill=NEXT_SKILL[next];
+      return{title:k+': '+NEXT_LABEL[next],sub:(a.grade||'?')+' · currently '+a.status,tag:a.status.toUpperCase(),tagCls:'tq-tag-gold',cmd:skill?skill+k:null};
+    });
+
+  // WAITING ON ROB
+  const waitingItems=CEO_TASKS.filter(t=>!chk[t.id]&&!URGENT_IDS.includes(t.id))
+    .map(t=>({title:t.text,sub:'Human required · see Action Board',tag:'WAITING',tagCls:'tq-tag-red',cmd:null}));
+
+  // SHIPPED
+  const shippedItems=(allEntries||[])
+    .filter(e=>e.status==='shipped'||e.status==='active')
+    .sort((a,b)=>(b.updated||b.date||'').localeCompare(a.updated||a.date||''))
+    .slice(0,5)
+    .map(e=>({title:e.title,sub:e.updated||e.date||'',tag:(e.category||'artifact').toUpperCase(),tagCls:'tq-tag-green',cmd:null,url:e.url}));
+
+  const badge=document.getElementById('doNowBadge');
+  if(badge)badge.textContent=doNow.length;
+
+  const renderItems=(items,empty)=>items.length?items.map(i=>`
+    <div class="tq-item">
+      <span class="tq-tag ${esc(i.tagCls)}">${esc(i.tag)}</span>
+      <div class="tq-item-body">
+        <div class="tq-item-title">${i.url?`<a href="${esc(i.url)}" target="_blank" style="color:inherit;text-decoration:none;">${esc(i.title)}</a>`:esc(i.title)}</div>
+        ${i.sub?`<div class="tq-item-sub">${esc(i.sub)}</div>`:''}
+      </div>
+      ${i.cmd?`<button class="tq-copy" onclick="navigator.clipboard.writeText('${esc(i.cmd)}').then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy',1400)})">Copy</button>`:''}
+    </div>`).join(''):`<div class="tq-empty">${empty}</div>`;
+
+  const set=(id,items,empty)=>{const el=document.getElementById(id);if(el)el.innerHTML=renderItems(items,empty);};
+  set('tqDoNow',doNow,'Nothing blocking.');
+  set('tqAgent',agentItems,'All axes concluded.');
+  set('tqWaiting',waitingItems,'All tasks done!');
+  set('tqShipped',shippedItems,'No artifacts yet.');
 }
 window.renderBugLog = function() {
   const openWrap = document.getElementById('bugLogOpen');
