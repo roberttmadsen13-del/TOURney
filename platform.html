@@ -585,6 +585,13 @@ td{padding:0.7rem 0.75rem;font-size:0.88rem;vertical-align:middle;}
 
       <div class="ref-section">
         <div class="ref-sec-hdr">
+          <div class="ref-sec-meta"><div class="ref-sec-title">Agent Can Do</div><div class="ref-sec-desc">Tasks ready for Claude to execute — copy the command and run in Claude Code</div></div>
+        </div>
+        <div id="refAgentQueue"><div style="padding:.75rem;color:var(--muted);font-size:.8rem;">Loading…</div></div>
+      </div>
+
+      <div class="ref-section">
+        <div class="ref-sec-hdr">
           <div class="ref-sec-meta"><div class="ref-sec-title">Quick Links</div><div class="ref-sec-desc">Internal tools and reference pages</div></div>
         </div>
         <div class="quick-links">
@@ -704,16 +711,6 @@ td{padding:0.7rem 0.75rem;font-size:0.88rem;vertical-align:middle;}
             <div class="tq-hdr" onclick="toggleTqSection('tqSectionWaiting')"><span class="tq-title">Waiting on Rob</span><span class="tq-badge" id="waitingBadge" style="background:rgba(192,144,48,.15);color:var(--gold);border-color:rgba(192,144,48,.3);">0</span><span class="tq-chevron">▼</span></div>
             <div id="tqWaiting"><div class="tq-empty">Loading…</div></div>
           </div>
-          <div class="tq-2col">
-            <div class="tq-section" id="tqSectionAgent">
-              <div class="tq-hdr" onclick="toggleTqSection('tqSectionAgent')"><span class="tq-title">Agent Can Do</span><span class="tq-chevron">▼</span></div>
-              <div id="tqAgent"><div class="tq-empty">Loading…</div></div>
-            </div>
-            <div class="tq-section" id="tqSectionShipped">
-              <div class="tq-hdr" onclick="toggleTqSection('tqSectionShipped')"><span class="tq-title">Recently Shipped</span><span class="tq-chevron">▼</span></div>
-              <div id="tqShipped"><div class="tq-empty">Loading…</div></div>
-            </div>
-          </div>
         </div>
       </div>
 
@@ -799,7 +796,7 @@ function loadTabData(t) {
   if (t === 'action')    { loadMissionControl(); loadArtifacts(); loadGrades(); loadCeoTasks(); tabLoaded['artifacts'] = true; }
   if (t === 'bugs')      { renderBugLog(); }
   if (t === 'checklist') { renderQaRuns(); }
-  if (t === 'reference') { renderReference(); }
+  if (t === 'reference') { renderReference(); loadMissionControl(); }
 }
 function showDashboard(email) {
   document.getElementById('loginWrap').style.display = 'none';
@@ -1376,7 +1373,7 @@ async function loadArtifacts() {
           <button id="notif-enable" style="background:var(--gold);color:#111;border:none;border-radius:5px;padding:.3rem .7rem;font-size:.75rem;cursor:pointer;font-weight:700;">Enable</button>
           <button id="notif-dismiss" style="background:none;border:none;color:rgba(240,230,204,.4);cursor:pointer;font-size:1rem;line-height:1;">✕</button>`;
         const grid=document.getElementById('cardGrid');
-        grid.parentNode.insertBefore(banner, grid);
+        if(grid) grid.parentNode.insertBefore(banner, grid);
         document.getElementById('notif-enable').onclick=async()=>{
           const perm=await Notification.requestPermission();
           banner.remove();
@@ -1391,7 +1388,7 @@ async function loadArtifacts() {
     renderTodayQueue();
     renderTimeline();
   } catch(err) {
-    document.getElementById('cardGrid').innerHTML=`<div class="grid-empty">Couldn't load qa-index.json: ${esc(err.message)}</div>`;
+    const errGrid=document.getElementById('cardGrid');if(errGrid)errGrid.innerHTML=`<div class="grid-empty">Couldn't load qa-index.json: ${esc(err.message)}</div>`;
   }
 }
 async function loadAxisBoard() {
@@ -1579,7 +1576,7 @@ document.querySelectorAll('.filter-btn:not(.archived-toggle)').forEach(btn => {
     renderHub();
   });
 });
-document.getElementById('hubSearch').addEventListener('input', e => { activeSearch=e.target.value; renderHub(); });
+const _hs=document.getElementById('hubSearch');if(_hs)_hs.addEventListener('input', e => { activeSearch=e.target.value; renderHub(); });
 
 /* ══════════════════════ CHECKLIST ══════════════════════ */
 const CL_SECTIONS = [
@@ -2037,6 +2034,7 @@ function renderTodayQueue(){
   set('tqAgent',agentItems,'All axes concluded.');
   set('tqWaiting',waitingItems,'No manual tasks pending.');
   set('tqShipped',shippedItems,'No artifacts yet.');
+  const refAgent=document.getElementById('refAgentQueue');if(refAgent)refAgent.innerHTML=renderItems(agentItems,'All axes concluded.');
   const wb=document.getElementById('waitingBadge');if(wb)wb.textContent=waitingItems.length;
   const actionBadge=document.getElementById('actionBoardBadge');
   if(actionBadge){const n=doNow.length+agentItems.length+waitingItems.length;actionBadge.textContent=n+' Open Action Item'+(n!==1?'s':'')+' →';}
@@ -2190,6 +2188,18 @@ function renderTimeline() {
       });
     });
   }
+
+  // From shipped platform_tasks
+  (mcShippedTasks||[]).forEach(t=>{
+    if(!t.title) return;
+    events.push({
+      date: t.shipped_at||t.created_at||(new Date().toISOString().substring(0,10)),
+      text: t.title,
+      sub: t.body||'',
+      dot: 'green',
+      url: ''
+    });
+  });
 
   // Sort newest first
   events.sort((a,b)=>b.date.localeCompare(a.date));
