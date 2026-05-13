@@ -2014,6 +2014,12 @@ function renderTimeline() {
 }
 
 /* ══════════════════════ BUGS TAB ══════════════════════ */
+// bugs.html uses the publishable key — same key needed here for shared session context
+const _sbBugs = supabase.createClient(
+  'https://jllugkiojeoopitdvzsa.supabase.co',
+  'sb_publishable_DnBMNLaSu61ykJ6P_fI2fw_D9DdAScn',
+  { auth: { persistSession: true } }
+);
 let _bugsCache = [], _bugsRealtimeWired = false;
 async function loadBugsTab() {
   const elOpen = document.getElementById('bugLogOpen');
@@ -2022,10 +2028,9 @@ async function loadBugsTab() {
   const elCC   = document.getElementById('compBugLogCount');
   if (!elOpen) return;
   elOpen.innerHTML = '<div style="color:var(--muted);font-size:.8rem;padding:.5rem 0;">Loading…</div>';
-  // ensure session is live before querying RLS-protected table
-  const { data: { session: bugsSess } } = await sb.auth.getSession();
+  const { data: { session: bugsSess } } = await _sbBugs.auth.getSession();
   if (!bugsSess) { elOpen.innerHTML = '<div style="color:var(--red);font-size:.75rem;">No active session — please sign out and back in.</div>'; return; }
-  const { data, error } = await sb.from('platform_bugs').select('*').order('created_at', { ascending: false });
+  const { data, error } = await _sbBugs.from('platform_bugs').select('*').order('created_at', { ascending: false });
   if (error) { elOpen.innerHTML = `<div style="color:var(--red);font-size:.75rem;">${esc(error.message)}</div>`; return; }
   _bugsCache = data || [];
   const open = _bugsCache.filter(b => b.status === 'open');
@@ -2048,11 +2053,11 @@ async function loadBugsTab() {
   if (elComp) elComp.innerHTML = done.length ? done.map(b => rowHtml(b, false)).join('') : '<div style="padding:.75rem 0;color:var(--muted);font-family:\'DM Mono\',monospace;font-size:.62rem;">No completed bugs yet.</div>';
   if (!_bugsRealtimeWired) {
     _bugsRealtimeWired = true;
-    sb.channel('platform_bugs_live').on('postgres_changes',{event:'*',schema:'public',table:'platform_bugs'},()=>loadBugsTab()).subscribe();
+    _sbBugs.channel('platform_bugs_live').on('postgres_changes',{event:'*',schema:'public',table:'platform_bugs'},()=>loadBugsTab()).subscribe();
   }
 }
-window.bugSetStatus = async (id, status) => { await sb.from('platform_bugs').update({status}).eq('id',id); loadBugsTab(); };
-window.bugDel = async (id) => { if(!confirm('Delete this bug permanently?')) return; await sb.from('platform_bugs').delete().eq('id',id); loadBugsTab(); };
+window.bugSetStatus = async (id, status) => { await _sbBugs.from('platform_bugs').update({status}).eq('id',id); loadBugsTab(); };
+window.bugDel = async (id) => { if(!confirm('Delete this bug permanently?')) return; await _sbBugs.from('platform_bugs').delete().eq('id',id); loadBugsTab(); };
 window.renderBugLog = loadBugsTab;
 function _buildBugDump() {
   return _bugsCache.filter(b=>b.status==='open').map((b,i)=>({idx:i+1,id:b.id,title:b.title||'(no title)',description:b.description||'',url:b.url||'',logged_at:b.created_at}));
