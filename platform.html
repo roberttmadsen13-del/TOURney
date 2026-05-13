@@ -349,6 +349,11 @@ td{padding:0.7rem 0.75rem;font-size:0.88rem;vertical-align:middle;}
 .ceo-body{flex:1;}
 .ceo-text{font-family:'Barlow',sans-serif;font-size:0.85rem;color:var(--text);line-height:1.4;}
 .ceo-why{font-family:'DM Mono',monospace;font-size:0.46rem;letter-spacing:0.06em;color:var(--muted);margin-top:0.35rem;line-height:1.55;}
+.ceo-meta{display:flex;flex-wrap:wrap;gap:.35rem;align-items:center;margin-top:.45rem;}
+.ceo-link{font-size:.67rem;font-family:'DM Mono',monospace;color:var(--gold);background:var(--gold-dim);border:1px solid rgba(192,144,48,.25);padding:.1rem .4rem;text-decoration:none;transition:border-color .12s;}
+.ceo-link:hover{border-color:var(--gold);}
+.ceo-blocks{font-size:.67rem;font-family:'DM Mono',monospace;color:rgba(217,74,74,.8);letter-spacing:.04em;}
+.axis-overall-card{background:rgba(192,144,48,.04);}
 .notes-ta{width:100%;min-height:180px;background:rgba(255,255,255,0.03);border:1px solid var(--border);color:var(--text);font-family:'Barlow',sans-serif;font-size:0.85rem;padding:0.85rem;outline:none;resize:vertical;line-height:1.6;}
 .notes-ta:focus{border-color:rgba(192,144,48,0.45);}
 .notes-saved{font-family:'DM Mono',monospace;font-size:0.42rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--green);margin-top:0.4rem;display:none;}
@@ -687,26 +692,37 @@ td{padding:0.7rem 0.75rem;font-size:0.88rem;vertical-align:middle;}
   <!-- ── TAB: ACTION BOARD ── -->
   <div id="panel-action" style="display:none;">
     <div class="action-wrap">
-      <div class="mc-hdr" style="margin-bottom:.75rem;">Today — <span id="mcTodayDate"></span></div>
-      <div class="today-queue">
-        <div>
-          <div class="tq-section">
-            <div class="tq-hdr"><span class="tq-title">Do Now</span><span class="tq-badge" id="doNowBadge">0</span></div>
-            <div id="tqDoNow"><div class="tq-empty">Loading…</div></div>
-          </div>
-          <div class="tq-section">
-            <div class="tq-hdr"><span class="tq-title">Agent Can Do</span></div>
-            <div id="tqAgent"><div class="tq-empty">Loading…</div></div>
-          </div>
+
+      <div class="action-section">
+        <div class="action-hd">
+          <span class="action-title">Your Checklist</span>
+          <span class="action-sub">Only you can do these — AI cannot · <span id="ceoOpenCount">—</span> remaining</span>
         </div>
-        <div>
-          <div class="tq-section">
-            <div class="tq-hdr"><span class="tq-title">Waiting on Rob</span><span class="tq-badge" id="waitingBadge" style="background:rgba(192,144,48,.15);color:var(--gold);border-color:rgba(192,144,48,.3);">0</span></div>
-            <div id="tqWaiting"><div class="tq-empty">Loading…</div></div>
+        <div class="ceo-list" id="ceoList"></div>
+      </div>
+
+      <div class="action-section" style="margin-top:2rem;">
+        <div class="mc-hdr" style="margin-bottom:.75rem;">Today — <span id="mcTodayDate"></span></div>
+        <div class="today-queue">
+          <div>
+            <div class="tq-section">
+              <div class="tq-hdr"><span class="tq-title">Do Now</span><span class="tq-badge" id="doNowBadge">0</span></div>
+              <div id="tqDoNow"><div class="tq-empty">Loading…</div></div>
+            </div>
+            <div class="tq-section">
+              <div class="tq-hdr"><span class="tq-title">Agent Can Do</span></div>
+              <div id="tqAgent"><div class="tq-empty">Loading…</div></div>
+            </div>
           </div>
-          <div class="tq-section">
-            <div class="tq-hdr"><span class="tq-title">Recently Shipped</span></div>
-            <div id="tqShipped"><div class="tq-empty">Loading…</div></div>
+          <div>
+            <div class="tq-section">
+              <div class="tq-hdr"><span class="tq-title">Waiting on Rob</span><span class="tq-badge" id="waitingBadge" style="background:rgba(192,144,48,.15);color:var(--gold);border-color:rgba(192,144,48,.3);">0</span></div>
+              <div id="tqWaiting"><div class="tq-empty">Loading…</div></div>
+            </div>
+            <div class="tq-section">
+              <div class="tq-hdr"><span class="tq-title">Recently Shipped</span></div>
+              <div id="tqShipped"><div class="tq-empty">Loading…</div></div>
+            </div>
           </div>
         </div>
       </div>
@@ -726,13 +742,6 @@ td{padding:0.7rem 0.75rem;font-size:0.88rem;vertical-align:middle;}
         <div class="timeline-feed" id="timelineFeed"><div style="padding:.75rem .9rem;font-size:.75rem;color:var(--muted);">Loading…</div></div>
       </div>
 
-      <div class="action-section" style="margin-top:2rem;">
-        <div class="action-hd">
-          <span class="action-title">Checklist — Rob Only</span>
-          <span class="action-sub">Only you can do these — AI cannot</span>
-        </div>
-        <div class="ceo-list" id="ceoList"></div>
-      </div>
     </div>
   </div>
 
@@ -1384,6 +1393,8 @@ async function loadAxisBoard() {
     const d=await r.json();
     const stages=['review','plan','runbook','executing','audit','concluded'];
     const gradeColor=g=>({'A+':'#4aaa4a','A':'#4aaa4a','A-':'#6aba6a','B+':'#c09030','B':'#c09030','B-':'#c07020','C+':'#d06030','C':'#d05020','C-':'#d04020','D':'#d03010'})[g]||'var(--muted)';
+    const gradeVal=g=>({'A+':4.3,'A':4.0,'A-':3.7,'B+':3.3,'B':3.0,'B-':2.7,'C+':2.3,'C':2.0,'C-':1.7,'D':1.0})[g]||2.0;
+    const valGrade=v=>{if(v>=4.15)return'A+';if(v>=3.85)return'A';if(v>=3.5)return'A-';if(v>=3.15)return'B+';if(v>=2.85)return'B';if(v>=2.5)return'B-';if(v>=2.15)return'C+';if(v>=1.85)return'C';if(v>=1.5)return'C-';return'D';};
     const el=document.getElementById('axisBoard');
     if(!el) return;
     const upd=(d.updated_at||'').substring(0,10);
@@ -1391,10 +1402,35 @@ async function loadAxisBoard() {
     if(lu) lu.textContent=upd?`Updated ${upd}`:'';
     const axes=Object.entries(d.axes||{});
     _axisDrawerData = d.axes||{};
-    el.innerHTML=axes.map(([key,a])=>{
+
+    // overall platform card
+    const allGrades=axes.map(([,a])=>gradeVal(a.grade||'B'));
+    const avgGrade=valGrade(allGrades.reduce((s,v)=>s+v,0)/allGrades.length);
+    const totalOpen=axes.reduce((s,[,a])=>s+(a.open_items||0),0);
+    const stageCounts=stages.map(s=>axes.filter(([,a])=>a.status===s).length);
+    const overallPips=stages.map((s,i)=>{
+      const n=stageCounts[i];
+      if(!n)return'';
+      return `<div class="axis-stage-pip active" title="${n} ${s}" style="flex:${n};position:relative;"><span style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:8px;color:rgba(0,0,0,.6);font-weight:700;">${n}</span></div>`;
+    }).join('');
+    const overallCard=`<div class="axis-row axis-overall-card" style="border-color:rgba(192,144,48,0.35);margin-bottom:.6rem;">
+      <div class="axis-label" style="color:var(--gold);font-weight:700;">Platform Overall</div>
+      <div class="axis-grade" style="color:${gradeColor(avgGrade)}">${esc(avgGrade)}</div>
+      <div class="axis-open">${totalOpen} open</div>
+      <div class="axis-summary">${axes.length} axes · ${axes.filter(([,a])=>a.status==='concluded').length} concluded · ${axes.filter(([,a])=>a.blocking).length} blocking</div>
+      <div class="axis-stages">${overallPips}</div>
+    </div>`;
+
+    // only axes with open items AND not concluded
+    const openAxes=axes.filter(([,a])=>(a.open_items||0)>0&&a.status!=='concluded');
+    if(!openAxes.length){
+      el.innerHTML=overallCard+'<div style="color:var(--muted);font-size:.8rem;padding:.5rem 0;">No open axis tickets.</div>';
+      return;
+    }
+    el.innerHTML=overallCard+openAxes.map(([key,a])=>{
       const ci=stages.indexOf(a.status||'review');
       const pips=stages.map((s,i)=>{
-        const cls=a.status==='concluded'?' concluded':i<ci?' done':i===ci?' active':'';
+        const cls=i<ci?' done':i===ci?' active':'';
         return `<div class="axis-stage-pip${cls}"></div>`;
       }).join('');
       return `<div class="axis-row${a.blocking?' blocking':''}" onclick="openAxisDrawer('${esc(key)}')" style="cursor:pointer;">
@@ -1752,12 +1788,17 @@ async function _saveCeoTasks() {
 }
 function loadCeoTasks(){
   const list=document.getElementById('ceoList');if(!list)return;
+  const pending=CEO_TASKS.filter(t=>!_ceoChecked[t.id]).length;
+  const ctr=document.getElementById('ceoOpenCount');if(ctr)ctr.textContent=pending+' of '+CEO_TASKS.length;
   list.innerHTML=CEO_TASKS.map(t=>{
     const done=!!_ceoChecked[t.id];
-    return'<div class="ceo-item'+(done?' done':'')+'">'
+    const links=(t.links||[]).map(l=>'<a class="ceo-link" href="'+esc(l.url)+'" target="_blank">'+esc(l.label)+'</a>').join('');
+    const blocks=(t.blocks||[]).length?'<span class="ceo-blocks">Blocks: '+esc((t.blocks||[]).join(', '))+'</span>':'';
+    const meta=(links||blocks)?'<div class="ceo-meta">'+links+blocks+'</div>':'';
+    return '<div class="ceo-item'+(done?' done':'')+'">'
       +'<div class="ceo-cb'+(done?' checked':'')+'" onclick="toggleCeoTask(\''+t.id+'\')"></div>'
       +'<div class="ceo-body"><div class="ceo-text">'+esc(t.text)+'</div>'
-      +'<div class="ceo-why">Why AI can\'t: '+esc(t.why)+'</div></div></div>';
+      +meta+'</div></div>';
   }).join('');
 }
 async function toggleCeoTask(id){
