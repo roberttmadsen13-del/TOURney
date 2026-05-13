@@ -61,6 +61,8 @@ footer{border-top:1px solid var(--border);padding:1.25rem 1.5rem;text-align:cent
 footer a{color:rgba(192,144,48,0.5);text-decoration:none;}
 footer a:hover{color:var(--gold);}
 @media(max-width:600px){.wrap{padding:1.25rem 1rem 3rem;}}
+/* hide topbar when embedded in platform iframe */
+@media screen { :root.in-iframe .topbar { display:none; } }
 </style>
 </head>
 <body>
@@ -538,5 +540,6 @@ ${JSON.stringify(bugs, null, 2)}
 </script>
 
 <script src="/bug-fab.js?v=3" defer></script>
+<script>if(window.self!==window.top)document.documentElement.classList.add('in-iframe');</script>
 </body>
 </html>

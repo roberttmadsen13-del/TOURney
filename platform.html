@@ -545,22 +545,7 @@ td{padding:0.7rem 0.75rem;font-size:0.88rem;vertical-align:middle;}
 
   <!-- ── TAB: BUGS ── -->
   <div id="panel-bugs" style="display:none;">
-    <div class="action-wrap">
-      <div class="action-section">
-        <div class="action-hd">
-          <span class="action-title">Open Bugs</span>
-          <span class="action-sub" id="openBugLogCount">0</span>
-        </div>
-        <div id="bugLogOpen"></div>
-      </div>
-      <div class="action-section" style="margin-top:2rem;">
-        <div class="action-hd">
-          <span class="action-title">Completed</span>
-          <span class="action-sub" id="compBugLogCount">0</span>
-        </div>
-        <div id="bugLogCompleted"></div>
-      </div>
-    </div>
+    <iframe id="bugsFrame" src="/platform/bugs" style="width:100%;height:calc(100vh - 104px);border:none;display:block;"></iframe>
   </div>
 
   <!-- ── TAB: CHECKLIST ── -->
