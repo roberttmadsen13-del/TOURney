@@ -226,7 +226,7 @@ async function doSignUp() {
   const { data: player, error: lookupErr } = await sb.from('players').select('id').eq('email', email).single();
 
   if (!player) {
-    err.textContent = "This email isn't registered as a player. Only signed-up players can create accounts.";
+    err.innerHTML = "This email isn't registered as a player. <a href='/marketing.html' style='color:var(--gold);'>Request an invitation →</a>";
     err.classList.add('show');
     btn.disabled = false;
     btn.textContent = 'CREATE ACCOUNT';

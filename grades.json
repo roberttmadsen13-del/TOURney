@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-05-13T00:00:00Z",
+  "updated_at": "2026-05-13T12:00:00Z",
   "description": "Per-axis grade history for TOURney platform. Updated automatically by review skills. Operations Action Board reads this file.",
   "axes": {
     "architecture": {
@@ -48,10 +48,10 @@
       "scores": [
         {
           "date": "2026-05-13",
-          "score": "B-",
+          "score": "B+",
           "url": "/platform/ux",
-          "review_title": "Audit · May 13, 2026",
-          "notes": "Grade unchanged at B-. Runbook written May 12 but only pre-fix (user-scalable, c9cc497) shipped. login.html:240/:288 still raw error.message. Zero skeleton injection on scoreboard/home init. No prefers-reduced-motion guard. No aria-live on dynamic regions. feed empty state present (text-only). 7 of 8 runbook steps remain open."
+          "review_title": "Concluded · May 13, 2026",
+          "notes": "All 7/8 runbook steps executed in 10a676f. Login errors sanitized (3 paths), skeleton shimmer on scoreboard+home, prefers-reduced-motion guard, install surface on player.html, aria-live on toast+leaderboard, overflow-x on main tables. Lighthouse CI deferred. Remaining gap: scorecard.html no skeleton (P3)."
         },
         {
           "date": "2026-05-12",

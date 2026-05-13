@@ -75,7 +75,7 @@ footer a:hover{color:var(--gold);}
   <div class="hero">
     <div class="hero-eye">Internal · Engineering</div>
     <h1>QA Bug Log</h1>
-    <div class="hero-meta">TOURney Platform · Updated 2026-05-12 · Last fix: scoreboard rounds table migration</div>
+    <div class="hero-meta">TOURney Platform · Updated 2026-05-13 · Last fix: UX sprint — login errors, skeletons, a11y, reduced-motion</div>
   </div>
 
   <!-- LIVE LOGGED BUGS (from FAB across all properties) -->
@@ -119,9 +119,9 @@ footer a:hover{color:var(--gold);}
       <div class="bug-title"><strong>RLS hardening</strong> — SECURITY_PLAN.md identifies permissive policies on <code>players</code>, <code>scores</code>, <code>push_subscriptions</code>. Needs SQL migrations before Stripe goes live.</div>
       <div class="bug-meta">Required before launch · See SECURITY_PLAN.md</div>
     </div>
-    <div class="bug-item pending">
-      <div class="bug-title"><strong>Supabase edge functions deploy</strong> — send-push (auth+CORS) and send-install-email (webhook secret) security fixes are in code but NOT deployed to production.</div>
-      <div class="bug-meta">Rob must run: npx supabase functions deploy send-push --project-ref jllugkiojeoopitdvzsa && npx supabase functions deploy send-install-email --project-ref jllugkiojeoopitdvzsa · Also set SEND_INSTALL_EMAIL_SECRET in Supabase dashboard + wire it to DB webhook Authorization header</div>
+    <div class="bug-item done">
+      <div class="bug-title"><strong>Supabase edge functions deploy</strong> — ✅ send-push v7 + send-install-email v4 deployed via Supabase MCP (session 14). ⚠️ MANUAL STILL NEEDED (Rob): set <code>SEND_INSTALL_EMAIL_SECRET</code> env var in Supabase dashboard → Edge Functions → Secrets + update DB webhook Authorization header.</div>
+      <div class="bug-meta">Deployed 2026-05-12 · session 14</div>
     </div>
     <div class="bug-item pending">
       <div class="bug-title"><strong>Tournament series concept</strong> — one brand → many events/years. Schema + UX TBD.</div>
@@ -132,6 +132,20 @@ footer a:hover{color:var(--gold);}
   <!-- SESSION HISTORY -->
   <div class="section">
     <div class="sec-title">✅ Fix History by Session</div>
+
+    <div class="session-hdr" onclick="toggleSession('s15')">
+      <span class="session-title">Session 15 · 2026-05-13 — UX Polish sprint <span class="pill pill-blue">UX</span> <span class="pill pill-green">A11y</span></span>
+      <span class="session-count">7 fixes ▾</span>
+    </div>
+    <div class="session-body" id="s15">
+      <div class="bug-item fixed"><div class="bug-title"><strong>login.html raw Supabase errors (×3)</strong> — <code>doSignIn</code> :181 now returns <code>'Invalid email or password.'</code> literal (no raw message passthrough). <code>doSignUp</code> :240 maps "already" → friendly string. <code>doForgot</code> :288 returns <code>'Password reset failed. Check your email address and try again.'</code></div><div class="bug-meta">login.html:181/240/288 · commit 10a676f</div></div>
+      <div class="bug-item fixed"><div class="bug-title"><strong>No loading skeletons — scoreboard</strong> — <code>tokens.css</code> linked in head; 6 shimmer rows in <code>#leaderboardBody</code> and <code>#indLeaderboardBody</code> with <code>aria-live="polite" aria-atomic="true"</code>. Data replace clears skeleton on resolve.</div><div class="bug-meta">scoreboard.html:206/276/302 · commit 10a676f</div></div>
+      <div class="bug-item fixed"><div class="bug-title"><strong>No loading skeleton — home hero leaderboard</strong> — <code>tokens.css</code> linked; <code>#heroLeaderboard</code> gets 5 shimmer divs as initial HTML + JS injection at start of <code>loadHeroScoreboard()</code>. <code>aria-live="polite"</code> added to container.</div><div class="bug-meta">home.html:401/450/1072 · commit 10a676f</div></div>
+      <div class="bug-item fixed"><div class="bug-title"><strong>No prefers-reduced-motion guard — home.html</strong> — <code>@media (prefers-reduced-motion: reduce)</code> block added after <code>.day-block</code> rules. Disables all hero + section entrance animations. WCAG 2.3.3 compliant.</div><div class="bug-meta">home.html:381 · commit 10a676f</div></div>
+      <div class="bug-item fixed"><div class="bug-title"><strong>Install app orphaned from player journey</strong> — <code>#installBanner</code> added to <code>player.html</code> above logout-row. Shown only when <code>!window.matchMedia('(display-mode: standalone)').matches</code>. Links to <code>/install</code>.</div><div class="bug-meta">player.html:237 · commit 10a676f</div></div>
+      <div class="bug-item fixed"><div class="bug-title"><strong>No aria-live on toast or leaderboard</strong> — <code>aria-live="polite" aria-atomic="true"</code> added to <code>#toast</code> (home.html), <code>#heroLeaderboard</code> (home.html), <code>#leaderboardBody</code> + <code>#indLeaderboardBody</code> (scoreboard.html). Screen readers now announce score updates and toasts.</div><div class="bug-meta">home.html:450/666 · scoreboard.html:276/302 · commit 10a676f</div></div>
+      <div class="bug-item fixed"><div class="bug-title"><strong>Leaderboard tables clip on 375px mobile</strong> — <code>div style="overflow-x:auto"</code> wrapper added around both main leaderboard tables (team + individual views) in <code>scoreboard.html</code>.</div><div class="bug-meta">scoreboard.html:264/289 · commit 10a676f</div></div>
+    </div>
 
     <div class="session-hdr" onclick="toggleSession('s14')">
       <span class="session-title">Session 14 · 2026-05-12 — Rounds table migration <span class="pill pill-gold">Schema</span></span>

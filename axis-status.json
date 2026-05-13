@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-05-13T00:00:00Z",
+  "updated_at": "2026-05-13T12:00:00Z",
   "description": "Living state for all TOURney platform axes. One entry per axis. Updated by every tourney-* skill. Agents read this for context (50 tokens) instead of parsing HTML artifacts.",
   "stages": ["review", "plan", "runbook", "executing", "audit", "concluded"],
   "axes": {
@@ -22,12 +22,12 @@
       "blocking": false
     },
     "ux": {
-      "status": "audit",
-      "grade": "B-",
+      "status": "concluded",
+      "grade": "B+",
       "artifact": "/platform/ux",
       "last_updated": "2026-05-13",
-      "summary": "Audit: 1/8 runbook steps done (user-scalable pre-fix c9cc497). Step 1 login sanitize partial (:240/:288 still raw). Steps 2,3,4,6,8 not executed. P1 blockers: login errors + skeletons still open.",
-      "open_items": 7,
+      "summary": "Concluded B+. All 7/8 runbook steps shipped (10a676f). Login sanitized, skeletons live, prefers-reduced-motion guard, install surface, aria-live, overflow-x. Lighthouse deferred to perf axis.",
+      "open_items": 1,
       "blocking": false
     },
     "security": {

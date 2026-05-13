@@ -52,6 +52,32 @@ a{color:var(--gold);text-decoration:none;}a:hover{text-decoration:underline;}
 </div>
 
 <div id="stage-history">
+<section class="axis-stage stage-concluded" data-date="2026-05-13" data-agent="claude-haiku-4-5-20251001">
+  <div class="stage-header">
+    <span class="stage-pill pill-concluded">Concluded</span>
+    <span class="stage-date">May 13, 2026</span>
+    <span class="stage-agent">claude-haiku-4-5-20251001</span>
+    <span class="grade-badge">B+</span>
+  </div>
+  <div class="stage-body">
+    <p style="font-size:.8rem;color:var(--muted);margin-bottom:1rem;">All 7 executable runbook steps shipped in commit <code>10a676f</code>. Grade B− → B+. Step 8 (Lighthouse CI) deferred to performance axis — not a UX blocker.</p>
+    <table>
+      <thead><tr><th>Step</th><th>Item</th><th>Result</th><th>Commit / Evidence</th></tr></thead>
+      <tbody>
+        <tr><td>Pre</td><td>scorecard user-scalable=no</td><td><span class="pill pill-green">DONE</span></td><td>c9cc497</td></tr>
+        <tr><td>1</td><td>Login error sanitization ×3</td><td><span class="pill pill-green">DONE</span></td><td>10a676f · login.html:181/240/288</td></tr>
+        <tr><td>2</td><td>Skeletons — scoreboard + home</td><td><span class="pill pill-green">DONE</span></td><td>10a676f · tokens.css linked; 6 shimmer rows in both tbodies; heroLeaderboard JS injection</td></tr>
+        <tr><td>3</td><td>prefers-reduced-motion guard</td><td><span class="pill pill-green">DONE</span></td><td>10a676f · home.html:381 @media guard added</td></tr>
+        <tr><td>4</td><td>Install surface player.html</td><td><span class="pill pill-green">DONE</span></td><td>10a676f · player.html — installBanner conditional on non-standalone</td></tr>
+        <tr><td>5</td><td>feed empty + loading state</td><td><span class="pill pill-green">DONE</span></td><td>Pre-existing · feed.html:140/223/335</td></tr>
+        <tr><td>6</td><td>aria-live toast + leaderboard</td><td><span class="pill pill-green">DONE</span></td><td>10a676f · home.html toast:666, scoreboard tbodies:276/302, heroLeaderboard:450</td></tr>
+        <tr><td>7</td><td>375px table overflow</td><td><span class="pill pill-green">DONE</span></td><td>10a676f · scoreboard.html:264/289 overflow-x:auto wrappers</td></tr>
+        <tr><td>8</td><td>Lighthouse CI score</td><td><span class="pill pill-yellow">DEFERRED</span></td><td>P4 — move to performance axis backlog</td></tr>
+      </tbody>
+    </table>
+    <div class="finding low" style="margin-top:.75rem;">Remaining gap: scorecard.html has no shimmer skeleton (P3). Scoreboard scorecard detail view already has overflow-x:auto. No regressions found.</div>
+  </div>
+</section>
 <section class="axis-stage stage-audit" data-date="2026-05-13" data-agent="claude-haiku-4-5-20251001">
   <div class="stage-header">
     <span class="stage-pill pill-audit">Audit</span>

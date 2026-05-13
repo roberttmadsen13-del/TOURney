@@ -13,19 +13,19 @@ Last commits: 997b043 (sec: send-install-email webhook secret gate)
 
 - **[HIGH] login.html raw Supabase errors exposed** (login.html — doSignIn(), doSignUp())
   Fix: Map GoTrue error codes to friendly strings. Fallback: "Sign in failed — check your email and password." Never pass `error?.message` directly to user.
-  Status: open
+  Status: closed — commit 10a676f (login.html:181/240/288 all sanitized)
 
 - **[HIGH] No loading skeletons site-wide** (scoreboard.html, home.html, scorecard.html, player.html)
   Fix: Add CSS shimmer skeleton to leaderboard + home as P1. Known sprint item since leadership 5-8-26.
-  Status: open
+  Status: closed — commit 10a676f (scoreboard both tbodies + home heroLeaderboard shimmer)
 
 - **[MEDIUM] No prefers-reduced-motion guard on home.html** (home.html — scroll animations)
   Fix: Add `@media (prefers-reduced-motion: reduce) { .will-animate { transition: none; opacity: 1; transform: none; } }`.
-  Status: open
+  Status: closed — commit 10a676f (home.html:381 @media guard)
 
 - **[MEDIUM] No aria-live on toast or live leaderboard** (scoreboard.html, home.html)
   Fix: Add `aria-live="polite"` to toast container and leaderboard list container.
-  Status: open
+  Status: closed — commit 10a676f (home toast:666, scoreboard tbodies:276/302, heroLeaderboard:450)
 
 <!-- UX review audit clean pass — 2026-05-12 — 5 bugs logged from tourney-review-ux -->
 

@@ -1,22 +1,22 @@
 {
   "$schema": "https://tourney.greenskeeper.studio/qa-index-schema.json",
   "version": 1,
-  "updated_at": "2026-05-13T00:00:00Z",
+  "updated_at": "2026-05-13T12:00:00Z",
   "description": "Canonical registry of all TOURney plans, reviews, audits, and QA artifacts. The /platform Artifacts tab renders from this file. Skills (e.g. tourney-review) append new entries when they generate output.",
   "entries": [
     {
       "id": "ux",
       "axis": "ux",
       "category": "axis",
-      "stage": "audit",
+      "stage": "concluded",
       "title": "UX Polish",
-      "summary": "Audit: B- unchanged. 1/8 runbook steps shipped (user-scalable c9cc497). login:240/:288 still raw. No skeletons, no prefers-reduced-motion, no aria-live. 7 open P1-P4 items.",
+      "summary": "Concluded B+. All runbook steps shipped (10a676f). Login sanitized, skeletons live, prefers-reduced-motion, install surface, aria-live, overflow-x. Lighthouse deferred.",
       "date": "2026-05-12",
       "updated": "2026-05-13",
       "author": "claude-haiku-4-5-20251001",
       "url": "/platform/ux",
       "file": "ux.html",
-      "tags": ["ux", "audit", "accessibility", "mobile"],
+      "tags": ["ux", "concluded", "accessibility", "mobile"],
       "status": "active"
     },
     {
