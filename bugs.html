@@ -133,6 +133,15 @@ footer a:hover{color:var(--gold);}
   <div class="section">
     <div class="sec-title">✅ Fix History by Session</div>
 
+    <div class="session-hdr" onclick="toggleSession('s16')">
+      <span class="session-title">Session 16 · 2026-05-13 — RLS hardening migration 008 <span class="pill pill-red">Security</span></span>
+      <span class="session-count">2 fixes ▾</span>
+    </div>
+    <div class="session-body" id="s16">
+      <div class="bug-item fixed"><div class="bug-title"><strong>tournament_players anon write surface</strong> — legacy table (superseded by <code>players</code>) had <code>auth manage FOR ALL USING(true)</code> + anon INSERT/SELECT. Any auth user could write/delete all rows cross-tenant. Replaced with owner/admin-scoped read + write policies.</div><div class="bug-meta">migration 008 · 20260513000008_rls_hardening.sql · applied 2026-05-13</div></div>
+      <div class="bug-item fixed"><div class="bug-title"><strong>settings pairing_% anon write</strong> — any unauthenticated client could INSERT/UPDATE pairing keys for any tournament. Scorecard requires auth before writing pairings. Changed policy from <code>anon</code> → <code>authenticated</code>.</div><div class="bug-meta">migration 008 · 20260513000008_rls_hardening.sql · applied 2026-05-13</div></div>
+    </div>
+
     <div class="session-hdr" onclick="toggleSession('s15')">
       <span class="session-title">Session 15 · 2026-05-13 — UX Polish sprint <span class="pill pill-blue">UX</span> <span class="pill pill-green">A11y</span></span>
       <span class="session-count">7 fixes ▾</span>
