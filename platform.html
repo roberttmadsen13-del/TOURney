@@ -776,6 +776,7 @@ function loadTabData(t) {
   if (t === 'tenants')   { loadTournaments(); loadCompAccounts(); loadCodes(); }
   if (t === 'action')    { loadMissionControl(); loadArtifacts(); }
   if (t === 'artifacts') { loadArtifacts(); }
+  if (t === 'checklist') { renderQaRuns(); }
   if (t === 'reference') { renderReference(); }
 }
 function showDashboard(email) {
@@ -1515,8 +1516,7 @@ function clSave() {
   localStorage.setItem('qa_slug', clSlug);
 }
 function clUrl(path) { return clSlug?`https://tourney.greenskeeper.studio/t/${clSlug}${path}`:'#'; }
-const QA_RUNS_KEY='gks_qa_runs';
-function logQaRun(){
+async function logQaRun(){
   const all=CL_SECTIONS.flatMap(s=>s.steps);
   const passed=all.filter(s=>clChecked[s.id]).length;
   const total=all.length;
@@ -1525,21 +1525,21 @@ function logQaRun(){
     const sp=sec.steps.filter(x=>clChecked[x.id]).length;
     sections[sec.id]={passed:sp,total:sec.steps.length};
   });
-  let runs=[];try{runs=JSON.parse(localStorage.getItem(QA_RUNS_KEY)||'[]');}catch{}
-  runs.unshift({id:'run_'+Date.now(),date:new Date().toISOString(),slug:clSlug||'—',passed,total,sections});
-  if(runs.length>25)runs=runs.slice(0,25);
-  localStorage.setItem(QA_RUNS_KEY,JSON.stringify(runs));
+  const { error } = await sb.from('qa_runs').insert({
+    slug: clSlug||'—', passed, total, notes: JSON.stringify(sections)
+  });
+  if(error){console.error('logQaRun failed',error);}
   renderQaRuns();
 }
-function renderQaRuns(){
+async function renderQaRuns(){
   const el=document.getElementById('qaRunHistory');if(!el)return;
-  let runs=[];try{runs=JSON.parse(localStorage.getItem(QA_RUNS_KEY)||'[]');}catch{}
-  if(!runs.length){el.innerHTML='';return;}
+  const { data: runs } = await sb.from('qa_runs').select('*').order('created_at',{ascending:false}).limit(25);
+  if(!runs?.length){el.innerHTML='';return;}
   const pctColor=p=>p>=90?'#4aaa4a':p>=70?'var(--gold)':'#d94a4a';
-  el.innerHTML=`<div class="qa-runs-hdr"><span class="qa-runs-title">Run History (${runs.length})</span><button onclick="if(confirm('Clear all run history?')){localStorage.removeItem('${QA_RUNS_KEY}');renderQaRuns();}" style="background:none;border:none;color:var(--muted);font-size:.62rem;cursor:pointer;letter-spacing:.05em;">Clear all</button></div>`
+  el.innerHTML=`<div class="qa-runs-hdr"><span class="qa-runs-title">Run History (${runs.length})</span><button onclick="clearQaRuns()" style="background:none;border:none;color:var(--muted);font-size:.62rem;cursor:pointer;letter-spacing:.05em;">Clear all</button></div>`
     +runs.map(r=>{
       const pct=r.total?Math.round(r.passed/r.total*100):0;
-      const d=new Date(r.date);
+      const d=new Date(r.created_at);
       const ds=d.toLocaleDateString('en-US',{month:'short',day:'numeric'})+' '+d.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'});
       return `<div class="qa-run-item">
         <span class="qa-run-date">${esc(ds)}</span>
@@ -1551,10 +1551,13 @@ function renderQaRuns(){
       </div>`;
     }).join('');
 }
-function deleteQaRun(id){
-  let runs=[];try{runs=JSON.parse(localStorage.getItem(QA_RUNS_KEY)||'[]');}catch{}
-  runs=runs.filter(r=>r.id!==id);
-  localStorage.setItem(QA_RUNS_KEY,JSON.stringify(runs));
+async function deleteQaRun(id){
+  await sb.from('qa_runs').delete().eq('id',id);
+  renderQaRuns();
+}
+async function clearQaRuns(){
+  if(!confirm('Clear all run history?'))return;
+  await sb.from('qa_runs').delete().neq('id','00000000-0000-0000-0000-000000000000');
   renderQaRuns();
 }
 function toggleCheck(id) { clChecked[id]=!clChecked[id]; clSave(); renderChecklist(); }
