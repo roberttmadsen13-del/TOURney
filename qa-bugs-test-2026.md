@@ -7,6 +7,28 @@ Last commits: 997b043 (sec: send-install-email webhook secret gate)
 
 ## 🔴 Open Bugs — Must Fix
 
+- **[CRITICAL] scorecard.html user-scalable=no** (scorecard.html:4 — viewport meta)
+  Fix: Remove `user-scalable=no` from meta viewport. WCAG 1.4.4 fail. Inputs already use `font-size:1rem` so iOS auto-zoom won't trigger. One attribute removal.
+  Status: open
+
+- **[HIGH] login.html raw Supabase errors exposed** (login.html — doSignIn(), doSignUp())
+  Fix: Map GoTrue error codes to friendly strings. Fallback: "Sign in failed — check your email and password." Never pass `error?.message` directly to user.
+  Status: open
+
+- **[HIGH] No loading skeletons site-wide** (scoreboard.html, home.html, scorecard.html, player.html)
+  Fix: Add CSS shimmer skeleton to leaderboard + home as P1. Known sprint item since leadership 5-8-26.
+  Status: open
+
+- **[MEDIUM] No prefers-reduced-motion guard on home.html** (home.html — scroll animations)
+  Fix: Add `@media (prefers-reduced-motion: reduce) { .will-animate { transition: none; opacity: 1; transform: none; } }`.
+  Status: open
+
+- **[MEDIUM] No aria-live on toast or live leaderboard** (scoreboard.html, home.html)
+  Fix: Add `aria-live="polite"` to toast container and leaderboard list container.
+  Status: open
+
+<!-- UX review audit clean pass — 2026-05-12 — 5 bugs logged from tourney-review-ux -->
+
 - **Bova formats unconfirmed**: seeded Day1=stroke, Day2=scramble, Day3=best_ball based on about text ("scramble, shambles, best ball, stroke play"). Shambles not mapped to a day. **Verify with Chris Bova before tournament runs. BLOCKED — human verification required.**
 
 ---

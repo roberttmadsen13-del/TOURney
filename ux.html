@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>UX Polish · TOURney Platform</title>
+<style>
+:root{--gold:#c09030;--bg:#0a0a0a;--surface:#111;--card:#161616;--border:#222;--text:#e8e8e8;--muted:#666;--radius:8px;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;padding:2rem 1rem;max-width:900px;margin:0 auto;}
+h1{font-size:1.6rem;font-weight:700;color:var(--gold);margin-bottom:.25rem;}
+.meta{font-size:.8rem;color:var(--muted);margin-bottom:2rem;}
+.lifecycle{display:flex;gap:0;margin-bottom:2.5rem;border-radius:var(--radius);overflow:hidden;border:1px solid var(--border);}
+.lc-stage{flex:1;padding:.5rem .25rem;text-align:center;font-size:.7rem;font-weight:600;background:var(--card);color:var(--muted);position:relative;text-transform:uppercase;letter-spacing:.04em;}
+.lc-stage.active{background:var(--gold);color:#000;}
+.lc-stage.done{background:#1a2a1a;color:#4a8a4a;}
+.lc-stage.concluded{background:#1a1a2a;color:#4a4a8a;}
+.axis-stage{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:1.5rem;overflow:hidden;}
+.stage-header{display:flex;align-items:center;gap:.75rem;padding:.75rem 1rem;border-bottom:1px solid var(--border);background:rgba(255,255,255,.02);}
+.stage-pill{font-size:.65rem;font-weight:700;padding:.2rem .5rem;border-radius:4px;text-transform:uppercase;letter-spacing:.05em;}
+.pill-review{background:#1a2533;color:#4a90d9;}
+.pill-plan{background:#2a2a1a;color:#d9b84a;}
+.pill-runbook{background:#1a2a1a;color:#4a9a6a;}
+.pill-executing{background:#2a1a1a;color:#d94a4a;}
+.pill-audit{background:#2a1a2a;color:#9a4ad9;}
+.pill-concluded{background:#1a1a2a;color:#4a4a9a;}
+.stage-date{font-size:.75rem;color:var(--muted);margin-left:auto;}
+.stage-agent{font-size:.7rem;color:var(--muted);}
+.grade-badge{font-size:.9rem;font-weight:700;color:var(--gold);}
+.stage-body{padding:1rem;}
+.finding{padding:.5rem .75rem;border-left:3px solid var(--border);margin:.5rem 0;font-size:.85rem;}
+.finding.high{border-color:#d94a4a;}.finding.med{border-color:#d9b84a;}.finding.low{border-color:#4a9a6a;}
+.sprint-item{display:flex;gap:.75rem;padding:.5rem 0;font-size:.85rem;border-bottom:1px solid var(--border);}
+.sprint-item:last-child{border:none;}
+.si-num{color:var(--gold);font-weight:700;min-width:1.5rem;}
+a{color:var(--gold);text-decoration:none;}a:hover{text-decoration:underline;}
+.back{display:inline-block;margin-bottom:1.5rem;font-size:.8rem;color:var(--muted);}
+</style>
+</head>
+<body>
+<a class="back" href="/platform">← Platform</a>
+<h1>UX Polish</h1>
+<div class="meta">Last updated May 12, 2026 · TOURney Platform</div>
+
+<div class="lifecycle" id="lifecycle-bar">
+  <div class="lc-stage" id="lc-review">Review</div>
+  <div class="lc-stage" id="lc-plan">Plan</div>
+  <div class="lc-stage" id="lc-runbook">Runbook</div>
+  <div class="lc-stage" id="lc-executing">Executing</div>
+  <div class="lc-stage" id="lc-audit">Audit</div>
+  <div class="lc-stage" id="lc-concluded">Concluded</div>
+</div>
+
+<div id="stage-history">
+<section class="axis-stage stage-review" data-date="2026-05-12" data-agent="claude-sonnet-4-6">
+  <div class="stage-header">
+    <span class="stage-pill pill-review">Review</span>
+    <span class="stage-date">May 12, 2026</span>
+    <span class="stage-agent">claude-sonnet-4-6</span>
+    <span class="grade-badge">B−</span>
+  </div>
+  <div class="stage-body">
+    <p style="font-size:.85rem;color:#aaa;margin-bottom:.75rem;">Premium aesthetic and solid CSS token coverage (admin.html 224 uses, 25+ pages consistent). Critical gaps surface on deep audit.</p>
+    <div class="finding high">🚨 <strong>scorecard.html</strong> — <code>user-scalable=no</code> in viewport meta. WCAG 1.4.4 fail. Remove immediately — inputs already use <code>font-size:1rem</code> so iOS zoom won't trigger.</div>
+    <div class="finding high">⚠️ <strong>login.html</strong> — raw <code>error?.message</code> from Supabase exposed to users. Map to friendly strings.</div>
+    <div class="finding high">💀 No loading skeletons site-wide — blank flash on every data fetch. Known sprint item since 5-8-26 leadership review. Highest-visibility gap.</div>
+    <div class="finding med">♿ No <code>prefers-reduced-motion</code> guard on home.html scroll animations. WCAG 2.3.3.</div>
+    <div class="finding med">🔊 No <code>aria-live</code> on toast container or live leaderboard. Screen readers miss all dynamic updates.</div>
+    <div class="finding low">✅ player.html hamburger: <code>aria-label</code>, <code>aria-expanded</code>, <code>role="menu"</code> — best ARIA in codebase. Use as template.</div>
+    <div class="finding low">✅ login.html 3-mode UX (sign-in/sign-up/forgot), button feedback, inline errors, gold focus ring — solid.</div>
+    <div class="finding low">✅ scoreboard.html empty-state + toast pattern — correct. Replicate to feed, directory.</div>
+    <div class="finding low">📱 install.html logic solid (beforeinstallprompt, standalone detection, timed fallback) but orphaned from player journey.</div>
+    <p style="font-size:.75rem;color:var(--muted);margin-top:.75rem;">Full report: <a href="/platform/5-12-26-claude-review-ux">/platform/5-12-26-claude-review-ux</a></p>
+    <p style="font-size:.8rem;font-weight:600;color:#aaa;margin-top:1rem;margin-bottom:.5rem;">Sprint (9 items):</p>
+    <div class="sprint-item"><span class="si-num">1</span><span>Remove <code>user-scalable=no</code> from scorecard.html — 5 min, WCAG fix</span></div>
+    <div class="sprint-item"><span class="si-num">2</span><span>Add loading skeletons to scoreboard + home — 2h, eliminates blank flash</span></div>
+    <div class="sprint-item"><span class="si-num">3</span><span>Sanitize login error messages — 30 min, security + UX</span></div>
+    <div class="sprint-item"><span class="si-num">4</span><span>Add <code>prefers-reduced-motion</code> to home.html — 20 min</span></div>
+    <div class="sprint-item"><span class="si-num">5</span><span>Surface install.html from player journey (post-RSVP, profile page) — 1h</span></div>
+    <div class="sprint-item"><span class="si-num">6</span><span>Audit empty states in feed.html + directory.html — 1h</span></div>
+    <div class="sprint-item"><span class="si-num">7</span><span>Add <code>aria-live</code> to toast + leaderboard — 30 min</span></div>
+    <div class="sprint-item"><span class="si-num">8</span><span>QA scoreboard table on 375px mobile — 30 min + potential fix</span></div>
+    <div class="sprint-item"><span class="si-num">9</span><span>Lighthouse a11y audit — confirm contrast ratios — 2h</span></div>
+  </div>
+</section>
+</div>
+
+<script>
+(function(){
+  const first=document.querySelector('.axis-stage');
+  if(!first)return;
+  const t=first.className.match(/stage-(\w+)/);
+  if(!t)return;
+  const order=['review','plan','runbook','executing','audit','concluded'];
+  const cur=t[1];
+  const ci=order.indexOf(cur);
+  order.forEach((s,i)=>{
+    const el=document.getElementById('lc-'+s);
+    if(!el)return;
+    if(i<ci)el.classList.add('done');
+    else if(i===ci)el.classList.add('active');
+  });
+})();
+</script>
+</body>
+</html>

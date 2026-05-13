@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-05-12T22:30:00Z",
+  "updated_at": "2026-05-12T23:00:00Z",
   "description": "Living state for all TOURney platform axes. One entry per axis. Updated by every tourney-* skill. Agents read this for context (50 tokens) instead of parsing HTML artifacts.",
   "stages": ["review", "plan", "runbook", "executing", "audit", "concluded"],
   "axes": {
@@ -23,11 +23,11 @@
     },
     "ux": {
       "status": "review",
-      "grade": "B",
+      "grade": "B-",
       "artifact": "/platform/ux",
-      "last_updated": "2026-05-08",
-      "summary": "Consistent dark-gold system, mobile nav. No loading skeletons, empty states partial, a11y unaudited.",
-      "open_items": 3,
+      "last_updated": "2026-05-12",
+      "summary": "user-scalable=no WCAG fail on scorecard; no loading skeletons site-wide; raw Supabase errors in login. Token usage solid, player.html ARIA exemplary.",
+      "open_items": 9,
       "blocking": false
     },
     "security": {

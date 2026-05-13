@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TOURney — UX Polish Review · May 12, 2026</title>
+<style>
+  :root {
+    --gold: #c09030;
+    --gold-light: #d4a840;
+    --gold-dim: rgba(192,144,48,0.18);
+    --ink: #1a1008;
+    --bg: #0d0a05;
+    --surface: #151009;
+    --card: #1c140a;
+    --card2: #221a0e;
+    --border: rgba(192,144,48,0.22);
+    --muted: #7a6a54;
+    --text: #e8dcc8;
+    --red: #c0392b;
+    --green: #27ae60;
+    --blue: #2980b9;
+    --orange: #e67e22;
+    --purple: #8e44ad;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { font-family: -apple-system, 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; font-size: 15px; }
+  nav { position: sticky; top: 0; z-index: 100; background: rgba(13,10,5,0.96); border-bottom: 1px solid var(--border); backdrop-filter: blur(12px); padding: 0.6rem 1.5rem; display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
+  .nav-brand { color: var(--gold); font-weight: 700; font-size: 1rem; letter-spacing: 0.05em; white-space: nowrap; }
+  .nav-brand span { color: var(--muted); font-weight: 400; font-size: 0.8rem; margin-left: 0.4rem; }
+  .nav-links { display: flex; gap: 0.2rem; flex-wrap: wrap; margin-left: auto; }
+  .nav-links a { color: var(--muted); text-decoration: none; font-size: 0.78rem; padding: 0.3rem 0.55rem; border-radius: 4px; transition: all 0.15s; white-space: nowrap; }
+  .nav-links a:hover { color: var(--gold); background: var(--gold-dim); }
+  .hero { padding: 3.5rem 1.5rem 2.5rem; text-align: center; border-bottom: 1px solid var(--border); background: linear-gradient(180deg, rgba(192,144,48,0.06) 0%, transparent 100%); }
+  .hero-eyebrow { display: inline-block; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold); border: 1px solid var(--border); border-radius: 20px; padding: 0.25rem 0.85rem; margin-bottom: 1.2rem; }
+  .hero h1 { font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 800; color: #fff; margin-bottom: 0.5rem; }
+  .hero h1 span { color: var(--gold); }
+  .hero-sub { color: var(--muted); max-width: 560px; margin: 0 auto 1.5rem; font-size: 0.95rem; }
+  .hero-meta { display: flex; gap: 1.5rem; justify-content: center; flex-wrap: wrap; font-size: 0.78rem; color: var(--muted); }
+  .hero-meta span { display: flex; align-items: center; gap: 0.35rem; }
+  .wrapper { max-width: 1000px; margin: 0 auto; padding: 0 1.5rem; }
+  section { padding: 3rem 0; border-bottom: 1px solid var(--border); }
+  section:last-child { border-bottom: none; }
+  .section-header { margin-bottom: 2rem; }
+  .section-eyebrow { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.4rem; }
+  .section-title { font-size: 1.5rem; font-weight: 800; color: #fff; margin-bottom: 0.4rem; }
+  .section-desc { color: var(--muted); font-size: 0.88rem; max-width: 600px; }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 1.25rem 1.4rem; margin-bottom: 0.75rem; }
+  .card-title { font-size: 0.88rem; font-weight: 700; color: var(--gold); margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem; }
+  .card p, .card li { font-size: 0.86rem; color: var(--text); margin-bottom: 0.3rem; }
+  .card ul, .card ol { padding-left: 1.2rem; }
+  .card li { margin-bottom: 0.4rem; }
+  .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 0.75rem; }
+  .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 0.75rem; }
+  .pill { display: inline-block; font-size: 0.68rem; font-weight: 700; letter-spacing: 0.06em; padding: 0.18rem 0.55rem; border-radius: 20px; text-transform: uppercase; }
+  .pill-gold { background: rgba(192,144,48,0.18); color: var(--gold); border: 1px solid rgba(192,144,48,0.3); }
+  .pill-green { background: rgba(39,174,96,0.15); color: var(--green); border: 1px solid rgba(39,174,96,0.3); }
+  .pill-red { background: rgba(192,57,43,0.15); color: var(--red); border: 1px solid rgba(192,57,43,0.3); }
+  .pill-orange { background: rgba(230,126,34,0.15); color: var(--orange); border: 1px solid rgba(230,126,34,0.3); }
+  .pill-blue { background: rgba(41,128,185,0.15); color: var(--blue); border: 1px solid rgba(41,128,185,0.3); }
+  .score-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 0.6rem; margin-bottom: 1.5rem; }
+  .score-cell { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 1rem; text-align: center; }
+  .score-num { font-size: 2rem; font-weight: 900; line-height: 1; margin-bottom: 0.2rem; }
+  .score-label { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); }
+  .score-green { color: var(--green); }
+  .score-gold { color: var(--gold); }
+  .score-red { color: var(--red); }
+  .score-blue { color: var(--blue); }
+  .score-orange { color: var(--orange); }
+  .sec-item { background: var(--card); border: 1px solid var(--border); border-left: 3px solid var(--border); border-radius: 0 8px 8px 0; padding: 1rem 1.25rem; margin-bottom: 0.75rem; }
+  .sec-item.sev-critical { border-left-color: #8b0000; }
+  .sec-item.sev-high { border-left-color: var(--red); }
+  .sec-item.sev-med { border-left-color: var(--orange); }
+  .sec-item.sev-low { border-left-color: var(--green); }
+  .sec-item.sev-info { border-left-color: var(--blue); }
+  .sec-header { display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.5rem; }
+  .sec-title { font-size: 0.9rem; font-weight: 700; color: #fff; }
+  .sec-body { font-size: 0.82rem; color: var(--muted); margin-bottom: 0.5rem; }
+  .sec-fix { font-size: 0.8rem; color: var(--text); background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 4px; padding: 0.5rem 0.7rem; }
+  .sec-fix strong { color: var(--gold-light); display: block; margin-bottom: 0.2rem; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; }
+  code { font-family: 'Consolas', 'Monaco', monospace; background: rgba(255,255,255,0.07); padding: 0.1rem 0.3rem; border-radius: 3px; font-size: 0.82em; color: var(--gold-light); }
+  .roadmap-item { display: flex; gap: 1.2rem; align-items: flex-start; background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 1.1rem 1.25rem; margin-bottom: 0.6rem; }
+  .roadmap-icon { width: 2.2rem; height: 2.2rem; border-radius: 50%; background: var(--gold-dim); color: var(--gold); display: grid; place-items: center; font-size: 1rem; flex-shrink: 0; border: 1px solid var(--border); }
+  .roadmap-content { flex: 1; }
+  .roadmap-title { font-size: 0.92rem; font-weight: 700; color: #fff; margin-bottom: 0.2rem; }
+  .roadmap-desc { font-size: 0.82rem; color: var(--muted); margin-bottom: 0.4rem; }
+  .roadmap-action { font-size: 0.78rem; color: var(--text); }
+  .roadmap-action strong { color: var(--gold-light); }
+  .matrix-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+  .matrix-table th { text-align: left; padding: 0.55rem 0.75rem; border-bottom: 1px solid var(--border); color: var(--muted); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; background: var(--surface); white-space: nowrap; }
+  .matrix-table td { padding: 0.55rem 0.75rem; border-bottom: 1px solid rgba(192,144,48,0.07); vertical-align: middle; }
+  .matrix-table tr:last-child td { border-bottom: none; }
+  .check-yes { color: var(--green); font-weight: 700; }
+  .check-partial { color: var(--orange); font-weight: 700; }
+  .check-no { color: var(--red); font-weight: 700; }
+  .table-wrap { background: var(--card); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; overflow-x: auto; }
+  footer { border-top: 1px solid var(--border); padding: 1.5rem; text-align: center; color: var(--muted); font-size: 0.75rem; }
+  footer span { color: var(--gold); }
+  .next-step-bar { background: rgba(192,144,48,0.07); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+  .next-step-inner { max-width: 1000px; margin: 0 auto; padding: 1rem 1.5rem; display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
+  .next-step-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); white-space: nowrap; }
+  .next-step-strong { color: var(--gold); font-size: 0.95rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; white-space: nowrap; }
+  @media (max-width: 600px) { .nav-links { display: none; } section { padding: 2rem 0; } }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-brand">TOURney <span>by Greenskeeper Studios</span></div>
+  <div class="nav-links">
+    <a href="/platform">⬡ Operations</a>
+    <a href="#focus">UX Polish</a>
+    <a href="#states">State Coverage</a>
+    <a href="#sprint">Sprint Plan</a>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="hero-eyebrow">Focused Review — UX Polish</div>
+  <h1><span>TOURney</span> — UX Polish Review</h1>
+  <p class="hero-sub">Design system, mobile, empty/loading/error states, accessibility, and motion audit. Evidence-cited. Sprint-ordered.</p>
+  <div class="hero-meta">
+    <span>📅 May 12, 2026</span>
+    <span>🤖 claude-sonnet-4-6</span>
+    <span>🏢 Greenskeeper Studios</span>
+    <span>🔒 Internal Only</span>
+  </div>
+</div>
+
+<section id="focus">
+<div class="wrapper">
+
+  <!-- Score Grid -->
+  <div class="section-header">
+    <div class="section-eyebrow">Overview</div>
+    <div class="section-title">UX Grade: B−</div>
+    <div class="section-desc">Premium aesthetic and solid design system tokenization. Critical gaps: no loading skeletons, user-scalable=no on scorecard, no reduced-motion support, accessibility markers sparse.</div>
+  </div>
+  <div class="score-grid">
+    <div class="score-cell">
+      <div class="score-num score-gold">B−</div>
+      <div class="score-label">Overall Grade</div>
+    </div>
+    <div class="score-cell">
+      <div class="score-num score-green">B+</div>
+      <div class="score-label">Design System</div>
+    </div>
+    <div class="score-cell">
+      <div class="score-num score-red">D</div>
+      <div class="score-label">Loading States</div>
+    </div>
+    <div class="score-cell">
+      <div class="score-num score-orange">C</div>
+      <div class="score-label">Empty States</div>
+    </div>
+    <div class="score-cell">
+      <div class="score-num score-gold">B</div>
+      <div class="score-label">Mobile</div>
+    </div>
+    <div class="score-cell">
+      <div class="score-num score-orange">C+</div>
+      <div class="score-label">Accessibility</div>
+    </div>
+  </div>
+
+  <!-- Design System -->
+  <div class="section-header" style="margin-top:2.5rem;">
+    <div class="section-eyebrow">Design System</div>
+    <div class="section-title">Token Usage &amp; Consistency</div>
+  </div>
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title">✅ CSS Token Usage — Strong</div>
+      <p>All key pages use <code>var(--gold)</code>, <code>var(--bg)</code>, <code>var(--card)</code>, <code>var(--border)</code>, <code>var(--muted)</code> consistently. Top users: admin.html (224 uses), platform.html (197), scoreboard.html (75), marketing.html (73), scorecard.html (66).</p>
+      <p style="margin-top:0.5rem;font-size:0.8rem;color:var(--muted);">Hardcoded <code>rgba(192,144,48,...)</code> creeps into inline styles on marketing.html and home.html — minor, but should be consolidated to tokens.</p>
+    </div>
+    <div class="card">
+      <div class="card-title">⚠️ Two Visual Themes — Intentional But Undocumented</div>
+      <p><strong>home.html</strong> (Bova tenant): Playfair Display serif, cream palette, full-bleed hero photography, dramatic scroll animations — theatrical and premium.</p>
+      <p style="margin-top:0.5rem;"><strong>Platform pages</strong>: Barlow Condensed, dark system, compact cards — operational and dense.</p>
+      <p style="margin-top:0.5rem;font-size:0.8rem;color:var(--muted);">Bifurcation is correct (tenant vs platform), but no design doc exists. New contributors will be confused.</p>
+    </div>
+    <div class="card">
+      <div class="card-title">✅ Component Patterns Consistent</div>
+      <p>Button hierarchy (gold primary / ghost outline), pill badges, card containers, toast notifications, and form group (<code>.fg label + input</code>) are consistent across scorecard, login, player, create, admin.</p>
+    </div>
+    <div class="card">
+      <div class="card-title">❌ No <code>prefers-reduced-motion</code> Support</div>
+      <p>home.html has rich scroll animations (<code>.will-animate</code> with fadeUp + translateY transitions, parallax hero, staggered day blocks). No <code>@media (prefers-reduced-motion: reduce)</code> guard. Vestibular disorder users get no opt-out.</p>
+      <div class="sec-fix" style="margin-top:0.6rem;"><strong>Fix</strong>Add <code>@media (prefers-reduced-motion: reduce) { .will-animate { transition: none; opacity: 1; transform: none; } }</code> to home.html.</div>
+    </div>
+  </div>
+
+  <!-- Per-Page UX -->
+  <div class="section-header" style="margin-top:2.5rem;">
+    <div class="section-eyebrow">Per-Page Audit</div>
+    <div class="section-title">Key Pages</div>
+  </div>
+
+  <div class="sec-item sev-critical">
+    <div class="sec-header">
+      <span class="pill pill-red">Critical</span>
+      <span class="sec-title">scorecard.html — <code>user-scalable=no</code></span>
+    </div>
+    <div class="sec-body"><code>scorecard.html</code> meta viewport: <code>user-scalable=no</code>. Prevents pinch-zoom on mobile. Accessibility violation — users with low vision cannot zoom to read scores or par values. WCAG 1.4.4 failure.</div>
+    <div class="sec-fix"><strong>Fix (scorecard.html:4)</strong>Remove <code>user-scalable=no</code> from the viewport meta. Inputs already use <code>font-size:1rem</code> so iOS auto-zoom won't trigger on focus.</div>
+  </div>
+
+  <div class="sec-item sev-high">
+    <div class="sec-header">
+      <span class="pill pill-orange">High</span>
+      <span class="sec-title">login.html — Raw Supabase Errors Exposed</span>
+    </div>
+    <div class="sec-body"><code>err.textContent = error?.message</code> passes raw Supabase/GoTrue error strings directly to the user. Can surface internal service names, email enumeration hints ("Email not confirmed"), or confusing technical messages.</div>
+    <div class="sec-fix"><strong>Fix (login.html:doSignIn)</strong>Map known error codes to friendly messages. Fallback: "Sign in failed — check your email and password." Never show raw <code>error.message</code> from auth providers.</div>
+  </div>
+
+  <div class="sec-item sev-med">
+    <div class="sec-header">
+      <span class="pill pill-gold">Good</span>
+      <span class="sec-title">login.html — Auth UX Solid</span>
+    </div>
+    <div class="sec-body">3-mode flow (sign-in / sign-up / forgot) on single card. Button feedback ("Signing in...") during async. Inline error display (<code>.login-err</code>) clears on mode switch. Labels above inputs — not placeholder-only. Focus state uses gold border.</div>
+  </div>
+
+  <div class="sec-item sev-med">
+    <div class="sec-header">
+      <span class="pill pill-green">Good</span>
+      <span class="sec-title">player.html — Best-in-class ARIA</span>
+    </div>
+    <div class="sec-body">Hamburger menu: <code>aria-label="Menu"</code>, <code>aria-expanded="false"</code>, SVG <code>aria-hidden="true"</code>. Drawer: <code>role="menu"</code>. Best accessibility implementation in the codebase — use as pattern for other pages.</div>
+  </div>
+
+  <div class="sec-item sev-med">
+    <div class="sec-header">
+      <span class="pill pill-gold">Good</span>
+      <span class="sec-title">scoreboard.html — Empty State + Toast</span>
+    </div>
+    <div class="sec-body">Pairs with no scores sorted to end of leaderboard. <code>empty-state</code> div shown when no pairs configured. Trash talk failure shows <code>showToast('Post failed — try again.')</code>. Good patterns — needs replication to other views.</div>
+  </div>
+
+  <div class="sec-item sev-med">
+    <div class="sec-header">
+      <span class="pill pill-orange">Medium</span>
+      <span class="sec-title">install.html — Orphaned From Player Journey</span>
+    </div>
+    <div class="sec-body">install.html has solid PWA logic: <code>beforeinstallprompt</code> capture, standalone detection, timed fallback to manual instructions, <code>appinstalled</code> confirmation. But no link surfaces this page from within the player RSVP or home flow. Players never find it.</div>
+    <div class="sec-fix"><strong>Fix</strong>Surface install CTA post-RSVP confirmation and on the player profile page. See onboarding review (5-11-26) for full flow context.</div>
+  </div>
+
+  <div class="sec-item sev-low">
+    <div class="sec-header">
+      <span class="pill pill-gold">Good</span>
+      <span class="sec-title">home.html — Motion &amp; Responsive Polished</span>
+    </div>
+    <div class="sec-body">Parallax hero, scroll-triggered entrance animations (IntersectionObserver), staggered day blocks, 3 responsive breakpoints (480px / 481–768px / 768px). Touch targets explicitly sized at 768px breakpoint. Premium execution — just needs reduced-motion guard.</div>
+  </div>
+
+</div>
+</section>
+
+<!-- State Coverage Matrix -->
+<section id="states">
+<div class="wrapper">
+  <div class="section-header">
+    <div class="section-eyebrow">State Coverage</div>
+    <div class="section-title">Empty / Loading / Error per Page</div>
+    <div class="section-desc">✅ Implemented · ⚠️ Partial / bare text · ❌ No handling</div>
+  </div>
+  <div class="table-wrap">
+    <table class="matrix-table">
+      <thead>
+        <tr>
+          <th>Page</th>
+          <th>Empty State</th>
+          <th>Loading State</th>
+          <th>Error State</th>
+          <th>Notes</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>scoreboard.html</strong></td>
+          <td><span class="check-yes">✅</span></td>
+          <td><span class="check-no">❌</span></td>
+          <td><span class="check-yes">✅ Toast</span></td>
+          <td>Empty-state div, no-scores sort — no skeleton on data fetch</td>
+        </tr>
+        <tr>
+          <td><strong>scorecard.html</strong></td>
+          <td><span class="check-partial">⚠️</span></td>
+          <td><span class="check-no">❌</span></td>
+          <td><span class="check-partial">⚠️</span></td>
+          <td>Blank flash on load; hole data missing = silent</td>
+        </tr>
+        <tr>
+          <td><strong>home.html</strong></td>
+          <td><span class="check-partial">⚠️</span></td>
+          <td><span class="check-no">❌</span></td>
+          <td><span class="check-partial">⚠️</span></td>
+          <td>No scores yet = empty leaderboard rows; no skeleton</td>
+        </tr>
+        <tr>
+          <td><strong>login.html</strong></td>
+          <td>N/A</td>
+          <td><span class="check-yes">✅ Button</span></td>
+          <td><span class="check-yes">✅ Inline</span></td>
+          <td>Button disables + "Signing in…"; inline error display</td>
+        </tr>
+        <tr>
+          <td><strong>player.html</strong></td>
+          <td><span class="check-partial">⚠️</span></td>
+          <td><span class="check-no">❌</span></td>
+          <td><span class="check-partial">⚠️</span></td>
+          <td>No-tournament state not verified; no skeleton</td>
+        </tr>
+        <tr>
+          <td><strong>install.html</strong></td>
+          <td>N/A</td>
+          <td><span class="check-yes">✅</span></td>
+          <td><span class="check-yes">✅ Fallback</span></td>
+          <td>Already-installed detection; timed manual fallback</td>
+        </tr>
+        <tr>
+          <td><strong>feed / directory</strong></td>
+          <td><span class="check-no">❌</span></td>
+          <td><span class="check-no">❌</span></td>
+          <td><span class="check-no">❌</span></td>
+          <td>Not audited — assumed from codebase pattern</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Mobile / Responsive -->
+  <div class="section-header" style="margin-top:2.5rem;">
+    <div class="section-eyebrow">Mobile &amp; Responsive</div>
+    <div class="section-title">Key Findings</div>
+  </div>
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title">✅ Touch Targets Sized Correctly</div>
+      <p>All form inputs: <code>font-size:1rem</code> (prevents iOS auto-zoom on focus), <code>padding: 0.75rem 0.85rem</code> — well above 44px minimum touch target. Explicitly enforced at 768px breakpoint in home.html.</p>
+    </div>
+    <div class="card">
+      <div class="card-title">❌ Scorecard Blocks Zoom (<code>user-scalable=no</code>)</div>
+      <p>Pinch-to-zoom disabled on the most data-dense mobile screen in the app. Users reading multi-hole scorecards on small phones cannot zoom in. Remove immediately.</p>
+    </div>
+    <div class="card">
+      <div class="card-title">✅ Breakpoints Present</div>
+      <p>home.html: three breakpoints (max-width:480px, 481–768px, max-width:768px). Inputs resized, hero reflows, CTA wraps. scorecard.html and scoreboard.html have at least one mobile breakpoint. marketing.html collapses phone mock at 560px.</p>
+    </div>
+    <div class="card">
+      <div class="card-title">⚠️ Table Scroll Not Verified</div>
+      <p>Scoreboard leaderboard table on narrow screens — overflow scrolling not confirmed. If table clips, scores are cut off on mobile. Needs manual QA on 375px viewport.</p>
+    </div>
+  </div>
+
+  <!-- Accessibility -->
+  <div class="section-header" style="margin-top:2.5rem;">
+    <div class="section-eyebrow">Accessibility</div>
+    <div class="section-title">A11y Findings</div>
+  </div>
+
+  <div class="sec-item sev-critical">
+    <div class="sec-header">
+      <span class="pill pill-red">WCAG Fail</span>
+      <span class="sec-title"><code>user-scalable=no</code> on scorecard.html — WCAG 1.4.4</span>
+    </div>
+    <div class="sec-body">Disabling zoom on a data-entry page fails WCAG 2.1 Success Criterion 1.4.4 (Resize Text). One-line fix.</div>
+  </div>
+
+  <div class="sec-item sev-high">
+    <div class="sec-header">
+      <span class="pill pill-orange">Missing</span>
+      <span class="sec-title">No <code>aria-live</code> on Dynamic Regions</span>
+    </div>
+    <div class="sec-body">Leaderboard updates, toast messages, and trash talk posts are injected via JS with no <code>aria-live</code> region. Screen readers miss these updates entirely.</div>
+    <div class="sec-fix"><strong>Fix</strong>Add <code>aria-live="polite"</code> to toast container and leaderboard list. Add <code>aria-live="assertive"</code> only for critical errors.</div>
+  </div>
+
+  <div class="sec-item sev-med">
+    <div class="sec-header">
+      <span class="pill pill-green">Good</span>
+      <span class="sec-title">ARIA on player.html Hamburger — Best in Codebase</span>
+    </div>
+    <div class="sec-body"><code>aria-label="Menu"</code>, <code>aria-expanded="false"</code> (toggled on open), SVG icon <code>aria-hidden="true"</code>, drawer <code>role="menu"</code>. Template for all other nav hamburgers.</div>
+  </div>
+
+  <div class="sec-item sev-med">
+    <div class="sec-header">
+      <span class="pill pill-green">Good</span>
+      <span class="sec-title">Form Labels Explicit</span>
+    </div>
+    <div class="sec-body">login.html, scorecard.html, create.html all use visible text labels above inputs (not placeholder-only). <code>.fg label</code> pattern consistent. Gold focus ring on inputs.</div>
+  </div>
+
+  <div class="sec-item sev-low">
+    <div class="sec-header">
+      <span class="pill pill-orange">Unknown</span>
+      <span class="sec-title">Color Contrast Not Verified</span>
+    </div>
+    <div class="sec-body"><code>--gold: #c09030</code> on dark <code>--bg: #0d0a05</code>. Estimated contrast ~4.5:1 — borderline AA for normal text. Muted text (<code>--muted: #7a6a54</code> on dark bg) likely fails AA. Needs Lighthouse or axe audit to confirm.</div>
+  </div>
+
+</div>
+</section>
+
+<!-- Sprint Plan -->
+<section id="sprint">
+<div class="wrapper">
+  <div class="section-header">
+    <div class="section-eyebrow">Sprint Plan</div>
+    <div class="section-title">9 Items — Ordered by User Impact</div>
+  </div>
+
+  <div class="roadmap-item">
+    <div class="roadmap-icon">🚨</div>
+    <div class="roadmap-content">
+      <div class="roadmap-title">Remove <code>user-scalable=no</code> from scorecard.html</div>
+      <div class="roadmap-desc">WCAG 1.4.4 violation. One attribute removal. Zero risk — inputs already prevent iOS auto-zoom via font-size:1rem.</div>
+      <div class="roadmap-action"><strong>File:</strong> scorecard.html line 4 · <strong>Effort:</strong> 5 min · <strong>Impact:</strong> Critical accessibility fix</div>
+    </div>
+  </div>
+
+  <div class="roadmap-item">
+    <div class="roadmap-icon">💀</div>
+    <div class="roadmap-content">
+      <div class="roadmap-title">Add Loading Skeletons to Scoreboard + Home</div>
+      <div class="roadmap-desc">Blank flash on every data load. Known sprint item from leadership 5-8-26 and AAA plan. Scoreboard and home.html leaderboard sections are highest-visibility. CSS-only shimmer skeleton — no JS dependency.</div>
+      <div class="roadmap-action"><strong>Files:</strong> scoreboard.html, home.html · <strong>Effort:</strong> 2h · <strong>Impact:</strong> Eliminates blank flash for all users</div>
+    </div>
+  </div>
+
+  <div class="roadmap-item">
+    <div class="roadmap-icon">🔒</div>
+    <div class="roadmap-content">
+      <div class="roadmap-title">Sanitize Login Error Messages</div>
+      <div class="roadmap-desc">Replace raw <code>error?.message</code> with a map of known GoTrue codes to friendly strings. Prevents email enumeration hints and internal service leakage.</div>
+      <div class="roadmap-action"><strong>File:</strong> login.html · doSignIn(), doSignUp() · <strong>Effort:</strong> 30 min · <strong>Impact:</strong> Security + UX</div>
+    </div>
+  </div>
+
+  <div class="roadmap-item">
+    <div class="roadmap-icon">♿</div>
+    <div class="roadmap-content">
+      <div class="roadmap-title">Add <code>prefers-reduced-motion</code> to home.html</div>
+      <div class="roadmap-desc">Rich scroll animations have no opt-out. Single media query disables transitions and skips fadeUp animations for users with vestibular disorders.</div>
+      <div class="roadmap-action"><strong>File:</strong> home.html · <strong>Effort:</strong> 20 min · <strong>Impact:</strong> WCAG 2.3.3 compliance</div>
+    </div>
+  </div>
+
+  <div class="roadmap-item">
+    <div class="roadmap-icon">📱</div>
+    <div class="roadmap-content">
+      <div class="roadmap-title">Surface Install Page From Player Journey</div>
+      <div class="roadmap-desc">install.html works well but is invisible. Add PWA install CTA to: post-RSVP confirmation screen, player profile page, and home.html nav. See onboarding review 5-11-26.</div>
+      <div class="roadmap-action"><strong>Files:</strong> home.html, player.html, profile.html · <strong>Effort:</strong> 1h · <strong>Impact:</strong> PWA adoption</div>
+    </div>
+  </div>
+
+  <div class="roadmap-item">
+    <div class="roadmap-icon">📭</div>
+    <div class="roadmap-content">
+      <div class="roadmap-title">Audit Empty States Across feed.html + directory.html</div>
+      <div class="roadmap-desc">Feed with no posts and directory with no players likely render blank containers. Add empty state components matching scoreboard.html pattern.</div>
+      <div class="roadmap-action"><strong>Files:</strong> feed.html, directory.html · <strong>Effort:</strong> 1h · <strong>Impact:</strong> First-run experience for new tournaments</div>
+    </div>
+  </div>
+
+  <div class="roadmap-item">
+    <div class="roadmap-icon">🔊</div>
+    <div class="roadmap-content">
+      <div class="roadmap-title">Add <code>aria-live</code> to Toast + Leaderboard</div>
+      <div class="roadmap-desc">Dynamic content (toast messages, live score updates, trash talk) injected via JS is invisible to screen readers. <code>aria-live="polite"</code> on toast container; <code>aria-live="polite"</code> on leaderboard list.</div>
+      <div class="roadmap-action"><strong>Files:</strong> scoreboard.html, home.html · <strong>Effort:</strong> 30 min · <strong>Impact:</strong> Screen reader support</div>
+    </div>
+  </div>
+
+  <div class="roadmap-item">
+    <div class="roadmap-icon">📏</div>
+    <div class="roadmap-content">
+      <div class="roadmap-title">QA Scoreboard Table on 375px Mobile</div>
+      <div class="roadmap-desc">Multi-day scoreboard table with pair names + 3 round columns likely overflows on small screens. Add <code>overflow-x: auto</code> wrapper if not present. Manual check required.</div>
+      <div class="roadmap-action"><strong>File:</strong> scoreboard.html · <strong>Effort:</strong> 30 min QA + potential fix · <strong>Impact:</strong> Mobile score readability</div>
+    </div>
+  </div>
+
+  <div class="roadmap-item">
+    <div class="roadmap-icon">🎨</div>
+    <div class="roadmap-content">
+      <div class="roadmap-title">Run Lighthouse Accessibility Audit + Fix Contrast</div>
+      <div class="roadmap-desc"><code>--muted: #7a6a54</code> on dark background likely fails AA contrast (estimated ~3:1). Run axe or Lighthouse on deployed URL. Fix failing contrast ratios — likely muted text needs lightening.</div>
+      <div class="roadmap-action"><strong>Files:</strong> All pages · <strong>Effort:</strong> 2h audit + fixes · <strong>Impact:</strong> WCAG AA compliance baseline</div>
+    </div>
+  </div>
+
+</div>
+</section>
+
+<div class="next-step-bar">
+  <div class="next-step-inner">
+    <span class="next-step-label">Next Skill</span>
+    <span class="next-step-strong">→ /tourney-plan-ux</span>
+    <span style="font-size:0.8rem;color:var(--muted);">Turn these findings into a sequenced implementation plan</span>
+  </div>
+</div>
+
+<footer>
+  Generated by <span>claude-sonnet-4-6</span> · Greenskeeper Studios Internal · May 12, 2026
+  <br style="margin-top:0.3rem">
+  <a href="/platform" style="color:var(--muted);font-size:0.72rem;text-decoration:none">← TOURney Operations</a>
+</footer>
+
+</body>
+</html>

@@ -47,6 +47,13 @@
       "cmd": "/tourney-review-ux",
       "scores": [
         {
+          "date": "2026-05-12",
+          "score": "B-",
+          "url": "/platform/5-12-26-claude-review-ux",
+          "review_title": "UX Polish Review · May 12, 2026",
+          "notes": "user-scalable=no on scorecard WCAG 1.4.4 fail; no loading skeletons site-wide (blank flash); raw Supabase error?.message in login.html; no prefers-reduced-motion on home.html animations. Strengths: CSS token usage consistent across 25+ pages, player.html ARIA exemplary, login.html multi-mode UX solid, scoreboard empty-state pattern correct."
+        },
+        {
           "date": "2026-05-08",
           "score": "B",
           "url": "/platform/5-8-26-claude-review",

@@ -1,9 +1,37 @@
 {
   "$schema": "https://tourney.greenskeeper.studio/qa-index-schema.json",
   "version": 1,
-  "updated_at": "2026-05-12T22:30:00Z",
+  "updated_at": "2026-05-12T23:00:00Z",
   "description": "Canonical registry of all TOURney plans, reviews, audits, and QA artifacts. The /platform Artifacts tab renders from this file. Skills (e.g. tourney-review) append new entries when they generate output.",
   "entries": [
+    {
+      "id": "ux",
+      "axis": "ux",
+      "category": "axis",
+      "stage": "review",
+      "title": "UX Polish",
+      "summary": "UX grade B-. Critical: user-scalable=no on scorecard (WCAG 1.4.4 fail), no loading skeletons site-wide, raw Supabase errors exposed in login. Token usage solid across 25+ pages. 9-item sprint ordered by user impact.",
+      "date": "2026-05-12",
+      "updated": "2026-05-12",
+      "author": "claude-sonnet-4-6",
+      "url": "/platform/ux",
+      "file": "ux.html",
+      "tags": ["ux", "review", "accessibility", "mobile"],
+      "status": "active"
+    },
+    {
+      "id": "review-ux-2026-05-12",
+      "category": "review",
+      "title": "UX Polish Review · May 12, 2026",
+      "summary": "Deep-dive UX audit: user-scalable=no WCAG 1.4.4 fail on scorecard; no loading skeletons (blank flash site-wide); raw Supabase error messages in login; no prefers-reduced-motion. Strengths: CSS token consistency, player.html ARIA exemplary, login 3-mode UX solid. 9-item sprint.",
+      "date": "2026-05-12",
+      "updated": "2026-05-12",
+      "author": "claude-sonnet-4-6",
+      "url": "/platform/5-12-26-claude-review-ux",
+      "file": "5-12-26-claude-review-ux.html",
+      "tags": ["review", "ux", "accessibility", "mobile"],
+      "status": "shipped"
+    },
     {
       "id": "finance",
       "axis": "finance",
