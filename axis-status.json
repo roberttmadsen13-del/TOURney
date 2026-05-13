@@ -26,8 +26,8 @@
       "grade": "B+",
       "artifact": "/platform/ux",
       "last_updated": "2026-05-13",
-      "summary": "Post-sprint review B+. 4 open items: heroLogoImg alt (MEDIUM), login submit spinner (MEDIUM), zero-player empty state (LOW), manifest 180px icon (LOW). All non-blocking.",
-      "open_items": 4,
+      "summary": "Post-sprint review B+. 1 real open item: manifest.json missing apple-touch-icon 180px (requires PNG asset from Rob). 3 flagged bugs were false positives — code already handles them.",
+      "open_items": 1,
       "blocking": false
     },
     "security": {

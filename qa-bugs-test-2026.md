@@ -33,19 +33,19 @@ Last commits: 997b043 (sec: send-install-email webhook secret gate)
 
 - [MEDIUM] heroLogoImg alt="" — empty alt on meaningful brand logo (home.html:429)
   Fix: set `alt` dynamically from `map.tourney_name + ' logo'` after settings load. 1 line.
-  Status: open
+  Status: closed — false positive. home.html:888 already sets `heroLogoImg.alt = tournament.name` when logo_url exists. When no logo, img is display:none so empty alt irrelevant.
 
 - [MEDIUM] login.html no submit spinner — button stays active during async signIn/signUp, double-tap risk (login.html — doSignIn/doSignUp)
   Fix: `btn.disabled=true; btn.textContent='Signing in…'` on click, restore in `.finally()`.
-  Status: open
+  Status: closed — false positive. login.html:175-176 (signIn), :222-223 (signUp), :277-278 (forgot) all already disable+relabel button. All 3 paths covered.
 
 - [LOW] home.html zero-player empty state missing — heroLeaderboard blank when no players registered (home.html — heroLeaderboard render)
   Fix: when `players.length === 0` show "Registration open — no players yet." card.
-  Status: open
+  Status: closed — false positive. home.html:1148 fires "Scores will appear once play begins." when ranked is empty, which covers 0-player case.
 
 - [LOW] manifest.json only 2 icon sizes — missing apple-touch-icon 180px, iOS generates low-res fallback (manifest.json)
   Fix: add icon-180.png + `<link rel="apple-touch-icon" sizes="180x180" href="/icon-180.png">` to all page heads.
-  Status: open
+  Status: open — requires icon-180.png asset export from logo source. Rob must create PNG.
 
 - **Bova formats unconfirmed**: seeded Day1=stroke, Day2=scramble, Day3=best_ball based on about text ("scramble, shambles, best ball, stroke play"). Shambles not mapped to a day. **Verify with Chris Bova before tournament runs. BLOCKED — human verification required.**
 
