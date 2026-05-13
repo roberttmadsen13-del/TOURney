@@ -120,13 +120,6 @@ td{padding:0.7rem 0.75rem;font-size:0.88rem;vertical-align:middle;}
 .mc-wrap{max-width:1100px;margin:0 auto;padding:1.75rem 1.75rem 4rem;}
 .mc-hdr{font-size:.72rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin:1.5rem 0 .75rem;}
 .mc-hdr:first-child{margin-top:0;}
-.launch-strip{display:grid;grid-template-columns:repeat(6,1fr);gap:.5rem;margin-bottom:2rem;}
-.ls-pill{background:var(--card);border:1px solid var(--border);border-radius:6px;padding:.6rem .75rem;display:flex;flex-direction:column;gap:.2rem;}
-.ls-label{font-size:.65rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;}
-.ls-val{font-size:.78rem;font-weight:700;color:var(--muted);}
-.ls-green{border-color:rgba(74,170,74,.35);}.ls-green .ls-val{color:#4aaa4a;}
-.ls-yellow{border-color:rgba(192,144,48,.4);}.ls-yellow .ls-val{color:var(--gold);}
-.ls-red{border-color:rgba(217,74,74,.4);}.ls-red .ls-val{color:#d94a4a;}
 .today-queue{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
 .tq-section{background:var(--card);border:1px solid var(--border);border-radius:8px;overflow:hidden;margin-bottom:1rem;}
 .tq-hdr{display:flex;align-items:center;justify-content:space-between;padding:.55rem .9rem;border-bottom:1px solid var(--border);background:rgba(255,255,255,.02);}
@@ -145,7 +138,7 @@ td{padding:0.7rem 0.75rem;font-size:0.88rem;vertical-align:middle;}
 .tq-tag-green{background:rgba(74,170,74,.15);color:#4aaa4a;}
 .tq-tag-gray{background:rgba(255,255,255,.06);color:var(--muted);}
 .tq-empty{padding:.7rem .9rem;font-size:.75rem;color:var(--muted);font-style:italic;}
-@media(max-width:640px){.launch-strip{grid-template-columns:repeat(3,1fr);}.today-queue{grid-template-columns:1fr;}.axis-row{grid-template-columns:120px 40px 40px;}.axis-summary,.axis-stages{display:none;}.tq-item-title{white-space:normal;}}
+@media(max-width:640px){.today-queue{grid-template-columns:1fr;}.axis-row{grid-template-columns:120px 40px 40px;}.axis-summary,.axis-stages{display:none;}.tq-item-title{white-space:normal;}}
 /* ── Axis Drawer ── */
 #axisDrawer{position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:1000;display:flex;justify-content:flex-end;backdrop-filter:blur(2px);}
 .drawer-panel{width:min(480px,100vw);background:var(--surface);border-left:1px solid var(--border);height:100%;overflow-y:auto;display:flex;flex-direction:column;}
@@ -422,9 +415,9 @@ td{padding:0.7rem 0.75rem;font-size:0.88rem;vertical-align:middle;}
 
   <div class="tabs">
     <button class="tab-btn active" id="tab-dash"      data-short="Dash"   onclick="switchTab('dash')">Dashboard</button>
-    <button class="tab-btn"        id="tab-tenants"   data-short="Ops"    onclick="switchTab('tenants')">Tenants</button>
-    <button class="tab-btn"        id="tab-action"    data-short="Action" onclick="switchTab('action')">Action Board</button>
-    <button class="tab-btn"        id="tab-artifacts" data-short="Files"  onclick="switchTab('artifacts')">Artifacts</button>
+    <button class="tab-btn"        id="tab-tenants"   data-short="Tenants" onclick="switchTab('tenants')">Tenants</button>
+    <button class="tab-btn"        id="tab-action"    data-short="Action"  onclick="switchTab('action')">Action Board</button>
+    <button class="tab-btn"        id="tab-artifacts" data-short="Docs"    onclick="switchTab('artifacts')">Artifacts</button>
     <button class="tab-btn"        id="tab-bugs"      data-short="Bugs"   onclick="switchTab('bugs')">Bugs</button>
     <button class="tab-btn"        id="tab-checklist" data-short="QA"     onclick="switchTab('checklist')">QA</button>
     <button class="tab-btn"        id="tab-reference" data-short="Ref"    onclick="switchTab('reference')">Reference</button>
@@ -440,15 +433,6 @@ td{padding:0.7rem 0.75rem;font-size:0.88rem;vertical-align:middle;}
       <div class="mc-hdr">Axis Scorecard <span style="font-size:.62rem;font-weight:400;color:var(--muted);">Click any axis for history</span></div>
       <div id="gradeAvgBar"></div>
       <div class="grade-grid" id="gradeGrid"><div class="grade-no-data" style="padding:1.5rem;font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.1em;text-transform:uppercase;">Loading grades…</div></div>
-      <div class="mc-hdr" style="margin-top:1.75rem;">Launch Readiness</div>
-      <div class="launch-strip">
-        <div class="ls-pill ls-gray" id="ls-revenue-pill"><span class="ls-label">Revenue</span><span class="ls-val" id="ls-revenue">—</span></div>
-        <div class="ls-pill ls-gray" id="ls-security-pill"><span class="ls-label">Security</span><span class="ls-val" id="ls-security">—</span></div>
-        <div class="ls-pill ls-gray" id="ls-qa-pill"><span class="ls-label">QA</span><span class="ls-val" id="ls-qa">—</span></div>
-        <div class="ls-pill ls-gray" id="ls-deployment-pill"><span class="ls-label">Deployment</span><span class="ls-val" id="ls-deployment">—</span></div>
-        <div class="ls-pill ls-gray" id="ls-legal-pill"><span class="ls-label">Legal</span><span class="ls-val" id="ls-legal">—</span></div>
-        <div class="ls-pill ls-gray" id="ls-product-pill"><span class="ls-label">Product</span><span class="ls-val" id="ls-product">—</span></div>
-      </div>
       <div style="margin-top:1.75rem;">
         <button id="actionBoardBadge" onclick="switchTab('action')" style="background:rgba(192,144,48,0.12);border:1px solid rgba(192,144,48,0.3);color:var(--gold);font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:0.82rem;letter-spacing:0.12em;text-transform:uppercase;padding:0.6rem 1.25rem;cursor:pointer;transition:all 0.15s;">0 Open Action Items →</button>
       </div>
@@ -681,10 +665,6 @@ td{padding:0.7rem 0.75rem;font-size:0.88rem;vertical-align:middle;}
         </div>
         <div>
           <div class="tq-section">
-            <div class="tq-hdr"><span class="tq-title">Waiting on Rob</span></div>
-            <div id="tqWaiting"><div class="tq-empty">Loading…</div></div>
-          </div>
-          <div class="tq-section">
             <div class="tq-hdr"><span class="tq-title">Recently Shipped</span></div>
             <div id="tqShipped"><div class="tq-empty">Loading…</div></div>
           </div>
@@ -708,7 +688,7 @@ td{padding:0.7rem 0.75rem;font-size:0.88rem;vertical-align:middle;}
 
       <div class="action-section" style="margin-top:2rem;">
         <div class="action-hd">
-          <span class="action-title">Waiting on Rob</span>
+          <span class="action-title">Checklist — Rob Only</span>
           <span class="action-sub">Only you can do these — AI cannot</span>
         </div>
         <div class="ceo-list" id="ceoList"></div>
@@ -1677,34 +1657,7 @@ async function loadMissionControl(){
   try{const r=await fetch('/axis-status.json',{cache:'no-store'});if(r.ok)mcAxisData=await r.json();}catch(e){}
   const el=document.getElementById('mcTodayDate');
   if(el)el.textContent=new Date().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'});
-  renderLaunchStrip();
   renderTodayQueue();
-}
-function _mcGradeCls(g){
-  if(!g)return'ls-gray';
-  if(g[0]==='A')return'ls-green';
-  if(g==='B+'||g==='B'||g==='B-')return'ls-yellow';
-  return'ls-red';
-}
-function renderLaunchStrip(){
-  const ax=mcAxisData?.axes||{};
-  const chk=_ceoChecked;
-  const pillars=[
-    {id:'revenue',  get:()=>ax.business?.blocking?['BLOCKED','ls-red']:[(ax.business?.grade||'—'),_mcGradeCls(ax.business?.grade)]},
-    {id:'security', get:()=>[(ax.security?.grade||'—'),_mcGradeCls(ax.security?.grade)]},
-    {id:'qa',       get:()=>{const d=mcAxisData?.updated_at?.substring(0,10);if(!d)return['Unknown','ls-gray'];const days=Math.floor((Date.now()-new Date(d))/86400000);return days<=3?['Fresh','ls-green']:days<=7?['Aging','ls-yellow']:['Stale','ls-red'];}},
-    {id:'deployment',get:()=>[(ax.deployment?.grade||'—'),_mcGradeCls(ax.deployment?.grade)]},
-    {id:'legal',    get:()=>(!chk.llc||!chk.tos)?['BLOCKED','ls-red']:['Clear','ls-green']},
-    {id:'product',  get:()=>[(ax['feature-depth']?.grade||'—'),_mcGradeCls(ax['feature-depth']?.grade)]},
-  ];
-  pillars.forEach(p=>{
-    const valEl=document.getElementById('ls-'+p.id);
-    const pill=document.getElementById('ls-'+p.id+'-pill');
-    if(!valEl)return;
-    const[val,cls]=p.get();
-    valEl.textContent=val;
-    if(pill)pill.className='ls-pill '+cls;
-  });
 }
 function renderTodayQueue(){
   const ax=mcAxisData?.axes||{};
@@ -1763,7 +1716,6 @@ function renderTodayQueue(){
   const set=(id,items,empty)=>{const el=document.getElementById(id);if(el)el.innerHTML=renderItems(items,empty);};
   set('tqDoNow',doNow,'Nothing blocking.');
   set('tqAgent',agentItems,'All axes concluded.');
-  set('tqWaiting',waitingItems,'All tasks done!');
   set('tqShipped',shippedItems,'No artifacts yet.');
   const actionBadge=document.getElementById('actionBoardBadge');
   if(actionBadge){const n=doNow.length+agentItems.length+waitingItems.length;actionBadge.textContent=n+' Open Action Item'+(n!==1?'s':'')+' →';}
