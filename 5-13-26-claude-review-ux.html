@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TOURney — UX Polish Review · May 13, 2026</title>
+<style>
+  :root {
+    --gold: #c09030;
+    --gold-light: #d4a840;
+    --gold-dim: rgba(192,144,48,0.18);
+    --ink: #1a1008;
+    --bg: #0d0a05;
+    --surface: #151009;
+    --card: #1c140a;
+    --card2: #221a0e;
+    --border: rgba(192,144,48,0.22);
+    --muted: #7a6a54;
+    --text: #e8dcc8;
+    --red: #c0392b;
+    --green: #27ae60;
+    --blue: #2980b9;
+    --orange: #e67e22;
+    --purple: #8e44ad;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { font-family: -apple-system, 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; font-size: 15px; }
+  nav { position: sticky; top: 0; z-index: 100; background: rgba(13,10,5,0.96); border-bottom: 1px solid var(--border); backdrop-filter: blur(12px); padding: 0.6rem 1.5rem; display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
+  .nav-brand { color: var(--gold); font-weight: 700; font-size: 1rem; letter-spacing: 0.05em; white-space: nowrap; }
+  .nav-brand span { color: var(--muted); font-weight: 400; font-size: 0.8rem; margin-left: 0.4rem; }
+  .nav-links { display: flex; gap: 0.2rem; flex-wrap: wrap; margin-left: auto; }
+  .nav-links a { color: var(--muted); text-decoration: none; font-size: 0.78rem; padding: 0.3rem 0.55rem; border-radius: 4px; transition: all 0.15s; white-space: nowrap; }
+  .nav-links a:hover { color: var(--gold); background: var(--gold-dim); }
+  .hero { padding: 3.5rem 1.5rem 2.5rem; text-align: center; border-bottom: 1px solid var(--border); background: linear-gradient(180deg, rgba(192,144,48,0.06) 0%, transparent 100%); }
+  .hero-eyebrow { display: inline-block; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold); border: 1px solid var(--border); border-radius: 20px; padding: 0.25rem 0.85rem; margin-bottom: 1.2rem; }
+  .hero h1 { font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 800; color: #fff; margin-bottom: 0.5rem; }
+  .hero h1 span { color: var(--gold); }
+  .hero-sub { color: var(--muted); max-width: 560px; margin: 0 auto 1.5rem; font-size: 0.95rem; }
+  .hero-meta { display: flex; gap: 1.5rem; justify-content: center; flex-wrap: wrap; font-size: 0.78rem; color: var(--muted); }
+  .hero-meta span { display: flex; align-items: center; gap: 0.35rem; }
+  .wrapper { max-width: 1000px; margin: 0 auto; padding: 0 1.5rem; }
+  section { padding: 3rem 0; border-bottom: 1px solid var(--border); }
+  section:last-child { border-bottom: none; }
+  .section-header { margin-bottom: 2rem; }
+  .section-eyebrow { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.4rem; }
+  .section-title { font-size: 1.5rem; font-weight: 800; color: #fff; margin-bottom: 0.4rem; }
+  .section-desc { color: var(--muted); font-size: 0.88rem; max-width: 600px; }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 1.25rem 1.4rem; margin-bottom: 0.75rem; }
+  .card-title { font-size: 0.88rem; font-weight: 700; color: var(--gold); margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
+  .card p, .card li { font-size: 0.86rem; color: var(--text); margin-bottom: 0.3rem; }
+  .card ul, .card ol { padding-left: 1.2rem; }
+  .card li { margin-bottom: 0.4rem; }
+  .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 0.75rem; }
+  .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 0.75rem; }
+  .pill { display: inline-block; font-size: 0.68rem; font-weight: 700; letter-spacing: 0.06em; padding: 0.18rem 0.55rem; border-radius: 20px; text-transform: uppercase; }
+  .pill-gold { background: rgba(192,144,48,0.18); color: var(--gold); border: 1px solid rgba(192,144,48,0.3); }
+  .pill-green { background: rgba(39,174,96,0.15); color: var(--green); border: 1px solid rgba(39,174,96,0.3); }
+  .pill-red { background: rgba(192,57,43,0.15); color: var(--red); border: 1px solid rgba(192,57,43,0.3); }
+  .pill-orange { background: rgba(230,126,34,0.15); color: var(--orange); border: 1px solid rgba(230,126,34,0.3); }
+  .pill-blue { background: rgba(41,128,185,0.15); color: var(--blue); border: 1px solid rgba(41,128,185,0.3); }
+  .pill-purple { background: rgba(142,68,173,0.15); color: var(--purple); border: 1px solid rgba(142,68,173,0.3); }
+  .table-wrap { background: var(--card); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; overflow-x: auto; }
+  .sec-item { background: var(--card); border: 1px solid var(--border); border-left: 3px solid var(--border); border-radius: 0 8px 8px 0; padding: 1rem 1.25rem; margin-bottom: 0.75rem; }
+  .sec-item.sev-med { border-left-color: var(--orange); }
+  .sec-item.sev-low { border-left-color: var(--green); }
+  .sec-item.sev-info { border-left-color: var(--blue); }
+  .sec-header { display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.5rem; flex-wrap: wrap; }
+  .sec-title { font-size: 0.9rem; font-weight: 700; color: #fff; }
+  .sec-body { font-size: 0.82rem; color: var(--muted); margin-bottom: 0.5rem; }
+  .sec-fix { font-size: 0.8rem; color: var(--text); background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 4px; padding: 0.5rem 0.7rem; }
+  .sec-fix strong { color: var(--gold-light); display: block; margin-bottom: 0.2rem; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; }
+  code { font-family: 'Consolas', 'Monaco', monospace; background: rgba(255,255,255,0.07); padding: 0.1rem 0.3rem; border-radius: 3px; font-size: 0.82em; color: var(--gold-light); }
+  .score-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 0.6rem; margin-bottom: 1.5rem; }
+  .score-cell { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 1rem; text-align: center; }
+  .score-num { font-size: 2rem; font-weight: 900; line-height: 1; margin-bottom: 0.2rem; }
+  .score-label { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); }
+  .score-green { color: var(--green); }
+  .score-gold { color: var(--gold); }
+  .score-red { color: var(--red); }
+  .score-blue { color: var(--blue); }
+  .score-orange { color: var(--orange); }
+  .roadmap-item { display: flex; gap: 1.2rem; align-items: flex-start; background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 1.1rem 1.25rem; margin-bottom: 0.6rem; }
+  .roadmap-icon { width: 2.2rem; height: 2.2rem; border-radius: 50%; background: var(--gold-dim); color: var(--gold); display: grid; place-items: center; font-size: 1rem; flex-shrink: 0; border: 1px solid var(--border); font-weight: 700; }
+  .roadmap-content { flex: 1; }
+  .roadmap-title { font-size: 0.92rem; font-weight: 700; color: #fff; margin-bottom: 0.2rem; display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
+  .roadmap-desc { font-size: 0.82rem; color: var(--muted); margin-bottom: 0.4rem; }
+  .roadmap-action { font-size: 0.78rem; color: var(--text); }
+  .roadmap-action strong { color: var(--gold-light); }
+  .bug-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+  .bug-table th { text-align: left; padding: 0.5rem 0.75rem; border-bottom: 1px solid var(--border); color: var(--muted); font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.08em; background: var(--surface); }
+  .bug-table td { padding: 0.55rem 0.75rem; border-bottom: 1px solid rgba(192,144,48,0.07); vertical-align: middle; }
+  .bug-table tr:last-child td { border-bottom: none; }
+  .input-cell { background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 4px; padding: 0.3rem 0.5rem; color: var(--text); font-size: 0.78rem; width: 100%; min-width: 120px; font-family: inherit; }
+  select.input-cell option { background: var(--card); }
+  .matrix-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+  .matrix-table th { text-align: left; padding: 0.55rem 0.75rem; border-bottom: 1px solid var(--border); color: var(--muted); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; background: var(--surface); white-space: nowrap; }
+  .matrix-table td { padding: 0.55rem 0.75rem; border-bottom: 1px solid rgba(192,144,48,0.07); vertical-align: middle; }
+  .matrix-table tr:last-child td { border-bottom: none; }
+  .check-yes { color: var(--green); font-weight: 700; }
+  .check-partial { color: var(--orange); font-weight: 700; }
+  .check-no { color: var(--red); font-weight: 700; }
+  footer { border-top: 1px solid var(--border); padding: 1.5rem; text-align: center; color: var(--muted); font-size: 0.75rem; }
+  footer span { color: var(--gold); }
+  .next-step-bar { background: rgba(192,144,48,0.07); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+  .next-step-inner { max-width: 1000px; margin: 0 auto; padding: 1rem 1.5rem; display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
+  .next-step-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); white-space: nowrap; }
+  .next-step-strong { color: var(--gold); font-size: 0.95rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; white-space: nowrap; }
+  .next-step-cmd { font-family: 'Consolas','Monaco',monospace; font-size: 0.78rem; color: var(--gold-light); background: rgba(255,255,255,0.04); border: 1px solid var(--border); border-radius: 4px; padding: 0.28rem 0.6rem; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .next-step-copy { background: var(--gold); color: #111; border: none; border-radius: 5px; padding: 0.38rem 1rem; font-size: 0.72rem; font-weight: 700; cursor: pointer; font-family: inherit; letter-spacing: 0.06em; text-transform: uppercase; white-space: nowrap; transition: opacity 0.15s; }
+  .next-step-copy:hover { opacity: 0.82; }
+  .url { font-family: monospace; font-size: 0.78rem; color: var(--gold-light); }
+  @media (max-width: 600px) {
+    .nav-links { display: none; }
+    .hero { padding: 2rem 1rem 1.5rem; }
+    section { padding: 2rem 0; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-brand">TOURney <span>by Greenskeeper Studios</span></div>
+  <div class="nav-links">
+    <a href="/platform">⬡ Operations</a>
+    <a href="/platform/ux">UX Axis</a>
+    <a href="#focus">Review</a>
+    <a href="#sprint">Sprint Plan</a>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="hero-eyebrow">Focused Review — UX Polish</div>
+  <h1><span>TOURney</span> — UX Polish Review</h1>
+  <p class="hero-sub">Post-sprint focused audit. Evidence-cited findings, letter grades, and 6-item sprint ordered by user impact.</p>
+  <div class="hero-meta">
+    <span>📅 May 13, 2026</span>
+    <span>🤖 Claude Sonnet 4.6</span>
+    <span>🏢 Greenskeeper Studios</span>
+    <span>🔒 Internal Only</span>
+  </div>
+</div>
+
+<section id="focus">
+<div class="wrapper">
+
+  <!-- 1. Grade + Metrics -->
+  <div class="section-header">
+    <div class="section-eyebrow">Overall Assessment</div>
+    <div class="section-title">UX Polish — Grade B+</div>
+    <div class="section-desc">Post-sprint audit following UX runbook completion (10a676f). 7/8 runbook items shipped. Four residual gaps logged.</div>
+  </div>
+
+  <div class="score-grid">
+    <div class="score-cell"><div class="score-num score-gold">B+</div><div class="score-label">Overall UX</div></div>
+    <div class="score-cell"><div class="score-num score-green">A</div><div class="score-label">Loading States</div></div>
+    <div class="score-cell"><div class="score-num score-gold">B+</div><div class="score-label">Empty States</div></div>
+    <div class="score-cell"><div class="score-num score-gold">B+</div><div class="score-label">Error Handling</div></div>
+    <div class="score-cell"><div class="score-num score-green">A−</div><div class="score-label">Mobile / Responsive</div></div>
+    <div class="score-cell"><div class="score-num score-blue">B−</div><div class="score-label">Accessibility</div></div>
+    <div class="score-cell"><div class="score-num score-blue">B</div><div class="score-label">PWA Quality</div></div>
+    <div class="score-cell"><div class="score-num score-gold">B+</div><div class="score-label">Typography</div></div>
+  </div>
+
+  <!-- 2. Design System -->
+  <div class="section-header" style="margin-top:2rem">
+    <div class="section-eyebrow">Design System</div>
+    <div class="section-title">Token Usage & Consistency</div>
+  </div>
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title">CSS Custom Properties</div>
+      <p>Consistent throughout. <code>--gold</code>, <code>--bg</code>, <code>--surface</code>, <code>--card</code>, <code>--border</code>, <code>--muted</code>, <code>--text</code> used across all key pages. No hardcoded hex leaking into primary interactive elements. Gold accent means the same thing everywhere: primary action or key data.</p>
+    </div>
+    <div class="card">
+      <div class="card-title">Typography System</div>
+      <p>Playfair Display (headings) + Barlow Condensed (eyebrows) + DM Mono (data) loaded from Google Fonts. Consistent H1/H2/H3 hierarchy. Body at 15–16px. Line-height 1.6. No readability regressions found across home, scorecard, scoreboard, login, feed.</p>
+    </div>
+    <div class="card">
+      <div class="card-title">Component Patterns</div>
+      <p>Cards, pills, buttons consistent across pages. Skeleton shimmer class reused on scoreboard.html:277-308, home.html:451-455, scorecard.html:269-272. Component reuse is strong — no divergence between tournament pages and platform pages.</p>
+    </div>
+    <div class="card">
+      <div class="card-title">Motion & Animation</div>
+      <p><code>prefers-reduced-motion</code> guard at home.html:381 — zeros transitions + transforms. <code>fadeUp</code> 0.9s hero animations respect the guard. HIO confetti overlay is the one exception — no reduced-motion path, LOW priority. WCAG 2.3.3 (AAA) satisfied for main animations.</p>
+    </div>
+  </div>
+
+  <!-- 3. Per-Page UX -->
+  <div class="section-header" style="margin-top:2.5rem">
+    <div class="section-eyebrow">Per-Page Audit</div>
+    <div class="section-title">Key Pages — UX Findings</div>
+  </div>
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title"><span class="pill pill-gold">home.html</span> Hero + Registration</div>
+      <p>Skeleton shimmer on heroLeaderboard (lines 451-455). <code>aria-live="polite"</code> on heroLeaderboard (line 450) and toast (line 680). Registration form dynamic from settings keys. <strong style="color:var(--orange)">Gap:</strong> <code>alt=""</code> on <code>#heroLogoImg</code> (line 429) — empty alt on meaningful branding image. Screen readers skip logo entirely.</p>
+    </div>
+    <div class="card">
+      <div class="card-title"><span class="pill pill-blue">scorecard.html</span> Score Entry</div>
+      <p>Inputs at <code>font-size:1rem</code> (line 38) prevents iOS auto-zoom without blocking pinch-zoom. Stepper buttons at 52px — meets 44px minimum touch target. Skeleton shimmer on load (lines 269-272). Nav mobile loaded (lines 239-240). <strong style="color:var(--orange)">Gap:</strong> no spinner/disable during async save operations.</p>
+    </div>
+    <div class="card">
+      <div class="card-title"><span class="pill pill-green">scoreboard.html</span> Leaderboard</div>
+      <p>Skeleton rows during load (lines 277-308). Empty states: "No scores recorded yet." (line 317), "No players registered yet." (lines 740-741). <code>aria-live</code> on both tbody wrappers. Mobile table scrolls via overflow-x (UX sprint). <strong style="color:var(--green)">Strength:</strong> best state coverage of all pages.</p>
+    </div>
+    <div class="card">
+      <div class="card-title"><span class="pill pill-orange">login.html</span> Auth Flow</div>
+      <p>User-friendly error messages (line 240) — maps GoTrue codes to friendly strings. All three auth modes (sign in, sign up, magic link) handle errors cleanly at lines 181, 240, 288. <strong style="color:var(--orange)">Gap:</strong> no visual feedback during async <code>signIn</code>/<code>signUp</code> — button stays active, double-tap risk.</p>
+    </div>
+    <div class="card">
+      <div class="card-title"><span class="pill pill-purple">feed.html</span> Trash Talk</div>
+      <p>Empty state pattern correct: custom CSS + "No shots fired." heading + "Be the first to talk trash" sub (lines 335-337). Toast error on post failure at line 452. <strong style="color:var(--green)">Strength:</strong> friendly copy with personality. Best empty state writing on the platform.</p>
+    </div>
+    <div class="card">
+      <div class="card-title"><span class="pill pill-gold">player.html</span> My Golf Portal</div>
+      <p>ARIA exemplary per prior audit. Billing gate logic clean. Admin bypass via <code>isAdmin</code> check. Phone rendered as <code>tel:</code> link. Handicap range + avg score after 5+ rounds. <strong style="color:var(--orange)">Gap:</strong> no skeleton during portal data load — raw blank flash on slow connections.</p>
+    </div>
+  </div>
+
+  <!-- 4. State Coverage Matrix -->
+  <div class="section-header" style="margin-top:2.5rem">
+    <div class="section-eyebrow">State Coverage</div>
+    <div class="section-title">Empty / Loading / Error Matrix</div>
+  </div>
+  <div class="table-wrap">
+    <table class="matrix-table">
+      <thead>
+        <tr>
+          <th>Page</th>
+          <th>Empty State</th>
+          <th>Loading State</th>
+          <th>Error State</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>home.html</td><td><span class="check-partial">⚠️ partial (no 0-player state)</span></td><td><span class="check-yes">✅ skeleton shimmer</span></td><td><span class="check-partial">⚠️ toast only</span></td></tr>
+        <tr><td>scorecard.html</td><td><span class="check-partial">⚠️ n/a (always has data)</span></td><td><span class="check-yes">✅ skeleton shimmer</span></td><td><span class="check-partial">⚠️ no save feedback</span></td></tr>
+        <tr><td>scoreboard.html</td><td><span class="check-yes">✅ both tbodies covered</span></td><td><span class="check-yes">✅ skeleton rows</span></td><td><span class="check-partial">⚠️ silent fail on fetch error</span></td></tr>
+        <tr><td>login.html</td><td><span class="check-partial">⚠️ n/a</span></td><td><span class="check-no">❌ no spinner on submit</span></td><td><span class="check-yes">✅ friendly messages</span></td></tr>
+        <tr><td>feed.html</td><td><span class="check-yes">✅ "No shots fired."</span></td><td><span class="check-partial">⚠️ unclear</span></td><td><span class="check-yes">✅ toast on post fail</span></td></tr>
+        <tr><td>player.html</td><td><span class="check-partial">⚠️ bare text fallback</span></td><td><span class="check-no">❌ no skeleton</span></td><td><span class="check-partial">⚠️ partial</span></td></tr>
+        <tr><td>admin.html</td><td><span class="check-partial">⚠️ partial</span></td><td><span class="check-partial">⚠️ partial</span></td><td><span class="check-partial">⚠️ toast + console.error</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 5. Mobile & Responsive -->
+  <div class="section-header" style="margin-top:2.5rem">
+    <div class="section-eyebrow">Mobile & Responsive</div>
+    <div class="section-title">Breakpoints, Touch Targets, Navigation</div>
+  </div>
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title">Breakpoints</div>
+      <p>home.html: 6 responsive breakpoints at 480, 500, 700, 768, 860px. Full coverage phone to desktop. Consistent pattern across key pages. No layout overflow detected in evidence. grid cols collapse correctly on narrow viewports.</p>
+    </div>
+    <div class="card">
+      <div class="card-title">Touch Targets</div>
+      <p>Scorecard stepper buttons: 52px height (exceeds 44px WCAG minimum). Score inputs use <code>font-size:1rem</code> — prevents iOS auto-zoom. <code>user-scalable=no</code> removed in commit c9cc497 — pinch-zoom now works. All critical entry surfaces are thumbable.</p>
+    </div>
+    <div class="card">
+      <div class="card-title">Navigation Pattern</div>
+      <p>nav-mobile.css + nav-mobile.js loaded on tournament pages. nav-platform.js on platform pages. Consistent drawer pattern with ← TOURney Platform link injected. Dedup guard <code>_seenHrefs</code> prevents duplicate links (commit a613da5). Hamburger visible on all pages.</p>
+    </div>
+    <div class="card">
+      <div class="card-title">Tables on Mobile</div>
+      <p>overflow-x on scoreboard main tables shipped in UX sprint (10a676f). No horizontal overflow on leaderboard. Score entry uses full-width stepper grid — renders correctly at 320px. Admin table still requires horizontal scroll on mobile (known, lower priority).</p>
+    </div>
+  </div>
+
+  <!-- 6. Accessibility -->
+  <div class="section-header" style="margin-top:2.5rem">
+    <div class="section-eyebrow">Accessibility</div>
+    <div class="section-title">ARIA, Focus, Contrast, Labels</div>
+  </div>
+
+  <div class="sec-item sev-med">
+    <div class="sec-header"><span class="pill pill-orange">MEDIUM</span><span class="sec-title">Empty alt on heroLogoImg — home.html:429</span></div>
+    <div class="sec-body">Logo image has <code>alt=""</code>. Screen readers skip it entirely. For a meaningful brand image the alt should convey the tournament name. Empty alt is semantically "decorative" — the logo is not decorative.</div>
+    <div class="sec-fix"><strong>Fix (5 min)</strong>In home.html JS after settings load: <code>document.getElementById('heroLogoImg').alt = (map.tourney_name || 'Tournament') + ' logo';</code> — one line, dynamic per tenant.</div>
+  </div>
+
+  <div class="sec-item sev-low">
+    <div class="sec-header"><span class="pill pill-green">LOW</span><span class="sec-title">No &lt;main&gt; landmark on key pages</span></div>
+    <div class="sec-body">Pages use generic <code>&lt;div&gt;</code> wrappers for primary content. Screen reader users cannot jump directly to main content via landmark shortcut. home.html, scoreboard.html, scorecard.html all affected.</div>
+    <div class="sec-fix"><strong>Fix (15 min)</strong>Wrap primary content area in <code>&lt;main&gt;</code> element on the three pages above. Zero visual change. Instant a11y win.</div>
+  </div>
+
+  <div class="sec-item sev-info">
+    <div class="sec-header"><span class="pill pill-blue">INFO</span><span class="sec-title">aria-live implemented correctly — home.html:450, 680 + scoreboard:276, 302</span></div>
+    <div class="sec-body">heroLeaderboard at line 450, toast at line 680 — both have <code>aria-live="polite"</code>. Scoreboard both tbody wrappers at lines 276 and 302. Live regions announce score changes to AT users without interrupting in-progress speech. Pattern is correct.</div>
+    <div class="sec-fix"><strong>Status</strong>No action needed. Ship and done.</div>
+  </div>
+
+  <div class="sec-item sev-info">
+    <div class="sec-header"><span class="pill pill-blue">INFO</span><span class="sec-title">prefers-reduced-motion guard correct — home.html:381</span></div>
+    <div class="sec-body">UX sprint shipped <code>@media (prefers-reduced-motion: reduce)</code> at home.html:381. Zeros transitions, opacity, transform on animated elements. WCAG 2.3.3 (AAA) satisfied for hero <code>fadeUp</code> animations. HIO confetti is the remaining exception — LOW priority.</div>
+    <div class="sec-fix"><strong>Status</strong>No action needed. HIO confetti reduced-motion path is a follow-up, not a blocker.</div>
+  </div>
+
+  <!-- 7. Sprint Plan -->
+  <div class="section-header" style="margin-top:2.5rem" id="sprint">
+    <div class="section-eyebrow">Sprint Plan</div>
+    <div class="section-title">6 Items — Ordered by User Impact</div>
+  </div>
+
+  <div class="roadmap-item">
+    <div class="roadmap-icon">1</div>
+    <div class="roadmap-content">
+      <div class="roadmap-title">Fix heroLogoImg alt attribute <span class="pill pill-orange">Medium · 5 min</span></div>
+      <div class="roadmap-desc">home.html:429 <code>alt=""</code> on meaningful brand image. Screen reader users get zero context on the primary logo. One-line fix, dynamic per tenant.</div>
+      <div class="roadmap-action"><strong>File:</strong> home.html JS · <strong>Change:</strong> <code>heroLogoImg.alt = (map.tourney_name || 'Tournament') + ' logo';</code> after settings load</div>
+    </div>
+  </div>
+
+  <div class="roadmap-item">
+    <div class="roadmap-icon">2</div>
+    <div class="roadmap-content">
+      <div class="roadmap-title">login.html submit spinner + button disable <span class="pill pill-orange">Medium · 30 min</span></div>
+      <div class="roadmap-desc">No visual feedback during async <code>signIn</code>/<code>signUp</code> — button stays active. Double-tap submits twice. Disable button + show loading text on submit, restore on response (success or error).</div>
+      <div class="roadmap-action"><strong>File:</strong> login.html · <strong>Pattern:</strong> <code>btn.disabled=true; btn.textContent='Signing in…'</code> on click, restore in <code>.finally()</code></div>
+    </div>
+  </div>
+
+  <div class="roadmap-item">
+    <div class="roadmap-icon">3</div>
+    <div class="roadmap-content">
+      <div class="roadmap-title">home.html zero-player empty state <span class="pill pill-green">Low · 20 min</span></div>
+      <div class="roadmap-desc">heroLeaderboard section shows nothing when tournament has no players yet. New tournament owners see a blank area with no guidance. Add explicit empty state card so they know registration is open.</div>
+      <div class="roadmap-action"><strong>File:</strong> home.html · <strong>Where:</strong> heroLeaderboard render, when <code>players.length === 0</code> show styled card: "Registration open — no players yet."</div>
+    </div>
+  </div>
+
+  <div class="roadmap-item">
+    <div class="roadmap-icon">4</div>
+    <div class="roadmap-content">
+      <div class="roadmap-title">manifest.json apple-touch-icon 180px <span class="pill pill-green">Low · 1h</span></div>
+      <div class="roadmap-desc">Only 2 icon sizes (192+512). iOS Safari uses apple-touch-icon meta for home screen icon — missing 180px variant means iOS generates a low-res fallback. Add 180px icon file + meta tag. manifest.json name hardcoded "TOURney" (minor, tourney-init.js handles it dynamically).</div>
+      <div class="roadmap-action"><strong>Files:</strong> manifest.json, home.html · <strong>Add:</strong> <code>&lt;link rel="apple-touch-icon" sizes="180x180" href="/icon-180.png"&gt;</code> to <code>&lt;head&gt;</code> of all pages</div>
+    </div>
+  </div>
+
+  <div class="roadmap-item">
+    <div class="roadmap-icon">5</div>
+    <div class="roadmap-content">
+      <div class="roadmap-title">Add &lt;main&gt; landmark to 3 key pages <span class="pill pill-blue">Info · 15 min</span></div>
+      <div class="roadmap-desc">home.html, scoreboard.html, scorecard.html all use generic divs for primary content. Screen reader users can't skip to main content. Zero visual change — structural HTML only.</div>
+      <div class="roadmap-action"><strong>Files:</strong> home.html, scoreboard.html, scorecard.html · <strong>Change:</strong> wrap primary content in <code>&lt;main&gt;</code> tag</div>
+    </div>
+  </div>
+
+  <div class="roadmap-item">
+    <div class="roadmap-icon">6</div>
+    <div class="roadmap-content">
+      <div class="roadmap-title">Lighthouse CI on Vercel deploy <span class="pill pill-blue">Info · 2h</span></div>
+      <div class="roadmap-desc">No automated perf/a11y regression detection. A GitHub Actions step running Lighthouse on each Vercel preview URL catches regressions before prod. Deferred from UX runbook (was item 8 of 8). Not blocking but compounds every other sprint item.</div>
+      <div class="roadmap-action"><strong>File:</strong> .github/workflows/lighthouse.yml · <strong>Tool:</strong> treosh/lighthouse-ci-action or Vercel built-in Lighthouse integration</div>
+    </div>
+  </div>
+
+  <!-- Bug Tracker -->
+  <div class="section-header" style="margin-top:2.5rem">
+    <div class="section-eyebrow">Bug Tracker</div>
+    <div class="section-title">UX Bugs — This Review</div>
+  </div>
+  <div class="table-wrap">
+    <table class="bug-table">
+      <thead>
+        <tr><th>#</th><th>Severity</th><th>File / Area</th><th>Description</th><th>Status</th></tr>
+      </thead>
+      <tbody id="bugRows">
+        <tr>
+          <td style="color:var(--muted);font-size:0.75rem">1</td>
+          <td><span class="pill pill-orange">Medium</span></td>
+          <td class="url">home.html:429</td>
+          <td><code>heroLogoImg alt=""</code> — empty alt on meaningful brand logo, screen readers skip it</td>
+          <td><span class="pill pill-red">Open</span></td>
+        </tr>
+        <tr>
+          <td style="color:var(--muted);font-size:0.75rem">2</td>
+          <td><span class="pill pill-orange">Medium</span></td>
+          <td class="url">login.html</td>
+          <td>No spinner/disable on submit during async signIn/signUp — double-tap risk, no loading feedback</td>
+          <td><span class="pill pill-red">Open</span></td>
+        </tr>
+        <tr>
+          <td style="color:var(--muted);font-size:0.75rem">3</td>
+          <td><span class="pill pill-green">Low</span></td>
+          <td class="url">home.html</td>
+          <td>heroLeaderboard shows blank when 0 players — no empty state guidance for new tournament owners</td>
+          <td><span class="pill pill-red">Open</span></td>
+        </tr>
+        <tr>
+          <td style="color:var(--muted);font-size:0.75rem">4</td>
+          <td><span class="pill pill-green">Low</span></td>
+          <td class="url">manifest.json</td>
+          <td>Only 2 icon sizes (192+512) — missing apple-touch-icon 180px, iOS generates low-res fallback</td>
+          <td><span class="pill pill-red">Open</span></td>
+        </tr>
+        <tr>
+          <td style="color:var(--muted);font-size:0.75rem">5</td>
+          <td><span class="pill pill-blue">Info</span></td>
+          <td class="url">home/scoreboard/scorecard</td>
+          <td>No &lt;main&gt; landmark — screen reader nav shortcut ineffective on 3 key pages</td>
+          <td><span class="pill pill-red">Open</span></td>
+        </tr>
+      </tbody>
+    </table>
+    <div style="padding:0.75rem 1rem">
+      <button onclick="addBugRow()" style="background:var(--gold-dim);color:var(--gold);border:1px solid var(--border);border-radius:5px;padding:0.35rem 0.9rem;font-size:0.75rem;font-weight:600;cursor:pointer;font-family:inherit;letter-spacing:0.04em">+ Add Row</button>
+    </div>
+  </div>
+
+</div>
+</section>
+
+<div class="next-step-bar">
+  <div class="next-step-inner">
+    <span class="next-step-label">Next Step</span>
+    <span class="next-step-strong">Fix heroLogoImg alt</span>
+    <span class="next-step-cmd" id="nextCmd">heroLogoImg.alt = (map.tourney_name || 'Tournament') + ' logo'; // home.html after settings load</span>
+    <button class="next-step-copy" onclick="navigator.clipboard.writeText(document.getElementById('nextCmd').textContent)">Copy</button>
+  </div>
+</div>
+
+<footer>
+  Generated by <span>Claude Sonnet 4.6</span> · Greenskeeper Studios Internal · May 13, 2026
+  <br style="margin-top:0.3rem">
+  <a href="/platform" style="color:var(--muted);font-size:0.72rem;text-decoration:none">← TOURney Operations</a>
+</footer>
+
+<script>
+  let bugCount = 5;
+  function addBugRow() {
+    bugCount++;
+    const tbody = document.getElementById('bugRows');
+    if (!tbody) return;
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td style="color:var(--muted);font-size:0.75rem">${bugCount}</td>
+      <td><select class="input-cell"><option>🔴 Critical</option><option>🟠 High</option><option>🟡 Medium</option><option>🟢 Low</option></select></td>
+      <td><input class="input-cell" type="text" placeholder="File / area"></td>
+      <td><input class="input-cell" type="text" placeholder="Describe the issue..."></td>
+      <td><select class="input-cell"><option>Open</option><option>In Progress</option><option>Fixed</option><option>Won't Fix</option></select></td>
+    `;
+    tbody.appendChild(tr);
+    tr.querySelector('input').focus();
+  }
+</script>
+
+</body>
+</html>

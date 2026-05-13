@@ -1,7 +1,7 @@
 {
   "$schema": "https://tourney.greenskeeper.studio/qa-index-schema.json",
   "version": 1,
-  "updated_at": "2026-05-13T23:30:00Z",
+  "updated_at": "2026-05-14T00:30:00Z",
   "description": "Canonical registry of all TOURney plans, reviews, audits, and QA artifacts. The /platform Artifacts tab renders from this file. Skills (e.g. tourney-review) append new entries when they generate output.",
   "entries": [
     {
@@ -20,16 +20,28 @@
       "id": "ux",
       "axis": "ux",
       "category": "axis",
-      "stage": "concluded",
-      "title": "UX Polish — Login, Skeletons, Motion, Install Surface",
-      "summary": "Concluded B+. All runbook steps shipped (10a676f). Login sanitized, skeletons live, prefers-reduced-motion, install surface, aria-live, overflow-x. Lighthouse deferred.",
+      "stage": "review",
+      "title": "UX Polish — Post-Sprint Review",
+      "summary": "B+. 7/8 runbook items shipped (10a676f). 4 open gaps: heroLogoImg alt empty, login submit no spinner, zero-player empty state missing, manifest 180px icon absent. All LOW/MEDIUM, non-blocking.",
       "date": "2026-05-12",
       "updated": "2026-05-13",
-      "author": "claude-haiku-4-5-20251001",
+      "author": "claude-sonnet-4-6",
       "url": "/platform/ux",
       "file": "ux.html",
-      "tags": ["ux", "concluded", "accessibility", "mobile"],
-      "status": "concluded"
+      "tags": ["ux", "review", "accessibility", "mobile"],
+      "status": "active"
+    },
+    {
+      "id": "review-ux-2026-05-13",
+      "category": "review",
+      "title": "UX Polish Review · May 13, 2026",
+      "summary": "Post-sprint UX audit. Grade B+. 7/8 runbook items shipped (10a676f). 4 open gaps: heroLogoImg alt empty (home.html:429 MEDIUM), login submit no spinner (MEDIUM), zero-player empty state missing (LOW), manifest 180px icon absent (LOW). Design system consistent, skeletons live, aria-live correct, mobile A-.",
+      "date": "2026-05-13",
+      "author": "claude-sonnet-4-6",
+      "url": "/platform/5-13-26-claude-review-ux",
+      "file": "5-13-26-claude-review-ux.html",
+      "tags": ["review", "ux", "accessibility", "mobile"],
+      "status": "shipped"
     },
     {
       "id": "plan-ux-2026-05-12",

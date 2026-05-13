@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-05-13T23:30:00Z",
+  "updated_at": "2026-05-14T00:30:00Z",
   "description": "Per-axis grade history for TOURney platform. Updated automatically by review skills. Operations Action Board reads this file.",
   "axes": {
     "architecture": {
@@ -60,6 +60,13 @@
       "label": "UX Polish",
       "cmd": "/tourney-review-ux",
       "scores": [
+        {
+          "date": "2026-05-13",
+          "score": "B+",
+          "url": "/platform/5-13-26-claude-review-ux",
+          "review_title": "UX Polish Review · May 13, 2026",
+          "notes": "Post-sprint review. 7/8 runbook items shipped (10a676f). Strengths: skeleton shimmer live, aria-live correct, prefers-reduced-motion guard, login errors sanitized, touch targets good. Open gaps: heroLogoImg alt empty (home.html:429), login submit no spinner, zero-player empty state missing, manifest 180px icon absent."
+        },
         {
           "date": "2026-05-13",
           "score": "B+",

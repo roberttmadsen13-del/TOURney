@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-05-13T20:00:00Z",
+  "updated_at": "2026-05-14T00:30:00Z",
   "description": "Living state for all TOURney platform axes. One entry per axis. Updated by every tourney-* skill. Agents read this for context (50 tokens) instead of parsing HTML artifacts.",
   "stages": ["review", "plan", "runbook", "executing", "audit", "concluded"],
   "axes": {
@@ -22,12 +22,12 @@
       "blocking": false
     },
     "ux": {
-      "status": "concluded",
+      "status": "review",
       "grade": "B+",
       "artifact": "/platform/ux",
       "last_updated": "2026-05-13",
-      "summary": "Concluded B+. All 7/8 runbook steps shipped (10a676f). Login sanitized, skeletons live, prefers-reduced-motion guard, install surface, aria-live, overflow-x. Lighthouse deferred to perf axis.",
-      "open_items": 1,
+      "summary": "Post-sprint review B+. 4 open items: heroLogoImg alt (MEDIUM), login submit spinner (MEDIUM), zero-player empty state (LOW), manifest 180px icon (LOW). All non-blocking.",
+      "open_items": 4,
       "blocking": false
     },
     "security": {

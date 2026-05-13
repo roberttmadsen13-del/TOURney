@@ -40,7 +40,7 @@ a{color:var(--gold);text-decoration:none;}a:hover{text-decoration:underline;}
 <body>
 <a class="back" href="/platform">← Platform</a>
 <h1>UX Polish</h1>
-<div class="meta">Last updated May 12, 2026 · TOURney Platform</div>
+<div class="meta">Last updated May 13, 2026 · TOURney Platform</div>
 
 <div class="lifecycle" id="lifecycle-bar">
   <div class="lc-stage" id="lc-review">Review</div>
@@ -52,6 +52,29 @@ a{color:var(--gold);text-decoration:none;}a:hover{text-decoration:underline;}
 </div>
 
 <div id="stage-history">
+<section class="axis-stage stage-review" data-date="2026-05-13" data-agent="claude-sonnet-4-6">
+  <div class="stage-header">
+    <span class="stage-pill pill-review">Review</span>
+    <span class="stage-date">May 13, 2026</span>
+    <span class="stage-agent">claude-sonnet-4-6</span>
+    <span class="grade-badge">B+</span>
+  </div>
+  <div class="stage-body">
+    <p style="font-size:.85rem;color:#aaa;margin-bottom:.75rem;">Post-sprint focused review. 7/8 runbook items shipped (10a676f). Four residual gaps found — all LOW/MEDIUM, none blocking.</p>
+    <div class="finding med">MEDIUM · <code>home.html:429</code> — heroLogoImg <code>alt=""</code>. Empty alt on meaningful brand logo — screen readers skip it entirely. Fix: set <code>alt</code> dynamically from <code>map.tourney_name</code> after settings load. 5 min.</div>
+    <div class="finding med">MEDIUM · <code>login.html</code> — no spinner/disable on async signIn/signUp. Button stays active; double-tap submits twice. Fix: <code>btn.disabled=true</code> on click, restore in <code>.finally()</code>. 30 min.</div>
+    <div class="finding low">LOW · <code>home.html</code> — heroLeaderboard shows blank when 0 players. New tournament owners see empty space. Fix: show "Registration open — no players yet." card when <code>players.length === 0</code>. 20 min.</div>
+    <div class="finding low">LOW · <code>manifest.json</code> — only 2 icon sizes (192+512). Missing apple-touch-icon 180px; iOS generates low-res fallback. Fix: add icon-180.png + <code>&lt;link rel="apple-touch-icon" sizes="180x180"&gt;</code> to all pages. 1h.</div>
+    <p style="margin-top:.75rem;font-size:.82rem;"><a href="/platform/5-13-26-claude-review-ux">Full UX Review → May 13, 2026</a></p>
+    <p style="font-size:.8rem;font-weight:600;color:#aaa;margin-top:1rem;margin-bottom:.5rem;">Sprint (6 items · ordered by impact):</p>
+    <div class="sprint-item"><span class="si-num">1</span><span>Fix heroLogoImg alt — home.html JS after settings load, 1 line, 5 min</span></div>
+    <div class="sprint-item"><span class="si-num">2</span><span>login.html submit spinner + button disable, 30 min</span></div>
+    <div class="sprint-item"><span class="si-num">3</span><span>home.html zero-player empty state in heroLeaderboard, 20 min</span></div>
+    <div class="sprint-item"><span class="si-num">4</span><span>manifest.json apple-touch-icon 180px + meta tag all pages, 1h</span></div>
+    <div class="sprint-item"><span class="si-num">5</span><span>Add &lt;main&gt; landmark to home/scoreboard/scorecard, 15 min</span></div>
+    <div class="sprint-item"><span class="si-num">6</span><span>Lighthouse CI on Vercel deploy (GitHub Actions), 2h</span></div>
+  </div>
+</section>
 <section class="axis-stage stage-concluded" data-date="2026-05-13" data-agent="claude-haiku-4-5-20251001">
   <div class="stage-header">
     <span class="stage-pill pill-concluded">Concluded</span>

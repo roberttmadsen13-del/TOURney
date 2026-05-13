@@ -29,6 +29,24 @@ Last commits: 997b043 (sec: send-install-email webhook secret gate)
 
 <!-- UX review audit clean pass — 2026-05-12 — 5 bugs logged from tourney-review-ux -->
 
+## Session 15 — May 13, 2026 (UX Polish Review — post-sprint)
+
+- [MEDIUM] heroLogoImg alt="" — empty alt on meaningful brand logo (home.html:429)
+  Fix: set `alt` dynamically from `map.tourney_name + ' logo'` after settings load. 1 line.
+  Status: open
+
+- [MEDIUM] login.html no submit spinner — button stays active during async signIn/signUp, double-tap risk (login.html — doSignIn/doSignUp)
+  Fix: `btn.disabled=true; btn.textContent='Signing in…'` on click, restore in `.finally()`.
+  Status: open
+
+- [LOW] home.html zero-player empty state missing — heroLeaderboard blank when no players registered (home.html — heroLeaderboard render)
+  Fix: when `players.length === 0` show "Registration open — no players yet." card.
+  Status: open
+
+- [LOW] manifest.json only 2 icon sizes — missing apple-touch-icon 180px, iOS generates low-res fallback (manifest.json)
+  Fix: add icon-180.png + `<link rel="apple-touch-icon" sizes="180x180" href="/icon-180.png">` to all page heads.
+  Status: open
+
 - **Bova formats unconfirmed**: seeded Day1=stroke, Day2=scramble, Day3=best_ball based on about text ("scramble, shambles, best ball, stroke play"). Shambles not mapped to a day. **Verify with Chris Bova before tournament runs. BLOCKED — human verification required.**
 
 ---
