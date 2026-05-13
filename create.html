@@ -855,7 +855,6 @@
         { key:'reg_bullet_1',      value: 'Open to invited players only' },
         { key:'reg_bullet_2',      value: `${S.days}-day tournament · ${S.days*18} holes` },
         { key:'reg_bullet_3',      value: loc || 'Location TBD' },
-        { key:'round_formats',     value: JSON.stringify(S.formats) },
         { key:'reg_show_dates',    value: 'false' },
         { key:'reg_show_why_me',   value: 'false' },
         { key:'reg_show_hat',      value: 'false' },
@@ -870,11 +869,8 @@
           })) : []),
       ];
       for (let i = 1; i <= S.days; i++) {
-        settings.push({ key:`round_day${i}`,       value: 'pending' });
         settings.push({ key:`course_name_day${i}`, value: '' });
         settings.push({ key:`pars_day${i}`,        value: JSON.stringify(Array(18).fill(4)) });
-        settings.push({ key:`format_day${i}_front`, value: S.formats[`day${i}`]?.front || 'stroke' });
-        settings.push({ key:`format_day${i}_back`,  value: S.formats[`day${i}`]?.back  || 'stroke' });
       }
       if (S.logoUrl) settings.push({ key:'logo_url', value: S.logoUrl });
 
@@ -882,6 +878,17 @@
         settings.map(s => ({ ...s, tournament_id: tid, updated_at: now }))
       );
       if (sErr) throw sErr;
+
+      const { error: rErr } = await db.from('rounds').insert(
+        Array.from({ length: S.days }, (_, i) => ({
+          tournament_id: tid,
+          day_number:    i + 1,
+          status:        'pending',
+          format_front:  S.formats[`day${i + 1}`]?.front || 'stroke',
+          format_back:   S.formats[`day${i + 1}`]?.back  || 'stroke',
+        }))
+      );
+      if (rErr) throw rErr;
 
       window.location.href = `/t/${slug}/admin`;
 
