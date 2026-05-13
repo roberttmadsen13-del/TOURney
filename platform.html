@@ -392,14 +392,13 @@ td{padding:0.7rem 0.75rem;font-size:0.88rem;vertical-align:middle;}
 .at-pill.active,.at-pill:hover{background:var(--gold-dim);border-color:rgba(192,144,48,.35);color:var(--gold);}
 .at-concluded-toggle{margin-left:auto;flex-shrink:0;background:transparent;border:1px solid var(--border);color:var(--muted);font-size:.58rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:.16rem .38rem;cursor:pointer;white-space:nowrap;transition:all .12s;}
 .at-concluded-toggle:hover,.at-concluded-unseen{border-color:rgba(192,144,48,.4);color:var(--gold);}
-.at-row{display:flex!important;flex-direction:column;gap:.45rem;}
+.at-row{display:flex!important;flex-direction:column;gap:.3rem;padding:.5rem .7rem!important;}
 .at-row-top{display:flex;align-items:center;gap:.5rem;min-width:0;}
-.at-row-top .axis-label{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:.78rem;}
-.at-row-top .at-date{white-space:nowrap;font-size:.6rem;color:var(--muted);font-family:'DM Mono',monospace;margin-left:auto;}
-.at-lifecycle{display:flex;width:100%;border-radius:3px;overflow:hidden;gap:1px;}
-.at-lc-seg{flex:1;padding:.22rem .1rem;text-align:center;font-size:.42rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;background:rgba(255,255,255,.025);color:rgba(240,230,204,.15);transition:none;}
-.at-lc-seg.done{background:rgba(42,80,42,.5);color:rgba(74,154,74,.7);}
-.at-lc-seg.concluded{background:rgba(26,26,60,.5);color:rgba(90,90,160,.7);}
+.at-row-top .axis-label{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:.75rem;font-weight:500;}
+.at-lifecycle{display:flex;width:100%;border-radius:2px;overflow:hidden;gap:1px;}
+.at-lc-seg{flex:1;padding:.13rem .05rem;text-align:center;font-size:.38rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;background:rgba(255,255,255,.025);color:rgba(240,230,204,.13);transition:none;}
+.at-lc-seg.done{background:rgba(42,80,42,.45);color:rgba(74,154,74,.6);}
+.at-lc-seg.concluded{background:rgba(26,26,60,.45);color:rgba(90,90,160,.6);}
 .at-row .axis-stages{display:none;}
 .at-tag-concluded{background:rgba(80,80,180,.15);color:#9090e0;border:1px solid rgba(80,80,180,.2);}
 .notes-ta{width:100%;min-height:180px;background:rgba(255,255,255,0.03);border:1px solid var(--border);color:var(--text);font-family:'Barlow',sans-serif;font-size:0.85rem;padding:0.85rem;outline:none;resize:vertical;line-height:1.6;}
@@ -1512,7 +1511,7 @@ function renderArtifactTickets(){
       return`<div class="at-lc-seg">${STAGE_LABELS[i]}</div>`;
     }).join('');
     return`<div class="axis-row at-row at-row-${stageKey}" onclick="openTicketDrawer('${esc(e.id)}')" style="cursor:pointer;${closed?'opacity:.5;':''}">
-      <div class="at-row-top">${dot}<div class="axis-label">${esc(e.title||'')}</div><div class="at-date">${esc((e.updated||e.date||'').substring(0,10))}</div></div>
+      <div class="at-row-top">${dot}<div class="axis-label">${esc(e.title||'')}</div></div>
       <div class="at-lifecycle">${lcSegs}</div>
     </div>`;
   }).join('');
