@@ -383,10 +383,11 @@ td{padding:0.7rem 0.75rem;font-size:0.88rem;vertical-align:middle;}
 .tq-cb.checked{border-color:var(--gold);background:var(--gold-dim);}
 .tq-cb.checked::after{content:'✓';color:var(--gold);font-size:.6rem;}
 .tq-item-links{display:flex;flex-wrap:wrap;gap:.3rem;margin-top:.3rem;}
-.at-filters{display:flex;align-items:center;gap:.4rem;margin-bottom:.65rem;flex-wrap:nowrap;overflow-x:auto;}
-.at-search{background:rgba(255,255,255,.04);border:1px solid var(--border);color:var(--text);font-family:'DM Mono',monospace;font-size:.72rem;padding:.28rem .55rem;outline:none;width:120px;min-width:80px;flex-shrink:0;transition:border-color .15s;}
+.at-filters{display:flex;align-items:center;gap:.4rem;margin-bottom:.65rem;flex-wrap:wrap;}
+.at-search{background:rgba(255,255,255,.04);border:1px solid var(--border);color:var(--text);font-family:'DM Mono',monospace;font-size:.72rem;padding:.28rem .55rem;outline:none;width:140px;min-width:80px;flex-shrink:0;transition:border-color .15s;}
 .at-search:focus{border-color:rgba(192,144,48,.4);}
-.at-pills{display:flex;gap:.25rem;flex-shrink:0;}
+.at-pills{display:flex;gap:.25rem;flex-wrap:wrap;flex-shrink:0;}
+.at-row .axis-stages{width:90px;min-width:90px;}
 .at-pill{background:transparent;border:1px solid var(--border);color:var(--muted);font-size:.58rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:.16rem .38rem;cursor:pointer;white-space:nowrap;transition:all .12s;}
 .at-pill.active,.at-pill:hover{background:var(--gold-dim);border-color:rgba(192,144,48,.35);color:var(--gold);}
 .at-concluded-toggle{margin-left:auto;flex-shrink:0;background:transparent;border:1px solid var(--border);color:var(--muted);font-size:.58rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:.16rem .38rem;cursor:pointer;white-space:nowrap;transition:all .12s;}
@@ -724,6 +725,7 @@ td{padding:0.7rem 0.75rem;font-size:0.88rem;vertical-align:middle;}
             <button class="at-pill" onclick="setAtFilter('plan',this)">Plan</button>
             <button class="at-pill" onclick="setAtFilter('runbook',this)">Runbook</button>
             <button class="at-pill" onclick="setAtFilter('executing',this)">Executing</button>
+            <button class="at-pill" onclick="setAtFilter('audit',this)">Audit</button>
           </div>
           <button class="at-concluded-toggle" id="atConcludedToggle" onclick="toggleAtConcluded()">Show concluded</button>
         </div>
