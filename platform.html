@@ -1666,10 +1666,26 @@ async function toggleCeoTask(id){
 
 /* ══════════════════════ MISSION CONTROL ══════════════════════ */
 let mcAxisData=null;
+let mcInboxTasks=[];
+let mcShippedTasks=[];
 async function loadMissionControl(){
   try{const r=await fetch('/axis-status.json',{cache:'no-store'});if(r.ok)mcAxisData=await r.json();}catch(e){}
   const el=document.getElementById('mcTodayDate');
   if(el)el.textContent=new Date().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'});
+  // load platform_tasks inbox + shipped in parallel
+  try {
+    const sess = await sb.auth.getSession();
+    const tok = sess.data?.session?.access_token;
+    if (tok) {
+      const FN='https://jllugkiojeoopitdvzsa.supabase.co/functions/v1/platform-action';
+      const [inboxRes, shippedRes] = await Promise.all([
+        fetch(FN,{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+tok},body:JSON.stringify({action:'task_list',queue:'inbox'})}),
+        fetch(FN,{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+tok},body:JSON.stringify({action:'task_list',queue:'shipped'})})
+      ]);
+      if(inboxRes.ok){const d=await inboxRes.json();mcInboxTasks=d.data||[];}
+      if(shippedRes.ok){const d=await shippedRes.json();mcShippedTasks=d.data||[];}
+    }
+  } catch(e){}
   renderTodayQueue();
 }
 function renderTodayQueue(){
@@ -1691,27 +1707,33 @@ function renderTodayQueue(){
     if(t&&!chk[id])doNow.push({title:t.text,sub:'Human required',tag:'URGENT',tagCls:'tq-tag-red',cmd:null});
   });
 
-  // AGENT
-  const stageOrder=['review','plan','runbook','executing','audit','concluded'];
-  const agentItems=Object.entries(ax)
-    .filter(([,a])=>a.status!=='concluded'&&NEXT[a.status]&&NEXT[a.status]!=='concluded')
-    .sort((a,b)=>stageOrder.indexOf(a[1].status)-stageOrder.indexOf(b[1].status))
-    .map(([k,a])=>{
-      const next=NEXT[a.status];
-      const skill=NEXT_SKILL[next];
-      return{title:k+': '+NEXT_LABEL[next],sub:(a.grade||'?')+' · currently '+a.status,tag:a.status.toUpperCase(),tagCls:'tq-tag-gold',cmd:skill?skill+k:null};
-    });
+  // AGENT — from platform_tasks inbox queue; fall back to axis-status derivation if empty
+  let agentItems=mcInboxTasks.map(t=>({title:t.title,sub:t.body||'',tag:t.tag||'INBOX',tagCls:'tq-tag-gold',cmd:t.cmd||null}));
+  if(!agentItems.length){
+    const stageOrder=['review','plan','runbook','executing','audit','concluded'];
+    agentItems=Object.entries(ax)
+      .filter(([,a])=>a.status!=='concluded'&&NEXT[a.status]&&NEXT[a.status]!=='concluded')
+      .sort((a,b)=>stageOrder.indexOf(a[1].status)-stageOrder.indexOf(b[1].status))
+      .map(([k,a])=>{
+        const next=NEXT[a.status];
+        const skill=NEXT_SKILL[next];
+        return{title:k+': '+NEXT_LABEL[next],sub:(a.grade||'?')+' · currently '+a.status,tag:a.status.toUpperCase(),tagCls:'tq-tag-gold',cmd:skill?skill+k:null};
+      });
+  }
 
   // WAITING ON ROB
   const waitingItems=CEO_TASKS.filter(t=>!chk[t.id]&&!URGENT_IDS.includes(t.id))
     .map(t=>({title:t.text,sub:'Human required · see Action Board',tag:'WAITING',tagCls:'tq-tag-red',cmd:null}));
 
-  // SHIPPED
-  const shippedItems=(allEntries||[])
-    .filter(e=>e.status==='shipped'||e.status==='active')
-    .sort((a,b)=>(b.updated||b.date||'').localeCompare(a.updated||a.date||''))
-    .slice(0,5)
-    .map(e=>({title:e.title,sub:e.updated||e.date||'',tag:(e.category||'artifact').toUpperCase(),tagCls:'tq-tag-green',cmd:null,url:e.url}));
+  // SHIPPED — from platform_tasks shipped queue; fall back to artifacts
+  let shippedItems=mcShippedTasks.map(t=>({title:t.title,sub:t.body||'',tag:t.tag||'SHIPPED',tagCls:'tq-tag-green',cmd:null}));
+  if(!shippedItems.length){
+    shippedItems=(allEntries||[])
+      .filter(e=>e.status==='shipped'||e.status==='active')
+      .sort((a,b)=>(b.updated||b.date||'').localeCompare(a.updated||a.date||''))
+      .slice(0,5)
+      .map(e=>({title:e.title,sub:e.updated||e.date||'',tag:(e.category||'artifact').toUpperCase(),tagCls:'tq-tag-green',cmd:null,url:e.url}));
+  }
 
   const badge=document.getElementById('doNowBadge');
   if(badge)badge.textContent=doNow.length;

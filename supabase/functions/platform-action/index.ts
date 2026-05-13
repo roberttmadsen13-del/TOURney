@@ -39,7 +39,8 @@ Deno.serve(async (req: Request) => {
   if (user.email?.toLowerCase() !== PLATFORM_OWNER.toLowerCase()) return json({ error: "Forbidden" }, 403, origin);
 
   const sb = createClient(SUPABASE_URL, SERVICE_KEY);
-  const { action, email } = await req.json();
+  const body = await req.json();
+  const { action, email } = body;
 
   if (action === "list") {
     const { data: accounts, error } = await sb.from("player_accounts").select("*");
@@ -117,6 +118,35 @@ Deno.serve(async (req: Request) => {
       .eq("email", email.toLowerCase());
     if (error) return json({ error: error.message }, 500, origin);
     return json({ ok: true }, 200, origin);
+  }
+
+  if (action === "task_push") {
+    const { source, queue, title, body: taskBody, cmd, tag } = body;
+    if (!source || !queue || !title) return json({ error: "source, queue, title required" }, 400, origin);
+    const { data, error } = await sb.from("platform_tasks").insert({
+      source, queue, title, body: taskBody ?? null, cmd: cmd ?? null, tag: tag ?? null
+    }).select("id").single();
+    if (error) return json({ error: error.message }, 500, origin);
+    return json({ ok: true, id: data.id }, 200, origin);
+  }
+
+  if (action === "task_done") {
+    const { id } = body;
+    if (!id) return json({ error: "id required" }, 400, origin);
+    const { error } = await sb.from("platform_tasks")
+      .update({ status: "done", updated_at: new Date().toISOString() })
+      .eq("id", id);
+    if (error) return json({ error: error.message }, 500, origin);
+    return json({ ok: true }, 200, origin);
+  }
+
+  if (action === "task_list") {
+    const { queue: filterQueue } = body;
+    let q = sb.from("platform_tasks").select("*").eq("status", "open").order("created_at", { ascending: true });
+    if (filterQueue) q = q.eq("queue", filterQueue);
+    const { data, error } = await q;
+    if (error) return json({ error: error.message }, 500, origin);
+    return json({ data }, 200, origin);
   }
 
   return json({ error: "Unknown action" }, 400, origin);
