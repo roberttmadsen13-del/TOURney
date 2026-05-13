@@ -1536,10 +1536,14 @@ function openTicketDrawer(id){
     const cls=stageKey==='concluded'?' done':i<ci?' done':i===ci?' active':'';
     return`<div class="drawer-lc-stage"><div class="drawer-lc-pip${cls}"></div><div class="drawer-lc-label">${s}</div></div>`;
   }).join('');
-  // next step cmd from axis name
+  // next step cmd — include related artifact URLs as context
   const axisKey=e.axis||e.id;
   const nextStage=stages[Math.min(ci+1,stages.length-1)];
-  const cmd=`/tourney-${nextStage}-${axisKey}`;
+  const relatedUrls=(allEntries||[])
+    .filter(x=>x.id!==e.id&&(x.tags||[]).includes(axisKey)&&x.url&&x.category!=='axis')
+    .sort((a,b)=>(b.updated||b.date||'').localeCompare(a.updated||a.date||''))
+    .slice(0,4).map(x=>`tourney.greenskeeper.studio${x.url}`);
+  const cmd=`/tourney-${nextStage}-${axisKey}${relatedUrls.length?' '+relatedUrls.join(' '):''}`;
   document.getElementById('drawerNextCmd').innerHTML=ci<stages.length-1
     ?`<div class="drawer-next-cmd"><span class="drawer-next-text">${esc(cmd)}</span><button class="drawer-copy-btn" onclick="navigator.clipboard.writeText('${esc(cmd)}').then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy',1200)})">Copy</button></div>`
     :'<div style="font-size:.75rem;color:#4aaa4a;padding:.5rem 0;">✓ Concluded</div>';
