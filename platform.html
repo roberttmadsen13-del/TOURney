@@ -1027,7 +1027,7 @@ Do NOT skip phases. Do NOT bypass gates. Do NOT --no-verify. If you are unsure a
 }
 function copyNextStep(cat, url) {
   const next=NEXT_STEP[cat]; if(!next) return;
-  const axis=(url.match(/-(security|architecture|ux|performance|business|data-model|deployment|feature-depth|finance|marketing|onboarding)(?:[^a-z]|$)/)||[])[1]||'';
+  const axis=(url.match(/[/\-](security|architecture|ux|performance|business|data-model|deployment|feature-depth|finance|marketing|onboarding)(?:[^a-z]|$)/)||[])[1]||'';
   const CHAIN=['review','plan','runbook','audit','postmortem','bugs']; // postmortem aliased to audit tier
   // Collect related entries (same axis) sorted by chain order — gives the skill full context.
   const seen=new Set();
@@ -1190,7 +1190,7 @@ function renderHub() {
     const isAutoArch=auto.has(e.id)&&!unar[e.id];
     const isFav=!!getFavorites()[e.id];
     const displayDate=e.updated&&e.updated!==e.date?`Updated ${fmtDate(e.updated)}`:`${fmtDate(e.date)}`;
-    const nextCat=NEXT_STEP[e.category];
+    const nextCat=e.category==='axis'?NEXT_STEP[e.stage]:NEXT_STEP[e.category];
     const statusOpts=STATUS_OPTS.map(s=>`<option value="${s}"${effStatus===s?' selected':''}>${s}</option>`).join('');
     return `<a class="card-link" href="${esc(e.url||'#')}">
       <div class="card cat-${esc(e.category||'plan')}${isAr?' archived':''}">
@@ -1206,7 +1206,7 @@ function renderHub() {
           <div class="card-tags">${tags}</div>
           <select class="status-sel" onclick="event.preventDefault();event.stopPropagation();" onchange="event.preventDefault();event.stopPropagation();setStatusOverride('${esc(e.id)}',this.value)">${statusOpts}</select>
           ${e.category==='runbook'?`<button class="nxt-btn" onclick="event.preventDefault();event.stopPropagation();copyExecuteRunbook('${esc(e.url||'')}')" title="Copy AI execution prompt for this runbook" style="background:rgba(39,174,96,0.12);border-color:rgba(39,174,96,0.35);color:var(--green);">▶ Execute</button>`:''}
-          ${nextCat?`<button class="nxt-btn" onclick="event.preventDefault();event.stopPropagation();copyNextStep('${esc(e.category)}','${esc(e.url||'')}')" title="Copy next step command">→ ${esc(NEXT_LABEL[nextCat])}</button>`:''}
+          ${nextCat?`<button class="nxt-btn" onclick="event.preventDefault();event.stopPropagation();copyNextStep('${esc(e.category==='axis'?e.stage:e.category)}','${esc(e.url||'')}')" title="Copy next step command">→ ${esc(NEXT_LABEL[nextCat])}</button>`:''}
           <button class="fav-btn${isFav?' fav-active':''}" onclick="event.preventDefault();event.stopPropagation();toggleFavorite('${esc(e.id)}',${!isFav})" title="${isFav?'Remove from favorites':'Add to favorites'}">${isFav?'★':'☆'}</button>
           <button class="archive-btn" onclick="event.preventDefault();event.stopPropagation();archiveEntry('${esc(e.id)}',${!isAr})">${isAr?'Unarchive':'Archive'}</button>
         </div>
