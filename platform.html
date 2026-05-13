@@ -394,7 +394,7 @@ td{padding:0.7rem 0.75rem;font-size:0.88rem;vertical-align:middle;}
 .at-concluded-toggle:hover,.at-concluded-unseen{border-color:rgba(192,144,48,.4);color:var(--gold);}
 .at-row{display:flex!important;flex-direction:column;gap:.3rem;padding:.5rem .7rem!important;}
 .at-row-top{display:flex;align-items:center;gap:.5rem;min-width:0;}
-.at-row-top .axis-label{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:.75rem;font-weight:500;}
+.at-row-top .axis-label{flex:1;min-width:0;overflow:hidden;white-space:nowrap;font-size:.75rem;font-weight:500;-webkit-mask-image:linear-gradient(to right,#000 70%,transparent 100%);mask-image:linear-gradient(to right,#000 70%,transparent 100%);}
 .at-lifecycle{display:flex;width:100%;border-radius:2px;overflow:hidden;gap:1px;}
 .at-lc-seg{flex:1;padding:.13rem .05rem;text-align:center;font-size:.38rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;background:rgba(255,255,255,.025);color:rgba(240,230,204,.13);transition:none;}
 .at-lc-seg.done{background:rgba(42,80,42,.45);color:rgba(74,154,74,.6);}
@@ -1511,7 +1511,7 @@ function renderArtifactTickets(){
       return`<div class="at-lc-seg">${STAGE_LABELS[i]}</div>`;
     }).join('');
     return`<div class="axis-row at-row at-row-${stageKey}" onclick="openTicketDrawer('${esc(e.id)}')" style="cursor:pointer;${closed?'opacity:.5;':''}">
-      <div class="at-row-top">${dot}<div class="axis-label">${esc(e.title||'')}</div></div>
+      <div class="at-row-top">${dot}<div class="axis-label">${esc(e.title||'')}</div><div style="white-space:nowrap;font-size:.58rem;color:var(--muted);font-family:'DM Mono',monospace;flex-shrink:0;margin-left:auto;padding-left:.5rem;">${esc((e.updated||e.date||'').substring(0,10))}</div></div>
       <div class="at-lifecycle">${lcSegs}</div>
     </div>`;
   }).join('');
