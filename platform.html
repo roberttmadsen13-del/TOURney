@@ -337,6 +337,7 @@ td{padding:0.7rem 0.75rem;font-size:0.88rem;vertical-align:middle;}
 .grade-avg-label{font-family:'DM Mono',monospace;font-size:0.46rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);}
 .grade-avg-note{font-family:'Barlow',sans-serif;font-size:0.72rem;color:rgba(240,230,204,0.45);margin-top:0.25rem;}
 .grade-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:0.75rem;}
+.grade-grid-compact{grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:.4rem;}
 .grade-card{background:var(--card);border:1px solid var(--border);padding:1rem;cursor:pointer;transition:all 0.18s;}
 .grade-card:hover{border-color:rgba(192,144,48,0.5);background:var(--card2);}
 .grade-card-top{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:0.45rem;}
@@ -448,7 +449,7 @@ td{padding:0.7rem 0.75rem;font-size:0.88rem;vertical-align:middle;}
     <button class="tab-btn active" id="tab-dash"      data-short="Dash"   onclick="switchTab('dash')">Dashboard</button>
     <button class="tab-btn"        id="tab-tenants"   data-short="Tenants" onclick="switchTab('tenants')">Tenants</button>
     <button class="tab-btn"        id="tab-action"    data-short="Action"  onclick="switchTab('action')">Action Board</button>
-    <button class="tab-btn"        id="tab-artifacts" data-short="Docs"    onclick="switchTab('artifacts')">Artifacts</button>
+
     <button class="tab-btn"        id="tab-bugs"      data-short="Bugs"   onclick="switchTab('bugs')">Bugs</button>
     <button class="tab-btn"        id="tab-checklist" data-short="QA"     onclick="switchTab('checklist')">QA</button>
     <button class="tab-btn"        id="tab-reference" data-short="Ref"    onclick="switchTab('reference')">Reference</button>
@@ -461,13 +462,7 @@ td{padding:0.7rem 0.75rem;font-size:0.88rem;vertical-align:middle;}
         <span class="stale-banner-icon">⚠</span>
         <span class="stale-banner-text" id="staleBannerText"></span>
       </div>
-      <div class="mc-hdr" style="display:flex;align-items:center;justify-content:space-between;">
-        <span>Axis Scorecard <span style="font-size:.62rem;font-weight:400;color:var(--muted);">Click any axis for history</span></span>
-        <button onclick="loadGrades()" style="background:none;border:1px solid var(--border);color:var(--muted);font-family:'DM Mono',monospace;font-size:.52rem;letter-spacing:.1em;text-transform:uppercase;padding:.2rem .5rem;cursor:pointer;transition:all .12s;" onmouseenter="this.style.borderColor='rgba(192,144,48,0.4)';this.style.color='var(--gold)'" onmouseleave="this.style.borderColor='';this.style.color=''">Refresh</button>
-      </div>
-      <div id="gradeAvgBar"></div>
-      <div class="grade-grid" id="gradeGrid"><div class="grade-no-data" style="padding:1.5rem;font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.1em;text-transform:uppercase;">Loading grades…</div></div>
-      <div style="margin-top:1.75rem;">
+      <div style="margin-top:.5rem;">
         <button id="actionBoardBadge" onclick="switchTab('action')" style="background:rgba(192,144,48,0.12);border:1px solid rgba(192,144,48,0.3);color:var(--gold);font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:0.82rem;letter-spacing:0.12em;text-transform:uppercase;padding:0.6rem 1.25rem;cursor:pointer;transition:all 0.15s;">0 Open Action Items →</button>
       </div>
     </div>
@@ -539,30 +534,6 @@ td{padding:0.7rem 0.75rem;font-size:0.88rem;vertical-align:middle;}
           <button class="btn-action btn-admin" onclick="loadMoreCodes()">Load more</button>
         </div>
       </div>
-    </div>
-  </div>
-
-  <!-- ── TAB: ARTIFACTS ── -->
-  <div id="panel-artifacts" style="display:none;">
-    <div class="hub-wrap">
-      <div class="toolbar">
-        <button class="filter-btn active" data-filter="all">All</button>
-        <button class="filter-btn" data-filter="review">Reviews</button>
-        <button class="filter-btn" data-filter="plan">Plans</button>
-        <button class="filter-btn" data-filter="audit">Audits</button>
-        <button class="filter-btn" data-filter="runbook">Runbooks</button>
-        <input id="hubSearch" type="text" class="hub-search" placeholder="Search…">
-        <select id="hubSort" class="hub-sort" onchange="sortMode=this.value;renderHub()">
-          <option value="status">Sort: Status</option>
-          <option value="date-new">Sort: Newest</option>
-          <option value="date-old">Sort: Oldest</option>
-          <option value="alpha">Sort: A→Z</option>
-        </select>
-        <span class="hub-count" id="hubCount">—</span>
-        <button class="filter-btn" data-filter="favorites" id="favFilterBtn">⭐ Favorites</button>
-        <button class="filter-btn archived-toggle" id="archivedToggle" onclick="toggleArchived()">Show Archived</button>
-      </div>
-      <div class="grid" id="cardGrid"><div class="grid-empty">Loading…</div></div>
     </div>
   </div>
 
@@ -758,6 +729,16 @@ td{padding:0.7rem 0.75rem;font-size:0.88rem;vertical-align:middle;}
       </div>
 
       <div class="action-section" style="margin-top:2rem;">
+        <div class="action-hd">
+          <span class="action-title">Axis Scorecard</span>
+          <span class="action-sub">Click any axis for history</span>
+          <button onclick="loadGrades()" style="margin-left:auto;background:none;border:1px solid var(--border);color:var(--muted);font-family:'DM Mono',monospace;font-size:.52rem;letter-spacing:.1em;text-transform:uppercase;padding:.2rem .5rem;cursor:pointer;transition:all .12s;" onmouseenter="this.style.borderColor='rgba(192,144,48,0.4)';this.style.color='var(--gold)'" onmouseleave="this.style.borderColor='';this.style.color=''">Refresh</button>
+        </div>
+        <div id="gradeAvgBar" style="margin-bottom:.5rem;"></div>
+        <div class="grade-grid grade-grid-compact" id="gradeGrid"><div class="grade-no-data" style="padding:1rem;font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.1em;text-transform:uppercase;">Loading grades…</div></div>
+      </div>
+
+      <div class="action-section" style="margin-top:2rem;">
         <div class="action-hd"><span class="action-title">Recent Activity</span></div>
         <div class="timeline-feed" id="timelineFeed"><div style="padding:.75rem .9rem;font-size:.75rem;color:var(--muted);">Loading…</div></div>
       </div>
@@ -807,8 +788,7 @@ const tabLoaded = {};
 function loadTabData(t) {
   if (t === 'dash')      { loadGrades(); loadCeoTasks(); }
   if (t === 'tenants')   { loadTournaments(); loadCompAccounts(); loadCodes(); }
-  if (t === 'action')    { loadMissionControl(); loadArtifacts(); tabLoaded['artifacts'] = true; }
-  if (t === 'artifacts') { loadArtifacts(); }
+  if (t === 'action')    { loadMissionControl(); loadArtifacts(); loadGrades(); tabLoaded['artifacts'] = true; }
   if (t === 'bugs')      { renderBugLog(); }
   if (t === 'checklist') { renderQaRuns(); }
   if (t === 'reference') { renderReference(); }
@@ -823,7 +803,7 @@ function showDashboard(email) {
 
 /* ══════════════════════ TABS ══════════════════════ */
 function switchTab(t) {
-  ['dash','tenants','artifacts','bugs','checklist','reference','action'].forEach(id => {
+  ['dash','tenants','bugs','checklist','reference','action'].forEach(id => {
     document.getElementById(`panel-${id}`).style.display = t === id ? '' : 'none';
     document.getElementById(`tab-${id}`).classList.toggle('active', t === id);
   });
