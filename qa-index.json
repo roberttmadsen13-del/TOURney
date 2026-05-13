@@ -1,9 +1,24 @@
 {
   "$schema": "https://tourney.greenskeeper.studio/qa-index-schema.json",
   "version": 1,
-  "updated_at": "2026-05-12T22:00:00Z",
+  "updated_at": "2026-05-12T22:30:00Z",
   "description": "Canonical registry of all TOURney plans, reviews, audits, and QA artifacts. The /platform Artifacts tab renders from this file. Skills (e.g. tourney-review) append new entries when they generate output.",
   "entries": [
+    {
+      "id": "finance",
+      "axis": "finance",
+      "category": "axis",
+      "stage": "plan",
+      "title": "Finance Plan",
+      "summary": "8-phase finance plan: LLC formation (P0 blocker) unlocks Stripe live mode, Mercury bank, accounting, and tax posture. 3 P0 items require Rob manual action. Target grade B+.",
+      "date": "2026-05-12",
+      "updated": "2026-05-12",
+      "author": "claude-sonnet-4-6",
+      "url": "/platform/finance",
+      "file": "finance.html",
+      "tags": ["finance", "plan", "llc", "stripe", "accounting"],
+      "status": "active"
+    },
     {
       "id": "review-finance-2026-05-11",
       "category": "review",

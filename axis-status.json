@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-05-12T00:00:00Z",
+  "updated_at": "2026-05-12T22:30:00Z",
   "description": "Living state for all TOURney platform axes. One entry per axis. Updated by every tourney-* skill. Agents read this for context (50 tokens) instead of parsing HTML artifacts.",
   "stages": ["review", "plan", "runbook", "executing", "audit", "concluded"],
   "axes": {
@@ -94,12 +94,12 @@
       "blocking": false
     },
     "finance": {
-      "status": "review",
+      "status": "plan",
       "grade": "C+",
       "artifact": "/platform/finance",
-      "last_updated": "2026-05-11",
-      "summary": "Stripe wiring B+. Zero revenue — LLC not formed, no live keys, reg_open=false, no ToS.",
-      "open_items": 4,
+      "last_updated": "2026-05-12",
+      "summary": "8-phase plan: LLC formation unblocks Stripe live mode, ToS, accounting, and tax posture. 3 P0 blockers all require Rob manual action.",
+      "open_items": 8,
       "blocking": true
     }
   }

@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Finance · TOURney Platform</title>
+<style>
+:root{--gold:#c09030;--gold-light:#d4a840;--gold-dim:rgba(192,144,48,0.18);--bg:#0a0a0a;--surface:#111;--card:#161616;--card2:#1c1c1c;--border:#222;--border-gold:rgba(192,144,48,0.22);--text:#e8e8e8;--muted:#666;--radius:8px;--red:#c0392b;--green:#27ae60;--orange:#e67e22;--blue:#2980b9;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,'Segoe UI',system-ui,sans-serif;padding:0;font-size:15px;line-height:1.6;}
+nav{position:sticky;top:0;z-index:100;background:rgba(10,10,10,0.96);border-bottom:1px solid var(--border-gold);backdrop-filter:blur(12px);padding:0.6rem 1.5rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap;}
+.nav-brand{color:var(--gold);font-weight:700;font-size:1rem;letter-spacing:0.05em;}
+.nav-brand span{color:var(--muted);font-weight:400;font-size:0.8rem;margin-left:0.4rem;}
+.nav-links{display:flex;gap:0.2rem;flex-wrap:wrap;margin-left:auto;}
+.nav-links a{color:var(--muted);text-decoration:none;font-size:0.78rem;padding:0.3rem 0.55rem;border-radius:4px;transition:all 0.15s;}
+.nav-links a:hover{color:var(--gold);background:var(--gold-dim);}
+.hero{padding:3rem 1.5rem 2rem;text-align:center;border-bottom:1px solid var(--border);background:linear-gradient(180deg,rgba(192,144,48,0.05) 0%,transparent 100%);}
+.hero-eyebrow{display:inline-block;font-size:0.72rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold);border:1px solid var(--border-gold);border-radius:20px;padding:0.25rem 0.85rem;margin-bottom:1.2rem;}
+.hero h1{font-size:clamp(1.8rem,4vw,2.6rem);font-weight:800;color:#fff;margin-bottom:0.4rem;}
+.hero h1 span{color:var(--gold);}
+.hero-meta{display:flex;gap:1.5rem;justify-content:center;flex-wrap:wrap;font-size:0.78rem;color:var(--muted);margin-top:1rem;}
+/* Lifecycle bar */
+.lifecycle{display:flex;gap:0;margin:2rem 1.5rem 0;border-radius:var(--radius);overflow:hidden;border:1px solid var(--border);}
+.lc-stage{flex:1;padding:.5rem .25rem;text-align:center;font-size:.68rem;font-weight:600;background:var(--card);color:var(--muted);text-transform:uppercase;letter-spacing:.04em;}
+.lc-stage.active{background:var(--gold);color:#000;}
+.lc-stage.done{background:#1a2a1a;color:#4a8a4a;}
+/* Content wrapper */
+.wrapper{max-width:900px;margin:0 auto;padding:2rem 1.5rem;}
+/* Stage sections */
+.axis-stage{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:1.5rem;overflow:hidden;}
+.stage-header{display:flex;align-items:center;gap:.75rem;padding:.75rem 1rem;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.stage-pill{display:inline-block;font-size:.65rem;font-weight:700;letter-spacing:.08em;padding:.2rem .6rem;border-radius:20px;text-transform:uppercase;}
+.pill-plan{background:rgba(41,128,185,0.15);color:var(--blue);border:1px solid rgba(41,128,185,0.3);}
+.pill-review{background:rgba(192,144,48,0.15);color:var(--gold);border:1px solid var(--border-gold);}
+.stage-date{font-size:.78rem;color:var(--muted);}
+.stage-agent{font-size:.72rem;color:var(--muted);margin-left:auto;}
+.grade-badge{font-size:.8rem;font-weight:800;color:var(--gold);background:var(--gold-dim);border:1px solid var(--border-gold);border-radius:4px;padding:.15rem .5rem;}
+.stage-body{padding:1.25rem 1.4rem;}
+/* Cards */
+.card{background:var(--card2);border:1px solid var(--border);border-radius:var(--radius);padding:1.2rem 1.4rem;margin-bottom:.75rem;}
+.card-title{font-size:.9rem;font-weight:700;color:var(--gold);margin-bottom:.5rem;display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;}
+.card p,.card li{font-size:.85rem;color:var(--text);margin-bottom:.3rem;}
+.card ul,.card ol{padding-left:1.2rem;}
+.card li{margin-bottom:.45rem;}
+.grid-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:.75rem;}
+/* Pills */
+.pill{display:inline-block;font-size:.65rem;font-weight:700;letter-spacing:.06em;padding:.18rem .55rem;border-radius:20px;text-transform:uppercase;}
+.pill-red   {background:rgba(192,57,43,0.15); color:var(--red);    border:1px solid rgba(192,57,43,0.3);}
+.pill-green {background:rgba(39,174,96,0.15); color:var(--green);  border:1px solid rgba(39,174,96,0.3);}
+.pill-orange{background:rgba(230,126,34,0.15);color:var(--orange); border:1px solid rgba(230,126,34,0.3);}
+.pill-blue  {background:rgba(41,128,185,0.15);color:var(--blue);   border:1px solid rgba(41,128,185,0.3);}
+.pill-gold  {background:var(--gold-dim);      color:var(--gold);   border:1px solid var(--border-gold);}
+.pill-gray  {background:rgba(255,255,255,0.05);color:var(--muted); border:1px solid var(--border);}
+/* Phase items */
+.phase-item{background:var(--card2);border:1px solid var(--border);border-left:3px solid var(--border);border-radius:0 var(--radius) var(--radius) 0;padding:1rem 1.25rem;margin-bottom:.75rem;}
+.phase-item.p0{border-left-color:#8b0000;}
+.phase-item.p1{border-left-color:var(--orange);}
+.phase-item.p2{border-left-color:var(--blue);}
+.phase-item.blocked{border-left-color:var(--red);}
+.phase-header{display:flex;align-items:center;gap:.6rem;margin-bottom:.5rem;flex-wrap:wrap;}
+.phase-title{font-size:.9rem;font-weight:700;color:#fff;}
+.phase-body{font-size:.83rem;color:var(--muted);margin-bottom:.5rem;}
+.phase-ac{font-size:.8rem;color:var(--text);background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:4px;padding:.5rem .7rem;margin-top:.5rem;}
+.phase-ac strong{color:var(--gold-light);display:block;margin-bottom:.2rem;font-size:.7rem;text-transform:uppercase;letter-spacing:.08em;}
+.phase-ac ul{padding-left:1.1rem;}
+.phase-ac li{font-size:.79rem;color:var(--text);margin-bottom:.25rem;}
+code{font-family:'Consolas','Monaco',monospace;background:rgba(255,255,255,0.07);padding:.1rem .3rem;border-radius:3px;font-size:.82em;color:var(--gold-light);}
+/* Overview grid */
+.overview-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:.75rem;margin-bottom:1.25rem;}
+.ov-card{background:var(--card2);border:1px solid var(--border);border-radius:var(--radius);padding:1rem;text-align:center;}
+.ov-val{font-size:1.6rem;font-weight:800;color:var(--gold);}
+.ov-label{font-size:.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-top:.2rem;}
+/* Risk table */
+.risk-table{width:100%;border-collapse:collapse;font-size:.82rem;}
+.risk-table th{text-align:left;padding:.5rem .75rem;border-bottom:1px solid var(--border);font-size:.7rem;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);}
+.risk-table td{padding:.6rem .75rem;border-bottom:1px solid rgba(34,34,34,0.5);vertical-align:top;}
+.risk-table tr:last-child td{border-bottom:none;}
+/* Next 3 */
+.next-action{display:flex;align-items:flex-start;gap:.85rem;padding:.85rem 1rem;background:var(--card2);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:.5rem;}
+.na-num{font-size:1.2rem;font-weight:800;color:var(--gold);min-width:1.5rem;}
+.na-body{flex:1;}
+.na-title{font-size:.88rem;font-weight:700;color:#fff;margin-bottom:.2rem;}
+.na-detail{font-size:.8rem;color:var(--muted);}
+h3{font-size:1rem;font-weight:700;color:#fff;margin:1.25rem 0 .75rem;}
+.section-label{font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-bottom:.5rem;}
+</style>
+</head>
+<body>
+<nav>
+  <span class="nav-brand">TOURney <span>Platform Intelligence</span></span>
+  <div class="nav-links">
+    <a href="/platform">← Platform</a>
+    <a href="/platform/5-11-26-claude-review-finance">Source Review</a>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="hero-eyebrow">Finance Axis</div>
+  <h1>TOURney — <span>Finance Plan</span></h1>
+  <div class="hero-meta">
+    <span>May 12, 2026</span>
+    <span>Claude Sonnet 4.6</span>
+    <span>Greenskeeper Studios Internal</span>
+    <span>Source grade: C+</span>
+  </div>
+</div>
+
+<div class="lifecycle" id="lifecycle-bar">
+  <div class="lc-stage" id="lc-review">Review</div>
+  <div class="lc-stage" id="lc-plan">Plan</div>
+  <div class="lc-stage" id="lc-runbook">Runbook</div>
+  <div class="lc-stage" id="lc-executing">Executing</div>
+  <div class="lc-stage" id="lc-audit">Audit</div>
+  <div class="lc-stage" id="lc-concluded">Concluded</div>
+</div>
+
+<div class="wrapper">
+<div id="stage-history">
+
+<section class="axis-stage stage-plan" data-date="2026-05-12" data-agent="claude-sonnet-4-6">
+  <div class="stage-header">
+    <span class="stage-pill pill-plan">Plan</span>
+    <span class="stage-date">May 12, 2026</span>
+    <span class="stage-agent">claude-sonnet-4-6</span>
+  </div>
+  <div class="stage-body">
+
+    <!-- OVERVIEW -->
+    <div class="section-label">Overview</div>
+    <div class="overview-grid">
+      <div class="ov-card"><div class="ov-val">C+</div><div class="ov-label">Current Grade</div></div>
+      <div class="ov-card"><div class="ov-val">B+</div><div class="ov-label">Target Grade</div></div>
+      <div class="ov-card"><div class="ov-val">8</div><div class="ov-label">Phases</div></div>
+      <div class="ov-card"><div class="ov-val">3</div><div class="ov-label">P0 Blockers</div></div>
+      <div class="ov-card"><div class="ov-val">$0</div><div class="ov-label">Current Revenue</div></div>
+      <div class="ov-card"><div class="ov-val">~$57</div><div class="ov-label">Monthly Burn</div></div>
+    </div>
+    <div class="card" style="margin-bottom:1.5rem;">
+      <div class="card-title">Situation</div>
+      <p>Stripe integration is A-quality — edge functions, webhook, DB schema, and tier gating are all wired. The business scaffolding is pre-launch D: LLC not formed, no live Stripe keys, zero revenue, no ToS/Privacy Policy, no accounting. Phases 1–3 are hard blockers to first dollar. Phases 4–8 are operational hygiene that should run in parallel once Phase 1 unblocks.</p>
+    </div>
+
+    <!-- PHASE 1 -->
+    <div class="section-label">Phase 1 — Legal Foundation</div>
+    <div class="phase-item p0 blocked">
+      <div class="phase-header">
+        <span class="phase-title">Form LLC + Obtain EIN</span>
+        <span class="pill pill-red">P0</span>
+        <span class="pill pill-red">BLOCKER</span>
+        <span class="pill pill-gray">Rob Manual</span>
+      </div>
+      <div class="phase-body">Single-member LLC formation under "Greenskeeper Studios LLC". EIN via IRS Form SS-4 (online, free, same-day approval). LLC is prerequisite for business Stripe account, business bank, and personal liability protection. Operating as sole proprietor exposes all personal assets to business risk.</div>
+      <div class="phase-ac">
+        <strong>Acceptance Criteria</strong>
+        <ul>
+          <li>LLC articles filed with state + approval received</li>
+          <li>EIN issued by IRS (confirmation letter or online confirmation)</li>
+          <li>Single-member operating agreement drafted and signed</li>
+          <li>No personal assets mixed with business post-formation</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="phase-item p0 blocked">
+      <div class="phase-header">
+        <span class="phase-title">Open Mercury Business Bank Account</span>
+        <span class="pill pill-red">P0</span>
+        <span class="pill pill-orange">Blocked on LLC + EIN</span>
+        <span class="pill pill-gray">Rob Manual</span>
+      </div>
+      <div class="phase-body">Mercury (mercury.com) is the recommended account for solo founders — no monthly fees, API access, strong Stripe integration. Requires LLC formation documents + EIN. Primary use: receive Stripe payouts, pay business expenses, document owner draws.</div>
+      <div class="phase-ac">
+        <strong>Acceptance Criteria</strong>
+        <ul>
+          <li>Mercury account open under Greenskeeper Studios LLC EIN</li>
+          <li>Debit card received</li>
+          <li>Stripe payouts directed to Mercury account</li>
+          <li>Zero personal transactions in this account</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- PHASE 2 -->
+    <div class="section-label" style="margin-top:1.25rem;">Phase 2 — ToS + Privacy Policy</div>
+    <div class="phase-item p0">
+      <div class="phase-header">
+        <span class="phase-title">Deploy Terms of Service + Privacy Policy</span>
+        <span class="pill pill-red">P0</span>
+        <span class="pill pill-orange">Required before live payments</span>
+        <span class="pill pill-gray">Rob Manual</span>
+      </div>
+      <div class="phase-body">Stripe requires ToS acceptance for live payments. Privacy Policy is legally required under CCPA/GDPR if collecting any user data. Recommended: Termly (~$10/mo) or Iubenda for generated policies. Both must be linked from footer across all pages.</div>
+      <div class="phase-ac">
+        <strong>Acceptance Criteria</strong>
+        <ul>
+          <li><code>/terms</code> and <code>/privacy</code> routes live and accessible</li>
+          <li>Footer links to both on <code>index.html</code>, <code>admin.html</code>, <code>player.html</code>, <code>marketing.html</code></li>
+          <li>ToS checkbox on registration flow before payment capture</li>
+          <li>Policies cover: data collection, payment processing, cancellation, contact info</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- PHASE 3 -->
+    <div class="section-label" style="margin-top:1.25rem;">Phase 3 — Stripe Live Mode Activation</div>
+    <div class="phase-item p0 blocked">
+      <div class="phase-header">
+        <span class="phase-title">Create Stripe Products + Price IDs</span>
+        <span class="pill pill-red">P0</span>
+        <span class="pill pill-orange">Blocked on Phase 1 + 2</span>
+        <span class="pill pill-gray">Rob Manual</span>
+      </div>
+      <div class="phase-body">
+        Code already reads 4 env vars that don't exist yet. <code>create-checkout</code> needs <code>STRIPE_PRICE_STARTER</code>, <code>STRIPE_PRICE_PRO</code>, <code>STRIPE_PRICE_CLUB</code>. <code>create-player-checkout</code> + <code>stripe-webhook</code> need <code>STRIPE_PRICE_PLAYER</code>. Create products in Stripe dashboard, then set secrets in Supabase.
+      </div>
+      <div class="phase-ac">
+        <strong>Steps</strong>
+        <ul>
+          <li>Update Stripe account with LLC name + EIN</li>
+          <li>Create product: "Player Pro" → recurring monthly price → copy price ID → <code>STRIPE_PRICE_PLAYER</code></li>
+          <li>Create product: "Tournament Organizer" → 3 price tiers (Starter/Pro/Club) → copy IDs → <code>STRIPE_PRICE_STARTER</code>, <code>STRIPE_PRICE_PRO</code>, <code>STRIPE_PRICE_CLUB</code></li>
+          <li>In Supabase dashboard → Project Settings → Edge Function Secrets: set all 4 price IDs + <code>STRIPE_SECRET_KEY</code> + <code>STRIPE_WEBHOOK_SECRET</code></li>
+          <li>Register live webhook: <code>https://jllugkiojeoopitdvzsa.supabase.co/functions/v1/stripe-webhook</code> — events: <code>checkout.session.completed</code>, <code>customer.subscription.updated</code>, <code>customer.subscription.deleted</code>, <code>invoice.payment_failed</code></li>
+          <li>Set <code>reg_open=true</code> in Supabase settings table for bova tenant</li>
+        </ul>
+        <strong style="margin-top:.5rem;">Acceptance Criteria</strong>
+        <ul>
+          <li>Real test purchase via <code>/player-upgrade</code> succeeds end-to-end</li>
+          <li><code>player_accounts.billing_status = 'active'</code> in DB after purchase</li>
+          <li>Stripe webhook <code>checkout.session.completed</code> fires and logs success</li>
+          <li>Tier gates (Design, Access tabs) unlock for upgraded player</li>
+          <li><code>PRICE_TO_PLAN</code> map resolves correctly (not empty object)</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="phase-item p1">
+      <div class="phase-header">
+        <span class="phase-title">Align tier-config.js with 3-tier model</span>
+        <span class="pill pill-orange">P1</span>
+        <span class="pill pill-blue">Code change</span>
+      </div>
+      <div class="phase-body"><code>lib/tier-config.js</code> currently only has <code>free</code> and <code>pro</code>. <code>create-checkout/index.ts</code> references <code>starter</code>, <code>pro</code>, and <code>club</code>. These must align before tournament organizer checkout is live.</div>
+      <div class="phase-ac">
+        <strong>Acceptance Criteria</strong>
+        <ul>
+          <li><code>TOURNEY_PLANS</code> has <code>free</code>, <code>starter</code>, <code>pro</code>, <code>club</code> keys</li>
+          <li><code>canAccess(plan, feature)</code> returns correct boolean for all combinations</li>
+          <li>Admin tab gates updated to reflect 3-tier model</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- PHASE 4 -->
+    <div class="section-label" style="margin-top:1.25rem;">Phase 4 — Accounting Setup</div>
+    <div class="phase-item p1">
+      <div class="phase-header">
+        <span class="phase-title">Wave Accounting — Free Setup</span>
+        <span class="pill pill-orange">P1</span>
+        <span class="pill pill-green">Wave recommended (free)</span>
+      </div>
+      <div class="phase-body">Wave (waveapps.com) is free, handles Stripe + bank feed integration, and is sufficient for a solo-founder SaaS pre-$100k ARR. QuickBooks (~$30/mo) adds complexity without benefit at current scale. Set up chart of accounts for SaaS: Revenue, Stripe Fees (2.9%+30¢/txn), Hosting, AI API, Domain/Tools, Owner Draw.</div>
+      <div class="phase-ac">
+        <strong>Acceptance Criteria</strong>
+        <ul>
+          <li>Wave account open under Greenskeeper Studios LLC</li>
+          <li>Mercury bank feed connected</li>
+          <li>Stripe integration connected (auto-imports payouts)</li>
+          <li>Chart of accounts matches SaaS cost structure</li>
+          <li>First month reconciled with zero unmatched transactions</li>
+          <li>Monthly reconciliation calendar reminder set</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- PHASE 5 -->
+    <div class="section-label" style="margin-top:1.25rem;">Phase 5 — Tax Posture</div>
+    <div class="phase-item p1">
+      <div class="phase-header">
+        <span class="phase-title">Quarterly Estimated Tax Payments</span>
+        <span class="pill pill-orange">P1</span>
+      </div>
+      <div class="phase-body">As sole member LLC (pass-through), Rob owes SE tax (~15.3%) + income tax on net profit. No withholding exists — quarterly estimates required to avoid underpayment penalty. 2026 remaining due dates: <strong>Jun 16</strong>, <strong>Sep 15</strong>, <strong>Jan 15, 2027</strong>. Rule of thumb: set aside 30% of every Stripe payout.</div>
+      <div class="phase-ac">
+        <strong>Acceptance Criteria</strong>
+        <ul>
+          <li>IRS account at <code>irs.gov/account</code> linked to EIN</li>
+          <li>Calendar reminders: Jun 16, Sep 15, Jan 15 (and Apr 15 2027)</li>
+          <li>Wave rule: tag every Stripe payout — 30% auto-allocated to "Tax Reserve" category</li>
+          <li>S-corp election decision documented: evaluate if annual profit exceeds $40k (breakeven point where SE tax savings exceed S-corp admin cost)</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- PHASE 6 -->
+    <div class="section-label" style="margin-top:1.25rem;">Phase 6 — Owner Draw Schedule</div>
+    <div class="phase-item p2">
+      <div class="phase-header">
+        <span class="phase-title">Sustainable Draw Policy</span>
+        <span class="pill pill-blue">P2</span>
+      </div>
+      <div class="phase-body">Current burn: ~$57/mo personal spend (no business entity yet). First draw only after 3 consecutive months of positive operating cash flow. Document draw policy in operating agreement. Track in Wave as "Owner's Equity Draw" — not salary, not expense.</div>
+      <div class="phase-ac">
+        <strong>Acceptance Criteria</strong>
+        <ul>
+          <li>Operating agreement specifies draw policy (frequency, trigger: positive cash flow)</li>
+          <li>Wave "Owner's Draw" account created under equity</li>
+          <li>No draw until 3 months positive cash flow observed</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- PHASE 7 -->
+    <div class="section-label" style="margin-top:1.25rem;">Phase 7 — Cost Reduction</div>
+    <div class="phase-item p2">
+      <div class="phase-header">
+        <span class="phase-title">Operating Cost Baseline + Optimization</span>
+        <span class="pill pill-blue">P2</span>
+      </div>
+      <div class="phase-body">Current ~$57/mo dominated by Anthropic API tokens. Token savings runbook already executed (haiku routing, cache prefix alias). Supabase and Vercel are on free/hobby tiers — adequate until meaningful scale.</div>
+      <div class="phase-ac">
+        <strong>Breakdown + Thresholds</strong>
+        <ul>
+          <li><strong>Anthropic API</strong> — dominant cost; monitor monthly in console; target &lt;$30/mo via existing optimization</li>
+          <li><strong>Supabase Free</strong> — upgrade to Pro ($25/mo) only when: DB &gt;500MB or storage &gt;5GB or &gt;50k MAU</li>
+          <li><strong>Vercel Hobby</strong> — upgrade to Pro ($20/mo) only when: bandwidth &gt;100GB/mo or team members needed</li>
+          <li><strong>Domain</strong> — ~$12/yr (greenskeeper.studio) — negligible</li>
+        </ul>
+        <strong>Acceptance Criteria</strong>
+        <ul>
+          <li>Anthropic spend tracked monthly in Wave under "AI API" category</li>
+          <li>Upgrade thresholds documented — do not upgrade ahead of need</li>
+          <li>Pre-revenue target: &lt;$30/mo total burn</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- PHASE 8 -->
+    <div class="section-label" style="margin-top:1.25rem;">Phase 8 — Pricing Economics</div>
+    <div class="phase-item p2">
+      <div class="phase-header">
+        <span class="phase-title">Define + Validate Tier Pricing Numbers</span>
+        <span class="pill pill-blue">P2</span>
+      </div>
+      <div class="phase-body">Per mempalace: pricing model is per-player, per-round. Numbers are TBD pending beta. Edge functions already support 4 price IDs (Starter/Pro/Club/Player). Tier-config only has free/pro binary today. Breakeven math: ~29 Player Pro subscribers at $2/mo covers $57 burn.</div>
+      <div class="phase-ac">
+        <strong>Recommended Starting Prices (subject to Rob's decision)</strong>
+        <ul>
+          <li><strong>Player Pro</strong>: $2/mo — access to Design/Access features; breakeven at 29 players</li>
+          <li><strong>Tournament Starter</strong>: $X/tournament (one-off, casual organizers)</li>
+          <li><strong>Tournament Pro</strong>: $X/mo subscription (recurring organizers)</li>
+          <li><strong>Tournament Club</strong>: $X/mo (multi-tournament orgs, premium support)</li>
+        </ul>
+        <strong>Acceptance Criteria</strong>
+        <ul>
+          <li>All 4 price IDs created in Stripe and set in Supabase secrets</li>
+          <li><code>tier-config.js</code> updated with starter/pro/club feature matrix</li>
+          <li>Pricing numbers published on <code>marketing.html</code> pricing section</li>
+          <li>Unit economics documented: revenue per customer vs. Stripe fees vs. infra cost</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- RISK REGISTER -->
+    <div class="section-label" style="margin-top:1.5rem;">Risk Register</div>
+    <div class="card">
+      <table class="risk-table">
+        <thead>
+          <tr>
+            <th>Risk</th>
+            <th>Severity</th>
+            <th>Mitigation</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>LLC not formed</strong> — personal assets exposed to business liability</td>
+            <td><span class="pill pill-red">Critical</span></td>
+            <td>Form LLC before collecting any revenue. No exceptions.</td>
+          </tr>
+          <tr>
+            <td><strong>No ToS/Privacy</strong> — payment collection without legal coverage</td>
+            <td><span class="pill pill-red">Critical</span></td>
+            <td>Deploy before flipping Stripe to live. Termly/Iubenda are same-day.</td>
+          </tr>
+          <tr>
+            <td><strong>PRICE_TO_PLAN map empty at runtime</strong> — all webhooks default to 'pro' regardless of price</td>
+            <td><span class="pill pill-orange">High</span></td>
+            <td>Set <code>STRIPE_PRICE_PLAYER</code> secret in Supabase before first purchase.</td>
+          </tr>
+          <tr>
+            <td><strong>tier-config.js binary (free/pro)</strong> — starter/club tiers have no feature definition</td>
+            <td><span class="pill pill-orange">High</span></td>
+            <td>Update <code>TOURNEY_PLANS</code> before enabling tournament organizer checkout.</td>
+          </tr>
+          <tr>
+            <td><strong>No tax reserve</strong> — first revenue check could trigger large tax liability with no set-aside</td>
+            <td><span class="pill pill-orange">Med</span></td>
+            <td>30% reserve rule in Wave from day 1 of revenue.</td>
+          </tr>
+          <tr>
+            <td><strong>Anthropic API cost spike</strong> — token usage tied to platform usage, can scale unexpectedly</td>
+            <td><span class="pill pill-blue">Low</span></td>
+            <td>Token savings runbook executed. Monitor monthly. Budget alert in Anthropic console.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- NEXT 3 ACTIONS -->
+    <div class="section-label" style="margin-top:1.5rem;">Next 3 Actions (Rob)</div>
+    <div class="next-action">
+      <div class="na-num">1</div>
+      <div class="na-body">
+        <div class="na-title">Form LLC + Obtain EIN</div>
+        <div class="na-detail">File Greenskeeper Studios LLC in your state. Then apply for EIN at IRS.gov (online, free, 10 min). This is the single action that unblocks Phases 2, 3, 4, and 5.</div>
+      </div>
+    </div>
+    <div class="next-action">
+      <div class="na-num">2</div>
+      <div class="na-body">
+        <div class="na-title">Deploy ToS + Privacy Policy</div>
+        <div class="na-detail">Use Termly or Iubenda to generate policies. Add <code>terms.html</code> + <code>privacy.html</code> to repo, link in footer. Can run concurrently with LLC formation — no dependency.</div>
+      </div>
+    </div>
+    <div class="next-action">
+      <div class="na-num">3</div>
+      <div class="na-body">
+        <div class="na-title">Create Stripe Products + Set Supabase Secrets</div>
+        <div class="na-detail">After LLC + EIN: update Stripe account, create 4 products, copy price IDs, set 6 secrets in Supabase dashboard (<code>STRIPE_SECRET_KEY</code>, <code>STRIPE_WEBHOOK_SECRET</code>, <code>STRIPE_PRICE_PLAYER</code>, <code>STRIPE_PRICE_STARTER</code>, <code>STRIPE_PRICE_PRO</code>, <code>STRIPE_PRICE_CLUB</code>). Then flip <code>reg_open=true</code>.</div>
+      </div>
+    </div>
+
+  </div><!-- /stage-body -->
+</section>
+
+</div><!-- /stage-history -->
+</div><!-- /wrapper -->
+
+<script>
+(function(){
+  const first=document.querySelector('.axis-stage');
+  if(!first)return;
+  const t=first.className.match(/stage-(\w+)/);
+  if(!t)return;
+  const order=['review','plan','runbook','executing','audit','concluded'];
+  const cur=t[1];
+  const ci=order.indexOf(cur);
+  order.forEach((s,i)=>{
+    const el=document.getElementById('lc-'+s);
+    if(!el)return;
+    if(i<ci)el.classList.add('done');
+    else if(i===ci)el.classList.add('active');
+  });
+})();
+</script>
+</body>
+</html>
