@@ -425,15 +425,22 @@ td{padding:0.7rem 0.75rem;font-size:0.88rem;vertical-align:middle;}
     <button class="tab-btn"        id="tab-tenants"   data-short="Ops"    onclick="switchTab('tenants')">Tenants</button>
     <button class="tab-btn"        id="tab-action"    data-short="Action" onclick="switchTab('action')">Action Board</button>
     <button class="tab-btn"        id="tab-artifacts" data-short="Files"  onclick="switchTab('artifacts')">Artifacts</button>
+    <button class="tab-btn"        id="tab-bugs"      data-short="Bugs"   onclick="switchTab('bugs')">Bugs</button>
     <button class="tab-btn"        id="tab-checklist" data-short="QA"     onclick="switchTab('checklist')">QA</button>
     <button class="tab-btn"        id="tab-reference" data-short="Ref"    onclick="switchTab('reference')">Reference</button>
   </div>
 
   <!-- ── TAB: DASHBOARD ── -->
-  <!-- ── MISSION CONTROL (Dashboard) ── -->
   <div id="panel-dash">
     <div class="mc-wrap">
-      <div class="mc-hdr">Launch Readiness</div>
+      <div id="staleBanner" class="stale-banner" style="display:none;">
+        <span class="stale-banner-icon">⚠</span>
+        <span class="stale-banner-text" id="staleBannerText"></span>
+      </div>
+      <div class="mc-hdr">Axis Scorecard <span style="font-size:.62rem;font-weight:400;color:var(--muted);">Click any axis for history</span></div>
+      <div id="gradeAvgBar"></div>
+      <div class="grade-grid" id="gradeGrid"><div class="grade-no-data" style="padding:1.5rem;font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.1em;text-transform:uppercase;">Loading grades…</div></div>
+      <div class="mc-hdr" style="margin-top:1.75rem;">Launch Readiness</div>
       <div class="launch-strip">
         <div class="ls-pill ls-gray" id="ls-revenue-pill"><span class="ls-label">Revenue</span><span class="ls-val" id="ls-revenue">—</span></div>
         <div class="ls-pill ls-gray" id="ls-security-pill"><span class="ls-label">Security</span><span class="ls-val" id="ls-security">—</span></div>
@@ -442,31 +449,9 @@ td{padding:0.7rem 0.75rem;font-size:0.88rem;vertical-align:middle;}
         <div class="ls-pill ls-gray" id="ls-legal-pill"><span class="ls-label">Legal</span><span class="ls-val" id="ls-legal">—</span></div>
         <div class="ls-pill ls-gray" id="ls-product-pill"><span class="ls-label">Product</span><span class="ls-val" id="ls-product">—</span></div>
       </div>
-      <div class="mc-hdr">Today — <span id="mcTodayDate"></span></div>
-      <div class="today-queue">
-        <div>
-          <div class="tq-section">
-            <div class="tq-hdr"><span class="tq-title">Do Now</span><span class="tq-badge" id="doNowBadge">0</span></div>
-            <div id="tqDoNow"><div class="tq-empty">Loading…</div></div>
-          </div>
-          <div class="tq-section">
-            <div class="tq-hdr"><span class="tq-title">Agent Can Do</span></div>
-            <div id="tqAgent"><div class="tq-empty">Loading…</div></div>
-          </div>
-        </div>
-        <div>
-          <div class="tq-section">
-            <div class="tq-hdr"><span class="tq-title">Waiting on Rob</span></div>
-            <div id="tqWaiting"><div class="tq-empty">Loading…</div></div>
-          </div>
-          <div class="tq-section">
-            <div class="tq-hdr"><span class="tq-title">Recently Shipped</span></div>
-            <div id="tqShipped"><div class="tq-empty">Loading…</div></div>
-          </div>
-        </div>
+      <div style="margin-top:1.75rem;">
+        <button id="actionBoardBadge" onclick="switchTab('action')" style="background:rgba(192,144,48,0.12);border:1px solid rgba(192,144,48,0.3);color:var(--gold);font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:0.82rem;letter-spacing:0.12em;text-transform:uppercase;padding:0.6rem 1.25rem;cursor:pointer;transition:all 0.15s;">0 Open Action Items →</button>
       </div>
-      <div class="mc-hdr" style="margin-top:1.5rem;">Recent Activity</div>
-      <div class="timeline-feed" id="timelineFeed"><div style="padding:.75rem .9rem;font-size:.75rem;color:var(--muted);">Loading…</div></div>
     </div>
   </div>
 
@@ -537,20 +522,12 @@ td{padding:0.7rem 0.75rem;font-size:0.88rem;vertical-align:middle;}
   <!-- ── TAB: ARTIFACTS ── -->
   <div id="panel-artifacts" style="display:none;">
     <div class="hub-wrap">
-      <div class="axis-board">
-        <div class="axis-board-hdr">
-          <span class="axis-board-title">Axis Tickets</span>
-          <span id="axisLastUpdated" style="font-size:.7rem;color:var(--muted);"></span>
-        </div>
-        <div id="axisBoard"><div style="color:var(--muted);font-size:.8rem;padding:.5rem 0;">Loading…</div></div>
-      </div>
       <div class="toolbar">
         <button class="filter-btn active" data-filter="all">All</button>
         <button class="filter-btn" data-filter="review">Reviews</button>
         <button class="filter-btn" data-filter="plan">Plans</button>
         <button class="filter-btn" data-filter="audit">Audits</button>
         <button class="filter-btn" data-filter="runbook">Runbooks</button>
-        <button class="filter-btn" data-filter="bugs">Bugs</button>
         <input id="hubSearch" type="text" class="hub-search" placeholder="Search…">
         <select id="hubSort" class="hub-sort" onchange="sortMode=this.value;renderHub()">
           <option value="status">Sort: Status</option>
@@ -566,6 +543,26 @@ td{padding:0.7rem 0.75rem;font-size:0.88rem;vertical-align:middle;}
     </div>
   </div>
 
+  <!-- ── TAB: BUGS ── -->
+  <div id="panel-bugs" style="display:none;">
+    <div class="action-wrap">
+      <div class="action-section">
+        <div class="action-hd">
+          <span class="action-title">Open Bugs</span>
+          <span class="action-sub" id="openBugLogCount">0</span>
+        </div>
+        <div id="bugLogOpen"></div>
+      </div>
+      <div class="action-section" style="margin-top:2rem;">
+        <div class="action-hd">
+          <span class="action-title">Completed</span>
+          <span class="action-sub" id="compBugLogCount">0</span>
+        </div>
+        <div id="bugLogCompleted"></div>
+      </div>
+    </div>
+  </div>
+
   <!-- ── TAB: CHECKLIST ── -->
   <div id="panel-checklist" style="display:none;">
     <div class="cl-wrap">
@@ -574,7 +571,7 @@ td{padding:0.7rem 0.75rem;font-size:0.88rem;vertical-align:middle;}
         <input class="slug-input" id="slugInput" type="text" placeholder="e.g. bova">
         <span class="cl-progress" id="progressLabel">— / —</span>
         <button class="btn-log-run" onclick="logQaRun()" style="margin-left:auto;">Log Run</button>
-        <a href="/platform/bugs" style="background:rgba(192,144,48,.12);border:1px solid rgba(192,144,48,.3);color:var(--gold);font-family:'Barlow Condensed',sans-serif;font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:.35rem .85rem;border-radius:5px;text-decoration:none;white-space:nowrap;">Bug Log →</a>
+        <button onclick="switchTab('bugs')" style="background:rgba(192,144,48,.12);border:1px solid rgba(192,144,48,.3);color:var(--gold);font-family:'Barlow Condensed',sans-serif;font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:.35rem .85rem;border-radius:5px;cursor:pointer;white-space:nowrap;">Bug Log →</button>
       </div>
       <div class="cl-sections" id="clSections"></div>
       <div class="qa-runs" id="qaRunHistory"></div>
@@ -685,23 +682,48 @@ td{padding:0.7rem 0.75rem;font-size:0.88rem;vertical-align:middle;}
   <!-- ── TAB: ACTION BOARD ── -->
   <div id="panel-action" style="display:none;">
     <div class="action-wrap">
-      <div id="staleBanner" class="stale-banner" style="display:none;">
-        <span class="stale-banner-icon">⚠</span>
-        <span class="stale-banner-text" id="staleBannerText"></span>
-      </div>
-
-      <div class="action-section">
-        <div class="action-hd">
-          <span class="action-title">Business Scorecard</span>
-          <span class="action-sub">Click any axis · see history · copy review command</span>
+      <div class="mc-hdr" style="margin-bottom:.75rem;">Today — <span id="mcTodayDate"></span></div>
+      <div class="today-queue">
+        <div>
+          <div class="tq-section">
+            <div class="tq-hdr"><span class="tq-title">Do Now</span><span class="tq-badge" id="doNowBadge">0</span></div>
+            <div id="tqDoNow"><div class="tq-empty">Loading…</div></div>
+          </div>
+          <div class="tq-section">
+            <div class="tq-hdr"><span class="tq-title">Agent Can Do</span></div>
+            <div id="tqAgent"><div class="tq-empty">Loading…</div></div>
+          </div>
         </div>
-        <div id="gradeAvgBar"></div>
-        <div class="grade-grid" id="gradeGrid"><div class="grade-no-data" style="padding:1.5rem;font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.1em;text-transform:uppercase;">Loading grades…</div></div>
+        <div>
+          <div class="tq-section">
+            <div class="tq-hdr"><span class="tq-title">Waiting on Rob</span></div>
+            <div id="tqWaiting"><div class="tq-empty">Loading…</div></div>
+          </div>
+          <div class="tq-section">
+            <div class="tq-hdr"><span class="tq-title">Recently Shipped</span></div>
+            <div id="tqShipped"><div class="tq-empty">Loading…</div></div>
+          </div>
+        </div>
       </div>
 
-      <div class="action-section">
+      <div class="action-section" style="margin-top:2rem;">
         <div class="action-hd">
-          <span class="action-title">CEO Tasks</span>
+          <span class="action-title">Axis Tickets</span>
+          <span class="action-sub" id="axisLastUpdated"></span>
+        </div>
+        <div class="axis-board">
+          <div id="axisBoard"><div style="color:var(--muted);font-size:.8rem;padding:.5rem 0;">Loading…</div></div>
+        </div>
+      </div>
+
+      <div class="action-section" style="margin-top:2rem;">
+        <div class="action-hd"><span class="action-title">Recent Activity</span></div>
+        <div class="timeline-feed" id="timelineFeed"><div style="padding:.75rem .9rem;font-size:.75rem;color:var(--muted);">Loading…</div></div>
+      </div>
+
+      <div class="action-section" style="margin-top:2rem;">
+        <div class="action-hd">
+          <span class="action-title">Waiting on Rob</span>
           <span class="action-sub">Only you can do these — AI cannot</span>
         </div>
         <div class="ceo-list" id="ceoList"></div>
@@ -765,7 +787,7 @@ function showDashboard(email) {
 
 /* ══════════════════════ TABS ══════════════════════ */
 function switchTab(t) {
-  ['dash','tenants','artifacts','checklist','reference','action'].forEach(id => {
+  ['dash','tenants','artifacts','bugs','checklist','reference','action'].forEach(id => {
     document.getElementById(`panel-${id}`).style.display = t === id ? '' : 'none';
     document.getElementById(`tab-${id}`).classList.toggle('active', t === id);
   });
@@ -1766,6 +1788,8 @@ function renderTodayQueue(){
   set('tqAgent',agentItems,'All axes concluded.');
   set('tqWaiting',waitingItems,'All tasks done!');
   set('tqShipped',shippedItems,'No artifacts yet.');
+  const actionBadge=document.getElementById('actionBoardBadge');
+  if(actionBadge){const n=doNow.length+agentItems.length+waitingItems.length;actionBadge.textContent=n+' Open Action Item'+(n!==1?'s':'')+' →';}
 }
 window.renderBugLog = function() {
   const openWrap = document.getElementById('bugLogOpen');
