@@ -774,8 +774,9 @@ const tabLoaded = {};
 function loadTabData(t) {
   if (t === 'dash')      { loadGrades(); loadCeoTasks(); }
   if (t === 'tenants')   { loadTournaments(); loadCompAccounts(); loadCodes(); }
-  if (t === 'action')    { loadMissionControl(); loadArtifacts(); }
+  if (t === 'action')    { loadMissionControl(); loadArtifacts(); tabLoaded['artifacts'] = true; }
   if (t === 'artifacts') { loadArtifacts(); }
+  if (t === 'bugs')      { renderBugLog(); }
   if (t === 'checklist') { renderQaRuns(); }
   if (t === 'reference') { renderReference(); }
 }
@@ -800,9 +801,9 @@ function switchTab(t) {
 /* ══════════════════════ DASHBOARD ══════════════════════ */
 function deriveStatus(rounds) {
   if (!rounds.length) return 'notlive';
-  const vals = rounds.map(r => (r.value||'').toLowerCase());
-  if (vals.every(v => v==='complete'||v==='done')) return 'complete';
-  if (vals.some(v => v==='active'||v==='live')) return 'live';
+  const vals = rounds.map(r => (r.status||'').toLowerCase());
+  if (vals.every(v => v==='closed')) return 'complete';
+  if (vals.some(v => v==='open')) return 'live';
   return 'notlive';
 }
 function statusBadge(s) {
@@ -1791,7 +1792,7 @@ function renderTodayQueue(){
   const NEXT={review:'plan',plan:'runbook',runbook:'executing',executing:'audit',audit:'concluded'};
   const NEXT_LABEL={plan:'Generate Plan',runbook:'Generate Runbook',executing:'Execute (Manual)',audit:'Run Audit'};
   const NEXT_SKILL={plan:'/tourney-plan-',runbook:'/tourney-runbook-',executing:null,audit:'/tourney-audit-'};
-  const URGENT_IDS=['send_install_email_secret','gh_actions_verify','supabase_email','leaked_pw'];
+  const URGENT_IDS=['wire_install_email_webhook','gh_actions_verify','supabase_email','leaked_pw'];
 
   // DO NOW
   const doNow=[];
@@ -2028,9 +2029,20 @@ async function loadBugsTab() {
   const elCC   = document.getElementById('compBugLogCount');
   if (!elOpen) return;
   elOpen.innerHTML = '<div style="color:var(--muted);font-size:.8rem;padding:.5rem 0;">Loading…</div>';
-  const { data: { session: bugsSess } } = await _sbBugs.auth.getSession();
-  if (!bugsSess) { elOpen.innerHTML = '<div style="color:var(--red);font-size:.75rem;">No active session — please sign out and back in.</div>'; return; }
-  const { data, error } = await _sbBugs.from('platform_bugs').select('*').order('created_at', { ascending: false });
+  const { data: { session: bugsSess } } = await sb.auth.getSession();
+  if (!bugsSess?.access_token) { elOpen.innerHTML = '<div style="color:var(--red);font-size:.75rem;">No active session — please sign out and back in.</div>'; return; }
+  // raw fetch bypasses Supabase client auth-injection quirks
+  const _bugsResp = await fetch(
+    'https://jllugkiojeoopitdvzsa.supabase.co/rest/v1/platform_bugs?select=*&order=created_at.desc',
+    { headers: {
+        'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpsbHVna2lvamVvb3BpdGR2enNhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYyNjc2MzYsImV4cCI6MjA5MTg0MzYzNn0.gvvK5IhTYdUPxsdmxq8pFiCD4CAINJ-fmnKuwDN0KLs',
+        'Authorization': 'Bearer ' + bugsSess.access_token,
+        'Content-Type': 'application/json'
+      }
+    }
+  );
+  const data = _bugsResp.ok ? await _bugsResp.json() : null;
+  const error = _bugsResp.ok ? null : { message: `HTTP ${_bugsResp.status}` };
   if (error) { elOpen.innerHTML = `<div style="color:var(--red);font-size:.75rem;">${esc(error.message)}</div>`; return; }
   _bugsCache = data || [];
   const open = _bugsCache.filter(b => b.status === 'open');
@@ -2053,11 +2065,11 @@ async function loadBugsTab() {
   if (elComp) elComp.innerHTML = done.length ? done.map(b => rowHtml(b, false)).join('') : '<div style="padding:.75rem 0;color:var(--muted);font-family:\'DM Mono\',monospace;font-size:.62rem;">No completed bugs yet.</div>';
   if (!_bugsRealtimeWired) {
     _bugsRealtimeWired = true;
-    _sbBugs.channel('platform_bugs_live').on('postgres_changes',{event:'*',schema:'public',table:'platform_bugs'},()=>loadBugsTab()).subscribe();
+    sb.channel('platform_bugs_live').on('postgres_changes',{event:'*',schema:'public',table:'platform_bugs'},()=>loadBugsTab()).subscribe();
   }
 }
-window.bugSetStatus = async (id, status) => { await _sbBugs.from('platform_bugs').update({status}).eq('id',id); loadBugsTab(); };
-window.bugDel = async (id) => { if(!confirm('Delete this bug permanently?')) return; await _sbBugs.from('platform_bugs').delete().eq('id',id); loadBugsTab(); };
+window.bugSetStatus = async (id, status) => { await sb.from('platform_bugs').update({status}).eq('id',id); loadBugsTab(); };
+window.bugDel = async (id) => { if(!confirm('Delete this bug permanently?')) return; await sb.from('platform_bugs').delete().eq('id',id); loadBugsTab(); };
 window.renderBugLog = loadBugsTab;
 function _buildBugDump() {
   return _bugsCache.filter(b=>b.status==='open').map((b,i)=>({idx:i+1,id:b.id,title:b.title||'(no title)',description:b.description||'',url:b.url||'',logged_at:b.created_at}));
