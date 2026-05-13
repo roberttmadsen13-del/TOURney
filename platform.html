@@ -1630,22 +1630,10 @@ function runReview(){
     el.style.display='block';setTimeout(()=>el.style.display='none',3000);
   });
 }
-const CEO_TASKS=[
-  {id:'llc',text:'Form Greenskeeper Studios LLC',why:'Filing with Secretary of State requires your legal identity and physical presence. EIN from IRS.gov requires your SSN. Business bank account requires LLC docs + ID.'},
-  {id:'stripe_activate',text:'Activate Stripe with LLC credentials',why:'Stripe KYC requires your legal identity, LLC documents, and business bank account — cannot be delegated or automated.'},
-  {id:'bova_formats',text:'Confirm Bova tournament formats with Chris Bova',why:'Requires a real conversation. AI cannot contact or receive responses from external people. Text/call Chris directly.'},
-  {id:'bova_admin',text:"Add Chris Bova's email as co-admin",why:"Need Chris's actual email + his confirmation he can log in. Go to /t/bova/admin → Access tab → add his email."},
-  {id:'pwa_iphone',text:'Test PWA install on your iPhone',why:'iOS service workers must be tested on real hardware — no simulator accurately replicates Safari PWA install behavior.'},
-  {id:'supabase_email',text:'Enable email confirmation in Supabase Auth',why:'Dashboard-only setting. supabase.com → project → Authentication → Email → toggle Confirm email ON.'},
-  {id:'leaked_pw',text:'Enable leaked password protection in Supabase',why:'Dashboard-only. Authentication → Sign In Methods → Leaked Password Protection → toggle ON. 30 seconds.'},
-  {id:'tos',text:'Write Terms of Service and Privacy Policy pages',why:'Legal documents represent your actual business practices and must be written/approved by you — AI can draft but you own them.'},
-  {id:'golf_db',text:'Purchase full US golf course database',why:'Purchasing business assets is a founder decision. golf-course-database.com — buy US flat file CSV/JSON.'},
-  {id:'aws_s3_backup',text:'Set up AWS S3 backup (bucket + IAM + 4 GitHub secrets)',why:'Requires AWS account access and GitHub repo secrets. Create bucket tourney-pg-backups (us-west-2), IAM user with s3:PutObject + s3:ListBucket, then add SUPABASE_DB_URL, BACKUP_S3_KEY, BACKUP_S3_SECRET, BACKUP_S3_BUCKET to GitHub secrets. Then manually trigger "Weekly DB Backup" workflow to verify.'},
-  {id:'stripe_price_player',text:'Create Stripe player product + set 3 Supabase secrets',why:'Requires Stripe dashboard access after LLC activation. Create "TOURney Player Account" $2/mo recurring product → copy price ID → set STRIPE_SECRET_KEY, STRIPE_WEBHOOK_SECRET, STRIPE_PRICE_PLAYER in Supabase edge fn secrets → register webhook endpoint: jllugkiojeoopitdvzsa.supabase.co/functions/v1/stripe-webhook.'},
-  {id:'gh_actions_verify',text:'Verify GitHub Actions green on aee0393 + e10a10d',why:'Requires checking the GitHub Actions dashboard. Go to github.com/roberttmadsen13-del/bova-invt/actions and confirm both the test scaffold (aee0393) and tier gating (e10a10d) CI runs passed.'},
-  {id:'anthropic_baseline',text:'Screenshot Anthropic Console usage baseline (prior 7 days)',why:'Required for token savings runbook tracking. Go to console.anthropic.com/usage → screenshot prior 7 days (total spend, input tokens, output tokens, cache_read_input_tokens) → save to C:\\Users\\Rob\\.claude\\baselines\\2026-05-11-anthropic-baseline.png. Placeholder text file exists — replace with real screenshot.'},
-  {id:'send_install_email_secret',text:'Set SEND_INSTALL_EMAIL_SECRET in Supabase + update DB webhook',why:'send-install-email v4 is deployed with webhook secret gate — but the secret env var is not set yet, so every player registration silently 401s the email. Dashboard-only: supabase.com → project jllugkiojeoopitdvzsa → Project Settings → Edge Functions → Add secret: SEND_INSTALL_EMAIL_SECRET=<random strong string>. Then update the players INSERT database webhook to send header: Authorization: Bearer <that same secret>.'},
-];
+let CEO_TASKS = [];
+async function _loadCeoTasksDef() {
+  try { CEO_TASKS = await fetch('/platform/ceo-tasks.json').then(r => r.json()); } catch(e) { console.error('ceo-tasks.json load failed', e); }
+}
 let _ceoChecked = {};
 async function _initCeoTasks(session) {
   const meta = session?.user?.user_metadata?.ceo_tasks;
@@ -1961,6 +1949,7 @@ renderQaRuns();
 (async()=>{
   const { data:{ session } } = await sb.auth.getSession();
   if (session?.user?.email===PLATFORM_EMAIL) {
+    await _loadCeoTasksDef();
     await _initCeoTasks(session);
     showDashboard(session.user.email);
     window.addEventListener('storage', e => { if (e.key === 'gks_bugs') renderBugLog(); });
