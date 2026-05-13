@@ -22,12 +22,12 @@
       "blocking": false
     },
     "ux": {
-      "status": "review",
+      "status": "plan",
       "grade": "B-",
       "artifact": "/platform/ux",
       "last_updated": "2026-05-12",
-      "summary": "user-scalable=no WCAG fail on scorecard; no loading skeletons site-wide; raw Supabase errors in login. Token usage solid, player.html ARIA exemplary.",
-      "open_items": 9,
+      "summary": "Plan: 8 open items P1-P4. user-scalable=no shipped. P1: loading skeletons + login error sanitization. Target B+ after execution.",
+      "open_items": 8,
       "blocking": false
     },
     "security": {

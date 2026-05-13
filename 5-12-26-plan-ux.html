@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TOURney — UX Plan · May 12, 2026</title>
+<style>
+  :root {
+    --gold: #c09030;
+    --gold-light: #d4a840;
+    --gold-dim: rgba(192,144,48,0.18);
+    --ink: #1a1008;
+    --bg: #0d0a05;
+    --surface: #151009;
+    --card: #1c140a;
+    --card2: #221a0e;
+    --border: rgba(192,144,48,0.22);
+    --muted: #7a6a54;
+    --text: #e8dcc8;
+    --red: #c0392b;
+    --green: #27ae60;
+    --blue: #2980b9;
+    --orange: #e67e22;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { font-family: -apple-system, 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; font-size: 15px; }
+  nav { position: sticky; top: 0; z-index: 100; background: rgba(13,10,5,0.96); border-bottom: 1px solid var(--border); backdrop-filter: blur(12px); padding: 0.6rem 1.5rem; display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
+  .nav-brand { color: var(--gold); font-weight: 700; font-size: 1rem; letter-spacing: 0.05em; }
+  .nav-brand span { color: var(--muted); font-weight: 400; font-size: 0.8rem; margin-left: 0.4rem; }
+  .nav-links { display: flex; gap: 0.2rem; flex-wrap: wrap; margin-left: auto; }
+  .nav-links a { color: var(--muted); text-decoration: none; font-size: 0.78rem; padding: 0.3rem 0.55rem; border-radius: 4px; transition: all 0.15s; }
+  .nav-links a:hover { color: var(--gold); background: var(--gold-dim); }
+  .hero { padding: 3.5rem 1.5rem 2.5rem; text-align: center; border-bottom: 1px solid var(--border); background: linear-gradient(180deg, rgba(192,144,48,0.06) 0%, transparent 100%); }
+  .hero-eyebrow { display: inline-block; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold); border: 1px solid var(--border); border-radius: 20px; padding: 0.25rem 0.85rem; margin-bottom: 1.2rem; }
+  .hero h1 { font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 800; color: #fff; margin-bottom: 0.5rem; }
+  .hero h1 span { color: var(--gold); }
+  .hero-sub { color: var(--muted); max-width: 560px; margin: 0 auto 1.5rem; font-size: 0.95rem; }
+  .hero-meta { display: flex; gap: 1.5rem; justify-content: center; flex-wrap: wrap; font-size: 0.78rem; color: var(--muted); }
+  .hero-meta span { display: flex; align-items: center; gap: 0.35rem; }
+  .wrapper { max-width: 1000px; margin: 0 auto; padding: 0 1.5rem; }
+  section { padding: 3rem 0; border-bottom: 1px solid var(--border); }
+  section:last-child { border-bottom: none; }
+  .section-header { margin-bottom: 2rem; }
+  .section-eyebrow { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.4rem; }
+  .section-title { font-size: 1.5rem; font-weight: 800; color: #fff; margin-bottom: 0.4rem; }
+  .section-desc { color: var(--muted); font-size: 0.88rem; max-width: 600px; }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 1.25rem 1.4rem; margin-bottom: 0.75rem; }
+  .card-title { font-size: 0.88rem; font-weight: 700; color: var(--gold); margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem; }
+  .card p, .card li { font-size: 0.86rem; color: var(--text); margin-bottom: 0.3rem; }
+  .card ul, .card ol { padding-left: 1.2rem; }
+  .card li { margin-bottom: 0.5rem; }
+  pre { font-family: 'Consolas', 'Monaco', monospace; background: rgba(255,255,255,0.04); border: 1px solid var(--border); border-radius: 6px; padding: 0.8rem 1rem; font-size: 0.78rem; color: var(--gold-light); overflow-x: auto; margin: 0.6rem 0; }
+  code { font-family: 'Consolas', 'Monaco', monospace; background: rgba(255,255,255,0.07); padding: 0.1rem 0.3rem; border-radius: 3px; font-size: 0.82em; color: var(--gold-light); }
+  .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 0.75rem; }
+  .pill { display: inline-block; font-size: 0.68rem; font-weight: 700; letter-spacing: 0.06em; padding: 0.18rem 0.55rem; border-radius: 20px; text-transform: uppercase; }
+  .pill-green { background: rgba(39,174,96,0.15); color: var(--green); border: 1px solid rgba(39,174,96,0.3); }
+  .pill-red { background: rgba(192,57,43,0.15); color: var(--red); border: 1px solid rgba(192,57,43,0.3); }
+  .pill-orange { background: rgba(230,126,34,0.15); color: var(--orange); border: 1px solid rgba(230,126,34,0.3); }
+  .pill-blue { background: rgba(41,128,185,0.15); color: var(--blue); border: 1px solid rgba(41,128,185,0.3); }
+  .pill-gold { background: rgba(192,144,48,0.18); color: var(--gold); border: 1px solid rgba(192,144,48,0.3); }
+  .score-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 0.6rem; margin-bottom: 1.5rem; }
+  .score-cell { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 1rem; text-align: center; }
+  .score-num { font-size: 2rem; font-weight: 900; line-height: 1; margin-bottom: 0.2rem; }
+  .score-label { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); }
+  .score-green { color: var(--green); }
+  .score-gold { color: var(--gold); }
+  .score-red { color: var(--red); }
+  .score-orange { color: var(--orange); }
+  .score-blue { color: var(--blue); }
+  .roadmap-item { display: flex; gap: 1.2rem; align-items: flex-start; background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 1.1rem 1.25rem; margin-bottom: 0.6rem; }
+  .roadmap-item.done { opacity: 0.6; border-color: rgba(39,174,96,0.3); }
+  .roadmap-icon { width: 2.2rem; height: 2.2rem; border-radius: 50%; background: var(--gold-dim); color: var(--gold); display: grid; place-items: center; font-size: 1rem; flex-shrink: 0; border: 1px solid var(--border); }
+  .roadmap-content { flex: 1; }
+  .roadmap-title { font-size: 0.92rem; font-weight: 700; color: #fff; margin-bottom: 0.2rem; }
+  .roadmap-desc { font-size: 0.82rem; color: var(--muted); margin-bottom: 0.4rem; }
+  .roadmap-action { font-size: 0.78rem; color: var(--text); }
+  .roadmap-action strong { color: var(--gold-light); }
+  .matrix-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+  .matrix-table th { text-align: left; padding: 0.55rem 0.75rem; border-bottom: 1px solid var(--border); color: var(--muted); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; background: var(--surface); }
+  .matrix-table td { padding: 0.55rem 0.75rem; border-bottom: 1px solid rgba(192,144,48,0.07); vertical-align: top; }
+  .matrix-table tr:last-child td { border-bottom: none; }
+  .check-yes { color: var(--green); font-weight: 700; }
+  .check-partial { color: var(--orange); font-weight: 700; }
+  .check-no { color: var(--red); font-weight: 700; }
+  .table-wrap { background: var(--card); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; overflow-x: auto; }
+  footer { border-top: 1px solid var(--border); padding: 1.5rem; text-align: center; color: var(--muted); font-size: 0.75rem; }
+  footer span { color: var(--gold); }
+  .next-step-bar { background: rgba(192,144,48,0.07); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+  .next-step-inner { max-width: 1000px; margin: 0 auto; padding: 1rem 1.5rem; display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
+  .next-step-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); }
+  .next-step-strong { color: var(--gold); font-size: 0.95rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
+  @media (max-width: 600px) { .nav-links { display: none; } section { padding: 2rem 0; } }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-brand">TOURney <span>by Greenskeeper Studios</span></div>
+  <div class="nav-links">
+    <a href="/platform">⬡ Operations</a>
+    <a href="#focus">UX Plan</a>
+    <a href="#states">State Coverage</a>
+    <a href="#sprint">Sprint</a>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="hero-eyebrow">Focused Plan — UX Polish</div>
+  <h1><span>TOURney</span> — UX Polish Plan</h1>
+  <p class="hero-sub">Sequenced implementation plan for 8 open UX items from the B− review. P1→P4 bucketed by user impact and effort. One item already shipped.</p>
+  <div class="hero-meta">
+    <span>📅 May 12, 2026</span>
+    <span>🤖 claude-sonnet-4-6</span>
+    <span>🏢 Greenskeeper Studios</span>
+    <span>🔒 Internal Only</span>
+  </div>
+</div>
+
+<section id="focus">
+<div class="wrapper">
+
+  <div class="section-header">
+    <div class="section-eyebrow">Overview</div>
+    <div class="section-title">8 Items Open · 1 Already Shipped</div>
+    <div class="section-desc">Review grade: B−. Target after plan execution: B+. Estimated total effort: ~8.5h across 4 priority tiers. P1 items unblock highest-visibility user experience gaps.</div>
+  </div>
+
+  <div class="score-grid">
+    <div class="score-cell">
+      <div class="score-num score-gold">B−</div>
+      <div class="score-label">Current Grade</div>
+    </div>
+    <div class="score-cell">
+      <div class="score-num score-green">B+</div>
+      <div class="score-label">Target Grade</div>
+    </div>
+    <div class="score-cell">
+      <div class="score-num score-green">1</div>
+      <div class="score-label">Shipped</div>
+    </div>
+    <div class="score-cell">
+      <div class="score-num score-orange">8</div>
+      <div class="score-label">Open Items</div>
+    </div>
+    <div class="score-cell">
+      <div class="score-num score-blue">~8.5h</div>
+      <div class="score-label">Total Effort</div>
+    </div>
+  </div>
+
+  <!-- State Coverage matrix -->
+  <div class="section-header" style="margin-top:2.5rem;" id="states">
+    <div class="section-eyebrow">Baseline</div>
+    <div class="section-title">State Coverage — Current vs Target</div>
+  </div>
+  <div class="table-wrap">
+    <table class="matrix-table">
+      <thead>
+        <tr><th>Page</th><th>Empty (now)</th><th>Loading (now)</th><th>Error (now)</th><th>Plan</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>scoreboard.html</strong></td>
+          <td><span class="check-yes">✅</span></td>
+          <td><span class="check-no">❌</span></td>
+          <td><span class="check-yes">✅ Toast</span></td>
+          <td>Add skeleton to leaderboard list (P1)</td>
+        </tr>
+        <tr>
+          <td><strong>home.html</strong></td>
+          <td><span class="check-partial">⚠️</span></td>
+          <td><span class="check-no">❌</span></td>
+          <td><span class="check-partial">⚠️</span></td>
+          <td>Add skeleton to leaderboard + section (P1)</td>
+        </tr>
+        <tr>
+          <td><strong>scorecard.html</strong></td>
+          <td><span class="check-partial">⚠️</span></td>
+          <td><span class="check-no">❌</span></td>
+          <td><span class="check-partial">⚠️</span></td>
+          <td>Skeleton on setup load (P2)</td>
+        </tr>
+        <tr>
+          <td><strong>login.html</strong></td>
+          <td>N/A</td>
+          <td><span class="check-yes">✅ Button</span></td>
+          <td><span class="check-partial">⚠️ Raw msg</span></td>
+          <td>Sanitize error strings (P1)</td>
+        </tr>
+        <tr>
+          <td><strong>feed.html</strong></td>
+          <td><span class="check-no">❌</span></td>
+          <td><span class="check-no">❌</span></td>
+          <td><span class="check-no">❌</span></td>
+          <td>Add empty state + skeleton (P2)</td>
+        </tr>
+        <tr>
+          <td><strong>directory.html</strong></td>
+          <td><span class="check-no">❌</span></td>
+          <td><span class="check-no">❌</span></td>
+          <td><span class="check-no">❌</span></td>
+          <td>Add empty state (P2)</td>
+        </tr>
+        <tr>
+          <td><strong>install.html</strong></td>
+          <td>N/A</td>
+          <td><span class="check-yes">✅</span></td>
+          <td><span class="check-yes">✅ Fallback</span></td>
+          <td>Surface from journey (P2)</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Design system tasks -->
+  <div class="section-header" style="margin-top:2.5rem;">
+    <div class="section-eyebrow">Design System</div>
+    <div class="section-title">Token &amp; Motion Tasks</div>
+  </div>
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title">⚡ CSS Shimmer Skeleton Pattern</div>
+      <p>Shared skeleton class for all pages. Add to <code>lib/util.js</code> CSS or inline per page. Zero JS dependency.</p>
+      <pre>@keyframes shimmer {
+  from { background-position: -200% 0 }
+  to   { background-position:  200% 0 }
+}
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--surface) 25%,
+    var(--card2)   50%,
+    var(--surface) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.4s ease infinite;
+  border-radius: 4px;
+}</pre>
+      <p>Usage: replace content containers with skeleton divs while awaiting data. Swap class on data resolve.</p>
+    </div>
+    <div class="card">
+      <div class="card-title">♿ prefers-reduced-motion Guard</div>
+      <p>Add to home.html <code>&lt;style&gt;</code> block. Disables all scroll animations for users with vestibular disorders. WCAG 2.3.3.</p>
+      <pre>@media (prefers-reduced-motion: reduce) {
+  .will-animate {
+    transition: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  .hero-img {
+    transition: none !important;
+  }
+  .day-block.will-animate {
+    transition: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}</pre>
+    </div>
+  </div>
+
+  <!-- Mobile tasks -->
+  <div class="section-header" style="margin-top:2.5rem;">
+    <div class="section-eyebrow">Mobile</div>
+    <div class="section-title">Remaining Mobile Tasks</div>
+  </div>
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title">✅ DONE — scorecard.html user-scalable=no</div>
+      <p>Removed in commit <code>c9cc497</code> (May 12, 2026). WCAG 1.4.4 violation cleared. Inputs retain <code>font-size:1rem</code> so iOS auto-zoom still suppressed.</p>
+    </div>
+    <div class="card">
+      <div class="card-title">🔍 QA — Scoreboard Table 375px</div>
+      <p>Multi-day table (pair name + 3 round columns + total) likely clips on iPhone SE / small Android. Need manual test.</p>
+      <p style="margin-top:0.5rem;font-size:0.8rem;color:var(--muted);">Fix if clipping: wrap table in <code>&lt;div style="overflow-x:auto"&gt;</code>. Add horizontal scroll indicator.</p>
+    </div>
+  </div>
+
+  <!-- Accessibility -->
+  <div class="section-header" style="margin-top:2.5rem;">
+    <div class="section-eyebrow">Accessibility</div>
+    <div class="section-title">A11y Implementation Plan</div>
+  </div>
+  <div class="card">
+    <div class="card-title">🔊 aria-live Regions — Where to Add</div>
+    <ul>
+      <li><strong>Toast container</strong> (all pages with <code>showToast()</code>): Add <code>aria-live="polite"</code> to the toast div. Screen readers announce toast text when injected.</li>
+      <li><strong>Leaderboard list</strong> (scoreboard.html, home.html): Add <code>aria-live="polite"</code> to the <code>&lt;div class="lb-list"&gt;</code> or equivalent. Realtime score updates announced.</li>
+      <li><strong>Login errors</strong>: Already in DOM via <code>.login-err</code> — add <code>aria-live="assertive"</code> so errors are announced immediately on auth failure.</li>
+    </ul>
+  </div>
+  <div class="card">
+    <div class="card-title">🔑 Login Error Message Map</div>
+    <p>Replace raw <code>error?.message</code> in <code>doSignIn()</code> and <code>doSignUp()</code>:</p>
+    <pre>const AUTH_ERRORS = {
+  'Invalid login credentials':
+    'Incorrect email or password.',
+  'Email not confirmed':
+    'Check your email for a confirmation link.',
+  'User already registered':
+    'An account with this email already exists.',
+  'Password should be at least 6 characters':
+    'Password must be at least 6 characters.',
+  'Signup requires a valid password':
+    'Please enter a valid password.',
+};
+
+const friendly =
+  AUTH_ERRORS[error?.message] ??
+  'Something went wrong — please try again.';
+err.textContent = friendly;</pre>
+  </div>
+  <div class="card">
+    <div class="card-title">📱 Surface install.html From Player Journey</div>
+    <ul>
+      <li><strong>player.html</strong> — add "Install App" link in the drawer menu (after Sign Out). Simple <code>&lt;a href="/install"&gt;</code>.</li>
+      <li><strong>profile.html</strong> — add PWA install CTA card at bottom of profile page.</li>
+      <li><strong>Post-RSVP confirmation</strong> (home.html RSVP form success state) — add "Install the app for live scoring" nudge with link to <code>/install</code>.</li>
+    </ul>
+  </div>
+
+</div>
+</section>
+
+<!-- Sprint Plan -->
+<section id="sprint">
+<div class="wrapper">
+  <div class="section-header">
+    <div class="section-eyebrow">Sprint Plan</div>
+    <div class="section-title">P1 → P4 · ~8.5h Total</div>
+    <div class="section-desc">Ordered by user-visible impact. P1 eliminates the two most complained-about UX gaps. All P1+P2 items can ship in a single focused session.</div>
+  </div>
+
+  <div class="roadmap-item done">
+    <div class="roadmap-icon">✅</div>
+    <div class="roadmap-content">
+      <div class="roadmap-title">~~Remove user-scalable=no from scorecard.html~~</div>
+      <div class="roadmap-desc">WCAG 1.4.4 fix. Shipped in commit c9cc497 — May 12, 2026.</div>
+      <div class="roadmap-action"><strong>Status:</strong> Done · <strong>Commit:</strong> c9cc497</div>
+    </div>
+  </div>
+
+  <p style="font-size:0.72rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);margin:1.5rem 0 0.5rem;">P1 — This Session</p>
+
+  <div class="roadmap-item">
+    <div class="roadmap-icon">💀</div>
+    <div class="roadmap-content">
+      <div class="roadmap-title">Add Loading Skeletons — Scoreboard + Home</div>
+      <div class="roadmap-desc">Highest-visibility gap. Every user sees blank flash on load. Add shimmer skeleton to leaderboard list containers while Supabase fetch resolves. Swap to real content on data.</div>
+      <div class="roadmap-action"><strong>Files:</strong> scoreboard.html (lb-list container), home.html (leaderboard section) · <strong>Approach:</strong> CSS shimmer class, show on init, hide on data · <strong>Effort:</strong> 2h</div>
+    </div>
+  </div>
+
+  <div class="roadmap-item">
+    <div class="roadmap-icon">🔒</div>
+    <div class="roadmap-content">
+      <div class="roadmap-title">Sanitize Login Error Messages</div>
+      <div class="roadmap-desc">Map GoTrue error strings to user-friendly copy. Prevents internal service names leaking. Affects doSignIn() and doSignUp().</div>
+      <div class="roadmap-action"><strong>File:</strong> login.html · <strong>Approach:</strong> AUTH_ERRORS map + fallback string (see Design section above) · <strong>Effort:</strong> 30 min</div>
+    </div>
+  </div>
+
+  <p style="font-size:0.72rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);margin:1.5rem 0 0.5rem;">P2 — Next Session</p>
+
+  <div class="roadmap-item">
+    <div class="roadmap-icon">♿</div>
+    <div class="roadmap-content">
+      <div class="roadmap-title">Add prefers-reduced-motion to home.html</div>
+      <div class="roadmap-desc">Single @media block disables all scroll animations. WCAG 2.3.3. No behavioral change for users who haven't opted into reduced motion.</div>
+      <div class="roadmap-action"><strong>File:</strong> home.html · <strong>Approach:</strong> CSS @media rule (see Design section above) · <strong>Effort:</strong> 20 min</div>
+    </div>
+  </div>
+
+  <div class="roadmap-item">
+    <div class="roadmap-icon">📱</div>
+    <div class="roadmap-content">
+      <div class="roadmap-title">Surface install.html From Player Journey</div>
+      <div class="roadmap-desc">3 touchpoints: player.html drawer, profile.html card, home.html post-RSVP success. install.html logic is already solid — just needs entry points.</div>
+      <div class="roadmap-action"><strong>Files:</strong> player.html, profile.html, home.html · <strong>Effort:</strong> 1h</div>
+    </div>
+  </div>
+
+  <div class="roadmap-item">
+    <div class="roadmap-icon">📭</div>
+    <div class="roadmap-content">
+      <div class="roadmap-title">Empty States — feed.html + directory.html</div>
+      <div class="roadmap-desc">First-run experience for new tournaments. Feed with no posts and directory with no players render blank. Copy pattern from scoreboard.html empty-state div.</div>
+      <div class="roadmap-action"><strong>Files:</strong> feed.html, directory.html · <strong>Effort:</strong> 1h</div>
+    </div>
+  </div>
+
+  <p style="font-size:0.72rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);margin:1.5rem 0 0.5rem;">P3 — Polish Pass</p>
+
+  <div class="roadmap-item">
+    <div class="roadmap-icon">🔊</div>
+    <div class="roadmap-content">
+      <div class="roadmap-title">Add aria-live Regions</div>
+      <div class="roadmap-desc">Toast container: aria-live="polite". Login error: aria-live="assertive". Leaderboard list: aria-live="polite". 30-min attribute add — no logic change.</div>
+      <div class="roadmap-action"><strong>Files:</strong> scoreboard.html, home.html, login.html · <strong>Effort:</strong> 30 min</div>
+    </div>
+  </div>
+
+  <div class="roadmap-item">
+    <div class="roadmap-icon">📏</div>
+    <div class="roadmap-content">
+      <div class="roadmap-title">QA Scoreboard Table on 375px Mobile</div>
+      <div class="roadmap-desc">Manual test at iPhone SE viewport. If multi-day columns clip: wrap in overflow-x:auto container. Add visible horizontal scroll indicator.</div>
+      <div class="roadmap-action"><strong>File:</strong> scoreboard.html · <strong>Effort:</strong> 30 min QA + fix if needed</div>
+    </div>
+  </div>
+
+  <p style="font-size:0.72rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);margin:1.5rem 0 0.5rem;">P4 — Longer Term</p>
+
+  <div class="roadmap-item">
+    <div class="roadmap-icon">🎨</div>
+    <div class="roadmap-content">
+      <div class="roadmap-title">Lighthouse A11y Audit + Contrast Fix</div>
+      <div class="roadmap-desc">--muted (#7a6a54 on #0d0a05) likely fails AA contrast (~3:1 estimated). Run axe or Lighthouse on deployed prod URL. Fix failing elements — likely lighten muted text to ~#9a8a74.</div>
+      <div class="roadmap-action"><strong>Files:</strong> All pages via shared token update · <strong>Effort:</strong> 2h audit + fixes · <strong>Blocked by:</strong> Nothing — run anytime</div>
+    </div>
+  </div>
+
+</div>
+</section>
+
+<div class="next-step-bar">
+  <div class="next-step-inner">
+    <span class="next-step-label">Next Skill</span>
+    <span class="next-step-strong">→ /tourney-runbook-ux</span>
+    <span style="font-size:0.8rem;color:var(--muted);">Step-by-step implementation runbook for the P1 items</span>
+  </div>
+</div>
+
+<footer>
+  Generated by <span>claude-sonnet-4-6</span> · Greenskeeper Studios Internal · May 12, 2026
+  <br style="margin-top:0.3rem">
+  <a href="/platform" style="color:var(--muted);font-size:0.72rem;text-decoration:none">← TOURney Operations</a>
+</footer>
+
+</body>
+</html>
