@@ -461,6 +461,9 @@ td{padding:0.7rem 0.75rem;font-size:0.88rem;vertical-align:middle;}
         <div class="stat"><div class="stat-val" id="statActive">—</div><div class="stat-label">Active Tournaments</div></div>
       </div>
       <div id="tourneyBody"></div>
+      <div style="text-align:center;margin:.75rem 0;display:none;" id="tourneyLoadMore">
+        <button class="btn-action btn-admin" onclick="loadMoreTourneys()">Load more</button>
+      </div>
       <div class="empty" id="emptyMsg" style="display:none;">No tournaments yet.</div>
 
       <div class="section-gap">
@@ -487,6 +490,9 @@ td{padding:0.7rem 0.75rem;font-size:0.88rem;vertical-align:middle;}
           </table>
         </div>
         <div class="empty" id="compEmpty" style="display:none;">No comped accounts yet.</div>
+        <div style="text-align:center;margin:.75rem 0;display:none;" id="compLoadMore">
+          <button class="btn-action btn-admin" onclick="_compPage++;renderCompAccounts(true)">Load more</button>
+        </div>
       </div>
 
       <div class="section-gap">
@@ -505,6 +511,9 @@ td{padding:0.7rem 0.75rem;font-size:0.88rem;vertical-align:middle;}
           </table>
         </div>
         <div class="empty" id="codesEmpty" style="display:none;">No codes yet.</div>
+        <div style="text-align:center;margin:.75rem 0;display:none;" id="codesLoadMore">
+          <button class="btn-action btn-admin" onclick="loadMoreCodes()">Load more</button>
+        </div>
       </div>
     </div>
   </div>
@@ -818,14 +827,21 @@ function sortComps(col) {
 function filterComps(q) {
   renderCompAccounts();
 }
-async function loadTournaments() {
+let _tourneysCursor = null;
+let _tourneysExhausted = false;
+async function loadTournaments(append=false) {
+  if (!append) { _tourneysCursor=null; _tourneysExhausted=false; }
+  if (_tourneysExhausted) return;
+  let q = sb.from('tournaments').select('*').order('created_at',{ascending:false}).limit(25);
+  if (_tourneysCursor) q = q.lt('created_at', _tourneysCursor);
   const [{ data: tourneys },{ data: players },{ data: rounds },{ data: scores }] = await Promise.all([
-    sb.from('tournaments').select('*').order('created_at',{ascending:false}).limit(25),
+    q,
     sb.from('players').select('tournament_id,created_at'),
     sb.from('rounds').select('tournament_id,day_number,status'),
     sb.from('scores').select('tournament_id'),
   ]);
-  if (!tourneys?.length) { document.getElementById('emptyMsg').style.display='block'; return; }
+  if (!append && !tourneys?.length) { document.getElementById('emptyMsg').style.display='block'; return; }
+  if (!tourneys?.length) { _tourneysExhausted=true; document.getElementById('tourneyLoadMore').style.display='none'; return; }
 
   // aggregate per tournament
   const playerCounts={}, lastPlayer={};
@@ -843,12 +859,18 @@ async function loadTournaments() {
   (scores||[]).forEach(s => { scoreCounts[s.tournament_id]=(scoreCounts[s.tournament_id]||0)+1; });
 
   const statuses = tourneys.map(t => deriveStatus(roundsByT[t.id]||[]));
-  document.getElementById('statTotal').textContent = tourneys.length;
-  document.getElementById('statPlayers').textContent = (players||[]).length;
-  document.getElementById('statOwners').textContent = new Set(tourneys.map(t=>t.owner_email)).size;
-  document.getElementById('statActive').textContent = statuses.filter(s=>s==='live').length;
+  if (!append) {
+    document.getElementById('statTotal').textContent = tourneys.length;
+    document.getElementById('statPlayers').textContent = (players||[]).length;
+    document.getElementById('statOwners').textContent = new Set(tourneys.map(t=>t.owner_email)).size;
+    document.getElementById('statActive').textContent = statuses.filter(s=>s==='live').length;
+  }
 
-  document.getElementById('tourneyBody').innerHTML = tourneys.map((t,i) => {
+  _tourneysCursor = tourneys[tourneys.length-1].created_at;
+  if (tourneys.length < 25) { _tourneysExhausted=true; document.getElementById('tourneyLoadMore').style.display='none'; }
+  else document.getElementById('tourneyLoadMore').style.display='block';
+
+  const cards = tourneys.map((t,i) => {
     const created = new Date(t.created_at).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
     const status = statuses[i];
     const pc = playerCounts[t.id]||0;
@@ -880,7 +902,11 @@ async function loadTournaments() {
       </div>
     </div>`;
   }).join('');
+  const body = document.getElementById('tourneyBody');
+  if (append) body.insertAdjacentHTML('beforeend', cards);
+  else body.innerHTML = cards;
 }
+function loadMoreTourneys() { loadTournaments(true); }
 async function deleteTourney(id, name) {
   if (!confirm(`Delete "${name}"? All data permanently removed.`)) return;
   const { error } = await sb.rpc('delete_tournament', { p_id: id });
@@ -909,11 +935,13 @@ async function loadCompAccounts() {
   renderCompAccounts();
 }
 
-function renderCompAccounts() {
+let _compPage = 1;
+function renderCompAccounts(append=false) {
+  if (!append) _compPage = 1;
   const tbody = document.getElementById('compBody'), empty = document.getElementById('compEmpty');
   const searchInput = document.querySelector('input[placeholder="Search by email…"]');
   const q = searchInput ? searchInput.value.toLowerCase() : '';
-  
+
   let data = compAccountsData.filter(a => !q || a.email.toLowerCase().includes(q));
   
   data.sort((a, b) => {
@@ -930,10 +958,13 @@ function renderCompAccounts() {
     return 0;
   });
 
-  if (!data.length) { tbody.innerHTML=''; empty.style.display='block'; return; }
+  const pageData = data.slice(0, _compPage * 25);
+  const moreEl = document.getElementById('compLoadMore');
+  if (moreEl) moreEl.style.display = data.length > pageData.length ? 'block' : 'none';
+  if (!pageData.length) { tbody.innerHTML=''; empty.style.display='block'; return; }
   empty.style.display='none';
-  
-  tbody.innerHTML = data.map(a => {
+
+  tbody.innerHTML = pageData.map(a => {
     const firstLogin = new Date(a.first_login||a.created_at).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
     const lastLogin = a.last_login ? new Date(a.last_login).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) : 'Never';
     const sc = a.billing_status==='comped'?'var(--green)':a.billing_status==='active'?'var(--gold)':'rgba(240,230,204,0.25)';
@@ -964,12 +995,22 @@ async function toggleCode(id, active) {
   await sb.from('create_codes').update({ active:!active }).eq('id', id);
   loadCodes();
 }
-async function loadCodes() {
-  const { data } = await sb.from('create_codes').select('*').order('created_at',{ascending:false});
+let _codesCursor = null;
+let _codesExhausted = false;
+async function loadCodes(append=false) {
+  if (!append) { _codesCursor=null; _codesExhausted=false; }
+  if (_codesExhausted) return;
+  let q = sb.from('create_codes').select('*').order('created_at',{ascending:false}).limit(25);
+  if (_codesCursor) q = q.lt('created_at', _codesCursor);
+  const { data } = await q;
   const tbody=document.getElementById('codesBody'), empty=document.getElementById('codesEmpty');
-  if (!data?.length) { tbody.innerHTML=''; empty.style.display='block'; return; }
+  if (!append && !data?.length) { tbody.innerHTML=''; empty.style.display='block'; return; }
+  if (!data?.length) { _codesExhausted=true; document.getElementById('codesLoadMore').style.display='none'; return; }
   empty.style.display='none';
-  tbody.innerHTML = data.map(c => {
+  _codesCursor = data[data.length-1].created_at;
+  if (data.length < 25) { _codesExhausted=true; document.getElementById('codesLoadMore').style.display='none'; }
+  else document.getElementById('codesLoadMore').style.display='block';
+  const rows = data.map(c => {
     const created=new Date(c.created_at).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
     const sc=c.active?'var(--green)':'rgba(240,230,204,0.25)';
     return `<tr>
@@ -980,7 +1021,10 @@ async function loadCodes() {
       <td><div class="actions"><button class="btn-action ${c.active?'btn-delete':'btn-admin'}" onclick="toggleCode('${c.id}',${c.active})">${c.active?'Deactivate':'Activate'}</button></div></td>
     </tr>`;
   }).join('');
+  if (append) tbody.insertAdjacentHTML('beforeend', rows);
+  else tbody.innerHTML = rows;
 }
+function loadMoreCodes() { loadCodes(true); }
 
 /* ══════════════════════ ARTIFACTS ══════════════════════ */
 const CAT_META = {
