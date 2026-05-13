@@ -11,6 +11,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="TOURney">
 <title>Enter Scores — TOURney</title>
+<link rel="stylesheet" href="/tokens.css">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Mono:wght@300;400;500&family=Barlow+Condensed:wght@300;400;600;700;800&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
 :root{--ink:#1a1008;--gold:#c09030;--gold-l:#d4aa50;--gold-p:#e8cc80;--cream:#f0e6cc;--red:#8a1e10;--green:#1a4010;--border:rgba(192,144,48,0.28);--bg:#f5ede0;--card:#fdf8f0;--muted:rgba(26,16,8,0.4);}
@@ -264,6 +265,13 @@ body{background:var(--bg);color:var(--ink);font-family:'Barlow',sans-serif;font-
   <div class="setup-title">Score <em>Entry</em></div>
   <div class="setup-sub">Foursome scorecard</div>
 
+  <div id="setupLoading" style="padding:1.5rem 0;">
+    <div class="skeleton" style="height:1.2rem;width:60%;margin:0 auto 1rem;border-radius:6px;"></div>
+    <div class="skeleton" style="height:3rem;width:100%;border-radius:8px;margin-bottom:0.75rem;"></div>
+    <div class="skeleton" style="height:3rem;width:100%;border-radius:8px;margin-bottom:0.75rem;"></div>
+    <div class="skeleton" style="height:3rem;width:100%;border-radius:8px;"></div>
+  </div>
+
   <div id="noRoundMsg" class="no-round" style="display:none;">
     <strong>No Active Round</strong>
     Scoring opens when the admin starts a round. Check back soon.
@@ -283,7 +291,7 @@ body{background:var(--bg);color:var(--ink);font-family:'Barlow',sans-serif;font-
     <div style="font-size:0.82rem;color:var(--muted);line-height:1.6;">Ask your admin to add <strong id="loginPromptEmail" style="color:var(--gold);word-break:break-all;"></strong> to your player profile.</div>
   </div>
 
-  <div id="setupForm">
+  <div id="setupForm" style="display:none;">
     <!-- Your Name & Team (read-only, auto-detected from profile) -->
     <div class="fg">
       <label>Your Name</label>
@@ -548,6 +556,9 @@ async function init() {
   if (!structRes.data?.find(r => r.key === 'structure')) {
     _structure = _teamCount <= 1 ? 'individual' : 'team';
   }
+
+  document.getElementById('setupLoading').style.display = 'none';
+  document.getElementById('setupForm').style.display = '';
 
   players = pRes.data || [];
 
