@@ -430,7 +430,10 @@ td{padding:0.7rem 0.75rem;font-size:0.88rem;vertical-align:middle;}
         <span class="stale-banner-icon">⚠</span>
         <span class="stale-banner-text" id="staleBannerText"></span>
       </div>
-      <div class="mc-hdr">Axis Scorecard <span style="font-size:.62rem;font-weight:400;color:var(--muted);">Click any axis for history</span></div>
+      <div class="mc-hdr" style="display:flex;align-items:center;justify-content:space-between;">
+        <span>Axis Scorecard <span style="font-size:.62rem;font-weight:400;color:var(--muted);">Click any axis for history</span></span>
+        <button onclick="loadGrades()" style="background:none;border:1px solid var(--border);color:var(--muted);font-family:'DM Mono',monospace;font-size:.52rem;letter-spacing:.1em;text-transform:uppercase;padding:.2rem .5rem;cursor:pointer;transition:all .12s;" onmouseenter="this.style.borderColor='rgba(192,144,48,0.4)';this.style.color='var(--gold)'" onmouseleave="this.style.borderColor='';this.style.color=''">Refresh</button>
+      </div>
       <div id="gradeAvgBar"></div>
       <div class="grade-grid" id="gradeGrid"><div class="grade-no-data" style="padding:1.5rem;font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.1em;text-transform:uppercase;">Loading grades…</div></div>
       <div style="margin-top:1.75rem;">
@@ -734,18 +737,18 @@ async function doLogin() {
   showDashboard(email);
 }
 async function doSignOut() { await sb.auth.signOut(); location.reload(); }
+const tabLoaded = {};
+function loadTabData(t) {
+  if (t === 'dash')      { loadGrades(); loadCeoTasks(); }
+  if (t === 'tenants')   { loadTournaments(); loadCompAccounts(); loadCodes(); }
+  if (t === 'action')    { loadMissionControl(); loadArtifacts(); }
+  if (t === 'artifacts') { loadArtifacts(); }
+  if (t === 'reference') { renderReference(); }
+}
 function showDashboard(email) {
   document.getElementById('loginWrap').style.display = 'none';
   document.getElementById('dashboard').style.display = 'block';
   document.getElementById('authedEmail').textContent = email;
-  loadTournaments();
-  loadCompAccounts();
-  loadCodes();
-  loadArtifacts();
-  renderReference();
-  loadGrades();
-  loadCeoTasks();
-  loadMissionControl();
   const saved = localStorage.getItem('ops_tab') || 'dash';
   switchTab(saved);
 }
@@ -757,6 +760,7 @@ function switchTab(t) {
     document.getElementById(`tab-${id}`).classList.toggle('active', t === id);
   });
   localStorage.setItem('ops_tab', t);
+  if (!tabLoaded[t]) { tabLoaded[t] = true; loadTabData(t); }
 }
 
 /* ══════════════════════ DASHBOARD ══════════════════════ */
@@ -1891,10 +1895,7 @@ renderQaRuns();
   if (session?.user?.email===PLATFORM_EMAIL) {
     await _initCeoTasks(session);
     showDashboard(session.user.email);
-    // Poll for changes to keep it seamless
-    setInterval(loadArtifacts, 5000);
-    setInterval(loadGrades, 10000);
-    setInterval(renderBugLog, 2000); // UI poll for bugs logged from FAB
+    window.addEventListener('storage', e => { if (e.key === 'gks_bugs') renderBugLog(); });
   }
 })();
 </script>
