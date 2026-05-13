@@ -775,6 +775,7 @@ async function doLogin() {
 }
 async function doSignOut() { await sb.auth.signOut(); location.reload(); }
 const tabLoaded = {};
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&tabLoaded.action){loadArtifacts();loadGrades();}});
 function loadTabData(t) {
   if (t === 'tenants')   { loadTournaments(); loadCompAccounts(); loadCodes(); }
   if (t === 'action')    { loadMissionControl(); loadArtifacts(); loadGrades(); loadCeoTasks(); tabLoaded['artifacts'] = true; }
@@ -1373,6 +1374,7 @@ async function loadArtifacts() {
     renderArtifactTickets();
     renderTodayQueue();
     renderTimeline();
+    loadGrades();
   } catch(err) {
     const errGrid=document.getElementById('cardGrid');if(errGrid)errGrid.innerHTML=`<div class="grid-empty">Couldn't load qa-index.json: ${esc(err.message)}</div>`;
   }
