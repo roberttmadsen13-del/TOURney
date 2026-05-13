@@ -129,7 +129,12 @@ td{padding:0.7rem 0.75rem;font-size:0.88rem;vertical-align:middle;}
 .mc-hdr:first-child{margin-top:0;}
 .today-queue{display:flex;flex-direction:column;gap:.75rem;}
 .tq-section{background:var(--card);border:1px solid var(--border);border-radius:8px;overflow:hidden;margin-bottom:1rem;}
-.tq-hdr{display:flex;align-items:center;justify-content:space-between;padding:.55rem .9rem;border-bottom:1px solid var(--border);background:rgba(255,255,255,.02);}
+.tq-hdr{display:flex;align-items:center;gap:.5rem;padding:.55rem .9rem;border-bottom:1px solid var(--border);background:rgba(255,255,255,.02);cursor:pointer;user-select:none;}
+.tq-chevron{margin-left:auto;color:var(--muted);font-size:.55rem;transition:transform .18s;line-height:1;}
+.tq-section.collapsed .tq-chevron{transform:rotate(-90deg);}
+.tq-section.collapsed>div:not(.tq-hdr){display:none;}
+.tq-section.collapsed{border-bottom:none;}
+.tq-2col{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;}
 .tq-title{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text);}
 .tq-badge{font-size:.62rem;font-weight:700;background:rgba(217,74,74,.15);color:#d94a4a;border:1px solid rgba(217,74,74,.3);border-radius:10px;padding:.1rem .4rem;}
 .tq-item{padding:.55rem .9rem;border-bottom:1px solid var(--border);font-size:.8rem;display:flex;gap:.55rem;align-items:flex-start;}
@@ -145,7 +150,7 @@ td{padding:0.7rem 0.75rem;font-size:0.88rem;vertical-align:middle;}
 .tq-tag-green{background:rgba(74,170,74,.15);color:#4aaa4a;}
 .tq-tag-gray{background:rgba(255,255,255,.06);color:var(--muted);}
 .tq-empty{padding:.7rem .9rem;font-size:.75rem;color:var(--muted);font-style:italic;}
-@media(max-width:640px){.today-queue{}.axis-row{grid-template-columns:120px 40px 40px;}.axis-summary,.axis-stages{display:none;}.tq-item-title{white-space:normal;}}
+@media(max-width:640px){.tq-2col{grid-template-columns:1fr;}.axis-row{grid-template-columns:120px 40px 40px;}.axis-summary,.axis-stages{display:none;}.tq-item-title{white-space:normal;}}
 /* ── Axis Drawer ── */
 #axisDrawer{position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:1000;display:flex;justify-content:flex-end;backdrop-filter:blur(2px);}
 .drawer-panel{width:min(480px,100vw);background:var(--surface);border-left:1px solid var(--border);height:100%;overflow-y:auto;display:flex;flex-direction:column;}
@@ -712,21 +717,23 @@ td{padding:0.7rem 0.75rem;font-size:0.88rem;vertical-align:middle;}
           <span class="action-title">Today — <span id="mcTodayDate" style="font-weight:400;text-transform:none;letter-spacing:0;"></span></span>
         </div>
         <div class="today-queue">
-          <div class="tq-section">
-            <div class="tq-hdr"><span class="tq-title">Do Now</span><span class="tq-badge" id="doNowBadge">0</span></div>
+          <div class="tq-section" id="tqSectionDoNow">
+            <div class="tq-hdr" onclick="toggleTqSection('tqSectionDoNow')"><span class="tq-title">Do Now</span><span class="tq-badge" id="doNowBadge">0</span><span class="tq-chevron">▼</span></div>
             <div id="tqDoNow"><div class="tq-empty">Loading…</div></div>
           </div>
-          <div class="tq-section">
-            <div class="tq-hdr"><span class="tq-title">Waiting on Rob</span><span class="tq-badge" id="waitingBadge" style="background:rgba(192,144,48,.15);color:var(--gold);border-color:rgba(192,144,48,.3);">0</span></div>
+          <div class="tq-section" id="tqSectionWaiting">
+            <div class="tq-hdr" onclick="toggleTqSection('tqSectionWaiting')"><span class="tq-title">Waiting on Rob</span><span class="tq-badge" id="waitingBadge" style="background:rgba(192,144,48,.15);color:var(--gold);border-color:rgba(192,144,48,.3);">0</span><span class="tq-chevron">▼</span></div>
             <div id="tqWaiting"><div class="tq-empty">Loading…</div></div>
           </div>
-          <div class="tq-section">
-            <div class="tq-hdr"><span class="tq-title">Agent Can Do</span></div>
-            <div id="tqAgent"><div class="tq-empty">Loading…</div></div>
-          </div>
-          <div class="tq-section">
-            <div class="tq-hdr"><span class="tq-title">Recently Shipped</span></div>
-            <div id="tqShipped"><div class="tq-empty">Loading…</div></div>
+          <div class="tq-2col">
+            <div class="tq-section" id="tqSectionAgent">
+              <div class="tq-hdr" onclick="toggleTqSection('tqSectionAgent')"><span class="tq-title">Agent Can Do</span><span class="tq-chevron">▼</span></div>
+              <div id="tqAgent"><div class="tq-empty">Loading…</div></div>
+            </div>
+            <div class="tq-section" id="tqSectionShipped">
+              <div class="tq-hdr" onclick="toggleTqSection('tqSectionShipped')"><span class="tq-title">Recently Shipped</span><span class="tq-chevron">▼</span></div>
+              <div id="tqShipped"><div class="tq-empty">Loading…</div></div>
+            </div>
           </div>
         </div>
       </div>
@@ -1874,6 +1881,24 @@ async function toggleCeoTask(id){
   await _saveCeoTasks();
 }
 
+/* ══════════════════════ TODAY QUEUE COLLAPSE ══════════════════════ */
+const _TQ_COLLAPSE_KEY='tq_collapsed';
+function _getTqState(){try{return JSON.parse(localStorage.getItem(_TQ_COLLAPSE_KEY)||'{}')}catch{return{};}}
+function toggleTqSection(id){
+  const sec=document.getElementById(id);if(!sec)return;
+  sec.classList.toggle('collapsed');
+  const s=_getTqState();s[id]=sec.classList.contains('collapsed');
+  localStorage.setItem(_TQ_COLLAPSE_KEY,JSON.stringify(s));
+}
+function _initTqCollapsed(){
+  const saved=_getTqState();
+  const defaults={tqSectionAgent:true,tqSectionShipped:true,tqSectionDoNow:false,tqSectionWaiting:false};
+  Object.keys(defaults).forEach(id=>{
+    const collapsed=id in saved?saved[id]:defaults[id];
+    const sec=document.getElementById(id);if(sec)sec.classList.toggle('collapsed',collapsed);
+  });
+}
+
 /* ══════════════════════ MISSION CONTROL ══════════════════════ */
 let mcAxisData=null;
 let mcInboxTasks=[];
@@ -1967,6 +1992,7 @@ function renderTodayQueue(){
   const wb=document.getElementById('waitingBadge');if(wb)wb.textContent=waitingItems.length;
   const actionBadge=document.getElementById('actionBoardBadge');
   if(actionBadge){const n=doNow.length+agentItems.length+waitingItems.length;actionBadge.textContent=n+' Open Action Item'+(n!==1?'s':'')+' →';}
+  _initTqCollapsed();
 }
 window.renderBugLog = function() {
   const openWrap = document.getElementById('bugLogOpen');
