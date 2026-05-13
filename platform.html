@@ -1307,6 +1307,20 @@ async function loadArtifacts() {
     const d=await r.json();
     allEntries=Array.isArray(d.entries)?d.entries:[];
 
+    // ── Auto-archive concluded artifacts ──────────────────────────────────────
+    {
+      const arKey='qa_archived';
+      let ar={};try{ar=JSON.parse(localStorage.getItem(arKey)||'{}');}catch{}
+      const overrides=getUnarchiveOverrides();
+      let changed=false;
+      allEntries.forEach(e=>{
+        if((e.status==='concluded'||e.status==='archived')&&!ar[e.id]&&!overrides[e.id]){
+          ar[e.id]=true; changed=true;
+        }
+      });
+      if(changed) localStorage.setItem(arKey,JSON.stringify(ar));
+    }
+
     // ── Artifact change notifications ──────────────────────────────────────
     const SEEN_KEY='platform_last_updated';
     const lastSeen=localStorage.getItem(SEEN_KEY)||'';
@@ -2008,6 +2022,9 @@ async function loadBugsTab() {
   const elCC   = document.getElementById('compBugLogCount');
   if (!elOpen) return;
   elOpen.innerHTML = '<div style="color:var(--muted);font-size:.8rem;padding:.5rem 0;">Loading…</div>';
+  // ensure session is live before querying RLS-protected table
+  const { data: { session: bugsSess } } = await sb.auth.getSession();
+  if (!bugsSess) { elOpen.innerHTML = '<div style="color:var(--red);font-size:.75rem;">No active session — please sign out and back in.</div>'; return; }
   const { data, error } = await sb.from('platform_bugs').select('*').order('created_at', { ascending: false });
   if (error) { elOpen.innerHTML = `<div style="color:var(--red);font-size:.75rem;">${esc(error.message)}</div>`; return; }
   _bugsCache = data || [];
