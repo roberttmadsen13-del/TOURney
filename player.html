@@ -234,11 +234,21 @@ a{color:inherit;text-decoration:none;}
   <div id="tourneyGrid" class="tourney-grid"></div>
   <div id="noTourneys" class="no-tourneys" style="display:none">No tournament history found.</div>
 
+  <div id="installBanner" style="display:none;margin-bottom:1.5rem;">
+    <a href="/install" style="display:flex;align-items:center;gap:0.75rem;background:var(--card2);padding:1rem 1.25rem;border:1px solid var(--border);text-decoration:none;">
+      <span style="font-size:1.2rem;">📲</span>
+      <div>
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:0.75rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold);">Install App</div>
+        <div style="font-size:0.72rem;color:var(--muted);margin-top:0.15rem;">Add TOURney to your home screen</div>
+      </div>
+    </a>
+  </div>
   <div class="logout-row">
     <button class="logout-btn" id="logoutBtn">Sign out</button>
   </div>
 </div>
 
+<script>if (!window.matchMedia('(display-mode: standalone)').matches) { document.getElementById('installBanner').style.display = ''; }</script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.105.3/dist/umd/supabase.min.js" integrity="sha384-iWpUQPQzWsFiosLgsS8o+e6E8y3Gm+EW2m/vAAo7A2H3fuc4KOKEx+5CAord2H2z" crossorigin="anonymous"></script>
 <script>
 const SUPABASE_URL = 'https://jllugkiojeoopitdvzsa.supabase.co';

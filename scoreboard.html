@@ -202,6 +202,7 @@ details[open] .explainer summary::after,.explainer details[open]>summary::after{
 .dot-c{background:#4a8a5a;}.dot-d{background:#7a4a8a;}.dot-e{background:#3a7a8a;}.dot-f{background:#8a5a2a;}.dot-g{background:#5a4a8a;}.dot-h{background:#8a3a5a;}
 .tb-label.team-c{color:#4a8a5a;}.tb-label.team-d{color:#7a4a8a;}.tb-label.team-e{color:#3a7a8a;}.tb-label.team-f{color:#8a5a2a;}.tb-label.team-g{color:#5a4a8a;}.tb-label.team-h{color:#8a3a5a;}
 </style>
+<link rel="stylesheet" href="/tokens.css">
 <link rel="stylesheet" href="/nav-mobile.css">
 <script defer src="/nav-mobile.js"></script>
 </head>
@@ -260,7 +261,7 @@ details[open] .explainer summary::after,.explainer details[open]>summary::after{
       </div>
 
       <div id="scoringModeBadge" style="display:none;margin-bottom:0.75rem;font-family:'DM Mono',monospace;font-size:0.45rem;letter-spacing:0.18em;text-transform:uppercase;padding:0.22rem 0.7rem;border:1px solid rgba(192,144,48,0.3);color:rgba(192,144,48,0.65);"></div>
-      <table class="lb-table">
+      <div style="overflow-x:auto;"><table class="lb-table">
         <thead>
           <tr>
             <th style="width:2.5rem"></th>
@@ -272,15 +273,20 @@ details[open] .explainer summary::after,.explainer details[open]>summary::after{
             <th class="right" id="hdrTotal">Total</th>
           </tr>
         </thead>
-        <tbody id="leaderboardBody">
-          <tr><td colspan="7" class="loading">Waiting for scores...</td></tr>
+        <tbody id="leaderboardBody" aria-live="polite" aria-atomic="true">
+          <tr><td colspan="7" class="skeleton" style="height:2.5rem;border-radius:4px;"></td></tr>
+          <tr><td colspan="7" class="skeleton" style="height:2.5rem;border-radius:4px;"></td></tr>
+          <tr><td colspan="7" class="skeleton" style="height:2.5rem;border-radius:4px;"></td></tr>
+          <tr><td colspan="7" class="skeleton" style="height:2.5rem;border-radius:4px;"></td></tr>
+          <tr><td colspan="7" class="skeleton" style="height:2.5rem;border-radius:4px;"></td></tr>
+          <tr><td colspan="7" class="skeleton" style="height:2.5rem;border-radius:4px;"></td></tr>
         </tbody>
-      </table>
+      </table></div>
     </div>
 
     <!-- INDIVIDUAL VIEW -->
     <div id="view-individual" style="display:none;">
-      <table class="lb-table">
+      <div style="overflow-x:auto;"><table class="lb-table">
         <thead>
           <tr>
             <th style="width:2.5rem"></th>
@@ -293,10 +299,15 @@ details[open] .explainer summary::after,.explainer details[open]>summary::after{
             <th class="right">Total</th>
           </tr>
         </thead>
-        <tbody id="indLeaderboardBody">
-          <tr><td colspan="8" class="loading">Waiting for scores...</td></tr>
+        <tbody id="indLeaderboardBody" aria-live="polite" aria-atomic="true">
+          <tr><td colspan="8" class="skeleton" style="height:2.5rem;border-radius:4px;"></td></tr>
+          <tr><td colspan="8" class="skeleton" style="height:2.5rem;border-radius:4px;"></td></tr>
+          <tr><td colspan="8" class="skeleton" style="height:2.5rem;border-radius:4px;"></td></tr>
+          <tr><td colspan="8" class="skeleton" style="height:2.5rem;border-radius:4px;"></td></tr>
+          <tr><td colspan="8" class="skeleton" style="height:2.5rem;border-radius:4px;"></td></tr>
+          <tr><td colspan="8" class="skeleton" style="height:2.5rem;border-radius:4px;"></td></tr>
         </tbody>
-      </table>
+      </table></div>
     </div>
 
     <!-- SCORECARD VIEW -->

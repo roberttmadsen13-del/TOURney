@@ -378,6 +378,13 @@ html { scroll-behavior: smooth; }
 .day-block.will-animate.visible { opacity: 1; transform: translateY(0); }
 .day-block:nth-child(2) { transition-delay: 0.12s; }
 .day-block:nth-child(3) { transition-delay: 0.24s; }
+@media (prefers-reduced-motion: reduce) {
+  .hero-logo-wrap, .hero-eyebrow, .hero-title, .hero-rule, .hero-meta, .hero-cta { animation: none; opacity: 1; transform: none; }
+  .hero-img { transition: none; }
+  .will-animate { transition: none; opacity: 1; transform: none; }
+  .will-animate.visible { opacity: 1; transform: none; }
+  .day-block.will-animate { transition: none; opacity: 1; transform: none; }
+}
 
 /* Mobile hero right-align adjustments */
 @media (max-width: 480px) {
@@ -390,6 +397,7 @@ html { scroll-behavior: smooth; }
 }
 
 </style>
+<link rel="stylesheet" href="/tokens.css">
 <link rel="stylesheet" href="/nav-mobile.css">
 <script defer src="/nav-mobile.js"></script>
 </head>
@@ -439,7 +447,13 @@ html { scroll-behavior: smooth; }
     <div class="s-title">Current <em>Standings</em></div>
     <div class="s-sub">Leaderboard &mdash; updates as scores come in</div>
     <div id="heroTeamBanners" style="display:grid;grid-template-columns:1fr 1fr;gap:1px;background:rgba(192,144,48,0.1);margin-bottom:2rem;"></div>
-    <div id="heroLeaderboard"></div>
+    <div id="heroLeaderboard" aria-live="polite" aria-atomic="true">
+      <div class="skeleton" style="height:2rem;border-radius:4px;margin-bottom:4px;"></div>
+      <div class="skeleton" style="height:2rem;border-radius:4px;margin-bottom:4px;"></div>
+      <div class="skeleton" style="height:2rem;border-radius:4px;margin-bottom:4px;"></div>
+      <div class="skeleton" style="height:2rem;border-radius:4px;margin-bottom:4px;"></div>
+      <div class="skeleton" style="height:2rem;border-radius:4px;"></div>
+    </div>
     <div style="margin-top:2.5rem;text-align:center;">
       <a href="/scoreboard" class="btn-gold">Full Leaderboard &rarr;</a>
     </div>
@@ -663,7 +677,7 @@ html { scroll-behavior: smooth; }
   <img id="lightboxImg" src="" alt="Tournament Hat">
 </div>
 
-<div class="toast" id="toast">
+<div class="toast" id="toast" aria-live="polite" aria-atomic="true">
   <div class="toast-title" id="toastTitle">Registered.</div>
   <div class="toast-body" id="toastBody">Your spot has been confirmed.</div>
 </div>
@@ -1054,6 +1068,8 @@ window.addEventListener('scroll', () => {
 
 // ── Feature 11: Hero Scoreboard ──────────────────────────────────────────────
 async function loadHeroScoreboard(tournamentId) {
+  const _lbSk = document.getElementById('heroLeaderboard');
+  if (_lbSk) _lbSk.innerHTML = '<div class="skeleton" style="height:2rem;border-radius:4px;margin-bottom:4px;"></div>'.repeat(5);
   const [pRes, sRes, taRes, p1Res, p2Res, p3Res, capRes] = await Promise.all([
     sb.from('players').select('id,first_name,last_name,handicap').eq('tournament_id', tournamentId),
     sb.from('scores').select('player_id,round,hole,gross_score').eq('tournament_id', tournamentId),

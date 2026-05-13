@@ -178,7 +178,7 @@ async function doSignIn() {
   const { data, error } = await sb.auth.signInWithPassword({ email, password });
 
   if (error || !data.user) {
-    err.textContent = error?.message || 'Invalid email or password.';
+    err.textContent = 'Invalid email or password.';
     err.classList.add('show');
     btn.disabled = false;
     btn.textContent = 'SIGN IN';
@@ -237,7 +237,7 @@ async function doSignUp() {
   const { data, error } = await sb.auth.signUp({ email, password });
 
   if (error) {
-    err.textContent = error.message;
+    err.textContent = error?.message?.toLowerCase().includes('already') ? 'An account with this email already exists. Sign in instead.' : 'Sign up failed — check your details and try again.';
     err.classList.add('show');
     btn.disabled = false;
     btn.textContent = 'CREATE ACCOUNT';
@@ -285,7 +285,7 @@ async function doForgot() {
   btn.textContent = 'SEND RESET LINK';
 
   if (error) {
-    err.textContent = error.message;
+    err.textContent = 'Password reset failed. Check your email address and try again.';
     err.classList.add('show');
     return;
   }
