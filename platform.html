@@ -1536,17 +1536,32 @@ function openTicketDrawer(id){
     const cls=stageKey==='concluded'?' done':i<ci?' done':i===ci?' active':'';
     return`<div class="drawer-lc-stage"><div class="drawer-lc-pip${cls}"></div><div class="drawer-lc-label">${s}</div></div>`;
   }).join('');
-  // next step cmd — include related artifact URLs as context
+  // rich copyable prompt
   const axisKey=e.axis||e.id;
   const nextStage=stages[Math.min(ci+1,stages.length-1)];
-  const relatedUrls=(allEntries||[])
+  const related=(allEntries||[])
     .filter(x=>x.id!==e.id&&(x.tags||[]).includes(axisKey)&&x.url&&x.category!=='axis')
     .sort((a,b)=>(b.updated||b.date||'').localeCompare(a.updated||a.date||''))
-    .slice(0,4).map(x=>`tourney.greenskeeper.studio${x.url}`);
-  const cmd=`/tourney-${nextStage}-${axisKey}${relatedUrls.length?' '+relatedUrls.join(' '):''}`;
-  document.getElementById('drawerNextCmd').innerHTML=ci<stages.length-1
-    ?`<div class="drawer-next-cmd"><span class="drawer-next-text">${esc(cmd)}</span><button class="drawer-copy-btn" onclick="navigator.clipboard.writeText('${esc(cmd)}').then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy',1200)})">Copy</button></div>`
-    :'<div style="font-size:.75rem;color:#4aaa4a;padding:.5rem 0;">✓ Concluded</div>';
+    .slice(0,4);
+  const urlLines=related.map(x=>`  - ${x.title||x.id}: tourney.greenskeeper.studio${x.url}`).join('\n');
+  const openItems=(e.summary||'').replace(/^[^.]+\.\s*/,'');
+  const cmd=[
+    `/tourney-${nextStage}-${axisKey}${related.length?' '+related.map(x=>`tourney.greenskeeper.studio${x.url}`).join(' '):''}`,
+    ``,
+    `Axis: ${axisKey} | Stage: ${stageKey} → ${nextStage}`,
+    urlLines?`Artifacts:\n${urlLines}`:'',
+    openItems?`Open items: ${openItems}`:'',
+  ].filter(Boolean).join('\n');
+  const cmdEl=document.getElementById('drawerNextCmd');
+  if(cmdEl){
+    cmdEl._cmd=cmd;
+    cmdEl.innerHTML=ci<stages.length-1
+      ?`<div class="drawer-next-cmd">
+          <pre class="drawer-next-text" style="white-space:pre-wrap;word-break:break-word;font-size:.7rem;line-height:1.5;margin:0;flex:1;">${esc(cmd)}</pre>
+          <button class="drawer-copy-btn" style="align-self:flex-start;" onclick="navigator.clipboard.writeText(document.getElementById('drawerNextCmd')._cmd).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy',1200)})">Copy</button>
+        </div>`
+      :'<div style="font-size:.75rem;color:#4aaa4a;padding:.5rem 0;">✓ Concluded</div>';
+  }
   document.getElementById('drawerGradeHistory').innerHTML='';
   // delete button
   const delBtn=document.getElementById('drawerDeleteBtn');
