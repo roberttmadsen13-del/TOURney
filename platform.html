@@ -683,6 +683,14 @@ td{padding:0.7rem 0.75rem;font-size:0.88rem;vertical-align:middle;}
   <div id="panel-action" style="display:none;">
     <div class="action-wrap">
 
+      <div class="action-section" style="margin-bottom:2rem;">
+        <div class="action-hd">
+          <span class="action-title">Checklist — Rob Only</span>
+          <span class="action-sub" id="ceoOpenCount"></span>
+        </div>
+        <div class="ceo-list" id="ceoList"></div>
+      </div>
+
       <div class="action-section">
         <div class="action-hd">
           <span class="action-title">Today — <span id="mcTodayDate" style="font-weight:400;text-transform:none;letter-spacing:0;"></span></span>
@@ -788,7 +796,7 @@ const tabLoaded = {};
 function loadTabData(t) {
   if (t === 'dash')      { loadGrades(); loadCeoTasks(); }
   if (t === 'tenants')   { loadTournaments(); loadCompAccounts(); loadCodes(); }
-  if (t === 'action')    { loadMissionControl(); loadArtifacts(); loadGrades(); tabLoaded['artifacts'] = true; }
+  if (t === 'action')    { loadMissionControl(); loadArtifacts(); loadGrades(); loadCeoTasks(); tabLoaded['artifacts'] = true; }
   if (t === 'bugs')      { renderBugLog(); }
   if (t === 'checklist') { renderQaRuns(); }
   if (t === 'reference') { renderReference(); }
