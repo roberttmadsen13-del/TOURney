@@ -123,6 +123,18 @@ td{padding:0.7rem 0.75rem;font-size:0.88rem;vertical-align:middle;}
 .axis-stage-pip.done{background:#2a4a2a;}
 .axis-stage-pip.active{background:var(--gold);}
 .axis-stage-pip.concluded{background:#2a2a5a;}
+/* stage-specific ticket row colors */
+.at-row-review{border-left:3px solid rgba(74,144,217,.55);}
+.at-row-plan{border-left:3px solid rgba(217,184,74,.55);}
+.at-row-runbook{border-left:3px solid rgba(74,154,106,.55);}
+.at-row-executing{border-left:3px solid rgba(217,74,74,.55);}
+.at-row-audit{border-left:3px solid rgba(154,74,217,.55);}
+.at-tag-review{background:rgba(26,37,51,.9);color:#4a90d9;border:1px solid rgba(74,144,217,.2);}
+.at-tag-plan{background:rgba(42,42,26,.9);color:#d9b84a;border:1px solid rgba(217,184,74,.2);}
+.at-tag-runbook{background:rgba(26,42,26,.9);color:#4a9a6a;border:1px solid rgba(74,154,106,.2);}
+.at-tag-executing{background:rgba(42,26,26,.9);color:#d94a4a;border:1px solid rgba(217,74,74,.2);}
+.at-tag-audit{background:rgba(42,26,42,.9);color:#9a4ad9;border:1px solid rgba(154,74,217,.2);}
+.at-tag-concluded{background:rgba(26,26,42,.9);color:#6a6ab4;border:1px solid rgba(100,100,180,.2);}
 /* ── Mission Control ── */
 .mc-wrap{max-width:1100px;margin:0 auto;padding:1.75rem 1.75rem 4rem;}
 .mc-hdr{font-size:.72rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin:1.5rem 0 .75rem;}
@@ -694,7 +706,7 @@ td{padding:0.7rem 0.75rem;font-size:0.88rem;vertical-align:middle;}
           </div>
           <div class="tq-section" id="tqSectionDoNow">
             <div class="tq-hdr" onclick="toggleTqSection('tqSectionDoNow')"><span class="tq-title">Do Now</span><span class="tq-badge" id="doNowBadge">0</span><span class="tq-chevron">▼</span></div>
-            <div id="tqDoNow"><div class="tq-empty">Loading…</div></div>
+            <div class="ceo-list" id="tqDoNow"><div class="tq-empty">Loading…</div></div>
           </div>
         </div>
       </div>
@@ -1481,9 +1493,9 @@ function renderArtifactTickets(){
       return`<div class="axis-stage-pip${cls}" title="${s}"></div>`;
     }).join('');
     const stageShort={review:'Review',plan:'Plan',runbook:'Runbook',executing:'Exec',audit:'Audit',concluded:'Done'}[stageKey]||stageKey;
-    return`<div class="axis-row at-row" onclick="openTicketDrawer('${esc(e.id)}')" style="cursor:pointer;${closed?'opacity:.5;':''}">
+    return`<div class="axis-row at-row at-row-${stageKey}" onclick="openTicketDrawer('${esc(e.id)}')" style="cursor:pointer;${closed?'opacity:.5;':''}">
       <div style="display:flex;align-items:center;min-width:0;gap:.35rem;">${dot}<div class="axis-label" style="font-size:.74rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${esc(e.title||'')}</div></div>
-      <span class="tq-tag tq-tag-gray" style="font-size:.55rem;white-space:nowrap;">${esc(stageShort)}</span>
+      <span class="tq-tag at-tag-${stageKey}" style="font-size:.55rem;white-space:nowrap;">${esc(stageShort)}</span>
       <div class="axis-stages" style="flex-shrink:0;">${pips}</div>
       <div style="white-space:nowrap;font-size:.6rem;color:var(--muted);font-family:'DM Mono',monospace;">${esc((e.updated||e.date||'').substring(0,10))}</div>
     </div>`;
@@ -1900,13 +1912,14 @@ function loadCeoTasks(){
   const ctr=document.getElementById('ceoOpenCount');if(ctr)ctr.textContent=pending+' of '+CEO_TASKS.length;
   list.innerHTML=CEO_TASKS.map(t=>{
     const done=!!_ceoChecked[t.id];
-    const links=(t.links||[]).map(l=>'<a class="ceo-link" href="'+esc(l.url)+'" target="_blank">'+esc(l.label)+'</a>').join('');
+    const links=(t.links||[]).map(l=>'<a class="ceo-link" href="'+esc(l.url)+'" target="_blank" rel="noopener noreferrer">'+esc(l.label)+'</a>').join('');
     const blocks=(t.blocks||[]).length?'<span class="ceo-blocks">Blocks: '+esc((t.blocks||[]).join(', '))+'</span>':'';
+    const why=t.why?'<div class="ceo-why">'+esc(t.why)+'</div>':'';
     const meta=(links||blocks)?'<div class="ceo-meta">'+links+blocks+'</div>':'';
     return '<div class="ceo-item'+(done?' done':'')+'">'
       +'<div class="ceo-cb'+(done?' checked':'')+'" onclick="toggleCeoTask(\''+t.id+'\')"></div>'
       +'<div class="ceo-body"><div class="ceo-text">'+esc(t.text)+'</div>'
-      +meta+'</div></div>';
+      +why+meta+'</div></div>';
   }).join('');
 }
 async function toggleCeoTask(id){
@@ -1933,6 +1946,11 @@ function _initTqCollapsed(){
   });
 }
 
+/* ── Do Now ack state ── */
+let _doNowAcked={};
+function _loadDoNowAcked(){try{_doNowAcked=JSON.parse(localStorage.getItem('donow_acked')||'{}')}catch{}}
+function toggleDoNowItem(key){_doNowAcked[key]=!_doNowAcked[key];localStorage.setItem('donow_acked',JSON.stringify(_doNowAcked));renderTodayQueue();}
+
 /* ══════════════════════ MISSION CONTROL ══════════════════════ */
 let mcAxisData=null;
 let mcInboxTasks=[];
@@ -1955,6 +1973,7 @@ async function loadMissionControl(){
       if(shippedRes.ok){const d=await shippedRes.json();mcShippedTasks=d.data||[];}
     }
   } catch(e){}
+  _loadDoNowAcked();
   renderTodayQueue();
 }
 function renderTodayQueue(){
@@ -1963,13 +1982,11 @@ function renderTodayQueue(){
   const NEXT={review:'plan',plan:'runbook',runbook:'executing',executing:'audit',audit:'concluded'};
   const NEXT_LABEL={plan:'Review →',runbook:'Review →',executing:'/tourney-execute',audit:'/tourney-execute'};
   const NEXT_SKILL={plan:'/tourney-review-',runbook:'/tourney-review-',executing:'/tourney-execute ',audit:'/tourney-execute '};
-  const URGENT_IDS=['wire_install_email_webhook','gh_actions_verify','supabase_email','leaked_pw'];
-
   // DO NOW — blocking axis issues only (human tasks live in checklist)
   const doNow=[];
   Object.entries(ax).forEach(([k,a])=>{
     if(a.blocking&&a.status!=='concluded')
-      doNow.push({title:k+' axis — blocked',sub:a.summary,tag:'BLOCKING',tagCls:'tq-tag-red',cmd:null});
+      doNow.push({key:k,title:k.charAt(0).toUpperCase()+k.slice(1)+' axis — blocked',sub:a.summary,artifact:a.artifact||null});
   });
 
   // AGENT — from platform_tasks inbox queue; fall back to axis-status derivation if empty
@@ -1986,10 +2003,6 @@ function renderTodayQueue(){
       });
   }
 
-  // WAITING ON ROB
-  const waitingItems=CEO_TASKS.filter(t=>!chk[t.id]&&!URGENT_IDS.includes(t.id))
-    .map(t=>({id:t.id,title:t.text,sub:(t.blocks||[]).length?'Blocks: '+(t.blocks||[]).join(', '):'',links:t.links||[],tag:'WAITING',tagCls:'tq-tag-gold',cmd:null}));
-
   // SHIPPED — from platform_tasks shipped queue; fall back to artifacts
   let shippedItems=mcShippedTasks.map(t=>({title:t.title,sub:t.body||'',tag:t.tag||'SHIPPED',tagCls:'tq-tag-green',cmd:null}));
   if(!shippedItems.length){
@@ -2000,22 +2013,38 @@ function renderTodayQueue(){
       .map(e=>({title:e.title,sub:e.updated||e.date||'',tag:(e.category||'artifact').toUpperCase(),tagCls:'tq-tag-green',cmd:null,url:e.url}));
   }
 
+  const doNowPending=doNow.filter(i=>!_doNowAcked[i.key]).length;
   const badge=document.getElementById('doNowBadge');
-  if(badge)badge.textContent=doNow.length;
+  if(badge)badge.textContent=doNowPending;
+
+  // render Do Now as ceo-item checklist cards
+  const doNowEl=document.getElementById('tqDoNow');
+  if(doNowEl){
+    doNowEl.innerHTML=doNow.length?doNow.map(i=>{
+      const done=!!_doNowAcked[i.key];
+      return'<div class="ceo-item'+(done?' done':'')+'">'
+        +'<div class="ceo-cb'+(done?' checked':'')+'" onclick="toggleDoNowItem(\''+i.key+'\')"></div>'
+        +'<div class="ceo-body">'
+        +'<div class="ceo-text">'+esc(i.title)+'</div>'
+        +(i.sub?'<div class="ceo-why">'+esc(i.sub)+'</div>':'')
+        +'<div class="ceo-meta">'
+        +(i.artifact?'<a class="ceo-link" href="'+esc(i.artifact)+'" target="_blank" rel="noopener noreferrer">View Ticket →</a>':'')
+        +'<button class="tq-copy" onclick="event.stopPropagation();navigator.clipboard.writeText(\'/tourney-execute '+i.key+'\').then(()=>{this.textContent=\'Copied!\';setTimeout(()=>this.textContent=\'Copy Skill\',1400)})">Copy Skill</button>'
+        +'</div></div></div>';
+    }).join(''):'<div class="tq-empty">Nothing blocking.</div>';
+  }
 
   const renderItems=(items,empty)=>items.length?items.map(i=>`
     <div class="tq-item">
-      ${i.id?`<div class="tq-cb${_ceoChecked[i.id]?' checked':''}" onclick="event.stopPropagation();toggleCeoTask('${esc(i.id)}')"></div>`:`<span class="tq-tag ${esc(i.tagCls)}">${esc(i.tag)}</span>`}
+      <span class="tq-tag ${esc(i.tagCls)}">${esc(i.tag)}</span>
       <div class="tq-item-body">
         <div class="tq-item-title">${i.url?`<a href="${esc(i.url)}" target="_blank" style="color:inherit;text-decoration:none;">${esc(i.title)}</a>`:esc(i.title)}</div>
         ${i.sub?`<div class="tq-item-sub">${esc(i.sub)}</div>`:''}
-        ${(i.links||[]).length?`<div class="tq-item-links">${i.links.map(l=>`<a class="ceo-link" href="${esc(l.url)}" target="_blank">${esc(l.label)}</a>`).join('')}</div>`:''}
       </div>
       ${i.cmd?`<button class="tq-copy" onclick="navigator.clipboard.writeText('${esc(i.cmd)}').then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy',1400)})">Copy</button>`:''}
     </div>`).join(''):`<div class="tq-empty">${empty}</div>`;
 
   const set=(id,items,empty)=>{const el=document.getElementById(id);if(el)el.innerHTML=renderItems(items,empty);};
-  set('tqDoNow',doNow,'Nothing blocking.');
   set('tqAgent',agentItems,'All axes concluded.');
   set('tqShipped',shippedItems,'No artifacts yet.');
   const refAgent=document.getElementById('refAgentQueue');if(refAgent)refAgent.innerHTML=renderItems(agentItems,'All axes concluded.');
