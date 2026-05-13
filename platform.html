@@ -67,6 +67,13 @@ td{padding:0.7rem 0.75rem;font-size:0.88rem;vertical-align:middle;}
 .t-slug{font-family:'DM Mono',monospace;font-size:0.48rem;letter-spacing:0.1em;color:var(--gold);margin-top:2px;}
 .t-owner{font-family:'DM Mono',monospace;font-size:0.52rem;color:var(--muted);}
 .t-count{font-family:'Barlow Condensed',sans-serif;font-size:1.05rem;font-weight:600;color:var(--gold);}
+.t-card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:1rem 1.1rem;margin-bottom:.75rem;}
+.t-card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:.5rem;margin-bottom:.5rem;}
+.t-card-mid{display:flex;flex-wrap:wrap;gap:.75rem;margin-bottom:.5rem;}
+.t-meta{font-family:'DM Mono',monospace;font-size:.5rem;color:var(--muted);}
+.t-card-stats{display:flex;flex-wrap:wrap;gap:1rem;font-size:.78rem;color:var(--text);margin-bottom:.75rem;}
+.t-card-stats strong{color:var(--gold);}
+.t-card-actions{display:flex;gap:.5rem;}
 .t-date{font-family:'DM Mono',monospace;font-size:0.48rem;color:rgba(240,230,204,0.25);}
 .actions{display:flex;gap:0.4rem;flex-wrap:wrap;}
 .btn-action{font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:0.62rem;letter-spacing:0.12em;text-transform:uppercase;padding:0.3rem 0.65rem;border:1px solid;background:none;cursor:pointer;transition:all 0.2s;text-decoration:none;display:inline-block;}
@@ -451,13 +458,9 @@ td{padding:0.7rem 0.75rem;font-size:0.88rem;vertical-align:middle;}
         <div class="stat"><div class="stat-val" id="statTotal">—</div><div class="stat-label">Total Tournaments</div></div>
         <div class="stat"><div class="stat-val" id="statPlayers">—</div><div class="stat-label">Total Players</div></div>
         <div class="stat"><div class="stat-val" id="statOwners">—</div><div class="stat-label">Unique Owners</div></div>
+        <div class="stat"><div class="stat-val" id="statActive">—</div><div class="stat-label">Active Tournaments</div></div>
       </div>
-      <div class="tbl-wrap">
-        <table>
-          <thead><tr><th>Tournament</th><th>Owner</th><th>Status</th><th>Players</th><th>Created</th><th></th></tr></thead>
-          <tbody id="tourneyBody"></tbody>
-        </table>
-      </div>
+      <div id="tourneyBody"></div>
       <div class="empty" id="emptyMsg" style="display:none;">No tournaments yet.</div>
 
       <div class="section-gap">
@@ -798,8 +801,8 @@ function statusBadge(s) {
   return '<span class="badge badge-notlive">Not Live</span>';
 }
 function filterTourneys(q) {
-  document.querySelectorAll('#tourneyBody tr').forEach(r => {
-    r.style.display = !q || r.textContent.toLowerCase().includes(q.toLowerCase()) ? '' : 'none';
+  document.querySelectorAll('#tourneyBody .t-card').forEach(r => {
+    r.style.display = !q || (r.dataset.search||r.textContent).toLowerCase().includes(q.toLowerCase()) ? '' : 'none';
   });
 }
 let compAccountsData = [];
@@ -816,33 +819,66 @@ function filterComps(q) {
   renderCompAccounts();
 }
 async function loadTournaments() {
-  const [{ data: tourneys },{ data: players },{ data: rounds }] = await Promise.all([
-    sb.from('tournaments').select('*').order('created_at',{ascending:false}),
-    sb.from('players').select('tournament_id'),
-    sb.from('settings').select('tournament_id,value').like('key','round_day%'),
+  const [{ data: tourneys },{ data: players },{ data: rounds },{ data: scores }] = await Promise.all([
+    sb.from('tournaments').select('*').order('created_at',{ascending:false}).limit(25),
+    sb.from('players').select('tournament_id,created_at'),
+    sb.from('rounds').select('tournament_id,day_number,status'),
+    sb.from('scores').select('tournament_id'),
   ]);
   if (!tourneys?.length) { document.getElementById('emptyMsg').style.display='block'; return; }
-  const counts={};
-  (players||[]).forEach(p => { counts[p.tournament_id]=(counts[p.tournament_id]||0)+1; });
-  const byT={};
-  (rounds||[]).forEach(r => { if(!byT[r.tournament_id])byT[r.tournament_id]=[]; byT[r.tournament_id].push(r); });
+
+  // aggregate per tournament
+  const playerCounts={}, lastPlayer={};
+  (players||[]).forEach(p => {
+    playerCounts[p.tournament_id]=(playerCounts[p.tournament_id]||0)+1;
+    if(!lastPlayer[p.tournament_id]||p.created_at>lastPlayer[p.tournament_id]) lastPlayer[p.tournament_id]=p.created_at;
+  });
+  const roundsByT={}, roundsComplete={};
+  (rounds||[]).forEach(r => {
+    roundsByT[r.tournament_id]=(roundsByT[r.tournament_id]||[]);
+    roundsByT[r.tournament_id].push(r);
+    if(r.status==='closed') roundsComplete[r.tournament_id]=(roundsComplete[r.tournament_id]||0)+1;
+  });
+  const scoreCounts={};
+  (scores||[]).forEach(s => { scoreCounts[s.tournament_id]=(scoreCounts[s.tournament_id]||0)+1; });
+
+  const statuses = tourneys.map(t => deriveStatus(roundsByT[t.id]||[]));
   document.getElementById('statTotal').textContent = tourneys.length;
   document.getElementById('statPlayers').textContent = (players||[]).length;
   document.getElementById('statOwners').textContent = new Set(tourneys.map(t=>t.owner_email)).size;
-  document.getElementById('tourneyBody').innerHTML = tourneys.map(t => {
+  document.getElementById('statActive').textContent = statuses.filter(s=>s==='live').length;
+
+  document.getElementById('tourneyBody').innerHTML = tourneys.map((t,i) => {
     const created = new Date(t.created_at).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
-    const status = deriveStatus(byT[t.id]||[]);
-    return `<tr>
-      <td><div class="t-name">${esc(t.name||t.short_name||'—')}</div><div class="t-slug">${esc(t.slug)}</div></td>
-      <td><div class="t-owner">${esc(t.owner_email||'—')}</div></td>
-      <td>${statusBadge(status)}</td>
-      <td><div class="t-count">${counts[t.id]||0}</div></td>
-      <td><div class="t-date">${created}</div></td>
-      <td><div class="actions">
-        <a class="btn-action btn-admin" href="/t/${esc(t.slug)}/admin">Admin</a>
+    const status = statuses[i];
+    const pc = playerCounts[t.id]||0;
+    const rc = (roundsByT[t.id]||[]).length;
+    const rDone = roundsComplete[t.id]||0;
+    const sc = scoreCounts[t.id]||0;
+    const lastAct = lastPlayer[t.id] ? new Date(lastPlayer[t.id]).toLocaleDateString('en-US',{month:'short',day:'numeric'}) : '—';
+    return `<div class="t-card" data-search="${esc((t.name||t.slug||'').toLowerCase()+' '+(t.owner_email||'').toLowerCase())}">
+      <div class="t-card-top">
+        <div>
+          <div class="t-name">${esc(t.name||t.short_name||'—')}</div>
+          <div class="t-slug">${esc(t.slug)}</div>
+        </div>
+        ${statusBadge(status)}
+      </div>
+      <div class="t-card-mid">
+        <span class="t-meta">Owner: ${esc(t.owner_email||'—')}</span>
+        <span class="t-meta">Created: ${created}</span>
+      </div>
+      <div class="t-card-stats">
+        <span>Players: <strong>${pc}</strong></span>
+        <span>Rounds: <strong>${rDone}/${rc}</strong></span>
+        <span>Scores: <strong>${sc}</strong></span>
+        <span>Last activity: <strong>${lastAct}</strong></span>
+      </div>
+      <div class="t-card-actions">
+        <a class="btn-action btn-admin" href="/t/${esc(t.slug)}/admin">Admin →</a>
         <button class="btn-action btn-delete" onclick="deleteTourney('${t.id}','${esc(t.name||t.slug)}')">Delete</button>
-      </div></td>
-    </tr>`;
+      </div>
+    </div>`;
   }).join('');
 }
 async function deleteTourney(id, name) {
