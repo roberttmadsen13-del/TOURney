@@ -392,7 +392,16 @@ td{padding:0.7rem 0.75rem;font-size:0.88rem;vertical-align:middle;}
 .at-pill.active,.at-pill:hover{background:var(--gold-dim);border-color:rgba(192,144,48,.35);color:var(--gold);}
 .at-concluded-toggle{margin-left:auto;flex-shrink:0;background:transparent;border:1px solid var(--border);color:var(--muted);font-size:.58rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:.16rem .38rem;cursor:pointer;white-space:nowrap;transition:all .12s;}
 .at-concluded-toggle:hover,.at-concluded-unseen{border-color:rgba(192,144,48,.4);color:var(--gold);}
-.at-row{grid-template-columns:1fr auto auto auto;gap:.6rem;}
+.at-row{display:flex!important;flex-direction:column;gap:.45rem;}
+.at-row-top{display:flex;align-items:center;gap:.5rem;min-width:0;}
+.at-row-top .axis-label{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:.78rem;}
+.at-row-top .at-date{white-space:nowrap;font-size:.6rem;color:var(--muted);font-family:'DM Mono',monospace;margin-left:auto;}
+.at-lifecycle{display:flex;width:100%;border-radius:3px;overflow:hidden;gap:1px;}
+.at-lc-seg{flex:1;padding:.22rem .1rem;text-align:center;font-size:.42rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;background:rgba(255,255,255,.03);color:rgba(240,230,204,.18);transition:none;}
+.at-lc-seg.done{background:#152015;color:#4a8a4a;}
+.at-lc-seg.active{background:var(--gold);color:#000;}
+.at-lc-seg.concluded{background:#151528;color:#5a5a9a;}
+.at-row .axis-stages{display:none;}
 .at-tag-concluded{background:rgba(80,80,180,.15);color:#9090e0;border:1px solid rgba(80,80,180,.2);}
 .notes-ta{width:100%;min-height:180px;background:rgba(255,255,255,0.03);border:1px solid var(--border);color:var(--text);font-family:'Barlow',sans-serif;font-size:0.85rem;padding:0.85rem;outline:none;resize:vertical;line-height:1.6;}
 .notes-ta:focus{border-color:rgba(192,144,48,0.45);}
@@ -1495,11 +1504,14 @@ function renderArtifactTickets(){
       return`<div class="axis-stage-pip${cls}" title="${s}"></div>`;
     }).join('');
     const stageShort={review:'Review',plan:'Plan',runbook:'Runbook',executing:'Exec',audit:'Audit',concluded:'Done'}[stageKey]||stageKey;
+    const STAGE_LABELS=['Review','Plan','Runbook','Executing','Audit','Concluded'];
+    const lcSegs=stages.map((s,i)=>{
+      const cls=closed?' concluded':i<ci?' done':i===ci?' active':'';
+      return`<div class="at-lc-seg${cls}">${STAGE_LABELS[i]}</div>`;
+    }).join('');
     return`<div class="axis-row at-row at-row-${stageKey}" onclick="openTicketDrawer('${esc(e.id)}')" style="cursor:pointer;${closed?'opacity:.5;':''}">
-      <div style="display:flex;align-items:center;min-width:0;gap:.35rem;">${dot}<div class="axis-label" style="font-size:.74rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${esc(e.title||'')}</div></div>
-      <span class="tq-tag at-tag-${stageKey}" style="font-size:.55rem;white-space:nowrap;">${esc(stageShort)}</span>
-      <div class="axis-stages" style="flex-shrink:0;">${pips}</div>
-      <div style="white-space:nowrap;font-size:.6rem;color:var(--muted);font-family:'DM Mono',monospace;">${esc((e.updated||e.date||'').substring(0,10))}</div>
+      <div class="at-row-top">${dot}<div class="axis-label">${esc(e.title||'')}</div><span class="tq-tag at-tag-${stageKey}" style="font-size:.55rem;white-space:nowrap;flex-shrink:0;">${esc(stageShort)}</span><div class="at-date">${esc((e.updated||e.date||'').substring(0,10))}</div></div>
+      <div class="at-lifecycle">${lcSegs}</div>
     </div>`;
   }).join('');
 }
