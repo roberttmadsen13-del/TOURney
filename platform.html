@@ -532,7 +532,28 @@ td{padding:0.7rem 0.75rem;font-size:0.88rem;vertical-align:middle;}
 
   <!-- ── TAB: BUGS ── -->
   <div id="panel-bugs" style="display:none;">
-    <iframe id="bugsFrame" src="/platform/bugs" style="width:100%;height:calc(100vh - 104px);border:none;display:block;"></iframe>
+    <div class="action-wrap">
+      <div style="display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:1.25rem;">
+        <button onclick="copyTriagePrompt()" style="background:rgba(192,144,48,0.12);border:1px solid rgba(192,144,48,0.35);color:var(--gold);padding:.45rem .9rem;border-radius:6px;cursor:pointer;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;">🗂 Organize into Sprints</button>
+        <button onclick="copyRunSprintPrompt()" style="background:rgba(39,174,96,0.12);border:1px solid rgba(39,174,96,0.4);color:var(--green);padding:.45rem .9rem;border-radius:6px;cursor:pointer;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;">▶ Run Next Sprint</button>
+        <button onclick="copyTopBugPrompt()" style="background:rgba(192,57,43,0.12);border:1px solid rgba(192,57,43,0.4);color:var(--red);padding:.45rem .9rem;border-radius:6px;cursor:pointer;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;">⚡ Fix Top P0 Now</button>
+        <button onclick="copyExportPrompt()" style="background:rgba(41,128,185,0.12);border:1px solid rgba(41,128,185,0.4);color:var(--blue);padding:.45rem .9rem;border-radius:6px;cursor:pointer;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;">📋 Export All Open</button>
+      </div>
+      <div class="action-section">
+        <div class="action-hd">
+          <span class="action-title">Open Bugs</span>
+          <span class="action-sub" id="openBugLogCount" style="color:var(--red);">0</span>
+        </div>
+        <div id="bugLogOpen"></div>
+      </div>
+      <div class="action-section" style="margin-top:1.75rem;">
+        <div class="action-hd">
+          <span class="action-title">Completed</span>
+          <span class="action-sub" id="compBugLogCount">0</span>
+        </div>
+        <div id="bugLogCompleted"></div>
+      </div>
+    </div>
   </div>
 
   <!-- ── TAB: CHECKLIST ── -->
@@ -1884,6 +1905,53 @@ function renderTimeline() {
     return `<div class="tl-item">${inner}</div>`;
   }).join('');
 }
+
+/* ══════════════════════ BUGS TAB ══════════════════════ */
+let _bugsCache = [], _bugsRealtimeWired = false;
+async function loadBugsTab() {
+  const elOpen = document.getElementById('bugLogOpen');
+  const elComp = document.getElementById('bugLogCompleted');
+  const elOC   = document.getElementById('openBugLogCount');
+  const elCC   = document.getElementById('compBugLogCount');
+  if (!elOpen) return;
+  elOpen.innerHTML = '<div style="color:var(--muted);font-size:.8rem;padding:.5rem 0;">Loading…</div>';
+  const { data, error } = await sb.from('platform_bugs').select('*').order('created_at', { ascending: false });
+  if (error) { elOpen.innerHTML = `<div style="color:var(--red);font-size:.75rem;">${esc(error.message)}</div>`; return; }
+  _bugsCache = data || [];
+  const open = _bugsCache.filter(b => b.status === 'open');
+  const done = _bugsCache.filter(b => b.status === 'completed');
+  if (elOC) elOC.textContent = open.length;
+  if (elCC) elCC.textContent = done.length;
+  const btnS = `background:none;padding:.28rem .6rem;border-radius:4px;cursor:pointer;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:.65rem;letter-spacing:.06em;text-transform:uppercase;`;
+  const rowHtml = (b, isOpen) => {
+    const d = new Date(b.created_at).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+    return `<div style="background:var(--card);border:1px solid var(--border);border-left:3px solid ${isOpen?'var(--red)':'var(--green)'};border-radius:0 6px 6px 0;padding:.75rem 1rem;margin-bottom:.45rem;">
+      <div style="font-size:.85rem;color:var(--text);line-height:1.45;margin-bottom:.2rem;">${b.title?`<strong style="color:#fff;">${esc(b.title)}</strong>`:'<em>(no title)</em>'}${b.description?' — '+esc(b.description):''}</div>
+      <div style="font-family:'DM Mono',monospace;font-size:.52rem;color:var(--muted);">${d}${b.url?' · '+esc(b.url):''}</div>
+      ${b.image_data?`<img src="${esc(b.image_data)}" style="max-height:120px;margin-top:.5rem;border-radius:6px;cursor:pointer;border:1px solid rgba(255,255,255,0.1);" onclick="window.open(this.src)">`:''}
+      <div style="margin-top:.5rem;display:flex;gap:.4rem;flex-wrap:wrap;">
+        <button onclick="bugSetStatus('${b.id}','${isOpen?'completed':'open'}')" style="${btnS}border:1px solid ${isOpen?'rgba(58,158,95,0.4)':'rgba(192,144,48,0.3)'};color:${isOpen?'var(--green)':'var(--muted)'};">${isOpen?'Mark Done':'Reopen'}</button>
+        <button onclick="bugDel('${b.id}')" style="${btnS}border:1px solid rgba(200,80,60,0.3);color:var(--red);">Delete</button>
+      </div></div>`;
+  };
+  elOpen.innerHTML = open.length ? open.map(b => rowHtml(b, true)).join('') : '<div style="padding:1rem;color:var(--green);font-family:\'DM Mono\',monospace;font-size:.65rem;text-transform:uppercase;letter-spacing:.1em;">✓ No open bugs</div>';
+  if (elComp) elComp.innerHTML = done.length ? done.map(b => rowHtml(b, false)).join('') : '<div style="padding:.75rem 0;color:var(--muted);font-family:\'DM Mono\',monospace;font-size:.62rem;">No completed bugs yet.</div>';
+  if (!_bugsRealtimeWired) {
+    _bugsRealtimeWired = true;
+    sb.channel('platform_bugs_live').on('postgres_changes',{event:'*',schema:'public',table:'platform_bugs'},()=>loadBugsTab()).subscribe();
+  }
+}
+window.bugSetStatus = async (id, status) => { await sb.from('platform_bugs').update({status}).eq('id',id); loadBugsTab(); };
+window.bugDel = async (id) => { if(!confirm('Delete this bug permanently?')) return; await sb.from('platform_bugs').delete().eq('id',id); loadBugsTab(); };
+window.renderBugLog = loadBugsTab;
+function _buildBugDump() {
+  return _bugsCache.filter(b=>b.status==='open').map((b,i)=>({idx:i+1,id:b.id,title:b.title||'(no title)',description:b.description||'',url:b.url||'',logged_at:b.created_at}));
+}
+function _flashFloater(msg){const t=document.createElement('div');t.textContent=msg;t.style.cssText='position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);background:var(--gold);color:#111;padding:.5rem 1.1rem;border-radius:6px;font-size:.78rem;font-weight:700;z-index:9999;pointer-events:none;max-width:90vw;text-align:center;';document.body.appendChild(t);setTimeout(()=>t.remove(),2800);}
+window.copyTriagePrompt=()=>{const bugs=_buildBugDump();if(!bugs.length)return _flashFloater('No open bugs');const cmd=`You are a senior product engineer triaging the open bug backlog for TOURney.\n\nOrganize ALL bugs into 3-5 shippable sprints. Per sprint: name, theme, priority (P0/P1/P2), effort (dev-days), dependencies, acceptance criteria, bug IDs.\n\nBias toward grouping by axis, P0 first, 1-3 days each.\n\nFinish with 5-line exec summary: what ships this week, next week, defer.\n\nRepo: C:\\Users\\Rob\\OneDrive\\Desktop\\Greenskeeper Studios\\Bova Invitational\\\n\nLive bug backlog (${bugs.length} open):\n\`\`\`json\n${JSON.stringify(bugs,null,2)}\n\`\`\``;navigator.clipboard.writeText(cmd).then(()=>_flashFloater('✓ Triage prompt copied ('+bugs.length+' bugs)'));};
+window.copyRunSprintPrompt=()=>{const bugs=_buildBugDump();if(!bugs.length)return _flashFloater('No open bugs');const cmd=`Execute the highest-priority cohesive cluster of TOURney bugs.\n\nPer bug: reproduce → root cause (file:line) → minimal fix → verify → commit + push → mark done in Supabase platform_bugs.\n\nPick 3-6 bugs from the same area. Ship as one sprint. Report what closed + what's next.\n\nRepo: C:\\Users\\Rob\\OneDrive\\Desktop\\Greenskeeper Studios\\Bova Invitational\\\n\nBacklog (${bugs.length} open):\n\`\`\`json\n${JSON.stringify(bugs,null,2)}\n\`\`\``;navigator.clipboard.writeText(cmd).then(()=>_flashFloater('✓ Sprint prompt copied'));};
+window.copyTopBugPrompt=()=>{const bugs=_buildBugDump();if(!bugs.length)return _flashFloater('No open bugs');const cmd=`Fix the single most critical open TOURney bug. Pick by impact/integrity/revenue. Reproduce → root cause → fix → verify → commit → mark done.\n\nRepo: C:\\Users\\Rob\\OneDrive\\Desktop\\Greenskeeper Studios\\Bova Invitational\\\n\nBacklog (${bugs.length} open):\n\`\`\`json\n${JSON.stringify(bugs,null,2)}\n\`\`\``;navigator.clipboard.writeText(cmd).then(()=>_flashFloater('✓ Top-P0 prompt copied'));};
+window.copyExportPrompt=()=>{const bugs=_buildBugDump();if(!bugs.length)return _flashFloater('No open bugs');navigator.clipboard.writeText(JSON.stringify(bugs,null,2)).then(()=>_flashFloater('✓ Raw JSON copied ('+bugs.length+' bugs)'));};
 
 /* ══ INIT ══ */
 clLoad();
