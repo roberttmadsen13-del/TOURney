@@ -134,7 +134,7 @@ td{padding:0.7rem 0.75rem;font-size:0.88rem;vertical-align:middle;}
 .tq-section.collapsed .tq-chevron{transform:rotate(-90deg);}
 .tq-section.collapsed>div:not(.tq-hdr){display:none;}
 .tq-section.collapsed{border-bottom:none;}
-.tq-2col{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;}
+.tq-2col{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;align-items:start;}
 .tq-title{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text);}
 .tq-badge{font-size:.62rem;font-weight:700;background:rgba(217,74,74,.15);color:#d94a4a;border:1px solid rgba(217,74,74,.3);border-radius:10px;padding:.1rem .4rem;}
 .tq-item{padding:.55rem .9rem;border-bottom:1px solid var(--border);font-size:.8rem;display:flex;gap:.55rem;align-items:flex-start;}
@@ -740,16 +740,17 @@ td{padding:0.7rem 0.75rem;font-size:0.88rem;vertical-align:middle;}
 
       <div class="action-section" style="margin-top:2rem;">
         <div class="action-hd">
-          <span class="action-title">Artifacts</span>
+          <span class="action-title">Tickets</span>
           <span class="action-sub" id="atTicketSub">—</span>
         </div>
         <div class="at-filters">
           <input type="text" id="atSearch" class="at-search" placeholder="Search…" oninput="filterArtifactTickets()">
           <div class="at-pills">
             <button class="at-pill active" onclick="setAtFilter('all',this)">All</button>
-            <button class="at-pill" onclick="setAtFilter('review',this)">Reviews</button>
-            <button class="at-pill" onclick="setAtFilter('plan',this)">Plans</button>
-            <button class="at-pill" onclick="setAtFilter('runbook',this)">Runbooks</button>
+            <button class="at-pill" onclick="setAtFilter('review',this)">Review</button>
+            <button class="at-pill" onclick="setAtFilter('plan',this)">Plan</button>
+            <button class="at-pill" onclick="setAtFilter('runbook',this)">Runbook</button>
+            <button class="at-pill" onclick="setAtFilter('executing',this)">Executing</button>
           </div>
           <button class="at-concluded-toggle" id="atConcludedToggle" onclick="toggleAtConcluded()">Show concluded</button>
         </div>
@@ -1479,42 +1480,82 @@ function renderArtifactTickets(){
   const el=document.getElementById('artifactTickets');
   if(!el||!allEntries)return;
   const stages=['review','plan','runbook','executing','audit','concluded'];
-  const catStage={review:0,plan:1,runbook:2,bugs:-1,reference:-1,axis:5};
-  const statusLabel={active:'ACTIVE','in-progress':'ACTIVE',shipped:'SHIPPED',archived:'ARCHIVED',concluded:'CONCLUDED'};
-  const statusCls={active:'tq-tag-gold','in-progress':'tq-tag-gold',shipped:'tq-tag-green',archived:'tq-tag-gray',concluded:'at-tag-concluded'};
-  const isClosed=e=>e.status==='concluded'||e.status==='archived';
-  const unseenCount=(allEntries||[]).filter(e=>e.category!=='axis'&&isClosed(e)&&!_atSeen.has(e.id)).length;
+  const isClosed=e=>e.status==='concluded'||e.status==='archived'||e.stage==='concluded';
+  const deleted=new Set(JSON.parse(localStorage.getItem('qt_deleted')||'[]'));
+  const unseenCount=(allEntries||[]).filter(e=>e.category==='axis'&&isClosed(e)&&!_atSeen.has(e.id)&&!deleted.has(e.id)).length;
   const tb=document.getElementById('atConcludedToggle');
   if(tb){
     tb.textContent=_atShowConcluded?'Hide concluded':('Show concluded'+(unseenCount?` · ${unseenCount} new`:''));
     unseenCount&&!_atShowConcluded?tb.classList.add('at-concluded-unseen'):tb.classList.remove('at-concluded-unseen');
   }
-  let entries=(allEntries||[]).filter(e=>e.category!=='axis');
+  let entries=(allEntries||[]).filter(e=>e.category==='axis'&&!deleted.has(e.id));
   if(!_atShowConcluded)entries=entries.filter(e=>!isClosed(e));
-  if(_atFilter!=='all')entries=entries.filter(e=>e.category===_atFilter);
+  if(_atFilter!=='all')entries=entries.filter(e=>(e.stage||e.category)===_atFilter);
   if(_atSearch.trim()){const q=_atSearch.toLowerCase();entries=entries.filter(e=>(e.title||'').toLowerCase().includes(q)||(e.summary||'').toLowerCase().includes(q));}
   entries.sort((a,b)=>(b.updated||b.date||'').localeCompare(a.updated||a.date||''));
   const sub=document.getElementById('atTicketSub');
-  if(sub)sub.textContent=entries.length+(entries.length!==1?' artifacts':' artifact');
-  if(!entries.length){el.innerHTML='<div style="color:var(--muted);font-size:.8rem;padding:.5rem 0;">No artifacts match.</div>';return;}
+  if(sub)sub.textContent=entries.length+(entries.length!==1?' tickets':' ticket');
+  if(!entries.length){el.innerHTML='<div style="color:var(--muted);font-size:.8rem;padding:.5rem 0;">No tickets.</div>';return;}
   el.innerHTML=entries.map(e=>{
-    const si=catStage[e.category]??0;
+    const stageKey=e.stage||e.category||'review';
+    const ci=stages.indexOf(stageKey);
     const closed=isClosed(e);
     const unseen=closed&&!_atSeen.has(e.id);
-    const pips=si<0?'':stages.map((s,i)=>{
-      const cls=closed?' concluded':i<si?' done':i===si?' active':'';
-      return`<div class="axis-stage-pip${cls}"></div>`;
-    }).join('');
-    const st=e.status||'active';
     const dot=unseen?'<span style="width:7px;height:7px;min-width:7px;border-radius:50%;background:var(--gold);display:inline-block;margin-right:.4rem;flex-shrink:0;"></span>':'';
-    return`<div class="axis-row at-row" onclick="openArtifactRow('${esc(e.id)}','${esc(e.url||'#')}')" style="cursor:pointer;${closed?'opacity:.5;':''}">
+    const pips=stages.map((s,i)=>{
+      const cls=closed?' concluded':i<ci?' done':i===ci?' active':'';
+      return`<div class="axis-stage-pip${cls}" title="${s}"></div>`;
+    }).join('');
+    return`<div class="axis-row at-row" onclick="openTicketDrawer('${esc(e.id)}')" style="cursor:pointer;${closed?'opacity:.55;':''}">
       <div style="display:flex;align-items:center;min-width:0;">${dot}<div class="axis-label" style="font-size:.75rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${esc(e.title||'')}</div></div>
       <div class="axis-summary" title="${esc(e.summary||'')}">${esc(e.summary||'')}</div>
-      <span class="tq-tag ${esc(statusCls[st]||'tq-tag-gray')}">${esc(statusLabel[st]||st.toUpperCase())}</span>
+      <span class="tq-tag tq-tag-gray" style="font-size:.58rem;text-transform:uppercase;">${esc(stageKey)}</span>
       <div class="axis-stages">${pips}</div>
       <div class="axis-open" style="text-align:right;white-space:nowrap;font-size:.65rem;">${esc(e.updated||e.date||'')}</div>
     </div>`;
   }).join('');
+}
+
+function openTicketDrawer(id){
+  const e=(allEntries||[]).find(x=>x.id===id);
+  if(!e)return;
+  _markAtSeen(id);
+  renderArtifactTickets();
+  // reuse axis drawer populated with qa-index data
+  const stages=['review','plan','runbook','executing','audit','concluded'];
+  const stageKey=e.stage||e.category||'review';
+  const ci=stages.indexOf(stageKey);
+  document.getElementById('drawerAxisName').textContent=e.title||e.id;
+  const gEl=document.getElementById('drawerGrade');
+  gEl.textContent='';gEl.style.color='';
+  document.getElementById('drawerStatus').textContent=stageKey;
+  document.getElementById('drawerMeta').textContent=(e.author||'')+(e.updated?` · updated ${e.updated}`:'');
+  document.getElementById('drawerSummary').textContent=e.summary||'';
+  document.getElementById('drawerArtifactBtn').href=e.url||'#';
+  document.getElementById('drawerLifecycle').innerHTML=stages.map((s,i)=>{
+    const cls=stageKey==='concluded'?' done':i<ci?' done':i===ci?' active':'';
+    return`<div class="drawer-lc-stage"><div class="drawer-lc-pip${cls}"></div><div class="drawer-lc-label">${s}</div></div>`;
+  }).join('');
+  // next step cmd from axis name
+  const axisKey=e.axis||e.id;
+  const nextStage=stages[Math.min(ci+1,stages.length-1)];
+  const cmd=`/tourney-${nextStage}-${axisKey}`;
+  document.getElementById('drawerNextCmd').innerHTML=ci<stages.length-1
+    ?`<div class="drawer-next-cmd"><span class="drawer-next-text">${esc(cmd)}</span><button class="drawer-copy-btn" onclick="navigator.clipboard.writeText('${esc(cmd)}').then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy',1200)})">Copy</button></div>`
+    :'<div style="font-size:.75rem;color:#4aaa4a;padding:.5rem 0;">✓ Concluded</div>';
+  document.getElementById('drawerGradeHistory').innerHTML='';
+  // delete button
+  const delBtn=document.getElementById('drawerDeleteBtn');
+  if(delBtn){delBtn.onclick=()=>deleteTicket(id);delBtn.style.display='';}
+  document.getElementById('axisDrawer').style.display='flex';
+  document.body.style.overflow='hidden';
+}
+function deleteTicket(id){
+  const d=new Set(JSON.parse(localStorage.getItem('qt_deleted')||'[]'));
+  d.add(id);
+  localStorage.setItem('qt_deleted',JSON.stringify([...d]));
+  closeAxisDrawer();
+  renderArtifactTickets();
 }
 
 document.querySelectorAll('.filter-btn:not(.archived-toggle)').forEach(btn => {
@@ -2256,8 +2297,9 @@ renderQaRuns();
       <div id="drawerNextCmd"></div>
       <div class="drawer-sec">Grade History</div>
       <div id="drawerGradeHistory"></div>
-      <div style="margin-top:1rem;">
+      <div style="margin-top:1rem;display:flex;gap:.6rem;align-items:center;flex-wrap:wrap;">
         <a class="drawer-artifact-btn" id="drawerArtifactBtn" href="#" target="_blank">View Full Artifact →</a>
+        <button id="drawerDeleteBtn" style="display:none;background:rgba(217,74,74,.12);border:1px solid rgba(217,74,74,.3);color:#d94a4a;font-size:.68rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:.3rem .65rem;cursor:pointer;" onclick="">Remove from view</button>
       </div>
     </div>
   </div>

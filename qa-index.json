@@ -1,7 +1,7 @@
 {
   "$schema": "https://tourney.greenskeeper.studio/qa-index-schema.json",
   "version": 1,
-  "updated_at": "2026-05-13T20:00:00Z",
+  "updated_at": "2026-05-13T21:00:00Z",
   "description": "Canonical registry of all TOURney plans, reviews, audits, and QA artifacts. The /platform Artifacts tab renders from this file. Skills (e.g. tourney-review) append new entries when they generate output.",
   "entries": [
     {
@@ -9,7 +9,7 @@
       "axis": "ux",
       "category": "axis",
       "stage": "concluded",
-      "title": "UX Polish",
+      "title": "UX Polish — Login, Skeletons, Motion, Install Surface",
       "summary": "Concluded B+. All runbook steps shipped (10a676f). Login sanitized, skeletons live, prefers-reduced-motion, install surface, aria-live, overflow-x. Lighthouse deferred.",
       "date": "2026-05-12",
       "updated": "2026-05-13",
@@ -50,7 +50,7 @@
       "axis": "finance",
       "category": "axis",
       "stage": "plan",
-      "title": "Finance Plan",
+      "title": "Finance — LLC Formation, Stripe Live Mode, Accounting",
       "summary": "8-phase finance plan: LLC formation (P0 blocker) unlocks Stripe live mode, Mercury bank, accounting, and tax posture. 3 P0 items require Rob manual action. Target grade B+.",
       "date": "2026-05-12",
       "updated": "2026-05-12",
@@ -58,6 +58,51 @@
       "url": "/platform/finance",
       "file": "finance.html",
       "tags": ["finance", "plan", "llc", "stripe", "accounting"],
+      "status": "active"
+    },
+    {
+      "id": "security",
+      "axis": "security",
+      "category": "axis",
+      "stage": "plan",
+      "title": "Security — RLS Hardening, CSP, Auth Gates",
+      "summary": "send-push v9 + send-install-email v6 deployed. Rounds write RLS 011 applied. Open: CSP unsafe-inline, invitations RLS, players/scores permissive read, webhook header (Rob).",
+      "date": "2026-05-07",
+      "updated": "2026-05-13",
+      "author": "claude-sonnet-4-6",
+      "url": "/platform/5-7-26-plan-security",
+      "file": "platform/5-7-26-plan-security.html",
+      "tags": ["security", "plan", "rls", "auth"],
+      "status": "active"
+    },
+    {
+      "id": "marketing",
+      "axis": "marketing",
+      "category": "axis",
+      "stage": "review",
+      "title": "Marketing — OG Tags, Social Proof, PWA Differentiator",
+      "summary": "Grade B−. No OG/Twitter card meta tags (zero social unfurl), zero social proof/testimonials, PWA install differentiator not headlined. 9-item sprint ordered by impact.",
+      "date": "2026-05-11",
+      "updated": "2026-05-11",
+      "author": "claude-sonnet-4-6",
+      "url": "/platform/5-11-26-claude-review-marketing",
+      "file": "5-11-26-claude-review-marketing.html",
+      "tags": ["marketing", "review", "growth"],
+      "status": "active"
+    },
+    {
+      "id": "onboarding",
+      "axis": "onboarding",
+      "category": "axis",
+      "stage": "review",
+      "title": "Onboarding — Invite Gate, Signup Conversion, PWA Install",
+      "summary": "Grade B−. Invite code gate kills cold-traffic conversion. Signup requires pre-existing RSVP (conversion bug). PWA install orphaned from player journey. 9-item sprint.",
+      "date": "2026-05-11",
+      "updated": "2026-05-11",
+      "author": "claude-sonnet-4-6",
+      "url": "/platform/5-11-26-claude-review-onboarding",
+      "file": "5-11-26-claude-review-onboarding.html",
+      "tags": ["onboarding", "review", "ux"],
       "status": "active"
     },
     {
