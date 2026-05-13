@@ -354,6 +354,20 @@ td{padding:0.7rem 0.75rem;font-size:0.88rem;vertical-align:middle;}
 .ceo-link:hover{border-color:var(--gold);}
 .ceo-blocks{font-size:.67rem;font-family:'DM Mono',monospace;color:rgba(217,74,74,.8);letter-spacing:.04em;}
 .axis-overall-card{background:rgba(192,144,48,.04);}
+.tq-cb{width:16px;height:16px;min-width:16px;border:1px solid var(--border);cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:3px;transition:all .12s;}
+.tq-cb.checked{border-color:var(--gold);background:var(--gold-dim);}
+.tq-cb.checked::after{content:'✓';color:var(--gold);font-size:.6rem;}
+.tq-item-links{display:flex;flex-wrap:wrap;gap:.3rem;margin-top:.3rem;}
+.at-filters{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;margin-bottom:.65rem;}
+.at-search{background:rgba(255,255,255,.04);border:1px solid var(--border);color:var(--text);font-family:'DM Mono',monospace;font-size:.72rem;padding:.28rem .55rem;outline:none;width:160px;transition:border-color .15s;}
+.at-search:focus{border-color:rgba(192,144,48,.4);}
+.at-pills{display:flex;gap:.3rem;flex-wrap:wrap;}
+.at-pill{background:transparent;border:1px solid var(--border);color:var(--muted);font-size:.62rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:.18rem .45rem;cursor:pointer;transition:all .12s;}
+.at-pill.active,.at-pill:hover{background:var(--gold-dim);border-color:rgba(192,144,48,.35);color:var(--gold);}
+.at-concluded-toggle{margin-left:auto;background:transparent;border:1px solid var(--border);color:var(--muted);font-size:.62rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:.18rem .45rem;cursor:pointer;white-space:nowrap;transition:all .12s;}
+.at-concluded-toggle:hover,.at-concluded-unseen{border-color:rgba(192,144,48,.4);color:var(--gold);}
+.at-row{grid-template-columns:minmax(160px,1fr) minmax(0,2fr) 80px 120px 65px;}
+.at-tag-concluded{background:rgba(80,80,180,.15);color:#9090e0;border:1px solid rgba(80,80,180,.2);}
 .notes-ta{width:100%;min-height:180px;background:rgba(255,255,255,0.03);border:1px solid var(--border);color:var(--text);font-family:'Barlow',sans-serif;font-size:0.85rem;padding:0.85rem;outline:none;resize:vertical;line-height:1.6;}
 .notes-ta:focus{border-color:rgba(192,144,48,0.45);}
 .notes-saved{font-family:'DM Mono',monospace;font-size:0.42rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--green);margin-top:0.4rem;display:none;}
@@ -695,16 +709,7 @@ td{padding:0.7rem 0.75rem;font-size:0.88rem;vertical-align:middle;}
 
       <div class="action-section">
         <div class="action-hd">
-          <span class="action-title">Your Checklist</span>
-          <span class="action-sub">Only you can do these — AI cannot · <span id="ceoOpenCount">—</span> remaining</span>
-        </div>
-        <div class="ceo-list" id="ceoList"></div>
-      </div>
-
-      <div class="action-section" style="margin-top:2rem;">
-        <div class="action-hd">
-          <span class="action-title">Today</span>
-          <span class="action-sub" id="mcTodayDate"></span>
+          <span class="action-title">Today — <span id="mcTodayDate" style="font-weight:400;text-transform:none;letter-spacing:0;"></span></span>
         </div>
         <div class="today-queue">
           <div class="tq-section">
@@ -712,12 +717,12 @@ td{padding:0.7rem 0.75rem;font-size:0.88rem;vertical-align:middle;}
             <div id="tqDoNow"><div class="tq-empty">Loading…</div></div>
           </div>
           <div class="tq-section">
-            <div class="tq-hdr"><span class="tq-title">Agent Can Do</span></div>
-            <div id="tqAgent"><div class="tq-empty">Loading…</div></div>
-          </div>
-          <div class="tq-section">
             <div class="tq-hdr"><span class="tq-title">Waiting on Rob</span><span class="tq-badge" id="waitingBadge" style="background:rgba(192,144,48,.15);color:var(--gold);border-color:rgba(192,144,48,.3);">0</span></div>
             <div id="tqWaiting"><div class="tq-empty">Loading…</div></div>
+          </div>
+          <div class="tq-section">
+            <div class="tq-hdr"><span class="tq-title">Agent Can Do</span></div>
+            <div id="tqAgent"><div class="tq-empty">Loading…</div></div>
           </div>
           <div class="tq-section">
             <div class="tq-hdr"><span class="tq-title">Recently Shipped</span></div>
@@ -728,12 +733,20 @@ td{padding:0.7rem 0.75rem;font-size:0.88rem;vertical-align:middle;}
 
       <div class="action-section" style="margin-top:2rem;">
         <div class="action-hd">
-          <span class="action-title">Axis Tickets</span>
-          <span class="action-sub" id="axisLastUpdated"></span>
+          <span class="action-title">Artifacts</span>
+          <span class="action-sub" id="atTicketSub">—</span>
         </div>
-        <div class="axis-board">
-          <div id="axisBoard"><div style="color:var(--muted);font-size:.8rem;padding:.5rem 0;">Loading…</div></div>
+        <div class="at-filters">
+          <input type="text" id="atSearch" class="at-search" placeholder="Search…" oninput="filterArtifactTickets()">
+          <div class="at-pills">
+            <button class="at-pill active" onclick="setAtFilter('all',this)">All</button>
+            <button class="at-pill" onclick="setAtFilter('review',this)">Reviews</button>
+            <button class="at-pill" onclick="setAtFilter('plan',this)">Plans</button>
+            <button class="at-pill" onclick="setAtFilter('runbook',this)">Runbooks</button>
+          </div>
+          <button class="at-concluded-toggle" id="atConcludedToggle" onclick="toggleAtConcluded()">Show concluded</button>
         </div>
+        <div id="artifactTickets"><div style="color:var(--muted);font-size:.8rem;padding:.5rem 0;">Loading…</div></div>
       </div>
 
       <div class="action-section" style="margin-top:2rem;">
@@ -786,7 +799,7 @@ const tabLoaded = {};
 function loadTabData(t) {
   if (t === 'dash')      { loadGrades(); loadCeoTasks(); }
   if (t === 'tenants')   { loadTournaments(); loadCompAccounts(); loadCodes(); }
-  if (t === 'action')    { loadMissionControl(); loadArtifacts(); loadCeoTasks(); tabLoaded['artifacts'] = true; }
+  if (t === 'action')    { loadMissionControl(); loadArtifacts(); tabLoaded['artifacts'] = true; }
   if (t === 'artifacts') { loadArtifacts(); }
   if (t === 'bugs')      { renderBugLog(); }
   if (t === 'checklist') { renderQaRuns(); }
@@ -1378,7 +1391,7 @@ async function loadArtifacts() {
     }
 
     renderHub();
-    loadAxisBoard();
+    renderArtifactTickets();
     renderTodayQueue();
     renderTimeline();
   } catch(err) {
@@ -1442,6 +1455,61 @@ async function loadAxisBoard() {
     }).join('');
   } catch(e){/* silent */}
 }
+/* ══════════════════════ ARTIFACT TICKETS ══════════════════════ */
+let _atFilter='all',_atSearch='',_atShowConcluded=false;
+let _atSeen=new Set(JSON.parse(localStorage.getItem('at_seen')||'[]'));
+function _markAtSeen(id){_atSeen.add(id);localStorage.setItem('at_seen',JSON.stringify([..._atSeen]));}
+function openArtifactRow(id,url){_markAtSeen(id);renderArtifactTickets();if(url&&url!=='#')window.open(url,'_blank');}
+function setAtFilter(f,btn){
+  _atFilter=f;
+  document.querySelectorAll('.at-pill').forEach(b=>b.classList.remove('active'));
+  if(btn)btn.classList.add('active');
+  renderArtifactTickets();
+}
+function toggleAtConcluded(){_atShowConcluded=!_atShowConcluded;renderArtifactTickets();}
+function filterArtifactTickets(){_atSearch=document.getElementById('atSearch')?.value||'';renderArtifactTickets();}
+function renderArtifactTickets(){
+  const el=document.getElementById('artifactTickets');
+  if(!el||!allEntries)return;
+  const stages=['review','plan','runbook','executing','audit','concluded'];
+  const catStage={review:0,plan:1,runbook:2,bugs:-1,reference:-1,axis:5};
+  const statusLabel={active:'ACTIVE','in-progress':'ACTIVE',shipped:'SHIPPED',archived:'ARCHIVED',concluded:'CONCLUDED'};
+  const statusCls={active:'tq-tag-gold','in-progress':'tq-tag-gold',shipped:'tq-tag-green',archived:'tq-tag-gray',concluded:'at-tag-concluded'};
+  const isClosed=e=>e.status==='concluded'||e.status==='archived';
+  const unseenCount=(allEntries||[]).filter(e=>e.category!=='axis'&&isClosed(e)&&!_atSeen.has(e.id)).length;
+  const tb=document.getElementById('atConcludedToggle');
+  if(tb){
+    tb.textContent=_atShowConcluded?'Hide concluded':('Show concluded'+(unseenCount?` · ${unseenCount} new`:''));
+    unseenCount&&!_atShowConcluded?tb.classList.add('at-concluded-unseen'):tb.classList.remove('at-concluded-unseen');
+  }
+  let entries=(allEntries||[]).filter(e=>e.category!=='axis');
+  if(!_atShowConcluded)entries=entries.filter(e=>!isClosed(e));
+  if(_atFilter!=='all')entries=entries.filter(e=>e.category===_atFilter);
+  if(_atSearch.trim()){const q=_atSearch.toLowerCase();entries=entries.filter(e=>(e.title||'').toLowerCase().includes(q)||(e.summary||'').toLowerCase().includes(q));}
+  entries.sort((a,b)=>(b.updated||b.date||'').localeCompare(a.updated||a.date||''));
+  const sub=document.getElementById('atTicketSub');
+  if(sub)sub.textContent=entries.length+(entries.length!==1?' artifacts':' artifact');
+  if(!entries.length){el.innerHTML='<div style="color:var(--muted);font-size:.8rem;padding:.5rem 0;">No artifacts match.</div>';return;}
+  el.innerHTML=entries.map(e=>{
+    const si=catStage[e.category]??0;
+    const closed=isClosed(e);
+    const unseen=closed&&!_atSeen.has(e.id);
+    const pips=si<0?'':stages.map((s,i)=>{
+      const cls=closed?' concluded':i<si?' done':i===si?' active':'';
+      return`<div class="axis-stage-pip${cls}"></div>`;
+    }).join('');
+    const st=e.status||'active';
+    const dot=unseen?'<span style="width:7px;height:7px;min-width:7px;border-radius:50%;background:var(--gold);display:inline-block;margin-right:.4rem;flex-shrink:0;"></span>':'';
+    return`<div class="axis-row at-row" onclick="openArtifactRow('${esc(e.id)}','${esc(e.url||'#')}')" style="cursor:pointer;${closed?'opacity:.5;':''}">
+      <div style="display:flex;align-items:center;min-width:0;">${dot}<div class="axis-label" style="font-size:.75rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${esc(e.title||'')}</div></div>
+      <div class="axis-summary" title="${esc(e.summary||'')}">${esc(e.summary||'')}</div>
+      <span class="tq-tag ${esc(statusCls[st]||'tq-tag-gray')}">${esc(statusLabel[st]||st.toUpperCase())}</span>
+      <div class="axis-stages">${pips}</div>
+      <div class="axis-open" style="text-align:right;white-space:nowrap;font-size:.65rem;">${esc(e.updated||e.date||'')}</div>
+    </div>`;
+  }).join('');
+}
+
 document.querySelectorAll('.filter-btn:not(.archived-toggle)').forEach(btn => {
   btn.addEventListener('click', () => {
     const isActive=btn.classList.contains('active');
@@ -1846,7 +1914,7 @@ function renderTodayQueue(){
   });
   URGENT_IDS.forEach(id=>{
     const t=CEO_TASKS.find(c=>c.id===id);
-    if(t&&!chk[id])doNow.push({title:t.text,sub:'Human required',tag:'URGENT',tagCls:'tq-tag-red',cmd:null});
+    if(t&&!chk[id])doNow.push({id:t.id,title:t.text,sub:(t.blocks||[]).length?'Blocks: '+(t.blocks||[]).join(', '):'Human required',links:t.links||[],tag:'URGENT',tagCls:'tq-tag-red',cmd:null});
   });
 
   // AGENT — from platform_tasks inbox queue; fall back to axis-status derivation if empty
@@ -1865,7 +1933,7 @@ function renderTodayQueue(){
 
   // WAITING ON ROB
   const waitingItems=CEO_TASKS.filter(t=>!chk[t.id]&&!URGENT_IDS.includes(t.id))
-    .map(t=>({title:t.text,sub:'Human required · see Action Board',tag:'WAITING',tagCls:'tq-tag-red',cmd:null}));
+    .map(t=>({id:t.id,title:t.text,sub:(t.blocks||[]).length?'Blocks: '+(t.blocks||[]).join(', '):'',links:t.links||[],tag:'WAITING',tagCls:'tq-tag-gold',cmd:null}));
 
   // SHIPPED — from platform_tasks shipped queue; fall back to artifacts
   let shippedItems=mcShippedTasks.map(t=>({title:t.title,sub:t.body||'',tag:t.tag||'SHIPPED',tagCls:'tq-tag-green',cmd:null}));
@@ -1882,10 +1950,11 @@ function renderTodayQueue(){
 
   const renderItems=(items,empty)=>items.length?items.map(i=>`
     <div class="tq-item">
-      <span class="tq-tag ${esc(i.tagCls)}">${esc(i.tag)}</span>
+      ${i.id?`<div class="tq-cb${_ceoChecked[i.id]?' checked':''}" onclick="event.stopPropagation();toggleCeoTask('${esc(i.id)}')"></div>`:`<span class="tq-tag ${esc(i.tagCls)}">${esc(i.tag)}</span>`}
       <div class="tq-item-body">
         <div class="tq-item-title">${i.url?`<a href="${esc(i.url)}" target="_blank" style="color:inherit;text-decoration:none;">${esc(i.title)}</a>`:esc(i.title)}</div>
         ${i.sub?`<div class="tq-item-sub">${esc(i.sub)}</div>`:''}
+        ${(i.links||[]).length?`<div class="tq-item-links">${i.links.map(l=>`<a class="ceo-link" href="${esc(l.url)}" target="_blank">${esc(l.label)}</a>`).join('')}</div>`:''}
       </div>
       ${i.cmd?`<button class="tq-copy" onclick="navigator.clipboard.writeText('${esc(i.cmd)}').then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy',1400)})">Copy</button>`:''}
     </div>`).join(''):`<div class="tq-empty">${empty}</div>`;
