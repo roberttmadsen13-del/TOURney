@@ -1450,16 +1450,17 @@ function filterArtifactTickets(){_atSearch=document.getElementById('atSearch')?.
 function renderArtifactTickets(){
   const el=document.getElementById('artifactTickets');
   if(!el||!allEntries)return;
+  const TICKET_CATS=new Set(['axis','review','plan','runbook','audit','postmortem']);
   const stages=['review','plan','runbook','executing','audit','concluded'];
   const isClosed=e=>e.status==='concluded'||e.status==='archived'||e.stage==='concluded';
   const deleted=new Set(JSON.parse(localStorage.getItem('qt_deleted')||'[]'));
-  const unseenCount=(allEntries||[]).filter(e=>e.category==='axis'&&isClosed(e)&&!_atSeen.has(e.id)&&!deleted.has(e.id)).length;
+  const unseenCount=(allEntries||[]).filter(e=>TICKET_CATS.has(e.category)&&isClosed(e)&&!_atSeen.has(e.id)&&!deleted.has(e.id)).length;
   const tb=document.getElementById('atConcludedToggle');
   if(tb){
     tb.textContent=_atShowConcluded?'Hide concluded':('Show concluded'+(unseenCount?` · ${unseenCount} new`:''));
     unseenCount&&!_atShowConcluded?tb.classList.add('at-concluded-unseen'):tb.classList.remove('at-concluded-unseen');
   }
-  let entries=(allEntries||[]).filter(e=>e.category==='axis'&&!deleted.has(e.id));
+  let entries=(allEntries||[]).filter(e=>TICKET_CATS.has(e.category)&&!deleted.has(e.id));
   if(!_atShowConcluded)entries=entries.filter(e=>!isClosed(e));
   if(_atFilter!=='all')entries=entries.filter(e=>(e.stage||e.category)===_atFilter);
   if(_atSearch.trim()){const q=_atSearch.toLowerCase();entries=entries.filter(e=>(e.title||'').toLowerCase().includes(q)||(e.summary||'').toLowerCase().includes(q));}
