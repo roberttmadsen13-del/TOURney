@@ -1,22 +1,22 @@
 {
   "$schema": "https://tourney.greenskeeper.studio/qa-index-schema.json",
   "version": 1,
-  "updated_at": "2026-05-12T23:00:00Z",
+  "updated_at": "2026-05-13T00:00:00Z",
   "description": "Canonical registry of all TOURney plans, reviews, audits, and QA artifacts. The /platform Artifacts tab renders from this file. Skills (e.g. tourney-review) append new entries when they generate output.",
   "entries": [
     {
       "id": "ux",
       "axis": "ux",
       "category": "axis",
-      "stage": "runbook",
+      "stage": "audit",
       "title": "UX Polish",
-      "summary": "Runbook ready: 8 steps P1-P4. Step 1 login error sanitization (login.html:181,240,288). Step 2 loading skeletons scoreboard+home. Steps 3-8: reduced-motion, install surface, empty states, aria-live, 375px QA, Lighthouse.",
+      "summary": "Audit: B- unchanged. 1/8 runbook steps shipped (user-scalable c9cc497). login:240/:288 still raw. No skeletons, no prefers-reduced-motion, no aria-live. 7 open P1-P4 items.",
       "date": "2026-05-12",
-      "updated": "2026-05-12",
-      "author": "claude-sonnet-4-6",
+      "updated": "2026-05-13",
+      "author": "claude-haiku-4-5-20251001",
       "url": "/platform/ux",
       "file": "ux.html",
-      "tags": ["ux", "runbook", "accessibility", "mobile"],
+      "tags": ["ux", "audit", "accessibility", "mobile"],
       "status": "active"
     },
     {

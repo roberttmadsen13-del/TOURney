@@ -52,6 +52,53 @@ a{color:var(--gold);text-decoration:none;}a:hover{text-decoration:underline;}
 </div>
 
 <div id="stage-history">
+<section class="axis-stage stage-audit" data-date="2026-05-13" data-agent="claude-haiku-4-5-20251001">
+  <div class="stage-header">
+    <span class="stage-pill pill-audit">Audit</span>
+    <span class="stage-date">May 13, 2026</span>
+    <span class="stage-agent">claude-haiku-4-5-20251001</span>
+    <span class="grade-badge">B−</span>
+  </div>
+  <div class="stage-body">
+    <p style="font-size:.8rem;color:var(--muted);margin-bottom:1rem;">Runbook execution audit. Evidence-only — every finding cites file:line or commit SHA. Grade unchanged: runbook written May 12, only 1 code fix shipped to production.</p>
+
+    <table>
+      <thead><tr><th>Step</th><th>Item</th><th>Status</th><th>Evidence</th><th>Sev</th></tr></thead>
+      <tbody>
+        <tr><td>Pre</td><td>scorecard user-scalable=no</td><td><span class="pill pill-green">DONE</span></td><td>commit c9cc497 · scorecard.html:7 clean viewport</td><td>—</td></tr>
+        <tr><td>1</td><td>Login error sanitization</td><td><span class="pill pill-yellow">PARTIAL</span></td><td>login.html:181 has fallback but still passes raw <code>error?.message</code> first · login.html:240 = <code>error.message</code> raw · login.html:288 = <code>error.message</code> raw</td><td>P1</td></tr>
+        <tr><td>2</td><td>Skeletons — scoreboard + home</td><td><span class="pill pill-red">NOT DONE</span></td><td>scoreboard.html:729–764 no skeleton injection before fetch · home.html: zero skeleton/shimmer/loading refs found</td><td>P1</td></tr>
+        <tr><td>3</td><td>prefers-reduced-motion guard</td><td><span class="pill pill-red">NOT DONE</span></td><td>home.html: .will-animate at :366–378 active · no @media (prefers-reduced-motion) guard anywhere in file</td><td>P2</td></tr>
+        <tr><td>4</td><td>Surface install from player.html</td><td><span class="pill pill-red">NOT DONE</span></td><td>player.html: grep for install/pwa/matchMedia/display-mode returned empty</td><td>P2</td></tr>
+        <tr><td>5</td><td>feed.html empty + loading state</td><td><span class="pill pill-green">DONE</span></td><td>feed.html:140 .loading-state · :223 "Loading feed..." · :335–337 empty-state on no posts · text-only (no shimmer skeleton)</td><td>—</td></tr>
+        <tr><td>6</td><td>aria-live toast + leaderboard</td><td><span class="pill pill-red">NOT DONE</span></td><td>grep aria-live across production .html files: zero matches on toast containers or leaderboard tbodies</td><td>P3</td></tr>
+        <tr><td>7</td><td>Scoreboard 375px table QA</td><td><span class="pill pill-yellow">PARTIAL</span></td><td>scoreboard.html:951 scorecard detail has overflow-x:auto · main leaderboard table has no overflow wrapper</td><td>P3</td></tr>
+        <tr><td>8</td><td>Lighthouse CI score</td><td><span class="pill pill-red">NOT DONE</span></td><td>No Lighthouse config or score in git log since review</td><td>P4</td></tr>
+      </tbody>
+    </table>
+
+    <p style="font-size:.75rem;font-weight:600;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;margin:1.25rem 0 .5rem;">Sub-axis grades</p>
+    <table>
+      <thead><tr><th>Axis</th><th>Grade</th><th>Δ</th><th>Reasoning</th></tr></thead>
+      <tbody>
+        <tr><td>Login Error UX</td><td>D+</td><td>→</td><td>Lines :240 + :288 still <code>error.message</code> raw. Line :181 partial fallback only. P1 not cleared.</td></tr>
+        <tr><td>Loading States</td><td>D</td><td>→</td><td>tokens.css has shimmer CSS but scoreboard + home inject no skeletons on init. Blank flash persists.</td></tr>
+        <tr><td>Accessibility</td><td>D</td><td>→</td><td>No aria-live on any dynamic region. prefers-reduced-motion guard absent. Both P2/P3 runbook items unexecuted.</td></tr>
+        <tr><td>Mobile</td><td>B</td><td>↑</td><td>user-scalable=no removed (c9cc497). Scorecard detail overflow-x:auto present. Main leaderboard table still unguarded at 375px.</td></tr>
+        <tr><td>Empty States</td><td>B+</td><td>→</td><td>feed.html + directory.html have text-based empty + loading states. No shimmer skeletons yet.</td></tr>
+        <tr><td>Visual Consistency</td><td>B+</td><td>→</td><td>Token usage unchanged — consistent var(--gold)/--bg/--card/--border across all pages. No regressions.</td></tr>
+        <tr><td>Install / PWA Journey</td><td>D</td><td>→</td><td>install.html remains orphaned. player.html has zero PWA surface. Step 4 not executed.</td></tr>
+      </tbody>
+    </table>
+
+    <p style="font-size:.75rem;font-weight:600;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;margin:1.25rem 0 .5rem;">Open P1–P2 items (execute next)</p>
+    <div class="finding high">P1 · login.html:181 — replace <code>error?.message || 'Invalid email or password.'</code> with literal string only. Then fix :240 + :288 same pattern. ~15 min.</div>
+    <div class="finding high">P1 · scoreboard.html — inject 6 skeleton rows into <code>#leaderboardBody</code> + <code>#indLeaderboardBody</code> on page init, before fetch. Clear on data resolve. tokens.css shimmer already defined.</div>
+    <div class="finding high">P1 · home.html — inject skeleton rows into leaderboard container on init. Clear on <code>sb</code> data resolve.</div>
+    <div class="finding med">P2 · home.html:378 — add <code>@media (prefers-reduced-motion: reduce)</code> guard after <code>.day-block.will-animate.visible</code> rule. Exact CSS in plan step 3.</div>
+    <div class="finding med">P2 · player.html — add "Install App" card conditional on <code>!window.matchMedia('(display-mode: standalone)').matches</code> linking to /install.</div>
+  </div>
+</section>
 <section class="axis-stage stage-runbook" data-date="2026-05-12" data-agent="claude-sonnet-4-6">
   <div class="stage-header">
     <span class="stage-pill pill-runbook">Runbook</span>

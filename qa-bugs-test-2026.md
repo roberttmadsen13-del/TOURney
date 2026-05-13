@@ -9,7 +9,7 @@ Last commits: 997b043 (sec: send-install-email webhook secret gate)
 
 - **[CRITICAL] scorecard.html user-scalable=no** (scorecard.html:4 — viewport meta)
   Fix: Remove `user-scalable=no` from meta viewport. WCAG 1.4.4 fail. Inputs already use `font-size:1rem` so iOS auto-zoom won't trigger. One attribute removal.
-  Status: open
+  Status: closed — commit c9cc497 (confirmed scorecard.html:7 clean viewport, no user-scalable)
 
 - **[HIGH] login.html raw Supabase errors exposed** (login.html — doSignIn(), doSignUp())
   Fix: Map GoTrue error codes to friendly strings. Fallback: "Sign in failed — check your email and password." Never pass `error?.message` directly to user.
