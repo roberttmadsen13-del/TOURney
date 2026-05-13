@@ -397,10 +397,9 @@ td{padding:0.7rem 0.75rem;font-size:0.88rem;vertical-align:middle;}
 .at-row-top .axis-label{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:.78rem;}
 .at-row-top .at-date{white-space:nowrap;font-size:.6rem;color:var(--muted);font-family:'DM Mono',monospace;margin-left:auto;}
 .at-lifecycle{display:flex;width:100%;border-radius:3px;overflow:hidden;gap:1px;}
-.at-lc-seg{flex:1;padding:.22rem .1rem;text-align:center;font-size:.42rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;background:rgba(255,255,255,.03);color:rgba(240,230,204,.18);transition:none;}
-.at-lc-seg.done{background:#152015;color:#4a8a4a;}
-.at-lc-seg.active{background:var(--gold);color:#000;}
-.at-lc-seg.concluded{background:#151528;color:#5a5a9a;}
+.at-lc-seg{flex:1;padding:.22rem .1rem;text-align:center;font-size:.42rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;background:rgba(255,255,255,.025);color:rgba(240,230,204,.15);transition:none;}
+.at-lc-seg.done{background:rgba(42,80,42,.5);color:rgba(74,154,74,.7);}
+.at-lc-seg.concluded{background:rgba(26,26,60,.5);color:rgba(90,90,160,.7);}
 .at-row .axis-stages{display:none;}
 .at-tag-concluded{background:rgba(80,80,180,.15);color:#9090e0;border:1px solid rgba(80,80,180,.2);}
 .notes-ta{width:100%;min-height:180px;background:rgba(255,255,255,0.03);border:1px solid var(--border);color:var(--text);font-family:'Barlow',sans-serif;font-size:0.85rem;padding:0.85rem;outline:none;resize:vertical;line-height:1.6;}
@@ -1505,12 +1504,15 @@ function renderArtifactTickets(){
     }).join('');
     const stageShort={review:'Review',plan:'Plan',runbook:'Runbook',executing:'Exec',audit:'Audit',concluded:'Done'}[stageKey]||stageKey;
     const STAGE_LABELS=['Review','Plan','Runbook','Executing','Audit','Concluded'];
+    const STAGE_ACTIVE={review:'rgba(74,144,217,.35);color:#6aaae8',plan:'rgba(192,144,48,.35);color:#c09030',runbook:'rgba(74,154,106,.35);color:#5ab87a',executing:'rgba(217,74,74,.35);color:#e06a6a',audit:'rgba(154,74,217,.35);color:#b07ad9',concluded:'rgba(74,74,154,.35);color:#8a8ad4'};
     const lcSegs=stages.map((s,i)=>{
-      const cls=closed?' concluded':i<ci?' done':i===ci?' active':'';
-      return`<div class="at-lc-seg${cls}">${STAGE_LABELS[i]}</div>`;
+      if(closed)return`<div class="at-lc-seg concluded">${STAGE_LABELS[i]}</div>`;
+      if(i<ci)return`<div class="at-lc-seg done">${STAGE_LABELS[i]}</div>`;
+      if(i===ci){const ac=STAGE_ACTIVE[s]||'rgba(192,144,48,.35);color:#c09030';return`<div class="at-lc-seg" style="background:${ac};">${STAGE_LABELS[i]}</div>`;}
+      return`<div class="at-lc-seg">${STAGE_LABELS[i]}</div>`;
     }).join('');
     return`<div class="axis-row at-row at-row-${stageKey}" onclick="openTicketDrawer('${esc(e.id)}')" style="cursor:pointer;${closed?'opacity:.5;':''}">
-      <div class="at-row-top">${dot}<div class="axis-label">${esc(e.title||'')}</div><span class="tq-tag at-tag-${stageKey}" style="font-size:.55rem;white-space:nowrap;flex-shrink:0;">${esc(stageShort)}</span><div class="at-date">${esc((e.updated||e.date||'').substring(0,10))}</div></div>
+      <div class="at-row-top">${dot}<div class="axis-label">${esc(e.title||'')}</div><div class="at-date">${esc((e.updated||e.date||'').substring(0,10))}</div></div>
       <div class="at-lifecycle">${lcSegs}</div>
     </div>`;
   }).join('');
