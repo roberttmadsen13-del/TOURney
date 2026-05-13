@@ -842,15 +842,7 @@ async function loadTournaments() {
 }
 async function deleteTourney(id, name) {
   if (!confirm(`Delete "${name}"? All data permanently removed.`)) return;
-  for (const tbl of ['push_subscriptions','scores','trash_talk','tournament_admins','invitations']) {
-    const { error } = await sb.from(tbl).delete().eq('tournament_id', id);
-    if (error) { alert(`Delete failed (${tbl}): ${error.message}`); return; }
-  }
-  for (const tbl of ['players','settings']) {
-    const { error } = await sb.from(tbl).delete().eq('tournament_id', id);
-    if (error) { alert(`Delete failed (${tbl}): ${error.message}`); return; }
-  }
-  const { error } = await sb.from('tournaments').delete().eq('id', id);
+  const { error } = await sb.rpc('delete_tournament', { p_id: id });
   if (error) { alert('Delete failed: ' + error.message); return; }
   loadTournaments();
 }
