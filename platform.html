@@ -1961,19 +1961,15 @@ function renderTodayQueue(){
   const ax=mcAxisData?.axes||{};
   const chk=_ceoChecked;
   const NEXT={review:'plan',plan:'runbook',runbook:'executing',executing:'audit',audit:'concluded'};
-  const NEXT_LABEL={plan:'Generate Plan',runbook:'Generate Runbook',executing:'Execute (Manual)',audit:'Run Audit'};
-  const NEXT_SKILL={plan:'/tourney-plan-',runbook:'/tourney-runbook-',executing:null,audit:'/tourney-audit-'};
+  const NEXT_LABEL={plan:'Review →',runbook:'Review →',executing:'/tourney-execute',audit:'/tourney-execute'};
+  const NEXT_SKILL={plan:'/tourney-review-',runbook:'/tourney-review-',executing:'/tourney-execute ',audit:'/tourney-execute '};
   const URGENT_IDS=['wire_install_email_webhook','gh_actions_verify','supabase_email','leaked_pw'];
 
-  // DO NOW
+  // DO NOW — blocking axis issues only (human tasks live in checklist)
   const doNow=[];
   Object.entries(ax).forEach(([k,a])=>{
     if(a.blocking&&a.status!=='concluded')
       doNow.push({title:k+' axis — blocked',sub:a.summary,tag:'BLOCKING',tagCls:'tq-tag-red',cmd:null});
-  });
-  URGENT_IDS.forEach(id=>{
-    const t=CEO_TASKS.find(c=>c.id===id);
-    if(t&&!chk[id])doNow.push({id:t.id,title:t.text,sub:(t.blocks||[]).length?'Blocks: '+(t.blocks||[]).join(', '):'Human required',links:t.links||[],tag:'URGENT',tagCls:'tq-tag-red',cmd:null});
   });
 
   // AGENT — from platform_tasks inbox queue; fall back to axis-status derivation if empty
