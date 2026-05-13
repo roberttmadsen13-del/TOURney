@@ -337,7 +337,8 @@ td{padding:0.7rem 0.75rem;font-size:0.88rem;vertical-align:middle;}
 .grade-avg-label{font-family:'DM Mono',monospace;font-size:0.46rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);}
 .grade-avg-note{font-family:'Barlow',sans-serif;font-size:0.72rem;color:rgba(240,230,204,0.45);margin-top:0.25rem;}
 .grade-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:0.75rem;}
-.grade-grid-compact{grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:.4rem;}
+.grade-grid-compact{grid-template-columns:repeat(auto-fill,minmax(90px,1fr));gap:.3rem;}
+.grade-grid-compact .grade-card{padding:.45rem .55rem;}
 .grade-card{background:var(--card);border:1px solid var(--border);padding:1rem;cursor:pointer;transition:all 0.18s;}
 .grade-card:hover{border-color:rgba(192,144,48,0.5);background:var(--card2);}
 .grade-card-top{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:0.45rem;}
@@ -446,26 +447,12 @@ td{padding:0.7rem 0.75rem;font-size:0.88rem;vertical-align:middle;}
   </div>
 
   <div class="tabs">
-    <button class="tab-btn active" id="tab-dash"      data-short="Dash"   onclick="switchTab('dash')">Dashboard</button>
+    <button class="tab-btn active" id="tab-action"    data-short="Action"  onclick="switchTab('action')">Action Board</button>
     <button class="tab-btn"        id="tab-tenants"   data-short="Tenants" onclick="switchTab('tenants')">Tenants</button>
-    <button class="tab-btn"        id="tab-action"    data-short="Action"  onclick="switchTab('action')">Action Board</button>
 
     <button class="tab-btn"        id="tab-bugs"      data-short="Bugs"   onclick="switchTab('bugs')">Bugs</button>
     <button class="tab-btn"        id="tab-checklist" data-short="QA"     onclick="switchTab('checklist')">QA</button>
     <button class="tab-btn"        id="tab-reference" data-short="Ref"    onclick="switchTab('reference')">Reference</button>
-  </div>
-
-  <!-- ── TAB: DASHBOARD ── -->
-  <div id="panel-dash">
-    <div class="mc-wrap">
-      <div id="staleBanner" class="stale-banner" style="display:none;">
-        <span class="stale-banner-icon">⚠</span>
-        <span class="stale-banner-text" id="staleBannerText"></span>
-      </div>
-      <div style="margin-top:.5rem;">
-        <button id="actionBoardBadge" onclick="switchTab('action')" style="background:rgba(192,144,48,0.12);border:1px solid rgba(192,144,48,0.3);color:var(--gold);font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:0.82rem;letter-spacing:0.12em;text-transform:uppercase;padding:0.6rem 1.25rem;cursor:pointer;transition:all 0.15s;">0 Open Action Items →</button>
-      </div>
-    </div>
   </div>
 
   <!-- ── TAB: TENANTS ── -->
@@ -690,19 +677,15 @@ td{padding:0.7rem 0.75rem;font-size:0.88rem;vertical-align:middle;}
   <div id="panel-action" style="display:none;">
     <div class="action-wrap">
 
-      <div class="action-section" style="margin-bottom:2rem;">
-        <div class="action-hd">
-          <span class="action-title">Checklist — Rob Only</span>
-          <span class="action-sub" id="ceoOpenCount"></span>
-        </div>
-        <div class="ceo-list" id="ceoList"></div>
-      </div>
-
       <div class="action-section">
         <div class="action-hd">
           <span class="action-title">Today — <span id="mcTodayDate" style="font-weight:400;text-transform:none;letter-spacing:0;"></span></span>
         </div>
         <div class="today-queue">
+          <div class="tq-section" id="tqSectionChecklist">
+            <div class="tq-hdr" onclick="toggleTqSection('tqSectionChecklist')"><span class="tq-title">Checklist — Rob Only</span><span class="tq-badge" id="ceoOpenCount" style="background:rgba(192,144,48,.15);color:var(--gold);border-color:rgba(192,144,48,.3);">0</span><span class="tq-chevron">▼</span></div>
+            <div class="ceo-list" id="ceoList"></div>
+          </div>
           <div class="tq-section" id="tqSectionDoNow">
             <div class="tq-hdr" onclick="toggleTqSection('tqSectionDoNow')"><span class="tq-title">Do Now</span><span class="tq-badge" id="doNowBadge">0</span><span class="tq-chevron">▼</span></div>
             <div id="tqDoNow"><div class="tq-empty">Loading…</div></div>
@@ -791,7 +774,6 @@ async function doLogin() {
 async function doSignOut() { await sb.auth.signOut(); location.reload(); }
 const tabLoaded = {};
 function loadTabData(t) {
-  if (t === 'dash')      { loadGrades(); loadCeoTasks(); }
   if (t === 'tenants')   { loadTournaments(); loadCompAccounts(); loadCodes(); }
   if (t === 'action')    { loadMissionControl(); loadArtifacts(); loadGrades(); loadCeoTasks(); tabLoaded['artifacts'] = true; }
   if (t === 'bugs')      { renderBugLog(); }
@@ -808,7 +790,8 @@ function showDashboard(email) {
 
 /* ══════════════════════ TABS ══════════════════════ */
 function switchTab(t) {
-  ['dash','tenants','bugs','checklist','reference','action'].forEach(id => {
+  if(t==='dash') t='action';
+  ['action','tenants','bugs','checklist','reference'].forEach(id => {
     document.getElementById(`panel-${id}`).style.display = t === id ? '' : 'none';
     document.getElementById(`tab-${id}`).classList.toggle('active', t === id);
   });
@@ -1256,6 +1239,7 @@ function computeAutoArchive(entries){
 function getUnarchiveOverrides(){try{return JSON.parse(localStorage.getItem('qa_unarchive_overrides')||'{}')}catch{return {}}}
 function renderHub() {
   const grid=document.getElementById('cardGrid');
+  if(!grid) return;
   const ar=getArchived();
   const auto=computeAutoArchive(allEntries);
   const unar=getUnarchiveOverrides();
@@ -1937,7 +1921,7 @@ function toggleTqSection(id){
 }
 function _initTqCollapsed(){
   const saved=_getTqState();
-  const defaults={tqSectionAgent:true,tqSectionShipped:true,tqSectionDoNow:false,tqSectionWaiting:false};
+  const defaults={tqSectionChecklist:false,tqSectionDoNow:false,tqSectionWaiting:false,tqSectionAgent:true,tqSectionShipped:true};
   Object.keys(defaults).forEach(id=>{
     const collapsed=id in saved?saved[id]:defaults[id];
     const sec=document.getElementById(id);if(sec)sec.classList.toggle('collapsed',collapsed);
