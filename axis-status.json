@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-05-13T12:00:00Z",
+  "updated_at": "2026-05-13T20:00:00Z",
   "description": "Living state for all TOURney platform axes. One entry per axis. Updated by every tourney-* skill. Agents read this for context (50 tokens) instead of parsing HTML artifacts.",
   "stages": ["review", "plan", "runbook", "executing", "audit", "concluded"],
   "axes": {
@@ -31,11 +31,11 @@
       "blocking": false
     },
     "security": {
-      "status": "review",
+      "status": "plan",
       "grade": "B",
       "artifact": "/platform/security",
-      "last_updated": "2026-05-12",
-      "summary": "send-push JWT live, install-email webhook gate deployed. Open: CSP unsafe-inline, RLS permissive players/scores/push_subscriptions.",
+      "last_updated": "2026-05-13",
+      "summary": "send-push v9 + send-install-email v6 deployed (2026-05-13). Rounds write RLS migration 011 applied. Plan + runbook artifacts exist. Open: CSP unsafe-inline, invitations RLS, players/scores/push_subscriptions permissive read, webhook Authorization header (manual Rob).",
       "open_items": 4,
       "blocking": false
     },

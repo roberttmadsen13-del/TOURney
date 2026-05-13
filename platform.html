@@ -701,6 +701,10 @@ td{padding:0.7rem 0.75rem;font-size:0.88rem;vertical-align:middle;}
         </div>
         <div>
           <div class="tq-section">
+            <div class="tq-hdr"><span class="tq-title">Waiting on Rob</span><span class="tq-badge" id="waitingBadge" style="background:rgba(192,144,48,.15);color:var(--gold);border-color:rgba(192,144,48,.3);">0</span></div>
+            <div id="tqWaiting"><div class="tq-empty">Loading…</div></div>
+          </div>
+          <div class="tq-section">
             <div class="tq-hdr"><span class="tq-title">Recently Shipped</span></div>
             <div id="tqShipped"><div class="tq-empty">Loading…</div></div>
           </div>
@@ -774,7 +778,7 @@ const tabLoaded = {};
 function loadTabData(t) {
   if (t === 'dash')      { loadGrades(); loadCeoTasks(); }
   if (t === 'tenants')   { loadTournaments(); loadCompAccounts(); loadCodes(); }
-  if (t === 'action')    { loadMissionControl(); loadArtifacts(); tabLoaded['artifacts'] = true; }
+  if (t === 'action')    { loadMissionControl(); loadArtifacts(); loadCeoTasks(); tabLoaded['artifacts'] = true; }
   if (t === 'artifacts') { loadArtifacts(); }
   if (t === 'bugs')      { renderBugLog(); }
   if (t === 'checklist') { renderQaRuns(); }
@@ -1243,7 +1247,7 @@ function renderHub() {
   const unar=getUnarchiveOverrides();
   const isArchived=(e)=>{
     if(unar[e.id]) return false;
-    return !!(e.archived||e.status==='archived'||ar[e.id]||auto.has(e.id));
+    return !!(e.archived||e.status==='archived'||e.status==='concluded'||ar[e.id]||auto.has(e.id));
   };
   const search=activeSearch.trim().toLowerCase();
   const filtered=allEntries.filter(e => {
@@ -1849,7 +1853,9 @@ function renderTodayQueue(){
   const set=(id,items,empty)=>{const el=document.getElementById(id);if(el)el.innerHTML=renderItems(items,empty);};
   set('tqDoNow',doNow,'Nothing blocking.');
   set('tqAgent',agentItems,'All axes concluded.');
+  set('tqWaiting',waitingItems,'No manual tasks pending.');
   set('tqShipped',shippedItems,'No artifacts yet.');
+  const wb=document.getElementById('waitingBadge');if(wb)wb.textContent=waitingItems.length;
   const actionBadge=document.getElementById('actionBoardBadge');
   if(actionBadge){const n=doNow.length+agentItems.length+waitingItems.length;actionBadge.textContent=n+' Open Action Item'+(n!==1?'s':'')+' →';}
 }
