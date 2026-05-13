@@ -8,15 +8,15 @@
       "id": "ux",
       "axis": "ux",
       "category": "axis",
-      "stage": "plan",
+      "stage": "runbook",
       "title": "UX Polish",
-      "summary": "Plan: 8 open items P1-P4. user-scalable=no WCAG fix shipped (c9cc497). P1: loading skeletons + login error sanitization. Target grade B+.",
+      "summary": "Runbook ready: 8 steps P1-P4. Step 1 login error sanitization (login.html:181,240,288). Step 2 loading skeletons scoreboard+home. Steps 3-8: reduced-motion, install surface, empty states, aria-live, 375px QA, Lighthouse.",
       "date": "2026-05-12",
       "updated": "2026-05-12",
       "author": "claude-sonnet-4-6",
       "url": "/platform/ux",
       "file": "ux.html",
-      "tags": ["ux", "plan", "accessibility", "mobile"],
+      "tags": ["ux", "runbook", "accessibility", "mobile"],
       "status": "active"
     },
     {

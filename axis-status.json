@@ -22,11 +22,11 @@
       "blocking": false
     },
     "ux": {
-      "status": "plan",
+      "status": "runbook",
       "grade": "B-",
       "artifact": "/platform/ux",
       "last_updated": "2026-05-12",
-      "summary": "Plan: 8 open items P1-P4. user-scalable=no shipped. P1: loading skeletons + login error sanitization. Target B+ after execution.",
+      "summary": "Runbook ready: 8 steps P1-P4. Step 1: login error sanitization. Step 2: loading skeletons. Steps 3-8: reduced-motion, install surface, empty states, aria-live, mobile QA, Lighthouse.",
       "open_items": 8,
       "blocking": false
     },

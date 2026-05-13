@@ -52,6 +52,111 @@ a{color:var(--gold);text-decoration:none;}a:hover{text-decoration:underline;}
 </div>
 
 <div id="stage-history">
+<section class="axis-stage stage-runbook" data-date="2026-05-12" data-agent="claude-sonnet-4-6">
+  <div class="stage-header">
+    <span class="stage-pill pill-runbook">Runbook</span>
+    <span class="stage-date">May 12, 2026</span>
+    <span class="stage-agent">claude-sonnet-4-6</span>
+  </div>
+  <div class="stage-body">
+    <p style="font-size:.85rem;color:#aaa;margin-bottom:1rem;">Execute 8 open UX items in priority order. Each step: exact file:line, exact change, verification. Rollback: <code>git revert HEAD</code> for any step.</p>
+
+    <!-- STEP 1 -->
+    <p style="font-size:.75rem;font-weight:700;color:var(--gold);letter-spacing:.08em;text-transform:uppercase;margin-bottom:.5rem;">Step 1 — Sanitize login errors (P1 · 30 min)</p>
+    <div class="finding high">
+      <strong>login.html:181</strong> — <code>doSignIn</code> raw message in first position<br>
+      Replace: <code>err.textContent = error?.message || 'Invalid email or password.'</code><br>
+      With: <code>err.textContent = 'Invalid email or password.'</code>
+    </div>
+    <div class="finding high">
+      <strong>login.html:240</strong> — <code>doSignUp</code> raw Supabase error<br>
+      Replace: <code>err.textContent = error.message</code><br>
+      With: <code>err.textContent = error?.message?.toLowerCase().includes('already') ? 'An account with this email already exists. Sign in instead.' : 'Sign up failed — check your details and try again.'</code>
+    </div>
+    <div class="finding high">
+      <strong>login.html:288</strong> — <code>doForgot</code> raw Supabase error<br>
+      Replace: <code>err.textContent = error.message</code><br>
+      With: <code>err.textContent = 'Password reset failed. Check your email address and try again.'</code>
+    </div>
+    <div class="finding low">✅ Verify: trigger each error path in browser. No Supabase/GoTrue strings visible. Friendly message shows.</div>
+
+    <!-- STEP 2 -->
+    <p style="font-size:.75rem;font-weight:700;color:var(--gold);letter-spacing:.08em;text-transform:uppercase;margin:1rem 0 .5rem;">Step 2 — Loading skeletons: scoreboard + home (P1 · 2h)</p>
+    <div class="finding med">
+      <strong>tokens.css</strong> already has <code>.skeleton</code> + <code>@keyframes shimmer</code>.<br>
+      <strong>2a.</strong> Add to <code>scoreboard.html &lt;head&gt;</code>: <code>&lt;link rel="stylesheet" href="/tokens.css"&gt;</code> (if not present).<br>
+      <strong>2b.</strong> In <code>scoreboard.html</code> — on page init before fetch, set:<br>
+      <code>document.getElementById('leaderboardBody').innerHTML = '&lt;tr&gt;&lt;td colspan="7" class="skeleton" style="height:2.5rem;border-radius:4px;"&gt;&lt;/td&gt;&lt;/tr&gt;'.repeat(6)</code><br>
+      Clear on data resolve (existing <code>lbRows</code> assignment at line 764 already replaces it).<br>
+      <strong>2c.</strong> Same pattern for <code>#indLeaderboardBody</code> (colspan 8).<br>
+      <strong>2d.</strong> In <code>home.html</code> — find the leaderboard list container, set skeleton rows on init, clear on <code>sb</code> data resolve.
+    </div>
+    <div class="finding low">✅ Verify: throttle to Slow 3G in DevTools. Skeleton shimmer visible. No blank flash. Content replaces skeleton on load.</div>
+
+    <!-- STEP 3 -->
+    <p style="font-size:.75rem;font-weight:700;color:var(--gold);letter-spacing:.08em;text-transform:uppercase;margin:1rem 0 .5rem;">Step 3 — prefers-reduced-motion guard (P2 · 20 min)</p>
+    <div class="finding med">
+      <strong>home.html</strong> — hero has inline <code>animation: fadeUp</code> on lines 49–57. Section animations via <code>.will-animate</code> (lines 366–378). No guard exists.<br>
+      After <code>.day-block.will-animate.visible</code> rule (line 378), add:<br>
+      <code style="display:block;white-space:pre;font-size:.78rem;margin:.4rem 0;">@media (prefers-reduced-motion: reduce) {
+  .hero-logo-wrap, .hero-eyebrow, .hero-title,
+  .hero-rule, .hero-meta, .hero-cta {
+    animation: none; opacity: 1; transform: none;
+  }
+  .will-animate { transition: none; opacity: 1; transform: none; }
+  .will-animate.visible { opacity: 1; transform: none; }
+  .day-block.will-animate { transition: none; opacity: 1; transform: none; }
+}</code>
+    </div>
+    <div class="finding low">✅ Verify: enable "Prefers reduced motion" in DevTools → Rendering. home.html loads with no motion. Content fully visible on load.</div>
+
+    <!-- STEP 4 -->
+    <p style="font-size:.75rem;font-weight:700;color:var(--gold);letter-spacing:.08em;text-transform:uppercase;margin:1rem 0 .5rem;">Step 4 — Surface install.html from player journey (P2 · 1h)</p>
+    <div class="finding med">
+      <code>player.html</code> has zero install/PWA references. <code>install.html</code> is orphaned.<br>
+      <strong>4a.</strong> In <code>player.html</code> profile section, add an "Install App" card/button that links to <code>/install</code> — conditional on <code>!window.matchMedia('(display-mode: standalone)').matches</code> (don't show if already installed).<br>
+      <strong>4b.</strong> Add same check to <code>home.html</code> bottom CTA area.
+    </div>
+    <div class="finding low">✅ Verify: open player.html in browser (non-standalone). "Install App" link visible. Open in installed PWA — link hidden.</div>
+
+    <!-- STEP 5 -->
+    <p style="font-size:.75rem;font-weight:700;color:var(--gold);letter-spacing:.08em;text-transform:uppercase;margin:1rem 0 .5rem;">Step 5 — Empty states: feed + directory (P2 · 1h)</p>
+    <div class="finding low">
+      <code>feed.html:335</code> and <code>directory.html:217</code> already have <code>.empty-state</code> class and copy. Verify they render with real data — check empty tournament (no posts, no players). If blank render found, the conditional branch isn't firing — debug the length check.<br>
+      <strong>Champions + profile pages</strong>: confirm empty state shows for 0 rounds played. If missing, add matching pattern from scoreboard.html.
+    </div>
+    <div class="finding low">✅ Verify: load each page with no data. Styled empty-state renders. No blank white box.</div>
+
+    <!-- STEP 6 -->
+    <p style="font-size:.75rem;font-weight:700;color:var(--gold);letter-spacing:.08em;text-transform:uppercase;margin:1rem 0 .5rem;">Step 6 — aria-live on toast + leaderboard (P3 · 30 min)</p>
+    <div class="finding med">
+      <strong>Toast container</strong> — find the toast div in <code>scoreboard.html</code>, <code>home.html</code>, <code>player.html</code>. Add <code>aria-live="polite" aria-atomic="true"</code>.<br>
+      <strong>Leaderboard table</strong> — <code>scoreboard.html:275</code> <code>&lt;tbody id="leaderboardBody"&gt;</code>. Add <code>aria-live="polite"</code> to the parent <code>&lt;table&gt;</code>.<br>
+      Pattern: <code>&lt;table class="lb-table" aria-live="polite" aria-label="Tournament leaderboard"&gt;</code>
+    </div>
+    <div class="finding low">✅ Verify: DevTools Accessibility pane shows aria-live on toast + leaderboard. Screen reader announces updates on score change (test with VoiceOver/NVDA if available).</div>
+
+    <!-- STEP 7 -->
+    <p style="font-size:.75rem;font-weight:700;color:var(--gold);letter-spacing:.08em;text-transform:uppercase;margin:1rem 0 .5rem;">Step 7 — QA scoreboard table 375px (P3 · 30 min)</p>
+    <div class="finding low">
+      In DevTools, set viewport to 375×667 (iPhone SE). Load scoreboard with 4+ teams. Check: column headers visible, scores readable, no horizontal overflow escaping container. If overflow found: wrap table in <code>&lt;div style="overflow-x:auto;-webkit-overflow-scrolling:touch;"&gt;</code>.
+    </div>
+    <div class="finding low">✅ Verify: 375px — no horizontal page scroll. Table scrolls within its own container if wider than viewport. Touch scroll smooth.</div>
+
+    <!-- STEP 8 -->
+    <p style="font-size:.75rem;font-weight:700;color:var(--gold);letter-spacing:.08em;text-transform:uppercase;margin:1rem 0 .5rem;">Step 8 — Lighthouse a11y audit (P4 · 2h)</p>
+    <div class="finding low">
+      Run Lighthouse (DevTools → Lighthouse → Accessibility) on: <code>scoreboard.html</code>, <code>home.html</code>, <code>player.html</code>, <code>login.html</code>. Fix any contrast failures (muted text <code>#666</code> on dark backgrounds may fail 4.5:1 ratio). Add missing <code>alt=""</code> to decorative images. Target score ≥90.
+    </div>
+    <div class="finding low">✅ Verify: Lighthouse a11y score ≥90 on all 4 pages. Zero critical contrast failures.</div>
+
+    <!-- ROLLBACK -->
+    <p style="font-size:.75rem;font-weight:700;color:var(--gold);letter-spacing:.08em;text-transform:uppercase;margin:1rem 0 .5rem;">Rollback</p>
+    <div class="finding low">All changes are CSS/HTML — low risk. <code>git revert HEAD</code> restores any single step. Steps 1–3 are independent; can revert individually via <code>git diff</code> + manual undo. No DB migrations, no edge function changes.</div>
+
+    <p style="font-size:.75rem;color:var(--muted);margin-top:1rem;">Source plan: <a href="/platform/ux">/platform/ux</a> · Review: <a href="/platform/5-12-26-claude-review-ux">/platform/5-12-26-claude-review-ux</a></p>
+  </div>
+</section>
 <section class="axis-stage stage-plan" data-date="2026-05-12" data-agent="claude-sonnet-4-6">
   <div class="stage-header">
     <span class="stage-pill pill-plan">Plan</span>
