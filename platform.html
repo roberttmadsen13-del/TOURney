@@ -690,10 +690,6 @@ td{padding:0.7rem 0.75rem;font-size:0.88rem;vertical-align:middle;}
             <div class="tq-hdr" onclick="toggleTqSection('tqSectionDoNow')"><span class="tq-title">Do Now</span><span class="tq-badge" id="doNowBadge">0</span><span class="tq-chevron">▼</span></div>
             <div id="tqDoNow"><div class="tq-empty">Loading…</div></div>
           </div>
-          <div class="tq-section" id="tqSectionWaiting">
-            <div class="tq-hdr" onclick="toggleTqSection('tqSectionWaiting')"><span class="tq-title">Waiting on Rob</span><span class="tq-badge" id="waitingBadge" style="background:rgba(192,144,48,.15);color:var(--gold);border-color:rgba(192,144,48,.3);">0</span><span class="tq-chevron">▼</span></div>
-            <div id="tqWaiting"><div class="tq-empty">Loading…</div></div>
-          </div>
         </div>
       </div>
 
@@ -2016,12 +2012,8 @@ function renderTodayQueue(){
   const set=(id,items,empty)=>{const el=document.getElementById(id);if(el)el.innerHTML=renderItems(items,empty);};
   set('tqDoNow',doNow,'Nothing blocking.');
   set('tqAgent',agentItems,'All axes concluded.');
-  set('tqWaiting',waitingItems,'No manual tasks pending.');
   set('tqShipped',shippedItems,'No artifacts yet.');
   const refAgent=document.getElementById('refAgentQueue');if(refAgent)refAgent.innerHTML=renderItems(agentItems,'All axes concluded.');
-  const wb=document.getElementById('waitingBadge');if(wb)wb.textContent=waitingItems.length;
-  const actionBadge=document.getElementById('actionBoardBadge');
-  if(actionBadge){const n=doNow.length+agentItems.length+waitingItems.length;actionBadge.textContent=n+' Open Action Item'+(n!==1?'s':'')+' →';}
   _initTqCollapsed();
 }
 window.renderBugLog = function() {
