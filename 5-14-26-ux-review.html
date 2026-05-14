@@ -138,7 +138,7 @@ footer span{color:var(--gold);}
   <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Review</div></div>
   <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Plan</div></div>
   <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Runbook</div></div>
-  <div class="lc-stage"><div class="lc-pill"></div><div class="lc-label">Executing</div></div>
+  <div class="lc-stage lc-active"><div class="lc-pill"></div><div class="lc-label">Executing</div></div>
   <div class="lc-stage"><div class="lc-pill"></div><div class="lc-label">Audit</div></div>
   <div class="lc-stage"><div class="lc-pill"></div><div class="lc-label">Concluded</div></div>
 </div>
@@ -510,8 +510,39 @@ footer span{color:var(--gold);}
 <section id="executing">
 <div class="wrapper">
 <!-- EXECUTING-CONTENT-START -->
-<div class="stage-pending">
-  <p>Awaiting execution. Run <code>/tourney-execute 5-14-26-ux-review.html</code> to proceed.</p>
+<div class="section-header">
+  <div class="section-eyebrow">Executing</div>
+  <div class="section-title">CSS Token Centralization — Completed</div>
+  <div class="section-desc">tokens.css linked on all tournament pages. SW cache bumped to v35. Partial execution — remaining runbook items carry forward.</div>
+</div>
+
+<div class="card" style="border-color:var(--green);margin-bottom:1rem;">
+  <div class="card-title" style="color:var(--green)">✓ DONE · CSS Token Centralization (Future → Shipped)</div>
+  <p><strong>What:</strong> Linked <code>/tokens.css</code> on 9 tournament pages that were missing it.</p>
+  <p><strong>Pages updated:</strong> admin.html, scoreboard.html, champions.html, install.html, login.html, directory.html, course.html, profile.html, feed.html</p>
+  <p><strong>Pages skipped (intentional):</strong> home.html (custom tan tokens), player.html / player-upgrade.html / create.html (dark variants), marketing.html (custom structure), platform.html (review artifact dark theme), scorecard.html (already linked)</p>
+  <p><strong>Cascade approach:</strong> tokens.css loads first with dark platform defaults. Each tournament page's inline <code>:root{}</code> overrides color tokens (later declaration wins). Brand colors via <code>applyBrandColors()</code> in tourney-init.js remain unaffected — those use <code>style.setProperty()</code> at runtime.</p>
+  <p><strong>Net gain:</strong> All 9 pages now get <code>.skeleton</code> shimmer, <code>.nav-offline-dot</code>, and <code>@media (prefers-reduced-motion)</code> guard for free, with zero visual regression on colors.</p>
+</div>
+
+<div class="card" style="border-color:var(--green);margin-bottom:1rem;">
+  <div class="card-title" style="color:var(--green)">✓ DONE · SW Cache Bump (v34 → v35)</div>
+  <p><code>sw.js</code> PRECACHE: <code>'tourney-v34'</code> → <code>'tourney-v35'</code>. Added <code>'/tokens.css'</code> to PRECACHE array. Old cache purged on activate.</p>
+</div>
+
+<div class="card" style="border-color:var(--orange);margin-bottom:1rem;">
+  <div class="card-title" style="color:var(--orange)">⏳ CARRY-FORWARD · Axis Scorecard Auto-Update (P1)</div>
+  <p>platform.html needs <code>fetchAndRenderGrades()</code> — fetch <code>/grades.json</code> on load, read <code>axes[key].scores[0].score</code>, update DOM cells by <code>data-axis</code> attribute. See Runbook Step 1.</p>
+</div>
+
+<div class="card" style="border-color:var(--orange);margin-bottom:1rem;">
+  <div class="card-title" style="color:var(--orange)">⏳ CARRY-FORWARD · Scorecard Skeleton (P2) · Login Spinner (P3)</div>
+  <p>scorecard.html: skeleton shimmer on hole rows during fetch. login.html: spinner on submit button while auth in-flight. Both CSS classes now available via tokens.css.</p>
+</div>
+
+<div class="card" style="border-color:var(--muted);">
+  <div class="card-title">⏳ CARRY-FORWARD · heroLogoImg alt (P4) · manifest 180px (P5) · admin token drift (P6)</div>
+  <p>home.html:429 <code>alt=""</code> → descriptive text. manifest.json 180px icon needs PNG asset from Rob. admin.html <code>.status-open</code> hardcoded green → <code>var(--green)</code>.</p>
 </div>
 <!-- EXECUTING-CONTENT-END -->
 </div>
