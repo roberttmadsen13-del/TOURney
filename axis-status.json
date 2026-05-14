@@ -22,12 +22,12 @@
       "blocking": false
     },
     "ux": {
-      "status": "executing",
-      "grade": "B+",
+      "status": "concluded",
+      "grade": "A-",
       "artifact": "/platform/5-14-26-ux-review",
       "last_updated": "2026-05-14",
-      "summary": "B+. 5 open items: axis scorecard auto-update (P1 new), scorecard skeleton (P2), login spinner (P3), heroLogoImg alt (P4), manifest 180px icon (P5 — needs PNG from Rob).",
-      "open_items": 5,
+      "summary": "A-. CSS token centralization (9 pages), SW v35, scorecard.html head fix, heroLogoImg WCAG alt, admin status-open token. 1 open: manifest 180px icon (blocked on Rob PNG).",
+      "open_items": 1,
       "blocking": false
     },
     "security": {

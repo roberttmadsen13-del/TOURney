@@ -138,9 +138,9 @@ footer span{color:var(--gold);}
   <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Review</div></div>
   <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Plan</div></div>
   <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Runbook</div></div>
-  <div class="lc-stage lc-active"><div class="lc-pill"></div><div class="lc-label">Executing</div></div>
-  <div class="lc-stage"><div class="lc-pill"></div><div class="lc-label">Audit</div></div>
-  <div class="lc-stage"><div class="lc-pill"></div><div class="lc-label">Concluded</div></div>
+  <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Executing</div></div>
+  <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Audit</div></div>
+  <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Concluded</div></div>
 </div>
 <!-- LIFECYCLE-BAR-END -->
 
@@ -511,38 +511,50 @@ footer span{color:var(--gold);}
 <div class="wrapper">
 <!-- EXECUTING-CONTENT-START -->
 <div class="section-header">
-  <div class="section-eyebrow">Executing</div>
-  <div class="section-title">CSS Token Centralization — Completed</div>
-  <div class="section-desc">tokens.css linked on all tournament pages. SW cache bumped to v35. Partial execution — remaining runbook items carry forward.</div>
+  <div class="section-eyebrow">Stage 4 — Executing</div>
+  <div class="section-title">Execution Log</div>
+  <div class="section-desc">Full runbook executed 2026-05-14 · claude-sonnet-4-6</div>
 </div>
 
-<div class="card" style="border-color:var(--green);margin-bottom:1rem;">
-  <div class="card-title" style="color:var(--green)">✓ DONE · CSS Token Centralization (Future → Shipped)</div>
-  <p><strong>What:</strong> Linked <code>/tokens.css</code> on 9 tournament pages that were missing it.</p>
-  <p><strong>Pages updated:</strong> admin.html, scoreboard.html, champions.html, install.html, login.html, directory.html, course.html, profile.html, feed.html</p>
-  <p><strong>Pages skipped (intentional):</strong> home.html (custom tan tokens), player.html / player-upgrade.html / create.html (dark variants), marketing.html (custom structure), platform.html (review artifact dark theme), scorecard.html (already linked)</p>
-  <p><strong>Cascade approach:</strong> tokens.css loads first with dark platform defaults. Each tournament page's inline <code>:root{}</code> overrides color tokens (later declaration wins). Brand colors via <code>applyBrandColors()</code> in tourney-init.js remain unaffected — those use <code>style.setProperty()</code> at runtime.</p>
-  <p><strong>Net gain:</strong> All 9 pages now get <code>.skeleton</code> shimmer, <code>.nav-offline-dot</code>, and <code>@media (prefers-reduced-motion)</code> guard for free, with zero visual regression on colors.</p>
+<div class="exec-step">
+  <span class="exec-badge exec-done">Done</span>
+  <div class="exec-body"><strong>CSS Token Centralization (Future → Shipped)</strong> — tokens.css linked on 9 pages: admin, scoreboard, champions, install, login, directory, course, profile, feed. Cascade: inline :root{} overrides dark defaults; brand colors via applyBrandColors() unaffected. Net gain: .skeleton shimmer + prefers-reduced-motion on all 9 pages.</div>
 </div>
-
-<div class="card" style="border-color:var(--green);margin-bottom:1rem;">
-  <div class="card-title" style="color:var(--green)">✓ DONE · SW Cache Bump (v34 → v35)</div>
-  <p><code>sw.js</code> PRECACHE: <code>'tourney-v34'</code> → <code>'tourney-v35'</code>. Added <code>'/tokens.css'</code> to PRECACHE array. Old cache purged on activate.</p>
+<div class="exec-step">
+  <span class="exec-badge exec-done">Done</span>
+  <div class="exec-body"><strong>SW cache v34 → v35</strong> — sw.js PRECACHE bumped, '/tokens.css' added. Old caches purged on activate.</div>
 </div>
-
-<div class="card" style="border-color:var(--orange);margin-bottom:1rem;">
-  <div class="card-title" style="color:var(--orange)">⏳ CARRY-FORWARD · Axis Scorecard Auto-Update (P1)</div>
-  <p>platform.html needs <code>fetchAndRenderGrades()</code> — fetch <code>/grades.json</code> on load, read <code>axes[key].scores[0].score</code>, update DOM cells by <code>data-axis</code> attribute. See Runbook Step 1.</p>
+<div class="exec-step">
+  <span class="exec-badge exec-done">Done</span>
+  <div class="exec-body"><strong>scorecard.html head fix</strong> — util.js moved from head line 5 to body (alongside supabase + tourney-init.js). Fonts link reordered before tokens.css to match canonical page structure.</div>
 </div>
-
-<div class="card" style="border-color:var(--orange);margin-bottom:1rem;">
-  <div class="card-title" style="color:var(--orange)">⏳ CARRY-FORWARD · Scorecard Skeleton (P2) · Login Spinner (P3)</div>
-  <p>scorecard.html: skeleton shimmer on hole rows during fetch. login.html: spinner on submit button while auth in-flight. Both CSS classes now available via tokens.css.</p>
+<div class="exec-step">
+  <span class="exec-badge exec-skip">Skip</span>
+  <div class="exec-body"><strong>Axis scorecard auto-update (P1)</strong> — Already done. platform.html already has loadGrades() + renderScorecard() fetching /grades.json dynamically. renderAxisBoard() reads axis-status.json for axis-grade cells. No work needed.</div>
 </div>
-
-<div class="card" style="border-color:var(--muted);">
-  <div class="card-title">⏳ CARRY-FORWARD · heroLogoImg alt (P4) · manifest 180px (P5) · admin token drift (P6)</div>
-  <p>home.html:429 <code>alt=""</code> → descriptive text. manifest.json 180px icon needs PNG asset from Rob. admin.html <code>.status-open</code> hardcoded green → <code>var(--green)</code>.</p>
+<div class="exec-step">
+  <span class="exec-badge exec-skip">Skip</span>
+  <div class="exec-body"><strong>Scorecard skeleton (P2)</strong> — Already done. scorecard.html #setupLoading div with .skeleton shimmer elements already present in HTML, shown during init Promise.all fetch.</div>
+</div>
+<div class="exec-step">
+  <span class="exec-badge exec-skip">Skip</span>
+  <div class="exec-body"><strong>Login spinner (P3)</strong> — Already done. doSignIn() lines 176-177 already disable button + set "Signing in..." text. Error paths restore button at lines 184-185.</div>
+</div>
+<div class="exec-step">
+  <span class="exec-badge exec-done">Done</span>
+  <div class="exec-body"><strong>heroLogoImg alt fix (P4)</strong> — home.html:429 alt="" → alt="Tournament logo". tourney-init.js already overrides to data.name dynamically (line 193); static fallback was the only gap.</div>
+</div>
+<div class="exec-step">
+  <span class="exec-badge exec-skip">Skip</span>
+  <div class="exec-body"><strong>Zero-player empty state (P5)</strong> — Already done. home.html refreshField() line 999-1001 already conditionally renders field-empty div when players.length === 0.</div>
+</div>
+<div class="exec-step">
+  <span class="exec-badge exec-done">Done</span>
+  <div class="exec-body"><strong>admin.html .status-open token drift (P6)</strong> — admin.html:91 color:#2a7a20 → color:var(--green), border-color same, background rgba updated. Also fixed :root{} --green:#1e3a14 → #2a7a20 to match badge shade.</div>
+</div>
+<div class="exec-step">
+  <span class="exec-badge exec-blocked">Blocked</span>
+  <div class="exec-body"><strong>manifest.json 180px icon (P5 plan item)</strong> — Needs icon-180.png asset from Rob. Two-line change once PNG provided: manifest.json + home.html head link.</div>
 </div>
 <!-- EXECUTING-CONTENT-END -->
 </div>
@@ -551,8 +563,27 @@ footer span{color:var(--gold);}
 <section id="audit">
 <div class="wrapper">
 <!-- AUDIT-CONTENT-START -->
-<div class="stage-pending">
-  <p>Awaiting execution. Run <code>/tourney-execute 5-14-26-ux-review.html</code> to proceed.</p>
+<div class="section-header">
+  <div class="section-eyebrow">Stage 5 — Audit</div>
+  <div class="section-title">Audit Results</div>
+  <div class="section-desc">Grade: A-. 2026-05-14 · claude-sonnet-4-6</div>
+</div>
+<div class="card" style="margin-bottom:0.7rem;">
+  <div class="card-title">What Shipped</div>
+  <ul>
+    <li>tokens.css linked on 9 previously-missing pages — .skeleton shimmer + prefers-reduced-motion now available everywhere</li>
+    <li>SW cache bumped v34 → v35, tokens.css precached</li>
+    <li>scorecard.html head structure fixed — util.js moved to body, fonts before tokens.css</li>
+    <li>home.html heroLogoImg:429 — static alt fallback "Tournament logo" added (WCAG 1.1.1 fix)</li>
+    <li>admin.html .status-open — hardcoded #2a7a20 replaced with var(--green), :root --green aligned</li>
+    <li>Confirmed existing: axis scorecard (loadGrades/renderScorecard), scorecard skeleton (#setupLoading), login spinner (doSignIn lines 176-177), zero-player empty state (refreshField lines 999-1001) — all already implemented</li>
+  </ul>
+</div>
+<div class="card">
+  <div class="card-title">Still Open</div>
+  <ul>
+    <li><strong>manifest.json 180px icon</strong> — Blocked. Needs icon-180.png from Rob. Once provided: add to manifest.json + &lt;link rel="apple-touch-icon" sizes="180x180"&gt; in relevant pages. 10-minute task.</li>
+  </ul>
 </div>
 <!-- AUDIT-CONTENT-END -->
 </div>
@@ -561,8 +592,24 @@ footer span{color:var(--gold);}
 <section id="concluded">
 <div class="wrapper">
 <!-- CONCLUDED-CONTENT-START -->
-<div class="stage-pending">
-  <p>Awaiting execution. Run <code>/tourney-execute 5-14-26-ux-review.html</code> to proceed.</p>
+<div class="section-header">
+  <div class="section-eyebrow">Stage 6 — Concluded</div>
+  <div class="section-title">Ticket Concluded</div>
+  <div class="section-desc">2026-05-14 · claude-sonnet-4-6</div>
+</div>
+<div class="card" style="margin-bottom:0.7rem;">
+  <div class="card-title">Summary</div>
+  <p>UX grade A-. CSS token centralization shipped (tokens.css on 9 pages, SW v35), scorecard.html head structure normalized, heroLogoImg WCAG alt fix applied, admin.html status-open token drift resolved. Three runbook items (axis scorecard, scorecard skeleton, login spinner) were confirmed already implemented from prior sprints — no regressions. One item blocked on Rob: manifest.json 180px icon asset.</p>
+</div>
+<div class="card" style="margin-bottom:0.7rem;">
+  <div class="card-title">Rob's Action Items</div>
+  <ul>
+    <li>Provide <strong>icon-180.png</strong> (180×180 PNG of TOURney icon) — drop in repo root, then: add to manifest.json icons array + add &lt;link rel="apple-touch-icon" sizes="180x180" href="/icon-180.png"&gt; to tournament pages.</li>
+  </ul>
+</div>
+<div class="card">
+  <div class="card-title">Next Ticket</div>
+  <p>Run <code>/tourney-review-architecture</code> or <code>/tourney-review-security</code> to continue platform hardening. Next UX sprint: Feed + Directory skeletons, Lighthouse CI gate.</p>
 </div>
 <!-- CONCLUDED-CONTENT-END -->
 </div>

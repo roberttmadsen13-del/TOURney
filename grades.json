@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-05-14T20:00:00Z",
+  "updated_at": "2026-05-14T21:00:00Z",
   "description": "Per-axis grade history for TOURney platform. Updated automatically by review skills. Operations Action Board reads this file.",
   "axes": {
     "architecture": {
@@ -74,6 +74,13 @@
       "label": "UX Polish",
       "cmd": "/tourney-review-ux",
       "scores": [
+        {
+          "date": "2026-05-14",
+          "score": "A-",
+          "url": "/platform/5-14-26-ux-review",
+          "review_title": "Execute + Audit · May 14, 2026",
+          "notes": "CSS token centralization shipped (9 pages + SW v35), scorecard.html head fix, heroLogoImg WCAG alt, admin status-open token. Axis scorecard/skeleton/login spinner confirmed already live from prior sprints. 1 blocked: manifest 180px icon needs PNG from Rob."
+        },
         {
           "date": "2026-05-14",
           "score": "B+",

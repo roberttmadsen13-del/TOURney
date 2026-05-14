@@ -7,15 +7,16 @@
     {
       "id": "review-ux-2026-05-14",
       "category": "review",
-      "stage": "executing",
+      "stage": "concluded",
       "title": "UX Polish Review · May 14, 2026",
-      "summary": "Grade B+. 4 carry-forward gaps from May 13 sprint: heroLogoImg alt empty (MEDIUM), login no spinner (MEDIUM), scorecard skeleton deferred (MEDIUM), manifest 180px absent (LOW). New P1: axis scorecard auto-update (Rob request). Design tokens consistent, skeletons live, aria-live correct.",
+      "summary": "Grade A-. CSS token centralization shipped (9 pages + SW v35), scorecard.html head fix, heroLogoImg WCAG alt, admin token drift resolved. Axis scorecard/skeleton/login spinner confirmed already live. 1 blocked: manifest 180px icon needs PNG from Rob.",
       "date": "2026-05-14",
+      "updated": "2026-05-14",
       "author": "claude-sonnet-4-6",
       "url": "/platform/5-14-26-ux-review",
       "file": "5-14-26-ux-review.html",
       "tags": ["review", "ux", "accessibility", "mobile"],
-      "status": "open"
+      "status": "concluded"
     },
     {
       "id": "review-2026-05-14",
