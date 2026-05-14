@@ -1546,13 +1546,11 @@ function openTicketDrawer(id){
     .slice(0,4);
   const urlLines=related.map(x=>`  - ${x.title||x.id}: tourney.greenskeeper.studio${x.url}`).join('\n');
   const openItems=(e.summary||'').replace(/^[^.]+\.\s*/,'');
-  const cmd=[
-    `/tourney-${nextStage}-${axisKey}${related.length?' '+related.map(x=>`tourney.greenskeeper.studio${x.url}`).join(' '):''}`,
-    ``,
-    `Axis: ${axisKey} | Stage: ${stageKey} → ${nextStage}`,
-    urlLines?`Artifacts:\n${urlLines}`:'',
-    openItems?`Open items: ${openItems}`:'',
-  ].filter(Boolean).join('\n');
+  const fileArg=e.file||'';
+  const artifactUrl=e.url?`tourney.greenskeeper.studio${e.url}`:'';
+  const cmd=e.category==='review'
+    ?[`/tourney-execute ${fileArg}`,artifactUrl,openItems?`Open items: ${openItems}`:''].filter(Boolean).join('\n')
+    :[`/tourney-${nextStage}-${axisKey}${related.length?' '+related.map(x=>`tourney.greenskeeper.studio${x.url}`).join(' '):''}`,``,`Axis: ${axisKey} | Stage: ${stageKey} → ${nextStage}`,urlLines?`Artifacts:\n${urlLines}`:'',openItems?`Open items: ${openItems}`:''].filter(Boolean).join('\n');
   const cmdEl=document.getElementById('drawerNextCmd');
   if(cmdEl){
     cmdEl._cmd=cmd;
