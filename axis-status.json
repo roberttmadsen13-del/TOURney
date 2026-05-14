@@ -22,12 +22,12 @@
       "blocking": false
     },
     "ux": {
-      "status": "review",
+      "status": "executing",
       "grade": "B+",
-      "artifact": "/platform/ux",
-      "last_updated": "2026-05-13",
-      "summary": "Post-sprint review B+. 1 real open item: manifest.json missing apple-touch-icon 180px (requires PNG asset from Rob). 3 flagged bugs were false positives — code already handles them.",
-      "open_items": 1,
+      "artifact": "/platform/5-14-26-ux-review",
+      "last_updated": "2026-05-14",
+      "summary": "B+. 5 open items: axis scorecard auto-update (P1 new), scorecard skeleton (P2), login spinner (P3), heroLogoImg alt (P4), manifest 180px icon (P5 — needs PNG from Rob).",
+      "open_items": 5,
       "blocking": false
     },
     "security": {

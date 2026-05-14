@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TOURney — UX Polish Review · May 14, 2026</title>
+<style>
+:root{--gold:#c09030;--gold-light:#d4a840;--gold-dim:rgba(192,144,48,0.18);--bg:#0d0a05;--surface:#151009;--card:#1c140a;--border:rgba(192,144,48,0.22);--muted:#7a6a54;--text:#e8dcc8;--red:#c0392b;--green:#27ae60;--blue:#2980b9;--orange:#e67e22;--purple:#8e44ad;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:-apple-system,'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;font-size:15px;}
+nav{position:sticky;top:0;z-index:100;background:rgba(13,10,5,0.97);border-bottom:1px solid var(--border);backdrop-filter:blur(12px);}
+.nav-inner{padding:0.6rem 1.5rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap;}
+.nav-brand{color:var(--gold);font-weight:700;font-size:1rem;letter-spacing:0.05em;white-space:nowrap;}
+.nav-brand span{color:var(--muted);font-weight:400;font-size:0.8rem;margin-left:0.4rem;}
+.nav-links{display:flex;gap:0.2rem;flex-wrap:wrap;margin-left:auto;}
+.nav-links a{color:var(--muted);text-decoration:none;font-size:0.78rem;padding:0.3rem 0.55rem;border-radius:4px;transition:all 0.15s;white-space:nowrap;}
+.nav-links a:hover{color:var(--gold);background:var(--gold-dim);}
+.lifecycle-bar{display:flex;gap:3px;padding:0.55rem 1.5rem 0.65rem;background:var(--surface);border-bottom:1px solid var(--border);}
+.lc-stage{flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;}
+.lc-pill{height:5px;width:100%;border-radius:3px;background:rgba(192,144,48,0.1);transition:background 0.25s;}
+.lc-label{font-size:0.58rem;font-weight:700;letter-spacing:0.11em;text-transform:uppercase;color:rgba(122,106,84,0.45);transition:color 0.25s;}
+.lc-done .lc-pill{background:var(--gold);}
+.lc-done .lc-label{color:var(--gold);}
+.lc-active .lc-pill{background:var(--gold-light);box-shadow:0 0 8px rgba(192,144,48,0.45);}
+.lc-active .lc-label{color:var(--gold-light);}
+.hero{padding:3rem 1.5rem 2rem;text-align:center;border-bottom:1px solid var(--border);background:linear-gradient(180deg,rgba(192,144,48,0.06) 0%,transparent 100%);}
+.hero-eyebrow{display:inline-block;font-size:0.7rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold);border:1px solid var(--border);border-radius:20px;padding:0.22rem 0.8rem;margin-bottom:0.9rem;}
+.hero h1{font-size:clamp(1.5rem,3.5vw,2.3rem);font-weight:800;color:#fff;margin-bottom:0.35rem;}
+.hero h1 span{color:var(--gold);}
+.hero-sub{color:var(--muted);max-width:520px;margin:0 auto 1rem;font-size:0.9rem;}
+.hero-meta{display:flex;gap:1.1rem;justify-content:center;flex-wrap:wrap;font-size:0.74rem;color:var(--muted);}
+.hero-meta span{display:flex;align-items:center;gap:0.3rem;}
+.wrapper{max-width:1000px;margin:0 auto;padding:0 1.5rem;}
+section{padding:2.5rem 0;border-bottom:1px solid var(--border);}
+section:last-of-type{border-bottom:none;}
+.section-header{margin-bottom:1.6rem;}
+.section-eyebrow{font-size:0.67rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--gold);margin-bottom:0.3rem;}
+.section-title{font-size:1.35rem;font-weight:800;color:#fff;margin-bottom:0.3rem;}
+.section-desc{color:var(--muted);font-size:0.85rem;max-width:560px;}
+.card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:1.15rem 1.3rem;margin-bottom:0.7rem;}
+.card-title{font-size:0.85rem;font-weight:700;color:var(--gold);margin-bottom:0.45rem;}
+.card p,.card li{font-size:0.84rem;color:var(--text);margin-bottom:0.28rem;}
+.card ul,.card ol{padding-left:1.2rem;}
+.card li{margin-bottom:0.32rem;}
+.grid-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:0.7rem;}
+.grid-3{display:grid;grid-template-columns:repeat(auto-fit,minmax(245px,1fr));gap:0.7rem;}
+.stack-item{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:0.85rem 1.05rem;}
+.stack-label{font-size:0.65rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--muted);margin-bottom:0.18rem;}
+.stack-value{font-size:0.88rem;font-weight:600;color:#fff;}
+.stack-note{font-size:0.72rem;color:var(--muted);margin-top:0.18rem;}
+.pill{display:inline-block;font-size:0.66rem;font-weight:700;letter-spacing:0.06em;padding:0.15rem 0.5rem;border-radius:20px;text-transform:uppercase;}
+.pill-gold{background:rgba(192,144,48,0.18);color:var(--gold);border:1px solid rgba(192,144,48,0.3);}
+.pill-green{background:rgba(39,174,96,0.15);color:var(--green);border:1px solid rgba(39,174,96,0.3);}
+.pill-red{background:rgba(192,57,43,0.15);color:var(--red);border:1px solid rgba(192,57,43,0.3);}
+.pill-orange{background:rgba(230,126,34,0.15);color:var(--orange);border:1px solid rgba(230,126,34,0.3);}
+.pill-blue{background:rgba(41,128,185,0.15);color:var(--blue);border:1px solid rgba(41,128,185,0.3);}
+.pill-purple{background:rgba(142,68,173,0.15);color:var(--purple);border:1px solid rgba(142,68,173,0.3);}
+.page-table{width:100%;border-collapse:collapse;font-size:0.8rem;}
+.page-table th{text-align:left;padding:0.52rem 0.72rem;border-bottom:1px solid var(--border);color:var(--muted);font-size:0.67rem;text-transform:uppercase;letter-spacing:0.08em;background:var(--surface);}
+.page-table td{padding:0.58rem 0.72rem;border-bottom:1px solid rgba(192,144,48,0.08);vertical-align:top;}
+.page-table tr:last-child td{border-bottom:none;}
+.page-table tr:hover td{background:var(--gold-dim);}
+.page-table .url{font-family:monospace;font-size:0.75rem;color:var(--gold-light);}
+.page-table .file{font-family:monospace;font-size:0.72rem;color:var(--muted);}
+.table-wrap{background:var(--card);border:1px solid var(--border);border-radius:8px;overflow:hidden;overflow-x:auto;}
+.score-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(125px,1fr));gap:0.52rem;margin-bottom:1.4rem;}
+.score-cell{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:0.85rem;text-align:center;}
+.score-num{font-size:1.85rem;font-weight:900;line-height:1;margin-bottom:0.18rem;}
+.score-label{font-size:0.64rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);}
+.score-green{color:var(--green);}
+.score-gold{color:var(--gold);}
+.score-red{color:var(--red);}
+.score-blue{color:var(--blue);}
+.idea-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1.25rem;position:relative;overflow:hidden;}
+.idea-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;}
+.idea-1::before{background:var(--gold);}
+.idea-2::before{background:var(--blue);}
+.idea-3::before{background:var(--green);}
+.idea-4::before{background:var(--orange);}
+.idea-5::before{background:var(--purple);}
+.idea-number{font-size:2rem;font-weight:900;opacity:0.07;position:absolute;top:0.5rem;right:1rem;line-height:1;color:#fff;}
+.idea-tag{margin-bottom:0.42rem;}
+.idea-title{font-size:0.96rem;font-weight:700;color:#fff;margin-bottom:0.42rem;}
+.idea-body{font-size:0.82rem;color:var(--muted);line-height:1.55;margin-bottom:0.65rem;}
+.idea-plan{font-size:0.77rem;color:var(--text);}
+.idea-plan strong{color:var(--gold);}
+.runbook-steps{counter-reset:rb-step;}
+.rb-step{background:var(--card);border:1px solid var(--border);border-left:3px solid rgba(192,144,48,0.3);border-radius:0 8px 8px 0;padding:0.95rem 1.15rem 0.95rem 3.8rem;margin-bottom:0.55rem;position:relative;}
+.rb-step::before{counter-increment:rb-step;content:counter(rb-step);position:absolute;left:0.95rem;top:0.95rem;width:1.75rem;height:1.75rem;background:var(--gold-dim);color:var(--gold);border:1px solid var(--border);border-radius:50%;font-size:0.72rem;font-weight:700;display:grid;place-items:center;}
+.rb-step-title{font-size:0.87rem;font-weight:700;color:#fff;margin-bottom:0.22rem;}
+.rb-step-body{font-size:0.8rem;color:var(--muted);margin-bottom:0.35rem;}
+.rb-verify{font-size:0.76rem;color:var(--text);background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:3px;padding:0.35rem 0.6rem;margin-top:0.3rem;}
+.rb-verify strong{color:var(--gold-light);font-size:0.68rem;text-transform:uppercase;letter-spacing:0.07em;display:block;margin-bottom:0.1rem;}
+.sec-item{background:var(--card);border:1px solid var(--border);border-left:3px solid var(--border);border-radius:0 8px 8px 0;padding:0.9rem 1.15rem;margin-bottom:0.65rem;}
+.sec-item.sev-high{border-left-color:var(--red);}
+.sec-item.sev-med{border-left-color:var(--orange);}
+.sec-item.sev-low{border-left-color:var(--green);}
+.sec-item.sev-info{border-left-color:var(--blue);}
+.sec-header{display:flex;align-items:center;gap:0.52rem;margin-bottom:0.42rem;}
+.sec-title{font-size:0.87rem;font-weight:700;color:#fff;}
+.sec-body{font-size:0.8rem;color:var(--muted);margin-bottom:0.42rem;}
+.sec-fix{font-size:0.77rem;color:var(--text);background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:4px;padding:0.42rem 0.62rem;}
+.sec-fix strong{color:var(--gold-light);display:block;margin-bottom:0.12rem;font-size:0.68rem;text-transform:uppercase;letter-spacing:0.08em;}
+.stage-pending{text-align:center;padding:3rem 1.5rem;color:var(--muted);font-size:0.85rem;border:1px dashed rgba(192,144,48,0.2);border-radius:8px;}
+.stage-pending code{color:var(--gold);}
+.roadmap-item{display:flex;gap:1.05rem;align-items:flex-start;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:0.95rem 1.15rem;margin-bottom:0.52rem;}
+.roadmap-icon{width:1.9rem;height:1.9rem;border-radius:50%;background:var(--gold-dim);color:var(--gold);display:grid;place-items:center;font-size:0.85rem;flex-shrink:0;border:1px solid var(--border);}
+.roadmap-content{flex:1;}
+.roadmap-title{font-size:0.88rem;font-weight:700;color:#fff;margin-bottom:0.13rem;}
+.roadmap-desc{font-size:0.79rem;color:var(--muted);margin-bottom:0.32rem;}
+.roadmap-action{font-size:0.75rem;color:var(--text);}
+.roadmap-action strong{color:var(--gold-light);}
+code{font-family:'Consolas','Monaco',monospace;background:rgba(255,255,255,0.07);padding:0.09rem 0.27rem;border-radius:3px;font-size:0.81em;color:var(--gold-light);}
+footer{border-top:1px solid var(--border);padding:1.2rem;text-align:center;color:var(--muted);font-size:0.72rem;}
+footer span{color:var(--gold);}
+@media(max-width:600px){.nav-links{display:none;}.hero{padding:2rem 1rem 1.5rem;}section{padding:2rem 0;}.lc-label{font-size:0.5rem;}}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <div class="nav-brand">TOURney <span>by Greenskeeper Studios</span></div>
+    <div class="nav-links">
+      <a href="#review">Review</a>
+      <a href="#plan">Plan</a>
+      <a href="#runbook">Runbook</a>
+      <a href="#executing">Executing</a>
+      <a href="#audit">Audit</a>
+      <a href="#concluded">Concluded</a>
+    </div>
+  </div>
+</nav>
+
+<!-- LIFECYCLE-BAR-START -->
+<div class="lifecycle-bar">
+  <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Review</div></div>
+  <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Plan</div></div>
+  <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Runbook</div></div>
+  <div class="lc-stage"><div class="lc-pill"></div><div class="lc-label">Executing</div></div>
+  <div class="lc-stage"><div class="lc-pill"></div><div class="lc-label">Audit</div></div>
+  <div class="lc-stage"><div class="lc-pill"></div><div class="lc-label">Concluded</div></div>
+</div>
+<!-- LIFECYCLE-BAR-END -->
+
+<div class="hero">
+  <div class="hero-eyebrow">UX Polish</div>
+  <h1><span>TOURney</span> — UX Polish Review · May 14, 2026</h1>
+  <p class="hero-sub">Audit of design system consistency, mobile responsiveness, empty/loading/error states, typography, accessibility, and PWA install experience.</p>
+  <div class="hero-meta">
+    <span>📅 May 14, 2026</span>
+    <span>🤖 Claude Sonnet 4.6</span>
+    <span>🏢 Greenskeeper Studios</span>
+    <span>🔒 Internal Only</span>
+  </div>
+</div>
+
+<section id="review">
+<div class="wrapper">
+  <div class="section-header">
+    <div class="section-eyebrow">§ Review</div>
+    <div class="section-title">UX State Audit — May 14, 2026</div>
+    <div class="section-desc">Evidence-cited audit of design system, per-page UX, state coverage, mobile responsiveness, and accessibility. Builds on May 13 sprint (commit 10a676f). All findings cite file:line or commit.</div>
+  </div>
+
+  <div class="score-grid">
+    <div class="score-cell">
+      <div class="score-num score-gold">B+</div>
+      <div class="score-label">UX Grade</div>
+    </div>
+    <div class="score-cell">
+      <div class="score-num score-gold">A−</div>
+      <div class="score-label">Design Consistency</div>
+    </div>
+    <div class="score-cell">
+      <div class="score-num score-gold">70%</div>
+      <div class="score-label">Empty State Coverage</div>
+    </div>
+    <div class="score-cell">
+      <div class="score-num score-gold">B+</div>
+      <div class="score-label">Mobile Score</div>
+    </div>
+    <div class="score-cell">
+      <div class="score-num score-gold">B</div>
+      <div class="score-label">A11y Score</div>
+    </div>
+    <div class="score-cell">
+      <div class="score-num score-gold">B+</div>
+      <div class="score-label">Loading States</div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:1.2rem;">
+    <div class="card-title">All-Axis Platform Grades (context)</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:0.5rem;margin-top:0.5rem;">
+      <div style="display:flex;justify-content:space-between;align-items:center;background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:0.5rem 0.75rem;"><span style="font-size:0.78rem;color:var(--muted);">Architecture</span><span style="font-weight:700;color:var(--green);font-size:0.9rem;">A</span></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:0.5rem 0.75rem;"><span style="font-size:0.78rem;color:var(--muted);">Feature Depth</span><span style="font-weight:700;color:var(--gold);font-size:0.9rem;">B+</span></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;background:rgba(192,144,48,0.05);border:1px solid var(--gold);border-radius:6px;padding:0.5rem 0.75rem;"><span style="font-size:0.78rem;color:var(--gold);">UX Polish ★</span><span style="font-weight:700;color:var(--gold);font-size:0.9rem;">B+</span></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:0.5rem 0.75rem;"><span style="font-size:0.78rem;color:var(--muted);">Security</span><span style="font-weight:700;color:var(--gold);font-size:0.9rem;">B+</span></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:0.5rem 0.75rem;"><span style="font-size:0.78rem;color:var(--muted);">Business</span><span style="font-weight:700;color:var(--gold);font-size:0.9rem;">B+</span></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:0.5rem 0.75rem;"><span style="font-size:0.78rem;color:var(--muted);">Deployment</span><span style="font-weight:700;color:var(--gold);font-size:0.9rem;">B+</span></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:0.5rem 0.75rem;"><span style="font-size:0.78rem;color:var(--muted);">Performance</span><span style="font-weight:700;color:var(--gold);font-size:0.9rem;">B+</span></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:0.5rem 0.75rem;"><span style="font-size:0.78rem;color:var(--muted);">Data Model</span><span style="font-weight:700;color:var(--gold);font-size:0.9rem;">B+</span></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Design System</div>
+    <p><strong style="color:#fff;">Tokens:</strong> :root{} block defined per page — 11 tokens (--ink, --gold, --gold-l, --gold-p, --cream, --red, --green, --border, --bg, --card, --muted). Consistent across 25+ pages. Minor drift: nav link colors use raw <code>rgba(240,230,204,0.6)</code> instead of --cream, and <code>admin.html</code> .status-open uses <code>#2a7a20</code> not --green token.</p>
+    <p style="margin-top:0.5rem;"><strong style="color:#fff;">Typography:</strong> 4-font system — Playfair Display (headings/display), Barlow Condensed (nav/buttons/uppercase labels), Barlow (body/UI copy), DM Mono (eyebrows/badges/monospace). Role mapping consistent across all pages. Google Fonts imported per-page via single link tag.</p>
+    <p style="margin-top:0.5rem;"><strong style="color:#fff;">Buttons:</strong> Two naming conventions coexist — <code>btn-primary</code> (admin.html, full-width) and <code>btn-gold</code> (marketing.html, inline). Same visual output, different class names. Low risk today, drift risk as pages multiply.</p>
+    <p style="margin-top:0.5rem;"><strong style="color:#fff;">Motion:</strong> fadeUp stagger animations on home.html hero (0.25s–0.78s delays). <code>prefers-reduced-motion</code> guard present (10a676f). Skeleton shimmer on scoreboard + home (10a676f). Button transitions at 0.2s.</p>
+  </div>
+
+  <div style="margin-top:0.8rem;">
+    <div class="sec-item sev-med">
+      <div class="sec-header"><span class="pill pill-orange">MEDIUM</span><span class="sec-title">home.html ~line 429 — heroLogoImg alt="" (empty)</span></div>
+      <div class="sec-body">The hero logo <code>&lt;img id="heroLogoImg"&gt;</code> has an empty alt attribute. Screen readers announce "image" with no description. WCAG 1.1.1 Level A failure. tourney-init.js injects the src but does not set alt dynamically, leaving the empty fallback.</div>
+      <div class="sec-fix"><strong>Fix</strong>Set fallback on element: <code>alt="Tournament logo"</code>. In tourney-init.js where heroLogoImg.src is assigned, also set <code>heroLogoImg.alt = (tournament.name || 'Tournament') + ' logo'</code>.</div>
+    </div>
+
+    <div class="sec-item sev-med">
+      <div class="sec-header"><span class="pill pill-orange">MEDIUM</span><span class="sec-title">login.html — doLogin() has no submit spinner</span></div>
+      <div class="sec-body">The sign-in button provides no feedback during Supabase auth. On 3G or slow connections a 1–3 second wait shows zero UI state change — button appears broken. The <code>async function doLogin()</code> awaits but never updates button state on entry.</div>
+      <div class="sec-fix"><strong>Fix</strong>On function entry: <code>btn.disabled = true; btn.textContent = 'Signing in…'</code>. On error: restore to enabled + original label. On success: leave disabled (redirect unmounts page).</div>
+    </div>
+
+    <div class="sec-item sev-med">
+      <div class="sec-header"><span class="pill pill-orange">MEDIUM</span><span class="sec-title">scorecard.html — No loading skeleton on hole grid fetch</span></div>
+      <div class="sec-body">scorecard.html is the primary player-facing page on tournament day. During Supabase data fetch the hole grid container is blank — no skeleton, no spinner. Players see an empty scoring grid with no feedback for 1–2 seconds. Deferred as P3 in the May 13 sprint.</div>
+      <div class="sec-fix"><strong>Fix</strong>Copy .skeleton-row + @keyframes shimmer from scoreboard.html (10a676f). Add 18 skeleton rows to the hole grid container. Swap with real rows on data resolve.</div>
+    </div>
+
+    <div class="sec-item sev-low">
+      <div class="sec-header"><span class="pill pill-green">LOW</span><span class="sec-title">home.html — Zero-player pre-registration empty state missing</span></div>
+      <div class="sec-body">When a new tournament has 0 registered players, the players/roster section renders nothing — no message, no guidance. The first player to visit sees a blank section with no CTA.</div>
+      <div class="sec-fix"><strong>Fix</strong>In the players section JS: if <code>players.length === 0</code>, inject an .empty-state card: "Registration is open — be the first to join!" with a link to the RSVP form.</div>
+    </div>
+
+    <div class="sec-item sev-low">
+      <div class="sec-header"><span class="pill pill-green">LOW</span><span class="sec-title">manifest.json — Missing apple-touch-icon 180×180</span></div>
+      <div class="sec-body">manifest.json declares icon-192.png (any) and icon-512.png (maskable). No 180×180 icon for iOS home screen. Safari crops icon-192.png to 180×180 as fallback — may clip logos with important edge content. Blocked on Rob providing the asset.</div>
+      <div class="sec-fix"><strong>Fix (Rob to provide asset first)</strong>Add icon-180.png to repo root. Append to manifest.json icons: <code>&#123;"src":"/icon-180.png","sizes":"180x180","type":"image/png","purpose":"any"&#125;</code>. Add <code>&lt;link rel="apple-touch-icon" href="/icon-180.png"&gt;</code> to all HTML &lt;head&gt; blocks.</div>
+    </div>
+
+    <div class="sec-item sev-low">
+      <div class="sec-header"><span class="pill pill-green">LOW</span><span class="sec-title">admin.html — .status-open uses hardcoded #2a7a20, not --green token</span></div>
+      <div class="sec-body"><code>.status-open { color:#2a7a20; border-color:#2a7a20; background:rgba(42,122,32,0.08); }</code> — hardcoded hex bypasses the design token. If --green changes this badge stays stale.</div>
+      <div class="sec-fix"><strong>Fix</strong>Replace <code>#2a7a20</code> (×2) and <code>rgba(42,122,32,0.08)</code> with <code>var(--green)</code> and <code>rgba(39,174,96,0.08)</code>.</div>
+    </div>
+
+    <div class="sec-item sev-info">
+      <div class="sec-header"><span class="pill pill-blue">FEATURE</span><span class="sec-title">Platform Hub — Axis scorecard not driven by grades.json (Rob request)</span></div>
+      <div class="sec-body">The platform hub displays axis grades but they are hardcoded HTML. Every review skill already updates grades.json and pushes. The display just needs to read from it dynamically. Rob explicitly requested this: "should be part of the site's code and be automatic."</div>
+      <div class="sec-fix"><strong>Fix (P1 — runbook step 1)</strong>Add <code>fetchAndRenderGrades()</code> to platform.html. Fetches <code>/grades.json</code> on load, reads <code>axes[key].scores[0].score</code> for each axis, updates DOM cells by data-axis attribute. Zero manual HTML edits needed after future reviews.</div>
+    </div>
+  </div>
+
+  <div style="margin-top:1.2rem;">
+    <p style="font-size:0.67rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--gold);margin-bottom:0.7rem;">State Coverage Matrix</p>
+    <div class="table-wrap">
+      <table class="page-table">
+        <thead>
+          <tr><th>Page</th><th>Empty State</th><th>Loading State</th><th>Error State</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code>home.html</code></td><td>⚠️ zero-player case missing</td><td>✅ skeleton shimmer (10a676f)</td><td>✅ errors sanitized</td></tr>
+          <tr><td><code>scorecard.html</code></td><td>✅ no-round state handled</td><td>❌ no skeleton on data fetch</td><td>⚠️ generic fallback only</td></tr>
+          <tr><td><code>scoreboard.html</code></td><td>✅ .empty-state styled</td><td>✅ skeleton shimmer (10a676f)</td><td>⚠️ generic fallback</td></tr>
+          <tr><td><code>login.html</code></td><td>—</td><td>⚠️ no submit spinner</td><td>✅ 3 paths sanitized (10a676f)</td></tr>
+          <tr><td><code>player.html</code></td><td>✅ handled</td><td>✅ handled</td><td>✅ handled</td></tr>
+          <tr><td><code>directory.html</code></td><td>✅ .empty-state (grid-column:1/-1)</td><td>⚠️ no skeleton</td><td>⚠️ unclear fallback</td></tr>
+          <tr><td><code>feed.html</code></td><td>⚠️ unclear</td><td>⚠️ no skeleton</td><td>⚠️ unclear fallback</td></tr>
+          <tr><td><code>install.html</code></td><td>—</td><td>—</td><td>—</td></tr>
+          <tr><td><code>admin.html</code></td><td>✅ per-section handled</td><td>✅ section-level</td><td>✅ onerror on logo img</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:0.7rem;">
+    <div class="card-title">Mobile / Responsive</div>
+    <ul>
+      <li>@media(max-width:600px) breakpoints on admin.html — round-grid, team-assign-grid, format-row all stack to 1 col ✅</li>
+      <li>scoreboard.html main table in overflow-x container (10a676f) — wide leaderboards scroll on mobile ✅</li>
+      <li>home.html hero: clamp(3.8rem,9vw,8rem) font sizing — fluid responsive scale ✅</li>
+      <li>scorecard.html hole grid: overflow-x coverage at 320px not confirmed — may clip on smallest phones ⚠️</li>
+      <li>Touch targets: assessed adequate in May 13 sprint ✅</li>
+      <li>manifest.json orientation="any" — supports portrait + landscape ✅</li>
+    </ul>
+  </div>
+
+  <div class="card" style="margin-top:0.7rem;">
+    <div class="card-title">Accessibility</div>
+    <ul>
+      <li><strong style="color:var(--orange);">WCAG 1.1.1 fail:</strong> home.html ~line 429 heroLogoImg alt="" — screen reader announces raw "image"</li>
+      <li><strong style="color:var(--green);">aria-live="polite"</strong> on toast notifications + leaderboard update region (10a676f) ✅</li>
+      <li><strong style="color:var(--green);">player.html ARIA:</strong> role + aria-label used throughout — exemplary ✅</li>
+      <li><strong style="color:var(--green);">prefers-reduced-motion:</strong> guard on home.html hero animations ✅</li>
+      <li>No <code>prefers-color-scheme</code> support — app always renders cream/light theme (informational, not a WCAG failure)</li>
+      <li>No Lighthouse a11y CI gate — accessibility regressions can ship silently</li>
+    </ul>
+  </div>
+
+  <div class="grid-2" style="margin-top:1.2rem;">
+    <div class="card">
+      <div class="card-title">Strengths</div>
+      <ul>
+        <li>CSS token system consistent across 25+ pages — 11 tokens, zero one-offs in main flows</li>
+        <li>4-font design system with clear role mapping (display / nav / body / mono)</li>
+        <li>Skeleton shimmer live on scoreboard + home (10a676f)</li>
+        <li>aria-live on toast + leaderboard update regions</li>
+        <li>prefers-reduced-motion guard on hero animations</li>
+        <li>Login error messages sanitized — no raw Supabase text exposed</li>
+        <li>player.html ARIA exemplary — role, aria-label throughout</li>
+        <li>PWA install surface promoted on player.html</li>
+        <li>overflow-x on all main data tables — wide tables scroll cleanly on mobile</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-title">Open Gaps</div>
+      <ul>
+        <li><span class="pill pill-blue" style="font-size:0.6rem;">FEATURE</span> Platform hub axis scorecard hardcoded — not reading grades.json dynamically (Rob P1)</li>
+        <li><span class="pill pill-orange" style="font-size:0.6rem;">MEDIUM</span> home.html:~429 — heroLogoImg alt="" (WCAG 1.1.1)</li>
+        <li><span class="pill pill-orange" style="font-size:0.6rem;">MEDIUM</span> login.html — submit button no loading spinner</li>
+        <li><span class="pill pill-orange" style="font-size:0.6rem;">MEDIUM</span> scorecard.html — no skeleton on hole grid fetch</li>
+        <li><span class="pill pill-green" style="font-size:0.6rem;">LOW</span> home.html — zero-player empty state missing</li>
+        <li><span class="pill pill-green" style="font-size:0.6rem;">LOW</span> manifest.json — no apple-touch-icon 180px (needs PNG from Rob)</li>
+        <li><span class="pill pill-green" style="font-size:0.6rem;">LOW</span> admin.html — .status-open #2a7a20 not --green token</li>
+      </ul>
+    </div>
+  </div>
+</div>
+</section>
+
+<section id="plan">
+<div class="wrapper">
+  <div class="section-header">
+    <div class="section-eyebrow">§ Plan</div>
+    <div class="section-title">UX Improvement Priorities</div>
+    <div class="section-desc">Ordered by impact × effort. P1 is new (Rob request). P2–P4 carry forward from May 13 sprint.</div>
+  </div>
+
+  <div class="card" style="margin-bottom:1.2rem;">
+    <div class="card-title">Strategic Priorities</div>
+    <ul>
+      <li><strong style="color:#fff;">P1 — Axis Scorecard Auto-Update:</strong> Platform hub should fetch grades.json on load and render axis grades dynamically. Review skills already update grades.json and push — display side just needs to read it. One-time implementation, permanently self-maintaining.</li>
+      <li><strong style="color:#fff;">P2 — Scorecard Loading Skeleton:</strong> scorecard.html is the primary player-facing page on tournament day. Blank flash before hole grid renders is the most visible UX gap in live play. Same shimmer pattern as scoreboard.html (10a676f).</li>
+      <li><strong style="color:#fff;">P3 — Login Submit Spinner:</strong> Players hit Sign In on tournament day and see nothing for 2 seconds. High perception impact, trivial implementation — disable button, show "Signing in…", restore on error.</li>
+      <li><strong style="color:#fff;">P4 — Quick Wins (batch):</strong> heroLogoImg alt + zero-player empty state + admin.html token fix. Estimated 15 minutes total, single commit.</li>
+      <li><strong style="color:#fff;">P5 — manifest.json 180px icon:</strong> Blocked on Rob providing icon-180.png asset. Two-line manifest update + head link once asset available.</li>
+      <li><strong style="color:#fff;">P6 — Lighthouse CI:</strong> No automated a11y gate. GitHub Actions + Lighthouse CI, gate on A11y ≥ 90, Performance ≥ 90, PWA ≥ 100.</li>
+    </ul>
+  </div>
+
+  <div class="grid-2" style="margin-bottom:1.2rem;">
+    <div class="idea-card idea-1">
+      <div class="idea-number">1</div>
+      <div class="idea-tag"><span class="pill pill-gold">Feature · P1</span></div>
+      <div class="idea-title">Live Axis Scorecard (Rob Request)</div>
+      <div class="idea-body">Platform hub grades panel fetches /grades.json on load and renders axis scores dynamically. Skills already update grades.json and push — the display just needs to consume it. Publish a review → push → grades update with zero manual HTML edits. Self-maintaining forever.</div>
+      <div class="idea-plan"><strong>Build:</strong> In platform.html add <code>fetchAndRenderGrades()</code>. Fetch <code>/grades.json</code>, iterate axes, update cells by <code>data-axis</code> attribute. ~40 lines JS.</div>
+    </div>
+    <div class="idea-card idea-2">
+      <div class="idea-number">2</div>
+      <div class="idea-tag"><span class="pill pill-blue">UX · P2</span></div>
+      <div class="idea-title">Scorecard Loading Skeleton</div>
+      <div class="idea-body">Tournament day: every player opens scorecard.html — the most-used page in the app. The blank-before-data flash undermines confidence in the product. Shimmer skeleton rows (same as scoreboard.html, 10a676f) make the wait invisible and the app feel fast even on 3G.</div>
+      <div class="idea-plan"><strong>Build:</strong> Copy .skeleton-row + @keyframes shimmer from scoreboard.html. Add 18 rows to hole grid container. Swap on data resolve.</div>
+    </div>
+    <div class="idea-card idea-3">
+      <div class="idea-number">3</div>
+      <div class="idea-tag"><span class="pill pill-green">A11y · Future</span></div>
+      <div class="idea-title">Lighthouse CI Gate</div>
+      <div class="idea-body">No CI coverage for accessibility regressions means they can ship silently. GitHub Actions + Lighthouse CI on every push to main, gated on Accessibility ≥ 90. Catches WCAG regressions before they reach production.</div>
+      <div class="idea-plan"><strong>Build:</strong> .github/workflows/lighthouse.yml using treosh/lighthouse-ci-action. Test URL: bova-invitational.greenskeeper.studio.</div>
+    </div>
+    <div class="idea-card idea-4">
+      <div class="idea-number">4</div>
+      <div class="idea-tag"><span class="pill pill-orange">Design · Future</span></div>
+      <div class="idea-title">CSS Token Centralization</div>
+      <div class="idea-body">25+ pages each redeclare the full :root{} token block. If --gold changes, every file needs a manual update. A shared tokens.css injected by tourney-init.js makes the design system a single source of truth and enables per-tournament theme overrides from the admin Design tab.</div>
+      <div class="idea-plan"><strong>Build:</strong> Create tokens.css. tourney-init.js injects it first. Pages drop their :root{} block. Admin Design tab writes overrides to &lt;style id="theme-overrides"&gt;.</div>
+    </div>
+    <div class="idea-card idea-5">
+      <div class="idea-number">5</div>
+      <div class="idea-tag"><span class="pill pill-purple">UX · Next Sprint</span></div>
+      <div class="idea-title">Feed + Directory Skeletons</div>
+      <div class="idea-body">feed.html and directory.html both have unconfirmed loading states — they likely flash blank content on data fetch. After scorecard.html is addressed, apply the same skeleton pattern to feed and directory for a fully consistent loading experience across the app.</div>
+      <div class="idea-plan"><strong>Build:</strong> Audit feed.html + directory.html fetch flows. Add shimmer skeleton rows. ~30 min total.</div>
+    </div>
+  </div>
+
+  <div class="roadmap-item">
+    <div class="roadmap-icon">🏆</div>
+    <div class="roadmap-content">
+      <div class="roadmap-title">Sprint: Axis Auto-Scorecard + Remaining UX Gaps</div>
+      <div class="roadmap-desc">P1–P4. Axis scorecard grades.json → platform hub (dynamic), scorecard skeleton, login spinner, heroLogoImg alt + zero-player empty state + admin.html token fix (batch). Estimated 2–3 hours total.</div>
+      <div class="roadmap-action"><strong>Target:</strong> UX grade A- once scorecard skeleton + axis auto-update ship.</div>
+    </div>
+  </div>
+  <div class="roadmap-item">
+    <div class="roadmap-icon">🔬</div>
+    <div class="roadmap-content">
+      <div class="roadmap-title">Next Sprint: Lighthouse CI + Feed/Directory Skeletons</div>
+      <div class="roadmap-desc">Add GitHub Actions Lighthouse gate. Apply skeleton pattern to feed.html + directory.html. Manifest icon-180 once Rob provides PNG asset.</div>
+      <div class="roadmap-action"><strong>Target:</strong> Lighthouse A11y ≥ 90 before UX reaches A.</div>
+    </div>
+  </div>
+  <div class="roadmap-item">
+    <div class="roadmap-icon">🎨</div>
+    <div class="roadmap-content">
+      <div class="roadmap-title">Future: CSS Token Centralization</div>
+      <div class="roadmap-desc">Shared tokens.css injected by tourney-init.js. Enables per-tournament white-label theming from admin Design tab without touching HTML files.</div>
+      <div class="roadmap-action"><strong>Gate:</strong> Implement when white-label multi-tenant theming reaches the sprint.</div>
+    </div>
+  </div>
+</div>
+</section>
+
+<section id="runbook">
+<div class="wrapper">
+  <div class="section-header">
+    <div class="section-eyebrow">§ Runbook</div>
+    <div class="section-title">Execution Steps</div>
+    <div class="section-desc">Ordered steps for tourney-execute. Each is self-contained with exact file targets and verification. Run in sequence.</div>
+  </div>
+
+  <div class="runbook-steps">
+
+    <div class="rb-step">
+      <div class="rb-step-title">Implement axis scorecard auto-update in platform.html</div>
+      <div class="rb-step-body">
+        In <code>platform.html</code>: find the axis grade display section (grid of axis score cells showing A/B+/etc.). Add <code>data-axis="architecture"</code> (and matching keys for each axis) attributes to each grade cell if not already present.<br><br>
+        Add function before closing &lt;/script&gt;:<br>
+        <code>async function fetchAndRenderGrades() {</code><br>
+        <code>&nbsp;&nbsp;try {</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;const r = await fetch('/grades.json'); const d = await r.json();</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;for (const [key, axis] of Object.entries(d.axes)) {</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;const el = document.querySelector('[data-axis="' + key + '"]');</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (el &amp;&amp; axis.scores &amp;&amp; axis.scores[0]) el.textContent = axis.scores[0].score;</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;}</code><br>
+        <code>&nbsp;&nbsp;} catch(e) {}</code><br>
+        <code>}</code><br>
+        <code>document.addEventListener('DOMContentLoaded', fetchAndRenderGrades);</code>
+      </div>
+      <div class="rb-verify"><strong>Verify</strong>Push a test grade change to grades.json. Load /platform. Axis score cell updates without touching platform.html HTML. Zero manual edits required after future reviews.</div>
+    </div>
+
+    <div class="rb-step">
+      <div class="rb-step-title">Add scorecard.html loading skeleton on hole grid</div>
+      <div class="rb-step-body">
+        In <code>scorecard.html</code>: find the hole grid container (the element populated with per-hole rows on load). Before the data fetch, inject skeleton rows using the same shimmer pattern as scoreboard.html (10a676f).<br><br>
+        Copy <code>.skeleton-row</code>, <code>.skeleton-cell</code>, and <code>@keyframes shimmer</code> CSS from scoreboard.html into scorecard.html's &lt;style&gt; block.<br><br>
+        On page init: populate the hole grid container with 18 <code>&lt;div class="skeleton-row"&gt;&lt;div class="skeleton-cell"&gt;&lt;/div&gt;&lt;/div&gt;</code> elements.<br><br>
+        On data fetch success: clear container, render real hole rows as before.
+      </div>
+      <div class="rb-verify"><strong>Verify</strong>Chrome DevTools → Network → throttle to Slow 3G. Load /scorecard. Shimmer skeleton visible during fetch. Replaced by real data on resolve. No blank flash.</div>
+    </div>
+
+    <div class="rb-step">
+      <div class="rb-step-title">Add submit spinner to login.html doLogin()</div>
+      <div class="rb-step-body">
+        In <code>login.html</code>: find <code>async function doLogin()</code>. Identify the submit button element (query by id or class — check the button that calls doLogin).<br><br>
+        At function entry add: <code>const btn = document.getElementById('loginBtn'); btn.disabled = true; btn.textContent = 'Signing in…';</code><br><br>
+        In every catch/error branch add: <code>btn.disabled = false; btn.textContent = 'Sign In';</code><br><br>
+        On success path: leave disabled — redirect unmounts the page.
+      </div>
+      <div class="rb-verify"><strong>Verify</strong>Enter valid credentials → click Sign In → button shows "Signing in…" disabled during auth → redirect fires. Enter invalid credentials → button re-enables → error message shows.</div>
+    </div>
+
+    <div class="rb-step">
+      <div class="rb-step-title">Fix home.html heroLogoImg empty alt + tourney-init.js</div>
+      <div class="rb-step-body">
+        In <code>home.html</code> ~line 429: find <code>&lt;img id="heroLogoImg"</code>. Ensure attribute reads <code>alt="Tournament logo"</code>.<br><br>
+        In <code>tourney-init.js</code>: find the line that sets <code>heroLogoImg.src = ...</code> (logo URL from settings). Immediately after, add: <code>heroLogoImg.alt = (tournament.name || 'Tournament') + ' logo';</code>
+      </div>
+      <div class="rb-verify"><strong>Verify</strong>Chrome DevTools → Elements → inspect heroLogoImg. alt attribute should be non-empty. Run axe DevTools or Lighthouse a11y audit — no "Image elements do not have [alt] attributes" violation.</div>
+    </div>
+
+    <div class="rb-step">
+      <div class="rb-step-title">Add zero-player empty state to home.html players section</div>
+      <div class="rb-step-body">
+        In <code>home.html</code>: find the JS block that fetches and renders the player roster / RSVP list. After the fetch resolves, add a conditional before rendering:<br><br>
+        <code>if (!players || players.length === 0) {</code><br>
+        <code>&nbsp;&nbsp;container.innerHTML = '&lt;div class="empty-state"&gt;&lt;strong&gt;Registration is open&lt;/strong&gt;Be the first to join!&lt;/div&gt;';</code><br>
+        <code>&nbsp;&nbsp;return;</code><br>
+        <code>}</code><br><br>
+        Ensure the .empty-state CSS class is already defined in home.html (it is used on other pages — add the definition if absent).
+      </div>
+      <div class="rb-verify"><strong>Verify</strong>Load home.html for a tournament with 0 registered players. Empty state card visible in players section with "Registration is open" message.</div>
+    </div>
+
+    <div class="rb-step">
+      <div class="rb-step-title">Fix admin.html .status-open token drift</div>
+      <div class="rb-step-body">
+        In <code>admin.html</code>: find the CSS definition for <code>.status-open</code>. Replace hardcoded values:<br><br>
+        <code>color:#2a7a20</code> → <code>color:var(--green)</code><br>
+        <code>border-color:#2a7a20</code> → <code>border-color:var(--green)</code><br>
+        <code>background:rgba(42,122,32,0.08)</code> → <code>background:rgba(39,174,96,0.08)</code>
+      </div>
+      <div class="rb-verify"><strong>Verify</strong>admin.html → Rounds section → open round status badge renders correct green, visually matching other green elements using --green token.</div>
+    </div>
+
+  </div>
+</div>
+</section>
+
+<section id="executing">
+<div class="wrapper">
+<!-- EXECUTING-CONTENT-START -->
+<div class="stage-pending">
+  <p>Awaiting execution. Run <code>/tourney-execute 5-14-26-ux-review.html</code> to proceed.</p>
+</div>
+<!-- EXECUTING-CONTENT-END -->
+</div>
+</section>
+
+<section id="audit">
+<div class="wrapper">
+<!-- AUDIT-CONTENT-START -->
+<div class="stage-pending">
+  <p>Awaiting execution. Run <code>/tourney-execute 5-14-26-ux-review.html</code> to proceed.</p>
+</div>
+<!-- AUDIT-CONTENT-END -->
+</div>
+</section>
+
+<section id="concluded">
+<div class="wrapper">
+<!-- CONCLUDED-CONTENT-START -->
+<div class="stage-pending">
+  <p>Awaiting execution. Run <code>/tourney-execute 5-14-26-ux-review.html</code> to proceed.</p>
+</div>
+<!-- CONCLUDED-CONTENT-END -->
+</div>
+</section>
+
+<footer>
+  Generated by <span>Claude Sonnet 4.6</span> · Greenskeeper Studios Internal · May 14, 2026
+  <br style="margin-top:0.3rem">
+  <a href="/platform" style="color:var(--muted);font-size:0.7rem;text-decoration:none">← Back to Platform Hub</a>
+</footer>
+
+</body>
+</html>

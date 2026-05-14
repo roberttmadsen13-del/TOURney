@@ -1,9 +1,22 @@
 {
   "$schema": "https://tourney.greenskeeper.studio/qa-index-schema.json",
   "version": 1,
-  "updated_at": "2026-05-14T12:00:00Z",
+  "updated_at": "2026-05-14T20:00:00Z",
   "description": "Canonical registry of all TOURney plans, reviews, audits, and QA artifacts. The /platform Artifacts tab renders from this file. Skills (e.g. tourney-review) append new entries when they generate output.",
   "entries": [
+    {
+      "id": "review-ux-2026-05-14",
+      "category": "review",
+      "stage": "executing",
+      "title": "UX Polish Review · May 14, 2026",
+      "summary": "Grade B+. 4 carry-forward gaps from May 13 sprint: heroLogoImg alt empty (MEDIUM), login no spinner (MEDIUM), scorecard skeleton deferred (MEDIUM), manifest 180px absent (LOW). New P1: axis scorecard auto-update (Rob request). Design tokens consistent, skeletons live, aria-live correct.",
+      "date": "2026-05-14",
+      "author": "claude-sonnet-4-6",
+      "url": "/platform/5-14-26-ux-review",
+      "file": "5-14-26-ux-review.html",
+      "tags": ["review", "ux", "accessibility", "mobile"],
+      "status": "open"
+    },
     {
       "id": "review-2026-05-14",
       "category": "review",
