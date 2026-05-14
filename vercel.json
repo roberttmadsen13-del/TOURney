@@ -91,7 +91,9 @@
     { "source": "/platform/5-12-26-claude-review-ux", "destination": "/5-12-26-claude-review-ux.html" },
     { "source": "/platform/ux", "destination": "/ux.html" },
     { "source": "/5-12-26-plan-ux", "destination": "/5-12-26-plan-ux.html" },
-    { "source": "/platform/5-12-26-plan-ux", "destination": "/5-12-26-plan-ux.html" }
+    { "source": "/platform/5-12-26-plan-ux", "destination": "/5-12-26-plan-ux.html" },
+    { "source": "/tos",     "destination": "/tos.html" },
+    { "source": "/privacy", "destination": "/privacy.html" }
 
   ]
 }
