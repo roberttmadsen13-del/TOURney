@@ -1,7 +1,9 @@
-const CACHE = 'tourney-v35';
+const CACHE = 'tourney-v36';
 const PRECACHE = [
   '/',
   '/tokens.css',
+  '/logo-nav.svg',
+  '/logo-hero.svg',
   '/celebrate.js',
   '/home.html',
   '/admin.html',

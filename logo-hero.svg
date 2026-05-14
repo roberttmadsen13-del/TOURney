@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 120" role="img" aria-label="TOURney">
+  <g transform="translate(100,22)">
+    <line x1="0" y1="0" x2="0" y2="34" stroke="#f0e6cc" stroke-width="1.4"/>
+    <polygon points="0,0 12,3.8 0,7.6" fill="#c09030"/>
+    <circle cx="0" cy="34" r="1.6" fill="#f0e6cc"/>
+  </g>
+  <line x1="60" y1="72" x2="140" y2="72" stroke="#c09030" stroke-width="0.6"/>
+  <text x="100" y="100" text-anchor="middle" font-family="'Barlow Condensed','Oswald','Arial Narrow',sans-serif" font-weight="700" font-size="26" letter-spacing="6" fill="#f0e6cc">TOUR<tspan fill="#c09030" font-weight="400">NEY</tspan></text>
+</svg>
