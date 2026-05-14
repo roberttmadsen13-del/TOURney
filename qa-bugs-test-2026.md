@@ -1,4 +1,10 @@
-# QA Bug Log — TOURney Platform (updated: 2026-05-12)
+# QA Bug Log — TOURney Platform (updated: 2026-05-14)
+
+### 2026-05-14 — 5-14-26-claude-review execute audit
+- [HIGH] XSS — feed.html buildPostMessage DOM escape pattern (feed.html:375) — replace with explicit `& < > "` escaping chain. Status: fixed (commit a562e7d)
+- [HIGH] XSS — admin.html url innerHTML image previews (admin.html:2187, 2342) — use DOM methods, assign url to img.src property. Status: fixed (commit a562e7d)
+
+---
 
 Last QA pass: security hardening + live QA both sites clean (2026-05-07)
 Last commits: 997b043 (sec: send-install-email webhook secret gate)

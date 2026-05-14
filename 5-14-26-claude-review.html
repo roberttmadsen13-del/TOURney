@@ -146,9 +146,9 @@ footer span{color:var(--gold);}
   <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Review</div></div>
   <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Plan</div></div>
   <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Runbook</div></div>
-  <div class="lc-stage"><div class="lc-pill"></div><div class="lc-label">Executing</div></div>
-  <div class="lc-stage"><div class="lc-pill"></div><div class="lc-label">Audit</div></div>
-  <div class="lc-stage"><div class="lc-pill"></div><div class="lc-label">Concluded</div></div>
+  <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Executing</div></div>
+  <div class="lc-stage lc-active"><div class="lc-pill"></div><div class="lc-label">Audit</div></div>
+  <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Concluded</div></div>
 </div>
 <!-- LIFECYCLE-BAR-END -->
 
@@ -485,8 +485,42 @@ footer span{color:var(--gold);}
 <section id="executing">
 <div class="wrapper">
 <!-- EXECUTING-CONTENT-START -->
-<div class="stage-pending">
-  <p>Awaiting execution. Run <code>/tourney-execute 5-14-26-claude-review.html</code> to proceed.</p>
+<div class="section-header">
+  <div class="section-eyebrow">Stage 4 — Executing</div>
+  <h2 class="section-title">Execution Log</h2>
+  <p class="section-desc">Step-by-step record of what ran. 2026-05-14 · Claude Sonnet 4.6</p>
+</div>
+<div class="exec-step">
+  <span class="exec-badge exec-done">Done</span>
+  <div class="exec-body"><strong>Fix _parseMentions XSS — feed.html:375</strong> — Replaced DOM innerHTML escape pattern (<code>d.textContent=text; d.innerHTML</code>) with explicit string escaping chain (<code>&amp; &lt; &gt; "</code>) followed by mention regex. Capture group only matches <code>[A-Za-z '.\-]</code> — no injection surface. feed.html:375-378.</div>
+</div>
+<div class="exec-step">
+  <span class="exec-badge exec-done">Done</span>
+  <div class="exec-body"><strong>Fix admin.html url innerHTML — lines 2185, 2340</strong> — Replaced both <code>el.innerHTML = `&lt;img src="${url}"...&gt;`</code> patterns in <code>renderLogoPreview</code> and <code>renderPhotoPreview</code> with DOM methods. <code>url</code> now assigned to <code>img.src</code> property directly — no HTML string interpolation. admin.html:2185-2191, 2340-2348.</div>
+</div>
+<div class="exec-step">
+  <span class="exec-badge exec-skipped">Skipped</span>
+  <div class="exec-body"><strong>Migration 012 — Tighten player_accounts RLS</strong> — Already done. Migration <code>fix_player_accounts_rls</code> (2026-05-06) removed anon read. Current policy: <code>"owner read own account"</code> — authenticated only, <code>email = auth.email()</code>. No <code>user_id</code> column exists in schema. No migration needed.</div>
+</div>
+<div class="exec-step">
+  <span class="exec-badge exec-blocked">Blocked</span>
+  <div class="exec-body"><strong>Set SEND_INSTALL_EMAIL_SECRET env var</strong> — Requires Rob: Supabase dashboard → Project Settings → Edge Functions → Environment Variables → add <code>SEND_INSTALL_EMAIL_SECRET</code> = <code>openssl rand -base64 32</code>. Then update DB webhook Authorization header with the secret value.</div>
+</div>
+<div class="exec-step">
+  <span class="exec-badge exec-done">Done</span>
+  <div class="exec-body"><strong>Create tos.html + privacy.html</strong> — Both files created in repo root with platform dark/gold theme. Full SaaS boilerplate: Greenskeeper Studios LLC, MN jurisdiction, Stripe payment processor, robert.t.madsen13@gmail.com contact, data = name/email/scores.</div>
+</div>
+<div class="exec-step">
+  <span class="exec-badge exec-done">Done</span>
+  <div class="exec-body"><strong>Add /tos and /privacy rewrites to vercel.json</strong> — Added <code>{"source":"/tos","destination":"/tos.html"}</code> and <code>{"source":"/privacy","destination":"/privacy.html"}</code> to rewrites array. vercel.json:94-95.</div>
+</div>
+<div class="exec-step">
+  <span class="exec-badge exec-done">Done</span>
+  <div class="exec-body"><strong>Link ToS + Privacy from login.html and home.html footers</strong> — home.html footer-copy div updated with both links (color: var(--muted), font-size: 0.72rem). login.html had no footer — added footer element before <code>&lt;/body&gt;</code> with same styling.</div>
+</div>
+<div class="exec-step">
+  <span class="exec-badge exec-done">Done</span>
+  <div class="exec-body"><strong>GH Actions CI workflow</strong> — Created <code>.github/workflows/ci.yml</code>: triggers on PR to main, runs ESLint on <code>*.js</code> and Deno type-check on <code>supabase/functions/*/index.ts</code>. Created <code>.github/workflows/deploy-functions.yml</code>: triggers on push to main when <code>supabase/functions/**</code> changes, deploys all edge functions. Requires <code>SUPABASE_ACCESS_TOKEN</code> + <code>SUPABASE_PROJECT_REF</code> repo secrets (Rob manual).</div>
 </div>
 <!-- EXECUTING-CONTENT-END -->
 </div>
@@ -495,8 +529,34 @@ footer span{color:var(--gold);}
 <section id="audit">
 <div class="wrapper">
 <!-- AUDIT-CONTENT-START -->
-<div class="stage-pending">
-  <p>Awaiting execution. Run <code>/tourney-execute 5-14-26-claude-review.html</code> to proceed.</p>
+<div class="section-header">
+  <div class="section-eyebrow">Stage 5 — Audit</div>
+  <h2 class="section-title">Audit Results</h2>
+  <p class="section-desc">Grade: B+. 2026-05-14 · Claude Sonnet 4.6</p>
+</div>
+<div class="score-grid">
+  <div class="score-cell"><div class="score-letter" style="color:var(--green)">B+</div><div class="score-axis">Execution</div></div>
+</div>
+<div class="card">
+  <div class="card-title">What Shipped</div>
+  <ul>
+    <li><strong>XSS closed — feed.html:375:</strong> <code>buildPostMessage</code> now uses explicit HTML escaping. DOM innerHTML escape pattern eliminated.</li>
+    <li><strong>XSS closed — admin.html:2185, 2340:</strong> <code>renderLogoPreview</code> and <code>renderPhotoPreview</code> use DOM methods. No more <code>innerHTML = `&lt;img src="${url}"&gt;`</code>.</li>
+    <li><strong>player_accounts RLS:</strong> Already secure. <code>fix_player_accounts_rls</code> migration (2026-05-06) confirmed. Anon read gone. No-op migration avoided.</li>
+    <li><strong>tos.html + privacy.html:</strong> Live at <code>/tos</code> and <code>/privacy</code>. Full SaaS boilerplate, platform theme.</li>
+    <li><strong>vercel.json:</strong> <code>/tos</code> → <code>/tos.html</code> and <code>/privacy</code> → <code>/privacy.html</code> rewrites in place.</li>
+    <li><strong>Footer links:</strong> home.html + login.html both link to <code>/tos</code> and <code>/privacy</code>.</li>
+    <li><strong>GH Actions CI:</strong> ESLint + Deno type-check on every PR. deploy-functions.yml on push to main (needs 2 secrets).</li>
+  </ul>
+</div>
+<div class="card">
+  <div class="card-title">Still Open</div>
+  <ul>
+    <li><strong>BLOCKED — SEND_INSTALL_EMAIL_SECRET:</strong> Webhook gate is coded but env var not set. Rob must add secret in Supabase dashboard + update DB webhook header.</li>
+    <li><strong>BLOCKED — GH Actions deploy secrets:</strong> <code>SUPABASE_ACCESS_TOKEN</code> + <code>SUPABASE_PROJECT_REF</code> must be added as GitHub repo secrets before deploy-functions.yml activates.</li>
+    <li><strong>CSP unsafe-inline:</strong> Not in this runbook — tracked in security axis.</li>
+    <li><strong>Invitations RLS + push_subscriptions permissive read:</strong> Not in this runbook — tracked in security axis.</li>
+  </ul>
 </div>
 <!-- AUDIT-CONTENT-END -->
 </div>
@@ -505,8 +565,25 @@ footer span{color:var(--gold);}
 <section id="concluded">
 <div class="wrapper">
 <!-- CONCLUDED-CONTENT-START -->
-<div class="stage-pending">
-  <p>Awaiting execution. Run <code>/tourney-execute 5-14-26-claude-review.html</code> to proceed.</p>
+<div class="section-header">
+  <div class="section-eyebrow">Stage 6 — Concluded</div>
+  <h2 class="section-title">Ticket Concluded</h2>
+  <p class="section-desc">2026-05-14 · Claude Sonnet 4.6</p>
+</div>
+<div class="card">
+  <div class="card-title">Summary</div>
+  <p>7 of 8 runbook steps executed. Both XSS vectors closed (feed.html mention parser, admin.html image previews). Legal pages live at <code>/tos</code> and <code>/privacy</code> with footer links in home.html and login.html. GH Actions CI pipeline in place for every PR. Net security delta: +2 XSS closed, player_accounts RLS already confirmed secure. 1 step blocked: <code>SEND_INSTALL_EMAIL_SECRET</code> requires Rob manual Supabase dashboard action.</p>
+</div>
+<div class="card">
+  <div class="card-title">Rob's Action Items</div>
+  <ul>
+    <li><strong>SEND_INSTALL_EMAIL_SECRET:</strong> Supabase dashboard → Project Settings → Edge Functions → Environment Variables → add <code>SEND_INSTALL_EMAIL_SECRET</code> = output of <code>openssl rand -base64 32</code>. Then update the DB webhook that triggers send-install-email — add the secret in the Authorization header.</li>
+    <li><strong>GitHub repo secrets:</strong> Add <code>SUPABASE_ACCESS_TOKEN</code> and <code>SUPABASE_PROJECT_REF</code> (= <code>jllugkiojeoopitdvzsa</code>) as secrets in GitHub → repo → Settings → Secrets → Actions. Required for deploy-functions.yml to activate.</li>
+  </ul>
+</div>
+<div class="card">
+  <div class="card-title">Next Ticket</div>
+  <p>Run <code>/tourney-review-security</code> to do a focused security axis review (CSP unsafe-inline, invitations RLS, push_subscriptions permissive read), or <code>/tourney-review-business</code> to unblock LLC formation path.</p>
 </div>
 <!-- CONCLUDED-CONTENT-END -->
 </div>

@@ -135,6 +135,15 @@ footer a:hover{color:var(--gold);}
   <div class="section">
     <div class="sec-title">✅ Fix History by Session</div>
 
+    <div class="session-hdr" onclick="toggleSession('s17')">
+      <span class="session-title">Session 17 · 2026-05-14 — XSS fixes (5-14-26-claude-review execute) <span class="pill pill-red">Security</span></span>
+      <span class="session-count">2 fixes ▾</span>
+    </div>
+    <div class="session-body" id="s17">
+      <div class="bug-item fixed"><div class="bug-title"><strong>XSS — feed.html buildPostMessage DOM escape pattern</strong> — <code>buildPostMessage</code> at feed.html:375 used <code>d.textContent=text; d.innerHTML</code> DOM side-effect for escaping then regex-replaced mention spans. Fragile: relies on implicit DOM behaviour. Fixed: explicit escaping chain (<code>&amp; &lt; &gt; "</code>) + mention regex on clean string. Mention capture only matches <code>[A-Za-z '.\-]</code> — no injection surface.</div><div class="bug-meta">feed.html:375-378 · commit a562e7d · 2026-05-14</div></div>
+      <div class="bug-item fixed"><div class="bug-title"><strong>XSS — admin.html url innerHTML in image previews</strong> — <code>renderLogoPreview</code> (admin.html:2187) and <code>renderPhotoPreview</code> (admin.html:2342) both used <code>el.innerHTML = \`&lt;img src="${url}"...&gt;\`</code> with unescaped <code>url</code> from DB. Fixed: DOM methods — <code>img.src = url</code> property assignment, no string interpolation into innerHTML.</div><div class="bug-meta">admin.html:2185-2191, 2340-2348 · commit a562e7d · 2026-05-14</div></div>
+    </div>
+
     <div class="session-hdr" onclick="toggleSession('s16')">
       <span class="session-title">Session 16 · 2026-05-13 — RLS hardening migration 008 <span class="pill pill-red">Security</span></span>
       <span class="session-count">2 fixes ▾</span>

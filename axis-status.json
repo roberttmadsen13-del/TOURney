@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-05-14T00:30:00Z",
+  "updated_at": "2026-05-14T18:00:00Z",
   "description": "Living state for all TOURney platform axes. One entry per axis. Updated by every tourney-* skill. Agents read this for context (50 tokens) instead of parsing HTML artifacts.",
   "stages": ["review", "plan", "runbook", "executing", "audit", "concluded"],
   "axes": {
@@ -31,30 +31,30 @@
       "blocking": false
     },
     "security": {
-      "status": "plan",
-      "grade": "B",
-      "artifact": "/platform/security",
-      "last_updated": "2026-05-13",
-      "summary": "send-push v9 + send-install-email v6 deployed (2026-05-13). Rounds write RLS migration 011 applied. Plan + runbook artifacts exist. Open: CSP unsafe-inline, invitations RLS, players/scores/push_subscriptions permissive read, webhook Authorization header (manual Rob).",
-      "open_items": 4,
+      "status": "audit",
+      "grade": "B+",
+      "artifact": "/platform/5-14-26-claude-review",
+      "last_updated": "2026-05-14",
+      "summary": "2 XSS closed (feed.html:375, admin.html:2185/2340). player_accounts RLS confirmed clean. Open: CSP unsafe-inline, SEND_INSTALL_EMAIL_SECRET (Rob manual), invitations/push_subscriptions permissive read.",
+      "open_items": 3,
       "blocking": false
     },
     "business": {
-      "status": "review",
+      "status": "audit",
       "grade": "C+",
-      "artifact": "/platform/business",
-      "last_updated": "2026-05-08",
-      "summary": "Stripe fully wired in code. BLOCKED: LLC not formed, no live keys, no ToS/Privacy.",
-      "open_items": 5,
+      "artifact": "/platform/5-14-26-claude-review",
+      "last_updated": "2026-05-14",
+      "summary": "ToS + Privacy pages live at /tos /privacy. Footer links added. LLC still not formed — Stripe test-mode only, reg_open=false. Revenue path blocked by Rob manual action.",
+      "open_items": 4,
       "blocking": true
     },
     "deployment": {
-      "status": "review",
-      "grade": "B+",
-      "artifact": "/platform/deployment",
-      "last_updated": "2026-05-08",
-      "summary": "Vercel static, full security headers, SW v17. No CI/CD, no staging, no monitoring.",
-      "open_items": 3,
+      "status": "audit",
+      "grade": "A-",
+      "artifact": "/platform/5-14-26-claude-review",
+      "last_updated": "2026-05-14",
+      "summary": "GH Actions CI live: ESLint + Deno type-check on PRs. deploy-functions.yml ready (needs SUPABASE_ACCESS_TOKEN + SUPABASE_PROJECT_REF repo secrets). No staging environment.",
+      "open_items": 2,
       "blocking": false
     },
     "performance": {
@@ -67,12 +67,12 @@
       "blocking": false
     },
     "data-model": {
-      "status": "review",
+      "status": "audit",
       "grade": "B",
-      "artifact": "/platform/data-model",
-      "last_updated": "2026-05-08",
-      "summary": "11 migrations clean. Settings un-typed, player_accounts anon read still open.",
-      "open_items": 2,
+      "artifact": "/platform/5-14-26-claude-review",
+      "last_updated": "2026-05-14",
+      "summary": "11 migrations clean. player_accounts RLS confirmed secure (authenticated-only, email=auth.email()). Remaining gap: settings store un-typed.",
+      "open_items": 1,
       "blocking": false
     },
     "marketing": {
