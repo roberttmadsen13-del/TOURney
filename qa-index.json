@@ -1,9 +1,23 @@
 {
   "$schema": "https://tourney.greenskeeper.studio/qa-index-schema.json",
   "version": 1,
-  "updated_at": "2026-05-14T20:00:00Z",
+  "updated_at": "2026-05-14T22:00:00Z",
   "description": "Canonical registry of all TOURney plans, reviews, audits, and QA artifacts. The /platform Artifacts tab renders from this file. Skills (e.g. tourney-review) append new entries when they generate output.",
   "entries": [
+    {
+      "id": "logo-audit-2026-05-14",
+      "category": "fix",
+      "stage": "concluded",
+      "title": "Logo Placement Audit + Fix · May 14, 2026",
+      "summary": "Joint marketing+UX audit of logo across all 14 pages. Shipped: login nav, marketing nav+footer, install hero, home nav height, scorecard nav width. All pages now have consistent logo-nav.svg (24-32px nav) or logo-hero.svg (hero/install). 0 pages without brand identity.",
+      "date": "2026-05-14",
+      "updated": "2026-05-14",
+      "author": "claude-sonnet-4-6",
+      "url": null,
+      "file": null,
+      "tags": ["fix", "ux", "marketing", "brand", "logo"],
+      "status": "concluded"
+    },
     {
       "id": "review-ux-2026-05-14",
       "category": "review",
