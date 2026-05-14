@@ -1,11 +1,18 @@
 {
-  "updated_at": "2026-05-14T00:30:00Z",
+  "updated_at": "2026-05-14T12:00:00Z",
   "description": "Per-axis grade history for TOURney platform. Updated automatically by review skills. Operations Action Board reads this file.",
   "axes": {
     "architecture": {
       "label": "Architecture",
       "cmd": "/tourney-review-architecture",
       "scores": [
+        {
+          "date": "2026-05-14",
+          "score": "A",
+          "url": "/platform/5-14-26-claude-review",
+          "review_title": "Full Platform Review · May 14, 2026",
+          "notes": "No regressions from May 13. 11 versioned migrations, clean progression. is_admin dropped (006). tournament_admins canonical. tourney-init.js init layer solid. Settings key-value store un-typed remains only gap."
+        },
         {
           "date": "2026-05-13",
           "score": "A",
@@ -33,6 +40,13 @@
       "label": "Feature Depth",
       "cmd": "/tourney-review-feature-depth",
       "scores": [
+        {
+          "date": "2026-05-14",
+          "score": "B+",
+          "url": "/platform/5-14-26-claude-review",
+          "review_title": "Full Platform Review · May 14, 2026",
+          "notes": "No regressions from May 13. Three tournament structures, 12 scoring formats, realtime scorecard, HIO confetti, feed, directory, champions, rounds model (007), admin Design tab 24 settings keys. Gaps: no tournament series, no score admin-edit UI."
+        },
         {
           "date": "2026-05-13",
           "score": "B+",
@@ -66,6 +80,13 @@
           "url": "/platform/5-13-26-claude-review-ux",
           "review_title": "UX Polish Review · May 13, 2026",
           "notes": "Post-sprint review. 7/8 runbook items shipped (10a676f). Strengths: skeleton shimmer live, aria-live correct, prefers-reduced-motion guard, login errors sanitized, touch targets good. Open gaps: heroLogoImg alt empty (home.html:429), login submit no spinner, zero-player empty state missing, manifest 180px icon absent."
+        },
+        {
+          "date": "2026-05-14",
+          "score": "B+",
+          "url": "/platform/5-14-26-claude-review",
+          "review_title": "Full Platform Review · May 14, 2026",
+          "notes": "No regressions from May 13 UX sprint (10a676f). Open gaps: heroLogoImg alt empty (home.html:429), login submit no spinner, zero-player empty state missing, manifest 180px icon absent. All LOW/MEDIUM, non-blocking."
         },
         {
           "date": "2026-05-13",
@@ -109,6 +130,13 @@
       "cmd": "/tourney-review-security",
       "scores": [
         {
+          "date": "2026-05-14",
+          "score": "B",
+          "url": "/platform/5-14-26-claude-review",
+          "review_title": "Full Platform Review · May 14, 2026",
+          "notes": "No change from May 13. Open HIGH: feed.html:377 _parseMentions XSS. Open HIGH: admin.html:~2044/2194 url innerHTML. MEDIUM: player_accounts anon SELECT USING(true) (005:41). MEDIUM: CSP unsafe-inline. MEDIUM: SEND_INSTALL_EMAIL_SECRET not set. Positives: stripe-webhook sig-verified, create-checkout JWT-gated, send-push v9 auth live, HSTS/X-Frame/nosniff correct."
+        },
+        {
           "date": "2026-05-13",
           "score": "B",
           "url": "/platform/5-13-26-claude-review",
@@ -150,6 +178,13 @@
       "cmd": "/tourney-review-business",
       "scores": [
         {
+          "date": "2026-05-14",
+          "score": "C+",
+          "url": "/platform/5-14-26-claude-review",
+          "review_title": "Full Platform Review · May 14, 2026",
+          "notes": "No change from May 13. Stripe fully wired (create-checkout JWT-gated, stripe-webhook sig-verified). Marketing + /create wizard live. BLOCKED: LLC not formed, no live Stripe keys, no ToS/Privacy, reg_open=false. Zero revenue."
+        },
+        {
           "date": "2026-05-13",
           "score": "C+",
           "url": "/platform/5-13-26-claude-review",
@@ -176,6 +211,13 @@
       "label": "Deployment",
       "cmd": "/tourney-review-deployment",
       "scores": [
+        {
+          "date": "2026-05-14",
+          "score": "B+",
+          "url": "/platform/5-14-26-claude-review",
+          "review_title": "Full Platform Review · May 14, 2026",
+          "notes": "No regressions from May 13. Vercel static deploy, full security headers, SW v34, 22 precached files, JSON bypass. /platform ops hub self-documents. Gaps: no CI/CD, no staging, edge function deploys manual."
+        },
         {
           "date": "2026-05-13",
           "score": "B+",
@@ -204,6 +246,13 @@
       "cmd": "/tourney-review-performance",
       "scores": [
         {
+          "date": "2026-05-14",
+          "score": "B",
+          "url": "/platform/5-14-26-claude-review",
+          "review_title": "Full Platform Review · May 14, 2026",
+          "notes": "No change from May 13. SW v34 cache-first assets, skeleton shimmer live on scoreboard+home. Scorecard + other pages still lack skeletons. No Lighthouse CI or perf monitoring."
+        },
+        {
           "date": "2026-05-13",
           "score": "B",
           "url": "/platform/5-13-26-claude-review",
@@ -230,6 +279,13 @@
       "label": "Data Model",
       "cmd": "/tourney-review-data-model",
       "scores": [
+        {
+          "date": "2026-05-14",
+          "score": "B",
+          "url": "/platform/5-14-26-claude-review",
+          "review_title": "Full Platform Review · May 14, 2026",
+          "notes": "No change from May 13. 11 migrations, clean audit trail. Remaining gaps: player_accounts anon SELECT USING(true) open (005:41), settings store un-typed."
+        },
         {
           "date": "2026-05-13",
           "score": "B",
