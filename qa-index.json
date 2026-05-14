@@ -7,6 +7,7 @@
     {
       "id": "review-2026-05-14",
       "category": "review",
+      "stage": "executing",
       "title": "Full Platform Review · May 14, 2026",
       "summary": "Security grade B: feed.html:377 _parseMentions XSS open, admin.html url innerHTML, player_accounts anon read, CSP unsafe-inline. Architecture A, UX B+ (sprint concluded). Stripe fully wired, LLC unformed. Business grade C+. 5-bug tracker seeded. Council of 5: CSP extraction, Stripe test-mode dry run, round summary email, GH Actions CI/CD, ToS+Privacy pages.",
       "date": "2026-05-14",
@@ -14,7 +15,7 @@
       "url": "/platform/5-14-26-claude-review",
       "file": "5-14-26-claude-review.html",
       "tags": ["review", "security", "audit"],
-      "status": "shipped"
+      "status": "open"
     },
     {
       "id": "review-2026-05-13",

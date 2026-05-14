@@ -1556,11 +1556,9 @@ function openTicketDrawer(id){
   const cmdEl=document.getElementById('drawerNextCmd');
   if(cmdEl){
     cmdEl._cmd=cmd;
+    const cmdLabel=cmd.split('\n')[0];
     cmdEl.innerHTML=ci<stages.length-1
-      ?`<div class="drawer-next-cmd">
-          <pre class="drawer-next-text" style="white-space:pre-wrap;word-break:break-word;font-size:.7rem;line-height:1.5;margin:0;flex:1;">${esc(cmd)}</pre>
-          <button class="drawer-copy-btn" style="align-self:flex-start;" onclick="navigator.clipboard.writeText(document.getElementById('drawerNextCmd')._cmd).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy',1200)})">Copy</button>
-        </div>`
+      ?`<button class="drawer-copy-btn" data-label="${esc(cmdLabel)}" onclick="navigator.clipboard.writeText(document.getElementById('drawerNextCmd')._cmd).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent=this.dataset.label,1200)})">${esc(cmdLabel)}</button>`
       :'<div style="font-size:.75rem;color:#4aaa4a;padding:.5rem 0;">✓ Concluded</div>';
   }
   document.getElementById('drawerGradeHistory').innerHTML='';
