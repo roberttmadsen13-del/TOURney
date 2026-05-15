@@ -192,6 +192,8 @@
             const el = document.getElementById(id);
             if (el) { el.src = data.logo_url; el.alt = data.name; el.style.display = ''; }
           });
+          const svgEl = document.getElementById('navLogoSvg');
+          if (svgEl) svgEl.style.display = 'none';
         };
         if (document.readyState === 'loading') {
           document.addEventListener('DOMContentLoaded', applyLogos);
