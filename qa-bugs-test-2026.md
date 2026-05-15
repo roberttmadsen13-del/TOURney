@@ -1,4 +1,12 @@
-# QA Bug Log — TOURney Platform (updated: 2026-05-14)
+# QA Bug Log — TOURney Platform (updated: 2026-05-15)
+
+### 2026-05-15 — 5-15-26-claude-review weekly automated review
+
+- [MEDIUM] Schema governance — duplicate migration prefix 006. Both `migrations/006_drop_is_admin.sql` and `migrations/006_multi_tourney_players.sql` carry the 006 prefix. Supabase applies by filename alpha-sort; ordering is implicit, not explicit. Fresh schema apply on a new environment is ambiguous. Fix: rename `006_multi_tourney_players.sql` → `006b_multi_tourney_players.sql`. Add header comment documenting the history. Status: open
+
+- [HIGH] player_accounts anon SELECT exposed. `migrations/005_invitations_and_accounts.sql`: `CREATE POLICY "anon read player_accounts" ON player_accounts FOR SELECT TO anon USING (true)`. Migration 008 only fixed the UPDATE path — SELECT still open. Any anonymous visitor can enumerate all player emails, plan tiers, and billing_status. Fix: migration 012 — drop anon policy, replace with `auth read own player_account` scoped to `email = auth.email()`. Status: open
+
+---
 
 ### 2026-05-14 — 5-14-26-claude-review execute audit
 - [HIGH] XSS — feed.html buildPostMessage DOM escape pattern (feed.html:375) — replace with explicit `& < > "` escaping chain. Status: fixed (commit a562e7d)
