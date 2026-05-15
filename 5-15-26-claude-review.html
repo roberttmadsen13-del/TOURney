@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TOURney — Full Platform Review · May 15, 2026</title>
+<style>
+:root{--gold:#c09030;--gold-light:#d4a840;--gold-dim:rgba(192,144,48,0.18);--bg:#0d0a05;--surface:#151009;--card:#1c140a;--border:rgba(192,144,48,0.22);--muted:#7a6a54;--text:#e8dcc8;--red:#c0392b;--green:#27ae60;--blue:#2980b9;--orange:#e67e22;--purple:#8e44ad;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:-apple-system,'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;font-size:15px;}
+nav{position:sticky;top:0;z-index:100;background:rgba(13,10,5,0.97);border-bottom:1px solid var(--border);backdrop-filter:blur(12px);}
+.nav-inner{padding:0.6rem 1.5rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap;}
+.nav-brand{color:var(--gold);font-weight:700;font-size:1rem;letter-spacing:0.05em;white-space:nowrap;}
+.nav-brand span{color:var(--muted);font-weight:400;font-size:0.8rem;margin-left:0.4rem;}
+.nav-links{display:flex;gap:0.2rem;flex-wrap:wrap;margin-left:auto;}
+.nav-links a{color:var(--muted);text-decoration:none;font-size:0.78rem;padding:0.3rem 0.55rem;border-radius:4px;transition:all 0.15s;white-space:nowrap;}
+.nav-links a:hover{color:var(--gold);background:var(--gold-dim);}
+.lifecycle-bar{display:flex;gap:3px;padding:0.55rem 1.5rem 0.65rem;background:var(--surface);border-bottom:1px solid var(--border);}
+.lc-stage{flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;}
+.lc-pill{height:5px;width:100%;border-radius:3px;background:rgba(192,144,48,0.1);transition:background 0.25s;}
+.lc-label{font-size:0.58rem;font-weight:700;letter-spacing:0.11em;text-transform:uppercase;color:rgba(122,106,84,0.45);transition:color 0.25s;}
+.lc-done .lc-pill{background:var(--gold);}
+.lc-done .lc-label{color:var(--gold);}
+.lc-active .lc-pill{background:var(--gold-light);box-shadow:0 0 8px rgba(192,144,48,0.45);}
+.lc-active .lc-label{color:var(--gold-light);}
+.hero{padding:3rem 1.5rem 2rem;text-align:center;border-bottom:1px solid var(--border);background:linear-gradient(180deg,rgba(192,144,48,0.06) 0%,transparent 100%);}
+.hero-eyebrow{display:inline-block;font-size:0.7rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold);border:1px solid var(--border);border-radius:20px;padding:0.22rem 0.8rem;margin-bottom:0.9rem;}
+.hero h1{font-size:clamp(1.5rem,3.5vw,2.3rem);font-weight:800;color:#fff;margin-bottom:0.35rem;}
+.hero h1 span{color:var(--gold);}
+.hero-sub{color:var(--muted);max-width:520px;margin:0 auto 1rem;font-size:0.9rem;}
+.hero-meta{display:flex;gap:1.1rem;justify-content:center;flex-wrap:wrap;font-size:0.74rem;color:var(--muted);}
+.hero-meta span{display:flex;align-items:center;gap:0.3rem;}
+.wrapper{max-width:1000px;margin:0 auto;padding:0 1.5rem;}
+section{padding:2.5rem 0;border-bottom:1px solid var(--border);}
+section:last-of-type{border-bottom:none;}
+.section-header{margin-bottom:1.6rem;}
+.section-eyebrow{font-size:0.67rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--gold);margin-bottom:0.3rem;}
+.section-title{font-size:1.35rem;font-weight:800;color:#fff;margin-bottom:0.3rem;}
+.section-desc{color:var(--muted);font-size:0.85rem;max-width:560px;}
+.card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:1.15rem 1.3rem;margin-bottom:0.7rem;}
+.card-title{font-size:0.85rem;font-weight:700;color:var(--gold);margin-bottom:0.45rem;}
+.card p,.card li{font-size:0.84rem;color:var(--text);margin-bottom:0.28rem;}
+.card ul,.card ol{padding-left:1.2rem;}
+.card li{margin-bottom:0.32rem;}
+.grid-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:0.7rem;}
+.grid-3{display:grid;grid-template-columns:repeat(auto-fit,minmax(245px,1fr));gap:0.7rem;}
+.stack-item{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:0.85rem 1.05rem;}
+.stack-label{font-size:0.65rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--muted);margin-bottom:0.18rem;}
+.stack-value{font-size:0.88rem;font-weight:600;color:#fff;}
+.stack-note{font-size:0.72rem;color:var(--muted);margin-top:0.18rem;}
+.pill{display:inline-block;font-size:0.66rem;font-weight:700;letter-spacing:0.06em;padding:0.15rem 0.5rem;border-radius:20px;text-transform:uppercase;}
+.pill-gold{background:rgba(192,144,48,0.18);color:var(--gold);border:1px solid rgba(192,144,48,0.3);}
+.pill-green{background:rgba(39,174,96,0.15);color:var(--green);border:1px solid rgba(39,174,96,0.3);}
+.pill-red{background:rgba(192,57,43,0.15);color:var(--red);border:1px solid rgba(192,57,43,0.3);}
+.pill-orange{background:rgba(230,126,34,0.15);color:var(--orange);border:1px solid rgba(230,126,34,0.3);}
+.pill-blue{background:rgba(41,128,185,0.15);color:var(--blue);border:1px solid rgba(41,128,185,0.3);}
+.pill-purple{background:rgba(142,68,173,0.15);color:var(--purple);border:1px solid rgba(142,68,173,0.3);}
+.page-table{width:100%;border-collapse:collapse;font-size:0.8rem;}
+.page-table th{text-align:left;padding:0.52rem 0.72rem;border-bottom:1px solid var(--border);color:var(--muted);font-size:0.67rem;text-transform:uppercase;letter-spacing:0.08em;background:var(--surface);}
+.page-table td{padding:0.58rem 0.72rem;border-bottom:1px solid rgba(192,144,48,0.08);vertical-align:top;}
+.page-table tr:last-child td{border-bottom:none;}
+.page-table tr:hover td{background:var(--gold-dim);}
+.page-table .url{font-family:monospace;font-size:0.75rem;color:var(--gold-light);}
+.page-table .file{font-family:monospace;font-size:0.72rem;color:var(--muted);}
+.table-wrap{background:var(--card);border:1px solid var(--border);border-radius:8px;overflow:hidden;overflow-x:auto;}
+.score-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(125px,1fr));gap:0.52rem;margin-bottom:1.4rem;}
+.score-cell{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:0.85rem;text-align:center;}
+.score-num{font-size:1.85rem;font-weight:900;line-height:1;margin-bottom:0.18rem;}
+.score-label{font-size:0.64rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);}
+.score-green{color:var(--green);}
+.score-gold{color:var(--gold);}
+.score-red{color:var(--red);}
+.score-blue{color:var(--blue);}
+.idea-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1.25rem;position:relative;overflow:hidden;}
+.idea-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;}
+.idea-1::before{background:var(--gold);}
+.idea-2::before{background:var(--blue);}
+.idea-3::before{background:var(--green);}
+.idea-4::before{background:var(--orange);}
+.idea-5::before{background:var(--purple);}
+.idea-number{font-size:2rem;font-weight:900;opacity:0.07;position:absolute;top:0.5rem;right:1rem;line-height:1;color:#fff;}
+.idea-tag{margin-bottom:0.42rem;}
+.idea-title{font-size:0.96rem;font-weight:700;color:#fff;margin-bottom:0.42rem;}
+.idea-body{font-size:0.82rem;color:var(--muted);line-height:1.55;margin-bottom:0.65rem;}
+.idea-plan{font-size:0.77rem;color:var(--text);}
+.idea-plan strong{color:var(--gold);}
+.runbook-steps{counter-reset:rb-step;}
+.rb-step{background:var(--card);border:1px solid var(--border);border-left:3px solid rgba(192,144,48,0.3);border-radius:0 8px 8px 0;padding:0.95rem 1.15rem 0.95rem 3.8rem;margin-bottom:0.55rem;position:relative;}
+.rb-step::before{counter-increment:rb-step;content:counter(rb-step);position:absolute;left:0.95rem;top:0.95rem;width:1.75rem;height:1.75rem;background:var(--gold-dim);color:var(--gold);border:1px solid var(--border);border-radius:50%;font-size:0.72rem;font-weight:700;display:grid;place-items:center;}
+.rb-step-title{font-size:0.87rem;font-weight:700;color:#fff;margin-bottom:0.22rem;}
+.rb-step-body{font-size:0.8rem;color:var(--muted);margin-bottom:0.35rem;}
+.rb-verify{font-size:0.76rem;color:var(--text);background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:3px;padding:0.35rem 0.6rem;margin-top:0.3rem;}
+.rb-verify strong{color:var(--gold-light);font-size:0.68rem;text-transform:uppercase;letter-spacing:0.07em;display:block;margin-bottom:0.1rem;}
+.sec-item{background:var(--card);border:1px solid var(--border);border-left:3px solid var(--border);border-radius:0 8px 8px 0;padding:0.9rem 1.15rem;margin-bottom:0.65rem;}
+.sec-item.sev-high{border-left-color:var(--red);}
+.sec-item.sev-med{border-left-color:var(--orange);}
+.sec-item.sev-low{border-left-color:var(--green);}
+.sec-item.sev-info{border-left-color:var(--blue);}
+.sec-header{display:flex;align-items:center;gap:0.52rem;margin-bottom:0.42rem;}
+.sec-title{font-size:0.87rem;font-weight:700;color:#fff;}
+.sec-body{font-size:0.8rem;color:var(--muted);margin-bottom:0.42rem;}
+.sec-fix{font-size:0.77rem;color:var(--text);background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:4px;padding:0.42rem 0.62rem;}
+.sec-fix strong{color:var(--gold-light);display:block;margin-bottom:0.12rem;font-size:0.68rem;text-transform:uppercase;letter-spacing:0.08em;}
+.stage-pending{text-align:center;padding:3rem 1.5rem;color:var(--muted);font-size:0.85rem;border:1px dashed rgba(192,144,48,0.2);border-radius:8px;}
+.stage-pending code{color:var(--gold);}
+.exec-step{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:0.85rem 1.05rem;margin-bottom:0.48rem;display:flex;gap:0.7rem;align-items:flex-start;}
+.exec-badge{font-size:0.66rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;padding:0.18rem 0.48rem;border-radius:3px;white-space:nowrap;flex-shrink:0;margin-top:0.08rem;}
+.exec-done{background:rgba(39,174,96,0.14);color:var(--green);border:1px solid rgba(39,174,96,0.28);}
+.exec-skipped{background:rgba(192,144,48,0.1);color:var(--muted);border:1px solid var(--border);}
+.exec-blocked{background:rgba(192,57,43,0.11);color:var(--red);border:1px solid rgba(192,57,43,0.28);}
+.exec-body{font-size:0.81rem;color:var(--text);}
+.exec-body strong{color:#fff;display:block;margin-bottom:0.12rem;font-size:0.83rem;}
+.roadmap-item{display:flex;gap:1.05rem;align-items:flex-start;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:0.95rem 1.15rem;margin-bottom:0.52rem;}
+.roadmap-icon{width:1.9rem;height:1.9rem;border-radius:50%;background:var(--gold-dim);color:var(--gold);display:grid;place-items:center;font-size:0.85rem;flex-shrink:0;border:1px solid var(--border);}
+.roadmap-content{flex:1;}
+.roadmap-title{font-size:0.88rem;font-weight:700;color:#fff;margin-bottom:0.13rem;}
+.roadmap-desc{font-size:0.79rem;color:var(--muted);margin-bottom:0.32rem;}
+.roadmap-action{font-size:0.75rem;color:var(--text);}
+.roadmap-action strong{color:var(--gold-light);}
+code{font-family:'Consolas','Monaco',monospace;background:rgba(255,255,255,0.07);padding:0.09rem 0.27rem;border-radius:3px;font-size:0.81em;color:var(--gold-light);}
+footer{border-top:1px solid var(--border);padding:1.2rem;text-align:center;color:var(--muted);font-size:0.72rem;}
+footer span{color:var(--gold);}
+@media(max-width:600px){.nav-links{display:none;}.hero{padding:2rem 1rem 1.5rem;}section{padding:2rem 0;}.lc-label{font-size:0.5rem;}}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <div class="nav-brand">TOURney <span>by Greenskeeper Studios</span></div>
+    <div class="nav-links">
+      <a href="#review">Review</a>
+      <a href="#plan">Plan</a>
+      <a href="#runbook">Runbook</a>
+      <a href="#executing">Executing</a>
+      <a href="#audit">Audit</a>
+      <a href="#concluded">Concluded</a>
+    </div>
+  </div>
+</nav>
+
+<!-- LIFECYCLE-BAR-START -->
+<div class="lifecycle-bar">
+  <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Review</div></div>
+  <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Plan</div></div>
+  <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Runbook</div></div>
+  <div class="lc-stage"><div class="lc-pill"></div><div class="lc-label">Executing</div></div>
+  <div class="lc-stage"><div class="lc-pill"></div><div class="lc-label">Audit</div></div>
+  <div class="lc-stage"><div class="lc-pill"></div><div class="lc-label">Concluded</div></div>
+</div>
+<!-- LIFECYCLE-BAR-END -->
+
+<div class="hero">
+  <div class="hero-eyebrow">Full Platform</div>
+  <h1><span>TOURney</span> — Full Platform Review · May 15, 2026</h1>
+  <p class="hero-sub">Weekly automated audit covering all 8 axes: architecture, security, UX, business readiness, deployment, performance, data model, and feature depth.</p>
+  <div class="hero-meta">
+    <span>📅 May 15, 2026</span>
+    <span>🤖 Claude Sonnet 4.6</span>
+    <span>🏢 Greenskeeper Studios</span>
+    <span>🔒 Internal Only</span>
+  </div>
+</div>
+
+<section id="review">
+<div class="wrapper">
+
+<div class="section-header">
+  <div class="section-eyebrow">§ Review</div>
+  <div class="section-title">Platform State — May 15, 2026</div>
+  <div class="section-desc">Evidence-grounded audit of all 8 axes. Grades compared to May 14, 2026. Last commit: <code>27f0379</code> fix: inline SVG logos across all pages — fixes Barlow Condensed font rendering.</div>
+</div>
+
+<!-- Score Grid -->
+<div class="score-grid">
+  <div class="score-cell">
+    <div class="score-num score-green">A-</div>
+    <div class="score-label">Architecture</div>
+  </div>
+  <div class="score-cell">
+    <div class="score-num score-gold">B+</div>
+    <div class="score-label">Feature Depth</div>
+  </div>
+  <div class="score-cell">
+    <div class="score-num score-green">A-</div>
+    <div class="score-label">UX Polish</div>
+  </div>
+  <div class="score-cell">
+    <div class="score-num score-gold">B+</div>
+    <div class="score-label">Security</div>
+  </div>
+  <div class="score-cell">
+    <div class="score-num score-red">C+</div>
+    <div class="score-label">Business</div>
+  </div>
+  <div class="score-cell">
+    <div class="score-num score-green">A-</div>
+    <div class="score-label">Deployment</div>
+  </div>
+  <div class="score-cell">
+    <div class="score-num score-gold">B</div>
+    <div class="score-label">Performance</div>
+  </div>
+  <div class="score-cell">
+    <div class="score-num score-gold">B</div>
+    <div class="score-label">Data Model</div>
+  </div>
+</div>
+
+<!-- What TOURney Is -->
+<div class="card">
+  <div class="card-title">What TOURney Is</div>
+  <p>Multi-tenant golf tournament SaaS PWA. Deployed at <code>tourney.greenskeeper.studio</code>. Tournament owners create events via a 5-step wizard at <code>/create</code>; players register, score, trash-talk, and install the PWA. Each tenant gets a subdomain or <code>/t/{slug}/</code> path with brand-injected colors and logo. Platform is static HTML + Supabase (Auth, DB, Edge Functions, Realtime) + Vercel. One active tenant: Bova Invitational (<code>bova.greenskeeper.studio</code>). Registration locked (<code>reg_open=false</code>) pending LLC formation and Stripe live-mode.</p>
+</div>
+
+<!-- Tech Stack -->
+<div class="grid-3" style="margin-bottom:1.4rem;">
+  <div class="stack-item">
+    <div class="stack-label">Frontend</div>
+    <div class="stack-value">Static HTML + Vanilla JS</div>
+    <div class="stack-note">No build step. MPA. CSS tokens via tokens.css.</div>
+  </div>
+  <div class="stack-item">
+    <div class="stack-label">Backend / DB</div>
+    <div class="stack-value">Supabase (jllugkiojeoopitdvzsa)</div>
+    <div class="stack-note">Postgres + RLS + Realtime + Auth + Edge Functions (Deno)</div>
+  </div>
+  <div class="stack-item">
+    <div class="stack-label">Hosting</div>
+    <div class="stack-value">Vercel (static)</div>
+    <div class="stack-note">GitHub origin: roberttmadsen13-del/TOURney. Auto-deploy on push.</div>
+  </div>
+  <div class="stack-item">
+    <div class="stack-label">PWA Cache</div>
+    <div class="stack-value">tourney-v36</div>
+    <div class="stack-note">26 precached files. SW install + activate + push + notificationclick handlers.</div>
+  </div>
+  <div class="stack-item">
+    <div class="stack-label">Init Layer</div>
+    <div class="stack-value">tourney-init.js</div>
+    <div class="stack-note">Slug detection (path + subdomain), brand inject, auth-gated nav. Exposed as <code>window.tourney</code>.</div>
+  </div>
+  <div class="stack-item">
+    <div class="stack-label">Routing</div>
+    <div class="stack-value">vercel.json rewrites</div>
+    <div class="stack-note">Tournament: /t/:slug/* → per-page HTML. Platform: /platform/:slug → /:slug.html.</div>
+  </div>
+</div>
+
+<!-- Edge Functions -->
+<div class="card" style="margin-bottom:1.4rem;">
+  <div class="card-title">Edge Functions (6)</div>
+  <ul>
+    <li><code>create-checkout</code> — JWT auth + <code>owner_email</code> match → Stripe Checkout session (Starter/Pro/Club tiers). Origin-scoped CORS.</li>
+    <li><code>create-player-checkout</code> — Player-tier Stripe checkout flow (individual upgrade path).</li>
+    <li><code>platform-action</code> — JWT auth + hard email gate (<code>PLATFORM_OWNER_EMAIL</code> env var). Rob-only super-admin actions. Service role DB client.</li>
+    <li><code>send-install-email</code> — DB webhook trigger. Gates on <code>SEND_INSTALL_EMAIL_SECRET</code> header (Rob must set this env var — pending manual action).</li>
+    <li><code>send-push</code> — JWT auth + owner/admin check (service role verify). VAPID web push for HIO alerts. tournament_admins join used for admin gate.</li>
+    <li><code>stripe-webhook</code> — Stripe signature verification. Handles subscription lifecycle events.</li>
+  </ul>
+</div>
+
+<!-- DB Tables -->
+<div class="card" style="margin-bottom:1.4rem;">
+  <div class="card-title">DB Tables — 11 Migrations (⚠️ duplicate 006 prefix)</div>
+  <ul>
+    <li><strong>001</strong> — <code>tournaments</code> table: id, slug, name, owner_email, status, logo_url, brand colors.</li>
+    <li><strong>002</strong> — <code>player_accounts</code> billing columns: plan, billing_status, billing_expires_at, billing_ref.</li>
+    <li><strong>003</strong> — Settings write RLS scoped to owner or <code>tournament_admins</code> member by email.</li>
+    <li><strong>004</strong> — <code>tournament_admins</code> table: email-based admin model. Replaces <code>players.is_admin</code> for RLS gates.</li>
+    <li><strong>005</strong> — <code>invitations</code> table + <code>player_accounts</code> table. Initial RLS permissive (superseded by 008).</li>
+    <li><strong>006a</strong> (<code>006_drop_is_admin.sql</code>) — Drops <code>players.is_admin</code> column after reconciliation with <code>tournament_admins</code>. Sanity-check guard before drop.</li>
+    <li><strong>006b</strong> (<code>006_multi_tourney_players.sql</code>) — <span style="color:var(--orange)">⚠️ DUPLICATE 006 PREFIX.</span> Adds <code>(tournament_id, email)</code> unique constraint to players, enabling cross-tournament participation.</li>
+    <li><strong>007</strong> — <code>rounds</code> table: round_id FK on scores, legacy round TEXT column preserved for rollout. Per-round par arrays, course info.</li>
+    <li><strong>008</strong> — Security hardening: scoped invitations, player_accounts UPDATE locked, admin-update for players, scores anon write removed.</li>
+    <li><strong>009</strong> — Two RLS self-join bugs fixed: admin invitations tautology + player scores cross-tenant insert.</li>
+    <li><strong>010</strong> — <code>push_subscriptions</code> scoped to own player. <code>tournament_admins</code> requires authenticated (no anon read).</li>
+    <li><strong>011</strong> — <code>trash_talk</code> INSERT scoped to own player_id + 30-second rate limit trigger (<code>check_trash_talk_rate_limit</code>).</li>
+  </ul>
+</div>
+
+<!-- Platform Pages -->
+<div class="table-wrap" style="margin-bottom:1.4rem;">
+  <table class="page-table">
+    <thead><tr><th>URL</th><th>File</th><th>Description</th></tr></thead>
+    <tbody>
+      <tr><td class="url">/</td><td class="file">marketing.html</td><td>Platform sales page. Pricing tiers, live tournament grid, /create CTA. Cold traffic entry.</td></tr>
+      <tr><td class="url">/create</td><td class="file">create.html</td><td>5-step wizard. Auth account → tournament seed → DB settings → owner redirect to /admin.</td></tr>
+      <tr><td class="url">/platform</td><td class="file">platform.html</td><td>Rob-only super admin. All tournaments, player counts, status badges, delete controls.</td></tr>
+      <tr><td class="url">/tos</td><td class="file">tos.html</td><td>Terms of Service. Shipped May 14.</td></tr>
+      <tr><td class="url">/privacy</td><td class="file">privacy.html</td><td>Privacy Policy. Shipped May 14.</td></tr>
+      <tr><td class="url">/install</td><td class="file">install.html</td><td>PWA install guide. Linked from registration email.</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- Tournament Pages -->
+<div class="table-wrap" style="margin-bottom:1.4rem;">
+  <table class="page-table">
+    <thead><tr><th>URL (/t/{slug}/…)</th><th>File</th><th>Description</th></tr></thead>
+    <tbody>
+      <tr><td class="url">/</td><td class="file">home.html</td><td>Landing. Hero, about, registration CTA. Fully editable from admin Design tab.</td></tr>
+      <tr><td class="url">/admin</td><td class="file">admin.html</td><td>Owner/co-admin dashboard. Rounds, pairings, course setup, Design (24 settings keys), player management.</td></tr>
+      <tr><td class="url">/login</td><td class="file">login.html</td><td>Email + password via Supabase Auth. Sanitized error messages (no raw Supabase errors).</td></tr>
+      <tr><td class="url">/scoreboard</td><td class="file">scoreboard.html</td><td>Live leaderboard. Team standings, round scores, Realtime subscription, trash talk.</td></tr>
+      <tr><td class="url">/scorecard</td><td class="file">scorecard.html</td><td>Hole-by-hole score entry. Offline queue via localStorage. Triggers leaderboard Realtime update.</td></tr>
+      <tr><td class="url">/feed</td><td class="file">feed.html</td><td>Activity feed. HIO alerts, trash talk, push notification trigger. _parseMentions XSS fixed (May 14).</td></tr>
+      <tr><td class="url">/profile</td><td class="file">profile.html</td><td>Individual player stats, scores, handicap history.</td></tr>
+      <tr><td class="url">/directory</td><td class="file">directory.html</td><td>Full player roster. Names, handicaps, team assignments.</td></tr>
+      <tr><td class="url">/course</td><td class="file">course.html</td><td>Course info. Par, yardage, local rules per round.</td></tr>
+      <tr><td class="url">/champions</td><td class="file">champions.html</td><td>Hall of fame. Past winners by year. Read-only.</td></tr>
+      <tr><td class="url">/install</td><td class="file">install.html</td><td>PWA add-to-home-screen guide. Linked from registration email.</td></tr>
+      <tr><td class="url">/player</td><td class="file">player.html</td><td>Detailed player profile with ARIA exemplary implementation.</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- Strengths + Gaps -->
+<div class="grid-2">
+  <div class="card">
+    <div class="card-title">Strengths</div>
+    <ul>
+      <li><strong>RLS depth.</strong> 11 migrations demonstrate progressive hardening. Migrations 008–011 each close specific cited vulnerabilities with verified policies. No USING(true) on write paths for critical tables.</li>
+      <li><strong>Edge function auth.</strong> All 6 functions verify JWT before acting. send-push, platform-action, and create-checkout use service-role only for verified operations — anon key used only for JWT verification.</li>
+      <li><strong>Migration history as audit log.</strong> Every security fix is a documented migration with inline rationale. 009 names the two self-join bugs it closed.</li>
+      <li><strong>XSS surface closed.</strong> feed.html:375 (_parseMentions) and admin.html:2185/2340 (image preview) fixed May 14. DOM methods used; no innerHTML on player-controlled content.</li>
+      <li><strong>PWA cache v36.</strong> 26 files precached. Offline scorecard entry via localStorage queue. Push notification with HIO vibration + deep-link.</li>
+      <li><strong>Logo rendering fixed.</strong> Commit 27f0379 — inline SVG logos resolve Barlow Condensed font rendering on all pages.</li>
+      <li><strong>ToS + Privacy shipped.</strong> /tos and /privacy live with footer links on home.html and login.html.</li>
+      <li><strong>Trash talk rate-limited.</strong> Migration 011: BEFORE INSERT trigger enforces 30-second cooldown, closes spam vector.</li>
+    </ul>
+  </div>
+  <div class="card">
+    <div class="card-title">Gaps &amp; Real Bugs</div>
+    <ul>
+      <li><span class="pill pill-red">NEW BUG</span> <strong>Duplicate migration prefix 006.</strong> <code>migrations/006_drop_is_admin.sql</code> and <code>migrations/006_multi_tourney_players.sql</code> both exist with prefix 006. Supabase CLI applies migrations by filename — alpha sort means <code>drop_is_admin</code> runs before <code>multi_tourney_players</code>, but this is fragile and will confuse any fresh schema apply, CI baseline check, or ops team member. Risk: silent ordering assumptions silently break on a new environment.</li>
+      <li><span class="pill pill-orange">HIGH</span> <strong>player_accounts anon read USING(true).</strong> <code>migrations/005</code>: <code>CREATE POLICY "anon read player_accounts" ON player_accounts FOR SELECT TO anon USING (true)</code>. Migration 008 fixed the UPDATE path but left SELECT open. Any anonymous visitor can enumerate all player emails, plans (<code>free/player/pro</code>), and <code>billing_status</code>. This is a privacy exposure — billing data should not be publicly readable.</li>
+      <li><span class="pill pill-orange">HIGH</span> <strong>CSP unsafe-inline open.</strong> <code>vercel.json</code> HTML Content-Security-Policy includes <code>script-src 'self' 'unsafe-inline'</code>. All pages have substantial inline <code>&lt;script&gt;</code> blocks. This nullifies XSS protection that CSP is supposed to provide. Blocking path: extract inline scripts to .js files.</li>
+      <li><span class="pill pill-orange">MANUAL</span> <strong>SEND_INSTALL_EMAIL_SECRET not set.</strong> send-install-email edge function deployed (v4) but webhook header is not yet configured. Rob must set env var in Supabase dashboard and update DB webhook header. Install emails not firing.</li>
+      <li><span class="pill pill-orange">MANUAL</span> <strong>deploy-functions CI secrets missing.</strong> <code>.github/workflows/deploy-functions.yml</code> requires <code>SUPABASE_ACCESS_TOKEN</code> and <code>SUPABASE_PROJECT_REF</code> repo secrets. Not yet set — edge functions deploy manually only.</li>
+      <li><span class="pill pill-red">BLOCKER</span> <strong>Business: LLC not formed → Stripe test-mode only.</strong> <code>reg_open=false</code>. Revenue path entirely blocked. No LLC = no Stripe live mode, no Mercury bank, no paid signups.</li>
+      <li><span class="pill pill-gold">LOW</span> <strong>No loading skeletons.</strong> Pages blank-flash while Supabase fetches data. Affects scoreboard, feed, directory, profile, champions. UX regression vs native-app competitors.</li>
+      <li><span class="pill pill-gold">LOW</span> <strong>No performance monitoring.</strong> No Sentry, no Lighthouse CI, no Core Web Vitals tracking. Performance grade held at B with no regression signal.</li>
+      <li><span class="pill pill-gold">LOW</span> <strong>settings store un-typed.</strong> Key-value store flexible but no schema enforcement. Wrong key typos fail silently. Typed settings object or Zod validation would close this.</li>
+      <li><span class="pill pill-gold">LOW</span> <strong>manifest 180px icon missing.</strong> Rob must supply PNG. Blocked on asset.</li>
+    </ul>
+  </div>
+</div>
+
+</div>
+</section>
+
+<section id="plan">
+<div class="wrapper">
+
+<div class="section-header">
+  <div class="section-eyebrow">§ Plan</div>
+  <div class="section-title">Strategic Priorities</div>
+  <div class="section-desc">Ordered by impact × urgency. Business blocker is P0 — it blocks revenue. Architecture and security items are P1.</div>
+</div>
+
+<div class="card" style="margin-bottom:1.4rem;">
+  <div class="card-title">Priority Stack</div>
+  <ol>
+    <li><strong>P0 [BUSINESS - BLOCKING]:</strong> Rob forms LLC → sets STRIPE_LIVE_MODE → sets reg_open=true. No code changes until this unblocks. Everything else is polish on a product that can't generate revenue.</li>
+    <li><strong>P1 [ARCHITECTURE]:</strong> Rename <code>006_multi_tourney_players.sql</code> → <code>006b_multi_tourney_players.sql</code> (or renumber to 012). Document the schema version history. Prevent fresh-apply ambiguity.</li>
+    <li><strong>P1 [SECURITY]:</strong> Restrict <code>player_accounts</code> anon SELECT — scope to <code>auth.email() = email</code> (authenticated only). Migration 012 (or 013).</li>
+    <li><strong>P1 [MANUAL — Rob]:</strong> Set <code>SEND_INSTALL_EMAIL_SECRET</code> env var in Supabase dashboard. Update DB webhook Authorization header. Unblocks install email flow.</li>
+    <li><strong>P2 [DEPLOYMENT]:</strong> Set <code>SUPABASE_ACCESS_TOKEN</code> + <code>SUPABASE_PROJECT_REF</code> GitHub repo secrets → enable CI edge function auto-deploy.</li>
+    <li><strong>P2 [SECURITY]:</strong> Extract inline scripts from HTML pages → enables strict CSP (remove <code>unsafe-inline</code>). High effort, high security payoff.</li>
+    <li><strong>P3 [PERFORMANCE]:</strong> Add loading skeletons site-wide (scoreboard, feed, directory, profile). Eliminates blank-flash. ~3h effort.</li>
+    <li><strong>P3 [PERFORMANCE]:</strong> Add Sentry + Lighthouse CI → performance regression signal. ~1h setup.</li>
+    <li><strong>P4 [FEATURE DEPTH]:</strong> Score admin-edit UI (admin can correct player scores after submission). Gap flagged since May 6.</li>
+    <li><strong>P4 [FEATURE DEPTH]:</strong> Tournament series / multi-event standings. Phase 3 scope.</li>
+  </ol>
+</div>
+
+<!-- Idea Cards -->
+<div class="grid-2" style="margin-bottom:1.4rem;">
+  <div class="idea-card idea-1">
+    <div class="idea-number">1</div>
+    <div class="idea-tag"><span class="pill pill-red">Business P0</span></div>
+    <div class="idea-title">LLC Formation → Revenue Unlock</div>
+    <div class="idea-body">Platform is technically ready. Business is the only blocker. LLC formation opens Stripe live mode, Mercury bank, and paid tournament registrations. First paying customer could be the next Bova-scale event.</div>
+    <div class="idea-plan"><strong>Build plan:</strong> Rob: Wyoming or Delaware single-member LLC (1–3 days via registered agent). Then: Stripe dashboard → live mode → Stripe price IDs → env vars on Supabase. Then: reg_open=true in settings. Revenue live within a week of LLC.</div>
+  </div>
+  <div class="idea-card idea-2">
+    <div class="idea-number">2</div>
+    <div class="idea-tag"><span class="pill pill-orange">Security P1</span></div>
+    <div class="idea-title">Strict CSP via Script Extraction</div>
+    <div class="idea-body">Every HTML page has large inline script blocks — that's what forces <code>unsafe-inline</code>. Extracting shared logic to <code>/lib/*.js</code> modules and page-specific scripts to sibling files makes a nonce-based or hash-based CSP achievable. Eliminates the last standing class of XSS bypass.</div>
+    <div class="idea-plan"><strong>Build plan:</strong> Extract shared utilities (esc, supabase init, nav) first. Then page-by-page extraction starting with feed.html and admin.html (largest surface). Update vercel.json CSP header. ~8–12h total.</div>
+  </div>
+  <div class="idea-card idea-3">
+    <div class="idea-number">3</div>
+    <div class="idea-tag"><span class="pill pill-gold">Performance P3</span></div>
+    <div class="idea-title">Loading Skeletons Platform-Wide</div>
+    <div class="idea-body">Every data-fetching page blank-flashes while Supabase responds. Skeleton shimmer is already in tokens.css from the UX sprint — it just needs to be wired on 6 more pages. Biggest visible quality improvement per hour of work.</div>
+    <div class="idea-plan"><strong>Build plan:</strong> Add skeleton containers matching final layout to scoreboard, feed, directory, profile, champions, course. Wire show/hide around data-fetch promises. ~3h. No new CSS needed.</div>
+  </div>
+  <div class="idea-card idea-4">
+    <div class="idea-number">4</div>
+    <div class="idea-tag"><span class="pill pill-blue">Feature P4</span></div>
+    <div class="idea-title">Score Admin-Edit UI</div>
+    <div class="idea-body">Admins currently cannot correct a player's submitted score without direct DB access. Every tournament risks a wrong score locked in. Admin should be able to select a round, select a player, and override any hole's score with an audit note.</div>
+    <div class="idea-plan"><strong>Build plan:</strong> New tab in admin.html "Scores". Fetch round + player grid. Inline editable cells. On save, UPDATE scores WHERE player_id + round_id + hole = admin-supplied values. RLS "admin manage scores" already covers this. ~4h.</div>
+  </div>
+  <div class="idea-card idea-5">
+    <div class="idea-number">5</div>
+    <div class="idea-tag"><span class="pill pill-purple">Deployment P2</span></div>
+    <div class="idea-title">CI Edge Function Auto-Deploy</div>
+    <div class="idea-body">deploy-functions.yml is wired and ready. Two GitHub repo secrets are all that's needed. Once set, every push to main automatically deploys all Supabase edge functions — no more manual CLI steps during a live tournament.</div>
+    <div class="idea-plan"><strong>Build plan:</strong> Rob: GitHub → repo settings → Secrets → add SUPABASE_ACCESS_TOKEN (from Supabase dashboard) and SUPABASE_PROJECT_REF (jllugkiojeoopitdvzsa). Done in 5 minutes. No code changes.</div>
+  </div>
+</div>
+
+<!-- Business Milestones -->
+<div class="section-header" style="margin-top:1rem;">
+  <div class="section-title" style="font-size:1rem;">Business Milestones</div>
+</div>
+<div class="roadmap-item">
+  <div class="roadmap-icon">1</div>
+  <div class="roadmap-content">
+    <div class="roadmap-title">LLC Formation</div>
+    <div class="roadmap-desc">Rob manual. Wyoming or Delaware single-member LLC. Registered agent ~$50/yr. Unlocks everything below.</div>
+    <div class="roadmap-action"><strong>Blocks:</strong> Stripe live mode, Mercury bank, paid signups, tax posture, contracts.</div>
+  </div>
+</div>
+<div class="roadmap-item">
+  <div class="roadmap-icon">2</div>
+  <div class="roadmap-content">
+    <div class="roadmap-title">Stripe Live Mode + First Paid Tournament</div>
+    <div class="roadmap-desc">Post-LLC: Stripe business verification, live price IDs, env vars set, reg_open=true. First paid tournament owner completes 5-step wizard.</div>
+    <div class="roadmap-action"><strong>Target:</strong> Within 1 week of LLC formation. Revenue live.</div>
+  </div>
+</div>
+<div class="roadmap-item">
+  <div class="roadmap-icon">3</div>
+  <div class="roadmap-content">
+    <div class="roadmap-title">Security Grade A</div>
+    <div class="roadmap-desc">player_accounts anon read locked, CSP unsafe-inline removed, SEND_INSTALL_EMAIL_SECRET set. All remaining open security items resolved.</div>
+    <div class="roadmap-action"><strong>Target:</strong> After LLC (don't spend engineering time on polish while revenue is blocked).</div>
+  </div>
+</div>
+<div class="roadmap-item">
+  <div class="roadmap-icon">4</div>
+  <div class="roadmap-content">
+    <div class="roadmap-title">Second Tenant Onboarded</div>
+    <div class="roadmap-desc">Non-Bova tournament completes /create wizard, pays, runs their event. Validates multi-tenancy at real-world scale beyond the PoC tenant.</div>
+    <div class="roadmap-action"><strong>Target:</strong> Summer 2026 golf season.</div>
+  </div>
+</div>
+<div class="roadmap-item">
+  <div class="roadmap-icon">5</div>
+  <div class="roadmap-content">
+    <div class="roadmap-title">Phase 3 — Tournament Series</div>
+    <div class="roadmap-desc">Multi-event standings, cumulative handicap tracking, series leaderboard. Unlocks club/league use case at higher price point.</div>
+    <div class="roadmap-action"><strong>Target:</strong> After 3+ tenants validated core product-market fit.</div>
+  </div>
+</div>
+
+</div>
+</section>
+
+<section id="runbook">
+<div class="wrapper">
+
+<div class="section-header">
+  <div class="section-eyebrow">§ Runbook</div>
+  <div class="section-title">Execution Steps</div>
+  <div class="section-desc">Ordered execution steps for <code>/tourney-execute</code>. Steps 1–3 are code + migration. Steps 4–6 are Rob manual actions. Step 7 is deployment verification.</div>
+</div>
+
+<div class="runbook-steps">
+
+  <div class="rb-step">
+    <div class="rb-step-title">Rename duplicate migration 006b</div>
+    <div class="rb-step-body">
+      File: <code>migrations/006_multi_tourney_players.sql</code><br>
+      Action: Rename to <code>migrations/006b_multi_tourney_players.sql</code>.<br>
+      Then update any schema baseline references or CI migration runners that enumerate migration files.<br>
+      Also add a header comment to the file: <code>-- Originally applied as 006 alongside 006_drop_is_admin. Renamed to 006b for ordering clarity.</code>
+    </div>
+    <div class="rb-verify">
+      <strong>Verify</strong>
+      Run <code>ls migrations/ | sort</code>. Confirm no two files share the same numeric prefix. Confirm both 006_drop_is_admin.sql and 006b_multi_tourney_players.sql are present.
+    </div>
+  </div>
+
+  <div class="rb-step">
+    <div class="rb-step-title">Write migration: restrict player_accounts anon SELECT</div>
+    <div class="rb-step-body">
+      Create <code>migrations/012_restrict_player_accounts_anon_read.sql</code>:<br>
+      <pre style="background:rgba(0,0,0,0.3);padding:0.6rem;border-radius:4px;font-size:0.75rem;overflow-x:auto;margin-top:0.4rem;">-- Migration 012: Restrict player_accounts anon SELECT.
+-- Bug: migration 005 left "anon read player_accounts" USING(true),
+--   exposing email, plan, and billing_status to all anonymous visitors.
+-- Fix: drop anon policy, replace with owner-scoped authenticated read.
+BEGIN;
+DROP POLICY IF EXISTS "anon read player_accounts" ON player_accounts;
+CREATE POLICY "auth read own player_account" ON player_accounts
+  FOR SELECT TO authenticated
+  USING (email = auth.email());
+COMMIT;</pre>
+    </div>
+    <div class="rb-verify">
+      <strong>Verify</strong>
+      Apply migration in Supabase SQL editor. Run: <code>SELECT policyname FROM pg_policies WHERE tablename = 'player_accounts'</code>. Confirm "anon read player_accounts" is gone. Confirm "auth read own player_account" exists. Test: unauthenticated Supabase client SELECT on player_accounts returns 0 rows.
+    </div>
+  </div>
+
+  <div class="rb-step">
+    <div class="rb-step-title">Update vercel.json — add new ticket rewrite</div>
+    <div class="rb-step-body">
+      File: <code>vercel.json</code><br>
+      In the <code>rewrites</code> array, add before the closing bracket:<br>
+      <code>{"source": "/platform/5-15-26-claude-review", "destination": "/5-15-26-claude-review.html"}</code>
+    </div>
+    <div class="rb-verify">
+      <strong>Verify</strong>
+      After deploy: <code>curl -I https://tourney.greenskeeper.studio/platform/5-15-26-claude-review</code> returns 200, not 404.
+    </div>
+  </div>
+
+  <div class="rb-step">
+    <div class="rb-step-title">[ROB MANUAL] Set SEND_INSTALL_EMAIL_SECRET env var</div>
+    <div class="rb-step-body">
+      Go to Supabase dashboard → Project Settings → Edge Functions → Environment Variables.<br>
+      Add: <code>SEND_INSTALL_EMAIL_SECRET = &lt;your-chosen-secret&gt;</code> (any strong random string, e.g. <code>openssl rand -hex 32</code>).<br>
+      Then: Database → Webhooks → find the players INSERT webhook → update the Authorization header value to match this secret.<br>
+      Format: <code>Authorization: Bearer &lt;SEND_INSTALL_EMAIL_SECRET&gt;</code>
+    </div>
+    <div class="rb-verify">
+      <strong>Verify</strong>
+      Create a test player row in Supabase Table Editor. Check Supabase Edge Function logs for send-install-email — confirm it receives the webhook and does NOT return 401. Confirm install email arrives in test inbox.
+    </div>
+  </div>
+
+  <div class="rb-step">
+    <div class="rb-step-title">[ROB MANUAL] Set GitHub repo secrets for CI edge deploy</div>
+    <div class="rb-step-body">
+      Go to GitHub → roberttmadsen13-del/TOURney → Settings → Secrets and variables → Actions.<br>
+      Add secret: <code>SUPABASE_ACCESS_TOKEN</code> — generate at app.supabase.com → Account → Access Tokens.<br>
+      Add secret: <code>SUPABASE_PROJECT_REF</code> = <code>jllugkiojeoopitdvzsa</code>.<br>
+      These enable <code>.github/workflows/deploy-functions.yml</code> to auto-deploy edge functions on push to main.
+    </div>
+    <div class="rb-verify">
+      <strong>Verify</strong>
+      Push a trivial change to main. Check GitHub Actions → deploy-functions workflow → confirm it runs and all 6 functions deploy successfully. Green check on the workflow run.
+    </div>
+  </div>
+
+  <div class="rb-step">
+    <div class="rb-step-title">Add loading skeletons to scoreboard.html and feed.html</div>
+    <div class="rb-step-body">
+      Files: <code>scoreboard.html</code>, <code>feed.html</code><br>
+      Pattern: In each page, find the container that renders Supabase data. Before the async fetch resolves, set <code>innerHTML</code> to skeleton shimmer HTML using the <code>.skeleton</code> class from <code>tokens.css</code>. On data resolve, replace with real content.<br>
+      Skeleton structure mirrors the final rendered card shape (same height, same columns). Use the existing shimmer keyframe already in tokens.css.
+    </div>
+    <div class="rb-verify">
+      <strong>Verify</strong>
+      Open scoreboard.html and feed.html in Chrome with Network → Slow 3G throttling. Confirm skeleton shimmers visible for 1–3 seconds before content loads. No blank white flash.
+    </div>
+  </div>
+
+  <div class="rb-step">
+    <div class="rb-step-title">Commit + push all changes</div>
+    <div class="rb-step-body">
+      <pre style="background:rgba(0,0,0,0.3);padding:0.6rem;border-radius:4px;font-size:0.75rem;overflow-x:auto;margin-top:0.4rem;">cd "C:/Users/Rob/Greenskeeper Studios/01 Repos/TOURney"
+git add migrations/006b_multi_tourney_players.sql \
+        migrations/012_restrict_player_accounts_anon_read.sql \
+        vercel.json \
+        scoreboard.html \
+        feed.html \
+        5-15-26-claude-review.html \
+        qa-index.json grades.json axis-status.json
+git commit -m "fix: duplicate 006 migration rename, player_accounts RLS, skeletons, weekly review 5-15-26"
+git push</pre>
+    </div>
+    <div class="rb-verify">
+      <strong>Verify</strong>
+      Confirm push succeeds. Check Vercel dashboard — deployment triggered. Confirm no build errors. Visit https://tourney.greenskeeper.studio/platform/5-15-26-claude-review — 200 OK.
+    </div>
+  </div>
+
+</div>
+</div>
+</section>
+
+<section id="executing">
+<div class="wrapper">
+<!-- EXECUTING-CONTENT-START -->
+<div class="stage-pending">
+  <p>Awaiting execution. Run <code>/tourney-execute 5-15-26-claude-review.html</code> to proceed.</p>
+</div>
+<!-- EXECUTING-CONTENT-END -->
+</div>
+</section>
+
+<section id="audit">
+<div class="wrapper">
+<!-- AUDIT-CONTENT-START -->
+<div class="stage-pending">
+  <p>Awaiting execution. Run <code>/tourney-execute 5-15-26-claude-review.html</code> to proceed.</p>
+</div>
+<!-- AUDIT-CONTENT-END -->
+</div>
+</section>
+
+<section id="concluded">
+<div class="wrapper">
+<!-- CONCLUDED-CONTENT-START -->
+<div class="stage-pending">
+  <p>Awaiting execution. Run <code>/tourney-execute 5-15-26-claude-review.html</code> to proceed.</p>
+</div>
+<!-- CONCLUDED-CONTENT-END -->
+</div>
+</section>
+
+<footer>
+  Generated by <span>Claude Sonnet 4.6</span> · Greenskeeper Studios Internal · May 15, 2026
+  <br style="margin-top:0.3rem">
+  <a href="/platform" style="color:var(--muted);font-size:0.7rem;text-decoration:none">← Back to Platform Hub</a>
+</footer>
+
+</body>
+</html>

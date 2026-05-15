@@ -1,11 +1,18 @@
 {
-  "updated_at": "2026-05-14T21:00:00Z",
+  "updated_at": "2026-05-15T08:00:00Z",
   "description": "Per-axis grade history for TOURney platform. Updated automatically by review skills. Operations Action Board reads this file.",
   "axes": {
     "architecture": {
       "label": "Architecture",
       "cmd": "/tourney-review-architecture",
       "scores": [
+        {
+          "date": "2026-05-15",
+          "score": "A-",
+          "url": "/platform/5-15-26-claude-review",
+          "review_title": "Full Platform Review · May 15, 2026",
+          "notes": "Down from A. New finding: two migrations both carry prefix 006 (006_drop_is_admin.sql + 006_multi_tourney_players.sql). Schema governance hazard — alpha-sort ordering is implicit, not explicit. Fresh schema apply ambiguous. Rename to 006b required. tourney-init.js solid, tournament_admins canonical, 11+ versioned migrations otherwise clean."
+        },
         {
           "date": "2026-05-14",
           "score": "A",
@@ -41,6 +48,13 @@
       "cmd": "/tourney-review-feature-depth",
       "scores": [
         {
+          "date": "2026-05-15",
+          "score": "B+",
+          "url": "/platform/5-15-26-claude-review",
+          "review_title": "Full Platform Review · May 15, 2026",
+          "notes": "No change. Inline SVG logo fix (27f0379) improves brand rendering but adds no features. Three tournament structures, 12 scoring formats, realtime scorecard, HIO confetti, feed, directory, champions, rounds model (007), admin Design tab 24 settings keys. Gaps: no score admin-edit UI, no tournament series."
+        },
+        {
           "date": "2026-05-14",
           "score": "B+",
           "url": "/platform/5-14-26-claude-review",
@@ -74,6 +88,13 @@
       "label": "UX Polish",
       "cmd": "/tourney-review-ux",
       "scores": [
+        {
+          "date": "2026-05-15",
+          "score": "A-",
+          "url": "/platform/5-15-26-claude-review",
+          "review_title": "Full Platform Review · May 15, 2026",
+          "notes": "No change. Inline SVG logo + Barlow Condensed font rendering fix confirmed (27f0379). CSS token centralization, SW v36, skeleton shimmer on scoreboard+home confirmed live. 1 open: manifest 180px icon (blocked on Rob PNG)."
+        },
         {
           "date": "2026-05-14",
           "score": "A-",
@@ -144,6 +165,13 @@
       "cmd": "/tourney-review-security",
       "scores": [
         {
+          "date": "2026-05-15",
+          "score": "B+",
+          "url": "/platform/5-15-26-claude-review",
+          "review_title": "Full Platform Review · May 15, 2026",
+          "notes": "Holds B+. Corrected prior note: player_accounts anon SELECT USING(true) from migration 005 confirmed still open — exposes email/plan/billing_status to anon visitors (migration 008 only scoped UPDATE, not SELECT). Migration 012 runbook item written to close it. CSP unsafe-inline and SEND_INSTALL_EMAIL_SECRET still pending."
+        },
+        {
           "date": "2026-05-14",
           "score": "B+",
           "url": "/platform/5-14-26-claude-review",
@@ -199,6 +227,13 @@
       "cmd": "/tourney-review-business",
       "scores": [
         {
+          "date": "2026-05-15",
+          "score": "C+",
+          "url": "/platform/5-15-26-claude-review",
+          "review_title": "Full Platform Review · May 15, 2026",
+          "notes": "No change. LLC still not formed — Stripe test-mode only, reg_open=false. ToS + Privacy live. Revenue path fully blocked by Rob manual action. Holding C+ until LLC formed."
+        },
+        {
           "date": "2026-05-14",
           "score": "C+",
           "url": "/platform/5-14-26-claude-review",
@@ -239,6 +274,13 @@
       "label": "Deployment",
       "cmd": "/tourney-review-deployment",
       "scores": [
+        {
+          "date": "2026-05-15",
+          "score": "A-",
+          "url": "/platform/5-15-26-claude-review",
+          "review_title": "Full Platform Review · May 15, 2026",
+          "notes": "No change. GH Actions CI live (ESLint + Deno type-check on PRs). SW v36 (up from v35). deploy-functions.yml ready but SUPABASE_ACCESS_TOKEN + SUPABASE_PROJECT_REF secrets not yet set (Rob manual — 5 min task). No staging environment."
+        },
         {
           "date": "2026-05-14",
           "score": "A-",
@@ -281,6 +323,13 @@
       "cmd": "/tourney-review-performance",
       "scores": [
         {
+          "date": "2026-05-15",
+          "score": "B",
+          "url": "/platform/5-15-26-claude-review",
+          "review_title": "Full Platform Review · May 15, 2026",
+          "notes": "No change. SW v36, 26 precached files. Skeleton shimmer on scoreboard+home confirmed. Feed, directory, profile, champions still blank-flash. No Lighthouse CI or perf monitoring. Runbook step added: extend skeletons to feed+scoreboard."
+        },
+        {
           "date": "2026-05-14",
           "score": "B",
           "url": "/platform/5-14-26-claude-review",
@@ -314,6 +363,13 @@
       "label": "Data Model",
       "cmd": "/tourney-review-data-model",
       "scores": [
+        {
+          "date": "2026-05-15",
+          "score": "B",
+          "url": "/platform/5-15-26-claude-review",
+          "review_title": "Full Platform Review · May 15, 2026",
+          "notes": "Holds B. New finding: duplicate 006 migration prefix (006_drop_is_admin + 006_multi_tourney_players) — schema governance hazard, fresh-apply ordering ambiguous. player_accounts anon SELECT USING(true) confirmed open from migration 005 (not closed by 008). settings store un-typed. 11 migrations otherwise sound."
+        },
         {
           "date": "2026-05-14",
           "score": "B",

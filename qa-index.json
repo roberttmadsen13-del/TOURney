@@ -1,9 +1,22 @@
 {
   "$schema": "https://tourney.greenskeeper.studio/qa-index-schema.json",
   "version": 1,
-  "updated_at": "2026-05-14T22:00:00Z",
+  "updated_at": "2026-05-15T08:00:00Z",
   "description": "Canonical registry of all TOURney plans, reviews, audits, and QA artifacts. The /platform Artifacts tab renders from this file. Skills (e.g. tourney-review) append new entries when they generate output.",
   "entries": [
+    {
+      "id": "review-2026-05-15",
+      "category": "review",
+      "stage": "executing",
+      "title": "Full Platform Review · May 15, 2026",
+      "summary": "Weekly automated review. New finding: duplicate 006 migration prefix (006_drop_is_admin + 006_multi_tourney_players) — schema governance hazard. player_accounts anon SELECT USING(true) exposes billing_status to anonymous visitors (not closed by migration 008). Grades: Arch A-, Feature B+, UX A-, Security B+, Business C+ (blocker), Deploy A-, Perf B, Data B. No axis below C.",
+      "date": "2026-05-15",
+      "author": "claude-sonnet-4-6",
+      "url": "/platform/5-15-26-claude-review",
+      "file": "5-15-26-claude-review.html",
+      "tags": ["review", "audit"],
+      "status": "open"
+    },
     {
       "id": "logo-audit-2026-05-14",
       "category": "fix",

@@ -1,23 +1,23 @@
 {
-  "updated_at": "2026-05-14T18:00:00Z",
+  "updated_at": "2026-05-15T08:00:00Z",
   "description": "Living state for all TOURney platform axes. One entry per axis. Updated by every tourney-* skill. Agents read this for context (50 tokens) instead of parsing HTML artifacts.",
   "stages": ["review", "plan", "runbook", "executing", "audit", "concluded"],
   "axes": {
     "architecture": {
       "status": "review",
-      "grade": "A",
-      "artifact": "/platform/architecture",
-      "last_updated": "2026-05-08",
-      "summary": "Clean init layer, tournament_admins canonical, 11 versioned migrations. Settings store un-typed.",
-      "open_items": 1,
+      "grade": "A-",
+      "artifact": "/platform/5-15-26-claude-review",
+      "last_updated": "2026-05-15",
+      "summary": "Down from A. Duplicate 006 migration prefix (006_drop_is_admin + 006_multi_tourney_players) — schema governance hazard. Rename to 006b required. tourney-init.js solid, tournament_admins canonical otherwise.",
+      "open_items": 2,
       "blocking": false
     },
     "feature-depth": {
       "status": "review",
       "grade": "B+",
-      "artifact": "/platform/feature-depth",
-      "last_updated": "2026-05-08",
-      "summary": "3 structures, 12 scoring formats, realtime, HIO. No score admin-edit UI, no tournament series.",
+      "artifact": "/platform/5-15-26-claude-review",
+      "last_updated": "2026-05-15",
+      "summary": "No change. 3 tournament structures, 12 scoring formats, realtime, HIO confetti, trash talk, rounds model. Gaps: no score admin-edit UI, no tournament series.",
       "open_items": 2,
       "blocking": false
     },
@@ -31,48 +31,48 @@
       "blocking": false
     },
     "security": {
-      "status": "audit",
+      "status": "review",
       "grade": "B+",
-      "artifact": "/platform/5-14-26-claude-review",
-      "last_updated": "2026-05-14",
-      "summary": "2 XSS closed (feed.html:375, admin.html:2185/2340). player_accounts RLS confirmed clean. Open: CSP unsafe-inline, SEND_INSTALL_EMAIL_SECRET (Rob manual), invitations/push_subscriptions permissive read.",
-      "open_items": 3,
+      "artifact": "/platform/5-15-26-claude-review",
+      "last_updated": "2026-05-15",
+      "summary": "Holds B+. player_accounts anon SELECT USING(true) confirmed still open (migration 005, not closed by 008). CSP unsafe-inline open. SEND_INSTALL_EMAIL_SECRET Rob manual pending. Migration 012 runbook written.",
+      "open_items": 4,
       "blocking": false
     },
     "business": {
       "status": "audit",
       "grade": "C+",
-      "artifact": "/platform/5-14-26-claude-review",
-      "last_updated": "2026-05-14",
-      "summary": "ToS + Privacy pages live at /tos /privacy. Footer links added. LLC still not formed — Stripe test-mode only, reg_open=false. Revenue path blocked by Rob manual action.",
+      "artifact": "/platform/5-15-26-claude-review",
+      "last_updated": "2026-05-15",
+      "summary": "No change. ToS + Privacy live. LLC not formed — Stripe test-mode only, reg_open=false. Revenue path fully blocked. P0 action: Rob forms LLC.",
       "open_items": 4,
       "blocking": true
     },
     "deployment": {
-      "status": "audit",
+      "status": "review",
       "grade": "A-",
-      "artifact": "/platform/5-14-26-claude-review",
-      "last_updated": "2026-05-14",
-      "summary": "GH Actions CI live: ESLint + Deno type-check on PRs. deploy-functions.yml ready (needs SUPABASE_ACCESS_TOKEN + SUPABASE_PROJECT_REF repo secrets). No staging environment.",
+      "artifact": "/platform/5-15-26-claude-review",
+      "last_updated": "2026-05-15",
+      "summary": "No change. GH Actions CI live. SW v36. deploy-functions.yml needs SUPABASE_ACCESS_TOKEN + SUPABASE_PROJECT_REF secrets (Rob manual, 5 min). No staging environment.",
       "open_items": 2,
       "blocking": false
     },
     "performance": {
       "status": "review",
       "grade": "B",
-      "artifact": "/platform/performance",
-      "last_updated": "2026-05-08",
-      "summary": "SW cache-first, realtime scorecard, DB indexes. No loading skeletons, no perf monitoring.",
+      "artifact": "/platform/5-15-26-claude-review",
+      "last_updated": "2026-05-15",
+      "summary": "No change. SW v36, 26 precached files. Skeletons on scoreboard+home. Feed, directory, profile, champions still blank-flash. No Lighthouse CI or perf monitoring.",
       "open_items": 2,
       "blocking": false
     },
     "data-model": {
-      "status": "audit",
+      "status": "review",
       "grade": "B",
-      "artifact": "/platform/5-14-26-claude-review",
-      "last_updated": "2026-05-14",
-      "summary": "11 migrations clean. player_accounts RLS confirmed secure (authenticated-only, email=auth.email()). Remaining gap: settings store un-typed.",
-      "open_items": 1,
+      "artifact": "/platform/5-15-26-claude-review",
+      "last_updated": "2026-05-15",
+      "summary": "Holds B. New: duplicate 006 migration prefix flagged. player_accounts anon SELECT USING(true) still open. settings store un-typed. 11 migrations otherwise sound.",
+      "open_items": 3,
       "blocking": false
     },
     "marketing": {
