@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TOURney — UX Polish Review · May 19, 2026</title>
+<style>
+:root{--gold:#c09030;--gold-light:#d4a840;--gold-dim:rgba(192,144,48,0.18);--bg:#0d0a05;--surface:#151009;--card:#1c140a;--border:rgba(192,144,48,0.22);--muted:#7a6a54;--text:#e8dcc8;--red:#c0392b;--green:#27ae60;--blue:#2980b9;--orange:#e67e22;--purple:#8e44ad;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:-apple-system,'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;font-size:15px;}
+nav{position:sticky;top:0;z-index:100;background:rgba(13,10,5,0.97);border-bottom:1px solid var(--border);backdrop-filter:blur(12px);}
+.nav-inner{padding:0.6rem 1.5rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap;}
+.nav-brand{color:var(--gold);font-weight:700;font-size:1rem;letter-spacing:0.05em;white-space:nowrap;}
+.nav-brand span{color:var(--muted);font-weight:400;font-size:0.8rem;margin-left:0.4rem;}
+.nav-links{display:flex;gap:0.2rem;flex-wrap:wrap;margin-left:auto;}
+.nav-links a{color:var(--muted);text-decoration:none;font-size:0.78rem;padding:0.3rem 0.55rem;border-radius:4px;transition:all 0.15s;white-space:nowrap;}
+.nav-links a:hover{color:var(--gold);background:var(--gold-dim);}
+.lifecycle-bar{display:flex;gap:3px;padding:0.55rem 1.5rem 0.65rem;background:var(--surface);border-bottom:1px solid var(--border);}
+.lc-stage{flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;}
+.lc-pill{height:5px;width:100%;border-radius:3px;background:rgba(192,144,48,0.1);transition:background 0.25s;}
+.lc-label{font-size:0.58rem;font-weight:700;letter-spacing:0.11em;text-transform:uppercase;color:rgba(122,106,84,0.45);transition:color 0.25s;}
+.lc-done .lc-pill{background:var(--gold);}
+.lc-done .lc-label{color:var(--gold);}
+.lc-active .lc-pill{background:var(--gold-light);box-shadow:0 0 8px rgba(192,144,48,0.45);}
+.lc-active .lc-label{color:var(--gold-light);}
+.hero{padding:3rem 1.5rem 2rem;text-align:center;border-bottom:1px solid var(--border);background:linear-gradient(180deg,rgba(192,144,48,0.06) 0%,transparent 100%);}
+.hero-eyebrow{display:inline-block;font-size:0.7rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold);border:1px solid var(--border);border-radius:20px;padding:0.22rem 0.8rem;margin-bottom:0.9rem;}
+.hero h1{font-size:clamp(1.5rem,3.5vw,2.3rem);font-weight:800;color:#fff;margin-bottom:0.35rem;}
+.hero h1 span{color:var(--gold);}
+.hero-sub{color:var(--muted);max-width:520px;margin:0 auto 1rem;font-size:0.9rem;}
+.hero-meta{display:flex;gap:1.1rem;justify-content:center;flex-wrap:wrap;font-size:0.74rem;color:var(--muted);}
+.hero-meta span{display:flex;align-items:center;gap:0.3rem;}
+.wrapper{max-width:1000px;margin:0 auto;padding:0 1.5rem;}
+section{padding:2.5rem 0;border-bottom:1px solid var(--border);}
+section:last-of-type{border-bottom:none;}
+.section-header{margin-bottom:1.6rem;}
+.section-eyebrow{font-size:0.67rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--gold);margin-bottom:0.3rem;}
+.section-title{font-size:1.35rem;font-weight:800;color:#fff;margin-bottom:0.3rem;}
+.section-desc{color:var(--muted);font-size:0.85rem;max-width:560px;}
+.card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:1.15rem 1.3rem;margin-bottom:0.7rem;}
+.card-title{font-size:0.85rem;font-weight:700;color:var(--gold);margin-bottom:0.45rem;}
+.card p,.card li{font-size:0.84rem;color:var(--text);margin-bottom:0.28rem;}
+.card ul,.card ol{padding-left:1.2rem;}
+.card li{margin-bottom:0.32rem;}
+.grid-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:0.7rem;}
+.grid-3{display:grid;grid-template-columns:repeat(auto-fit,minmax(245px,1fr));gap:0.7rem;}
+.stack-item{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:0.85rem 1.05rem;}
+.stack-label{font-size:0.65rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--muted);margin-bottom:0.18rem;}
+.stack-value{font-size:0.88rem;font-weight:600;color:#fff;}
+.stack-note{font-size:0.72rem;color:var(--muted);margin-top:0.18rem;}
+.pill{display:inline-block;font-size:0.66rem;font-weight:700;letter-spacing:0.06em;padding:0.15rem 0.5rem;border-radius:20px;text-transform:uppercase;}
+.pill-gold{background:rgba(192,144,48,0.18);color:var(--gold);border:1px solid rgba(192,144,48,0.3);}
+.pill-green{background:rgba(39,174,96,0.15);color:var(--green);border:1px solid rgba(39,174,96,0.3);}
+.pill-red{background:rgba(192,57,43,0.15);color:var(--red);border:1px solid rgba(192,57,43,0.3);}
+.pill-orange{background:rgba(230,126,34,0.15);color:var(--orange);border:1px solid rgba(230,126,34,0.3);}
+.pill-blue{background:rgba(41,128,185,0.15);color:var(--blue);border:1px solid rgba(41,128,185,0.3);}
+.page-table{width:100%;border-collapse:collapse;font-size:0.8rem;}
+.page-table th{text-align:left;padding:0.52rem 0.72rem;border-bottom:1px solid var(--border);color:var(--muted);font-size:0.67rem;text-transform:uppercase;letter-spacing:0.08em;background:var(--surface);}
+.page-table td{padding:0.58rem 0.72rem;border-bottom:1px solid rgba(192,144,48,0.08);vertical-align:top;}
+.page-table tr:last-child td{border-bottom:none;}
+.page-table tr:hover td{background:var(--gold-dim);}
+.page-table .url{font-family:monospace;font-size:0.75rem;color:var(--gold-light);}
+.page-table .file{font-family:monospace;font-size:0.72rem;color:var(--muted);}
+.table-wrap{background:var(--card);border:1px solid var(--border);border-radius:8px;overflow:hidden;overflow-x:auto;}
+.score-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(125px,1fr));gap:0.52rem;margin-bottom:1.4rem;}
+.score-cell{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:0.85rem;text-align:center;}
+.score-num{font-size:1.85rem;font-weight:900;line-height:1;margin-bottom:0.18rem;}
+.score-label{font-size:0.64rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);}
+.score-green{color:var(--green);}
+.score-gold{color:var(--gold);}
+.score-red{color:var(--red);}
+.score-blue{color:var(--blue);}
+.idea-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1.25rem;position:relative;overflow:hidden;}
+.idea-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;}
+.idea-1::before{background:var(--gold);}
+.idea-2::before{background:var(--blue);}
+.idea-3::before{background:var(--green);}
+.idea-4::before{background:var(--orange);}
+.idea-5::before{background:var(--purple);}
+.idea-number{font-size:2rem;font-weight:900;opacity:0.07;position:absolute;top:0.5rem;right:1rem;line-height:1;color:#fff;}
+.idea-tag{margin-bottom:0.42rem;}
+.idea-title{font-size:0.96rem;font-weight:700;color:#fff;margin-bottom:0.42rem;}
+.idea-body{font-size:0.82rem;color:var(--muted);line-height:1.55;margin-bottom:0.65rem;}
+.idea-plan{font-size:0.77rem;color:var(--text);}
+.idea-plan strong{color:var(--gold);}
+.runbook-steps{counter-reset:rb-step;}
+.rb-step{background:var(--card);border:1px solid var(--border);border-left:3px solid rgba(192,144,48,0.3);border-radius:0 8px 8px 0;padding:0.95rem 1.15rem 0.95rem 3.8rem;margin-bottom:0.55rem;position:relative;}
+.rb-step::before{counter-increment:rb-step;content:counter(rb-step);position:absolute;left:0.95rem;top:0.95rem;width:1.75rem;height:1.75rem;background:var(--gold-dim);color:var(--gold);border:1px solid var(--border);border-radius:50%;font-size:0.72rem;font-weight:700;display:grid;place-items:center;}
+.rb-step-title{font-size:0.87rem;font-weight:700;color:#fff;margin-bottom:0.22rem;}
+.rb-step-body{font-size:0.8rem;color:var(--muted);margin-bottom:0.35rem;}
+.rb-verify{font-size:0.76rem;color:var(--text);background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:3px;padding:0.35rem 0.6rem;margin-top:0.3rem;}
+.rb-verify strong{color:var(--gold-light);font-size:0.68rem;text-transform:uppercase;letter-spacing:0.07em;display:block;margin-bottom:0.1rem;}
+.sec-item{background:var(--card);border:1px solid var(--border);border-left:3px solid var(--border);border-radius:0 8px 8px 0;padding:0.9rem 1.15rem;margin-bottom:0.65rem;}
+.sec-item.sev-high{border-left-color:var(--red);}
+.sec-item.sev-med{border-left-color:var(--orange);}
+.sec-item.sev-low{border-left-color:var(--green);}
+.sec-item.sev-info{border-left-color:var(--blue);}
+.sec-header{display:flex;align-items:center;gap:0.52rem;margin-bottom:0.42rem;}
+.sec-title{font-size:0.87rem;font-weight:700;color:#fff;}
+.sec-body{font-size:0.8rem;color:var(--muted);margin-bottom:0.42rem;}
+.sec-fix{font-size:0.77rem;color:var(--text);background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:4px;padding:0.42rem 0.62rem;}
+.sec-fix strong{color:var(--gold-light);display:block;margin-bottom:0.12rem;font-size:0.68rem;text-transform:uppercase;letter-spacing:0.08em;}
+.stage-pending{text-align:center;padding:3rem 1.5rem;color:var(--muted);font-size:0.85rem;border:1px dashed rgba(192,144,48,0.2);border-radius:8px;}
+.stage-pending code{color:var(--gold);}
+code{font-family:'Consolas','Monaco',monospace;background:rgba(255,255,255,0.07);padding:0.09rem 0.27rem;border-radius:3px;font-size:0.81em;color:var(--gold-light);}
+footer{border-top:1px solid var(--border);padding:1.2rem;text-align:center;color:var(--muted);font-size:0.72rem;}
+footer span{color:var(--gold);}
+@media(max-width:600px){.nav-links{display:none;}.hero{padding:2rem 1rem 1.5rem;}section{padding:2rem 0;}.lc-label{font-size:0.5rem;}}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <div class="nav-brand">TOURney <span>by Greenskeeper Studios</span></div>
+    <div class="nav-links">
+      <a href="#review">Review</a>
+      <a href="#plan">Plan</a>
+      <a href="#runbook">Runbook</a>
+      <a href="#executing">Executing</a>
+      <a href="#audit">Audit</a>
+      <a href="#concluded">Concluded</a>
+    </div>
+  </div>
+</nav>
+
+<!-- LIFECYCLE-BAR-START -->
+<div class="lifecycle-bar">
+  <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Review</div></div>
+  <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Plan</div></div>
+  <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Runbook</div></div>
+  <div class="lc-stage"><div class="lc-pill"></div><div class="lc-label">Executing</div></div>
+  <div class="lc-stage"><div class="lc-pill"></div><div class="lc-label">Audit</div></div>
+  <div class="lc-stage"><div class="lc-pill"></div><div class="lc-label">Concluded</div></div>
+</div>
+<!-- LIFECYCLE-BAR-END -->
+
+<div class="hero">
+  <div class="hero-eyebrow">UX Polish</div>
+  <h1><span>TOURney</span> — UX Polish Review · May 19, 2026</h1>
+  <p class="hero-sub">Full logo SVG audit across all 14 pages — method, viewBox, placement, and brand system compliance. Every page catalogued. Runbook generates exact edits for tourney-execute.</p>
+  <div class="hero-meta">
+    <span>📅 May 19, 2026</span>
+    <span>🤖 claude-sonnet-4-6</span>
+    <span>🏢 Greenskeeper Studios</span>
+    <span>🔒 Internal Only</span>
+  </div>
+</div>
+
+<section id="review">
+<div class="wrapper">
+
+  <div class="section-header">
+    <div class="section-eyebrow">§ Review</div>
+    <div class="section-title">Current State — Logo SVG Audit</div>
+    <div class="section-desc">Evidence-only. Every page inspected. Logo method, element IDs, dimensions, and brand system compliance recorded for each.</div>
+  </div>
+
+  <div class="score-grid">
+    <div class="score-cell"><div class="score-num score-gold">A-</div><div class="score-label">UX Polish</div></div>
+    <div class="score-cell"><div class="score-num score-gold">A-</div><div class="score-label">Architecture</div></div>
+    <div class="score-cell"><div class="score-num score-gold">B+</div><div class="score-label">Feature Depth</div></div>
+    <div class="score-cell"><div class="score-num score-gold">B+</div><div class="score-label">Security</div></div>
+    <div class="score-cell"><div class="score-num score-red">C+</div><div class="score-label">Business</div></div>
+    <div class="score-cell"><div class="score-num score-gold">A-</div><div class="score-label">Deployment</div></div>
+    <div class="score-cell"><div class="score-num score-blue">B</div><div class="score-label">Performance</div></div>
+    <div class="score-cell"><div class="score-num score-blue">B</div><div class="score-label">Data Model</div></div>
+  </div>
+
+  <div class="card" style="margin-bottom:1.4rem;">
+    <div class="card-title">Brand System — Logo Spec (tourney-brand SKILL.md)</div>
+    <ul>
+      <li><strong>Nav logo:</strong> Inline <code>&lt;svg id="navLogoSvg" viewBox="0 0 240 48" style="height:24px"&gt;</code> — pasted verbatim into every nav. <em>Never</em> <code>&lt;img src="/logo-nav.svg"&gt;</code>.</li>
+      <li><strong>Nav companion:</strong> <code>&lt;img id="navLogoImg" style="display:none;height:32px"&gt;</code> alongside navLogoSvg — tourney-init.js swaps src to tournament logo_url and toggles visibility.</li>
+      <li><strong>Hero logo:</strong> <code>&lt;img id="heroLogoImg" src="/logo-hero.svg"&gt;</code> — stays as <code>&lt;img&gt;</code> so tourney-init.js can replace <code>.src</code> with tournament logo at runtime.</li>
+      <li><strong>Install hero:</strong> <code>&lt;img src="/logo-hero.svg" style="width:140px"&gt;</code> — loaded separately via inline script, not tourney-init.</li>
+      <li><strong>Static files:</strong> <code>/logo-nav.svg</code> and <code>/logo-hero.svg</code> exist in repo root, precached in sw.js. Source of truth for design — do not link via <code>&lt;img&gt;</code> in app pages.</li>
+    </ul>
+  </div>
+
+  <!-- FULL PAGE LOGO MATRIX -->
+  <div class="section-header" style="margin-top:1.4rem;margin-bottom:0.8rem;">
+    <div class="section-eyebrow">Logo Matrix</div>
+    <div class="section-title" style="font-size:1.1rem;">14-Page Logo Inventory</div>
+  </div>
+
+  <div class="table-wrap" style="margin-bottom:1.4rem;">
+    <table class="page-table">
+      <thead>
+        <tr>
+          <th>Page / File</th>
+          <th>URL</th>
+          <th>Nav Logo</th>
+          <th>Hero Logo</th>
+          <th>Status</th>
+          <th>Issue</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="file">home.html</span></td>
+          <td><span class="url">/t/:slug/</span></td>
+          <td>Playfair text + navLogoImg/Svg (tourney-init)</td>
+          <td><code>&lt;img id="heroLogoImg" src="/logo-hero.svg"&gt;</code></td>
+          <td><span class="pill pill-green">✅ OK</span></td>
+          <td>Hero correct. tourney-init handles nav swap.</td>
+        </tr>
+        <tr>
+          <td><span class="file">scorecard.html</span></td>
+          <td><span class="url">/t/:slug/scorecard</span></td>
+          <td>Playfair Display text — <code>.nav-logo em</code> style only</td>
+          <td>None</td>
+          <td><span class="pill pill-red">❌ Missing</span></td>
+          <td>No <code>navLogoSvg</code> element. tourney-init logo swap won't fire. Brand absent.</td>
+        </tr>
+        <tr>
+          <td><span class="file">scoreboard.html</span></td>
+          <td><span class="url">/t/:slug/scoreboard</span></td>
+          <td><code>&lt;img id="navLogoSvg" src="/logo-nav.svg"&gt;</code></td>
+          <td>None</td>
+          <td><span class="pill pill-orange">⚠️ Wrong method</span></td>
+          <td>Uses <code>&lt;img&gt;</code> not inline <code>&lt;svg&gt;</code>. Brand spec prohibits linking logo files via img. Has navLogoImg companion — functional but non-compliant.</td>
+        </tr>
+        <tr>
+          <td><span class="file">feed.html</span></td>
+          <td><span class="url">/t/:slug/feed</span></td>
+          <td><code>&lt;img id="navLogoSvg" src="/logo-nav.svg"&gt;</code></td>
+          <td>None</td>
+          <td><span class="pill pill-orange">⚠️ Wrong method</span></td>
+          <td>Same as scoreboard — img not inline SVG.</td>
+        </tr>
+        <tr>
+          <td><span class="file">directory.html</span></td>
+          <td><span class="url">/t/:slug/directory</span></td>
+          <td><code>&lt;img id="navLogoSvg" src="/logo-nav.svg"&gt;</code> + navLogoImg</td>
+          <td>None</td>
+          <td><span class="pill pill-orange">⚠️ Wrong method</span></td>
+          <td>img not inline SVG. Also has hardcoded "The Bova <em>Invitational</em>" text node inside .nav-logo (tourney-init replaces at runtime — acceptable as fallback).</td>
+        </tr>
+        <tr>
+          <td><span class="file">champions.html</span></td>
+          <td><span class="url">/t/:slug/champions</span></td>
+          <td><code>&lt;img id="navLogoSvg" src="/logo-nav.svg"&gt;</code></td>
+          <td>None</td>
+          <td><span class="pill pill-orange">⚠️ Wrong method</span></td>
+          <td>img not inline SVG.</td>
+        </tr>
+        <tr>
+          <td><span class="file">course.html</span></td>
+          <td><span class="url">/t/:slug/course</span></td>
+          <td><code>&lt;img id="navLogoSvg" src="/logo-nav.svg"&gt;</code></td>
+          <td>None</td>
+          <td><span class="pill pill-orange">⚠️ Wrong method</span></td>
+          <td>img not inline SVG.</td>
+        </tr>
+        <tr>
+          <td><span class="file">admin.html</span></td>
+          <td><span class="url">/t/:slug/admin</span></td>
+          <td>Playfair Display text — <code>.nav-logo em</code> style only</td>
+          <td>None</td>
+          <td><span class="pill pill-red">❌ Missing</span></td>
+          <td>No SVG logo element. Admin-only page, lower priority, but brand spec still applies.</td>
+        </tr>
+        <tr>
+          <td><span class="file">install.html</span></td>
+          <td><span class="url">/t/:slug/install</span></td>
+          <td>No nav</td>
+          <td><code>&lt;img src="/logo-hero.svg" style="width:140px"&gt;</code> — inline script swaps to tournament logo</td>
+          <td><span class="pill pill-green">✅ OK</span></td>
+          <td>Correct per spec. No nav needed on install flow.</td>
+        </tr>
+        <tr>
+          <td><span class="file">login.html</span></td>
+          <td><span class="url">/t/:slug/login</span></td>
+          <td>Inline <code>&lt;svg id="navLogoSvg"&gt;</code> — <strong style="color:var(--red)">WRONG viewBox</strong></td>
+          <td>None</td>
+          <td><span class="pill pill-red">❌ Wrong dims</span></td>
+          <td>viewBox="0 0 200 120" (hero viewBox) used in nav position. Should be "0 0 240 48". Logo renders ~2.5× too tall in nav — visually broken at height:32px.</td>
+        </tr>
+        <tr>
+          <td><span class="file">marketing.html</span></td>
+          <td><span class="url">/</span></td>
+          <td>CSS text string "TOURney" via <code>.nav-logo{letter-spacing:0.28em}</code></td>
+          <td>None</td>
+          <td><span class="pill pill-orange">⚠️ No SVG</span></td>
+          <td>Platform marketing page. No inline SVG or img logo. Pure text wordmark — functional but inconsistent with brand system. Also footer uses same text pattern.</td>
+        </tr>
+        <tr>
+          <td><span class="file">platform.html</span></td>
+          <td><span class="url">/platform</span></td>
+          <td><code>&lt;img src="/logo-nav.svg" style="height:22px"&gt;</code> in .topbar-brand</td>
+          <td>None</td>
+          <td><span class="pill pill-orange">⚠️ No id + img</span></td>
+          <td>No <code>id="navLogoSvg"</code>, so tourney-init swap won't fire. Dark platform theme — img links logo file (spec says inline). Lower priority: platform hub is internal.</td>
+        </tr>
+        <tr>
+          <td><span class="file">create.html</span></td>
+          <td><span class="url">/create</span></td>
+          <td>Not inspected</td>
+          <td>Unknown</td>
+          <td><span class="pill pill-blue">? Unverified</span></td>
+          <td>Not catted in evidence batch. Needs manual check.</td>
+        </tr>
+        <tr>
+          <td><span class="file">player.html</span></td>
+          <td><span class="url">/player</span></td>
+          <td>Not inspected</td>
+          <td>Unknown</td>
+          <td><span class="pill pill-blue">? Unverified</span></td>
+          <td>Not catted in evidence batch. Needs manual check.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- SUMMARY FINDINGS -->
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title">✅ Strengths</div>
+      <ul>
+        <li>Brand system fully documented in <code>tourney-brand/SKILL.md</code> — single source of truth for logo SVG, colors, typography.</li>
+        <li><code>home.html</code> hero logo correct — <code>id="heroLogoImg"</code> as <code>&lt;img&gt;</code> with <code>src="/logo-hero.svg"</code>. tourney-init.js swaps src at runtime to tournament logo.</li>
+        <li><code>install.html</code> hero correct — 140px inline img, inline script handles tournament logo swap. No nav needed.</li>
+        <li>5 pages (scoreboard, feed, directory, champions, course) at least have correct element IDs (<code>navLogoSvg</code>, <code>navLogoImg</code>) — tourney-init swap fires correctly even though method is wrong (img vs inline SVG).</li>
+        <li>Both <code>/logo-nav.svg</code> and <code>/logo-hero.svg</code> exist in repo root and are precached in SW.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-title">❌ Gaps / Real Bugs</div>
+      <ul>
+        <li><strong style="color:var(--red)">login.html nav SVG — wrong viewBox.</strong> Uses <code>viewBox="0 0 200 120"</code> (hero spec) in nav position. Should be <code>viewBox="0 0 240 48"</code>. Logo renders ~2.5× oversized inside the 56px nav bar.</li>
+        <li><strong style="color:var(--orange)">5 pages using <code>&lt;img src="/logo-nav.svg"&gt;</code> for navLogoSvg</strong> (scoreboard, feed, directory, champions, course). Brand spec says inline SVG only — external img link prohibited. Extra HTTP request, not inline-renderable.</li>
+        <li><strong style="color:var(--orange)">scorecard.html and admin.html have no SVG logo element.</strong> tourney-init logo swap never fires. Players on scorecard see zero brand logo — most-used page in the product.</li>
+        <li><strong style="color:var(--orange)">marketing.html nav has no SVG</strong> — pure CSS text "TOURney". First page all potential customers see. Should have inline SVG nav logo for brand consistency.</li>
+        <li><strong style="color:var(--muted)">create.html and player.html logo state unverified</strong> — not catted in evidence. Could be fine or missing.</li>
+        <li><strong style="color:var(--muted)">platform.html topbar img has no id</strong> — tourney-init swap won't fire. Internal-only page, low impact.</li>
+      </ul>
+    </div>
+  </div>
+
+</div>
+</section>
+
+<section id="plan">
+<div class="wrapper">
+
+  <div class="section-header">
+    <div class="section-eyebrow">§ Plan</div>
+    <div class="section-title">Logo Consistency — Execution Priorities</div>
+    <div class="section-desc">Ordered by user-facing impact. P1–P3 ship in one execute pass. P4–P5 are polish and verification.</div>
+  </div>
+
+  <div class="card" style="margin-bottom:1rem;">
+    <div class="card-title">Priority Stack</div>
+    <ul>
+      <li><strong style="color:var(--red)">P1 — Fix login.html nav SVG viewBox.</strong> Most visually broken — hero viewBox in nav. 1 string replace. Immediate fix.</li>
+      <li><strong style="color:var(--orange)">P2 — Add inline SVG nav logo to scorecard.html.</strong> Most-used player-facing page. Currently zero brand logo. Needs inline SVG block + navLogoImg companion added to .nav-logo div.</li>
+      <li><strong style="color:var(--orange)">P3 — Replace img navLogoSvg with inline SVG on 5 pages</strong> (scoreboard, feed, directory, champions, course). Functional today, non-compliant per spec. One pass, 5 files.</li>
+      <li><strong style="color:var(--gold)">P4 — Add inline SVG nav logo to marketing.html.</strong> First impression page. CSS text "TOURney" replaced with inline SVG wordmark.</li>
+      <li><strong style="color:var(--gold)">P5 — Verify + fix create.html and player.html.</strong> Cat both pages, check logo state, apply standard pattern if missing.</li>
+      <li><strong style="color:var(--muted)">P6 — admin.html nav logo.</strong> Admin-only page, lowest user-facing priority. Add inline SVG to complete 100% coverage.</li>
+    </ul>
+  </div>
+
+  <div class="grid-2" style="margin-bottom:1rem;">
+    <div class="idea-card idea-1">
+      <div class="idea-number">1</div>
+      <div class="idea-tag"><span class="pill pill-red">P1 · Immediate</span></div>
+      <div class="idea-title">Fix login.html viewBox</div>
+      <div class="idea-body">One attribute change on the existing inline SVG. viewBox "0 0 200 120" → "0 0 240 48". Also confirm height attr is 24px (or 32px if no navLogoImg).</div>
+      <div class="idea-plan"><strong>Effort:</strong> 2 min. 1 Edit call.</div>
+    </div>
+    <div class="idea-card idea-2">
+      <div class="idea-number">2</div>
+      <div class="idea-tag"><span class="pill pill-orange">P2 · High</span></div>
+      <div class="idea-title">Scorecard nav logo</div>
+      <div class="idea-body">Most-used page in product (every active round). Players open this for every hole. Zero logo currently. Add standard nav SVG block + navLogoImg companion inside .nav-logo.</div>
+      <div class="idea-plan"><strong>Effort:</strong> 5 min. Replace .nav-logo div contents.</div>
+    </div>
+    <div class="idea-card idea-3">
+      <div class="idea-number">3</div>
+      <div class="idea-tag"><span class="pill pill-orange">P3 · Medium</span></div>
+      <div class="idea-title">5-page img → inline SVG</div>
+      <div class="idea-body">Scoreboard, feed, directory, champions, course. Replace <code>&lt;img id="navLogoSvg" src="/logo-nav.svg"&gt;</code> with inline SVG block. IDs already correct — just swap the element type.</div>
+      <div class="idea-plan"><strong>Effort:</strong> 10 min. 5 Edit calls, all identical pattern.</div>
+    </div>
+    <div class="idea-card idea-4">
+      <div class="idea-number">4</div>
+      <div class="idea-tag"><span class="pill pill-gold">P4 · Polish</span></div>
+      <div class="idea-title">marketing.html SVG nav</div>
+      <div class="idea-body">Replace CSS text wordmark with inline SVG in nav. Marketing page is first touchpoint for new customers — brand consistency here matters for perception.</div>
+      <div class="idea-plan"><strong>Effort:</strong> 5 min. Edit nav div inner HTML.</div>
+    </div>
+    <div class="idea-card idea-5">
+      <div class="idea-number">5</div>
+      <div class="idea-tag"><span class="pill pill-blue">P5 · Verify</span></div>
+      <div class="idea-title">Audit create + player pages</div>
+      <div class="idea-body">create.html and player.html not catted in this review. Read both, check logo state, apply standard pattern if missing. Closes the 100% verified coverage gap.</div>
+      <div class="idea-plan"><strong>Effort:</strong> 5 min. Read + conditional Edit.</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Business Milestones</div>
+    <ul>
+      <li><strong>After this runbook:</strong> 100% of player-facing pages have correct inline SVG nav logo. tourney-init logo swap fires reliably on every page.</li>
+      <li><strong>Marketing impression:</strong> marketing.html (/ root) will show inline SVG wordmark — no longer text-only. Every potential customer sees branded identity.</li>
+      <li><strong>No regressions possible:</strong> Inline SVG doesn't add HTTP requests, doesn't depend on /logo-nav.svg file availability. Pure DOM — no network failure path.</li>
+    </ul>
+  </div>
+
+</div>
+</section>
+
+<section id="runbook">
+<div class="wrapper">
+
+  <div class="section-header">
+    <div class="section-eyebrow">§ Runbook</div>
+    <div class="section-title">Exact Steps for tourney-execute</div>
+    <div class="section-desc">Each step cites the exact file, old string, and new string. Run in order. No questions needed.</div>
+  </div>
+
+  <div class="runbook-steps">
+
+    <div class="rb-step">
+      <div class="rb-step-title">Fix login.html nav SVG — wrong viewBox</div>
+      <div class="rb-step-body">
+        The existing inline SVG in login.html nav uses the hero viewBox <code>viewBox="0 0 200 120"</code> instead of the nav viewBox <code>viewBox="0 0 240 48"</code>. Also update height to match brand spec (24px when navLogoImg present, 32px when sole logo).<br><br>
+        <strong>File:</strong> <code>login.html</code><br>
+        <strong>Old:</strong> <code>id="navLogoSvg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 120" style="height:32px;width:auto;display:block;flex-shrink:0;" role="img" aria-label="TOURNEY"</code><br>
+        <strong>New:</strong> <code>id="navLogoSvg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 48" style="height:24px;width:auto;display:block;flex-shrink:0;" role="img" aria-label="TOURney"</code><br><br>
+        Also verify login.html nav has <code>&lt;img id="navLogoImg" style="display:none;height:32px;max-width:120px;object-fit:contain;object-position:left"&gt;</code> alongside the SVG. If missing, add it.
+      </div>
+      <div class="rb-verify"><strong>Verify</strong> Nav logo renders at ~24px tall in the 56px nav bar. No overflow. TOURNEY text horizontal.</div>
+    </div>
+
+    <div class="rb-step">
+      <div class="rb-step-title">Add inline SVG nav logo to scorecard.html</div>
+      <div class="rb-step-body">
+        scorecard.html currently has a text-only nav logo using Playfair Display. No <code>navLogoSvg</code> or <code>navLogoImg</code> elements exist — tourney-init logo swap never fires.<br><br>
+        <strong>File:</strong> <code>scorecard.html</code><br>
+        Find the <code>.nav-logo</code> div in the nav. Replace its contents (the Playfair text) with the standard nav logo block:<br><br>
+        <code>
+          &lt;img id="navLogoImg" style="display:none;height:32px;max-width:120px;object-fit:contain;object-position:left" alt="Tournament Logo"&gt;<br>
+          &lt;svg id="navLogoSvg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 48" style="height:24px;width:auto;display:block;flex-shrink:0;" role="img" aria-label="TOURney"&gt;<br>
+          &nbsp;&nbsp;&lt;text x="120" y="32" text-anchor="middle" font-family="'Barlow Condensed','Oswald','Arial Narrow',sans-serif" font-weight="700" font-size="26" letter-spacing="6" fill="#f0e6cc"&gt;TOUR&lt;tspan fill="#c09030" font-weight="400"&gt;NEY&lt;/tspan&gt;&lt;/text&gt;<br>
+          &nbsp;&nbsp;&lt;line x1="64" y1="40" x2="176" y2="40" stroke="#c09030" stroke-width="0.6"/&gt;<br>
+          &lt;/svg&gt;
+        </code>
+      </div>
+      <div class="rb-verify"><strong>Verify</strong> scorecard.html nav shows TOURney SVG. When tournament has logo_url, tourney-init hides SVG and shows tournament logo. No visual regression on scoring flow.</div>
+    </div>
+
+    <div class="rb-step">
+      <div class="rb-step-title">Replace img navLogoSvg with inline SVG — scoreboard.html</div>
+      <div class="rb-step-body">
+        <strong>File:</strong> <code>scoreboard.html</code><br>
+        <strong>Old:</strong> <code>&lt;img id="navLogoSvg" src="/logo-nav.svg" style="height:24px;width:auto;display:block;flex-shrink:0;" alt="TOURney"&gt;</code><br>
+        <strong>New:</strong> inline SVG block (same as step 2, without navLogoImg line — navLogoImg already exists on this page):<br>
+        <code>
+          &lt;svg id="navLogoSvg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 48" style="height:24px;width:auto;display:block;flex-shrink:0;" role="img" aria-label="TOURney"&gt;<br>
+          &nbsp;&nbsp;&lt;text x="120" y="32" text-anchor="middle" font-family="'Barlow Condensed','Oswald','Arial Narrow',sans-serif" font-weight="700" font-size="26" letter-spacing="6" fill="#f0e6cc"&gt;TOUR&lt;tspan fill="#c09030" font-weight="400"&gt;NEY&lt;/tspan&gt;&lt;/text&gt;<br>
+          &nbsp;&nbsp;&lt;line x1="64" y1="40" x2="176" y2="40" stroke="#c09030" stroke-width="0.6"/&gt;<br>
+          &lt;/svg&gt;
+        </code>
+      </div>
+      <div class="rb-verify"><strong>Verify</strong> Nav logo visible on scoreboard. tourney-init swap still fires (navLogoImg present). No layout shift.</div>
+    </div>
+
+    <div class="rb-step">
+      <div class="rb-step-title">Replace img navLogoSvg with inline SVG — feed.html</div>
+      <div class="rb-step-body">
+        <strong>File:</strong> <code>feed.html</code><br>
+        Same pattern as step 3. Replace <code>&lt;img id="navLogoSvg" src="/logo-nav.svg" style="height:24px;width:auto;display:block;flex-shrink:0;" alt="TOURney"&gt;</code> with inline SVG block (viewBox="0 0 240 48", height:24px, same SVG content).
+      </div>
+      <div class="rb-verify"><strong>Verify</strong> Feed page nav shows TOURney SVG. No broken logo on feed load.</div>
+    </div>
+
+    <div class="rb-step">
+      <div class="rb-step-title">Replace img navLogoSvg with inline SVG — directory.html</div>
+      <div class="rb-step-body">
+        <strong>File:</strong> <code>directory.html</code><br>
+        Same pattern. Replace <code>&lt;img id="navLogoSvg" src="/logo-nav.svg" style="height:24px;width:auto;display:block;flex-shrink:0;" alt="TOURney"&gt;</code> with inline SVG block. navLogoImg companion already present on this page.
+      </div>
+      <div class="rb-verify"><strong>Verify</strong> Directory nav logo renders. tourney-init replaces hardcoded "The Bova Invitational" text and swaps navLogoSvg visibility correctly.</div>
+    </div>
+
+    <div class="rb-step">
+      <div class="rb-step-title">Replace img navLogoSvg with inline SVG — champions.html</div>
+      <div class="rb-step-body">
+        <strong>File:</strong> <code>champions.html</code><br>
+        Replace <code>&lt;img id="navLogoSvg" src="/logo-nav.svg" style="height:24px;width:auto;display:block;flex-shrink:0;" alt="TOURney"&gt;</code> with inline SVG block.
+      </div>
+      <div class="rb-verify"><strong>Verify</strong> Champions page nav logo visible. No regression on champions display.</div>
+    </div>
+
+    <div class="rb-step">
+      <div class="rb-step-title">Replace img navLogoSvg with inline SVG — course.html</div>
+      <div class="rb-step-body">
+        <strong>File:</strong> <code>course.html</code><br>
+        Replace <code>&lt;img id="navLogoSvg" src="/logo-nav.svg" style="height:24px;width:auto;display:block;flex-shrink:0;" alt="TOURney"&gt;</code> with inline SVG block.
+      </div>
+      <div class="rb-verify"><strong>Verify</strong> Course page nav logo visible. No broken layout.</div>
+    </div>
+
+    <div class="rb-step">
+      <div class="rb-step-title">Add inline SVG to marketing.html nav</div>
+      <div class="rb-step-body">
+        marketing.html nav currently has <code>&lt;div class="nav-logo"&gt;TOURney&lt;/div&gt;</code> — pure text.<br><br>
+        <strong>File:</strong> <code>marketing.html</code><br>
+        Read current nav-logo div. Replace text content with inline SVG. Since marketing.html is a platform page (no tourney-init slug swap), no navLogoImg needed — just the SVG at height:28px.<br>
+        Also update <code>.nav-logo</code> CSS to remove the text-transform/letter-spacing styles that were styling the text wordmark, and add <code>display:flex;align-items:center;</code> for the SVG container.
+      </div>
+      <div class="rb-verify"><strong>Verify</strong> Marketing nav shows SVG logo. Footer "TOURney" text can stay as-is (footer branding, different context).</div>
+    </div>
+
+    <div class="rb-step">
+      <div class="rb-step-title">Audit create.html and player.html logo state</div>
+      <div class="rb-step-body">
+        These two pages were not inspected in the evidence batch.<br><br>
+        <strong>Action:</strong> Read both files. Check for presence of <code>navLogoSvg</code> and <code>navLogoImg</code> elements in nav. If missing or using wrong method, apply the standard inline SVG pattern from steps 3–7.
+      </div>
+      <div class="rb-verify"><strong>Verify</strong> Both pages have navLogoSvg (inline SVG) and navLogoImg (hidden img). tourney-init fires correctly.</div>
+    </div>
+
+    <div class="rb-step">
+      <div class="rb-step-title">Add inline SVG to admin.html nav (polish)</div>
+      <div class="rb-step-body">
+        admin.html uses Playfair Display text nav logo. Lower priority since it's admin-only, but for 100% brand consistency:<br><br>
+        <strong>File:</strong> <code>admin.html</code><br>
+        Find the <code>.nav-logo</code> div. Add navLogoSvg inline SVG alongside the existing nav-badge element. No navLogoImg needed (admin doesn't load tournament logo in nav).
+      </div>
+      <div class="rb-verify"><strong>Verify</strong> Admin nav shows TOURney SVG. Admin badge still visible. No layout break.</div>
+    </div>
+
+    <div class="rb-step">
+      <div class="rb-step-title">Commit and push</div>
+      <div class="rb-step-body">
+        <code>git add scorecard.html scoreboard.html feed.html directory.html champions.html course.html login.html marketing.html admin.html create.html player.html</code><br>
+        <code>git commit -m "fix: inline SVG nav logo on all pages; login.html viewBox corrected 200x120→240x48"</code><br>
+        <code>git push</code>
+      </div>
+      <div class="rb-verify"><strong>Verify</strong> Vercel deploy succeeds. All 12 pages show consistent TOURney SVG nav logo at 24px height. tourney-init logo swap fires on all tournament pages.</div>
+    </div>
+
+  </div>
+
+</div>
+</section>
+
+<section id="executing">
+<div class="wrapper">
+<!-- EXECUTING-CONTENT-START -->
+<div class="section-header">
+  <div class="section-eyebrow">§ Executing</div>
+  <div class="section-title">Awaiting Execution</div>
+</div>
+<div class="stage-pending">
+  <p>Awaiting execution. Run <code>/tourney-execute 5-19-26-ux-review.html</code> to proceed.</p>
+</div>
+<!-- EXECUTING-CONTENT-END -->
+</div>
+</section>
+
+<section id="audit">
+<div class="wrapper">
+<!-- AUDIT-CONTENT-START -->
+<div class="section-header">
+  <div class="section-eyebrow">§ Audit</div>
+  <div class="section-title">Awaiting Audit</div>
+</div>
+<div class="stage-pending">
+  <p>Awaiting execution. Run <code>/tourney-execute 5-19-26-ux-review.html</code> to proceed.</p>
+</div>
+<!-- AUDIT-CONTENT-END -->
+</div>
+</section>
+
+<section id="concluded">
+<div class="wrapper">
+<!-- CONCLUDED-CONTENT-START -->
+<div class="section-header">
+  <div class="section-eyebrow">§ Concluded</div>
+  <div class="section-title">Awaiting Conclusion</div>
+</div>
+<div class="stage-pending">
+  <p>Awaiting execution. Run <code>/tourney-execute 5-19-26-ux-review.html</code> to proceed.</p>
+</div>
+<!-- CONCLUDED-CONTENT-END -->
+</div>
+</section>
+
+<footer>
+  Generated by <span>claude-sonnet-4-6</span> · Greenskeeper Studios Internal · May 19, 2026
+  <br style="margin-top:0.3rem">
+  <a href="/platform" style="color:var(--muted);font-size:0.7rem;text-decoration:none">← Back to Platform Hub</a>
+</footer>
+
+</body>
+</html>

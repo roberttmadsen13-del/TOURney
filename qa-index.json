@@ -1,9 +1,22 @@
 {
   "$schema": "https://tourney.greenskeeper.studio/qa-index-schema.json",
   "version": 1,
-  "updated_at": "2026-05-15T08:00:00Z",
+  "updated_at": "2026-05-19T00:00:00Z",
   "description": "Canonical registry of all TOURney plans, reviews, audits, and QA artifacts. The /platform Artifacts tab renders from this file. Skills (e.g. tourney-review) append new entries when they generate output.",
   "entries": [
+    {
+      "id": "review-ux-2026-05-19",
+      "category": "review",
+      "stage": "executing",
+      "title": "UX Polish Review · May 19, 2026",
+      "summary": "Logo SVG audit across all 14 pages. login.html nav SVG has wrong viewBox (200x120 hero vs 240x48 nav — renders 2.5× oversized). 5 pages use img not inline SVG for navLogoSvg. scorecard.html and admin.html have no SVG logo element — tourney-init swap never fires. marketing.html nav is CSS text only. 10-step runbook ready.",
+      "date": "2026-05-19",
+      "author": "claude-sonnet-4-6",
+      "url": "/platform/5-19-26-ux-review",
+      "file": "5-19-26-ux-review.html",
+      "tags": ["review", "ux", "brand", "logo"],
+      "status": "open"
+    },
     {
       "id": "review-2026-05-15",
       "category": "review",

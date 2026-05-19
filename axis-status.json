@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-05-15T08:00:00Z",
+  "updated_at": "2026-05-19T00:00:00Z",
   "description": "Living state for all TOURney platform axes. One entry per axis. Updated by every tourney-* skill. Agents read this for context (50 tokens) instead of parsing HTML artifacts.",
   "stages": ["review", "plan", "runbook", "executing", "audit", "concluded"],
   "axes": {
@@ -22,12 +22,12 @@
       "blocking": false
     },
     "ux": {
-      "status": "concluded",
+      "status": "executing",
       "grade": "A-",
-      "artifact": "/platform/5-14-26-ux-review",
-      "last_updated": "2026-05-14",
-      "summary": "A-. CSS token centralization (9 pages), SW v35, scorecard.html head fix, heroLogoImg WCAG alt, admin status-open token. 1 open: manifest 180px icon (blocked on Rob PNG).",
-      "open_items": 1,
+      "artifact": "/platform/5-19-26-ux-review",
+      "last_updated": "2026-05-19",
+      "summary": "A-. Logo audit: login.html wrong viewBox (200x120→240x48), 5 pages img not inline SVG, scorecard.html nav has zero logo, marketing.html text-only. 10-step runbook written. Run /tourney-execute.",
+      "open_items": 6,
       "blocking": false
     },
     "security": {
