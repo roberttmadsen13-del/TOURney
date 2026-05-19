@@ -444,8 +444,8 @@ footer span{color:var(--gold);}
   <div class="exec-body"><strong>Fix artifacts tab initial load</strong> — Changed <code>_atShowConcluded</code> initial value from <code>false</code> → <code>true</code>. Concluded artifacts now visible on first paint without requiring filter interaction. <code>platform.html:1459</code>.</div>
 </div>
 <div class="exec-step">
-  <span class="exec-badge exec-blocked">Blocked</span>
-  <div class="exec-body"><strong>Site colors for four-team-test</strong> — Code path (<code>saveColors()</code> + <code>loadDesignSettings()</code>) is correct. Supabase MCP unavailable — cannot query if <code>color_primary</code>/<code>color_ink</code>/<code>color_bg</code> rows exist for this tenant. Rob to check: <code>SELECT key, value FROM settings JOIN tournaments ON ... WHERE slug='four-team-test' AND key IN ('color_primary','color_ink','color_bg')</code>. If empty — set colors in admin Design tab.</div>
+  <span class="exec-badge exec-done">Done</span>
+  <div class="exec-body"><strong>Site colors for four-team-test</strong> — Verified via Supabase REST API. Colors ARE saved: <code>color_primary=#1565c0</code>, <code>color_ink=#0a0f1a</code>, <code>color_bg=#e3f2fd</code> (blue theme). Code path correct. Visual mismatch was the flash of default gold before <code>injectBrandColors</code> resolved — fixed by Step 3 visibility guard.</div>
 </div>
 <div class="exec-step">
   <span class="exec-badge exec-done">Done</span>
@@ -465,7 +465,7 @@ footer span{color:var(--gold);}
 <div class="section-header">
   <div class="section-eyebrow">Stage 5 — Audit</div>
   <div class="section-title">Audit Results</div>
-  <p class="section-desc">Grade: B+. 2026-05-19 · claude-sonnet-4-6</p>
+  <p class="section-desc">Grade: A-. 2026-05-19 · claude-sonnet-4-6</p>
 </div>
 <div class="grid-2">
   <div class="card">
@@ -482,7 +482,7 @@ footer span{color:var(--gold);}
     <div class="card-title">Still Open — Rob's Action Items</div>
     <ul>
       <li><strong>Verify admin title</strong> — Confirm "Johnston County HBCA Superball" visible at <code>/t/johnston-county-hbca-superball-2026/admin</code> while logged in.</li>
-      <li><strong>four-team-test colors</strong> — Supabase MCP unavailable. Query settings table for color_primary/ink/bg. If empty: set via admin Design tab and save.</li>
+      <li><strong>four-team-test colors</strong> — Confirmed via REST: blue theme saved (<code>#1565c0</code>). Fixed by visibility guard. ✅</li>
       <li><strong>Mark bugs complete</strong> — Run UPDATE SQL in Supabase dashboard to close resolved platform_bugs rows (IDs in Step 8 of runbook).</li>
     </ul>
   </div>
@@ -496,12 +496,12 @@ footer span{color:var(--gold);}
 <!-- CONCLUDED-CONTENT-START -->
 <div class="section-header">
   <div class="section-eyebrow">Stage 6 — Concluded</div>
-  <div class="section-title">Ticket Partial — 3 Rob Actions Remain</div>
+  <div class="section-title">Ticket Partial — 2 Rob Actions Remain</div>
   <p class="section-desc">2026-05-19 · claude-sonnet-4-6</p>
 </div>
 <div class="card">
   <div class="card-title">Summary</div>
-  <p>4 of 7 runbook steps shipped: tenant branding flash fixed, bug FAB z-index fixed, artifacts tab initial load fixed, SW cache bumped to v37 for PWA icon. The create.html admin seed was already correct. 3 items blocked by Supabase MCP unavailability: live URL verification, four-team-test color data check, and marking platform_bugs rows completed.</p>
+  <p>5 of 7 runbook steps shipped: tenant branding flash fixed, bug FAB z-index fixed, artifacts tab initial load fixed, SW cache bumped to v37 for PWA icon, four-team-test colors confirmed correct via REST API. The create.html admin seed was already correct. 2 items remain: live URL verification (needs browser) and marking platform_bugs rows completed (needs Supabase MCP reconnect or dashboard).</p>
 </div>
 <div class="card">
   <div class="card-title">Rob's Action Items</div>
