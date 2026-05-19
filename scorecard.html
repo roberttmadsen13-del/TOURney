@@ -541,7 +541,7 @@ async function init() {
   const [pRes, tRes, roundsRes, parRes, yardsRes, notifyRes, tcRes, structRes] = await Promise.all([
     sb.from('players').select('*').eq('tournament_id', tournament.id).order('first_name'),
     sb.from('settings').select('*').eq('tournament_id', tournament.id).eq('key','team_assignments'),
-    sb.from('rounds').select('day_number,status,format_front,format_back').eq('tournament_id', tournament.id).order('day_number'),
+    sb.from('rounds').select('day_number,status,format_front,format_back,course_id,tee_name').eq('tournament_id', tournament.id).order('day_number'),
     sb.from('settings').select('*').eq('tournament_id', tournament.id).like('key','pars_day%'),
     sb.from('settings').select('*').eq('tournament_id', tournament.id).like('key','yards_day%'),
     sb.from('settings').select('value').eq('tournament_id', tournament.id).eq('key','notify_hole_in_one').maybeSingle(),
@@ -568,10 +568,12 @@ async function init() {
   if (tRes.data?.[0]) try { teamAssignments = JSON.parse(tRes.data[0].value); } catch {}
 
   const roundStates = {};
+  const roundCourses = {};
   (roundsRes.data || []).forEach(r => {
     const key = `day${r.day_number}`;
     roundStates[key] = r.status;
     if (r.format_front) roundFormats[key] = { front: r.format_front, back: r.format_back || r.format_front };
+    if (r.course_id) roundCourses[key] = { course_id: r.course_id, tee_name: r.tee_name };
   });
   currentRound = Object.entries(roundStates).find(([,v]) => v === 'open')?.[0] || null;
 
@@ -583,7 +585,16 @@ async function init() {
   (yardsRes.data || []).forEach(r => { try { yardsOverrides[r.key.replace('yards_','')] = JSON.parse(r.value); } catch {} });
   courseYards = yardsOverrides[currentRound] || [];
 
-  // roundFormats already populated from rounds table above
+  // Load pars + yards from golf_courses when round has a linked course (authoritative over settings)
+  const courseRef = roundCourses[currentRound];
+  if (courseRef?.course_id) {
+    const { data: gc } = await sb.from('golf_courses').select('pars,tees').eq('id', courseRef.course_id).maybeSingle();
+    if (gc) {
+      if (gc.pars?.length === 18) coursePars = gc.pars;
+      const tee = (gc.tees || []).find(t => t.name === courseRef.tee_name) || gc.tees?.[0];
+      if (tee?.yards?.length === 18) courseYards = tee.yards;
+    }
+  }
 
   if (!currentRound) {
     document.getElementById('noRoundMsg').style.display = 'block';

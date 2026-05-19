@@ -1620,6 +1620,7 @@ let _courseDropdownIdx = {};
 let _courseSearchTimer = {};
 let _courseSearchCache = {};
 let _courseTees = {};
+let _courseIds = {};
 
 function onTeeSelect(day) {
   const sel = document.getElementById(`teeSelect-${day}`);
@@ -1681,7 +1682,7 @@ async function doCourseSearch(day, q) {
   // Query Supabase — ilike search on name, city, state
   const pattern = `%${q}%`;
   const { data, error } = await sb.from('golf_courses')
-    .select('name, city, state, pars, yards, tees')
+    .select('id, name, city, state, pars, yards, tees')
     .or(`name.ilike.${pattern},city.ilike.${pattern},state.ilike.${pattern}`)
     .limit(12);
 
@@ -1763,6 +1764,7 @@ function selectCourse(day, course) {
   input.value = course.name;
   input.classList.add('db-filled');
   document.getElementById(`courseIcon-${day}`).innerHTML = '&#10003;';
+  if (course.id) _courseIds[day] = course.id;
 
   // Auto-fill all 18 pars
   const pars = course.pars;
@@ -1892,6 +1894,17 @@ async function saveCourseNameAndPars(day) {
   if (hasYards) upserts.push({ key: `yards_${day}`, tournament_id: _tid, value: JSON.stringify(yards), updated_at: new Date().toISOString() });
   if (teeName) upserts.push({ key: `tee_name_${day}`, tournament_id: _tid, value: teeName, updated_at: new Date().toISOString() });
   await sb.from('settings').upsert(upserts, { onConflict: 'tournament_id,key' });
+
+  // Write course_id + tee_name to rounds table (authoritative for scorecard)
+  const dayNum = parseInt(day.replace('day',''));
+  const courseId = _courseIds[day] || null;
+  if (courseId || teeName) {
+    const roundUpdate = {};
+    if (courseId) roundUpdate.course_id = courseId;
+    if (teeName) roundUpdate.tee_name = teeName;
+    await sb.from('rounds').update(roundUpdate)
+      .eq('tournament_id', _tid).eq('day_number', dayNum);
+  }
   showToast(`Day ${day.replace('day','')} course details saved.`);
 }
 
