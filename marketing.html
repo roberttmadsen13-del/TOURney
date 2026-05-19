@@ -3,6 +3,12 @@
 <head>
   <meta charset="UTF-8">
 <link rel="icon" href="/icon-192.png" type="image/png">
+<link rel="manifest" href="/platform-manifest.json">
+<link rel="apple-touch-icon" href="/platform-icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="TOURney">
+<meta name="theme-color" content="#0a0703">
     <script>
     (function(){
       var h=location.hostname,s='.greenskeeper.studio',p='tourney.greenskeeper.studio';
@@ -697,5 +703,6 @@
 </script>
 <script defer src="/nav-platform.js"></script>
 <script src="/bug-fab.js?v=3" defer></script>
+<script>if('serviceWorker'in navigator)navigator.serviceWorker.register('/sw.js');</script>
 </body>
 </html>

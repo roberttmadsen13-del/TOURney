@@ -1,8 +1,8 @@
 {
   "name": "TOURney",
   "short_name": "TOURney",
-  "description": "My Golf — track your game across all your tournaments",
-  "start_url": "/player",
+  "description": "Run your golf tournament like a pro",
+  "start_url": "/",
   "scope": "/",
   "display": "standalone",
   "background_color": "#0d0a06",
