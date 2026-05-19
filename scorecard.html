@@ -939,7 +939,7 @@ function getHoleFormat(hole) {
   const nine = hole <= 9 ? 'front' : 'back';
   return (roundFormats[currentRound] || DEFAULT_FORMATS[currentRound] || {})[nine] || 'stroke';
 }
-const PAIR_TEAM_FMTS = ['scramble','alt_shot','chapman','greensomes'];
+const PAIR_TEAM_FMTS = ['scramble','superball','alt_shot','chapman','greensomes'];
 function isScrambleHole(hole)  { return PAIR_TEAM_FMTS.includes(getHoleFormat(hole)); }
 function isBestBallHole(hole)  { return getHoleFormat(hole) === 'best_ball'; }
 function isStablefordHole(hole){ const f = getHoleFormat(hole); return f === 'stableford' || f === 'mod_stableford'; }
@@ -958,6 +958,7 @@ const FORMAT_DISPLAY = {
   mod_stableford: 'Mod. Stableford',
   nassau:         'Nassau',
   skins:          'Skins',
+  superball:      'Superball',
 };
 function formatLabel(hole) { return FORMAT_DISPLAY[getHoleFormat(hole)] || 'Stroke Play'; }
 
