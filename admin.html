@@ -860,6 +860,7 @@ let _pairNames = {}; // { 1: 'Smith / Jones', 2: '...', ... }
 const TEAM_LETTERS = ['A','B','C','D','E','F','G','H'];
 let _teamNames = ['Team A','Team B','Team C','Team D','Team E','Team F','Team G','Team H'];
 let coursePars = JSON.parse(JSON.stringify(DEFAULT_PARS));
+let courseYards = {};
 let roundFormats = JSON.parse(JSON.stringify(DEFAULT_FORMATS));
 let _numDays = 3;
 let sortMode = 'name';
@@ -948,7 +949,7 @@ function showAdmin(email) {
 
 // ── DATA ──────────────────────────────────────────────────────────
 async function loadAll() {
-  await Promise.all([loadPlayers(), loadRoundStates(), loadTeams(), loadPars(), loadFormats(), loadTeamNames(), loadCourseNames(), loadDesignSettings(), loadChampions(), loadNotifySettings(), loadInvitations()]);
+  await Promise.all([loadPlayers(), loadRoundStates(), loadTeams(), loadPars(), loadYards(), loadFormats(), loadTeamNames(), loadCourseNames(), loadDesignSettings(), loadChampions(), loadNotifySettings(), loadInvitations()]);
   renderTable();
   buildParEditor();
   renderTeamUI();
@@ -1117,6 +1118,14 @@ async function loadPars() {
   (data || []).forEach(row => {
     const day = row.key.replace('pars_','');
     try { coursePars[day] = JSON.parse(row.value); } catch {}
+  });
+}
+
+async function loadYards() {
+  const { data } = await sb.from('settings').select('*').eq('tournament_id', _tid).like('key','yards_day%');
+  (data || []).forEach(row => {
+    const day = row.key.replace('yards_','');
+    try { courseYards[day] = JSON.parse(row.value); } catch {}
   });
 }
 
@@ -1526,6 +1535,7 @@ function buildParEditor() {
   ['day1','day2','day3'].forEach(day => {
     const body = document.getElementById(`parBody-${day}`);
     const pars = coursePars[day] || DEFAULT_PARS[day];
+    const yards = courseYards[day] || Array(18).fill('');
     body.innerHTML = `
       <div class="course-mode-toggle">
         <button class="course-mode-btn active" id="modeSearch-${day}" onclick="setCourseMode('${day}','search')">Search Database</button>
@@ -1539,18 +1549,29 @@ function buildParEditor() {
           <div class="course-dropdown" id="courseDropdown-${day}"></div>
         </div>
       </div>
-      <div class="par-nine-label">Front Nine (Holes 1–9)</div>
+      <div class="par-nine-label">Front Nine — Par (Holes 1–9)</div>
       <div class="par-inputs" id="parFront-${day}">
         ${Array.from({length:9},(_,i) => `<div class="par-input-wrap"><div class="par-hole-num">${i+1}</div><input type="number" class="par-input" id="par-${day}-${i+1}" value="${pars[i]}" min="2" max="6" oninput="updateParSubtotals('${day}')"></div>`).join('')}
       </div>
-      <div class="par-nine-label">Back Nine (Holes 10–18)</div>
+      <div class="par-nine-label">Front Nine — Yards (Holes 1–9)</div>
+      <div class="par-inputs" id="yardFront-${day}">
+        ${Array.from({length:9},(_,i) => `<div class="par-input-wrap"><div class="par-hole-num">${i+1}</div><input type="number" class="par-input" id="yard-${day}-${i+1}" value="${yards[i]||''}" min="50" max="700" placeholder="—" oninput="updateYardSubtotals('${day}')"></div>`).join('')}
+      </div>
+      <div class="par-nine-label">Back Nine — Par (Holes 10–18)</div>
       <div class="par-inputs" id="parBack-${day}">
         ${Array.from({length:9},(_,i) => `<div class="par-input-wrap"><div class="par-hole-num">${i+10}</div><input type="number" class="par-input" id="par-${day}-${i+10}" value="${pars[i+9]}" min="2" max="6" oninput="updateParSubtotals('${day}')"></div>`).join('')}
       </div>
+      <div class="par-nine-label">Back Nine — Yards (Holes 10–18)</div>
+      <div class="par-inputs" id="yardBack-${day}">
+        ${Array.from({length:9},(_,i) => `<div class="par-input-wrap"><div class="par-hole-num">${i+10}</div><input type="number" class="par-input" id="yard-${day}-${i+10}" value="${yards[i+9]||''}" min="50" max="700" placeholder="—" oninput="updateYardSubtotals('${day}')"></div>`).join('')}
+      </div>
       <div class="par-subtotals">
-        <div class="par-sub">OUT: <span id="parOut-${day}">—</span></div>
-        <div class="par-sub">IN: <span id="parIn-${day}">—</span></div>
-        <div class="par-sub">TOT: <span id="parTot-${day}">—</span></div>
+        <div class="par-sub">PAR OUT: <span id="parOut-${day}">—</span></div>
+        <div class="par-sub">PAR IN: <span id="parIn-${day}">—</span></div>
+        <div class="par-sub">PAR TOT: <span id="parTot-${day}">—</span></div>
+        <div class="par-sub">YDS OUT: <span id="yardOut-${day}">—</span></div>
+        <div class="par-sub">YDS IN: <span id="yardIn-${day}">—</span></div>
+        <div class="par-sub">YDS TOT: <span id="yardTot-${day}">—</span></div>
       </div>
       <div style="display:flex;gap:0.6rem;margin-top:1.2rem;">
         <button class="save-pars-btn" onclick="saveCourseNameAndPars('${day}')">Save Course Details</button>
@@ -1624,7 +1645,7 @@ async function doCourseSearch(day, q) {
   // Query Supabase — ilike search on name, city, state
   const pattern = `%${q}%`;
   const { data, error } = await sb.from('golf_courses')
-    .select('name, city, state, pars')
+    .select('name, city, state, pars, yards')
     .or(`name.ilike.${pattern},city.ilike.${pattern},state.ilike.${pattern}`)
     .limit(12);
 
@@ -1720,8 +1741,22 @@ function selectCourse(day, course) {
   });
   updateParSubtotals(day);
 
+  // Auto-fill yards if available
+  if (course.yards?.length) {
+    course.yards.forEach((y, i) => {
+      const el = document.getElementById(`yard-${day}-${i+1}`);
+      if (el) {
+        el.value = y;
+        el.style.transition = 'background 0.3s';
+        el.style.background = 'rgba(42,122,32,0.15)';
+        setTimeout(() => { el.style.background = ''; }, 600);
+      }
+    });
+    updateYardSubtotals(day);
+  }
+
   document.getElementById(`courseDropdown-${day}`).classList.remove('open');
-  showToast(`Loaded pars for ${course.name} (${course.city}, ${course.state})`);
+  showToast(`Loaded pars${course.yards?.length ? ' + yardages' : ''} for ${course.name} (${course.city}, ${course.state})`);
 }
 
 function toggleParDay(day) {
@@ -1744,6 +1779,19 @@ function updateParSubtotals(day) {
   document.getElementById(`parOut-${day}`).textContent = valid ? out : '—';
   document.getElementById(`parIn-${day}`).textContent  = valid ? inn : '—';
   document.getElementById(`parTot-${day}`).textContent = valid ? out + inn : '—';
+}
+
+function updateYardSubtotals(day) {
+  let out = 0, inn = 0, hasAny = false;
+  for (let h = 1; h <= 18; h++) {
+    const el = document.getElementById(`yard-${day}-${h}`);
+    if (!el) continue;
+    const v = parseInt(el.value);
+    if (!isNaN(v) && v > 0) { hasAny = true; if (h <= 9) out += v; else inn += v; }
+  }
+  document.getElementById(`yardOut-${day}`).textContent = hasAny ? out : '—';
+  document.getElementById(`yardIn-${day}`).textContent  = hasAny ? inn : '—';
+  document.getElementById(`yardTot-${day}`).textContent = hasAny ? out + inn : '—';
 }
 
 async function savePars(day) {
@@ -1773,6 +1821,14 @@ async function saveCourseNameAndPars(day) {
   }
   if (!valid) { showToast('Fix invalid par values (must be 2–6) before saving.'); return; }
   coursePars[day] = pars;
+  // Collect yards (optional)
+  const yards = [];
+  for (let h = 1; h <= 18; h++) {
+    const el = document.getElementById(`yard-${day}-${h}`);
+    yards.push(parseInt(el?.value) || 0);
+  }
+  const hasYards = yards.some(y => y > 0);
+  if (hasYards) courseYards[day] = yards;
   // Save course name
   const nameEl = document.getElementById(`courseName-${day}`);
   const name = nameEl?.value?.trim() || '';
@@ -1782,6 +1838,7 @@ async function saveCourseNameAndPars(day) {
     { key: `pars_${day}`, tournament_id: _tid, value: JSON.stringify(pars), updated_at: new Date().toISOString() },
     { key: `course_name_${day}`, tournament_id: _tid, value: name, updated_at: new Date().toISOString() },
   ];
+  if (hasYards) upserts.push({ key: `yards_${day}`, tournament_id: _tid, value: JSON.stringify(yards), updated_at: new Date().toISOString() });
   await sb.from('settings').upsert(upserts, { onConflict: 'tournament_id,key' });
   showToast(`Day ${day.replace('day','')} course details saved.`);
 }

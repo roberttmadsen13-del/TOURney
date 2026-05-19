@@ -68,6 +68,7 @@ body{background:var(--bg);color:var(--ink);font-family:'Barlow',sans-serif;font-
 .hole-label{font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.4em;text-transform:uppercase;color:var(--muted);margin-bottom:0.2rem;}
 .hole-num{font-family:'Playfair Display',serif;font-size:2.8rem;font-weight:900;color:var(--ink);line-height:1;}
 .hole-par{font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);margin-top:0.2rem;}
+.hole-yards{font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);margin-top:0.15rem;}
 .format-badge{font-family:'DM Mono',monospace;font-size:0.4rem;letter-spacing:0.15em;text-transform:uppercase;padding:0.18rem 0.5rem;border:1px solid rgba(192,144,48,0.3);color:rgba(192,144,48,0.6);white-space:nowrap;align-self:flex-start;}
 
 /* ── FOURSOME GRID ── */
@@ -357,6 +358,7 @@ body{background:var(--bg);color:var(--ink);font-family:'Barlow',sans-serif;font-
         <div class="hole-label">Hole</div>
         <div class="hole-num" id="holeNum">1</div>
         <div class="hole-par" id="holePar">Par 4</div>
+        <div class="hole-yards" id="holeYards"></div>
       </div>
       <div class="format-badge" id="formatBadge">Stroke Play</div>
     </div>
@@ -513,6 +515,7 @@ let players = [];
 let teamAssignments = {};
 let currentRound = null;
 let coursePars = [];
+let courseYards = [];
 let roundFormats = JSON.parse(JSON.stringify(DEFAULT_FORMATS));
 
 // Foursome state
@@ -536,11 +539,12 @@ let scoreHistory = [];
 // ── INIT ──────────────────────────────────────────────────────────
 async function init() {
   const { tournament } = await window.tourney.ready;
-  const [pRes, tRes, roundsRes, parRes, notifyRes, tcRes, structRes] = await Promise.all([
+  const [pRes, tRes, roundsRes, parRes, yardsRes, notifyRes, tcRes, structRes] = await Promise.all([
     sb.from('players').select('*').eq('tournament_id', tournament.id).order('first_name'),
     sb.from('settings').select('*').eq('tournament_id', tournament.id).eq('key','team_assignments'),
     sb.from('rounds').select('day_number,status,format_front,format_back').eq('tournament_id', tournament.id).order('day_number'),
     sb.from('settings').select('*').eq('tournament_id', tournament.id).like('key','pars_day%'),
+    sb.from('settings').select('*').eq('tournament_id', tournament.id).like('key','yards_day%'),
     sb.from('settings').select('value').eq('tournament_id', tournament.id).eq('key','notify_hole_in_one').maybeSingle(),
     sb.from('settings').select('value').eq('tournament_id', tournament.id).eq('key','team_count').maybeSingle(),
     sb.from('settings').select('key,value').eq('tournament_id', tournament.id).in('key', ['structure','pair_count',...Array.from({length:24},(_,i)=>`pair_${i+1}_name`)]),
@@ -575,6 +579,10 @@ async function init() {
   const parOverrides = {};
   (parRes.data || []).forEach(r => { try { parOverrides[r.key.replace('pars_','')] = JSON.parse(r.value); } catch {} });
   coursePars = parOverrides[currentRound] || DEFAULT_PARS[currentRound] || DEFAULT_PARS.day2;
+
+  const yardsOverrides = {};
+  (yardsRes.data || []).forEach(r => { try { yardsOverrides[r.key.replace('yards_','')] = JSON.parse(r.value); } catch {} });
+  courseYards = yardsOverrides[currentRound] || [];
 
   // roundFormats already populated from rounds table above
 
@@ -1001,8 +1009,11 @@ function scoreValClass(gross, par) {
 // ── RENDER HOLE ───────────────────────────────────────────────────
 function renderHole() {
   const par = coursePars[currentHole - 1] || 4;
+  const yd = courseYards[currentHole - 1];
   document.getElementById('holeNum').textContent = currentHole;
   document.getElementById('holePar').textContent = `Par ${par}`;
+  const yardsEl = document.getElementById('holeYards');
+  if (yardsEl) yardsEl.textContent = yd ? `${yd} yd` : '';
   document.getElementById('progressHoleLabel').textContent = `Hole ${currentHole} of 18`;
   document.getElementById('progressFill').style.width = `${((currentHole - 1) / 18) * 100}%`;
   document.getElementById('prevBtn').disabled = currentHole === 1;
