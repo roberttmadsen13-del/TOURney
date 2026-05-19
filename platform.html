@@ -1076,35 +1076,29 @@ function toggleArchived() {
   document.getElementById('archivedToggle').textContent = showArchived ? 'Hide Archived' : 'Show Archived';
   renderHub();
 }
-function archiveEntry(id, val) {
-  // persist archive state in localStorage (qa-index.json is static)
-  const key='qa_archived';
-  let ar={}; try { ar=JSON.parse(localStorage.getItem(key)||'{}'); } catch{}
-  if (val) {
-    ar[id]=true; localStorage.setItem(key, JSON.stringify(ar));
-    // clear any unarchive override so it stays archived
-    const u=getUnarchiveOverrides(); delete u[id];
-    localStorage.setItem('qa_unarchive_overrides', JSON.stringify(u));
-  } else {
-    delete ar[id]; localStorage.setItem(key, JSON.stringify(ar));
-    // record explicit unarchive so auto-archive lifecycle won't re-archive it
-    const u=getUnarchiveOverrides(); u[id]=true;
-    localStorage.setItem('qa_unarchive_overrides', JSON.stringify(u));
-  }
+const PREF_KEYS=['qa_archived','qa_unarchive_overrides','qa_favorites','qa_status_overrides'];
+function getPref(key){try{return JSON.parse(localStorage.getItem(key)||'{}')}catch{return {}}}
+function setPref(key,val){
+  localStorage.setItem(key,JSON.stringify(val));
+  sb.from('platform_prefs').upsert({key,value:val,updated_at:new Date().toISOString()},{onConflict:'key'}).then(()=>{});
+}
+async function hydratePrefs(){
+  try{
+    const{data}=await sb.from('platform_prefs').select('key,value').in('key',PREF_KEYS);
+    if(data) data.forEach(r=>localStorage.setItem(r.key,JSON.stringify(r.value)));
+  }catch(e){console.warn('hydratePrefs',e);}
+}
+function archiveEntry(id,val){
+  let ar=getPref('qa_archived');
+  if(val){ar[id]=true;setPref('qa_archived',ar);const u=getPref('qa_unarchive_overrides');delete u[id];setPref('qa_unarchive_overrides',u);}
+  else{delete ar[id];setPref('qa_archived',ar);const u=getPref('qa_unarchive_overrides');u[id]=true;setPref('qa_unarchive_overrides',u);}
   renderHub();
 }
-function getArchived() {
-  try { return JSON.parse(localStorage.getItem('qa_archived')||'{}'); } catch { return {}; }
-}
-function getFavorites() {
-  try { return JSON.parse(localStorage.getItem('qa_favorites')||'{}'); } catch { return {}; }
-}
-function toggleFavorite(id, val) {
-  let f=getFavorites(); val?f[id]=true:delete f[id];
-  localStorage.setItem('qa_favorites', JSON.stringify(f)); renderHub();
-}
-function getStatusOverrides(){try{return JSON.parse(localStorage.getItem('qa_status_overrides')||'{}')}catch{return {}}}
-function setStatusOverride(id,status){const o=getStatusOverrides();if(status==='__clear__')delete o[id];else o[id]=status;localStorage.setItem('qa_status_overrides',JSON.stringify(o));renderHub();}
+function getArchived(){return getPref('qa_archived');}
+function getFavorites(){return getPref('qa_favorites');}
+function toggleFavorite(id,val){let f=getFavorites();val?f[id]=true:delete f[id];setPref('qa_favorites',f);renderHub();}
+function getStatusOverrides(){return getPref('qa_status_overrides');}
+function setStatusOverride(id,status){const o=getStatusOverrides();if(status==='__clear__')delete o[id];else o[id]=status;setPref('qa_status_overrides',o);renderHub();}
 function copyExecuteRunbook(url) {
   const full='https://tourney.greenskeeper.studio'+url;
   const axis=(url.match(/-(security|architecture|ux|performance|business|data-model|deployment|feature-depth|finance|marketing|onboarding|aaa)(?:[^a-z]|$)/)||[])[1]||'';
@@ -1262,7 +1256,7 @@ function computeAutoArchive(entries){
   }
   return arch;
 }
-function getUnarchiveOverrides(){try{return JSON.parse(localStorage.getItem('qa_unarchive_overrides')||'{}')}catch{return {}}}
+function getUnarchiveOverrides(){return getPref('qa_unarchive_overrides');}
 function renderHub() {
   const grid=document.getElementById('cardGrid');
   if(!grid) return;
@@ -1331,6 +1325,7 @@ function renderHub() {
   <div>Run <code>/tourney-review</code> or append to <code>qa-index.json</code>.</div></div>`;
 }
 async function loadArtifacts() {
+  await hydratePrefs();
   try {
     const r=await fetch('/qa-index.json',{cache:'no-store'});
     if (!r.ok) throw new Error(`HTTP ${r.status}`);
