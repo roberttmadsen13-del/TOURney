@@ -22,9 +22,9 @@
 
     const css = document.createElement('style');
     css.textContent = `
-      .gb-fab{position:fixed;bottom:2rem;right:2rem;width:56px;height:56px;border-radius:50%;background:rgba(200,80,60,0.85);color:#fff;display:flex;align-items:center;justify-content:center;font-size:1.6rem;box-shadow:0 4px 16px rgba(200,80,60,0.4);cursor:pointer;z-index:9999;transition:all .2s;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,0.15);}
+      .gb-fab{position:fixed;bottom:2rem;right:2rem;width:56px;height:56px;border-radius:50%;background:rgba(200,80,60,0.85);color:#fff;display:flex;align-items:center;justify-content:center;font-size:1.6rem;box-shadow:0 4px 16px rgba(200,80,60,0.4);cursor:pointer;z-index:10001;transition:all .2s;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,0.15);}
       .gb-fab:hover{transform:scale(1.05);background:rgba(220,90,70,0.95);}
-      .gb-modal{position:fixed;inset:0;background:rgba(0,0,0,0.18);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);z-index:10000;display:none;align-items:flex-start;justify-content:center;padding:.5rem;overflow-y:auto;-webkit-overflow-scrolling:touch;}
+      .gb-modal{position:fixed;inset:0;background:rgba(0,0,0,0.18);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);z-index:10002;display:none;align-items:flex-start;justify-content:center;padding:.5rem;overflow-y:auto;-webkit-overflow-scrolling:touch;}
       .gb-content{background:rgba(20,15,10,0.35);border:1px solid rgba(255,255,255,0.08);border-radius:18px;padding:.85rem;width:100%;max-width:440px;box-shadow:0 12px 40px rgba(0,0,0,0.5);display:flex;flex-direction:column;gap:.55rem;margin:auto;}
       .gb-hdr{display:flex;justify-content:space-between;align-items:center;color:rgba(255,255,255,0.8);font-family:'Barlow Condensed',sans-serif;text-transform:uppercase;font-weight:700;letter-spacing:.12em;font-size:.85rem;}
       .gb-close{background:rgba(255,255,255,0.06);border:none;border-radius:50%;width:24px;height:24px;color:rgba(255,255,255,0.7);font-size:.8rem;cursor:pointer;display:flex;align-items:center;justify-content:center;}

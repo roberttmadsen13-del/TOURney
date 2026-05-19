@@ -315,6 +315,20 @@
       "status": "shipped"
     },
     {
+      "id": "review-bugs-2026-05-19",
+      "category": "review",
+      "stage": "audit",
+      "title": "Bug Backlog Review · May 19, 2026",
+      "summary": "Execute grade B+. 4 shipped: tenant flash guard (tourney-init.js), bug FAB z-index 9999→10001, artifacts tab concluded visible by default, SW v36→v37 for PWA icon cache. 3 blocked (Supabase MCP down): live title verify, four-team-test colors data check, platform_bugs UPDATE.",
+      "date": "2026-05-19",
+      "updated": "2026-05-19",
+      "author": "claude-sonnet-4-6",
+      "url": "/platform/5-19-26-bugs-review",
+      "file": "5-19-26-bugs-review.html",
+      "tags": ["bugs", "review", "fix", "ux"],
+      "status": "partial"
+    },
+    {
       "id": "bugs-2026",
       "category": "bugs",
       "title": "Bug Log — TOURney Platform",

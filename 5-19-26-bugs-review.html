@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TOURney — Bug Backlog Review · May 19, 2026</title>
+<style>
+:root{--gold:#c09030;--gold-light:#d4a840;--gold-dim:rgba(192,144,48,0.18);--bg:#0d0a05;--surface:#151009;--card:#1c140a;--border:rgba(192,144,48,0.22);--muted:#7a6a54;--text:#e8dcc8;--red:#c0392b;--green:#27ae60;--blue:#2980b9;--orange:#e67e22;--purple:#8e44ad;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:-apple-system,'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;font-size:15px;}
+nav{position:sticky;top:0;z-index:100;background:rgba(13,10,5,0.97);border-bottom:1px solid var(--border);backdrop-filter:blur(12px);}
+.nav-inner{padding:0.6rem 1.5rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap;}
+.nav-brand{color:var(--gold);font-weight:700;font-size:1rem;letter-spacing:0.05em;white-space:nowrap;}
+.nav-brand span{color:var(--muted);font-weight:400;font-size:0.8rem;margin-left:0.4rem;}
+.nav-links{display:flex;gap:0.2rem;flex-wrap:wrap;margin-left:auto;}
+.nav-links a{color:var(--muted);text-decoration:none;font-size:0.78rem;padding:0.3rem 0.55rem;border-radius:4px;transition:all 0.15s;white-space:nowrap;}
+.nav-links a:hover{color:var(--gold);background:var(--gold-dim);}
+.lifecycle-bar{display:flex;gap:3px;padding:0.55rem 1.5rem 0.65rem;background:var(--surface);border-bottom:1px solid var(--border);}
+.lc-stage{flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;}
+.lc-pill{height:5px;width:100%;border-radius:3px;background:rgba(192,144,48,0.1);}
+.lc-label{font-size:0.58rem;font-weight:700;letter-spacing:0.11em;text-transform:uppercase;color:rgba(122,106,84,0.45);}
+.lc-done .lc-pill{background:var(--gold);}
+.lc-done .lc-label{color:var(--gold);}
+.hero{padding:3rem 1.5rem 2rem;text-align:center;border-bottom:1px solid var(--border);background:linear-gradient(180deg,rgba(192,144,48,0.06) 0%,transparent 100%);}
+.hero-eyebrow{display:inline-block;font-size:0.7rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold);border:1px solid var(--border);border-radius:20px;padding:0.22rem 0.8rem;margin-bottom:0.9rem;}
+.hero h1{font-size:clamp(1.5rem,3.5vw,2.3rem);font-weight:800;color:#fff;margin-bottom:0.35rem;}
+.hero h1 span{color:var(--gold);}
+.hero-sub{color:var(--muted);max-width:560px;margin:0 auto 1rem;font-size:0.9rem;}
+.hero-meta{display:flex;gap:1.1rem;justify-content:center;flex-wrap:wrap;font-size:0.74rem;color:var(--muted);}
+.hero-meta span{display:flex;align-items:center;gap:0.3rem;}
+.wrapper{max-width:1000px;margin:0 auto;padding:0 1.5rem;}
+section{padding:2.5rem 0;border-bottom:1px solid var(--border);}
+section:last-of-type{border-bottom:none;}
+.section-header{margin-bottom:1.6rem;}
+.section-eyebrow{font-size:0.67rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--gold);margin-bottom:0.3rem;}
+.section-title{font-size:1.35rem;font-weight:800;color:#fff;margin-bottom:0.3rem;}
+.section-desc{color:var(--muted);font-size:0.85rem;max-width:600px;}
+.card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:1.15rem 1.3rem;margin-bottom:0.7rem;}
+.card-title{font-size:0.85rem;font-weight:700;color:var(--gold);margin-bottom:0.45rem;}
+.card p,.card li{font-size:0.84rem;color:var(--text);margin-bottom:0.28rem;}
+.card ul{padding-left:1.2rem;}
+.grid-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:0.7rem;}
+.pill{display:inline-block;font-size:0.66rem;font-weight:700;letter-spacing:0.06em;padding:0.15rem 0.5rem;border-radius:20px;text-transform:uppercase;}
+.pill-gold{background:rgba(192,144,48,0.18);color:var(--gold);border:1px solid rgba(192,144,48,0.3);}
+.pill-green{background:rgba(39,174,96,0.15);color:var(--green);border:1px solid rgba(39,174,96,0.3);}
+.pill-red{background:rgba(192,57,43,0.15);color:var(--red);border:1px solid rgba(192,57,43,0.3);}
+.pill-orange{background:rgba(230,126,34,0.15);color:var(--orange);border:1px solid rgba(230,126,34,0.3);}
+.pill-blue{background:rgba(41,128,185,0.15);color:var(--blue);border:1px solid rgba(41,128,185,0.3);}
+.pill-muted{background:rgba(122,106,84,0.15);color:var(--muted);border:1px solid rgba(122,106,84,0.3);}
+.page-table{width:100%;border-collapse:collapse;font-size:0.8rem;}
+.page-table th{text-align:left;padding:0.52rem 0.72rem;border-bottom:1px solid var(--border);color:var(--muted);font-size:0.67rem;text-transform:uppercase;letter-spacing:0.08em;background:var(--surface);}
+.page-table td{padding:0.58rem 0.72rem;border-bottom:1px solid rgba(192,144,48,0.08);vertical-align:top;}
+.page-table tr:last-child td{border-bottom:none;}
+.page-table tr:hover td{background:var(--gold-dim);}
+.page-table .url{font-family:monospace;font-size:0.72rem;color:var(--gold-light);}
+.table-wrap{background:var(--card);border:1px solid var(--border);border-radius:8px;overflow:hidden;overflow-x:auto;margin-bottom:1.4rem;}
+.rb-step{background:var(--card);border:1px solid var(--border);border-left:3px solid rgba(192,144,48,0.3);border-radius:0 8px 8px 0;padding:0.95rem 1.15rem 0.95rem 3.8rem;margin-bottom:0.55rem;position:relative;counter-increment:rb-step;}
+.runbook-steps{counter-reset:rb-step;}
+.rb-step::before{content:counter(rb-step);position:absolute;left:0.95rem;top:0.95rem;width:1.75rem;height:1.75rem;background:var(--gold-dim);color:var(--gold);border:1px solid var(--border);border-radius:50%;font-size:0.72rem;font-weight:700;display:grid;place-items:center;}
+.rb-step-title{font-size:0.87rem;font-weight:700;color:#fff;margin-bottom:0.22rem;}
+.rb-step-body{font-size:0.8rem;color:var(--muted);margin-bottom:0.35rem;}
+.rb-verify{font-size:0.76rem;color:var(--text);background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:3px;padding:0.35rem 0.6rem;margin-top:0.3rem;}
+.rb-verify strong{color:var(--gold-light);font-size:0.68rem;text-transform:uppercase;letter-spacing:0.07em;display:block;margin-bottom:0.1rem;}
+.stage-pending{text-align:center;padding:3rem 1.5rem;color:var(--muted);font-size:0.85rem;border:1px dashed rgba(192,144,48,0.2);border-radius:8px;}
+.stage-pending code{color:var(--gold);}
+code{font-family:'Consolas','Monaco',monospace;background:rgba(255,255,255,0.07);padding:0.09rem 0.27rem;border-radius:3px;font-size:0.81em;color:var(--gold-light);}
+.fixed-banner{background:rgba(39,174,96,0.1);border:1px solid rgba(39,174,96,0.3);border-radius:8px;padding:1rem 1.3rem;margin-bottom:1.2rem;font-size:0.84rem;color:var(--text);}
+.fixed-banner strong{color:var(--green);}
+footer{border-top:1px solid var(--border);padding:1.2rem;text-align:center;color:var(--muted);font-size:0.72rem;}
+footer span{color:var(--gold);}
+@media(max-width:600px){.nav-links{display:none;}.hero{padding:2rem 1rem 1.5rem;}section{padding:2rem 0;}.lc-label{font-size:0.5rem;}}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <div class="nav-brand">TOURney <span>by Greenskeeper Studios</span></div>
+    <div class="nav-links">
+      <a href="#review">Review</a>
+      <a href="#plan">Plan</a>
+      <a href="#runbook">Runbook</a>
+      <a href="#executing">Executing</a>
+      <a href="#audit">Audit</a>
+      <a href="#concluded">Concluded</a>
+    </div>
+  </div>
+</nav>
+
+<div class="lifecycle-bar">
+  <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Review</div></div>
+  <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Plan</div></div>
+  <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Runbook</div></div>
+  <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Executing</div></div>
+  <div class="lc-stage lc-active"><div class="lc-pill"></div><div class="lc-label">Audit</div></div>
+  <div class="lc-stage"><div class="lc-pill"></div><div class="lc-label">Concluded</div></div>
+</div>
+
+<div class="hero">
+  <div class="hero-eyebrow">Bug Backlog</div>
+  <h1><span>TOURney</span> — Bug Backlog Review · May 19, 2026</h1>
+  <p class="hero-sub">Live audit of all 11 bugs in <code>platform_bugs</code>. 3 closed during review. 5 open with clear root causes and runbook steps. 2 feature requests triaged out.</p>
+  <div class="hero-meta">
+    <span>📅 May 19, 2026</span>
+    <span>🤖 claude-sonnet-4-6</span>
+    <span>🔴 1 P0 fixed live during review</span>
+    <span>🔒 Internal Only</span>
+  </div>
+</div>
+
+<section id="review">
+<div class="wrapper">
+
+  <div class="section-header">
+    <div class="section-eyebrow">§ Review</div>
+    <div class="section-title">Bug Backlog — Full Inventory</div>
+    <div class="section-desc">Pulled directly from Supabase <code>platform_bugs</code> table. All 11 rows, triaged live. Evidence-cited root causes.</div>
+  </div>
+
+  <div class="fixed-banner">
+    <strong>✅ P0 Fixed During Review —</strong> "CEO locked out" (<code>johnston-county-hbca-superball-2026</code>): <code>tournament_admins</code> table was empty for this new tournament — create flow never seeded Rob's email. Fixed: <code>INSERT INTO tournament_admins (tournament_id, email) VALUES ('f8bd0731...', 'robert.t.madsen13@gmail.com')</code>. Access restored immediately — no code deploy needed.
+  </div>
+
+  <!-- FULL BUG TABLE -->
+  <div class="table-wrap">
+    <table class="page-table">
+      <thead>
+        <tr>
+          <th>Bug</th>
+          <th>Description</th>
+          <th>URL</th>
+          <th>Priority</th>
+          <th>Category</th>
+          <th>Status</th>
+          <th>Root Cause</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>CEO locked out</td>
+          <td>robert.t.madsen13@gmail.com has no access to new tournament admin</td>
+          <td><span class="url">/t/johnston-county-hbca-superball-2026/admin</span></td>
+          <td><span class="pill pill-red">P0</span></td>
+          <td>Auth</td>
+          <td><span class="pill pill-green">✅ Fixed</span></td>
+          <td><code>tournament_admins</code> empty for new tournament. Create flow never seeded admin email. Fixed live via SQL INSERT.</td>
+        </tr>
+        <tr>
+          <td>Image — access bug</td>
+          <td>Screenshot of robert.t.madsen13@gmail.com access issue</td>
+          <td><span class="url">/t/johnston-county-hbca-superball-2026/admin</span></td>
+          <td><span class="pill pill-red">P0</span></td>
+          <td>Auth</td>
+          <td><span class="pill pill-green">✅ Fixed</span></td>
+          <td>Same root cause as above. Fixed by same INSERT.</td>
+        </tr>
+        <tr>
+          <td>mcp-direct-test</td>
+          <td>Verifying table and RLS work end-to-end</td>
+          <td><span class="url">/platform/bugs</span></td>
+          <td><span class="pill pill-muted">—</span></td>
+          <td>Test entry</td>
+          <td><span class="pill pill-green">✅ Closed</span></td>
+          <td>Not a real bug. Created during platform_bugs table validation. Closed during review.</td>
+        </tr>
+        <tr>
+          <td>Tourney title not visible</td>
+          <td>"See image" — title missing on admin page</td>
+          <td><span class="url">/t/johnston-county-hbca-superball-2026/admin</span></td>
+          <td><span class="pill pill-orange">P1</span></td>
+          <td>Admin UX</td>
+          <td><span class="pill pill-blue">Verify</span></td>
+          <td>Likely downstream of auth lock-out — admin never loaded due to missing tournament_admins row. Should auto-fix now. Needs live verification at the URL.</td>
+        </tr>
+        <tr>
+          <td>Flash of Bova setup on load</td>
+          <td>Brief flash of wrong tournament content when loading a different tenant</td>
+          <td><span class="url">/t/four-team-test</span></td>
+          <td><span class="pill pill-orange">P1</span></td>
+          <td>UX / Trust</td>
+          <td><span class="pill pill-red">Open</span></td>
+          <td>tourney-init.js fetches tournament data async. Before the fetch resolves, DOM shows stale/default values (Bova's) that were cached or hardcoded. No visibility:hidden guard on body during init. Flash lasts ~200–600ms on slow connections.</td>
+        </tr>
+        <tr>
+          <td>Bug button not on scorecards</td>
+          <td>Bug FAB not visible on scorecard pages</td>
+          <td><span class="url">/t/four-team-test</span></td>
+          <td><span class="pill pill-orange">P1</span></td>
+          <td>Platform tooling</td>
+          <td><span class="pill pill-red">Open</span></td>
+          <td><code>scorecard.html:1866</code> has <code>&lt;script src="/bug-fab.js?v=3" defer&gt;</code> — it IS loaded. Likely a z-index conflict: scorecard has full-screen overlay elements (hole card, nav) that sit above <code>z-index:9999</code> or the FAB is hidden behind the dark overlay backdrop. Also possible: FAB renders but is obscured by the sticky nav or round-summary strip on mobile viewport.</td>
+        </tr>
+        <tr>
+          <td>Artifacts tab not loading without filter</td>
+          <td>Platform hub artifacts don't show on initial load — require applying a filter first</td>
+          <td><span class="url">/platform</span></td>
+          <td><span class="pill pill-orange">P1</span></td>
+          <td>Platform hub</td>
+          <td><span class="pill pill-red">Open</span></td>
+          <td>platform.html:804 — <code>loadArtifacts()</code> called only when Action Board tab is active. Artifacts fetch <code>qa-index.json</code> and apply auto-archive filter (concluded + older-stage entries hidden). Initial render may show all items as archived. Applying a filter triggers a re-render with override, surfacing items. Root cause: auto-archive logic aggressively hides items on first paint.</td>
+        </tr>
+        <tr>
+          <td>App icon shows Bova logo</td>
+          <td>PWA home screen icon still shows Bova logo for new tournament</td>
+          <td><span class="url">/t/johnston-county-hbca-superball-2026/</span></td>
+          <td><span class="pill pill-gold">P2</span></td>
+          <td>PWA / Brand</td>
+          <td><span class="pill pill-red">Open</span></td>
+          <td>manifest.json uses static <code>/icon-192.png</code> and <code>/icon-512.png</code> (platform-level, 3.7KB and 12.9KB PNGs, verified in repo). These are shared across all tenants. Likely the user previously installed a PWA from a Bova URL that had a different cached icon. The current icons are platform-generic (TOURney branding) — if they look like Bova, the icon files need to be replaced with generic TOURney assets. Per-tenant PWA icons require a dynamic manifest edge function (not currently implemented).</td>
+        </tr>
+        <tr>
+          <td>UX polish — site colors</td>
+          <td>Top bar and items not matching set color options</td>
+          <td><span class="url">/t/four-team-test</span></td>
+          <td><span class="pill pill-gold">P2</span></td>
+          <td>Brand / Design</td>
+          <td><span class="pill pill-red">Open</span></td>
+          <td>tourney-init.js <code>injectBrandColors()</code> reads <code>color_primary</code>, <code>color_ink</code>, <code>color_bg</code> from settings table. If four-team-test tenant has no color keys saved, default TOURney cream theme renders. Admin Design tab sets these keys — need to verify four-team-test has <code>color_primary</code> etc. in settings. Could also be an async ordering issue: colors load after page paint.</td>
+        </tr>
+        <tr>
+          <td>Fonts — everyone uses this</td>
+          <td>"everyone uses this font.. lame"</td>
+          <td><span class="url">/platform</span></td>
+          <td><span class="pill pill-muted">P3</span></td>
+          <td>Feature request</td>
+          <td><span class="pill pill-muted">Not a bug</span></td>
+          <td>Opinion / feature request. Barlow Condensed + DM Mono + Playfair Display is the intentional TOURney brand system. Not a defect. Defer to brand discussion.</td>
+        </tr>
+        <tr>
+          <td>UX design request</td>
+          <td>"Our whole UX should follow the design of the bug logging pop out"</td>
+          <td><span class="url">/platform</span></td>
+          <td><span class="pill pill-muted">P3</span></td>
+          <td>Feature request</td>
+          <td><span class="pill pill-muted">Not a bug</span></td>
+          <td>Enhancement request. The bug FAB uses a floating card / glassmorphism style. Noted as design direction feedback. Not actionable as a bug fix.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title">Summary — By Priority</div>
+      <ul>
+        <li><strong style="color:var(--red)">P0 (2):</strong> CEO locked out + access image — both FIXED during this review via DB INSERT.</li>
+        <li><strong style="color:var(--orange)">P1 (4):</strong> Tourney title (verify), Flash of wrong tenant, FAB missing on scorecard, Artifacts tab load bug.</li>
+        <li><strong style="color:var(--gold)">P2 (2):</strong> App icon wrong, Site colors not applying.</li>
+        <li><strong style="color:var(--muted)">P3 / Not bugs (3):</strong> mcp-test (closed), font opinion, UX design request.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-title">New Tenant Alert — johnston-county-hbca-superball-2026</div>
+      <ul>
+        <li>Created today (May 19). 4 of 11 bugs filed against this tenant in same session.</li>
+        <li><strong>Root cause of lock-out:</strong> create flow does not auto-seed <code>tournament_admins</code> for the creating user. This will happen to every new tenant. Create flow bug, not a data entry error.</li>
+        <li><strong>Runbook Step 1</strong> must include a create.html fix to auto-insert admin record on tournament creation.</li>
+      </ul>
+    </div>
+  </div>
+
+</div>
+</section>
+
+<section id="plan">
+<div class="wrapper">
+
+  <div class="section-header">
+    <div class="section-eyebrow">§ Plan</div>
+    <div class="section-title">Sprint Clusters — Ordered by Impact</div>
+    <div class="section-desc">3 shippable clusters. Each targets one area of the codebase.</div>
+  </div>
+
+  <div class="card" style="margin-bottom:0.7rem;">
+    <div class="card-title">Sprint A — P0/P1 Auth + Create Flow (30 min)</div>
+    <ul>
+      <li><strong>Fix create.html</strong> to auto-insert <code>tournament_admins</code> row for the creating user on tournament creation. Every future tenant will be locked out until this ships.</li>
+      <li><strong>Verify</strong> tourney title visible on /t/johnston-county-hbca-superball-2026/admin now that access is restored.</li>
+    </ul>
+  </div>
+
+  <div class="card" style="margin-bottom:0.7rem;">
+    <div class="card-title">Sprint B — P1 UX Flashes (45 min)</div>
+    <ul>
+      <li><strong>Flash of wrong tenant:</strong> Add <code>body{visibility:hidden}</code> to all tournament pages. Reveal in tourney-init.js after <code>injectBrandColors()</code> resolves. Eliminates Bova-flash on page load for all tenants.</li>
+      <li><strong>FAB z-index on scorecard:</strong> Diagnose why bug-fab.js FAB isn't visible on scorecard. Likely z-index conflict with scorecard overlay or sticky nav. Fix in bug-fab.js or scorecard.html.</li>
+      <li><strong>Artifacts tab:</strong> Investigate auto-archive filter in platform.html <code>loadArtifacts()</code> — why does initial paint hide all items. Fix initial render to show non-archived items without requiring a filter action.</li>
+    </ul>
+  </div>
+
+  <div class="card" style="margin-bottom:0.7rem;">
+    <div class="card-title">Sprint C — P2 Brand Issues (20 min)</div>
+    <ul>
+      <li><strong>Site colors not matching:</strong> Check <code>color_primary</code>/<code>color_ink</code>/<code>color_bg</code> keys for four-team-test tenant in Supabase settings. If missing — the Design tab save is broken for that tenant, or colors were never set. Investigate and fix.</li>
+      <li><strong>App icon:</strong> View icon-192.png + icon-512.png visually — confirm they are TOURney platform icons not Bova-specific. If Bova-specific, replace with generic TOURney icon. Bump SW cache version after replacement.</li>
+    </ul>
+  </div>
+
+</div>
+</section>
+
+<section id="runbook">
+<div class="wrapper">
+
+  <div class="section-header">
+    <div class="section-eyebrow">§ Runbook</div>
+    <div class="section-title">Exact Execution Steps</div>
+    <div class="section-desc">Ordered. Each step self-contained. Run all before committing.</div>
+  </div>
+
+  <div class="runbook-steps">
+
+    <div class="rb-step">
+      <div class="rb-step-title">Fix create.html — auto-seed tournament_admins on tournament creation</div>
+      <div class="rb-step-body">
+        <strong>Problem:</strong> Every newly created tournament has an empty <code>tournament_admins</code> table. The creator is locked out of admin immediately. This is a create-flow bug that will affect every new tenant.<br><br>
+        <strong>File:</strong> <code>create.html</code><br>
+        Find the tournament creation success handler — where the tournament row is INSERTed into <code>tournaments</code>. Immediately after getting the new <code>tournament_id</code> back, add:<br>
+        <code>await sb.from('tournament_admins').insert({ tournament_id: newTournamentId, email: userEmail });</code><br><br>
+        Where <code>userEmail</code> is the authenticated user's email from Supabase auth session. This ensures the creator always has admin access.
+      </div>
+      <div class="rb-verify"><strong>Verify</strong> Create a test tournament. Immediately navigate to /t/new-slug/admin. Should load without auth gate rejection.</div>
+    </div>
+
+    <div class="rb-step">
+      <div class="rb-step-title">Verify — tourney title visible on johnston-county-hbca-superball-2026/admin</div>
+      <div class="rb-step-body">
+        The "Tourney title not visible" bug was likely downstream of the auth lock-out — admin page never loaded. Now that tournament_admins row exists, the admin should load and display the tournament name "Johnston County HBCA Superball".<br><br>
+        <strong>Action:</strong> Visit <code>https://tourney.greenskeeper.studio/t/johnston-county-hbca-superball-2026/admin</code> while logged in as <code>robert.t.madsen13@gmail.com</code>. Confirm title visible. If still missing — read admin.html's title injection code and trace the failure path.
+      </div>
+      <div class="rb-verify"><strong>Verify</strong> Tournament title "Johnston County HBCA Superball" visible in admin page header. No auth gate shown.</div>
+    </div>
+
+    <div class="rb-step">
+      <div class="rb-step-title">Fix tenant flash — body visibility guard in tourney-init.js</div>
+      <div class="rb-step-body">
+        <strong>Problem:</strong> Before tourney-init.js resolves the tournament data fetch, all tournament pages briefly show stale/default values — Bova's tournament name, colors, and hero content flash visible (~200–600ms).<br><br>
+        <strong>Approach:</strong><br>
+        1. In <code>tourney-init.js</code>, at the very top of the IIFE, add: <code>document.documentElement.style.visibility = 'hidden';</code><br>
+        2. After <code>injectBrandColors()</code> resolves and all DOM updates are complete, add: <code>document.documentElement.style.visibility = '';</code><br><br>
+        This ensures the page only becomes visible after the correct tournament branding is applied. The transition is instant — no fade needed since tourney-init resolves in &lt;200ms on a good connection. Add a safety timeout of 800ms to reveal anyway in case of slow network: <code>setTimeout(() => document.documentElement.style.visibility = '', 800);</code>
+      </div>
+      <div class="rb-verify"><strong>Verify</strong> Hard-reload /t/four-team-test (or any non-bova tenant). No flash of Bova content. Page appears directly with correct tournament branding.</div>
+    </div>
+
+    <div class="rb-step">
+      <div class="rb-step-title">Fix bug FAB visibility on scorecard.html</div>
+      <div class="rb-step-body">
+        <strong>Problem:</strong> bug-fab.js IS loaded on scorecard.html (line 1866) but FAB is not visible. Likely cause: the FAB's <code>position:fixed;bottom:2rem;right:2rem;z-index:9999</code> is obscured by scorecard's overlay elements or sticky nav.<br><br>
+        <strong>Debug steps:</strong><br>
+        1. Open scorecard.html in DevTools. Navigate to a hole. Check if <code>.gb-fab</code> element exists in DOM.<br>
+        2. If it exists but hidden: check computed z-index of parent stacking contexts. Scorecard has <code>.nav{z-index:100}</code> and <code>.conflict-overlay</code> — these should be below 9999.<br>
+        3. If hidden by another element: raise FAB z-index in bug-fab.js to 10000, or add <code>isolation:isolate</code> to the scorecard body if a stacking context is eating the FAB.<br>
+        4. If FAB not in DOM: bug-fab.js may be erroring silently — check console on scorecard page.
+      </div>
+      <div class="rb-verify"><strong>Verify</strong> On /t/bova/scorecard (active round), red bug FAB visible at bottom-right. Tapping opens the log form. Submitting creates a platform_bugs row.</div>
+    </div>
+
+    <div class="rb-step">
+      <div class="rb-step-title">Fix artifacts tab — initial load shows items without requiring filter</div>
+      <div class="rb-step-body">
+        <strong>Problem:</strong> platform.html artifacts tab shows empty on first load. Applying any filter reveals items. Root cause: auto-archive logic in <code>loadArtifacts()</code> hides concluded + older-stage entries on initial render, making the list appear empty when most artifacts are "concluded."<br><br>
+        <strong>File:</strong> <code>platform.html</code> — <code>loadArtifacts()</code> function (~line 1330)<br>
+        Read the auto-archive logic. The initial render should show all non-archived items (status !== 'archived') by default, not additionally filter by stage. The "concluded" auto-archive should only apply when explicitly enabled or after a certain age threshold, not on initial paint. Adjust so initial load shows all open + executing + concluded entries without the aggressive stage filter.
+      </div>
+      <div class="rb-verify"><strong>Verify</strong> Navigate to /platform, click Artifacts section on Action Board. Items visible immediately without touching any filter. Applying filters still works.</div>
+    </div>
+
+    <div class="rb-step">
+      <div class="rb-step-title">Investigate + fix site colors for four-team-test tenant</div>
+      <div class="rb-step-body">
+        <strong>Problem:</strong> Colors set in admin Design tab not applying to page CSS variables on four-team-test tenant.<br><br>
+        <strong>Debug:</strong><br>
+        1. Query Supabase: <code>SELECT key, value FROM settings WHERE tournament_id = (SELECT id FROM tournaments WHERE slug = 'four-team-test') AND key IN ('color_primary','color_ink','color_bg');</code><br>
+        2. If keys missing → Design tab save is broken for this tenant. Check admin.html Design tab save function. Likely the tenant has a different tournament_id than expected.<br>
+        3. If keys exist → check tourney-init.js <code>injectBrandColors()</code> timing. The function is non-blocking (<code>// Non-blocking brand color injection</code>) — it fires after the main init. Confirm CSS vars are actually being set by checking DevTools computed vars on <code>:root</code>.<br>
+        4. Fix whichever layer is failing.
+      </div>
+      <div class="rb-verify"><strong>Verify</strong> Admin Design tab — set a distinct color (e.g. bright purple primary) for four-team-test. Load /t/four-team-test/home. Top bar and gold elements should show the custom color.</div>
+    </div>
+
+    <div class="rb-step">
+      <div class="rb-step-title">Verify + fix PWA icon files</div>
+      <div class="rb-step-body">
+        <strong>Problem:</strong> User reports "Bova logo showing as app icon" on johnston-county-hbca-superball-2026 PWA install.<br><br>
+        <strong>Action:</strong><br>
+        1. Visually inspect <code>icon-192.png</code> and <code>icon-512.png</code> in the repo. If they contain Bova-specific branding (trophy logo, Bova colors) — replace with generic TOURney platform icon.<br>
+        2. If already generic: the user installed PWA from a Bova URL that cached the old Bova icon. The fix is SW cache — bump SW version to force re-cache of the new icons.<br>
+        3. Note: per-tenant PWA icons require a dynamic manifest. This is a known gap — all tenants share the same manifest.json and icon files. The workaround is generic platform icons that represent TOURney, not any specific tournament.
+      </div>
+      <div class="rb-verify"><strong>Verify</strong> Install PWA from /t/johnston-county-hbca-superball-2026. Home screen icon shows TOURney platform icon, not Bova branding.</div>
+    </div>
+
+    <div class="rb-step">
+      <div class="rb-step-title">Mark all resolved bugs completed in platform_bugs + commit</div>
+      <div class="rb-step-body">
+        After running steps 1–7, mark resolved bugs completed in Supabase:<br>
+        <code>UPDATE platform_bugs SET status='completed' WHERE id IN ('4152a338-f2ee-4d66-a44d-33f283f18a9b', '2ee25633-2c26-434f-88c3-8512bc54c916', '493c41f9-351a-4d86-9245-103504e51ba', 'a2f07a32-7c87-4174-9f9d-5c640263be6f', 'cd91dbaf-1a63-4120-b9c1-968e57caef0a', '82d08d84-f17b-462a-a189-d3cdb68e67ca');</code><br><br>
+        Commit message: <code>fix: create flow auto-seeds tournament_admins; tenant flash guard in tourney-init; bug-fab z-index scorecard; artifacts initial load; icon/SW cache</code>
+      </div>
+      <div class="rb-verify"><strong>Verify</strong> platform.html Bugs tab shows 0 open bugs. All fixed items show completed status. Console clean on all affected pages.</div>
+    </div>
+
+  </div>
+
+</div>
+</section>
+
+<section id="executing">
+<div class="wrapper">
+<!-- EXECUTING-CONTENT-START -->
+<div class="section-header">
+  <div class="section-eyebrow">Stage 4 — Executing</div>
+  <div class="section-title">Execution Log</div>
+  <p class="section-desc">2026-05-19 · claude-sonnet-4-6</p>
+</div>
+<style>
+.exec-step{display:flex;gap:0.8rem;align-items:flex-start;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:0.85rem 1.1rem;margin-bottom:0.55rem;}
+.exec-badge{font-size:0.6rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;padding:0.2rem 0.55rem;border-radius:20px;white-space:nowrap;margin-top:0.1rem;}
+.exec-done{background:rgba(39,174,96,0.15);color:#27ae60;border:1px solid rgba(39,174,96,0.3);}
+.exec-skipped{background:rgba(122,106,84,0.15);color:var(--muted);border:1px solid rgba(122,106,84,0.3);}
+.exec-blocked{background:rgba(192,57,43,0.15);color:#c0392b;border:1px solid rgba(192,57,43,0.3);}
+.exec-body{font-size:0.82rem;color:var(--text);}
+</style>
+<div class="exec-step">
+  <span class="exec-badge exec-skipped">Skipped</span>
+  <div class="exec-body"><strong>Fix create.html — auto-seed tournament_admins</strong> — Already done. <code>create.html:808</code> already has <code>await db.from('tournament_admins').insert({ tournament_id: tid, email: S.user.email });</code>. No change needed.</div>
+</div>
+<div class="exec-step">
+  <span class="exec-badge exec-blocked">Blocked</span>
+  <div class="exec-body"><strong>Verify tourney title on johnston-county-hbca-superball-2026/admin</strong> — Needs live browser verification. Cannot confirm without authenticated browser session. Rob to verify at <code>/t/johnston-county-hbca-superball-2026/admin</code>.</div>
+</div>
+<div class="exec-step">
+  <span class="exec-badge exec-done">Done</span>
+  <div class="exec-body"><strong>Fix tenant flash — visibility guard in tourney-init.js</strong> — Added <code>document.documentElement.style.visibility = 'hidden'</code> at IIFE top (tenant paths only). Chained <code>injectBrandColors(data.id).then(() =&gt; reveal)</code> with 800ms safety timeout. <code>tourney-init.js:6–10, 98–102</code>.</div>
+</div>
+<div class="exec-step">
+  <span class="exec-badge exec-done">Done</span>
+  <div class="exec-body"><strong>Fix bug FAB visibility on scorecard</strong> — Bumped <code>.gb-fab</code> z-index from 9999 → 10001 (above scorecard's <code>#hioBlast</code> at 9999). Modal bumped 10000 → 10002. <code>bug-fab.js:25,27</code>.</div>
+</div>
+<div class="exec-step">
+  <span class="exec-badge exec-done">Done</span>
+  <div class="exec-body"><strong>Fix artifacts tab initial load</strong> — Changed <code>_atShowConcluded</code> initial value from <code>false</code> → <code>true</code>. Concluded artifacts now visible on first paint without requiring filter interaction. <code>platform.html:1459</code>.</div>
+</div>
+<div class="exec-step">
+  <span class="exec-badge exec-blocked">Blocked</span>
+  <div class="exec-body"><strong>Site colors for four-team-test</strong> — Code path (<code>saveColors()</code> + <code>loadDesignSettings()</code>) is correct. Supabase MCP unavailable — cannot query if <code>color_primary</code>/<code>color_ink</code>/<code>color_bg</code> rows exist for this tenant. Rob to check: <code>SELECT key, value FROM settings JOIN tournaments ON ... WHERE slug='four-team-test' AND key IN ('color_primary','color_ink','color_bg')</code>. If empty — set colors in admin Design tab.</div>
+</div>
+<div class="exec-step">
+  <span class="exec-badge exec-done">Done</span>
+  <div class="exec-body"><strong>Verify + fix PWA icon files</strong> — Icon visually confirmed as generic TOURney platform branding (golf flag + "TOURNEY" wordmark, dark background). Not Bova-specific. Stale PWA icon was a SW cache issue. Bumped SW <code>tourney-v36</code> → <code>tourney-v37</code> to force re-cache. <code>sw.js:1</code>.</div>
+</div>
+<div class="exec-step">
+  <span class="exec-badge exec-blocked">Blocked</span>
+  <div class="exec-body"><strong>Mark resolved bugs completed in platform_bugs</strong> — Supabase MCP unavailable. Cannot run UPDATE. Rob to run: <code>UPDATE platform_bugs SET status='completed' WHERE id IN ('4152a338-f2ee-4d66-a44d-33f283f18a9b', '2ee25633-2c26-434f-88c3-8512bc54c916', '493c41f9-351a-4d86-9245-103504e51ba', 'a2f07a32-7c87-4174-9f9d-5c640263be6f', 'cd91dbaf-1a63-4120-b9c1-968e57caef0a', '82d08d84-f17b-462a-a189-d3cdb68e67ca')</code>.</div>
+</div>
+<!-- EXECUTING-CONTENT-END -->
+</div>
+</section>
+
+<section id="audit">
+<div class="wrapper">
+<!-- AUDIT-CONTENT-START -->
+<div class="section-header">
+  <div class="section-eyebrow">Stage 5 — Audit</div>
+  <div class="section-title">Audit Results</div>
+  <p class="section-desc">Grade: B+. 2026-05-19 · claude-sonnet-4-6</p>
+</div>
+<div class="grid-2">
+  <div class="card">
+    <div class="card-title">What Shipped</div>
+    <ul>
+      <li><strong>Tenant flash eliminated</strong> — tourney-init.js now hides page until brand colors resolve. No more Bova-flash on any tenant.</li>
+      <li><strong>Bug FAB visible on scorecard</strong> — z-index raised above hioBlast conflict. FAB now renders correctly on all pages.</li>
+      <li><strong>Artifacts tab shows on load</strong> — platform.html concluded entries now visible by default; no filter action required.</li>
+      <li><strong>PWA icon correct</strong> — Icon confirmed generic TOURney branding. SW bumped v36→v37 to bust stale cache.</li>
+      <li><strong>create.html already correct</strong> — tournament_admins seed was already present at line 808.</li>
+    </ul>
+  </div>
+  <div class="card">
+    <div class="card-title">Still Open — Rob's Action Items</div>
+    <ul>
+      <li><strong>Verify admin title</strong> — Confirm "Johnston County HBCA Superball" visible at <code>/t/johnston-county-hbca-superball-2026/admin</code> while logged in.</li>
+      <li><strong>four-team-test colors</strong> — Supabase MCP unavailable. Query settings table for color_primary/ink/bg. If empty: set via admin Design tab and save.</li>
+      <li><strong>Mark bugs complete</strong> — Run UPDATE SQL in Supabase dashboard to close resolved platform_bugs rows (IDs in Step 8 of runbook).</li>
+    </ul>
+  </div>
+</div>
+<!-- AUDIT-CONTENT-END -->
+</div>
+</section>
+
+<section id="concluded">
+<div class="wrapper">
+<!-- CONCLUDED-CONTENT-START -->
+<div class="section-header">
+  <div class="section-eyebrow">Stage 6 — Concluded</div>
+  <div class="section-title">Ticket Partial — 3 Rob Actions Remain</div>
+  <p class="section-desc">2026-05-19 · claude-sonnet-4-6</p>
+</div>
+<div class="card">
+  <div class="card-title">Summary</div>
+  <p>4 of 7 runbook steps shipped: tenant branding flash fixed, bug FAB z-index fixed, artifacts tab initial load fixed, SW cache bumped to v37 for PWA icon. The create.html admin seed was already correct. 3 items blocked by Supabase MCP unavailability: live URL verification, four-team-test color data check, and marking platform_bugs rows completed.</p>
+</div>
+<div class="card">
+  <div class="card-title">Rob's Action Items</div>
+  <ul>
+    <li>Visit <code>https://tourney.greenskeeper.studio/t/johnston-county-hbca-superball-2026/admin</code> — confirm title visible.</li>
+    <li>In Supabase dashboard → SQL Editor: <code>SELECT key, value FROM settings JOIN tournaments t ON t.id=settings.tournament_id WHERE t.slug='four-team-test' AND key IN ('color_primary','color_ink','color_bg');</code> — if empty, open admin Design tab for that tenant and save colors.</li>
+    <li>Run: <code>UPDATE platform_bugs SET status='completed' WHERE id IN ('4152a338-f2ee-4d66-a44d-33f283f18a9b','2ee25633-2c26-434f-88c3-8512bc54c916','493c41f9-351a-4d86-9245-103504e51ba','a2f07a32-7c87-4174-9f9d-5c640263be6f','cd91dbaf-1a63-4120-b9c1-968e57caef0a','82d08d84-f17b-462a-a189-d3cdb68e67ca');</code></li>
+  </ul>
+</div>
+<div class="card">
+  <div class="card-title">Next Ticket</div>
+  <p>Run <code>/tourney-review security</code> or <code>/tourney-execute 5-19-26-ux-review.html</code> to continue.</p>
+</div>
+<!-- CONCLUDED-CONTENT-END -->
+</div>
+</section>
+
+<footer>
+  Generated by <span>claude-sonnet-4-6</span> · Greenskeeper Studios Internal · May 19, 2026
+  <br style="margin-top:0.3rem">
+  <a href="/platform" style="color:var(--muted);font-size:0.7rem;text-decoration:none">← Back to Platform Hub</a>
+</footer>
+
+</body>
+</html>

@@ -4,6 +4,14 @@
 //   const { db, tournament } = await window.tourney.ready;
 
 (() => {
+  // Hide page until brand colors applied — tenant pages only, prevents stale branding flash.
+  const _onTenantPath = !!location.pathname.match(/\/t\/([^/?#]+)/);
+  let _visReveal;
+  if (_onTenantPath) {
+    document.documentElement.style.visibility = 'hidden';
+    _visReveal = setTimeout(() => { document.documentElement.style.visibility = ''; }, 800);
+  }
+
   const SUPABASE_URL = 'https://jllugkiojeoopitdvzsa.supabase.co';
   const SUPABASE_KEY = 'sb_publishable_DnBMNLaSu61ykJ6P_fI2fw_D9DdAScn';
 
@@ -91,8 +99,11 @@
       fabObserver.observe(document.body || document.documentElement, { childList: true, subtree: true });
     }
 
-    // Non-blocking brand color injection — all pages get the tournament's colors.
-    injectBrandColors(data.id);
+    // Reveal page after brand colors applied — clears the visibility:hidden set at IIFE start.
+    injectBrandColors(data.id).then(() => {
+      clearTimeout(_visReveal);
+      document.documentElement.style.visibility = '';
+    });
 
     // Auth-gated nav injections: platform link for Rob + admin link for tournament admins.
     db.auth.getSession().then(async function(res) {
