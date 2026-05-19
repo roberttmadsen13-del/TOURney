@@ -1577,7 +1577,11 @@ function buildParEditor() {
           </select>
         </div>
       </div>
-      <div id="manualYardWrap-${day}">
+      <div id="manualYardWrap-${day}" style="display:none;">
+        <div class="par-nine-label" style="cursor:pointer;user-select:none;display:flex;align-items:center;gap:0.5rem;" onclick="toggleManualYards('${day}')">
+          <span id="yardToggle-${day}">&#9658;</span> Yardages (optional)
+        </div>
+        <div id="yardInputs-${day}" style="display:none;">
         <div class="par-nine-label">Front Nine — Yards (Holes 1–9)</div>
         <div class="par-inputs" id="yardFront-${day}">
           ${Array.from({length:9},(_,i) => `<div class="par-input-wrap"><div class="par-hole-num">${i+1}</div><input type="number" class="par-input" id="yard-${day}-${i+1}" value="${yards[i]||''}" min="50" max="700" placeholder="—" oninput="updateYardSubtotals('${day}')"></div>`).join('')}
@@ -1585,6 +1589,7 @@ function buildParEditor() {
         <div class="par-nine-label">Back Nine — Yards (Holes 10–18)</div>
         <div class="par-inputs" id="yardBack-${day}">
           ${Array.from({length:9},(_,i) => `<div class="par-input-wrap"><div class="par-hole-num">${i+10}</div><input type="number" class="par-input" id="yard-${day}-${i+10}" value="${yards[i+9]||''}" min="50" max="700" placeholder="—" oninput="updateYardSubtotals('${day}')"></div>`).join('')}
+        </div>
         </div>
       </div>
       <div class="par-subtotals">
@@ -1655,6 +1660,15 @@ function setCourseMode(day, mode) {
     if (tw) tw.style.display = 'none';
     if (mw) mw.style.display = '';
   }
+}
+
+function toggleManualYards(day) {
+  const wrap = document.getElementById(`yardInputs-${day}`);
+  const tog = document.getElementById(`yardToggle-${day}`);
+  if (!wrap) return;
+  const open = wrap.style.display === 'none';
+  wrap.style.display = open ? '' : 'none';
+  if (tog) tog.innerHTML = open ? '&#9660;' : '&#9658;';
 }
 
 function onCourseSearch(day) {
