@@ -635,9 +635,9 @@ html { scroll-behavior: smooth; }
           </div>
           <button class="form-submit" onclick="submitRsvp()">Confirm Registration</button>
           <div id="playerAccountBanner" style="display:none;margin-top:1rem;padding:1rem 1.2rem;border:1px solid rgba(192,144,48,0.4);background:rgba(192,144,48,0.06);text-align:center;">
-            <div style="font-family:'Barlow Condensed',sans-serif;font-size:0.72rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);margin-bottom:0.5rem;">Player Account Required</div>
-            <div style="font-size:0.82rem;color:rgba(240,230,204,0.55);margin-bottom:0.9rem;">A $2/mo Player Account is required to join a tournament.</div>
-            <a href="/player-upgrade" class="btn-gold" style="font-size:0.65rem;padding:0.5rem 1.5rem;">Get Player Account &rarr;</a>
+            <div style="font-family:'Barlow Condensed',sans-serif;font-size:0.72rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);margin-bottom:0.5rem;">Account Required</div>
+            <div style="font-size:0.82rem;color:rgba(240,230,204,0.55);margin-bottom:0.9rem;">Create a free account to register. Takes 30 seconds.</div>
+            <a href="/login?redirect=registration" class="btn-gold" style="font-size:0.65rem;padding:0.5rem 1.5rem;">Create Account &rarr;</a>
           </div>
         </div>
         <div class="success-state" id="successRsvp">
@@ -708,10 +708,20 @@ window.addEventListener('scroll', () => { document.getElementById('mainNav').cla
     'team_a_captain','challengers_captain',
     ...fmtDayKeys
   ];
-  const { data } = await sb.from('settings').select('key,value').eq('tournament_id', tournament.id).in('key', keys);
+  const [{ data }, { data: roundsData }] = await Promise.all([
+    sb.from('settings').select('key,value').eq('tournament_id', tournament.id).in('key', keys),
+    sb.from('rounds').select('day_number,format_front,format_back').eq('tournament_id', tournament.id).order('day_number'),
+  ]);
   if (!data) return;
   const map = {};
   data.forEach(r => { map[r.key] = r.value; });
+  // Formats are authoritative in rounds table, not settings
+  if (roundsData?.length) {
+    roundsData.forEach(r => {
+      map[`format_day${r.day_number}_front`] = r.format_front || 'stroke';
+      map[`format_day${r.day_number}_back`]  = r.format_back  || r.format_front || 'stroke';
+    });
+  }
 
   // Hero eyebrow & meta
   const eyebrow = document.querySelector('.hero-eyebrow');
@@ -941,15 +951,10 @@ async function submitRsvp() {
   }
   if (!ok) return;
 
-  // Gate: require active player_accounts subscription
-  const { data: acct } = await sb.from('player_accounts')
-    .select('billing_status, billing_expires_at')
-    .eq('email', email.toLowerCase())
-    .maybeSingle();
-  const isActive = (acct?.billing_status === 'active' || acct?.billing_status === 'comped') &&
-    (!acct.billing_expires_at || new Date(acct.billing_expires_at) > new Date());
-  if (!isActive) {
-    showToast('Player Account Required', 'A $2/mo Player Account is required to join. Tap below to get one.');
+  // Gate: require a Supabase auth session (free account)
+  const { data: { session } } = await sb.auth.getSession();
+  if (!session) {
+    showToast('Account Required', 'Create a free account to register for this tournament.');
     setTimeout(() => {
       const el = document.getElementById('playerAccountBanner');
       if (el) el.style.display = 'block';
@@ -1072,7 +1077,7 @@ async function loadHeroScoreboard(tournamentId) {
   if (_lbSk) _lbSk.innerHTML = '<div class="skeleton" style="height:2rem;border-radius:4px;margin-bottom:4px;"></div>'.repeat(5);
   const [pRes, sRes, taRes, p1Res, p2Res, p3Res, capRes] = await Promise.all([
     sb.from('players').select('id,first_name,last_name,handicap').eq('tournament_id', tournamentId),
-    sb.from('scores').select('player_id,round,hole,gross_score').eq('tournament_id', tournamentId),
+    sb.from('scores').select('player_id,day_number,hole,gross_score').eq('tournament_id', tournamentId),
     sb.from('settings').select('value').eq('tournament_id', tournamentId).eq('key','team_assignments').maybeSingle(),
     sb.from('settings').select('value').eq('tournament_id', tournamentId).eq('key','pars_day1').maybeSingle(),
     sb.from('settings').select('value').eq('tournament_id', tournamentId).eq('key','pars_day2').maybeSingle(),
@@ -1090,7 +1095,7 @@ async function loadHeroScoreboard(tournamentId) {
   const HANDICAP_STROKES = {scratch:0,eagle:4,birdie:8,bogey:12,pretender:16,hacker:20};
 
   const scoreMap = {};
-  for (const s of scores) scoreMap[`${s.player_id}:${s.round}:${s.hole}`] = s.gross_score;
+  for (const s of scores) scoreMap[`${s.player_id}:${s.day_number}:${s.hole}`] = s.gross_score;
 
   function playerNet(player) {
     let total = 0; let holes = 0;
