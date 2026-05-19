@@ -961,12 +961,16 @@ async function submitRsvp() {
     }, 100);
     return;
   }
+  // Lock email to authenticated user — prevents registering as someone else
+  const sessionEmail = session.user.email.toLowerCase();
+  const emailField = document.getElementById('rsvpEmail');
+  if (emailField) emailField.value = sessionEmail;
 
   const { tournament } = await window.tourney.ready;
   const { error } = await sb.from('players').insert({
     first_name: first,
     last_name:  last,
-    email:      email.toLowerCase(),
+    email:      sessionEmail,
     phone_number: phone || null,
     handicap:   hcap,
     available_dates: (_dpGroup && _dpGroup.style.display !== 'none') ? [...selectedDates] : [],
@@ -984,6 +988,9 @@ async function submitRsvp() {
     }
     return;
   }
+
+  // Auto-comp the registering player's account — no payment required for tournament participants
+  await sb.from('player_accounts').upsert({ email: sessionEmail, billing_status: 'comped' }, { onConflict: 'email' });
 
   document.getElementById('rsvpFormCard').classList.add('hidden');
   document.getElementById('successRsvp').classList.add('show');
@@ -1021,6 +1028,15 @@ sb.channel('players-public')
   .subscribe();
 
 refreshField();
+
+// Pre-fill email from auth session if already logged in
+(async () => {
+  const { data: { session } } = await sb.auth.getSession();
+  if (session?.user?.email) {
+    const f = document.getElementById('rsvpEmail');
+    if (f) { f.value = session.user.email; f.readOnly = true; f.style.opacity = '0.6'; }
+  }
+})();
 
 // HAT TOGGLE
 function toggleHat() {
