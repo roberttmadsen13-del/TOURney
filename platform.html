@@ -1062,9 +1062,9 @@ const CAT_META = {
   postmortem:{pill:'pill-orange',label:'Audit'}, skill:{pill:'pill-purple',label:'Skill'},
   bugs:{pill:'pill-red',label:'Bugs'}, reference:{pill:'pill-muted',label:'Reference'},
 };
-const STATUS_PILL  = { active:'pill-gold','in-progress':'pill-gold',queued:'pill-blue',shipped:'pill-green',critical:'pill-red',archived:'pill-muted' };
-const STATUS_LABEL = { active:'Active','in-progress':'Active',queued:'Queued',shipped:'Shipped',critical:'Critical',archived:'Archived' };
-const STATUS_ORDER = { critical:0,active:1,'in-progress':1,queued:2,shipped:3 };
+const STATUS_PILL  = { active:'pill-gold','in-progress':'pill-gold',queued:'pill-blue',shipped:'pill-green',critical:'pill-red',archived:'pill-muted',concluded:'pill-muted' };
+const STATUS_LABEL = { active:'Active','in-progress':'Active',queued:'Queued',shipped:'Shipped',critical:'Critical',archived:'Archived',concluded:'Concluded' };
+const STATUS_ORDER = { critical:0,active:1,'in-progress':1,queued:2,shipped:3,concluded:5 };
 let sortMode='status';
 const NEXT_STEP = {review:'plan',plan:'runbook',runbook:'audit',audit:'bugs',postmortem:'bugs',bugs:'fix'};
 const NEXT_LABEL = {plan:'Plan',runbook:'Runbook',audit:'Audit',bugs:'Bugs',fix:'Debug'};
@@ -1271,7 +1271,8 @@ function renderHub() {
   const unar=getUnarchiveOverrides();
   const isArchived=(e)=>{
     if(unar[e.id]) return false;
-    return !!(e.archived||e.status==='archived'||e.status==='concluded'||ar[e.id]||auto.has(e.id));
+    const effSt=stOverrides[e.id]||e.status;
+    return !!(e.archived||effSt==='archived'||ar[e.id]||auto.has(e.id));
   };
   const search=activeSearch.trim().toLowerCase();
   const filtered=allEntries.filter(e => {
@@ -1288,12 +1289,12 @@ function renderHub() {
     if(sortMode==='date-new') return (b.updated||b.date||'').localeCompare(a.updated||a.date||'');
     if(sortMode==='date-old') return (a.updated||a.date||'').localeCompare(b.updated||b.date||'');
     if(sortMode==='alpha')    return (a.title||'').localeCompare(b.title||'');
-    const sa=STATUS_ORDER[a.status]??4, sb=STATUS_ORDER[b.status]??4;
+    const sa=STATUS_ORDER[stOverrides[a.id]||a.status]??4, sb=STATUS_ORDER[stOverrides[b.id]||b.status]??4;
     if(sa!==sb) return sa-sb;
     return (b.updated||b.date||'').localeCompare(a.updated||a.date||'');
   });
   const stOverrides=getStatusOverrides();
-  const STATUS_OPTS=['active','in-progress','queued','shipped','critical','archived'];
+  const STATUS_OPTS=['active','in-progress','queued','shipped','critical','archived','concluded'];
   grid.innerHTML=(filtered.length?sorted.map(e=>{
     const meta=CAT_META[e.category]||CAT_META.plan;
     const effStatus=stOverrides[e.id]||e.status;
@@ -1343,7 +1344,7 @@ async function loadArtifacts() {
       const overrides=getUnarchiveOverrides();
       let changed=false;
       allEntries.forEach(e=>{
-        if((e.status==='concluded'||e.status==='archived')&&!ar[e.id]&&!overrides[e.id]){
+        if(e.status==='archived'&&!ar[e.id]&&!overrides[e.id]){
           ar[e.id]=true; changed=true;
         }
       });
