@@ -897,7 +897,7 @@ async function checkSession() {
   const isOwner = tRow?.owner_email?.toLowerCase() === email;
   if (isOwner || adminRow || email === PLATFORM_OWNER) {
     _tid = tournament.id; _slug = tournament.slug;
-    applyTierGates(acctRow?.plan ?? 'free');
+    applyTierGates(email === PLATFORM_OWNER ? 'scratch' : (acctRow?.plan ?? 'free'));
     showAdmin(email);
   }
 }
