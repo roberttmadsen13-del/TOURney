@@ -886,6 +886,8 @@ async function doLogin() {
     if (!isOwner && !adminRow) { await sb.auth.signOut(); err.classList.add('show'); return; }
   }
   _tid = tournament.id; _slug = tournament.slug;
+  const { data: acctRow2 } = await sb.from('player_accounts').select('plan').eq('email', email.toLowerCase()).maybeSingle();
+  applyTierGates(email.toLowerCase() === PLATFORM_OWNER ? 'scratch' : (acctRow2?.plan ?? 'free'));
   showAdmin(email);
 }
 
