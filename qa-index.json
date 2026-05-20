@@ -1,9 +1,22 @@
 {
   "$schema": "https://tourney.greenskeeper.studio/qa-index-schema.json",
   "version": 1,
-  "updated_at": "2026-05-19T00:00:00Z",
+  "updated_at": "2026-05-19T12:00:00Z",
   "description": "Canonical registry of all TOURney plans, reviews, audits, and QA artifacts. The /platform Artifacts tab renders from this file. Skills (e.g. tourney-review) append new entries when they generate output.",
   "entries": [
+    {
+      "id": "master-plan-2026-05-19",
+      "category": "review",
+      "stage": "executing",
+      "title": "Master Consolidation Plan · May 19, 2026",
+      "summary": "All open items from pre-May-14 tickets consolidated. Completed work stripped. 16 runbook steps: 7 Rob manual (LLC, Stripe, secrets), 9 engineering (OG tags, onboarding fix, score edit, profile skeleton, Lighthouse CI, CSP). Platform grades: Arch A, UX A, Security A-, Feature B+, Perf B+, Data B+, Marketing B-, Onboarding B-, Business C+ (blocking).",
+      "date": "2026-05-19",
+      "author": "claude-sonnet-4-6",
+      "url": "/platform/5-19-26-master-plan",
+      "file": "5-19-26-master-plan.html",
+      "tags": ["review", "plan", "master", "consolidation"],
+      "status": "open"
+    },
     {
       "id": "review-ux-2026-05-19",
       "category": "review",
@@ -65,59 +78,64 @@
     {
       "id": "review-2026-05-14",
       "category": "review",
-      "stage": "audit",
+      "stage": "concluded",
       "title": "Full Platform Review · May 14, 2026",
       "summary": "Execute grade B+. Shipped: 2 XSS fixes (feed.html:375, admin.html:2185/2340), ToS+Privacy pages live at /tos /privacy, footer links, vercel rewrites, GH Actions CI pipeline. Skipped: player_accounts RLS (already done). Blocked: SEND_INSTALL_EMAIL_SECRET env var (Rob manual), GH deploy-functions secrets.",
       "date": "2026-05-14",
-      "updated": "2026-05-14",
+      "updated": "2026-05-19",
       "author": "claude-sonnet-4-6",
       "url": "/platform/5-14-26-claude-review",
       "file": "5-14-26-claude-review.html",
       "tags": ["review", "security", "audit"],
-      "status": "partial"
+      "status": "concluded"
     },
     {
       "id": "review-2026-05-13",
       "category": "review",
+      "stage": "concluded",
       "title": "Full Platform Review · May 13, 2026",
       "summary": "Security grade B: feed.html:377 _parseMentions XSS open, admin.html url innerHTML, player_accounts anon read, CSP unsafe-inline. Architecture A, UX B+ (sprint concluded). Stripe fully wired, LLC unformed. Business grade C+. 5-bug tracker seeded. Council of 5: CSP extraction, Stripe test-mode dry run, round summary email, GH Actions CI/CD, ToS+Privacy pages.",
       "date": "2026-05-13",
+      "updated": "2026-05-19",
       "author": "claude-sonnet-4-6",
       "url": "/platform/5-13-26-claude-review",
       "file": "5-13-26-claude-review.html",
       "tags": ["review", "security", "audit"],
-      "status": "shipped"
+      "status": "concluded"
     },
     {
       "id": "ux",
       "axis": "ux",
       "category": "axis",
-      "stage": "review",
+      "stage": "concluded",
       "title": "UX Polish — Post-Sprint Review",
-      "summary": "B+. 7/8 runbook items shipped (10a676f). 4 open gaps: heroLogoImg alt empty, login submit no spinner, zero-player empty state missing, manifest 180px icon absent. All LOW/MEDIUM, non-blocking.",
+      "summary": "B+. 7/8 runbook items shipped (10a676f). superseded by 5-19-26-ux-review (Grade A, all items resolved).",
       "date": "2026-05-12",
-      "updated": "2026-05-13",
+      "updated": "2026-05-19",
       "author": "claude-sonnet-4-6",
       "url": "/platform/ux",
       "file": "ux.html",
       "tags": ["ux", "review", "accessibility", "mobile"],
-      "status": "active"
+      "status": "concluded"
     },
     {
       "id": "review-ux-2026-05-13",
       "category": "review",
+      "stage": "concluded",
       "title": "UX Polish Review · May 13, 2026",
-      "summary": "Post-sprint UX audit. Grade B+. 7/8 runbook items shipped (10a676f). 4 open gaps: heroLogoImg alt empty (home.html:429 MEDIUM), login submit no spinner (MEDIUM), zero-player empty state missing (LOW), manifest 180px icon absent (LOW). Design system consistent, skeletons live, aria-live correct, mobile A-.",
+      "summary": "Post-sprint UX audit. Grade B+. All open gaps resolved in 5-19-26-ux-review (Grade A).",
       "date": "2026-05-13",
+      "updated": "2026-05-19",
       "author": "claude-sonnet-4-6",
       "url": "/platform/5-13-26-claude-review-ux",
       "file": "5-13-26-claude-review-ux.html",
       "tags": ["review", "ux", "accessibility", "mobile"],
-      "status": "shipped"
+      "status": "concluded"
     },
     {
       "id": "plan-ux-2026-05-12",
       "category": "plan",
+      "stage": "concluded",
       "title": "UX Polish Plan · May 12, 2026",
       "summary": "8-item UX plan P1-P4: loading skeletons (P1/2h), login error sanitization (P1/30min), prefers-reduced-motion (P2/20min), install journey (P2/1h), empty states (P2/1h), aria-live (P3/30min), mobile table QA (P3/30min), Lighthouse audit (P4/2h). user-scalable=no already shipped.",
       "date": "2026-05-12",
@@ -126,11 +144,12 @@
       "url": "/platform/5-12-26-plan-ux",
       "file": "5-12-26-plan-ux.html",
       "tags": ["plan", "ux", "accessibility", "mobile"],
-      "status": "shipped"
+      "status": "concluded"
     },
     {
       "id": "review-ux-2026-05-12",
       "category": "review",
+      "stage": "concluded",
       "title": "UX Polish Review · May 12, 2026",
       "summary": "Deep-dive UX audit: user-scalable=no WCAG 1.4.4 fail on scorecard; no loading skeletons (blank flash site-wide); raw Supabase error messages in login; no prefers-reduced-motion. Strengths: CSS token consistency, player.html ARIA exemplary, login 3-mode UX solid. 9-item sprint.",
       "date": "2026-05-12",
@@ -139,71 +158,72 @@
       "url": "/platform/5-12-26-claude-review-ux",
       "file": "5-12-26-claude-review-ux.html",
       "tags": ["review", "ux", "accessibility", "mobile"],
-      "status": "shipped"
+      "status": "concluded"
     },
     {
       "id": "finance",
       "axis": "finance",
       "category": "axis",
-      "stage": "plan",
+      "stage": "concluded",
       "title": "Finance — LLC Formation, Stripe Live Mode, Accounting",
-      "summary": "8-phase finance plan: LLC formation (P0 blocker) unlocks Stripe live mode, Mercury bank, accounting, and tax posture. 3 P0 items require Rob manual action. Target grade B+.",
+      "summary": "8-phase finance plan: LLC formation (P0 blocker) unlocks Stripe live mode, Mercury bank, accounting, and tax posture. Open items consolidated into 5-19-26-master-plan.",
       "date": "2026-05-12",
-      "updated": "2026-05-12",
+      "updated": "2026-05-19",
       "author": "claude-sonnet-4-6",
       "url": "/platform/finance",
       "file": "finance.html",
       "tags": ["finance", "plan", "llc", "stripe", "accounting"],
-      "status": "active"
+      "status": "concluded"
     },
     {
       "id": "security",
       "axis": "security",
       "category": "axis",
-      "stage": "plan",
+      "stage": "concluded",
       "title": "Security — RLS Hardening, CSP, Auth Gates",
-      "summary": "send-push v9 + send-install-email v6 deployed. Rounds write RLS 011 applied. Open: CSP unsafe-inline, invitations RLS, players/scores permissive read, webhook header (Rob).",
+      "summary": "send-push v9 + send-install-email v6 deployed. Rounds write RLS 011 applied. migration 012 applied (player_accounts anon read closed). Open items (CSP unsafe-inline, webhook header) consolidated into 5-19-26-master-plan.",
       "date": "2026-05-07",
-      "updated": "2026-05-13",
+      "updated": "2026-05-19",
       "author": "claude-sonnet-4-6",
       "url": "/platform/5-7-26-plan-security",
       "file": "platform/5-7-26-plan-security.html",
       "tags": ["security", "plan", "rls", "auth"],
-      "status": "active"
+      "status": "concluded"
     },
     {
       "id": "marketing",
       "axis": "marketing",
       "category": "axis",
-      "stage": "review",
+      "stage": "concluded",
       "title": "Marketing — OG Tags, Social Proof, PWA Differentiator",
-      "summary": "Grade B−. No OG/Twitter card meta tags (zero social unfurl), zero social proof/testimonials, PWA install differentiator not headlined. 9-item sprint ordered by impact.",
+      "summary": "Grade B−. Open items consolidated into 5-19-26-master-plan runbook steps 8-9.",
       "date": "2026-05-11",
-      "updated": "2026-05-11",
+      "updated": "2026-05-19",
       "author": "claude-sonnet-4-6",
       "url": "/platform/5-11-26-claude-review-marketing",
       "file": "5-11-26-claude-review-marketing.html",
       "tags": ["marketing", "review", "growth"],
-      "status": "active"
+      "status": "concluded"
     },
     {
       "id": "onboarding",
       "axis": "onboarding",
       "category": "axis",
-      "stage": "review",
+      "stage": "concluded",
       "title": "Onboarding — Invite Gate, Signup Conversion, PWA Install",
-      "summary": "Grade B−. Invite code gate kills cold-traffic conversion. Signup requires pre-existing RSVP (conversion bug). PWA install orphaned from player journey. 9-item sprint.",
+      "summary": "Grade B−. Open items consolidated into 5-19-26-master-plan runbook steps 10-12.",
       "date": "2026-05-11",
-      "updated": "2026-05-11",
+      "updated": "2026-05-19",
       "author": "claude-sonnet-4-6",
       "url": "/platform/5-11-26-claude-review-onboarding",
       "file": "5-11-26-claude-review-onboarding.html",
       "tags": ["onboarding", "review", "ux"],
-      "status": "active"
+      "status": "concluded"
     },
     {
       "id": "review-finance-2026-05-11",
       "category": "review",
+      "stage": "concluded",
       "title": "Finance Review · May 11, 2026",
       "summary": "Finance graded C+ overall: Stripe wiring is B+ (edge functions, webhook, DB schema fully built, no hardcoded keys) but zero revenue due to LLC not formed, no live Stripe keys set, reg_open=false, and no ToS/Privacy. Operating costs ~$57/mo (Anthropic dominant). Breakeven at ~30 pro players at $2/mo. Top risks: no LLC (personal liability), no ToS before revenue, Stripe env vars unset. Three actions: form LLC, wire Stripe in test mode, open accounting + flip reg_open.",
       "date": "2026-05-11",
@@ -212,11 +232,12 @@
       "url": "/platform/5-11-26-claude-review-finance",
       "file": "5-11-26-claude-review-finance.html",
       "tags": ["review", "finance", "money"],
-      "status": "shipped"
+      "status": "concluded"
     },
     {
       "id": "review-marketing-2026-05-11",
       "category": "review",
+      "stage": "concluded",
       "title": "Marketing Review · May 11, 2026",
       "summary": "Full marketing audit of tourney.greenskeeper.studio. Overall grade B−. Strengths: premium brand, clear pricing, embedded live demo, strong H1. Critical gaps: no OG/Twitter card meta tags (zero social unfurl), zero social proof/testimonials, PWA install differentiator not headlined. Top 3 actions: add OG tags, add Bova social proof callout, rewrite meta description to benefit-first. 9-item sprint ordered by impact/effort.",
       "date": "2026-05-11",
@@ -225,11 +246,12 @@
       "url": "/5-11-26-claude-review-marketing",
       "file": "5-11-26-claude-review-marketing.html",
       "tags": ["review", "marketing", "growth"],
-      "status": "shipped"
+      "status": "concluded"
     },
     {
       "id": "review-onboarding-2026-05-11",
       "category": "review",
+      "stage": "concluded",
       "title": "Onboarding Review · May 11, 2026",
       "summary": "End-to-end new user journey audit: discovery to sign-up to first tournament to first score. Grade: B−. Top findings: invite code gate kills cold-traffic conversion, login.html signup requires pre-existing RSVP (conversion bug), PWA install orphaned from player journey. 9-item sprint prioritized by conversion impact. Key wins available: fix signup error message, add request-access to invite gate, surface PWA install post-RSVP.",
       "date": "2026-05-11",
@@ -238,7 +260,7 @@
       "url": "/5-11-26-claude-review-onboarding",
       "file": "5-11-26-claude-review-onboarding.html",
       "tags": ["review", "onboarding", "ux"],
-      "status": "shipped"
+      "status": "concluded"
     },
     {
       "id": "runbook-token-savings-business-2026-05-11",
@@ -269,6 +291,7 @@
     {
       "id": "meeting-notes-2026-05-08",
       "category": "reference",
+      "stage": "concluded",
       "title": "Leadership Meeting Notes · May 8, 2026",
       "summary": "Automated weekly review drop. Team consensus: LLC formation is the single unblocking action (C+ Business Ready 3rd week). send-push deploy is Day 1 (auth fix committed, not live). send-install-email needs auth fix written first. Sprint order: deploy send-push → fix send-install-email → loading skeletons → LLC → ToS/Privacy. Handicap net score flagged as table stakes by CMO.",
       "date": "2026-05-08",
@@ -277,11 +300,12 @@
       "url": "/platform/leadership-meeting-notes-2026-05-08",
       "file": "platform/leadership-meeting-notes-2026-05-08.md",
       "tags": ["reference", "leadership", "meeting"],
-      "status": "shipped"
+      "status": "concluded"
     },
     {
       "id": "review-2026-05-08",
       "category": "review",
+      "stage": "concluded",
       "title": "Full Platform Review · May 8, 2026",
       "summary": "Weekly scheduled review. Grades: Architecture A, Feature Depth B+, UX B, Security B-, Business Ready C+, Deployment B+, Performance B, Data Model B. ✅ send-push now deployed v7 with JWT auth + owner/admin check (2026-05-12). ✅ send-install-email webhook secret gate added + deployed v4 (2026-05-12). Remaining: CSP unsafe-inline, RLS hardening, LLC formation. Council of 5: loading skeletons, tournament series schema, ToS/Privacy gate, CI on push, handicap-adjusted scoreboard.",
       "date": "2026-05-08",
@@ -290,11 +314,12 @@
       "url": "/platform/5-8-26-claude-review",
       "file": "5-8-26-claude-review.html",
       "tags": ["review", "security", "audit"],
-      "status": "shipped"
+      "status": "concluded"
     },
     {
       "id": "plan-token-savings-business-2026-05-07",
       "category": "plan",
+      "stage": "concluded",
       "title": "Business Plan: Claude Token Spend · May 7, 2026",
       "summary": "Financial case for cutting GKS Anthropic spend 25-50%. Status quo $55/mo -> conservative $41/mo (27% saved) or aggressive $30/mo (45% saved). Stacked savings model, decision framework (Haiku/Sonnet/Opus by task class), risk register, 7-step adoption sprint with verification gates. Annual savings $264 reinvested into TOURney customer infra.",
       "date": "2026-05-07",
@@ -303,11 +328,12 @@
       "url": "/platform/5-7-26-token-savings-plan-business",
       "file": "5-7-26-token-savings-plan-business.html",
       "tags": ["plan", "business", "cost", "claude"],
-      "status": "shipped"
+      "status": "concluded"
     },
     {
       "id": "review-token-burn-2026-05-07",
       "category": "review",
+      "stage": "concluded",
       "title": "Claude Token Burn Review · May 7, 2026",
       "summary": "Why GKS Anthropic spend is too high and the 5-step plan to cut 25-40% without quality loss. Top wins: cache CLAUDE.md breakpoint, demote Opus->Sonnet/Haiku, swap Read->ctx_execute_file. Sourced from claude-code-guide SME brief + this machine's settings.json audit.",
       "date": "2026-05-07",
@@ -316,7 +342,7 @@
       "url": "/platform/5-7-26-claude-token-burn-claude-review",
       "file": "5-7-26-claude-token-burn-claude-review.html",
       "tags": ["review", "cost", "ops", "claude"],
-      "status": "shipped"
+      "status": "concluded"
     },
     {
       "id": "review-bugs-2026-05-19",
@@ -348,6 +374,7 @@
     {
       "id": "review-2026-05-06",
       "category": "review",
+      "stage": "concluded",
       "title": "Full Platform Review · May 6, 2026",
       "summary": "Code-to-business audit, council of 5 polish ideas, full QA protocol, business roadmap (LLC → PSP), security analysis. Security graded D+ — three CRITICAL/HIGH findings (player_accounts RLS, invitations RLS, admin.html XSS). All other axes A-/B+.",
       "date": "2026-05-06",
@@ -361,6 +388,7 @@
     {
       "id": "review-security-2026-05-07",
       "category": "review",
+      "stage": "concluded",
       "title": "Security Review · May 7, 2026",
       "summary": "Full security audit. Grade: B−. 2 critical findings (invitations anon-update USING true, send-install-email no auth). 2 high (auth manage invitations open, player_accounts billing data exposed to anon). CSP unsafe-inline nullifies XSS protection. _parseMentions XSS surface in trash talk. Stripe webhook and create-checkout correctly auth-gated. No key leaks. 10-item remediation sprint.",
       "date": "2026-05-07",
@@ -374,6 +402,7 @@
     {
       "id": "plan-security-2026-05-07",
       "category": "plan",
+      "stage": "concluded",
       "title": "Security Hardening Plan · May 7, 2026",
       "summary": "Closes all findings from 5-7-26 security review (B−) + outstanding items from 5-6-26 full review. 3 critical fixes (invitations RLS, accept-invitation edge fn, send-install-email auth). 4 high fixes (parseMentions XSS, safeUrl admin, git audit, player_accounts RLS). Pre-launch: magic link auth, CSP unsafe-inline removal, server-side score validation. Phase 2: audit log, multi-tenant RLS, rate limiting, GDPR deletion. 12 sequenced sprint items.",
       "date": "2026-05-07",
@@ -400,6 +429,7 @@
     {
       "id": "aaa-plan",
       "category": "plan",
+      "stage": "concluded",
       "title": "AAA Implementation Plan · A+ across Architecture · Feature Depth · UX Polish",
       "summary": "22 sequenced sprints, ~38 dev-days, taking three product axes to A+. Foundation sprints already shipped: design tokens, shared util lib, observability stub, empty-state library, copy-link component, offline indicator, print stylesheet, migration drafts (006 drop_is_admin, 007 round_model).",
       "date": "2026-05-06",
@@ -408,11 +438,12 @@
       "url": "/platform/aaa-plan",
       "file": "aaa-plan.html",
       "tags": ["plan", "architecture", "features", "ux", "active"],
-      "status": "in-progress"
+      "status": "concluded"
     },
     {
       "id": "meeting-2026-05-13-2",
       "category": "meeting-note",
+      "stage": "concluded",
       "title": "Leadership Meeting · May 13, 2026 (Session 2)",
       "summary": "send-install-email auth gate + per-IP rate limit shipped — security posture B+. Local Ollama CPU fix: num_thread:4 cap added, 7b set as default model. Conference table incident logged.",
       "date": "2026-05-13",
@@ -420,7 +451,7 @@
       "author": "leadership-team",
       "url": "",
       "tags": ["meeting", "leadership"],
-      "status": "active"
+      "status": "concluded"
     }
   ]
 }

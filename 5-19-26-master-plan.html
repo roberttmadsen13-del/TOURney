@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TOURney — Master Consolidation Plan · May 19, 2026</title>
+<style>
+:root{--gold:#c09030;--gold-light:#d4a840;--gold-dim:rgba(192,144,48,0.18);--bg:#0d0a05;--surface:#151009;--card:#1c140a;--border:rgba(192,144,48,0.22);--muted:#7a6a54;--text:#e8dcc8;--red:#c0392b;--green:#27ae60;--blue:#2980b9;--orange:#e67e22;--purple:#8e44ad;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:-apple-system,'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;font-size:15px;}
+nav{position:sticky;top:0;z-index:100;background:rgba(13,10,5,0.97);border-bottom:1px solid var(--border);backdrop-filter:blur(12px);}
+.nav-inner{padding:0.6rem 1.5rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap;}
+.nav-brand{color:var(--gold);font-weight:700;font-size:1rem;letter-spacing:0.05em;white-space:nowrap;}
+.nav-brand span{color:var(--muted);font-weight:400;font-size:0.8rem;margin-left:0.4rem;}
+.nav-links{display:flex;gap:0.2rem;flex-wrap:wrap;margin-left:auto;}
+.nav-links a{color:var(--muted);text-decoration:none;font-size:0.78rem;padding:0.3rem 0.55rem;border-radius:4px;transition:all 0.15s;white-space:nowrap;}
+.nav-links a:hover{color:var(--gold);background:var(--gold-dim);}
+.lifecycle-bar{display:flex;gap:3px;padding:0.55rem 1.5rem 0.65rem;background:var(--surface);border-bottom:1px solid var(--border);}
+.lc-stage{flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;}
+.lc-pill{height:5px;width:100%;border-radius:3px;background:rgba(192,144,48,0.1);transition:background 0.25s;}
+.lc-label{font-size:0.58rem;font-weight:700;letter-spacing:0.11em;text-transform:uppercase;color:rgba(122,106,84,0.45);transition:color 0.25s;}
+.lc-done .lc-pill{background:var(--gold);}
+.lc-done .lc-label{color:var(--gold);}
+.lc-active .lc-pill{background:var(--gold-light);box-shadow:0 0 8px rgba(192,144,48,0.45);}
+.lc-active .lc-label{color:var(--gold-light);}
+.hero{padding:3rem 1.5rem 2rem;text-align:center;border-bottom:1px solid var(--border);background:linear-gradient(180deg,rgba(192,144,48,0.06) 0%,transparent 100%);}
+.hero-eyebrow{display:inline-block;font-size:0.7rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold);border:1px solid var(--border);border-radius:20px;padding:0.22rem 0.8rem;margin-bottom:0.9rem;}
+.hero h1{font-size:clamp(1.5rem,3.5vw,2.3rem);font-weight:800;color:#fff;margin-bottom:0.35rem;}
+.hero h1 span{color:var(--gold);}
+.hero-sub{color:var(--muted);max-width:520px;margin:0 auto 1rem;font-size:0.9rem;}
+.hero-meta{display:flex;gap:1.1rem;justify-content:center;flex-wrap:wrap;font-size:0.74rem;color:var(--muted);}
+.hero-meta span{display:flex;align-items:center;gap:0.3rem;}
+.wrapper{max-width:1000px;margin:0 auto;padding:0 1.5rem;}
+section{padding:2.5rem 0;border-bottom:1px solid var(--border);}
+section:last-of-type{border-bottom:none;}
+.section-header{margin-bottom:1.6rem;}
+.section-eyebrow{font-size:0.67rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--gold);margin-bottom:0.3rem;}
+.section-title{font-size:1.35rem;font-weight:800;color:#fff;margin-bottom:0.3rem;}
+.section-desc{color:var(--muted);font-size:0.85rem;max-width:560px;}
+.card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:1.15rem 1.3rem;margin-bottom:0.7rem;}
+.card-title{font-size:0.85rem;font-weight:700;color:var(--gold);margin-bottom:0.45rem;}
+.card p,.card li{font-size:0.84rem;color:var(--text);margin-bottom:0.28rem;}
+.card ul,.card ol{padding-left:1.2rem;}
+.card li{margin-bottom:0.32rem;}
+.grid-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:0.7rem;}
+.grid-3{display:grid;grid-template-columns:repeat(auto-fit,minmax(245px,1fr));gap:0.7rem;}
+.stack-item{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:0.85rem 1.05rem;}
+.stack-label{font-size:0.65rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--muted);margin-bottom:0.18rem;}
+.stack-value{font-size:0.88rem;font-weight:600;color:#fff;}
+.stack-note{font-size:0.72rem;color:var(--muted);margin-top:0.18rem;}
+.pill{display:inline-block;font-size:0.66rem;font-weight:700;letter-spacing:0.06em;padding:0.15rem 0.5rem;border-radius:20px;text-transform:uppercase;}
+.pill-gold{background:rgba(192,144,48,0.18);color:var(--gold);border:1px solid rgba(192,144,48,0.3);}
+.pill-green{background:rgba(39,174,96,0.15);color:var(--green);border:1px solid rgba(39,174,96,0.3);}
+.pill-red{background:rgba(192,57,43,0.15);color:var(--red);border:1px solid rgba(192,57,43,0.3);}
+.pill-orange{background:rgba(230,126,34,0.15);color:var(--orange);border:1px solid rgba(230,126,34,0.3);}
+.pill-blue{background:rgba(41,128,185,0.15);color:var(--blue);border:1px solid rgba(41,128,185,0.3);}
+.pill-purple{background:rgba(142,68,173,0.15);color:var(--purple);border:1px solid rgba(142,68,173,0.3);}
+.score-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(125px,1fr));gap:0.52rem;margin-bottom:1.4rem;}
+.score-cell{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:0.85rem;text-align:center;}
+.score-num{font-size:1.85rem;font-weight:900;line-height:1;margin-bottom:0.18rem;}
+.score-label{font-size:0.64rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);}
+.score-green{color:var(--green);}
+.score-gold{color:var(--gold);}
+.score-red{color:var(--red);}
+.score-blue{color:var(--blue);}
+.score-orange{color:var(--orange);}
+.idea-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1.25rem;position:relative;overflow:hidden;}
+.idea-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;}
+.idea-1::before{background:var(--gold);}
+.idea-2::before{background:var(--blue);}
+.idea-3::before{background:var(--green);}
+.idea-4::before{background:var(--orange);}
+.idea-5::before{background:var(--purple);}
+.idea-number{font-size:2rem;font-weight:900;opacity:0.07;position:absolute;top:0.5rem;right:1rem;line-height:1;color:#fff;}
+.idea-tag{margin-bottom:0.42rem;}
+.idea-title{font-size:0.96rem;font-weight:700;color:#fff;margin-bottom:0.42rem;}
+.idea-body{font-size:0.82rem;color:var(--muted);line-height:1.55;margin-bottom:0.65rem;}
+.idea-plan{font-size:0.77rem;color:var(--text);}
+.idea-plan strong{color:var(--gold);}
+.runbook-steps{counter-reset:rb-step;}
+.rb-step{background:var(--card);border:1px solid var(--border);border-left:3px solid rgba(192,144,48,0.3);border-radius:0 8px 8px 0;padding:0.95rem 1.15rem 0.95rem 3.8rem;margin-bottom:0.55rem;position:relative;}
+.rb-step.rob-action{border-left-color:var(--red);}
+.rb-step::before{counter-increment:rb-step;content:counter(rb-step);position:absolute;left:0.95rem;top:0.95rem;width:1.75rem;height:1.75rem;background:var(--gold-dim);color:var(--gold);border:1px solid var(--border);border-radius:50%;font-size:0.72rem;font-weight:700;display:grid;place-items:center;}
+.rb-step-title{font-size:0.87rem;font-weight:700;color:#fff;margin-bottom:0.22rem;}
+.rb-step-body{font-size:0.8rem;color:var(--muted);margin-bottom:0.35rem;}
+.rb-verify{font-size:0.76rem;color:var(--text);background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:3px;padding:0.35rem 0.6rem;margin-top:0.3rem;}
+.rb-verify strong{color:var(--gold-light);font-size:0.68rem;text-transform:uppercase;letter-spacing:0.07em;display:block;margin-bottom:0.1rem;}
+.rb-blocked{font-size:0.68rem;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:var(--red);border:1px solid rgba(192,57,43,0.3);background:rgba(192,57,43,0.08);border-radius:3px;padding:0.18rem 0.5rem;display:inline-block;margin-bottom:0.35rem;}
+.roadmap-item{display:flex;gap:1.05rem;align-items:flex-start;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:0.95rem 1.15rem;margin-bottom:0.52rem;}
+.roadmap-icon{width:1.9rem;height:1.9rem;border-radius:50%;background:var(--gold-dim);color:var(--gold);display:grid;place-items:center;font-size:0.85rem;flex-shrink:0;border:1px solid var(--border);}
+.roadmap-content{flex:1;}
+.roadmap-title{font-size:0.88rem;font-weight:700;color:#fff;margin-bottom:0.13rem;}
+.roadmap-desc{font-size:0.79rem;color:var(--muted);margin-bottom:0.32rem;}
+.roadmap-action{font-size:0.75rem;color:var(--text);}
+.roadmap-action strong{color:var(--gold-light);}
+.stage-pending{text-align:center;padding:3rem 1.5rem;color:var(--muted);font-size:0.85rem;border:1px dashed rgba(192,144,48,0.2);border-radius:8px;}
+.stage-pending code{color:var(--gold);}
+code{font-family:'Consolas','Monaco',monospace;background:rgba(255,255,255,0.07);padding:0.09rem 0.27rem;border-radius:3px;font-size:0.81em;color:var(--gold-light);}
+footer{border-top:1px solid var(--border);padding:1.2rem;text-align:center;color:var(--muted);font-size:0.72rem;}
+footer span{color:var(--gold);}
+@media(max-width:600px){.nav-links{display:none;}.hero{padding:2rem 1rem 1.5rem;}section{padding:2rem 0;}.lc-label{font-size:0.5rem;}}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <div class="nav-brand">TOURney <span>by Greenskeeper Studios</span></div>
+    <div class="nav-links">
+      <a href="#review">Review</a>
+      <a href="#plan">Plan</a>
+      <a href="#runbook">Runbook</a>
+      <a href="#executing">Executing</a>
+      <a href="#audit">Audit</a>
+      <a href="#concluded">Concluded</a>
+    </div>
+  </div>
+</nav>
+
+<!-- LIFECYCLE-BAR-START -->
+<div class="lifecycle-bar">
+  <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Review</div></div>
+  <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Plan</div></div>
+  <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Runbook</div></div>
+  <div class="lc-stage"><div class="lc-pill"></div><div class="lc-label">Executing</div></div>
+  <div class="lc-stage"><div class="lc-pill"></div><div class="lc-label">Audit</div></div>
+  <div class="lc-stage"><div class="lc-pill"></div><div class="lc-label">Concluded</div></div>
+</div>
+<!-- LIFECYCLE-BAR-END -->
+
+<div class="hero">
+  <div class="hero-eyebrow">Master Plan</div>
+  <h1><span>TOURney</span> — Master Consolidation Plan · May 19, 2026</h1>
+  <p class="hero-sub">All open items from pre-May-14 tickets consolidated into one actionable plan. Completed work stripped. Ordered by impact.</p>
+  <div class="hero-meta">
+    <span>📅 May 19, 2026</span>
+    <span>🤖 Claude Sonnet 4.6</span>
+    <span>🏢 Greenskeeper Studios</span>
+    <span>🔒 Internal Only</span>
+  </div>
+</div>
+
+<section id="review">
+<div class="wrapper">
+<div class="section-header">
+  <div class="section-eyebrow">Stage 1 — Review</div>
+  <h2 class="section-title">Platform State · May 19, 2026</h2>
+  <p class="section-desc">Current axis grades. Reflects all work shipped through today, including 5-15 execute + 5-19 UX conclude.</p>
+</div>
+
+<div class="score-grid">
+  <div class="score-cell"><div class="score-num score-green">A</div><div class="score-label">Architecture</div></div>
+  <div class="score-cell"><div class="score-num score-gold">B+</div><div class="score-label">Feature Depth</div></div>
+  <div class="score-cell"><div class="score-num score-green">A</div><div class="score-label">UX Polish</div></div>
+  <div class="score-cell"><div class="score-num score-gold">A−</div><div class="score-label">Security</div></div>
+  <div class="score-cell"><div class="score-num score-red">C+</div><div class="score-label">Business</div></div>
+  <div class="score-cell"><div class="score-num score-gold">A−</div><div class="score-label">Deployment</div></div>
+  <div class="score-cell"><div class="score-num score-gold">B+</div><div class="score-label">Performance</div></div>
+  <div class="score-cell"><div class="score-num score-gold">B+</div><div class="score-label">Data Model</div></div>
+  <div class="score-cell"><div class="score-num score-orange">B−</div><div class="score-label">Marketing</div></div>
+  <div class="score-cell"><div class="score-num score-orange">B−</div><div class="score-label">Onboarding</div></div>
+</div>
+
+<div class="card">
+  <div class="card-title">What Has Shipped (not in this runbook)</div>
+  <ul>
+    <li><strong>XSS closed:</strong> <code>_parseMentions</code> feed.html:375 + <code>safeUrl()</code> admin.html:2185/2340 — shipped 5-14</li>
+    <li><strong>Auth gates:</strong> send-push v9 + send-install-email v6 — shipped 5-12</li>
+    <li><strong>RLS hardening:</strong> invitations USING(true) closed, player_accounts anon read closed (migration 012) — shipped 5-19</li>
+    <li><strong>ToS + Privacy:</strong> pages live at /tos /privacy + footer links — shipped 5-14</li>
+    <li><strong>GH Actions CI:</strong> ci.yml + backup.yml + typecheck.yml + test.yml — shipped 5-14</li>
+    <li><strong>Loading skeletons:</strong> feed.html, scoreboard.html, directory.html, champions.html — shipped 5-19</li>
+    <li><strong>CSS token centralization:</strong> tokens.css on 9 pages, SW v36 — shipped 5-14</li>
+    <li><strong>Logo SVG:</strong> all 14 pages nav wordmark + hero — shipped 5-19</li>
+    <li><strong>Schema governance:</strong> 006b rename — 12 migrations unambiguously ordered — shipped 5-19</li>
+    <li><strong>Tenant isolation:</strong> hardcoded "Bova Invitational" text removed from 5 pages — shipped 5-19</li>
+  </ul>
+</div>
+
+<div class="grid-2">
+  <div class="card">
+    <div class="card-title">Open: Rob Manual (Blocking)</div>
+    <ul>
+      <li><strong>LLC not formed</strong> — personal liability, blocks Stripe live mode entirely</li>
+      <li><strong>Stripe live keys unset</strong> — <code>STRIPE_SECRET_KEY</code> + <code>STRIPE_WEBHOOK_SECRET</code> not in Vercel env</li>
+      <li><strong>Stripe webhook unregistered</strong> — <code>jllugkiojeoopitdvzsa.supabase.co/functions/v1/stripe-webhook</code> not registered in Stripe dashboard</li>
+      <li><strong>reg_open = false</strong> — no player can reach checkout</li>
+      <li><strong>SEND_INSTALL_EMAIL_SECRET</strong> — not wired to Supabase DB webhook (Authorization header)</li>
+      <li><strong>GitHub CI secrets</strong> — <code>SUPABASE_ACCESS_TOKEN</code> + <code>SUPABASE_PROJECT_REF</code> missing from repo secrets</li>
+    </ul>
+  </div>
+  <div class="card">
+    <div class="card-title">Open: Engineering</div>
+    <ul>
+      <li><strong>CSP unsafe-inline</strong> — vercel.json CSP header includes <code>'unsafe-inline'</code>. Nullifies XSS script injection protection. Fix requires extracting all inline JS to external files (~8-12h)</li>
+      <li><strong>OG / Twitter card meta tags</strong> — zero social unfurl on any page</li>
+      <li><strong>Social proof</strong> — no testimonials or Bova event callout on marketing.html</li>
+      <li><strong>Invite gate: request access path</strong> — cold traffic hits gate and bounces; no "request access" escape hatch</li>
+      <li><strong>Signup RSVP bug</strong> — login.html signup flow requires pre-existing RSVP; new users hit confusing error</li>
+      <li><strong>PWA install orphaned</strong> — no post-RSVP PWA install prompt</li>
+      <li><strong>Score admin-edit UI</strong> — admin cannot correct scores after submission</li>
+      <li><strong>profile.html skeleton</strong> — blank flash on load (auth-gate makes this more complex than feed/directory)</li>
+      <li><strong>Lighthouse CI</strong> — lighthouse.yml exists but needs config + secrets</li>
+      <li><strong>Settings store un-typed</strong> — key-value store has no schema enforcement or constants file</li>
+    </ul>
+  </div>
+</div>
+</div>
+</section>
+
+<section id="plan">
+<div class="wrapper">
+<div class="section-header">
+  <div class="section-eyebrow">Stage 2 — Plan</div>
+  <h2 class="section-title">What Ships Next</h2>
+  <p class="section-desc">Ordered by impact. Rob actions unblock revenue. Engineering items are sequenced by effort and dependency.</p>
+</div>
+
+<div class="card" style="border-left:3px solid var(--red);margin-bottom:1.2rem;">
+  <div class="card-title" style="color:var(--red);">P0 — Revenue Blockers (Rob Manual)</div>
+  <p>All revenue is blocked until LLC is formed. Everything else in this section is 1-3 hours of Rob's time across a few weeks. Sequence: LLC → Mercury bank → Stripe live keys → register webhook → flip reg_open. These are purely admin tasks — no engineering required.</p>
+  <ol style="margin-top:0.6rem;padding-left:1.2rem;">
+    <li style="margin-bottom:0.3rem;font-size:0.84rem;">Form LLC (Wyoming ~$50 online, or Delaware ~$90) — takes 1-3 business days</li>
+    <li style="margin-bottom:0.3rem;font-size:0.84rem;">Open Mercury business bank account (free, online, links to Stripe)</li>
+    <li style="margin-bottom:0.3rem;font-size:0.84rem;">Activate Stripe account with LLC EIN, add Mercury bank</li>
+    <li style="margin-bottom:0.3rem;font-size:0.84rem;">Add Stripe live keys to Vercel env vars</li>
+    <li style="margin-bottom:0.3rem;font-size:0.84rem;">Register stripe-webhook endpoint in Stripe dashboard</li>
+    <li style="margin-bottom:0.3rem;font-size:0.84rem;">Wire SEND_INSTALL_EMAIL_SECRET to Supabase DB webhook</li>
+    <li style="margin-bottom:0.3rem;font-size:0.84rem;">Add GitHub CI secrets (5 min)</li>
+    <li style="font-size:0.84rem;">Flip reg_open = true in tournament settings → first paying player</li>
+  </ol>
+</div>
+
+<div class="grid-2" style="margin-bottom:1rem;">
+  <div class="idea-card idea-1">
+    <div class="idea-number">1</div>
+    <div class="idea-tag"><span class="pill pill-gold">Marketing · 2h</span></div>
+    <div class="idea-title">OG Tags + Social Proof</div>
+    <div class="idea-body">Zero social unfurl on any page means every shared link is a dead click. Adding OG tags to marketing.html and a Bova social proof callout is a 2-hour engineering task that permanently improves every share.</div>
+    <div class="idea-plan"><strong>Scope:</strong> Add <code>&lt;meta property="og:*"&gt;</code> + <code>&lt;meta name="twitter:card"&gt;</code> to marketing.html, home.html, feed.html. Add "Real tournament, real players" social proof block to marketing.html with Bova stats.</div>
+  </div>
+  <div class="idea-card idea-2">
+    <div class="idea-number">2</div>
+    <div class="idea-tag"><span class="pill pill-blue">Onboarding · 3h</span></div>
+    <div class="idea-title">Fix the Invite Gate + Signup Flow</div>
+    <div class="idea-body">Cold traffic bounces at the invite gate with no path forward. Signup errors are confusing because they assume RSVP. PWA install prompt never fires for new users. Three targeted fixes that together improve conversion dramatically.</div>
+    <div class="idea-plan"><strong>Scope:</strong> Add "Request Access" email form to invite gate. Fix login.html signup error message to not presume existing RSVP. Add PWA install prompt on post-RSVP confirmation screen.</div>
+  </div>
+  <div class="idea-card idea-3">
+    <div class="idea-number">3</div>
+    <div class="idea-tag"><span class="pill pill-green">Feature · 4h</span></div>
+    <div class="idea-title">Score Admin-Edit UI</div>
+    <div class="idea-body">Admins have no way to correct scores after submission. A player enters a wrong score, it's permanent. This is a table-stakes feature for running real tournaments — one bad entry during a live event is a support nightmare.</div>
+    <div class="idea-plan"><strong>Scope:</strong> Add edit mode to admin.html score table. Inline input per cell, save button, audit log entry. Supabase RLS already allows admin writes. No new migration needed.</div>
+  </div>
+  <div class="idea-card idea-4">
+    <div class="idea-number">4</div>
+    <div class="idea-tag"><span class="pill pill-orange">Performance · 2h</span></div>
+    <div class="idea-title">profile.html Skeleton + Lighthouse CI</div>
+    <div class="idea-body">profile.html still blank-flashes on load — the last page without a skeleton. lighthouse.yml exists but is unconfigured. Together these close the performance gap to A-.</div>
+    <div class="idea-plan"><strong>Scope:</strong> Add skeleton shimmer to profile.html loading state (auth-gate pattern: wait for session, then render). Configure lighthouse.yml with thresholds (perf ≥85, a11y ≥90). Wire LHCI_GITHUB_APP_TOKEN secret.</div>
+  </div>
+  <div class="idea-card idea-5">
+    <div class="idea-number">5</div>
+    <div class="idea-tag"><span class="pill pill-purple">Security · 8-12h</span></div>
+    <div class="idea-title">CSP unsafe-inline Removal</div>
+    <div class="idea-body">The CSP header in vercel.json includes <code>'unsafe-inline'</code> because every page uses inline <code>&lt;script&gt;</code> blocks. This nullifies the entire script injection protection. Fix requires extracting all inline JS to external files — a large but one-time refactor.</div>
+    <div class="idea-plan"><strong>Scope:</strong> Audit all inline scripts per page. Extract to <code>/lib/{page}.js</code>. Update vercel.json CSP to remove unsafe-inline. Test full app. ~10 pages × 30min each. Results in Security A.</div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-title">Deferred (Phase 2)</div>
+  <ul>
+    <li><strong>Tournament series</strong> — multi-tournament linking, cumulative leaderboard. No schema exists yet. Post-launch.</li>
+    <li><strong>Settings store typing</strong> — add a <code>SETTINGS_KEYS</code> constants file + TypeScript interface. Low urgency; only one consumer.</li>
+    <li><strong>Server-side score validation</strong> — currently client-trusts score submissions. Edge function validation post-launch.</li>
+    <li><strong>Handicap-adjusted scoreboard</strong> — net score column. Needs player handicap data model.</li>
+    <li><strong>Multi-tenant RLS audit</strong> — when second tenant onboards, verify RLS policy isolation is airtight.</li>
+  </ul>
+</div>
+
+<div class="roadmap-item">
+  <div class="roadmap-icon">1</div>
+  <div class="roadmap-content">
+    <div class="roadmap-title">Rob: Form LLC + Stripe (unblocks revenue)</div>
+    <div class="roadmap-desc">Wyoming or Delaware LLC. Mercury bank. Stripe live keys in Vercel. Register webhook. Flip reg_open. ~1-3 weeks elapsed, ~4h Rob time total.</div>
+    <div class="roadmap-action"><strong>Milestone:</strong> First paying player can reach checkout.</div>
+  </div>
+</div>
+<div class="roadmap-item">
+  <div class="roadmap-icon">2</div>
+  <div class="roadmap-content">
+    <div class="roadmap-title">Engineering Sprint: Marketing + Onboarding + Score Edit (1 session, ~9h)</div>
+    <div class="roadmap-desc">OG tags, social proof, invite gate request-access, signup fix, PWA post-RSVP prompt, score admin-edit UI. All engineering-executable with no Rob action.</div>
+    <div class="roadmap-action"><strong>Milestone:</strong> Marketing B+, Onboarding B+, Feature Depth A-.</div>
+  </div>
+</div>
+<div class="roadmap-item">
+  <div class="roadmap-icon">3</div>
+  <div class="roadmap-content">
+    <div class="roadmap-title">Engineering Sprint: Performance + Security (1-2 sessions)</div>
+    <div class="roadmap-desc">profile.html skeleton, Lighthouse CI config. Then CSP unsafe-inline removal (big — 8-12h, own session).</div>
+    <div class="roadmap-action"><strong>Milestone:</strong> Performance A-, Security A. Platform overall A-.</div>
+  </div>
+</div>
+<div class="roadmap-item">
+  <div class="roadmap-icon">4</div>
+  <div class="roadmap-content">
+    <div class="roadmap-title">Launch: First External Tenant + Revenue</div>
+    <div class="roadmap-desc">With LLC formed, Stripe live, onboarding fixed, and marketing improved — recruit second tournament. First real revenue validates the SaaS model.</div>
+    <div class="roadmap-action"><strong>Milestone:</strong> Business C+ → B+.</div>
+  </div>
+</div>
+</div>
+</section>
+
+<section id="runbook">
+<div class="wrapper">
+<div class="section-header">
+  <div class="section-eyebrow">Stage 3 — Runbook</div>
+  <h2 class="section-title">Execution Steps</h2>
+  <p class="section-desc">Rob-blocked steps are marked. Engineering steps are ordered by dependency — execute top to bottom. Run <code>/tourney-execute 5-19-26-master-plan.html</code> to proceed.</p>
+</div>
+
+<div class="runbook-steps">
+
+  <div class="rb-step rob-action">
+    <div class="rb-blocked">Rob Manual</div>
+    <div class="rb-step-title">Form LLC</div>
+    <div class="rb-step-body">Go to Wyoming Secretary of State (online, ~$50) or Delaware (online, ~$90). File Articles of Organization for "Greenskeeper Studios LLC." Takes 1-3 business days. Get EIN from IRS (free, instant at irs.gov/ein).</div>
+    <div class="rb-verify"><strong>Verify</strong> LLC approval letter received + EIN assigned.</div>
+  </div>
+
+  <div class="rb-step rob-action">
+    <div class="rb-blocked">Rob Manual</div>
+    <div class="rb-step-title">Open Mercury Business Bank Account</div>
+    <div class="rb-step-body">Go to mercury.com. Sign up with LLC name + EIN. Connect Stripe to Mercury for payouts. Takes ~10 minutes online; account opens same day.</div>
+    <div class="rb-verify"><strong>Verify</strong> Mercury account active + linked to Stripe.</div>
+  </div>
+
+  <div class="rb-step rob-action">
+    <div class="rb-blocked">Rob Manual</div>
+    <div class="rb-step-title">Activate Stripe + Set Live Keys in Vercel</div>
+    <div class="rb-step-body">In Stripe dashboard: complete business verification with LLC EIN. Get live publishable key + secret key. In Vercel → Project → Settings → Environment Variables: add <code>STRIPE_SECRET_KEY=sk_live_...</code> and <code>STRIPE_PUBLISHABLE_KEY=pk_live_...</code> and <code>STRIPE_WEBHOOK_SECRET=whsec_...</code>.</div>
+    <div class="rb-verify"><strong>Verify</strong> Vercel env vars saved. Redeploy triggered.</div>
+  </div>
+
+  <div class="rb-step rob-action">
+    <div class="rb-blocked">Rob Manual</div>
+    <div class="rb-step-title">Register Stripe Webhook Endpoint</div>
+    <div class="rb-step-body">Stripe Dashboard → Developers → Webhooks → Add endpoint. URL: <code>https://jllugkiojeoopitdvzsa.supabase.co/functions/v1/stripe-webhook</code>. Events: <code>checkout.session.completed</code>, <code>customer.subscription.updated</code>, <code>customer.subscription.deleted</code>, <code>invoice.payment_failed</code>. Copy the signing secret → set as <code>STRIPE_WEBHOOK_SECRET</code> in Vercel (replaces placeholder).</div>
+    <div class="rb-verify"><strong>Verify</strong> Stripe shows endpoint as "Enabled." Test event sends 200.</div>
+  </div>
+
+  <div class="rb-step rob-action">
+    <div class="rb-blocked">Rob Manual</div>
+    <div class="rb-step-title">Wire SEND_INSTALL_EMAIL_SECRET to Supabase DB Webhook</div>
+    <div class="rb-step-body">Supabase Dashboard → Database → Webhooks. Find the players INSERT webhook (or create if missing). Set HTTP header: <code>Authorization: Bearer {SEND_INSTALL_EMAIL_SECRET}</code>. The secret value is already set in Supabase edge function secrets.</div>
+    <div class="rb-verify"><strong>Verify</strong> Insert a test player → confirm install email fires.</div>
+  </div>
+
+  <div class="rb-step rob-action">
+    <div class="rb-blocked">Rob Manual</div>
+    <div class="rb-step-title">Add GitHub CI Secrets</div>
+    <div class="rb-step-body">GitHub → roberttmadsen13-del/TOURney → Settings → Secrets and variables → Actions → New repository secret. Add: <code>SUPABASE_ACCESS_TOKEN</code> (from supabase.com/dashboard/account/tokens) and <code>SUPABASE_PROJECT_REF=jllugkiojeoopitdvzsa</code>. This unblocks deploy-functions.yml.</div>
+    <div class="rb-verify"><strong>Verify</strong> Push any change → deploy-functions.yml passes in Actions.</div>
+  </div>
+
+  <div class="rb-step rob-action">
+    <div class="rb-blocked">Rob Manual — After LLC + Stripe</div>
+    <div class="rb-step-title">Flip reg_open = true</div>
+    <div class="rb-step-body">In Supabase → Table Editor → tournament_settings (or settings table). Find the row for <code>reg_open</code> key. Set value to <code>true</code>. This opens checkout to players.</div>
+    <div class="rb-verify"><strong>Verify</strong> marketing.html "Register" button leads to checkout. Stripe test-mode transaction completes.</div>
+  </div>
+
+  <div class="rb-step">
+    <div class="rb-step-title">Add OG Tags to marketing.html, home.html, feed.html</div>
+    <div class="rb-step-body">In <code>&lt;head&gt;</code> of marketing.html, home.html, feed.html — add:
+<code>&lt;meta property="og:title" content="TOURney — Golf Tournament Software"&gt;</code>,
+<code>&lt;meta property="og:description" content="Run your golf tournament like a pro. Real-time scoring, leaderboard, and player management."&gt;</code>,
+<code>&lt;meta property="og:image" content="https://tourney.greenskeeper.studio/assets/og-image.png"&gt;</code>,
+<code>&lt;meta property="og:url" content="https://tourney.greenskeeper.studio"&gt;</code>,
+<code>&lt;meta name="twitter:card" content="summary_large_image"&gt;</code>.
+Also create <code>assets/og-image.png</code> (1200×630) — can use logo-hero.svg scaled.</div>
+    <div class="rb-verify"><strong>Verify</strong> Paste URL into opengraph.xyz → preview shows title + image.</div>
+  </div>
+
+  <div class="rb-step">
+    <div class="rb-step-title">Add Social Proof Block to marketing.html</div>
+    <div class="rb-step-body">After the pricing section in marketing.html, insert a "Real Results" or "Proven in the Field" block. Include: Bova Invitational stats (N players, N rounds, N hole-in-ones via HIO confetti), "Running since 2025" timeline. No fictional testimonials — use real event data from Supabase. Grep <code>marketing.html</code> for pricing section anchor to find insertion point.</div>
+    <div class="rb-verify"><strong>Verify</strong> Section renders on mobile. Stats are accurate.</div>
+  </div>
+
+  <div class="rb-step">
+    <div class="rb-step-title">Fix Invite Gate: Add "Request Access" Path</div>
+    <div class="rb-step-body">Find the invite code gate in login.html or the relevant gate page. Add a secondary path: "Don't have an invite code? Request access →" that links to a simple email-to form (mailto: or a minimal form that emails robert.t.madsen13@gmail.com). This gives cold traffic a conversion path instead of a dead end. No backend needed — mailto: link is sufficient for pre-launch.</div>
+    <div class="rb-verify"><strong>Verify</strong> Load invite gate without a code → "Request access" link visible. Clicking opens email client pre-filled.</div>
+  </div>
+
+  <div class="rb-step">
+    <div class="rb-step-title">Fix login.html Signup Error Message</div>
+    <div class="rb-step-body">Find signup flow in login.html. When a user signs up but has no matching RSVP (player_accounts row), the error message should read: "Your account has been created. You'll receive an invite link once the tournament opens — check your email." Currently it shows a confusing Supabase error. Grep login.html for the signup error handling path.</div>
+    <div class="rb-verify"><strong>Verify</strong> Sign up with a fresh email (no RSVP) → helpful message shown, no raw error.</div>
+  </div>
+
+  <div class="rb-step">
+    <div class="rb-step-title">Add PWA Install Prompt Post-RSVP</div>
+    <div class="rb-step-body">After a player completes RSVP/signup, show a PWA install prompt. Find the RSVP confirmation handler in the relevant page (grep for "rsvp" or "registration success" in JS). Add: check <code>window.deferredPrompt</code> (set in sw.js beforeinstallprompt listener) → if available, show an "Add to Home Screen" banner with the logo. Dismiss on close, don't re-show.</div>
+    <div class="rb-verify"><strong>Verify</strong> Complete RSVP on mobile → install banner appears. Tap install → app added to home screen.</div>
+  </div>
+
+  <div class="rb-step">
+    <div class="rb-step-title">Add Score Admin-Edit UI to admin.html</div>
+    <div class="rb-step-body">In admin.html score table (grep for <code>scores</code> table tbody). Add an edit icon per row that toggles the row to inline-edit mode. Each score cell becomes <code>&lt;input type="number"&gt;</code>. Save button calls Supabase update on the scores table row. Existing admin RLS already permits writes. Add a brief "Edited by admin · {timestamp}" note to the row after save.</div>
+    <div class="rb-verify"><strong>Verify</strong> Login as admin → click edit on a score → change value → save → page reflects new score. Non-admin cannot see edit UI.</div>
+  </div>
+
+  <div class="rb-step">
+    <div class="rb-step-title">Add profile.html Loading Skeleton</div>
+    <div class="rb-step-body">profile.html loads behind an auth gate — the page must wait for Supabase session before fetching profile data, causing a blank flash longer than normal. Find the loading state in profile.html (grep <code>loadingState</code> or <code>loading</code>). Replace with a skeleton layout: avatar circle skeleton (60px), name skeleton (200px wide), stat row skeletons (3 columns), recent rounds skeleton list. Use existing <code>.skeleton</code> class from tokens.css.</div>
+    <div class="rb-verify"><strong>Verify</strong> Hard-refresh profile.html → skeleton shimmer appears immediately → resolves to real data.</div>
+  </div>
+
+  <div class="rb-step">
+    <div class="rb-step-title">Configure lighthouse.yml CI</div>
+    <div class="rb-step-body">Read <code>.github/workflows/lighthouse.yml</code>. Wire it to run on push to main against the Vercel preview URL. Set minimum thresholds: performance ≥ 85, accessibility ≥ 90, best-practices ≥ 85, SEO ≥ 80. Add <code>LHCI_GITHUB_APP_TOKEN</code> secret (generate at lighthouse-ci.appspot.com). Failing thresholds should warn but not block deploy.</div>
+    <div class="rb-verify"><strong>Verify</strong> Push to main → lighthouse.yml appears in Actions → report posted to PR/commit.</div>
+  </div>
+
+  <div class="rb-step">
+    <div class="rb-step-title">[Large] CSP unsafe-inline Removal</div>
+    <div class="rb-step-body">This is its own session. For each page with inline <code>&lt;script&gt;</code> blocks: extract JS to <code>/lib/{page}-inline.js</code>, replace <code>&lt;script&gt;...&lt;/script&gt;</code> with <code>&lt;script src="/lib/{page}-inline.js"&gt;&lt;/script&gt;</code>. After all pages done, update vercel.json CSP <code>script-src</code> to remove <code>'unsafe-inline'</code>. Pages: home.html, feed.html, directory.html, champions.html, profile.html, login.html, scoreboard.html, admin.html, marketing.html, install.html (~10 pages). Estimated 8-12h total.</div>
+    <div class="rb-verify"><strong>Verify</strong> All pages load without console CSP errors. Run full QA protocol. Security grade → A.</div>
+  </div>
+
+</div>
+</div>
+</section>
+
+<section id="executing">
+<div class="wrapper">
+<!-- EXECUTING-CONTENT-START -->
+<div class="stage-pending">
+  <p>Awaiting execution. Run <code>/tourney-execute 5-19-26-master-plan.html</code> to proceed.</p>
+</div>
+<!-- EXECUTING-CONTENT-END -->
+</div>
+</section>
+
+<section id="audit">
+<div class="wrapper">
+<!-- AUDIT-CONTENT-START -->
+<div class="stage-pending">
+  <p>Awaiting execution. Run <code>/tourney-execute 5-19-26-master-plan.html</code> to proceed.</p>
+</div>
+<!-- AUDIT-CONTENT-END -->
+</div>
+</section>
+
+<section id="concluded">
+<div class="wrapper">
+<!-- CONCLUDED-CONTENT-START -->
+<div class="stage-pending">
+  <p>Awaiting execution. Run <code>/tourney-execute 5-19-26-master-plan.html</code> to proceed.</p>
+</div>
+<!-- CONCLUDED-CONTENT-END -->
+</div>
+</section>
+
+<footer>
+  Generated by <span>Claude Sonnet 4.6</span> · Greenskeeper Studios Internal · May 19, 2026
+  <br style="margin-top:0.3rem">
+  <a href="/platform" style="color:var(--muted);font-size:0.7rem;text-decoration:none">← Back to Platform Hub</a>
+</footer>
+
+</body>
+</html>
