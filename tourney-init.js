@@ -18,7 +18,7 @@
       var m=location.pathname.match(/\/t\/([^/]+)/);
       var home=m?'/t/'+m[1]+'/':'/platform';
       var onHome=location.pathname===home||location.pathname.replace(/\/$/,'')===(m?'/t/'+m[1]:'');
-      if(!onHome)window.location.href=home;
+      if(!onHome)location.replace(home);
     }
   });
 })();
@@ -173,6 +173,13 @@
       if (metaTitle) metaTitle.content = data.short_name || data.name.split(' ')[0];
       const loginSub = document.getElementById('loginSubtitle');
       if (loginSub) loginSub.textContent = `${data.name} · Restricted`;
+      // Inject dynamic OG title/description for social sharing on tenant pages
+      let _ogT = document.querySelector('meta[property="og:title"]');
+      if (!_ogT) { _ogT = document.createElement('meta'); _ogT.setAttribute('property', 'og:title'); document.head.appendChild(_ogT); }
+      _ogT.setAttribute('content', document.title);
+      let _ogD = document.querySelector('meta[property="og:description"]');
+      if (!_ogD) { _ogD = document.createElement('meta'); _ogD.setAttribute('property', 'og:description'); document.head.appendChild(_ogD); }
+      _ogD.setAttribute('content', data.subtitle || data.name);
 
       // Replace nav wordmark text on every page — preserves svg/img/span siblings.
       const updateNavWordmarks = () => {

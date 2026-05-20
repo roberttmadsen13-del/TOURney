@@ -2021,7 +2021,7 @@ function toggleTqSection(id){
 }
 function _initTqCollapsed(){
   const saved=_getTqState();
-  const defaults={tqSectionChecklist:false,tqSectionDoNow:false,tqSectionWaiting:false,tqSectionAgent:true,tqSectionShipped:true};
+  const defaults={tqSectionChecklist:true,tqSectionDoNow:true,tqSectionWaiting:false,tqSectionAgent:true,tqSectionShipped:true};
   Object.keys(defaults).forEach(id=>{
     const collapsed=id in saved?saved[id]:defaults[id];
     const sec=document.getElementById(id);if(sec)sec.classList.toggle('collapsed',collapsed);
