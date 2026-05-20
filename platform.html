@@ -607,6 +607,13 @@ td{padding:0.7rem 0.75rem;font-size:0.88rem;vertical-align:middle;}
 
       <div class="ref-section">
         <div class="ref-sec-hdr">
+          <div class="ref-sec-meta"><div class="ref-sec-title">Live Pages</div><div class="ref-sec-desc">Every live URL — tap to open. Use to QA pages or trigger error-monitor.</div></div>
+        </div>
+        <div id="refLivePages"><div style="padding:.75rem;color:var(--muted);font-size:.8rem;">Loading…</div></div>
+      </div>
+
+      <div class="ref-section">
+        <div class="ref-sec-hdr">
           <div class="ref-sec-meta"><div class="ref-sec-title">Quick Links</div><div class="ref-sec-desc">Internal tools and reference pages</div></div>
         </div>
         <div class="quick-links">
@@ -1802,8 +1809,54 @@ document.getElementById('slugInput').addEventListener('input', e => {
 });
 
 /* ══════════════════════ REFERENCE ══════════════════════ */
-function renderReference() {
-  // Empty now, or we can just leave it as a no-op if nothing needs dynamic rendering in Reference
+async function renderReference() {
+  const el = document.getElementById('refLivePages');
+  if (!el || el.dataset.loaded) return;
+  el.dataset.loaded = '1';
+
+  const TENANT_PAGES = [
+    {label:'Home', path:''},
+    {label:'Scoreboard', path:'scoreboard'},
+    {label:'Scorecard', path:'scorecard'},
+    {label:'Directory', path:'directory'},
+    {label:'Feed', path:'feed'},
+    {label:'Admin', path:'admin'},
+    {label:'Profile', path:'profile'},
+    {label:'Install', path:'install'},
+  ];
+  const PLATFORM_PAGES = [
+    {label:'Marketing', path:'/'},
+    {label:'Create', path:'/create'},
+    {label:'Platform', path:'/platform'},
+    {label:'Login', path:'/login'},
+    {label:'Player', path:'/player'},
+    {label:'Upgrade', path:'/player-upgrade'},
+  ];
+
+  const { data: tourneys } = await sb.from('tournaments').select('slug,name').order('created_at');
+
+  const BASE = 'https://tourney.greenskeeper.studio';
+  let html = '<div style="display:flex;flex-direction:column;gap:1rem;">';
+
+  // Platform pages
+  html += `<div><div style="font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);margin-bottom:.4rem;">Platform</div><div style="display:flex;flex-wrap:wrap;gap:.4rem;">`;
+  PLATFORM_PAGES.forEach(({label,path}) => {
+    html += `<a href="${BASE}${path}" target="_blank" style="font-size:.75rem;padding:.3rem .65rem;border-radius:6px;background:var(--card);border:1px solid var(--border);color:var(--text);text-decoration:none;white-space:nowrap;">${label}<span style="color:var(--muted);font-size:.65rem;margin-left:.3rem;">${path||'/'}</span></a>`;
+  });
+  html += '</div></div>';
+
+  // Per-tenant
+  (tourneys || []).forEach(t => {
+    html += `<div><div style="font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);margin-bottom:.4rem;">${t.name} <span style="color:var(--muted);font-weight:400;text-transform:none;letter-spacing:0;">${t.slug}</span></div><div style="display:flex;flex-wrap:wrap;gap:.4rem;">`;
+    TENANT_PAGES.forEach(({label,path}) => {
+      const url = path ? `${BASE}/t/${t.slug}/${path}` : `${BASE}/t/${t.slug}/`;
+      html += `<a href="${url}" target="_blank" style="font-size:.75rem;padding:.3rem .65rem;border-radius:6px;background:var(--card);border:1px solid var(--border);color:var(--text);text-decoration:none;white-space:nowrap;">${label}</a>`;
+    });
+    html += '</div></div>';
+  });
+
+  html += '</div>';
+  el.innerHTML = html;
 }
 
 /* ══════════════════════ ACTION BOARD ══════════════════════ */
