@@ -5,6 +5,24 @@
 
 (function(){var s=document.createElement('script');s.src='/error-monitor.js';s.async=true;document.head.appendChild(s);})();
 
+// Android PWA back button guard — push sentinel once per session so back navigates
+// to tenant home instead of exiting the app.
+(function(){
+  if(!sessionStorage.getItem('_pwag')){
+    sessionStorage.setItem('_pwag','1');
+    history.pushState({_g:true},'');
+  }
+  window.addEventListener('popstate',function(e){
+    if(e.state&&e.state._g){
+      history.pushState({_g:true},''); // re-arm so back always stays in app
+      var m=location.pathname.match(/\/t\/([^/]+)/);
+      var home=m?'/t/'+m[1]+'/':'/platform';
+      var onHome=location.pathname===home||location.pathname.replace(/\/$/,'')===(m?'/t/'+m[1]:'');
+      if(!onHome)window.location.href=home;
+    }
+  });
+})();
+
 (() => {
   // Hide page until brand colors applied — tenant pages only, prevents stale branding flash.
   const _onTenantPath = !!location.pathname.match(/\/t\/([^/?#]+)/);
