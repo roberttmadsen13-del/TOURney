@@ -691,7 +691,7 @@ loadNavLogo();
   if (!email) return;
   const { tournament } = await window.tourney.ready;
   const _adminHref = location.pathname.match(/\/t\/([^/?#]+)/) ? `/t/${tournament.slug}/admin` : '/admin';
-  const { data: ac } = await sb.from('tournament_admins').select('id').eq('tournament_id', tournament.id).eq('email', email.toLowerCase()).maybeSingle();
+  const { data: ac } = await sb.from('tournament_admins').select('tournament_id').eq('tournament_id', tournament.id).eq('email', email.toLowerCase()).maybeSingle();
   if (ac) {
     const nl = document.querySelector('.nav-links');
     if (nl) { const a = document.createElement('a'); a.href = _adminHref; a.textContent = 'Admin'; nl.appendChild(a); }
