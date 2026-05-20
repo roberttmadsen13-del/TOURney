@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TOURney — Deployment Review · May 20, 2026</title>
+<style>
+:root{--gold:#c09030;--gold-light:#d4a840;--gold-dim:rgba(192,144,48,0.18);--bg:#0d0a05;--surface:#151009;--card:#1c140a;--border:rgba(192,144,48,0.22);--muted:#7a6a54;--text:#e8dcc8;--red:#c0392b;--green:#27ae60;--blue:#2980b9;--orange:#e67e22;--purple:#8e44ad;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:-apple-system,'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;font-size:15px;}
+nav{position:sticky;top:0;z-index:100;background:rgba(13,10,5,0.97);border-bottom:1px solid var(--border);backdrop-filter:blur(12px);}
+.nav-inner{padding:0.6rem 1.5rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap;}
+.nav-brand{color:var(--gold);font-weight:700;font-size:1rem;letter-spacing:0.05em;white-space:nowrap;}
+.nav-brand span{color:var(--muted);font-weight:400;font-size:0.8rem;margin-left:0.4rem;}
+.nav-links{display:flex;gap:0.2rem;flex-wrap:wrap;margin-left:auto;}
+.nav-links a{color:var(--muted);text-decoration:none;font-size:0.78rem;padding:0.3rem 0.55rem;border-radius:4px;transition:all 0.15s;white-space:nowrap;}
+.nav-links a:hover{color:var(--gold);background:var(--gold-dim);}
+.lifecycle-bar{display:flex;gap:3px;padding:0.55rem 1.5rem 0.65rem;background:var(--surface);border-bottom:1px solid var(--border);}
+.lc-stage{flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;}
+.lc-pill{height:5px;width:100%;border-radius:3px;background:rgba(192,144,48,0.1);transition:background 0.25s;}
+.lc-label{font-size:0.58rem;font-weight:700;letter-spacing:0.11em;text-transform:uppercase;color:rgba(122,106,84,0.45);transition:color 0.25s;}
+.lc-done .lc-pill{background:var(--gold);}
+.lc-done .lc-label{color:var(--gold);}
+.lc-active .lc-pill{background:var(--gold-light);box-shadow:0 0 8px rgba(192,144,48,0.45);}
+.lc-active .lc-label{color:var(--gold-light);}
+.hero{padding:3rem 1.5rem 2rem;text-align:center;border-bottom:1px solid var(--border);background:linear-gradient(180deg,rgba(192,144,48,0.06) 0%,transparent 100%);}
+.hero-eyebrow{display:inline-block;font-size:0.7rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold);border:1px solid var(--border);border-radius:20px;padding:0.22rem 0.8rem;margin-bottom:0.9rem;}
+.hero h1{font-size:clamp(1.5rem,3.5vw,2.3rem);font-weight:800;color:#fff;margin-bottom:0.35rem;}
+.hero h1 span{color:var(--gold);}
+.hero-sub{color:var(--muted);max-width:580px;margin:0 auto 1rem;font-size:0.9rem;}
+.hero-meta{display:flex;gap:1.1rem;justify-content:center;flex-wrap:wrap;font-size:0.74rem;color:var(--muted);}
+.hero-meta span{display:flex;align-items:center;gap:0.3rem;}
+.wrapper{max-width:1000px;margin:0 auto;padding:0 1.5rem;}
+section{padding:2.5rem 0;border-bottom:1px solid var(--border);}
+section:last-of-type{border-bottom:none;}
+.section-header{margin-bottom:1.6rem;}
+.section-eyebrow{font-size:0.67rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--gold);margin-bottom:0.3rem;}
+.section-title{font-size:1.35rem;font-weight:800;color:#fff;margin-bottom:0.3rem;}
+.section-desc{color:var(--muted);font-size:0.85rem;max-width:560px;}
+.card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:1.15rem 1.3rem;margin-bottom:0.7rem;}
+.card-title{font-size:0.85rem;font-weight:700;color:var(--gold);margin-bottom:0.45rem;}
+.card p,.card li{font-size:0.84rem;color:var(--text);margin-bottom:0.28rem;}
+.card ul,.card ol{padding-left:1.2rem;}
+.card li{margin-bottom:0.32rem;}
+.grid-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:0.7rem;}
+.grid-3{display:grid;grid-template-columns:repeat(auto-fit,minmax(245px,1fr));gap:0.7rem;}
+.stack-item{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:0.85rem 1.05rem;}
+.stack-label{font-size:0.65rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--muted);margin-bottom:0.18rem;}
+.stack-value{font-size:0.88rem;font-weight:600;color:#fff;}
+.stack-note{font-size:0.72rem;color:var(--muted);margin-top:0.18rem;}
+.pill{display:inline-block;font-size:0.66rem;font-weight:700;letter-spacing:0.06em;padding:0.15rem 0.5rem;border-radius:20px;text-transform:uppercase;}
+.pill-gold{background:rgba(192,144,48,0.18);color:var(--gold);border:1px solid rgba(192,144,48,0.3);}
+.pill-green{background:rgba(39,174,96,0.15);color:var(--green);border:1px solid rgba(39,174,96,0.3);}
+.pill-red{background:rgba(192,57,43,0.15);color:var(--red);border:1px solid rgba(192,57,43,0.3);}
+.pill-orange{background:rgba(230,126,34,0.15);color:var(--orange);border:1px solid rgba(230,126,34,0.3);}
+.pill-blue{background:rgba(41,128,185,0.15);color:var(--blue);border:1px solid rgba(41,128,185,0.3);}
+.pill-purple{background:rgba(142,68,173,0.15);color:var(--purple);border:1px solid rgba(142,68,173,0.3);}
+.page-table{width:100%;border-collapse:collapse;font-size:0.8rem;}
+.page-table th{text-align:left;padding:0.52rem 0.72rem;border-bottom:1px solid var(--border);color:var(--muted);font-size:0.67rem;text-transform:uppercase;letter-spacing:0.08em;background:var(--surface);}
+.page-table td{padding:0.58rem 0.72rem;border-bottom:1px solid rgba(192,144,48,0.08);vertical-align:top;}
+.page-table tr:last-child td{border-bottom:none;}
+.page-table tr:hover td{background:var(--gold-dim);}
+.page-table .url{font-family:monospace;font-size:0.75rem;color:var(--gold-light);}
+.page-table .file{font-family:monospace;font-size:0.72rem;color:var(--muted);}
+.table-wrap{background:var(--card);border:1px solid var(--border);border-radius:8px;overflow:hidden;overflow-x:auto;}
+.score-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(125px,1fr));gap:0.52rem;margin-bottom:1.4rem;}
+.score-cell{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:0.85rem;text-align:center;}
+.score-num{font-size:1.85rem;font-weight:900;line-height:1;margin-bottom:0.18rem;}
+.score-label{font-size:0.64rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);}
+.score-green{color:var(--green);}
+.score-gold{color:var(--gold);}
+.score-red{color:var(--red);}
+.score-blue{color:var(--blue);}
+.idea-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1.25rem;position:relative;overflow:hidden;}
+.idea-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;}
+.idea-1::before{background:var(--gold);}
+.idea-2::before{background:var(--blue);}
+.idea-3::before{background:var(--green);}
+.idea-4::before{background:var(--orange);}
+.idea-5::before{background:var(--purple);}
+.idea-number{font-size:2rem;font-weight:900;opacity:0.07;position:absolute;top:0.5rem;right:1rem;line-height:1;color:#fff;}
+.idea-tag{margin-bottom:0.42rem;}
+.idea-title{font-size:0.96rem;font-weight:700;color:#fff;margin-bottom:0.42rem;}
+.idea-body{font-size:0.82rem;color:var(--muted);line-height:1.55;margin-bottom:0.65rem;}
+.idea-plan{font-size:0.77rem;color:var(--text);}
+.idea-plan strong{color:var(--gold);}
+.runbook-steps{counter-reset:rb-step;}
+.rb-step{background:var(--card);border:1px solid var(--border);border-left:3px solid rgba(192,144,48,0.3);border-radius:0 8px 8px 0;padding:0.95rem 1.15rem 0.95rem 3.8rem;margin-bottom:0.55rem;position:relative;}
+.rb-step::before{counter-increment:rb-step;content:counter(rb-step);position:absolute;left:0.95rem;top:0.95rem;width:1.75rem;height:1.75rem;background:var(--gold-dim);color:var(--gold);border:1px solid var(--border);border-radius:50%;font-size:0.72rem;font-weight:700;display:grid;place-items:center;}
+.rb-step-title{font-size:0.87rem;font-weight:700;color:#fff;margin-bottom:0.22rem;}
+.rb-step-body{font-size:0.8rem;color:var(--muted);margin-bottom:0.35rem;}
+.rb-verify{font-size:0.76rem;color:var(--text);background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:3px;padding:0.35rem 0.6rem;margin-top:0.3rem;}
+.rb-verify strong{color:var(--gold-light);font-size:0.68rem;text-transform:uppercase;letter-spacing:0.07em;display:block;margin-bottom:0.1rem;}
+.sec-item{background:var(--card);border:1px solid var(--border);border-left:3px solid var(--border);border-radius:0 8px 8px 0;padding:0.9rem 1.15rem;margin-bottom:0.65rem;}
+.sec-item.sev-high{border-left-color:var(--red);}
+.sec-item.sev-med{border-left-color:var(--orange);}
+.sec-item.sev-low{border-left-color:var(--green);}
+.sec-item.sev-info{border-left-color:var(--blue);}
+.sec-header{display:flex;align-items:center;gap:0.52rem;margin-bottom:0.42rem;}
+.sec-title{font-size:0.87rem;font-weight:700;color:#fff;}
+.sec-body{font-size:0.8rem;color:var(--muted);margin-bottom:0.42rem;}
+.sec-fix{font-size:0.77rem;color:var(--text);background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:4px;padding:0.42rem 0.62rem;}
+.sec-fix strong{color:var(--gold-light);display:block;margin-bottom:0.12rem;font-size:0.68rem;text-transform:uppercase;letter-spacing:0.08em;}
+.stage-pending{text-align:center;padding:3rem 1.5rem;color:var(--muted);font-size:0.85rem;border:1px dashed rgba(192,144,48,0.2);border-radius:8px;}
+.stage-pending code{color:var(--gold);}
+.roadmap-item{display:flex;gap:1.05rem;align-items:flex-start;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:0.95rem 1.15rem;margin-bottom:0.52rem;}
+.roadmap-icon{width:1.9rem;height:1.9rem;border-radius:50%;background:var(--gold-dim);color:var(--gold);display:grid;place-items:center;font-size:0.85rem;flex-shrink:0;border:1px solid var(--border);}
+.roadmap-content{flex:1;}
+.roadmap-title{font-size:0.88rem;font-weight:700;color:#fff;margin-bottom:0.13rem;}
+.roadmap-desc{font-size:0.79rem;color:var(--muted);margin-bottom:0.32rem;}
+.roadmap-action{font-size:0.75rem;color:var(--text);}
+.roadmap-action strong{color:var(--gold-light);}
+code{font-family:'Consolas','Monaco',monospace;background:rgba(255,255,255,0.07);padding:0.09rem 0.27rem;border-radius:3px;font-size:0.81em;color:var(--gold-light);}
+footer{border-top:1px solid var(--border);padding:1.2rem;text-align:center;color:var(--muted);font-size:0.72rem;}
+footer span{color:var(--gold);}
+@media(max-width:600px){.nav-links{display:none;}.hero{padding:2rem 1rem 1.5rem;}section{padding:2rem 0;}.lc-label{font-size:0.5rem;}}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <div class="nav-brand">TOURney <span>by Greenskeeper Studios</span></div>
+    <div class="nav-links">
+      <a href="#review">Review</a>
+      <a href="#plan">Plan</a>
+      <a href="#runbook">Runbook</a>
+      <a href="#executing">Executing</a>
+      <a href="#audit">Audit</a>
+      <a href="#concluded">Concluded</a>
+    </div>
+  </div>
+</nav>
+
+<!-- LIFECYCLE-BAR-START -->
+<div class="lifecycle-bar">
+  <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Review</div></div>
+  <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Plan</div></div>
+  <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Runbook</div></div>
+  <div class="lc-stage"><div class="lc-pill"></div><div class="lc-label">Executing</div></div>
+  <div class="lc-stage"><div class="lc-pill"></div><div class="lc-label">Audit</div></div>
+  <div class="lc-stage"><div class="lc-pill"></div><div class="lc-label">Concluded</div></div>
+</div>
+<!-- LIFECYCLE-BAR-END -->
+
+<div class="hero">
+  <div class="hero-eyebrow">Deployment</div>
+  <h1><span>TOURney</span> — Deployment Review · May 20, 2026</h1>
+  <p class="hero-sub">Audit of how Claude Code agents interact with git, Vercel, Supabase, and third-party services — workflow safety, deploy pipeline, secrets management, service worker cache strategy, and monitoring gaps.</p>
+  <div class="hero-meta">
+    <span>📅 May 20, 2026</span>
+    <span>🤖 Claude Sonnet 4.6</span>
+    <span>🏢 Greenskeeper Studios</span>
+    <span>🔒 Internal Only</span>
+  </div>
+</div>
+
+<section id="review">
+<div class="wrapper">
+
+  <div class="section-header">
+    <div class="section-eyebrow">§ Review</div>
+    <div class="section-title">Platform Health — Deployment Axis</div>
+    <div class="section-desc">Evidence-based audit of the full deploy pipeline from agent commit to live URL, including all third-party service integrations.</div>
+  </div>
+
+  <div class="score-grid">
+    <div class="score-cell"><div class="score-num score-green">A</div><div class="score-label">Architecture</div></div>
+    <div class="score-cell"><div class="score-num score-gold">B+</div><div class="score-label">Feature Depth</div></div>
+    <div class="score-cell"><div class="score-num score-green">A</div><div class="score-label">UX Polish</div></div>
+    <div class="score-cell"><div class="score-num score-gold">A−</div><div class="score-label">Security</div></div>
+    <div class="score-cell"><div class="score-num score-red">C+</div><div class="score-label">Business</div></div>
+    <div class="score-cell" style="border-color:rgba(230,126,34,0.4)"><div class="score-num" style="color:var(--orange)">B</div><div class="score-label">Deployment ▼</div></div>
+    <div class="score-cell"><div class="score-num score-gold">B+</div><div class="score-label">Performance</div></div>
+    <div class="score-cell"><div class="score-num score-gold">B+</div><div class="score-label">Data Model</div></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">What TOURney Is</div>
+    <p>Multi-tenant tournament SaaS PWA. Static HTML/JS frontend deployed on Vercel. Supabase for auth, database, realtime, and edge functions. GitHub as the source of truth — every push to <code>main</code> triggers an immediate Vercel production deploy. No framework build step. All Claude Code agents (Planner, Execution, Bug Review) operate directly on this pipeline.</p>
+  </div>
+
+  <div class="grid-3" style="margin-bottom:0.7rem">
+    <div class="stack-item"><div class="stack-label">Frontend</div><div class="stack-value">Static HTML/JS/CSS</div><div class="stack-note">No framework. tourney-init.js as init layer. Vercel CDN delivery.</div></div>
+    <div class="stack-item"><div class="stack-label">Deploy Trigger</div><div class="stack-value">git push → Vercel</div><div class="stack-note">Every push to main = instant prod deploy. No preview branch. No gate.</div></div>
+    <div class="stack-item"><div class="stack-label">Database + Auth</div><div class="stack-value">Supabase (PostgreSQL)</div><div class="stack-note">12 migrations. RLS on all tables. Anon key in client. Service role server-only.</div></div>
+    <div class="stack-item"><div class="stack-label">Edge Functions</div><div class="stack-value">Supabase Deno (5 fns)</div><div class="stack-note">send-push, platform-action, send-install-email, log-client-error, create-checkout</div></div>
+    <div class="stack-item"><div class="stack-label">Service Worker</div><div class="stack-value">sw.js — CACHE v37</div><div class="stack-note">Manual version bump. 25-item precache list. Network-first for init/bug-fab.</div></div>
+    <div class="stack-item"><div class="stack-label">CI / Workflows</div><div class="stack-value">7 GitHub Actions</div><div class="stack-note">ci.yml, test.yml, typecheck.yml, lighthouse.yml, backup.yml, deploy-functions.yml</div></div>
+    <div class="stack-item"><div class="stack-label">Email</div><div class="stack-value">Resend API</div><div class="stack-note">RESEND_API_KEY in Supabase secrets. Used by send-install-email edge fn.</div></div>
+    <div class="stack-item"><div class="stack-label">Push Notifications</div><div class="stack-value">Web Push / VAPID</div><div class="stack-note">VAPID_PUBLIC_KEY + VAPID_PRIVATE_KEY in Supabase secrets. send-push edge fn.</div></div>
+    <div class="stack-item"><div class="stack-label">Payments</div><div class="stack-value">Stripe (wired, not live)</div><div class="stack-note">create-checkout edge fn present. Keys unset — blocked on LLC + EIN formation.</div></div>
+  </div>
+
+  <div class="card" style="margin-bottom:0.7rem">
+    <div class="card-title">Edge Functions — Auth Patterns</div>
+    <ul>
+      <li><strong>send-push</strong> — Requires <code>Authorization</code> header. Validates user via anon client. Verifies tournament ownership or admin membership via service role. Origin restricted to <code>*.greenskeeper.studio</code>. <span class="pill pill-red">BUG: .select('id') on tournament_admins — no id col</span></li>
+      <li><strong>platform-action</strong> — Requires <code>Authorization</code>. Validates user via anon client. Platform owner check via <code>PLATFORM_OWNER_EMAIL</code> env var. Service role for privileged writes. Origin regex validated.</li>
+      <li><strong>send-install-email</strong> — Webhook secret auth (<code>SEND_INSTALL_EMAIL_SECRET</code>). Called by Supabase DB webhook on player insert. Service role for tournament lookup. <span class="pill pill-orange">Secret not set in prod yet</span></li>
+      <li><strong>log-client-error</strong> — Accepts error payloads from client bug-fab.js. Writes to Supabase. No user auth required (public error logging).</li>
+      <li><strong>create-checkout</strong> — Stripe checkout session creator. Stripe secret held server-side. Not live — keys unset.</li>
+    </ul>
+  </div>
+
+  <div class="card" style="margin-bottom:0.7rem">
+    <div class="card-title">Security Headers (vercel.json)</div>
+    <ul>
+      <li><strong>HSTS</strong>: <code>max-age=63072000; includeSubDomains; preload</code> — 2-year HSTS with preload. Correct.</li>
+      <li><strong>X-Content-Type-Options</strong>: <code>nosniff</code> — present on all routes.</li>
+      <li><strong>X-Frame-Options</strong>: <code>DENY</code> — clickjacking protection present.</li>
+      <li><strong>Referrer-Policy</strong>: <code>strict-origin-when-cross-origin</code> — correct.</li>
+      <li><strong>Permissions-Policy</strong>: camera, microphone, geolocation blocked. Payment self-only.</li>
+      <li><strong>CSP</strong>: Applied to <code>*.html</code> only. Allows <code>unsafe-inline</code> for scripts (required by current inline JS architecture). <code>cdn.jsdelivr.net</code> in script-src. <span class="pill pill-orange">unsafe-inline weakens XSS protection</span></li>
+      <li><strong>Cache headers</strong>: <code>no-store</code> on .html and .json. SW served no-store. Assets (CSS/JS/PNG) have no explicit Cache-Control — rely on Vercel CDN defaults.</li>
+    </ul>
+  </div>
+
+  <div class="card" style="margin-bottom:0.7rem">
+    <div class="card-title">Service Worker — Cache Strategy</div>
+    <ul>
+      <li><strong>Cache name</strong>: <code>tourney-v37</code> — manual bump required on every deploy that changes precached files.</li>
+      <li><strong>Precache list</strong>: 25 entries — manually maintained. Agent-added files not auto-added.</li>
+      <li><strong>Supabase passthrough</strong>: SW skips all <code>*.supabase.co</code> requests. Correct.</li>
+      <li><strong>JSON bypass</strong>: SW skips <code>.json</code> files — artifacts always fresh. Correct.</li>
+      <li><strong>Network-first</strong>: <code>bug-fab.js</code> and <code>tourney-init.js</code> use network-first. Correct — these change frequently.</li>
+      <li><strong>Risk</strong>: Agent deploys HTML/CSS/JS changes without bumping CACHE version = PWA users get stale assets until manual cache clear. <span class="pill pill-red">No automation for version bump</span></li>
+    </ul>
+  </div>
+
+  <div class="card" style="margin-bottom:0.7rem">
+    <div class="card-title">Claude Agent Workflow — Git + Vercel</div>
+    <ul>
+      <li><strong>Commit flow</strong>: Planner dispatches → Execution worker commits directly to <code>main</code> → push triggers Vercel prod deploy instantly. Zero human review gate between agent commit and live URL.</li>
+      <li><strong>Branch protection</strong>: None. Agents can force-push, rewrite history, or deploy broken code with no friction.</li>
+      <li><strong>Staging environment</strong>: None. Agents always test against production. A broken agent fix ships immediately to real players.</li>
+      <li><strong>CI gating</strong>: 7 workflows run (ci.yml, test.yml, typecheck.yml, lighthouse.yml) but Vercel deploys on push regardless of workflow pass/fail. Tests are informational, not blocking.</li>
+      <li><strong>Worktree accumulation</strong>: <code>.claude/worktrees/</code> inside repo — nested worktrees found (e.g. <code>dazzling-volhard-3f903d/.claude/worktrees/...</code>). These pollute grep results, inflate repo size, and confuse future agents reading the codebase.</li>
+    </ul>
+  </div>
+
+  <div class="card" style="margin-bottom:0.7rem">
+    <div class="card-title">Claude Agent Workflow — Supabase MCP</div>
+    <ul>
+      <li><strong>Available to agents</strong>: <code>mcp__claude_ai_Supabase__execute_sql</code>, <code>apply_migration</code>, <code>get_logs</code>, <code>list_tables</code>, and 15+ other tools.</li>
+      <li><strong>No isolation</strong>: All Supabase MCP calls target production. No Supabase branch/preview for agent work. A bad migration applied by an Execution worker is instant, permanent, and hits real data.</li>
+      <li><strong>No migration review gate</strong>: Agents can <code>apply_migration</code> without Rob approval. The only safeguard is the agent's own judgment.</li>
+      <li><strong>Logs accessible</strong>: <code>get_logs</code> lets agents diagnose Supabase edge function logs directly — this is a positive capability.</li>
+    </ul>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title">Strengths</div>
+      <ul>
+        <li>All secrets (VAPID, service_role, RESEND, STRIPE) in Supabase/Vercel env vars — zero committed secrets found.</li>
+        <li>Edge functions authenticate callers before any privileged operation. Origin validation on send-push and platform-action.</li>
+        <li>SW correctly passes through all Supabase API/realtime calls — no caching of live data.</li>
+        <li>7 CI workflows in place — infrastructure thinking is solid.</li>
+        <li>JSON artifacts always served fresh (no-store + SW bypass).</li>
+        <li>12 clean, unambiguously ordered migrations.</li>
+        <li>Network-first for frequently-changing scripts (tourney-init.js, bug-fab.js).</li>
+        <li>CSP configured (even if unsafe-inline — it's there).</li>
+        <li>Supabase MCP gives agents strong diagnostic capability (logs, SQL, tables).</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-title">Gaps &amp; Confirmed Bugs</div>
+
+      <div class="sec-item sev-high">
+        <div class="sec-header"><span class="pill pill-red">Critical</span><span class="sec-title">send-push: .select('id') on tournament_admins</span></div>
+        <div class="sec-body">File: <code>supabase/functions/send-push/index.ts</code>. Table <code>tournament_admins</code> has composite PK (tournament_id, email) — no <code>id</code> column. Query returns 400. Breaks admin check in send-push. Root cause of bugs #6, #9, #10.</div>
+        <div class="sec-fix"><strong>Fix</strong>Change <code>.select('id')</code> → <code>.select('tournament_id')</code> in the adminRow check. Then deploy edge function.</div>
+      </div>
+
+      <div class="sec-item sev-high">
+        <div class="sec-header"><span class="pill pill-red">Critical</span><span class="sec-title">No agent isolation — agents deploy directly to prod</span></div>
+        <div class="sec-body">Execution worker commits to <code>main</code> → instant Vercel prod deploy. No staging, no human gate. A broken agent fix ships immediately to real players. Same applies to Supabase: MCP <code>apply_migration</code> hits prod directly.</div>
+        <div class="sec-fix"><strong>Mitigation</strong>Add branch protection on main. Require CI pass before merge. Create a <code>staging</code> branch wired to a Vercel preview deployment for agent work.</div>
+      </div>
+
+      <div class="sec-item sev-high">
+        <div class="sec-header"><span class="pill pill-orange">High</span><span class="sec-title">SW cache version not auto-bumped on deploy</span></div>
+        <div class="sec-body"><code>sw.js</code> line 1: <code>const CACHE = 'tourney-v37'</code>. Must be manually incremented. Agent deploys that change precached assets without bumping = stale PWA for all installed users until manual cache clear.</div>
+        <div class="sec-fix"><strong>Fix</strong>Add a GitHub Action step that auto-increments CACHE version string on every push to main that touches precached files.</div>
+      </div>
+
+      <div class="sec-item sev-med">
+        <div class="sec-header"><span class="pill pill-orange">Medium</span><span class="sec-title">CI workflows don't gate Vercel deploy</span></div>
+        <div class="sec-body">7 GitHub Actions workflows exist but Vercel deploys on push regardless of outcome. A failing typecheck or test run does not block the deploy. CI is purely informational.</div>
+        <div class="sec-fix"><strong>Fix</strong>Add Vercel ignore build step or use <code>vercel --prebuilt</code> with a GitHub Action that only triggers on CI pass.</div>
+      </div>
+
+      <div class="sec-item sev-med">
+        <div class="sec-header"><span class="pill pill-orange">Medium</span><span class="sec-title">Stale .claude/worktrees/ accumulation in repo</span></div>
+        <div class="sec-body">Multiple nested worktree directories found inside <code>.claude/worktrees/</code> — including <code>dazzling-volhard-3f903d/.claude/worktrees/...</code>. These inflate repo size, pollute grep/search results for future agents, and cause false matches in codebase analysis.</div>
+        <div class="sec-fix"><strong>Fix</strong>Add <code>.claude/worktrees/</code> to <code>.gitignore</code>. Run <code>git rm -r --cached .claude/worktrees/</code> to remove tracked files. Then prune locally.</div>
+      </div>
+
+      <div class="sec-item sev-med">
+        <div class="sec-header"><span class="pill pill-orange">Medium</span><span class="sec-title">No error monitoring (Sentry / equivalent)</span></div>
+        <div class="sec-body">No Sentry, no Datadog, no Plausible, no gtag found in any .html or .js file. The only error signal is the custom <code>log-client-error</code> edge fn + bug-fab.js. Prod JS errors are invisible unless a user manually files a bug report.</div>
+        <div class="sec-fix"><strong>Fix</strong>Add Sentry (free tier). One script tag in each page head. Captures unhandled exceptions, promise rejections, and network errors automatically.</div>
+      </div>
+
+      <div class="sec-item sev-low">
+        <div class="sec-header"><span class="pill pill-blue">Info</span><span class="sec-title">SEND_INSTALL_EMAIL_SECRET not set in prod</span></div>
+        <div class="sec-body">send-install-email edge function checks <code>WEBHOOK_SECRET</code> from env. If unset, all webhook calls to this function return 401. New player registration emails not sent.</div>
+        <div class="sec-fix"><strong>Fix</strong>Rob manually sets secret in Supabase Dashboard → Settings → Edge Function Secrets. Generate: <code>openssl rand -hex 32</code>. Then set matching value in Supabase DB webhook config.</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</section>
+
+<section id="plan">
+<div class="wrapper">
+
+  <div class="section-header">
+    <div class="section-eyebrow">§ Plan</div>
+    <div class="section-title">Deployment Priorities</div>
+    <div class="section-desc">Ordered by impact. P1 is a one-line bug fix that unblocks 3 open bugs. P2–P5 harden the Claude agent workflow against accidents.</div>
+  </div>
+
+  <div class="card" style="margin-bottom:1rem">
+    <div class="card-title">Strategic Priorities (P1 → P6)</div>
+    <ol style="padding-left:1.2rem">
+      <li style="margin-bottom:0.5rem"><strong>P1 — Fix send-push select('id') bug</strong>: One-line fix. Unblocks bugs #6, #9, #10. Redeploy edge function. 10 minutes.</li>
+      <li style="margin-bottom:0.5rem"><strong>P2 — Prune stale worktrees + .gitignore</strong>: Remove tracked .claude/worktrees/ from git. Immediate repo hygiene improvement. Agents read cleaner codebase going forward. 15 minutes.</li>
+      <li style="margin-bottom:0.5rem"><strong>P3 — Automate SW CACHE version bump</strong>: GitHub Action that sed-replaces version string in sw.js on push. Prevents stale PWA cache bugs from agent deploys. 30 minutes.</li>
+      <li style="margin-bottom:0.5rem"><strong>P4 — Gate Vercel deploy on CI pass</strong>: Wire test.yml and typecheck.yml as required status checks before Vercel deploys. Adds friction — must weigh against solo-dev velocity. 1 hour.</li>
+      <li style="margin-bottom:0.5rem"><strong>P5 — Add Sentry error monitoring</strong>: Free tier. One script tag. Captures all unhandled JS errors on all pages automatically. Fills the biggest monitoring gap. 1 hour.</li>
+      <li style="margin-bottom:0.5rem"><strong>P6 — Set SEND_INSTALL_EMAIL_SECRET</strong>: Rob manual. Generate secret, set in Supabase, set in DB webhook. Unblocks install email flow. 15 minutes.</li>
+    </ol>
+  </div>
+
+  <div class="grid-2" style="margin-bottom:1rem">
+    <div class="idea-card idea-1">
+      <div class="idea-number">1</div>
+      <div class="idea-tag"><span class="pill pill-red">Critical Fix</span></div>
+      <div class="idea-title">Fix send-push Admin Check</div>
+      <div class="idea-body">The tournament_admins table uses a composite primary key (tournament_id + email). There is no id column. The send-push edge function's .select('id') call returns a 400 for every tournament. Changing to .select('tournament_id') restores the admin check and fixes 3 open bugs.</div>
+      <div class="idea-plan"><strong>Build:</strong> Edit supabase/functions/send-push/index.ts. Change one line. Run deploy-functions workflow or push and let it auto-deploy.</div>
+    </div>
+    <div class="idea-card idea-2">
+      <div class="idea-number">2</div>
+      <div class="idea-tag"><span class="pill pill-orange">Agent Safety</span></div>
+      <div class="idea-title">SW Cache Auto-Bump</div>
+      <div class="idea-body">Every agent deploy risks serving stale cached assets to PWA users. A GitHub Action that auto-increments the CACHE version in sw.js on every push eliminates this risk. No agent needs to remember to bump — it happens automatically.</div>
+      <div class="idea-plan"><strong>Build:</strong> Add a step in ci.yml: <code>sed -i "s/tourney-v[0-9]*/tourney-v$(date +%s)/" sw.js</code> and commit. Or use a numeric counter stored in a file.</div>
+    </div>
+    <div class="idea-card idea-3">
+      <div class="idea-number">3</div>
+      <div class="idea-tag"><span class="pill pill-blue">Repo Hygiene</span></div>
+      <div class="idea-title">Purge Stale Worktrees</div>
+      <div class="idea-body">Nested .claude/worktrees/ directories are committed to the repo. They contain thousands of duplicate files that appear in grep results for agents analyzing the codebase. Removing them and adding a .gitignore entry makes all future agent codebase analysis accurate.</div>
+      <div class="idea-plan"><strong>Build:</strong> git rm -r --cached .claude/worktrees/. Add .claude/worktrees/ to .gitignore. Commit. Local pruning: git worktree prune.</div>
+    </div>
+    <div class="idea-card idea-4">
+      <div class="idea-number">4</div>
+      <div class="idea-tag"><span class="pill pill-orange">Monitoring</span></div>
+      <div class="idea-title">Sentry Error Monitoring</div>
+      <div class="idea-body">Zero error monitoring exists outside custom bug-fab.js. Prod JS errors are invisible unless a user notices and manually files a report. Sentry free tier captures all unhandled exceptions, promise rejections, and network errors across all pages with one script tag per page.</div>
+      <div class="idea-plan"><strong>Build:</strong> Create Sentry account → new project (JavaScript). Add CDN script tag to each HTML page head. Set SENTRY_DSN as Vercel env var. 1 hour total.</div>
+    </div>
+    <div class="idea-card idea-5">
+      <div class="idea-number">5</div>
+      <div class="idea-tag"><span class="pill pill-purple">Future</span></div>
+      <div class="idea-title">Supabase Branch per Agent Task</div>
+      <div class="idea-body">Supabase supports branching (preview branches). Wiring agent migration work to a Supabase branch would allow testing schema changes against a copy of prod before applying. Eliminates the risk of a bad agent migration hitting live data. Requires Supabase Pro plan.</div>
+      <div class="idea-plan"><strong>Build:</strong> Upgrade Supabase plan. Create branch per agent task via mcp__claude_ai_Supabase__create_branch. Merge only after Rob review.</div>
+    </div>
+  </div>
+
+  <div class="section-header" style="margin-top:1.5rem">
+    <div class="section-title" style="font-size:1rem">Deployment Milestones</div>
+  </div>
+
+  <div class="roadmap-item">
+    <div class="roadmap-icon">🔧</div>
+    <div class="roadmap-content">
+      <div class="roadmap-title">Fix send-push + purge worktrees</div>
+      <div class="roadmap-desc">Unblocks bugs #6/#9/#10. Cleans codebase for all future agent work.</div>
+      <div class="roadmap-action"><strong>Timeline: 30 minutes. Engineering only.</strong></div>
+    </div>
+  </div>
+  <div class="roadmap-item">
+    <div class="roadmap-icon">⚙️</div>
+    <div class="roadmap-content">
+      <div class="roadmap-title">SW auto-bump + Sentry</div>
+      <div class="roadmap-desc">Eliminates stale-cache risk from agent deploys. Adds prod error visibility.</div>
+      <div class="roadmap-action"><strong>Timeline: 2 hours. Engineering only.</strong></div>
+    </div>
+  </div>
+  <div class="roadmap-item">
+    <div class="roadmap-icon">🔐</div>
+    <div class="roadmap-content">
+      <div class="roadmap-title">SEND_INSTALL_EMAIL_SECRET + deploy-functions secrets</div>
+      <div class="roadmap-desc">Unblocks install email flow. Requires Rob to set secrets in Supabase dashboard.</div>
+      <div class="roadmap-action"><strong>Timeline: 15 minutes. Rob manual.</strong></div>
+    </div>
+  </div>
+  <div class="roadmap-item">
+    <div class="roadmap-icon">🛡️</div>
+    <div class="roadmap-content">
+      <div class="roadmap-title">CI gate on Vercel deploy</div>
+      <div class="roadmap-desc">Blocks broken agent code from reaching prod. Requires balancing with solo-dev velocity.</div>
+      <div class="roadmap-action"><strong>Timeline: 1–2 hours. Engineering. Consider after first paying tenant.</strong></div>
+    </div>
+  </div>
+  <div class="roadmap-item">
+    <div class="roadmap-icon">🌿</div>
+    <div class="roadmap-content">
+      <div class="roadmap-title">Supabase branch isolation for agents</div>
+      <div class="roadmap-desc">Prevents bad agent migrations from hitting prod data. Requires Supabase Pro.</div>
+      <div class="roadmap-action"><strong>Timeline: Post-revenue. Supabase Pro ~$25/mo.</strong></div>
+    </div>
+  </div>
+
+</div>
+</section>
+
+<section id="runbook">
+<div class="wrapper">
+
+  <div class="section-header">
+    <div class="section-eyebrow">§ Runbook</div>
+    <div class="section-title">Execution Steps</div>
+    <div class="section-desc">Ordered, concrete steps for tourney-execute. Steps 1–3 are engineering-only. Step 4 requires Rob.</div>
+  </div>
+
+  <div class="runbook-steps">
+
+    <div class="rb-step">
+      <div class="rb-step-title">Fix send-push: change .select('id') → .select('tournament_id')</div>
+      <div class="rb-step-body">
+        File: <code>supabase/functions/send-push/index.ts</code><br>
+        Find the adminRow query block (around line 40–50 in the function). It reads:<br>
+        <code>.from('tournament_admins').select('id').eq('tournament_id', tournament_id).eq('email', user.email).maybeSingle()</code><br>
+        Change <code>.select('id')</code> to <code>.select('tournament_id')</code>.<br>
+        Then push the change — the deploy-functions workflow will redeploy the edge function automatically.
+      </div>
+      <div class="rb-verify"><strong>Verify</strong>Check Supabase edge function logs after deploy. A push notification trigger should return 200, not 400. Bugs #6/#9/#10 should stop appearing in the bug feed.</div>
+    </div>
+
+    <div class="rb-step">
+      <div class="rb-step-title">Purge stale worktrees from git tracking</div>
+      <div class="rb-step-body">
+        Run in repo root:<br>
+        <code>git rm -r --cached ".claude/worktrees/" 2>/dev/null || true</code><br>
+        Add to <code>.gitignore</code> (append line): <code>.claude/worktrees/</code><br>
+        Also add: <code>.claude/worktrees</code><br>
+        Commit: <code>git commit -m "chore: remove tracked worktrees, gitignore .claude/worktrees"</code><br>
+        Then prune local worktrees: <code>git worktree prune</code>
+      </div>
+      <div class="rb-verify"><strong>Verify</strong>Run <code>git status</code> — no .claude/worktrees/ files shown. Run <code>git worktree list</code> — only main worktree listed. Run <code>grep -r "submitRsvp" . --include="*.html" --exclude-dir=".git"</code> — results should only be from live source files, not worktree copies.</div>
+    </div>
+
+    <div class="rb-step">
+      <div class="rb-step-title">Add SW cache auto-bump to ci.yml</div>
+      <div class="rb-step-body">
+        Read <code>.github/workflows/ci.yml</code>. After the checkout step, add a step:<br>
+        <code>- name: Bump SW cache version</code><br>
+        <code>&nbsp;&nbsp;run: |</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;NEW_VER="tourney-v$(date +%s)"</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;sed -i "s/const CACHE = 'tourney-v[0-9]*/const CACHE = '$NEW_VER/" sw.js</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;git config user.email "ci@greenskeeper.studio"</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;git config user.name "GKS CI"</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;git diff --quiet || git commit -am "ci: bump SW cache version"</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;git push</code><br>
+        This runs on every push, auto-increments the CACHE key using a Unix timestamp, and commits the updated sw.js.
+      </div>
+      <div class="rb-verify"><strong>Verify</strong>Push any change. Check GitHub Actions run — SW bump step should show "Bump SW cache version" step passing. Check sw.js in repo — CACHE value should be a new timestamp-based string.</div>
+    </div>
+
+    <div class="rb-step">
+      <div class="rb-step-title">Add Sentry error monitoring to all HTML pages</div>
+      <div class="rb-step-body">
+        Create Sentry account at sentry.io → New Project → JavaScript (Browser). Get DSN.<br>
+        Add to Vercel environment variables: <code>SENTRY_DSN=https://xxxx@sentry.io/yyyy</code><br>
+        Add this script tag to the <code>&lt;head&gt;</code> of every HTML page (admin.html, home.html, scorecard.html, scoreboard.html, platform.html, and all others):<br>
+        <code>&lt;script src="https://browser.sentry-cdn.com/7.x.x/bundle.min.js" crossorigin="anonymous"&gt;&lt;/script&gt;</code><br>
+        <code>&lt;script&gt;Sentry.init({ dsn: 'YOUR_DSN', tracesSampleRate: 0.1 });&lt;/script&gt;</code><br>
+        Update CSP in vercel.json to allow <code>browser.sentry-cdn.com</code> in script-src and <code>sentry.io</code> in connect-src.
+      </div>
+      <div class="rb-verify"><strong>Verify</strong>Visit any page. Open browser console. Run <code>Sentry.captureMessage('test')</code>. Check Sentry dashboard — test event should appear within 30 seconds.</div>
+    </div>
+
+    <div class="rb-step">
+      <div class="rb-step-title">[Rob] Set SEND_INSTALL_EMAIL_SECRET in Supabase</div>
+      <div class="rb-step-body">
+        Generate a secret: run <code>openssl rand -hex 32</code> (or use any random 32-byte hex string).<br>
+        Go to Supabase Dashboard → your project → Settings → Edge Functions → Secrets.<br>
+        Add secret: key = <code>SEND_INSTALL_EMAIL_SECRET</code>, value = the generated hex string.<br>
+        Then go to Supabase Dashboard → Database → Webhooks.<br>
+        Find the webhook that triggers <code>send-install-email</code>. Set the Authorization header value to <code>Bearer {same hex string}</code>.
+      </div>
+      <div class="rb-verify"><strong>Verify</strong>Register a test player on any tournament. Check Supabase edge function logs for send-install-email — should show 200, not 401. Check email inbox for install email.</div>
+    </div>
+
+  </div>
+
+</div>
+</section>
+
+<section id="executing">
+<div class="wrapper">
+<!-- EXECUTING-CONTENT-START -->
+<div class="stage-pending">
+  <p>Awaiting execution. Run <code>/tourney-execute 5-20-26-deployment-review.html</code> to proceed.</p>
+</div>
+<!-- EXECUTING-CONTENT-END -->
+</div>
+</section>
+
+<section id="audit">
+<div class="wrapper">
+<!-- AUDIT-CONTENT-START -->
+<div class="stage-pending">
+  <p>Awaiting execution. Run <code>/tourney-execute 5-20-26-deployment-review.html</code> to proceed.</p>
+</div>
+<!-- AUDIT-CONTENT-END -->
+</div>
+</section>
+
+<section id="concluded">
+<div class="wrapper">
+<!-- CONCLUDED-CONTENT-START -->
+<div class="stage-pending">
+  <p>Awaiting execution. Run <code>/tourney-execute 5-20-26-deployment-review.html</code> to proceed.</p>
+</div>
+<!-- CONCLUDED-CONTENT-END -->
+</div>
+</section>
+
+<footer>
+  Generated by <span>Claude Sonnet 4.6</span> · Greenskeeper Studios Internal · May 20, 2026
+  <br style="margin-top:0.3rem">
+  <a href="/platform" style="color:var(--muted);font-size:0.7rem;text-decoration:none">← Back to Platform Hub</a>
+</footer>
+
+</body>
+</html>

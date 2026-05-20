@@ -339,6 +339,13 @@
       "scores": [
         {
           "date": "2026-05-20",
+          "score": "B",
+          "url": "/platform/5-20-26-deployment-review",
+          "review_title": "Deployment Review · May 20, 2026",
+          "notes": "Down from B+. Critical: send-push edge fn .select('id') on tournament_admins (no id col) = 400 error on all admin checks (bugs #6/#9/#10). Agent workflow gap: push to main = instant prod deploy, no staging, no CI gate, Supabase MCP hits prod directly. SW v37 manual bump = stale PWA risk. Stale nested .claude/worktrees/ committed to repo. No Sentry monitoring."
+        },
+        {
+          "date": "2026-05-20",
           "score": "B+",
           "url": "/platform/5-20-26-claude-review",
           "review_title": "Full Platform Review · May 20, 2026",

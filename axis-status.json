@@ -49,12 +49,12 @@
       "blocking": true
     },
     "deployment": {
-      "status": "review",
-      "grade": "B+",
-      "artifact": "/platform/5-20-26-claude-review",
+      "status": "executing",
+      "grade": "B",
+      "artifact": "/platform/5-20-26-deployment-review",
       "last_updated": "2026-05-20",
-      "summary": "GH Actions CI live. SW v37. No Lighthouse CI, no S3 backup, deploy-functions secrets not set. No staging environment.",
-      "open_items": 3,
+      "summary": "Down from B+. Critical: send-push .select('id') on tournament_admins = 400 (bugs #6/#9/#10). Agents push direct to prod, no staging, no CI gate, no Supabase branch isolation. SW v37 manual bump = stale PWA risk. Stale worktrees in repo. No Sentry.",
+      "open_items": 6,
       "blocking": false
     },
     "performance": {

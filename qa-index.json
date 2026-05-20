@@ -5,6 +5,19 @@
   "description": "Canonical registry of all TOURney plans, reviews, audits, and QA artifacts. The /platform Artifacts tab renders from this file. Skills (e.g. tourney-review) append new entries when they generate output.",
   "entries": [
     {
+      "id": "deployment-review-2026-05-20",
+      "category": "review",
+      "stage": "executing",
+      "title": "Deployment Review · May 20, 2026",
+      "summary": "Deployment axis deep-dive from Claude agent perspective. Critical: send-push edge fn uses .select('id') on tournament_admins (no id col) — 400 error root cause for bugs #6/#9/#10. Agent workflow gap: direct push to main = instant prod deploy, no staging, no CI gate, Supabase MCP hits prod directly. SW CACHE='tourney-v37' manual bump = stale PWA risk. Stale .claude/worktrees/ committed to repo polluting agent codebase analysis. No Sentry monitoring. 5-step runbook. Grade: B (down from B+).",
+      "date": "2026-05-20",
+      "author": "claude-sonnet-4-6",
+      "url": "/platform/5-20-26-deployment-review",
+      "file": "5-20-26-deployment-review.html",
+      "tags": ["review", "deployment", "agent-workflow"],
+      "status": "open"
+    },
+    {
       "id": "review-2026-05-20",
       "category": "review",
       "stage": "executing",
