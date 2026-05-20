@@ -949,6 +949,10 @@ function showAdmin(email) {
   document.getElementById('loginGate').style.display = 'none';
   document.getElementById('adminUI').style.display = 'block';
   document.getElementById('adminEmail').textContent = email;
+  window.tourney.ready.then(({ tournament }) => {
+    const sub = document.getElementById('adminPageSub');
+    if (sub) sub.textContent = tournament.name;
+  });
   loadAll();
   subscribeRealtime();
 }
