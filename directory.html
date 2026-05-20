@@ -114,7 +114,14 @@ a{color:inherit;text-decoration:none;}
 </div>
 
 <div class="main">
-  <div id="loadingState" class="loading">Loading field...</div>
+  <div id="loadingState" style="padding:1.5rem;display:flex;flex-direction:column;gap:0.75rem;">
+    <div class="skeleton" style="height:3rem;border-radius:8px;"></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;">
+      <div class="skeleton" style="height:10rem;border-radius:8px;"></div>
+      <div class="skeleton" style="height:10rem;border-radius:8px;"></div>
+    </div>
+    <div class="skeleton" style="height:6rem;border-radius:8px;"></div>
+  </div>
   <div id="directoryContent" style="display:none;">
 
     <!-- STATS BAR -->

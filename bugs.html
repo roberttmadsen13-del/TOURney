@@ -99,7 +99,7 @@ footer a:hover{color:var(--gold);}
 
   <!-- OPEN BUGS -->
   <div class="section">
-    <div class="sec-title">🔴 Open Bugs — Must Fix <span class="sec-count">3 open</span></div>
+    <div class="sec-title">🔴 Open Bugs — Must Fix <span class="sec-count">5 open</span></div>
     <div class="bug-item open">
       <div class="bug-title"><strong>Supabase MCP disconnected</strong> — claude.ai Supabase MCP returns "Server not found" in current session. Rob has 2 Claude accounts — MCP authorized on one, active session on the other. Blocks all Supabase admin ops (platform_bugs UPDATE, migrations, SQL queries).</div>
       <div class="bug-meta">OPEN · 2026-05-19 · Fix: run <code>! claude mcp list</code>, reconnect via <code>/mcp</code>, or switch to account with Supabase MCP auth</div>
@@ -107,6 +107,14 @@ footer a:hover{color:var(--gold);}
     <div class="bug-item open">
       <div class="bug-title"><strong>platform_bugs rows not marked complete</strong> — 6 resolved bugs in Supabase <code>platform_bugs</code> table still show <code>status=open</code>. Could not UPDATE — blocked by Supabase MCP outage. IDs in <code>5-19-26-bugs-review.html</code> Step 8.</div>
       <div class="bug-meta">OPEN · 2026-05-19 · Fix: reconnect MCP, then run UPDATE SQL from ticket Step 8 · Blocked by: Supabase MCP bug above</div>
+    </div>
+    <div class="bug-item blocked">
+      <div class="bug-title"><strong>[ROB MANUAL] SEND_INSTALL_EMAIL_SECRET not wired to DB webhook</strong> — <code>send-install-email</code> edge function deployed (v4) and env var may be set, but DB webhook Authorization header still needs to match. Install emails not firing on player registration. Fix: Supabase → Database → Webhooks → players INSERT webhook → set <code>Authorization: Bearer {SEND_INSTALL_EMAIL_SECRET}</code>.</div>
+      <div class="bug-meta">BLOCKED · Rob manual · 2026-05-19 · Source: 5-15-26-claude-review runbook step 4</div>
+    </div>
+    <div class="bug-item blocked">
+      <div class="bug-title"><strong>[ROB MANUAL] GitHub CI secrets not set — edge functions deploy manually only</strong> — <code>.github/workflows/deploy-functions.yml</code> ready but <code>SUPABASE_ACCESS_TOKEN</code> and <code>SUPABASE_PROJECT_REF</code> secrets not added to repo. Every edge function deploy requires manual CLI. Fix: GitHub → roberttmadsen13-del/TOURney → Settings → Secrets → add both. 5-min task.</div>
+      <div class="bug-meta">BLOCKED · Rob manual · 2026-05-19 · SUPABASE_PROJECT_REF = jllugkiojeoopitdvzsa · Source: 5-15-26-claude-review runbook step 5</div>
     </div>
     <div class="bug-item open">
       <div class="bug-title"><strong>Bova formats unconfirmed</strong> — Day1=stroke, Day2=scramble, Day3=best_ball seeded by guess. Shambles not mapped to a day.</div>
