@@ -23,7 +23,7 @@
     {
       "id": "review-2026-05-15",
       "category": "review",
-      "stage": "audit",
+      "stage": "concluded",
       "title": "Full Platform Review · May 15, 2026",
       "summary": "Execute audit B+. 006b rename shipped, migration 012 applied (player_accounts anon read closed), feed.html skeleton added. 2 blocked: SEND_INSTALL_EMAIL_SECRET + GitHub CI secrets (Rob manual). Arch A, Security A-, Data B+, Perf B+. Business C+ unchanged (LLC blocker).",
       "date": "2026-05-15",
@@ -31,7 +31,7 @@
       "url": "/platform/5-15-26-claude-review",
       "file": "5-15-26-claude-review.html",
       "tags": ["review", "audit"],
-      "status": "partial",
+      "status": "concluded",
       "updated": "2026-05-19"
     },
     {

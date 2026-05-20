@@ -100,11 +100,12 @@ footer span{color:var(--gold);}
 <div class="hero">
   <div class="hero-eyebrow">Bug Backlog</div>
   <h1><span>TOURney</span> — Bug Backlog Review · May 19, 2026</h1>
-  <p class="hero-sub">Live audit of all 11 bugs in <code>platform_bugs</code>. 3 closed during review. 5 open with clear root causes and runbook steps. 2 feature requests triaged out.</p>
+  <p class="hero-sub">12 bugs total. 5 code fixes shipped (tenant flash, FAB z-index, artifacts tab, SW v37, colors confirmed). <code>platform_bugs</code> table updated. 1 new bug added (popup opacity). 1 Rob action remains: verify admin title live.</p>
   <div class="hero-meta">
-    <span>📅 May 19, 2026</span>
+    <span>📅 May 19–20, 2026</span>
     <span>🤖 claude-sonnet-4-6</span>
     <span>🔴 1 P0 fixed live during review</span>
+    <span>✅ DB updated May 20</span>
     <span>🔒 Internal Only</span>
   </div>
 </div>
@@ -236,6 +237,15 @@ footer span{color:var(--gold);}
           <td><span class="pill pill-muted">Not a bug</span></td>
           <td>Enhancement request. The bug FAB uses a floating card / glassmorphism style. Noted as design direction feedback. Not actionable as a bug fix.</td>
         </tr>
+        <tr>
+          <td>Bug popup opacity</td>
+          <td>"should be 10% less transparent" — log bug pop up needs reduced transparency</td>
+          <td><span class="url">/platform</span></td>
+          <td><span class="pill pill-gold">P2</span></td>
+          <td>UI Polish</td>
+          <td><span class="pill pill-blue">Planned</span></td>
+          <td>Bug FAB modal/container background opacity too high (too transparent). Reduce backdrop opacity by ~10% in <code>bug-fab.js</code> modal styles. Logged 2026-05-20. ID: <code>26e81e78</code>.</td>
+        </tr>
       </tbody>
     </table>
   </div>
@@ -244,9 +254,9 @@ footer span{color:var(--gold);}
     <div class="card">
       <div class="card-title">Summary — By Priority</div>
       <ul>
-        <li><strong style="color:var(--red)">P0 (2):</strong> CEO locked out + access image — both FIXED during this review via DB INSERT.</li>
-        <li><strong style="color:var(--orange)">P1 (4):</strong> Tourney title (verify), Flash of wrong tenant, FAB missing on scorecard, Artifacts tab load bug.</li>
-        <li><strong style="color:var(--gold)">P2 (2):</strong> App icon wrong, Site colors not applying.</li>
+        <li><strong style="color:var(--red)">P0 (2):</strong> CEO locked out + access image — both FIXED during review via DB INSERT.</li>
+        <li><strong style="color:var(--orange)">P1 (4):</strong> Tourney title (Rob verify pending), Flash (✅ shipped), FAB z-index (✅ shipped), Artifacts tab (✅ shipped).</li>
+        <li><strong style="color:var(--gold)">P2 (3):</strong> App icon (✅ SW cache bump), Site colors (✅ confirmed via REST), Bug popup opacity (planned).</li>
         <li><strong style="color:var(--muted)">P3 / Not bugs (3):</strong> mcp-test (closed), font opinion, UX design request.</li>
       </ul>
     </div>
@@ -286,6 +296,13 @@ footer span{color:var(--gold);}
       <li><strong>Flash of wrong tenant:</strong> Add <code>body{visibility:hidden}</code> to all tournament pages. Reveal in tourney-init.js after <code>injectBrandColors()</code> resolves. Eliminates Bova-flash on page load for all tenants.</li>
       <li><strong>FAB z-index on scorecard:</strong> Diagnose why bug-fab.js FAB isn't visible on scorecard. Likely z-index conflict with scorecard overlay or sticky nav. Fix in bug-fab.js or scorecard.html.</li>
       <li><strong>Artifacts tab:</strong> Investigate auto-archive filter in platform.html <code>loadArtifacts()</code> — why does initial paint hide all items. Fix initial render to show non-archived items without requiring a filter action.</li>
+    </ul>
+  </div>
+
+  <div class="card" style="margin-bottom:0.7rem;">
+    <div class="card-title">Sprint D — P2 UI Polish — Bug Popup Opacity (5 min) <span class="pill pill-blue" style="font-size:0.62rem;vertical-align:middle;">New · 2026-05-20</span></div>
+    <ul>
+      <li><strong>Bug popup 10% less transparent:</strong> Reduce modal background opacity in <code>bug-fab.js</code>. Find the modal container's <code>background</code> or <code>backdrop-filter</code> style — reduce opacity by ~10% (e.g. <code>rgba(13,10,5,0.88)</code> → <code>rgba(13,10,5,0.95)</code> or similar). Quick visual tweak, no functional change.</li>
     </ul>
   </div>
 
@@ -393,6 +410,16 @@ footer span{color:var(--gold);}
     </div>
 
     <div class="rb-step">
+      <div class="rb-step-title">Fix bug popup opacity — reduce transparency by ~10% <span class="pill pill-blue" style="font-size:0.6rem;vertical-align:middle;">New · 2026-05-20</span></div>
+      <div class="rb-step-body">
+        <strong>Problem:</strong> Bug log popup modal is too transparent — reporter wants it 10% less transparent.<br><br>
+        <strong>File:</strong> <code>bug-fab.js</code><br>
+        Find the modal container background style. Look for <code>rgba(..., 0.X)</code> on the modal panel or its wrapper. Reduce the alpha by ~0.10 (e.g. <code>0.82</code> → <code>0.92</code>). If using <code>backdrop-filter: blur</code> with a semi-transparent background, increase the background alpha. Make the change, visually verify in DevTools.
+      </div>
+      <div class="rb-verify"><strong>Verify</strong> Open bug FAB on /platform. Click to open modal. Modal should feel slightly more solid/opaque than before. Content remains legible. Submit a test bug entry — form still works.</div>
+    </div>
+
+    <div class="rb-step">
       <div class="rb-step-title">Mark all resolved bugs completed in platform_bugs + commit</div>
       <div class="rb-step-body">
         After running steps 1–7, mark resolved bugs completed in Supabase:<br>
@@ -452,8 +479,12 @@ footer span{color:var(--gold);}
   <div class="exec-body"><strong>Verify + fix PWA icon files</strong> — Icon visually confirmed as generic TOURney platform branding (golf flag + "TOURNEY" wordmark, dark background). Not Bova-specific. Stale PWA icon was a SW cache issue. Bumped SW <code>tourney-v36</code> → <code>tourney-v37</code> to force re-cache. <code>sw.js:1</code>.</div>
 </div>
 <div class="exec-step">
-  <span class="exec-badge exec-blocked">Blocked</span>
-  <div class="exec-body"><strong>Mark resolved bugs completed in platform_bugs</strong> — Supabase MCP unavailable. Cannot run UPDATE. Rob to run: <code>UPDATE platform_bugs SET status='completed' WHERE id IN ('4152a338-f2ee-4d66-a44d-33f283f18a9b', '2ee25633-2c26-434f-88c3-8512bc54c916', '493c41f9-351a-4d86-9245-103504e51ba', 'a2f07a32-7c87-4174-9f9d-5c640263be6f', 'cd91dbaf-1a63-4120-b9c1-968e57caef0a', '82d08d84-f17b-462a-a189-d3cdb68e67ca')</code>.</div>
+  <span class="exec-badge exec-done">Done</span>
+  <div class="exec-body"><strong>Mark resolved bugs completed in platform_bugs</strong> — MCP reconnected 2026-05-20 (omen1 session). UPDATE executed: 5 rows → <code>completed</code>: tenant flash, FAB z-index, artifacts tab, app icon, site colors. <code>tourney title</code> (cd91dbaf) left <code>open</code> — Rob must verify live first.</div>
+</div>
+<div class="exec-step">
+  <span class="exec-badge" style="background:rgba(41,128,185,0.15);color:#2980b9;border:1px solid rgba(41,128,185,0.3);">Planned</span>
+  <div class="exec-body"><strong>Bug popup opacity — 10% less transparent</strong> — New bug logged 2026-05-20 (<code>26e81e78</code>). Fix: reduce modal alpha in <code>bug-fab.js</code>. See Runbook Step 9. Not yet executed.</div>
 </div>
 <!-- EXECUTING-CONTENT-END -->
 </div>
@@ -481,9 +512,14 @@ footer span{color:var(--gold);}
   <div class="card">
     <div class="card-title">Still Open — Rob's Action Items</div>
     <ul>
-      <li><strong>Verify admin title</strong> — Confirm "Johnston County HBCA Superball" visible at <code>/t/johnston-county-hbca-superball-2026/admin</code> while logged in.</li>
-      <li><strong>four-team-test colors</strong> — Confirmed via REST: blue theme saved (<code>#1565c0</code>). Fixed by visibility guard. ✅</li>
-      <li><strong>Mark bugs complete</strong> — Run UPDATE SQL in Supabase dashboard to close resolved platform_bugs rows (IDs in Step 8 of runbook).</li>
+      <li><strong>Verify admin title</strong> — Confirm "Johnston County HBCA Superball" visible at <code>/t/johnston-county-hbca-superball-2026/admin</code> while logged in. Once confirmed, run: <code>UPDATE platform_bugs SET status='completed' WHERE id='cd91dbaf-1a63-4120-b9c1-968e57caef0a';</code></li>
+    </ul>
+    <p style="font-size:0.8rem;color:var(--green);margin-top:0.5rem;">✅ platform_bugs UPDATE complete — 5 rows marked completed (MCP reconnected 2026-05-20).<br>✅ four-team-test colors confirmed via REST: blue theme (<code>#1565c0</code>) — fixed by visibility guard.</p>
+  </div>
+  <div class="card">
+    <div class="card-title">New Bug — Next Execute Session</div>
+    <ul>
+      <li><strong>Bug popup opacity</strong> (<code>26e81e78</code>) — reduce modal transparency by ~10% in <code>bug-fab.js</code>. Runbook Step 9.</li>
     </ul>
   </div>
 </div>

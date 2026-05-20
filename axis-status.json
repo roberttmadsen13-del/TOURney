@@ -4,7 +4,7 @@
   "stages": ["review", "plan", "runbook", "executing", "audit", "concluded"],
   "axes": {
     "architecture": {
-      "status": "audit",
+      "status": "concluded",
       "grade": "A",
       "artifact": "/platform/5-15-26-claude-review",
       "last_updated": "2026-05-19",
@@ -31,7 +31,7 @@
       "blocking": false
     },
     "security": {
-      "status": "audit",
+      "status": "concluded",
       "grade": "A-",
       "artifact": "/platform/5-15-26-claude-review",
       "last_updated": "2026-05-19",
@@ -58,7 +58,7 @@
       "blocking": false
     },
     "performance": {
-      "status": "audit",
+      "status": "concluded",
       "grade": "B+",
       "artifact": "/platform/5-15-26-claude-review",
       "last_updated": "2026-05-19",
@@ -67,7 +67,7 @@
       "blocking": false
     },
     "data-model": {
-      "status": "audit",
+      "status": "concluded",
       "grade": "B+",
       "artifact": "/platform/5-15-26-claude-review",
       "last_updated": "2026-05-19",
