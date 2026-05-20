@@ -607,7 +607,7 @@ td{padding:0.7rem 0.75rem;font-size:0.88rem;vertical-align:middle;}
 
       <div class="ref-section">
         <div class="ref-sec-hdr">
-          <div class="ref-sec-meta"><div class="ref-sec-title">Live Pages</div><div class="ref-sec-desc">Every live URL — tap to open. Use to QA pages or trigger error-monitor.</div></div>
+          <div class="ref-sec-meta"><div class="ref-sec-title">Live Pages</div><div class="ref-sec-desc">Tap to open any live page. Groups mirror /urls. Full technical map at <a href="/urls" target="_blank" style="color:var(--gold);">/urls</a>.</div></div>
         </div>
         <div id="refLivePages"><div style="padding:.75rem;color:var(--muted);font-size:.8rem;">Loading…</div></div>
       </div>
@@ -1814,40 +1814,35 @@ async function renderReference() {
   if (!el || el.dataset.loaded) return;
   el.dataset.loaded = '1';
 
-  const TENANT_PAGES = [
-    {label:'Tournament Home', path:''},
-    {label:'Leaderboard', path:'scoreboard'},
-    {label:'Score Entry', path:'scorecard'},
-    {label:'Player Directory', path:'directory'},
-    {label:'Activity Feed', path:'feed'},
-    {label:'Player Profile', path:'profile'},
-    {label:'Admin Dashboard', path:'admin'},
-    {label:'Past Champions', path:'champions'},
-    {label:'Course Info', path:'course'},
-    {label:'Tournament Login', path:'login'},
-    {label:'PWA Install Guide', path:'install'},
-  ];
-  const PLATFORM_PAGES = [
+  // Groups mirror urls.html exactly
+  const APP_PAGES = [
     {label:'Marketing Landing', path:'/'},
-    {label:'Create New Tournament', path:'/create'},
+    {label:'Create Tournament', path:'/create'},
     {label:'My Golf', path:'/player'},
-    {label:'Upgrade Player Account', path:'/player-upgrade'},
-    {label:'Operations', path:'/platform'},
-    {label:'Platform Login', path:'/login'},
-  ];
-  const SUPPORT_PAGES = [
+    {label:'Upgrade Account', path:'/player-upgrade'},
+    {label:'Login', path:'/login'},
     {label:'Terms of Service', path:'/tos'},
     {label:'Privacy Policy', path:'/privacy'},
-    {label:'QA Hub', path:'/qa'},
-    {label:'QA Checklist', path:'/qa-checklist'},
-    {label:'URL Map', path:'/urls'},
-    {label:'All Combinations', path:'/combos'},
-    {label:'Finance Platform', path:'/finance'},
-    {label:'UX Polish Platform', path:'/ux'},
-    {label:'Architecture Flow', path:'/architecture'},
-    {label:'AAA Plan', path:'/platform/aaa-plan'},
+  ];
+  const TENANT_PAGES = [
+    {label:'Home', path:''},
+    {label:'Leaderboard', path:'scoreboard'},
+    {label:'Score Entry', path:'scorecard'},
+    {label:'Directory', path:'directory'},
+    {label:'Feed', path:'feed'},
+    {label:'Profile', path:'profile'},
+    {label:'Admin', path:'admin'},
+    {label:'Champions', path:'champions'},
+    {label:'Course', path:'course'},
+    {label:'Login', path:'login'},
+    {label:'Install', path:'install'},
+  ];
+  const INTERNAL_PAGES = [
+    {label:'Operations Hub', path:'/platform'},
     {label:'Bug Log', path:'/platform/bugs'},
-    {label:'Not Found', path:'/404'},
+    {label:'AAA Plan', path:'/platform/aaa-plan'},
+    {label:'URL Map', path:'/urls'},
+    {label:'Combos', path:'/combos'},
   ];
 
   const { data: tourneys } = await sb.from('tournaments').select('slug,name').order('created_at');
@@ -1865,18 +1860,12 @@ async function renderReference() {
   }
 
   let html = '<div>';
-
-  // Platform pages from /urls.
-  html += group('Platform Pages', `${PLATFORM_PAGES.length} pages`, PLATFORM_PAGES, p => BASE + p.path);
-
-  // Per-tenant groups
+  html += group('App Pages', `${APP_PAGES.length} pages`, APP_PAGES, p => BASE + p.path);
   (tourneys || []).forEach(t => {
     html += group(t.name, t.slug, TENANT_PAGES, p => p.path ? `${BASE}/t/${t.slug}/${p.path}` : `${BASE}/t/${t.slug}/`);
   });
-
-  // Local standalone/support pages not fully expanded in /urls.
-  html += group('Support + Local Pages', `${SUPPORT_PAGES.length} pages`, SUPPORT_PAGES, p => BASE + p.path);
-
+  html += group('Platform — Internal', `${INTERNAL_PAGES.length} pages`, INTERNAL_PAGES, p => BASE + p.path);
+  html += `<div style="text-align:right;margin-top:.4rem"><a href="/urls" target="_blank" style="font-size:.68rem;color:var(--gold);text-decoration:none;">Full technical map → /urls</a></div>`;
   html += '</div>';
   el.innerHTML = html;
 }
