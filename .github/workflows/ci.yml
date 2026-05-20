@@ -3,8 +3,27 @@ name: CI
 on:
   pull_request:
     branches: [main]
+  push:
+    branches: [main]
 
 jobs:
+  bump-sw-cache:
+    name: Bump SW cache version
+    runs-on: ubuntu-latest
+    if: github.actor != 'github-actions[bot]'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Bump SW cache version
+        run: |
+          NEW_VER="tourney-v$(date +%s)"
+          sed -i "s/const CACHE = 'tourney-v[0-9]*/const CACHE = '$NEW_VER/" sw.js
+          git config user.email "ci@greenskeeper.studio"
+          git config user.name "GKS CI"
+          git diff --quiet || git commit -am "ci: bump SW cache version [skip ci]"
+          git push
+
   lint-js:
     name: ESLint
     runs-on: ubuntu-latest

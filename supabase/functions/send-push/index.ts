@@ -50,7 +50,7 @@ Deno.serve(async (req) => {
   if (!isOwner) {
     const { data: adminRow } = await sbSvc
       .from('tournament_admins')
-      .select('id')
+      .select('tournament_id')
       .eq('tournament_id', tournament_id)
       .eq('email', user.email)
       .maybeSingle();
