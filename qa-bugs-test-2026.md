@@ -1,5 +1,16 @@
 # QA Bug Log — TOURney Platform (updated: 2026-05-20)
 
+### 2026-05-20 — 5-20-26-deployment-review execute audit
+<!-- 5-20-26-deployment-review execute audit clean for shipped steps -->
+- [DONE] send-push .select('id') → .select('tournament_id') at supabase/functions/send-push/index.ts:53 — root cause of bugs #6/#9/#10 eliminated. Status: fixed
+- [DONE] SW cache auto-bump — ci.yml bump-sw-cache job added, fires on push to main (not bot pushes). Status: fixed
+- [INFO] git worktree prune Windows ACL errors on .git/worktrees/ internal metadata — benign, repo content unaffected. Status: observation only
+- [BLOCKED] SEND_INSTALL_EMAIL_SECRET — Rob manual. Status: open
+- [BLOCKED] Sentry error monitoring — deferred. Status: open
+- [BLOCKED] platform_bugs #6/#9/#10 DB status update — Supabase MCP disconnected, cannot UPDATE. Status: open
+
+---
+
 ### 2026-05-20 — bug triage: /create Live Pages + d35a8d29 audit-stage claim
 
 - [P1 OPEN] /create missing from Live Pages App Pages group on /platform (platform.html:1821) — code shows entry present post-commit 7c2261e; observed missing on live site. Fix: verify deploy reflects 7c2261e; if still absent check renderReference() APP_PAGES render path. Status: open

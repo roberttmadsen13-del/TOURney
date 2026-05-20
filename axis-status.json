@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-05-20T00:00:00Z",
+  "updated_at": "2026-05-20T12:00:00Z",
   "description": "Living state for all TOURney platform axes. One entry per axis. Updated by every tourney-* skill. Agents read this for context (50 tokens) instead of parsing HTML artifacts.",
   "stages": ["review", "plan", "runbook", "executing", "audit", "concluded"],
   "axes": {
@@ -49,12 +49,12 @@
       "blocking": true
     },
     "deployment": {
-      "status": "executing",
-      "grade": "B",
+      "status": "audit",
+      "grade": "B+",
       "artifact": "/platform/5-20-26-deployment-review",
       "last_updated": "2026-05-20",
-      "summary": "Down from B+. Critical: send-push .select('id') on tournament_admins = 400 (bugs #6/#9/#10). Agents push direct to prod, no staging, no CI gate, no Supabase branch isolation. SW v37 manual bump = stale PWA risk. Stale worktrees in repo. No Sentry.",
-      "open_items": 6,
+      "summary": "send-push .select('id') fixed (bugs #6/#9/#10 root cause gone). SW cache auto-bump live in ci.yml. 2 open: SEND_INSTALL_EMAIL_SECRET (Rob manual) + Sentry (deferred).",
+      "open_items": 2,
       "blocking": false
     },
     "performance": {

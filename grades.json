@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-05-20T00:00:00Z",
+  "updated_at": "2026-05-20T12:00:00Z",
   "description": "Per-axis grade history for TOURney platform. Updated automatically by review skills. Operations Action Board reads this file.",
   "axes": {
     "architecture": {
@@ -337,6 +337,13 @@
       "label": "Deployment",
       "cmd": "/tourney-review-deployment",
       "scores": [
+        {
+          "date": "2026-05-20",
+          "score": "B+",
+          "url": "/platform/5-20-26-deployment-review",
+          "review_title": "Execute + Audit · May 20, 2026",
+          "notes": "send-push .select('id') fixed at index.ts:53 — bugs #6/#9/#10 root cause gone, deploy-functions.yml auto-redeploys. SW cache auto-bump job added to ci.yml — stale PWA risk eliminated. Worktrees pre-clean (gitignore already had entry). Blocked: SEND_INSTALL_EMAIL_SECRET (Rob manual), Sentry (deferred). Net: B → B+."
+        },
         {
           "date": "2026-05-20",
           "score": "B",

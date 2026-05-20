@@ -155,6 +155,15 @@ footer a:hover{color:var(--gold);}
   <div class="section">
     <div class="sec-title">✅ Fix History by Session</div>
 
+    <div class="session-hdr" onclick="toggleSession('s20b')">
+      <span class="session-title">2026-05-20 — Deployment Review Execute <span class="pill pill-green">Deploy</span> <span class="pill pill-gold">B+</span></span>
+      <span class="session-count">2 fixes ▾</span>
+    </div>
+    <div class="session-body collapsed" id="s20b">
+      <div class="bug-item fixed"><div class="bug-title"><strong>send-push .select('id') on tournament_admins</strong> — table has composite PK (tournament_id + email), no id column. Query returned 400, breaking admin push notification auth for all tournaments. Root cause of bugs #6/#9/#10. Fixed: changed to <code>.select('tournament_id')</code>.</div><div class="bug-meta">supabase/functions/send-push/index.ts:53 · commit 14bbdbb · 2026-05-20</div></div>
+      <div class="bug-item fixed"><div class="bug-title"><strong>SW cache version not auto-bumped on agent deploys</strong> — every agent push risked stale PWA cache for installed users. Fixed: added <code>bump-sw-cache</code> job to ci.yml that fires on push to main (with bot-push guard to prevent loops). Auto-increments CACHE key using Unix timestamp on every deploy.</div><div class="bug-meta">.github/workflows/ci.yml · commit 14bbdbb · 2026-05-20</div></div>
+    </div>
+
     <div class="session-hdr" onclick="toggleSession('s17')">
       <span class="session-title">Session 17 · 2026-05-14 — XSS fixes (5-14-26-claude-review execute) <span class="pill pill-red">Security</span></span>
       <span class="session-count">2 fixes ▾</span>
