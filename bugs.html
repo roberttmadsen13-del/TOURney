@@ -77,7 +77,7 @@ footer a:hover{color:var(--gold);}
   <div class="hero">
     <div class="hero-eye">Internal · Engineering</div>
     <h1>QA Bug Log</h1>
-    <div class="hero-meta">TOURney Platform · Updated 2026-05-19 · Last fix: bugs-review execute — tenant flash, FAB z-index, artifacts tab, SW v37</div>
+    <div class="hero-meta">TOURney Platform · Updated 2026-05-20 · Last logged: /create missing from Live Pages App Pages group (P1)</div>
   </div>
 
   <!-- LIVE LOGGED BUGS (from FAB across all properties) -->
@@ -99,7 +99,7 @@ footer a:hover{color:var(--gold);}
 
   <!-- OPEN BUGS -->
   <div class="section">
-    <div class="sec-title">🔴 Open Bugs — Must Fix <span class="sec-count">5 open</span></div>
+    <div class="sec-title">🔴 Open Bugs — Must Fix <span class="sec-count">6 open</span></div>
     <div class="bug-item open">
       <div class="bug-title"><strong>Supabase MCP disconnected</strong> — claude.ai Supabase MCP returns "Server not found" in current session. Rob has 2 Claude accounts — MCP authorized on one, active session on the other. Blocks all Supabase admin ops (platform_bugs UPDATE, migrations, SQL queries).</div>
       <div class="bug-meta">OPEN · 2026-05-19 · Fix: run <code>! claude mcp list</code>, reconnect via <code>/mcp</code>, or switch to account with Supabase MCP auth</div>
@@ -115,6 +115,10 @@ footer a:hover{color:var(--gold);}
     <div class="bug-item blocked">
       <div class="bug-title"><strong>[ROB MANUAL] GitHub CI secrets not set — edge functions deploy manually only</strong> — <code>.github/workflows/deploy-functions.yml</code> ready but <code>SUPABASE_ACCESS_TOKEN</code> and <code>SUPABASE_PROJECT_REF</code> secrets not added to repo. Every edge function deploy requires manual CLI. Fix: GitHub → roberttmadsen13-del/TOURney → Settings → Secrets → add both. 5-min task.</div>
       <div class="bug-meta">BLOCKED · Rob manual · 2026-05-19 · SUPABASE_PROJECT_REF = jllugkiojeoopitdvzsa · Source: 5-15-26-claude-review runbook step 5</div>
+    </div>
+    <div class="bug-item open">
+      <div class="bug-title"><strong>/create missing from Live Pages → App Pages group on /platform</strong> — <code>/create</code> page not appearing in the App Pages accordion in the Live Pages section of the /platform Ref tab. <code>platform.html:1821</code> shows entry present post-commit <code>7c2261e</code> (Live Pages consolidation pass). Observed on live site — may be deploy cache lag or was present before consolidation commit. P1: CEO sees /platform daily.</div>
+      <div class="bug-meta">OPEN · 2026-05-20 · platform.html:1821 · Fix: verify live deploy reflects 7c2261e; if still missing check APP_PAGES render path in renderReference()</div>
     </div>
     <div class="bug-item open">
       <div class="bug-title"><strong>Bova formats unconfirmed</strong> — Day1=stroke, Day2=scramble, Day3=best_ball seeded by guess. Shambles not mapped to a day.</div>

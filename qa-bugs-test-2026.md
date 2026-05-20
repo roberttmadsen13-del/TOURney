@@ -1,5 +1,10 @@
 # QA Bug Log — TOURney Platform (updated: 2026-05-20)
 
+### 2026-05-20 — bug triage: /create Live Pages + d35a8d29 audit-stage claim
+
+- [P1 OPEN] /create missing from Live Pages App Pages group on /platform (platform.html:1821) — code shows entry present post-commit 7c2261e; observed missing on live site. Fix: verify deploy reflects 7c2261e; if still absent check renderReference() APP_PAGES render path. Status: open
+- [INVALID] d35a8d29 "audit stage not in execute skill" — NOT CONFIRMED. SKILL.md has §Audit at Step 3 (lines 44-55) + Step 5c (lines 117-138) + lifecycle bar stage (line 89). Bug ID not found in bugs.html. Closed/invalid.
+
 ### 2026-05-20 — fresh sweep: commits a8b5a8b + 796bb9b
 
 - [CLEAN] tournament_admins id→tournament_id fix (796bb9b): verified all 7 live files. admin.html :885/:901 use `select('email')`, champions.html :284 / profile.html :246 / feed.html :694 / scorecard.html :490 use `select('tournament_id')`, player.html :337/:616 use `select('tournament_id')`. No `select('id')` on tournament_admins anywhere. Fix correct.
