@@ -1,11 +1,18 @@
 {
-  "updated_at": "2026-05-19T00:00:00Z",
+  "updated_at": "2026-05-20T00:00:00Z",
   "description": "Per-axis grade history for TOURney platform. Updated automatically by review skills. Operations Action Board reads this file.",
   "axes": {
     "architecture": {
       "label": "Architecture",
       "cmd": "/tourney-review-architecture",
       "scores": [
+        {
+          "date": "2026-05-20",
+          "score": "A",
+          "url": "/platform/5-20-26-claude-review",
+          "review_title": "Full Platform Review · May 20, 2026",
+          "notes": "No change. 12 migrations clean with unambiguous ordering. tournament_admins canonical. Settings store un-typed remains only open item."
+        },
         {
           "date": "2026-05-19",
           "score": "A",
@@ -55,6 +62,13 @@
       "cmd": "/tourney-review-feature-depth",
       "scores": [
         {
+          "date": "2026-05-20",
+          "score": "B+",
+          "url": "/platform/5-20-26-claude-review",
+          "review_title": "Full Platform Review · May 20, 2026",
+          "notes": "No change. 3 tournament structures, 12 scoring formats, realtime scorecard, HIO confetti, feed, directory, champions, rounds model, admin Design tab. Gaps: no score admin-edit UI, no tournament series."
+        },
+        {
           "date": "2026-05-15",
           "score": "B+",
           "url": "/platform/5-15-26-claude-review",
@@ -95,6 +109,13 @@
       "label": "UX Polish",
       "cmd": "/tourney-review-ux",
       "scores": [
+        {
+          "date": "2026-05-20",
+          "score": "A",
+          "url": "/platform/5-20-26-claude-review",
+          "review_title": "Full Platform Review · May 20, 2026",
+          "notes": "No change. All 11 nav-bar pages correct nav SVG. login.html viewBox fixed. Hardcoded tenant text removed. tourney-init logo swap fires everywhere. Zero open items."
+        },
         {
           "date": "2026-05-19",
           "score": "A",
@@ -186,6 +207,13 @@
       "cmd": "/tourney-review-security",
       "scores": [
         {
+          "date": "2026-05-20",
+          "score": "A-",
+          "url": "/platform/5-20-26-claude-review",
+          "review_title": "Full Platform Review · May 20, 2026",
+          "notes": "No change. CSP unsafe-inline persists (all HTML pages have inline scripts). SEND_INSTALL_EMAIL_SECRET unset. invitations + push_subscriptions SELECT USING(true) — migration 013 runbook written. Migration 012 closed player_accounts anon read."
+        },
+        {
           "date": "2026-05-19",
           "score": "A-",
           "url": "/platform/5-15-26-claude-review",
@@ -255,6 +283,13 @@
       "cmd": "/tourney-review-business",
       "scores": [
         {
+          "date": "2026-05-20",
+          "score": "C+",
+          "url": "/platform/5-20-26-claude-review",
+          "review_title": "Full Platform Review · May 20, 2026",
+          "notes": "No change. LLC not formed — 3+ weeks pending. Stripe dead in prod (keys unset). ToS + Privacy live. Revenue path fully blocked. P0: Rob forms LLC → EIN → Stripe account → set secrets."
+        },
+        {
           "date": "2026-05-15",
           "score": "C+",
           "url": "/platform/5-15-26-claude-review",
@@ -302,6 +337,13 @@
       "label": "Deployment",
       "cmd": "/tourney-review-deployment",
       "scores": [
+        {
+          "date": "2026-05-20",
+          "score": "B+",
+          "url": "/platform/5-20-26-claude-review",
+          "review_title": "Full Platform Review · May 20, 2026",
+          "notes": "GH Actions CI live (ESLint + Deno). SW v37, 25 precached files. No Lighthouse CI, no S3 backup, deploy-functions.yml secrets not set. No staging environment."
+        },
         {
           "date": "2026-05-15",
           "score": "A-",
@@ -351,6 +393,13 @@
       "cmd": "/tourney-review-performance",
       "scores": [
         {
+          "date": "2026-05-20",
+          "score": "B+",
+          "url": "/platform/5-20-26-claude-review",
+          "review_title": "Full Platform Review · May 20, 2026",
+          "notes": "No change. Skeletons on feed, scoreboard, home, directory, champions (SW v37). profile.html still blank-flash. No Lighthouse CI baseline."
+        },
+        {
           "date": "2026-05-19",
           "score": "B+",
           "url": "/platform/5-15-26-claude-review",
@@ -398,6 +447,13 @@
       "label": "Data Model",
       "cmd": "/tourney-review-data-model",
       "scores": [
+        {
+          "date": "2026-05-20",
+          "score": "B+",
+          "url": "/platform/5-20-26-claude-review",
+          "review_title": "Full Platform Review · May 20, 2026",
+          "notes": "No change. 12 migrations clean. Migration 012 closed player_accounts anon read. invitations + push_subscriptions still USING(true) — migration 013 runbook step written. Settings store un-typed."
+        },
         {
           "date": "2026-05-19",
           "score": "B+",

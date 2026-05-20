@@ -1,9 +1,22 @@
 {
   "$schema": "https://tourney.greenskeeper.studio/qa-index-schema.json",
   "version": 1,
-  "updated_at": "2026-05-19T12:00:00Z",
+  "updated_at": "2026-05-20T00:00:00Z",
   "description": "Canonical registry of all TOURney plans, reviews, audits, and QA artifacts. The /platform Artifacts tab renders from this file. Skills (e.g. tourney-review) append new entries when they generate output.",
   "entries": [
+    {
+      "id": "review-2026-05-20",
+      "category": "review",
+      "stage": "executing",
+      "title": "Full Platform Review · May 20, 2026",
+      "summary": "Platform walkthrough: 5 tabs documented (Action, Tenants, Bugs, Checklist, Reference), all functional. 12 open items: Stripe dead (keys unset), LLC not formed, SEND_INSTALL_EMAIL_SECRET unset, CSP unsafe-inline, invitations/push_subscriptions permissive RLS, no OG tags, no score admin-edit UI, profile skeleton missing, no Lighthouse CI, no S3 backup, settings un-typed, no tournament series. Grades: Arch A, UX A, Security A−, Feature B+, Perf B+, Data B+, Deploy B+, Business C+ (blocking).",
+      "date": "2026-05-20",
+      "author": "claude-sonnet-4-6",
+      "url": "/platform/5-20-26-claude-review",
+      "file": "5-20-26-claude-review.html",
+      "tags": ["review", "full-platform"],
+      "status": "open"
+    },
     {
       "id": "master-plan-2026-05-19",
       "category": "review",
