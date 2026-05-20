@@ -77,7 +77,7 @@ footer a:hover{color:var(--gold);}
   <div class="hero">
     <div class="hero-eye">Internal · Engineering</div>
     <h1>QA Bug Log</h1>
-    <div class="hero-meta">TOURney Platform · Updated 2026-05-13 · Last fix: UX sprint — login errors, skeletons, a11y, reduced-motion</div>
+    <div class="hero-meta">TOURney Platform · Updated 2026-05-19 · Last fix: bugs-review execute — tenant flash, FAB z-index, artifacts tab, SW v37</div>
   </div>
 
   <!-- LIVE LOGGED BUGS (from FAB across all properties) -->
@@ -99,7 +99,15 @@ footer a:hover{color:var(--gold);}
 
   <!-- OPEN BUGS -->
   <div class="section">
-    <div class="sec-title">🔴 Open Bugs — Must Fix <span class="sec-count">1 open</span></div>
+    <div class="sec-title">🔴 Open Bugs — Must Fix <span class="sec-count">3 open</span></div>
+    <div class="bug-item open">
+      <div class="bug-title"><strong>Supabase MCP disconnected</strong> — claude.ai Supabase MCP returns "Server not found" in current session. Rob has 2 Claude accounts — MCP authorized on one, active session on the other. Blocks all Supabase admin ops (platform_bugs UPDATE, migrations, SQL queries).</div>
+      <div class="bug-meta">OPEN · 2026-05-19 · Fix: run <code>! claude mcp list</code>, reconnect via <code>/mcp</code>, or switch to account with Supabase MCP auth</div>
+    </div>
+    <div class="bug-item open">
+      <div class="bug-title"><strong>platform_bugs rows not marked complete</strong> — 6 resolved bugs in Supabase <code>platform_bugs</code> table still show <code>status=open</code>. Could not UPDATE — blocked by Supabase MCP outage. IDs in <code>5-19-26-bugs-review.html</code> Step 8.</div>
+      <div class="bug-meta">OPEN · 2026-05-19 · Fix: reconnect MCP, then run UPDATE SQL from ticket Step 8 · Blocked by: Supabase MCP bug above</div>
+    </div>
     <div class="bug-item open">
       <div class="bug-title"><strong>Bova formats unconfirmed</strong> — Day1=stroke, Day2=scramble, Day3=best_ball seeded by guess. Shambles not mapped to a day.</div>
       <div class="bug-meta">BLOCKED · Human verification required · Verify with Chris Bova before tournament runs</div>
