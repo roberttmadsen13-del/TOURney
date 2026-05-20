@@ -1815,45 +1815,67 @@ async function renderReference() {
   el.dataset.loaded = '1';
 
   const TENANT_PAGES = [
-    {label:'Home', path:''},
-    {label:'Scoreboard', path:'scoreboard'},
-    {label:'Scorecard', path:'scorecard'},
-    {label:'Directory', path:'directory'},
-    {label:'Feed', path:'feed'},
-    {label:'Admin', path:'admin'},
-    {label:'Profile', path:'profile'},
-    {label:'Install', path:'install'},
+    {label:'Tournament Home', path:''},
+    {label:'Leaderboard', path:'scoreboard'},
+    {label:'Score Entry', path:'scorecard'},
+    {label:'Player Directory', path:'directory'},
+    {label:'Activity Feed', path:'feed'},
+    {label:'Player Profile', path:'profile'},
+    {label:'Admin Dashboard', path:'admin'},
+    {label:'Past Champions', path:'champions'},
+    {label:'Course Info', path:'course'},
+    {label:'Tournament Login', path:'login'},
+    {label:'PWA Install Guide', path:'install'},
   ];
   const PLATFORM_PAGES = [
-    {label:'Marketing', path:'/'},
-    {label:'Create', path:'/create'},
-    {label:'Platform', path:'/platform'},
-    {label:'Login', path:'/login'},
-    {label:'Player', path:'/player'},
-    {label:'Upgrade', path:'/player-upgrade'},
+    {label:'Marketing Landing', path:'/'},
+    {label:'Create New Tournament', path:'/create'},
+    {label:'My Golf', path:'/player'},
+    {label:'Upgrade Player Account', path:'/player-upgrade'},
+    {label:'Operations', path:'/platform'},
+    {label:'Platform Login', path:'/login'},
+  ];
+  const SUPPORT_PAGES = [
+    {label:'Terms of Service', path:'/tos'},
+    {label:'Privacy Policy', path:'/privacy'},
+    {label:'QA Hub', path:'/qa'},
+    {label:'QA Checklist', path:'/qa-checklist'},
+    {label:'URL Map', path:'/urls'},
+    {label:'All Combinations', path:'/combos'},
+    {label:'Finance Platform', path:'/finance'},
+    {label:'UX Polish Platform', path:'/ux'},
+    {label:'Architecture Flow', path:'/architecture'},
+    {label:'AAA Plan', path:'/platform/aaa-plan'},
+    {label:'Bug Log', path:'/platform/bugs'},
+    {label:'Not Found', path:'/404'},
   ];
 
   const { data: tourneys } = await sb.from('tournaments').select('slug,name').order('created_at');
-
   const BASE = 'https://tourney.greenskeeper.studio';
-  let html = '<div style="display:flex;flex-direction:column;gap:1rem;">';
 
-  // Platform pages
-  html += `<div><div style="font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);margin-bottom:.4rem;">Platform</div><div style="display:flex;flex-wrap:wrap;gap:.4rem;">`;
-  PLATFORM_PAGES.forEach(({label,path}) => {
-    html += `<a href="${BASE}${path}" target="_blank" style="font-size:.75rem;padding:.3rem .65rem;border-radius:6px;background:var(--card);border:1px solid var(--border);color:var(--text);text-decoration:none;white-space:nowrap;">${label}<span style="color:var(--muted);font-size:.65rem;margin-left:.3rem;">${path||'/'}</span></a>`;
-  });
-  html += '</div></div>';
+  const grpStyle = 'background:var(--card);border:1px solid var(--border);border-radius:8px;margin-bottom:.55rem;overflow:hidden;';
+  const sumStyle = 'display:flex;align-items:center;justify-content:space-between;padding:.65rem 1rem;cursor:pointer;list-style:none;font-size:.75rem;font-weight:700;color:var(--text);';
+  const bodyStyle = 'padding:.5rem 1rem .75rem;display:flex;flex-wrap:wrap;gap:.4rem;';
+  const linkStyle = 'font-size:.74rem;padding:.28rem .6rem;border-radius:5px;background:rgba(255,255,255,0.04);border:1px solid var(--border);color:var(--text);text-decoration:none;white-space:nowrap;';
+  const eyeStyle = 'font-size:.65rem;color:var(--muted);font-weight:400;margin-left:.35rem;';
 
-  // Per-tenant
+  function group(title, badge, pages, urlFn) {
+    const links = pages.map(p => `<a href="${urlFn(p)}" target="_blank" style="${linkStyle}">${p.label}<span style="${eyeStyle}">${p.path || '/'}</span></a>`).join('');
+    return `<details style="${grpStyle}"><summary style="${sumStyle}"><span>${title}${badge?`<span style="${eyeStyle}">${badge}</span>`:''}</span><span style="color:var(--muted);font-size:.65rem;">›</span></summary><div style="${bodyStyle}">${links}</div></details>`;
+  }
+
+  let html = '<div>';
+
+  // Platform pages from /urls.
+  html += group('Platform Pages', `${PLATFORM_PAGES.length} pages`, PLATFORM_PAGES, p => BASE + p.path);
+
+  // Per-tenant groups
   (tourneys || []).forEach(t => {
-    html += `<div><div style="font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);margin-bottom:.4rem;">${t.name} <span style="color:var(--muted);font-weight:400;text-transform:none;letter-spacing:0;">${t.slug}</span></div><div style="display:flex;flex-wrap:wrap;gap:.4rem;">`;
-    TENANT_PAGES.forEach(({label,path}) => {
-      const url = path ? `${BASE}/t/${t.slug}/${path}` : `${BASE}/t/${t.slug}/`;
-      html += `<a href="${url}" target="_blank" style="font-size:.75rem;padding:.3rem .65rem;border-radius:6px;background:var(--card);border:1px solid var(--border);color:var(--text);text-decoration:none;white-space:nowrap;">${label}</a>`;
-    });
-    html += '</div></div>';
+    html += group(t.name, t.slug, TENANT_PAGES, p => p.path ? `${BASE}/t/${t.slug}/${p.path}` : `${BASE}/t/${t.slug}/`);
   });
+
+  // Local standalone/support pages not fully expanded in /urls.
+  html += group('Support + Local Pages', `${SUPPORT_PAGES.length} pages`, SUPPORT_PAGES, p => BASE + p.path);
 
   html += '</div>';
   el.innerHTML = html;
@@ -2405,3 +2427,4 @@ renderQaRuns();
 <script src="/bug-fab.js?v=4" defer></script>
 </body>
 </html>
+
