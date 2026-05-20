@@ -1,9 +1,9 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>TOURney â€” AAA Plan Â· Architecture Â· Feature Depth Â· UX Polish</title>
+<title>TOURney — AAA Plan · Architecture · Feature Depth · UX Polish</title>
 <style>
   :root {
     --gold: #c09030; --gold-light: #d4a840; --gold-dim: rgba(192,144,48,0.18);
@@ -60,8 +60,8 @@
   .checklist h3{font-size:0.88rem;font-weight:700;color:var(--gold);margin-bottom:0.6rem;text-transform:uppercase;letter-spacing:0.08em}
   .checklist ul{list-style:none;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:0.4rem}
   .checklist li{font-size:0.82rem;padding-left:1.5rem;position:relative}
-  .checklist li::before{content:'â˜';position:absolute;left:0;color:var(--muted)}
-  .checklist li.done::before{content:'âœ“';color:var(--green)}
+  .checklist li::before{content:'☐';position:absolute;left:0;color:var(--muted)}
+  .checklist li.done::before{content:'✓';color:var(--green)}
   .checklist li.done{color:var(--muted)}
   .seq-card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin-bottom:0.7rem}
   .seq-card-title{font-size:0.88rem;font-weight:700;color:var(--gold);margin-bottom:0.5rem}
@@ -102,19 +102,19 @@
 
 <div class="hero">
   <div class="hero-eyebrow">AAA Implementation Plan</div>
-  <h1><span>TOURney</span> â€” Path to A+</h1>
+  <h1><span>TOURney</span> — Path to A+</h1>
   <p class="hero-sub">Sequenced sprint plan to take Architecture, Feature Depth, and UX Polish from current grades to A+ across the board. ~22 sprints, ~38 dev-days. Every sprint shippable on its own.</p>
   <div class="grade-strip">
     <div class="grade-cell">
-      <div><span class="grade-from">A-</span><span class="grade-arrow">â†’</span><span class="grade-to">A+</span></div>
+      <div><span class="grade-from">A-</span><span class="grade-arrow">→</span><span class="grade-to">A+</span></div>
       <div class="grade-label">Architecture</div>
     </div>
     <div class="grade-cell">
-      <div><span class="grade-from">A-</span><span class="grade-arrow">â†’</span><span class="grade-to">A+</span></div>
+      <div><span class="grade-from">A-</span><span class="grade-arrow">→</span><span class="grade-to">A+</span></div>
       <div class="grade-label">Feature Depth</div>
     </div>
     <div class="grade-cell">
-      <div><span class="grade-from">B</span><span class="grade-arrow">â†’</span><span class="grade-to">A+</span></div>
+      <div><span class="grade-from">B</span><span class="grade-arrow">→</span><span class="grade-to">A+</span></div>
       <div class="grade-label">UX Polish</div>
     </div>
   </div>
@@ -124,30 +124,30 @@
 <div class="wrapper">
   <div class="section-header">
     <div class="section-eyebrow">Execution Log</div>
-    <div class="section-title">Status â€” What's Already Shipped</div>
+    <div class="section-title">Status — What's Already Shipped</div>
     <div class="section-desc">Foundation work landed in commit ca2b430+ on 2026-05-06. Larger refactors and feature builds queued.</div>
   </div>
   <div class="status-snap">
     <h3>Done in this session</h3>
-    <div class="status-row s-done"><span class="ck">âœ“</span><span><code>tokens.css</code> â€” design system tokens, skeleton CSS, offline-dot CSS, reduced-motion respect</span><span class="note">A2</span></div>
-    <div class="status-row s-done"><span class="ck">âœ“</span><span><code>lib/util.js</code> â€” shared esc / escAttr / fmtDate / fmtPhone / copyToClipboard / haptic / debounce / throttle / toast</span><span class="note">A1 partial</span></div>
-    <div class="status-row s-done"><span class="ck">âœ“</span><span><code>lib/empty-states.js</code> â€” 13 brand-voice empty-state copies + render helper</span><span class="note">U6</span></div>
-    <div class="status-row s-done"><span class="ck">âœ“</span><span><code>lib/observability.js</code> â€” Sentry stub (gated on DSN), offline indicator, perf marks</span><span class="note">A6 + U15</span></div>
-    <div class="status-row s-done"><span class="ck">âœ“</span><span><code>components/copy-link.js</code> â€” &lt;copy-link&gt; web component with copy-confirm animation</span><span class="note">U14</span></div>
-    <div class="status-row s-done"><span class="ck">âœ“</span><span><code>print.css</code> â€” paper-backup print stylesheet for scorecard</span><span class="note">F8 partial</span></div>
-    <div class="status-row s-done"><span class="ck">âœ“</span><span><code>tsconfig.json</code> â€” JSDoc type-check setup, no-emit, includes lib/ + components/</span><span class="note">A3 setup</span></div>
-    <div class="status-row s-done"><span class="ck">âœ“</span><span><code>migrations/006_drop_is_admin.sql</code> â€” drafted, NOT applied (gated on client-side cutover)</span><span class="note">A7</span></div>
-    <div class="status-row s-done"><span class="ck">âœ“</span><span><code>migrations/007_round_model.sql</code> â€” drafted, NOT applied (rounds table + scores.round_id backfill)</span><span class="note">A7</span></div>
-    <div class="status-row s-done"><span class="ck">âœ“</span><span><code>vercel.json</code> â€” security headers (CSP / HSTS / XFO / Referrer-Policy / Permissions-Policy) added</span><span class="note">Sec Â§6</span></div>
+    <div class="status-row s-done"><span class="ck">✓</span><span><code>tokens.css</code> — design system tokens, skeleton CSS, offline-dot CSS, reduced-motion respect</span><span class="note">A2</span></div>
+    <div class="status-row s-done"><span class="ck">✓</span><span><code>lib/util.js</code> — shared esc / escAttr / fmtDate / fmtPhone / copyToClipboard / haptic / debounce / throttle / toast</span><span class="note">A1 partial</span></div>
+    <div class="status-row s-done"><span class="ck">✓</span><span><code>lib/empty-states.js</code> — 13 brand-voice empty-state copies + render helper</span><span class="note">U6</span></div>
+    <div class="status-row s-done"><span class="ck">✓</span><span><code>lib/observability.js</code> — Sentry stub (gated on DSN), offline indicator, perf marks</span><span class="note">A6 + U15</span></div>
+    <div class="status-row s-done"><span class="ck">✓</span><span><code>components/copy-link.js</code> — &lt;copy-link&gt; web component with copy-confirm animation</span><span class="note">U14</span></div>
+    <div class="status-row s-done"><span class="ck">✓</span><span><code>print.css</code> — paper-backup print stylesheet for scorecard</span><span class="note">F8 partial</span></div>
+    <div class="status-row s-done"><span class="ck">✓</span><span><code>tsconfig.json</code> — JSDoc type-check setup, no-emit, includes lib/ + components/</span><span class="note">A3 setup</span></div>
+    <div class="status-row s-done"><span class="ck">✓</span><span><code>migrations/006_drop_is_admin.sql</code> — drafted, NOT applied (gated on client-side cutover)</span><span class="note">A7</span></div>
+    <div class="status-row s-done"><span class="ck">✓</span><span><code>migrations/007_round_model.sql</code> — drafted, NOT applied (rounds table + scores.round_id backfill)</span><span class="note">A7</span></div>
+    <div class="status-row s-done"><span class="ck">✓</span><span><code>vercel.json</code> — security headers (CSP / HSTS / XFO / Referrer-Policy / Permissions-Policy) added</span><span class="note">Sec §6</span></div>
   </div>
   <div class="status-snap">
-    <h3>Queued â€” Larger surgical refactors</h3>
-    <div class="status-row s-queued"><span class="ck">â—¯</span><span>A1 full â€” refactor admin.html / scorecard.html / scoreboard.html / home.html to consume <code>lib/util.js</code></span><span class="note">multi-session</span></div>
-    <div class="status-row s-defer"><span class="ck">âŠ˜</span><span>A4 â€” Vitest + Playwright (needs npm + Node + GH Action)</span><span class="note">infra</span></div>
-    <div class="status-row s-defer"><span class="ck">âŠ˜</span><span>A5 â€” staging Supabase project + preview branch</span><span class="note">manual</span></div>
-    <div class="status-row s-defer"><span class="ck">âŠ˜</span><span>A8 â€” backup drill (S3 + GH secrets)</span><span class="note">infra</span></div>
-    <div class="status-row s-queued"><span class="ck">â—¯</span><span>F1â€“F7, F9â€“F10 â€” feature sprints</span><span class="note">queued</span></div>
-    <div class="status-row s-queued"><span class="ck">â—¯</span><span>U1â€“U5, U7â€“U13 â€” UX sprints</span><span class="note">queued</span></div>
+    <h3>Queued — Larger surgical refactors</h3>
+    <div class="status-row s-queued"><span class="ck">◯</span><span>A1 full — refactor admin.html / scorecard.html / scoreboard.html / home.html to consume <code>lib/util.js</code></span><span class="note">multi-session</span></div>
+    <div class="status-row s-defer"><span class="ck">⊘</span><span>A4 — Vitest + Playwright (needs npm + Node + GH Action)</span><span class="note">infra</span></div>
+    <div class="status-row s-defer"><span class="ck">⊘</span><span>A5 — staging Supabase project + preview branch</span><span class="note">manual</span></div>
+    <div class="status-row s-defer"><span class="ck">⊘</span><span>A8 — backup drill (S3 + GH secrets)</span><span class="note">infra</span></div>
+    <div class="status-row s-queued"><span class="ck">◯</span><span>F1–F7, F9–F10 — feature sprints</span><span class="note">queued</span></div>
+    <div class="status-row s-queued"><span class="ck">◯</span><span>U1–U5, U7–U13 — UX sprints</span><span class="note">queued</span></div>
   </div>
 </div>
 </section>
@@ -156,12 +156,12 @@
 <div class="wrapper">
   <div class="section-header">
     <div class="section-eyebrow">Section 1 of 3</div>
-    <div class="section-title">Architecture: A- â†’ A+</div>
+    <div class="section-title">Architecture: A- → A+</div>
     <div class="section-desc">Zero-runtime-dep ethos preserved. Shared component layer. Type-checked. Tested. Observable. Schema changes via CLI. Backups verified.</div>
   </div>
 
   <div class="sprint done">
-    <div class="sprint-head"><span class="sprint-id">A1</span><span class="sprint-title">Shared Module Layer</span><span class="pill pill-blue">partial Â· in progress</span><span class="sprint-dur">3 days</span></div>
+    <div class="sprint-head"><span class="sprint-id">A1</span><span class="sprint-title">Shared Module Layer</span><span class="pill pill-blue">partial · in progress</span><span class="sprint-dur">3 days</span></div>
     <div class="sprint-body">Extract every duplicated helper (<code>esc()</code>, format constants, date utils) into <code>lib/util.js</code>. Extract repeated UI fragments (toast, modal, skeleton) into <code>components/*.js</code>. Replace inline scripts/styles with linked external assets so files drop from 150KB to ~30KB HTML + cached shared assets.</div>
     <div class="sprint-acc"><strong>Acceptance</strong> admin.html drops below 60KB. <code>grep -c "function esc" *.html</code> returns 0.</div>
   </div>
@@ -186,14 +186,14 @@
 
   <div class="sprint queued">
     <div class="sprint-head"><span class="sprint-id">A5</span><span class="sprint-title">Staging Environment</span><span class="pill pill-purple">queued</span><span class="sprint-dur">2 days</span></div>
-    <div class="sprint-body">Second Supabase project. Vercel preview branch points at staging keys via env. Migration workflow: staging first â†’ smoke tests â†’ prod.</div>
+    <div class="sprint-body">Second Supabase project. Vercel preview branch points at staging keys via env. Migration workflow: staging first → smoke tests → prod.</div>
     <div class="sprint-acc"><strong>Acceptance</strong> <code>git push origin staging</code> deploys to <code>staging.tourney.greenskeeper.studio</code>.</div>
   </div>
 
   <div class="sprint done">
     <div class="sprint-head"><span class="sprint-id">A6</span><span class="sprint-title">Observability</span><span class="pill pill-blue">stub shipped</span><span class="sprint-dur">1 day</span></div>
-    <div class="sprint-body">Sentry CDN snippet in <code>lib/observability.js</code> â€” gated on <code>window.SENTRY_DSN</code>. Posthog free-tier for funnel tracking on <code>/create</code>. Activate by setting DSN.</div>
-    <div class="sprint-acc"><strong>Acceptance</strong> Throw a test error â†’ see it in Sentry within 30s with stack trace.</div>
+    <div class="sprint-body">Sentry CDN snippet in <code>lib/observability.js</code> — gated on <code>window.SENTRY_DSN</code>. Posthog free-tier for funnel tracking on <code>/create</code>. Activate by setting DSN.</div>
+    <div class="sprint-acc"><strong>Acceptance</strong> Throw a test error → see it in Sentry within 30s with stack trace.</div>
   </div>
 
   <div class="sprint done">
@@ -228,62 +228,62 @@
 <div class="wrapper">
   <div class="section-header">
     <div class="section-eyebrow">Section 2 of 3</div>
-    <div class="section-title">Feature Depth: A- â†’ A+</div>
+    <div class="section-title">Feature Depth: A- → A+</div>
     <div class="section-desc">Longitudinal layer. Year-2 tournament in 5 minutes via clone. Achievements. Spectator mode. Auto recap. Tier gating drives revenue.</div>
   </div>
 
   <div class="sprint queued">
     <div class="sprint-head"><span class="sprint-id">F1</span><span class="sprint-title">Tournament Series</span><span class="sprint-dur">3 days</span></div>
     <div class="sprint-body">Schema: <code>series</code> + <code>tournaments.series_id FK</code>. Series landing <code>/s/{slug}/</code> with year tabs. Champions roll up across years.</div>
-    <div class="sprint-acc"><strong>Acceptance</strong> Navigate <code>/s/bova/</code> â†’ see Bova 2025 + 2026 + future events.</div>
+    <div class="sprint-acc"><strong>Acceptance</strong> Navigate <code>/s/bova/</code> → see Bova 2025 + 2026 + future events.</div>
   </div>
 
   <div class="sprint queued">
     <div class="sprint-head"><span class="sprint-id">F2</span><span class="sprint-title">Templates + Roster Carry-Forward</span><span class="sprint-dur">2 days</span></div>
     <div class="sprint-body">Admin "Clone tournament" copies all settings + course pars + branding. Player carry-forward checkbox on /create.</div>
-    <div class="sprint-acc"><strong>Acceptance</strong> Clone Bova 2026 â†’ blank Bova 2027 in &lt;30s, fully themed.</div>
+    <div class="sprint-acc"><strong>Acceptance</strong> Clone Bova 2026 → blank Bova 2027 in &lt;30s, fully themed.</div>
   </div>
 
   <div class="sprint queued">
     <div class="sprint-head"><span class="sprint-id">F3</span><span class="sprint-title">Achievements + Auto-Awards</span><span class="sprint-dur">2 days</span></div>
     <div class="sprint-body">Schema: <code>achievements</code>. Postgres triggers auto-award hole-in-one, eagle, double-eagle, birdie streak, comeback win. Profile badges + feed posts auto-fire.</div>
-    <div class="sprint-acc"><strong>Acceptance</strong> Insert score of 1 on par-3 â†’ achievement â†’ push notification â†’ feed item.</div>
+    <div class="sprint-acc"><strong>Acceptance</strong> Insert score of 1 on par-3 → achievement → push notification → feed item.</div>
   </div>
 
   <div class="sprint queued">
     <div class="sprint-head"><span class="sprint-id">F4</span><span class="sprint-title">Spectator Mode</span><span class="sprint-dur">1 day</span></div>
     <div class="sprint-body">Per-tournament passcode. <code>/t/{slug}/spectate?p={passcode}</code> read-only scoreboard + feed. No auth required.</div>
-    <div class="sprint-acc"><strong>Acceptance</strong> Open spectate URL in incognito â†’ see live scoreboard.</div>
+    <div class="sprint-acc"><strong>Acceptance</strong> Open spectate URL in incognito → see live scoreboard.</div>
   </div>
 
   <div class="sprint queued">
     <div class="sprint-head"><span class="sprint-id">F5</span><span class="sprint-title">Auto-Generated Recap Page</span><span class="sprint-dur">2 days</span></div>
     <div class="sprint-body">Edge function on tournament close generates recap with final standings, MVP, hole-in-one count, longest streak, biggest comeback. Public URL <code>/t/{slug}/recap</code>. Recap email to all players.</div>
-    <div class="sprint-acc"><strong>Acceptance</strong> Admin closes tournament â†’ recap URL works in 10s.</div>
+    <div class="sprint-acc"><strong>Acceptance</strong> Admin closes tournament → recap URL works in 10s.</div>
   </div>
 
   <div class="sprint queued">
     <div class="sprint-head"><span class="sprint-id">F6</span><span class="sprint-title">Player Comparison + Round Replay</span><span class="sprint-dur">2 days</span></div>
     <div class="sprint-body">Side-by-side hole-by-hole comparison. Slider on scoreboard scrubs through tournament showing leaderboard at hole N.</div>
-    <div class="sprint-acc"><strong>Acceptance</strong> Scrub slider â†’ leaderboard reorders smoothly.</div>
+    <div class="sprint-acc"><strong>Acceptance</strong> Scrub slider → leaderboard reorders smoothly.</div>
   </div>
 
   <div class="sprint queued">
-    <div class="sprint-head"><span class="sprint-id">F7</span><span class="sprint-title">Tier Gating (Stripe Plumbing â†’ Revenue)</span><span class="sprint-dur">3 days</span></div>
+    <div class="sprint-head"><span class="sprint-id">F7</span><span class="sprint-title">Tier Gating (Stripe Plumbing → Revenue)</span><span class="sprint-dur">3 days</span></div>
     <div class="sprint-body">Feature flags per tier in <code>tier-config.js</code>. Starter: 1 tournament, 24 players. Pro: 5 tournaments, 96 players, series, achievements. Club: unlimited. Admin UI shows disabled states + upgrade CTAs.</div>
-    <div class="sprint-acc"><strong>Acceptance</strong> Starter-tier owner clicks "Series" tab â†’ upgrade modal with Stripe link.</div>
+    <div class="sprint-acc"><strong>Acceptance</strong> Starter-tier owner clicks "Series" tab → upgrade modal with Stripe link.</div>
   </div>
 
   <div class="sprint done">
     <div class="sprint-head"><span class="sprint-id">F8</span><span class="sprint-title">Exports + Printables</span><span class="pill pill-blue">print done</span><span class="sprint-dur">1 day</span></div>
-    <div class="sprint-body">CSV export of all scores + players + settings. Scorecard "Print" button â†’ CSS <code>@page</code> styling for paper backup. Print stylesheet shipped â€” CSV export queued.</div>
+    <div class="sprint-body">CSV export of all scores + players + settings. Scorecard "Print" button → CSS <code>@page</code> styling for paper backup. Print stylesheet shipped — CSV export queued.</div>
     <div class="sprint-acc"><strong>Acceptance</strong> Print preview shows clean B&W scorecard with all 18 holes.</div>
   </div>
 
   <div class="sprint queued">
-    <div class="sprint-head"><span class="sprint-id">F9</span><span class="sprint-title">GHIN Handicap Sync</span><span class="sprint-dur">2 days Â· optional</span></div>
+    <div class="sprint-head"><span class="sprint-id">F9</span><span class="sprint-title">GHIN Handicap Sync</span><span class="sprint-dur">2 days · optional</span></div>
     <div class="sprint-body">GHIN ID field on registration. Edge function fetches verified handicap.</div>
-    <div class="sprint-acc"><strong>Acceptance</strong> Enter GHIN ID â†’ handicap auto-fills + locks (admin override allowed).</div>
+    <div class="sprint-acc"><strong>Acceptance</strong> Enter GHIN ID → handicap auto-fills + locks (admin override allowed).</div>
   </div>
 
   <div class="sprint queued">
@@ -314,26 +314,26 @@
 <div class="wrapper">
   <div class="section-header">
     <div class="section-eyebrow">Section 3 of 3</div>
-    <div class="section-title">UX Polish: B â†’ A+</div>
+    <div class="section-title">UX Polish: B → A+</div>
     <div class="section-desc">Every interaction feels intentional. Score submits feel instant. Empty states have personality. Onboarding guides new owners to the aha moment.</div>
   </div>
 
   <div class="sprint queued">
     <div class="sprint-head"><span class="sprint-id">U1</span><span class="sprint-title">Skeleton Loaders + Loading State Contract</span><span class="sprint-dur">2 days</span></div>
     <div class="sprint-body">Every async render gets a skeleton. Standardize <code>idle | loading | success | error</code> pattern across all pages. Skeleton CSS already shipped in <code>tokens.css</code>.</div>
-    <div class="sprint-acc"><strong>Acceptance</strong> Slow 3G â†’ skeleton shows, no flash of empty.</div>
+    <div class="sprint-acc"><strong>Acceptance</strong> Slow 3G → skeleton shows, no flash of empty.</div>
   </div>
 
   <div class="sprint queued">
     <div class="sprint-head"><span class="sprint-id">U2</span><span class="sprint-title">Optimistic UI on Score Submit</span><span class="sprint-dur">1 day</span></div>
     <div class="sprint-body">Score appears immediately + dimmed. On 200 OK undim. On error rollback + inline retry toast.</div>
-    <div class="sprint-acc"><strong>Acceptance</strong> Submit score â†’ appears instantly. Server confirm in &lt;500ms.</div>
+    <div class="sprint-acc"><strong>Acceptance</strong> Submit score → appears instantly. Server confirm in &lt;500ms.</div>
   </div>
 
   <div class="sprint queued">
     <div class="sprint-head"><span class="sprint-id">U3</span><span class="sprint-title">Animated Rank Changes on Scoreboard</span><span class="sprint-dur">1 day</span></div>
-    <div class="sprint-body">Track previous rank per team. On Realtime update, FLIP-animate rows. Toast for milestones: "ðŸ¦… Eagle â€” Team A".</div>
-    <div class="sprint-acc"><strong>Acceptance</strong> Submit low score in second tab â†’ scoreboard reshuffles with animation.</div>
+    <div class="sprint-body">Track previous rank per team. On Realtime update, FLIP-animate rows. Toast for milestones: "🦅 Eagle — Team A".</div>
+    <div class="sprint-acc"><strong>Acceptance</strong> Submit low score in second tab → scoreboard reshuffles with animation.</div>
   </div>
 
   <div class="sprint queued">
@@ -351,25 +351,25 @@
   <div class="sprint done">
     <div class="sprint-head"><span class="sprint-id">U6</span><span class="sprint-title">Empty States with Personality</span><span class="pill pill-green">copy lib done</span><span class="sprint-dur">1 day</span></div>
     <div class="sprint-body">13 brand-voice empty-state copies in <code>lib/empty-states.js</code>. Wire <code>tourneyEmpty.render(el, key)</code> into every empty-render branch.</div>
-    <div class="sprint-acc"><strong>Acceptance</strong> Walk every page in fresh tournament â†’ no clinical empty states remain.</div>
+    <div class="sprint-acc"><strong>Acceptance</strong> Walk every page in fresh tournament → no clinical empty states remain.</div>
   </div>
 
   <div class="sprint queued">
     <div class="sprint-head"><span class="sprint-id">U7</span><span class="sprint-title">Haptics + Sound</span><span class="sprint-dur">1 day</span></div>
     <div class="sprint-body"><code>haptic()</code> already in <code>lib/util.js</code>. Wire to score submit, hole-in-one notification, tournament end. Toggleable sound effects (off by default).</div>
-    <div class="sprint-acc"><strong>Acceptance</strong> Submit score on iPhone â†’ feel haptic.</div>
+    <div class="sprint-acc"><strong>Acceptance</strong> Submit score on iPhone → feel haptic.</div>
   </div>
 
   <div class="sprint queued">
     <div class="sprint-head"><span class="sprint-id">U8</span><span class="sprint-title">Inline Form Validation</span><span class="sprint-dur">1 day</span></div>
     <div class="sprint-body">Field-level errors with shake animation on invalid submit. Replace alerts with red-bordered field + caption.</div>
-    <div class="sprint-acc"><strong>Acceptance</strong> Submit /create with bad slug â†’ field shakes + caption.</div>
+    <div class="sprint-acc"><strong>Acceptance</strong> Submit /create with bad slug → field shakes + caption.</div>
   </div>
 
   <div class="sprint queued">
     <div class="sprint-head"><span class="sprint-id">U9</span><span class="sprint-title">Admin Onboarding Tour</span><span class="sprint-dur">2 days</span></div>
-    <div class="sprint-body">Guided overlay for first-time admin: logo â†’ course â†’ registration â†’ players â†’ scoring. Each step links to relevant tab. Persistent progress bar.</div>
-    <div class="sprint-acc"><strong>Acceptance</strong> New admin from /create â†’ lands in admin â†’ sees tour automatically.</div>
+    <div class="sprint-body">Guided overlay for first-time admin: logo → course → registration → players → scoring. Each step links to relevant tab. Persistent progress bar.</div>
+    <div class="sprint-acc"><strong>Acceptance</strong> New admin from /create → lands in admin → sees tour automatically.</div>
   </div>
 
   <div class="sprint queued">
@@ -387,13 +387,13 @@
   <div class="sprint queued">
     <div class="sprint-head"><span class="sprint-id">U12</span><span class="sprint-title">Tooltips + Helpfulness</span><span class="sprint-dur">1 day</span></div>
     <div class="sprint-body">Every non-obvious admin icon gets tooltip. Helper captions under dense input fields.</div>
-    <div class="sprint-acc"><strong>Acceptance</strong> Hover any admin icon â†’ tooltip within 400ms.</div>
+    <div class="sprint-acc"><strong>Acceptance</strong> Hover any admin icon → tooltip within 400ms.</div>
   </div>
 
   <div class="sprint queued">
     <div class="sprint-head"><span class="sprint-id">U13</span><span class="sprint-title">Drag-Drop + Custom Color Picker</span><span class="sprint-dur">1 day</span></div>
     <div class="sprint-body">Logo upload zone with paste-from-clipboard support. Branded color picker with preset golf-aesthetic swatches.</div>
-    <div class="sprint-acc"><strong>Acceptance</strong> Paste copied image into upload zone â†’ uploads.</div>
+    <div class="sprint-acc"><strong>Acceptance</strong> Paste copied image into upload zone → uploads.</div>
   </div>
 
   <div class="sprint done">
@@ -405,7 +405,7 @@
   <div class="sprint done">
     <div class="sprint-head"><span class="sprint-id">U15</span><span class="sprint-title">Offline Indicator</span><span class="pill pill-green">done</span><span class="sprint-dur">0.5 day</span></div>
     <div class="sprint-body">Persistent badge in nav when SW detects offline. Implementation: <code>body.is-offline</code> class toggled by <code>lib/observability.js</code>; <code>.nav-offline-dot</code> CSS in <code>tokens.css</code>.</div>
-    <div class="sprint-acc"><strong>Acceptance</strong> Airplane mode on â†’ orange dot in nav within 2s.</div>
+    <div class="sprint-acc"><strong>Acceptance</strong> Airplane mode on → orange dot in nav within 2s.</div>
   </div>
 
   <div class="checklist">
@@ -443,23 +443,23 @@
   <div class="seq-card">
     <div class="seq-card-title">If shipping serially</div>
     <ol>
-      <li><strong>Phase 1 â€” Architecture A1â€“A3</strong> (6 days). Every later sprint benefits from shared module layer + type safety.</li>
-      <li><strong>Phase 2 â€” Architecture A4â€“A6</strong> (7 days). Tests + staging + Sentry before any feature/UX work goes live.</li>
-      <li><strong>Phase 3 â€” UX U1â€“U4</strong> (6 days). Foundation UX patterns used by all later features.</li>
-      <li><strong>Phase 4 â€” Feature F1â€“F2</strong> (5 days). Series + templates unlock the longitudinal value prop.</li>
-      <li><strong>Phase 5 â€” UX U5â€“U9</strong> (7 days). Visual polish layer.</li>
-      <li><strong>Phase 6 â€” Feature F3â€“F5</strong> (5 days). Achievements + spectator + recap = viral moments.</li>
-      <li><strong>Phase 7 â€” Feature F7</strong> (3 days). Tier gating turns on revenue.</li>
-      <li><strong>Phase 8</strong> â€” A7â€“A8 + F6, F8â€“F10 + U10â€“U15 fill in as parallel low-priority work.</li>
+      <li><strong>Phase 1 — Architecture A1–A3</strong> (6 days). Every later sprint benefits from shared module layer + type safety.</li>
+      <li><strong>Phase 2 — Architecture A4–A6</strong> (7 days). Tests + staging + Sentry before any feature/UX work goes live.</li>
+      <li><strong>Phase 3 — UX U1–U4</strong> (6 days). Foundation UX patterns used by all later features.</li>
+      <li><strong>Phase 4 — Feature F1–F2</strong> (5 days). Series + templates unlock the longitudinal value prop.</li>
+      <li><strong>Phase 5 — UX U5–U9</strong> (7 days). Visual polish layer.</li>
+      <li><strong>Phase 6 — Feature F3–F5</strong> (5 days). Achievements + spectator + recap = viral moments.</li>
+      <li><strong>Phase 7 — Feature F7</strong> (3 days). Tier gating turns on revenue.</li>
+      <li><strong>Phase 8</strong> — A7–A8 + F6, F8–F10 + U10–U15 fill in as parallel low-priority work.</li>
     </ol>
   </div>
 </div>
 </section>
 
 <footer>
-  Generated by <span>Claude Sonnet 4.6</span> Â· Greenskeeper Studios Internal Â· 2026-05-06
+  Generated by <span>Claude Sonnet 4.6</span> · Greenskeeper Studios Internal · 2026-05-06
   <br style="margin-top:0.3rem">
-  <a href="/" style="color:var(--muted); font-size:0.72rem; text-decoration:none">â† tourney.greenskeeper.studio</a>
+  <a href="/" style="color:var(--muted); font-size:0.72rem; text-decoration:none">← tourney.greenskeeper.studio</a>
 </footer>
 
 <script src="/bug-fab.js?v=4" defer></script>

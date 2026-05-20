@@ -1,9 +1,9 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>TOURney â€” AAA Implementation Runbook Â· May 11, 2026</title>
+<title>TOURney — AAA Implementation Runbook · May 11, 2026</title>
 <style>
   :root {
     --gold: #c09030;
@@ -73,8 +73,8 @@
   .gate-head { font-size: 0.78rem; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: var(--orange); margin-bottom: 0.4rem; }
   .checklist { list-style: none; padding-left: 0; }
   .checklist li { padding-left: 1.6rem; position: relative; margin-bottom: 0.35rem; font-size: 0.84rem; }
-  .checklist li::before { content: "â˜"; position: absolute; left: 0; color: var(--gold); font-size: 1rem; line-height: 1; }
-  .checklist li.done::before { content: "â˜‘"; color: var(--green); }
+  .checklist li::before { content: "☐"; position: absolute; left: 0; color: var(--gold); font-size: 1rem; line-height: 1; }
+  .checklist li.done::before { content: "☑"; color: var(--green); }
   .phase-banner { background: var(--card2); border: 1px solid var(--border); border-radius: 8px; padding: 0.9rem 1.2rem; margin-bottom: 1rem; display: flex; gap: 1rem; align-items: center; flex-wrap: wrap; }
   .phase-num { font-family: 'Consolas','Monaco',monospace; font-size: 1.4rem; font-weight: 900; color: var(--gold); }
   .phase-name { font-size: 0.95rem; font-weight: 700; color: #fff; }
@@ -93,7 +93,7 @@
 <nav>
   <div class="nav-brand">TOURney <span>by Greenskeeper Studios</span></div>
   <div class="nav-links">
-    <a href="/platform">â¬¡ Operations</a>
+    <a href="/platform">⬡ Operations</a>
     <a href="#scope">Scope</a>
     <a href="#prereq">Prereqs</a>
     <a href="#steps">Steps</a>
@@ -104,13 +104,13 @@
 
 <div class="hero">
   <div class="hero-eyebrow">AAA Implementation Runbook</div>
-  <h1><span>TOURney</span> â€” AAA Execution Plan</h1>
-  <p class="hero-sub">Step-by-step operational procedure to ship the next 8 highest-priority queued AAA sprints safely to production. Foundation first (shared lib, CI, backups) â†’ schema â†’ testing â†’ staging â†’ tier gating. Every phase has a go/no-go gate.</p>
+  <h1><span>TOURney</span> — AAA Execution Plan</h1>
+  <p class="hero-sub">Step-by-step operational procedure to ship the next 8 highest-priority queued AAA sprints safely to production. Foundation first (shared lib, CI, backups) → schema → testing → staging → tier gating. Every phase has a go/no-go gate.</p>
   <div class="hero-meta">
-    <span>ðŸ“… May 11, 2026</span>
-    <span>ðŸ¤– Claude Opus 4.7</span>
-    <span>ðŸ¢ Greenskeeper Studios</span>
-    <span>ðŸ”’ Internal Only</span>
+    <span>📅 May 11, 2026</span>
+    <span>🤖 Claude Opus 4.7</span>
+    <span>🏢 Greenskeeper Studios</span>
+    <span>🔒 Internal Only</span>
   </div>
 </div>
 
@@ -124,22 +124,22 @@
 
   <div class="card">
     <div class="card-title">Trigger Conditions</div>
-    <p>Use this runbook when executing the AAA plan (<code>/platform/aaa-plan</code>). Runbook covers sprints <code>A1 finish</code>, <code>A3 wire</code>, <code>A4</code>, <code>A5</code>, <code>A7</code>, <code>A8</code>, <code>F7</code> in safe-deploy order. Sprints not yet listed here (F1â€“F6, F8â€“F10, U1â€“U12) get their own future runbooks once their prereqs land.</p>
+    <p>Use this runbook when executing the AAA plan (<code>/platform/aaa-plan</code>). Runbook covers sprints <code>A1 finish</code>, <code>A3 wire</code>, <code>A4</code>, <code>A5</code>, <code>A7</code>, <code>A8</code>, <code>F7</code> in safe-deploy order. Sprints not yet listed here (F1–F6, F8–F10, U1–U12) get their own future runbooks once their prereqs land.</p>
   </div>
 
   <div class="card">
     <div class="card-title">Estimated Duration</div>
     <ul>
       <li><strong>Phase 0 (Pre-flight):</strong> 15 min</li>
-      <li><strong>Phase 1 (A1 shared lib finish):</strong> ~6 hours of refactor work, spread over 1â€“2 sessions</li>
+      <li><strong>Phase 1 (A1 shared lib finish):</strong> ~6 hours of refactor work, spread over 1–2 sessions</li>
       <li><strong>Phase 2 (A3 CI wiring):</strong> 1 hour</li>
       <li><strong>Phase 3 (A8 backup drill):</strong> 1 hour setup + weekly automation</li>
-      <li><strong>Phase 4â€“5 (A7 migrations 006 + 007):</strong> 30 min each, gated on full <code>tournament_admins</code> rollout</li>
+      <li><strong>Phase 4–5 (A7 migrations 006 + 007):</strong> 30 min each, gated on full <code>tournament_admins</code> rollout</li>
       <li><strong>Phase 6 (A4 test scaffold):</strong> ~4 hours initial scaffold (deeper backfill is a follow-up sprint)</li>
       <li><strong>Phase 7 (A5 staging env):</strong> ~2 hours</li>
       <li><strong>Phase 8 (F7 tier gating):</strong> ~6 hours (depends on A5 staging)</li>
     </ul>
-    <p><strong>Total wall-clock</strong>: ~3â€“4 calendar days of focused work, dependent on Stripe Phase 8 being last so failures don't block revenue.</p>
+    <p><strong>Total wall-clock</strong>: ~3–4 calendar days of focused work, dependent on Stripe Phase 8 being last so failures don't block revenue.</p>
   </div>
 
   <div class="card">
@@ -148,7 +148,7 @@
       <li><strong>Owner:</strong> Rob (Greenskeeper Studios)</li>
       <li><strong>Repo:</strong> <code>C:\Users\Rob\OneDrive\Desktop\Greenskeeper Studios\Bova Invitational\</code></li>
       <li><strong>Remotes:</strong> <code>origin</code> = bova-invt (Vercel-deployed), <code>tourney</code> = TOURney mirror</li>
-      <li><strong>Supabase project:</strong> <code>jllugkiojeoopitdvzsa</code> (prod) â€” staging project created in Phase 7</li>
+      <li><strong>Supabase project:</strong> <code>jllugkiojeoopitdvzsa</code> (prod) — staging project created in Phase 7</li>
       <li><strong>Deploy:</strong> Vercel auto-deploys on push to <code>main</code></li>
     </ul>
   </div>
@@ -171,9 +171,9 @@
   <div class="card">
     <div class="card-title">Access &amp; Environment</div>
     <ul class="checklist">
-      <li>Logged into Supabase CLI (<code>npx supabase login</code>) â€” required for migrations + edge fn deploys</li>
+      <li>Logged into Supabase CLI (<code>npx supabase login</code>) — required for migrations + edge fn deploys</li>
       <li>GitHub push access on <code>roberttmadsen13-del/bova-invt</code> (origin) + <code>/TOURney</code> (mirror)</li>
-      <li>Vercel project connected to bova-invt main â†’ auto-deploys</li>
+      <li>Vercel project connected to bova-invt main → auto-deploys</li>
       <li>Node 20+ installed locally (<code>node -v</code>)</li>
       <li>Git working tree clean (<code>git status</code> returns nothing)</li>
       <li>On <code>main</code> branch, up to date with <code>origin/main</code></li>
@@ -197,11 +197,11 @@ git tag aaa-runbook-start-$(date +%Y%m%d-%H%M)</pre>
   <div class="section-header">
     <div class="section-eyebrow">Section 3 of 6</div>
     <div class="section-title">Execution Steps</div>
-    <div class="section-desc">Numbered, atomic, copy-paste ready. Order is the safe-deploy sequence. Do not skip phases â€” each gates the next.</div>
+    <div class="section-desc">Numbered, atomic, copy-paste ready. Order is the safe-deploy sequence. Do not skip phases — each gates the next.</div>
   </div>
 
-  <!-- â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ PHASE 0 â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
-  <div class="phase-banner"><span class="phase-num">P0</span><span class="phase-name">Pre-flight Verification</span><span class="phase-meta">15 min Â· zero risk</span></div>
+  <!-- ─────────── PHASE 0 ─────────── -->
+  <div class="phase-banner"><span class="phase-num">P0</span><span class="phase-name">Pre-flight Verification</span><span class="phase-meta">15 min · zero risk</span></div>
 
   <div class="step">
     <div class="step-head"><span class="step-id">0.1</span><span class="step-title">Pull latest, verify clean tree</span><span class="pill pill-blue">read-only</span></div>
@@ -230,12 +230,12 @@ git status</pre>
   </div>
 
   <div class="gate">
-    <div class="gate-head">ðŸš¦ Gate P0 â†’ P1</div>
+    <div class="gate-head">🚦 Gate P0 → P1</div>
     <p>Proceed only if: tree clean, on main, Supabase CLI works, grade snapshot recorded. If any item failed, fix it before continuing.</p>
   </div>
 
-  <!-- â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ PHASE 1 â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
-  <div class="phase-banner"><span class="phase-num">P1</span><span class="phase-name">A1: Finish Shared Module Layer</span><span class="phase-meta">~6 hours Â· refactor only</span></div>
+  <!-- ─────────── PHASE 1 ─────────── -->
+  <div class="phase-banner"><span class="phase-num">P1</span><span class="phase-name">A1: Finish Shared Module Layer</span><span class="phase-meta">~6 hours · refactor only</span></div>
 
   <div class="step">
     <div class="step-head"><span class="step-id">1.1</span><span class="step-title">Inventory duplicates</span><span class="pill pill-blue">read-only</span></div>
@@ -267,7 +267,7 @@ grep -rn "showToast\|copyToClipboard" --include="*.html" | wc -l</pre>
 
   <div class="step">
     <div class="step-head"><span class="step-id">1.4</span><span class="step-title">Roll out to remaining pages</span><span class="pill pill-orange">write</span></div>
-    <p>Once 1.3 is green, repeat for: home.html, scoreboard.html, scorecard.html, feed.html, profile.html, directory.html, login.html, champions.html, platform.html, bugs.html, create.html, player.html, player-upgrade.html. One PR per page or one bundled â€” Rob's call.</p>
+    <p>Once 1.3 is green, repeat for: home.html, scoreboard.html, scorecard.html, feed.html, profile.html, directory.html, login.html, champions.html, platform.html, bugs.html, create.html, player.html, player-upgrade.html. One PR per page or one bundled — Rob's call.</p>
     <div class="expected"><strong>Expected:</strong> All pages drop in size. <code>grep -c "function esc" *.html</code> returns 0.</div>
     <div class="verify"><strong>Verify:</strong> Full QA loop per CLAUDE.md (console, network, happy path, edge cases, visual, regression) on each migrated page.</div>
     <div class="rollback"><strong>Rollback:</strong> <code>git revert</code> per-page commits. Each commit must be standalone.</div>
@@ -275,7 +275,7 @@ grep -rn "showToast\|copyToClipboard" --include="*.html" | wc -l</pre>
 
   <div class="step">
     <div class="step-head"><span class="step-id">1.5</span><span class="step-title">Bump SW cache, commit, push</span><span class="pill pill-red">deploy</span></div>
-<pre># bump CACHE in sw.js (vNN â†’ vNN+1)
+<pre># bump CACHE in sw.js (vNN → vNN+1)
 git add -A
 git commit -m "refactor: extract shared helpers to lib/util.js (A1)"
 git push origin main</pre>
@@ -285,12 +285,12 @@ git push origin main</pre>
   </div>
 
   <div class="gate">
-    <div class="gate-head">ðŸš¦ Gate P1 â†’ P2</div>
-    <p>Proceed only if: all migrated pages load cleanly in prod, no console errors, scoring + admin flows verified. <strong>Wait 24 hours</strong> with prod traffic before continuing â€” if no bug reports surface, advance.</p>
+    <div class="gate-head">🚦 Gate P1 → P2</div>
+    <p>Proceed only if: all migrated pages load cleanly in prod, no console errors, scoring + admin flows verified. <strong>Wait 24 hours</strong> with prod traffic before continuing — if no bug reports surface, advance.</p>
   </div>
 
-  <!-- â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ PHASE 2 â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
-  <div class="phase-banner"><span class="phase-num">P2</span><span class="phase-name">A3: Wire Type-Checked CI</span><span class="phase-meta">~1 hour Â· CI only, no runtime impact</span></div>
+  <!-- ─────────── PHASE 2 ─────────── -->
+  <div class="phase-banner"><span class="phase-num">P2</span><span class="phase-name">A3: Wire Type-Checked CI</span><span class="phase-meta">~1 hour · CI only, no runtime impact</span></div>
 
   <div class="step">
     <div class="step-head"><span class="step-id">2.1</span><span class="step-title">Create tsconfig.json</span><span class="pill pill-orange">write</span></div>
@@ -319,7 +319,7 @@ JSON</pre>
     <div class="step-head"><span class="step-id">2.2</span><span class="step-title">Add GitHub Action</span><span class="pill pill-orange">write</span></div>
 <pre>mkdir -p .github/workflows
 # Create .github/workflows/typecheck.yml</pre>
-    <p>Action: runs on PR + push to main. Steps: <code>actions/checkout@v4</code> â†’ <code>setup-node</code> v20 â†’ <code>npx tsc --noEmit</code>. Fails PR on type errors.</p>
+    <p>Action: runs on PR + push to main. Steps: <code>actions/checkout@v4</code> → <code>setup-node</code> v20 → <code>npx tsc --noEmit</code>. Fails PR on type errors.</p>
     <div class="expected"><strong>Expected:</strong> File exists, syntax valid YAML.</div>
     <div class="verify"><strong>Verify:</strong> Open a throwaway PR with intentional type error. Action fails red. Close PR.</div>
     <div class="rollback"><strong>Rollback:</strong> <code>rm .github/workflows/typecheck.yml</code>.</div>
@@ -331,29 +331,29 @@ JSON</pre>
 git commit -m "ci: typecheck lib/ on PR (A3)"
 git push origin main</pre>
     <div class="expected"><strong>Expected:</strong> First Action run green.</div>
-    <div class="verify"><strong>Verify:</strong> GitHub â†’ Actions tab shows green âœ“ on the commit.</div>
+    <div class="verify"><strong>Verify:</strong> GitHub → Actions tab shows green ✓ on the commit.</div>
     <div class="rollback"><strong>Rollback:</strong> <code>git revert &lt;sha&gt;; git push</code>.</div>
   </div>
 
   <div class="gate">
-    <div class="gate-head">ðŸš¦ Gate P2 â†’ P3</div>
+    <div class="gate-head">🚦 Gate P2 → P3</div>
     <p>Proceed only if: Action runs green on a fresh commit. No tsc errors against committed <code>lib/util.js</code>.</p>
   </div>
 
-  <!-- â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ PHASE 3 â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
-  <div class="phase-banner"><span class="phase-num">P3</span><span class="phase-name">A8: Weekly Backup Drill</span><span class="phase-meta">~1 hour Â· defensive, prereq for risky migrations</span></div>
+  <!-- ─────────── PHASE 3 ─────────── -->
+  <div class="phase-banner"><span class="phase-num">P3</span><span class="phase-name">A8: Weekly Backup Drill</span><span class="phase-meta">~1 hour · defensive, prereq for risky migrations</span></div>
 
   <div class="step">
     <div class="step-head"><span class="step-id">3.1</span><span class="step-title">Provision backup storage</span><span class="pill pill-orange">setup</span></div>
     <p>Create private S3 bucket (or Cloudflare R2) <code>tourney-pg-backups</code>. Lifecycle policy: delete objects older than 90 days. Add IAM user with put-only access; store key in GitHub repo Secrets as <code>BACKUP_S3_KEY</code> / <code>BACKUP_S3_SECRET</code> / <code>BACKUP_S3_BUCKET</code>.</p>
-    <div class="expected"><strong>Expected:</strong> Bucket exists. Secrets visible in Settings â†’ Secrets.</div>
+    <div class="expected"><strong>Expected:</strong> Bucket exists. Secrets visible in Settings → Secrets.</div>
     <div class="verify"><strong>Verify:</strong> <code>aws s3 ls s3://tourney-pg-backups/</code> succeeds (empty).</div>
     <div class="rollback"><strong>Rollback:</strong> Delete bucket. Revoke IAM user. Remove secrets.</div>
   </div>
 
   <div class="step">
     <div class="step-head"><span class="step-id">3.2</span><span class="step-title">Add GitHub Action for weekly pg_dump</span><span class="pill pill-orange">write</span></div>
-    <p>Create <code>.github/workflows/backup.yml</code>. Schedule: <code>cron: '0 6 * * 1'</code> (Mondays 06:00 UTC). Steps: pg_dump via Supabase connection string (env <code>SUPABASE_DB_URL</code>) â†’ gzip â†’ upload to S3 with date-stamped key.</p>
+    <p>Create <code>.github/workflows/backup.yml</code>. Schedule: <code>cron: '0 6 * * 1'</code> (Mondays 06:00 UTC). Steps: pg_dump via Supabase connection string (env <code>SUPABASE_DB_URL</code>) → gzip → upload to S3 with date-stamped key.</p>
     <div class="expected"><strong>Expected:</strong> Workflow file syntactically valid.</div>
     <div class="verify"><strong>Verify:</strong> Trigger manually via "Run workflow". Logs show dump completed + S3 upload 200. Check bucket has <code>tourney-2026-05-11.sql.gz</code>.</div>
     <div class="rollback"><strong>Rollback:</strong> <code>rm .github/workflows/backup.yml</code>. Existing dumps stay in S3.</div>
@@ -362,18 +362,18 @@ git push origin main</pre>
   <div class="step">
     <div class="step-head"><span class="step-id">3.3</span><span class="step-title">Monthly restore drill</span><span class="pill pill-blue">verify</span></div>
     <p>Once per month: download latest dump, restore to scratch Supabase project, run smoke query (<code>select count(*) from tournaments</code>). Record drill outcome in <code>.runbook-backup-drills.md</code>.</p>
-    <div class="expected"><strong>Expected:</strong> Restore completes. Count matches prod Â±recent inserts.</div>
+    <div class="expected"><strong>Expected:</strong> Restore completes. Count matches prod ±recent inserts.</div>
     <div class="verify"><strong>Verify:</strong> Drill log committed with date + outcome.</div>
     <div class="rollback"><strong>Rollback:</strong> N/A (read-only against prod).</div>
   </div>
 
   <div class="gate">
-    <div class="gate-head">ðŸš¦ Gate P3 â†’ P4</div>
+    <div class="gate-head">🚦 Gate P3 → P4</div>
     <p>Proceed only if: at least ONE successful backup uploaded to S3 AND restore drill passed. <strong>Do not run migrations without verified backups.</strong></p>
   </div>
 
-  <!-- â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ PHASE 4 â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
-  <div class="phase-banner"><span class="phase-num">P4</span><span class="phase-name">A7: Apply Migration 006 â€” drop is_admin</span><span class="phase-meta">30 min Â· schema, gated</span></div>
+  <!-- ─────────── PHASE 4 ─────────── -->
+  <div class="phase-banner"><span class="phase-num">P4</span><span class="phase-name">A7: Apply Migration 006 — drop is_admin</span><span class="phase-meta">30 min · schema, gated</span></div>
 
   <div class="step">
     <div class="step-head"><span class="step-id">4.1</span><span class="step-title">Audit code for residual is_admin references</span><span class="pill pill-blue">read-only</span></div>
@@ -394,12 +394,12 @@ npx supabase db push --linked</pre>
   </div>
 
   <div class="gate">
-    <div class="gate-head">ðŸš¦ Gate P4 â†’ P5</div>
+    <div class="gate-head">🚦 Gate P4 → P5</div>
     <p>Proceed only if: column dropped, no admin features regressed in QA. <strong>Wait 24 hours</strong> with prod traffic. If anyone reports admin access broken, halt and investigate.</p>
   </div>
 
-  <!-- â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ PHASE 5 â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
-  <div class="phase-banner"><span class="phase-num">P5</span><span class="phase-name">A7: Apply Migration 007 â€” rounds table</span><span class="phase-meta">30 min Â· schema, gated</span></div>
+  <!-- ─────────── PHASE 5 ─────────── -->
+  <div class="phase-banner"><span class="phase-num">P5</span><span class="phase-name">A7: Apply Migration 007 — rounds table</span><span class="phase-meta">30 min · schema, gated</span></div>
 
   <div class="step">
     <div class="step-head"><span class="step-id">5.1</span><span class="step-title">Review migration 007</span><span class="pill pill-blue">read-only</span></div>
@@ -419,12 +419,12 @@ npx supabase db push --linked</pre>
   </div>
 
   <div class="gate">
-    <div class="gate-head">ðŸš¦ Gate P5 â†’ P6</div>
-    <p>Proceed only if: rounds populated, no scoreboard regression (admin/scoreboard/scorecard still read from settings). <strong>Wait 48 hours</strong> before any code migrates to read from <code>rounds</code> table â€” observability first.</p>
+    <div class="gate-head">🚦 Gate P5 → P6</div>
+    <p>Proceed only if: rounds populated, no scoreboard regression (admin/scoreboard/scorecard still read from settings). <strong>Wait 48 hours</strong> before any code migrates to read from <code>rounds</code> table — observability first.</p>
   </div>
 
-  <!-- â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ PHASE 6 â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
-  <div class="phase-banner"><span class="phase-num">P6</span><span class="phase-name">A4: Test Suite Scaffold</span><span class="phase-meta">~4 hours Â· setup only, deeper backfill is its own sprint</span></div>
+  <!-- ─────────── PHASE 6 ─────────── -->
+  <div class="phase-banner"><span class="phase-num">P6</span><span class="phase-name">A4: Test Suite Scaffold</span><span class="phase-meta">~4 hours · setup only, deeper backfill is its own sprint</span></div>
 
   <div class="step">
     <div class="step-head"><span class="step-id">6.1</span><span class="step-title">Install Vitest + Playwright</span><span class="pill pill-orange">setup</span></div>
@@ -440,9 +440,9 @@ npx playwright install chromium</pre>
     <div class="step-head"><span class="step-id">6.2</span><span class="step-title">Write smoke tests</span><span class="pill pill-orange">write</span></div>
     <p>Minimum viable scaffold:</p>
     <ul>
-      <li><code>tests/unit/util.test.js</code> â€” Vitest, 3 tests on <code>esc()</code></li>
-      <li><code>tests/e2e/score-submit.spec.js</code> â€” Playwright, fills scorecard for one hole on a test tournament</li>
-      <li><code>tests/e2e/admin-grant.spec.js</code> â€” Playwright, owner grants tournament_admin to a test email</li>
+      <li><code>tests/unit/util.test.js</code> — Vitest, 3 tests on <code>esc()</code></li>
+      <li><code>tests/e2e/score-submit.spec.js</code> — Playwright, fills scorecard for one hole on a test tournament</li>
+      <li><code>tests/e2e/admin-grant.spec.js</code> — Playwright, owner grants tournament_admin to a test email</li>
     </ul>
     <div class="expected"><strong>Expected:</strong> All three tests pass locally.</div>
     <div class="verify"><strong>Verify:</strong> <code>npx vitest run &amp;&amp; npx playwright test</code> exit 0.</div>
@@ -451,26 +451,26 @@ npx playwright install chromium</pre>
 
   <div class="step">
     <div class="step-head"><span class="step-id">6.3</span><span class="step-title">Add CI workflow</span><span class="pill pill-orange">write</span></div>
-    <p>Create <code>.github/workflows/test.yml</code>. Runs on PR + push: <code>npm ci</code> â†’ <code>npx vitest run</code> â†’ <code>npx playwright install --with-deps chromium</code> â†’ <code>npx playwright test</code>. Cache <code>node_modules</code> and Playwright browsers.</p>
+    <p>Create <code>.github/workflows/test.yml</code>. Runs on PR + push: <code>npm ci</code> → <code>npx vitest run</code> → <code>npx playwright install --with-deps chromium</code> → <code>npx playwright test</code>. Cache <code>node_modules</code> and Playwright browsers.</p>
     <div class="expected"><strong>Expected:</strong> Workflow file valid. First run green.</div>
     <div class="verify"><strong>Verify:</strong> Action shows test count in summary.</div>
     <div class="rollback"><strong>Rollback:</strong> <code>rm .github/workflows/test.yml</code>.</div>
   </div>
 
   <div class="gate">
-    <div class="gate-head">ðŸš¦ Gate P6 â†’ P7</div>
+    <div class="gate-head">🚦 Gate P6 → P7</div>
     <p>Proceed only if: full test pipeline green in CI. If e2e flakes on Playwright, fix flakiness before P7 (staging will magnify flakes).</p>
   </div>
 
-  <!-- â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ PHASE 7 â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
-  <div class="phase-banner"><span class="phase-num">P7</span><span class="phase-name">A5: Staging Environment</span><span class="phase-meta">~2 hours Â· isolated from prod</span></div>
+  <!-- ─────────── PHASE 7 ─────────── -->
+  <div class="phase-banner"><span class="phase-num">P7</span><span class="phase-name">A5: Staging Environment</span><span class="phase-meta">~2 hours · isolated from prod</span></div>
 
   <div class="step">
     <div class="step-head"><span class="step-id">7.1</span><span class="step-title">Create staging Supabase project</span><span class="pill pill-orange">setup</span></div>
-    <p>Supabase Dashboard â†’ New Project â†’ name <code>tourney-staging</code> â†’ same region as prod (West US Oregon) â†’ strong password. Capture project ref + anon key + service_role.</p>
+    <p>Supabase Dashboard → New Project → name <code>tourney-staging</code> → same region as prod (West US Oregon) → strong password. Capture project ref + anon key + service_role.</p>
     <div class="expected"><strong>Expected:</strong> Project status green. URL <code>https://&lt;staging-ref&gt;.supabase.co</code>.</div>
     <div class="verify"><strong>Verify:</strong> <code>curl https://&lt;staging-ref&gt;.supabase.co/rest/v1/ -H "apikey: &lt;anon&gt;"</code> returns OpenAPI doc.</div>
-    <div class="rollback"><strong>Rollback:</strong> Delete project from dashboard (free tier â€” no cost lost).</div>
+    <div class="rollback"><strong>Rollback:</strong> Delete project from dashboard (free tier — no cost lost).</div>
   </div>
 
   <div class="step">
@@ -484,19 +484,19 @@ npx supabase db push --linked</pre>
 
   <div class="step">
     <div class="step-head"><span class="step-id">7.3</span><span class="step-title">Wire Vercel preview to staging</span><span class="pill pill-orange">setup</span></div>
-    <p>Vercel project â†’ Settings â†’ Environment Variables â†’ add <code>SUPABASE_URL</code> + <code>SUPABASE_ANON_KEY</code> scoped to "Preview" only (Production keeps prod values). Push a branch <code>staging</code> â†’ preview URL uses staging Supabase.</p>
+    <p>Vercel project → Settings → Environment Variables → add <code>SUPABASE_URL</code> + <code>SUPABASE_ANON_KEY</code> scoped to "Preview" only (Production keeps prod values). Push a branch <code>staging</code> → preview URL uses staging Supabase.</p>
     <div class="expected"><strong>Expected:</strong> Preview deployment lands on staging-ref Supabase. Prod unaffected.</div>
     <div class="verify"><strong>Verify:</strong> Visit preview URL, open DevTools, network tab shows requests to <code>staging-ref.supabase.co</code> not <code>jllugkiojeoopitdvzsa</code>.</div>
     <div class="rollback"><strong>Rollback:</strong> Delete preview env vars in Vercel.</div>
   </div>
 
   <div class="gate">
-    <div class="gate-head">ðŸš¦ Gate P7 â†’ P8</div>
-    <p>Proceed only if: staging preview loads + reads from staging Supabase, prod still reads from prod, no env var bleed. <strong>This gate is mandatory for Phase 8</strong> â€” Stripe gating WILL be tested on staging before prod flip.</p>
+    <div class="gate-head">🚦 Gate P7 → P8</div>
+    <p>Proceed only if: staging preview loads + reads from staging Supabase, prod still reads from prod, no env var bleed. <strong>This gate is mandatory for Phase 8</strong> — Stripe gating WILL be tested on staging before prod flip.</p>
   </div>
 
-  <!-- â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ PHASE 8 â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
-  <div class="phase-banner"><span class="phase-num">P8</span><span class="phase-name">F7: Tier Gating (Stripe â†’ Revenue)</span><span class="phase-meta">~6 hours Â· revenue-affecting, staging-first</span></div>
+  <!-- ─────────── PHASE 8 ─────────── -->
+  <div class="phase-banner"><span class="phase-num">P8</span><span class="phase-name">F7: Tier Gating (Stripe → Revenue)</span><span class="phase-meta">~6 hours · revenue-affecting, staging-first</span></div>
 
   <div class="step">
     <div class="step-head"><span class="step-id">8.1</span><span class="step-title">Define tier config</span><span class="pill pill-orange">write</span></div>
@@ -514,9 +514,9 @@ export function canAccess(plan, feature) { return TIERS[plan]?.[feature]; }</pre
 
   <div class="step">
     <div class="step-head"><span class="step-id">8.2</span><span class="step-title">Wire admin UI gates (staging only)</span><span class="pill pill-orange">write</span></div>
-    <p>In admin.html, before showing Series tab, call <code>canAccess(currentPlan,'series')</code>. If false â†’ render disabled tab with upgrade modal CTA linking to <code>/player-upgrade?from=series</code>. Same pattern for Achievements + Recap.</p>
+    <p>In admin.html, before showing Series tab, call <code>canAccess(currentPlan,'series')</code>. If false → render disabled tab with upgrade modal CTA linking to <code>/player-upgrade?from=series</code>. Same pattern for Achievements + Recap.</p>
     <div class="expected"><strong>Expected:</strong> Starter-tier owner sees disabled tab with lock icon + "Upgrade to Pro" link.</div>
-    <div class="verify"><strong>Verify:</strong> On staging preview: log in as starter test account â†’ Series tab disabled. Switch to pro test account â†’ tab enabled.</div>
+    <div class="verify"><strong>Verify:</strong> On staging preview: log in as starter test account → Series tab disabled. Switch to pro test account → tab enabled.</div>
     <div class="rollback"><strong>Rollback:</strong> <code>git revert</code> the admin.html commit on preview branch. Prod untouched.</div>
   </div>
 
@@ -524,24 +524,24 @@ export function canAccess(plan, feature) { return TIERS[plan]?.[feature]; }</pre
     <div class="step-head"><span class="step-id">8.3</span><span class="step-title">Stripe checkout: pass tier into metadata</span><span class="pill pill-red">edge fn</span></div>
     <p><code>create-checkout</code> edge function already accepts <code>tier</code> in body and stores in subscription metadata. Add server-side validation: confirm <code>tier in PRICE_IDS</code> before creating session (already in place).</p>
     <div class="expected"><strong>Expected:</strong> No edge fn change required beyond audit confirming existing code path.</div>
-    <div class="verify"><strong>Verify:</strong> Test checkout from staging preview â†’ Stripe test mode â†’ confirm <code>tier</code> appears in subscription metadata on Stripe Dashboard.</div>
+    <div class="verify"><strong>Verify:</strong> Test checkout from staging preview → Stripe test mode → confirm <code>tier</code> appears in subscription metadata on Stripe Dashboard.</div>
     <div class="rollback"><strong>Rollback:</strong> N/A (no change deployed).</div>
   </div>
 
   <div class="step">
     <div class="step-head"><span class="step-id">8.4</span><span class="step-title">Webhook: write plan back to player_accounts</span><span class="pill pill-red">edge fn</span></div>
-    <p><code>stripe-webhook</code> on <code>customer.subscription.created/updated</code>: extract <code>metadata.tier</code> â†’ upsert <code>player_accounts.plan = tier, billing_status = 'active'</code>. Deploy via Supabase MCP to staging first.</p>
+    <p><code>stripe-webhook</code> on <code>customer.subscription.created/updated</code>: extract <code>metadata.tier</code> → upsert <code>player_accounts.plan = tier, billing_status = 'active'</code>. Deploy via Supabase MCP to staging first.</p>
     <div class="expected"><strong>Expected:</strong> Webhook logs show plan update. <code>select email, plan from player_accounts where email='&lt;test&gt;'</code> shows correct tier.</div>
-    <div class="verify"><strong>Verify:</strong> Run staging end-to-end: signup â†’ upgrade â†’ check plan in DB. Run Playwright e2e.</div>
+    <div class="verify"><strong>Verify:</strong> Run staging end-to-end: signup → upgrade → check plan in DB. Run Playwright e2e.</div>
     <div class="rollback"><strong>Rollback:</strong> Redeploy prior version of stripe-webhook via Supabase MCP (versions retained).</div>
   </div>
 
   <div class="step">
-    <div class="step-head"><span class="step-id">8.5</span><span class="step-title">Promote staging â†’ prod</span><span class="pill pill-red">deploy</span></div>
+    <div class="step-head"><span class="step-id">8.5</span><span class="step-title">Promote staging → prod</span><span class="pill pill-red">deploy</span></div>
 <pre># Merge staging branch into main
 git checkout main
 git pull origin main --ff-only
-git merge --no-ff staging -m "feat: tier gating (F7) â€” promoted from staging"
+git merge --no-ff staging -m "feat: tier gating (F7) — promoted from staging"
 git push origin main</pre>
     <p>Deploy <code>stripe-webhook</code> to prod via Supabase MCP.</p>
     <div class="expected"><strong>Expected:</strong> Vercel deploys main. Webhook version v+1 active on prod.</div>
@@ -550,8 +550,8 @@ git push origin main</pre>
   </div>
 
   <div class="gate">
-    <div class="gate-head">ðŸš¦ Final Gate â€” Runbook Complete</div>
-    <p>Done only when: prod webhook upgrades a real account, tier-gated features render correctly per plan, all CI green, snapshot tag <code>aaa-runbook-start-*</code> still exists for diff baseline. Update <code>/platform/aaa-plan</code> sprint statuses from queued â†’ done for A1, A3, A4, A5, A7, A8, F7.</p>
+    <div class="gate-head">🚦 Final Gate — Runbook Complete</div>
+    <p>Done only when: prod webhook upgrades a real account, tier-gated features render correctly per plan, all CI green, snapshot tag <code>aaa-runbook-start-*</code> still exists for diff baseline. Update <code>/platform/aaa-plan</code> sprint statuses from queued → done for A1, A3, A4, A5, A7, A8, F7.</p>
   </div>
 </div>
 </section>
@@ -602,7 +602,7 @@ git push origin main</pre>
   </div>
   <div class="card">
     <div class="card-title">Phase 3 (Backup automation)</div>
-    <p>Disable workflow in Actions UI. Bucket + backups remain (defensive â€” keep them).</p>
+    <p>Disable workflow in Actions UI. Bucket + backups remain (defensive — keep them).</p>
   </div>
   <div class="card">
     <div class="card-title">Phase 4 (drop is_admin)</div>
@@ -610,7 +610,7 @@ git push origin main</pre>
   </div>
   <div class="card">
     <div class="card-title">Phase 5 (rounds table)</div>
-    <p><code>drop table rounds cascade</code> in Supabase SQL editor. Code never reads from rounds yet (per Gate P5 â†’ P6), so zero client impact.</p>
+    <p><code>drop table rounds cascade</code> in Supabase SQL editor. Code never reads from rounds yet (per Gate P5 → P6), so zero client impact.</p>
   </div>
   <div class="card">
     <div class="card-title">Phase 6 (Test suite)</div>
@@ -622,7 +622,7 @@ git push origin main</pre>
   </div>
   <div class="card">
     <div class="card-title">Phase 8 (Tier gating)</div>
-    <p><code>git revert</code> the F7 commits on main. Redeploy prior stripe-webhook version via Supabase MCP. <strong>Do not delete subscriptions in Stripe</strong> â€” leave existing customers on their current plan until next runbook.</p>
+    <p><code>git revert</code> the F7 commits on main. Redeploy prior stripe-webhook version via Supabase MCP. <strong>Do not delete subscriptions in Stripe</strong> — leave existing customers on their current plan until next runbook.</p>
   </div>
 </div>
 </section>
@@ -638,18 +638,18 @@ git push origin main</pre>
   <div class="card">
     <div class="card-title">Halt conditions</div>
     <ul>
-      <li>Any phase gate fails after two attempts â†’ halt, file a bug via the FAB, write a postmortem before retrying</li>
-      <li>Prod console errors on a page that previously loaded clean â†’ revert most recent push immediately</li>
-      <li>Stripe webhook returns 5xx for &gt; 3 events in a row â†’ revert Phase 8.4 and investigate Stripe Dashboard event log</li>
-      <li>Backup workflow fails 3 weeks in a row â†’ halt all migration phases; backups are a hard prereq</li>
+      <li>Any phase gate fails after two attempts → halt, file a bug via the FAB, write a postmortem before retrying</li>
+      <li>Prod console errors on a page that previously loaded clean → revert most recent push immediately</li>
+      <li>Stripe webhook returns 5xx for &gt; 3 events in a row → revert Phase 8.4 and investigate Stripe Dashboard event log</li>
+      <li>Backup workflow fails 3 weeks in a row → halt all migration phases; backups are a hard prereq</li>
     </ul>
   </div>
 
   <div class="card">
     <div class="card-title">Contacts</div>
     <ul>
-      <li><strong>Owner:</strong> Rob Madsen â€” sole operator</li>
-      <li><strong>Stripe:</strong> dashboard.stripe.com â†’ Support â†’ Chat (live mode incidents only)</li>
+      <li><strong>Owner:</strong> Rob Madsen — sole operator</li>
+      <li><strong>Stripe:</strong> dashboard.stripe.com → Support → Chat (live mode incidents only)</li>
       <li><strong>Supabase:</strong> support@supabase.com (paid plan response within 24h)</li>
       <li><strong>Vercel:</strong> vercel.com/help (community + chat on Pro plan)</li>
     </ul>
@@ -658,19 +658,19 @@ git push origin main</pre>
   <div class="card">
     <div class="card-title">Related Artifacts</div>
     <ul>
-      <li><a href="/platform/aaa-plan" style="color:var(--gold-light)">/platform/aaa-plan</a> â€” source plan for this runbook</li>
-      <li><a href="/platform/5-7-26-runbook-security" style="color:var(--gold-light)">/platform/5-7-26-runbook-security</a> â€” security hardening runbook (prereq for Phase 4)</li>
-      <li><a href="/platform/5-8-26-claude-review" style="color:var(--gold-light)">/platform/5-8-26-claude-review</a> â€” most recent full platform review (grade baseline)</li>
-      <li><a href="/platform/bugs" style="color:var(--gold-light)">/platform/bugs</a> â€” log any runbook-discovered issues here</li>
+      <li><a href="/platform/aaa-plan" style="color:var(--gold-light)">/platform/aaa-plan</a> — source plan for this runbook</li>
+      <li><a href="/platform/5-7-26-runbook-security" style="color:var(--gold-light)">/platform/5-7-26-runbook-security</a> — security hardening runbook (prereq for Phase 4)</li>
+      <li><a href="/platform/5-8-26-claude-review" style="color:var(--gold-light)">/platform/5-8-26-claude-review</a> — most recent full platform review (grade baseline)</li>
+      <li><a href="/platform/bugs" style="color:var(--gold-light)">/platform/bugs</a> — log any runbook-discovered issues here</li>
     </ul>
   </div>
 </div>
 </section>
 
 <footer>
-  Generated by <span>Claude Opus 4.7</span> Â· Greenskeeper Studios Internal Â· May 11, 2026
+  Generated by <span>Claude Opus 4.7</span> · Greenskeeper Studios Internal · May 11, 2026
   <br style="margin-top:0.3rem">
-  <a href="/platform" style="color:var(--muted);font-size:0.72rem;text-decoration:none">â† TOURney Operations</a>
+  <a href="/platform" style="color:var(--muted);font-size:0.72rem;text-decoration:none">← TOURney Operations</a>
 </footer>
 
 <script src="/bug-fab.js?v=4" defer></script>
