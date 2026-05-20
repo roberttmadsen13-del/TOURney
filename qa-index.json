@@ -347,16 +347,16 @@
     {
       "id": "review-bugs-2026-05-19",
       "category": "review",
-      "stage": "audit",
+      "stage": "concluded",
       "title": "Bug Backlog Review · May 19, 2026",
-      "summary": "Execute grade A-. 5 shipped: tenant flash guard (tourney-init.js), bug FAB z-index 9999→10001, artifacts tab concluded visible by default, SW v36→v37 for PWA icon cache, four-team-test colors confirmed via REST. 2 Rob actions remain: verify admin title live, platform_bugs UPDATE (needs MCP reconnect).",
+      "summary": "Grade A-. 6 code fixes shipped: tenant flash guard, FAB z-index 10001, SW v37, four-team-test colors, bug popup opacity (bug-fab.js v5), artifacts tab default hidden. 1 Rob action remains: verify admin title + mark bug cd91dbaf completed.",
       "date": "2026-05-19",
       "updated": "2026-05-19",
       "author": "claude-sonnet-4-6",
       "url": "/platform/5-19-26-bugs-review",
       "file": "5-19-26-bugs-review.html",
       "tags": ["bugs", "review", "fix", "ux"],
-      "status": "partial"
+      "status": "concluded"
     },
     {
       "id": "bugs-2026",

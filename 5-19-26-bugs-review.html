@@ -93,8 +93,8 @@ footer span{color:var(--gold);}
   <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Plan</div></div>
   <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Runbook</div></div>
   <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Executing</div></div>
-  <div class="lc-stage lc-active"><div class="lc-pill"></div><div class="lc-label">Audit</div></div>
-  <div class="lc-stage"><div class="lc-pill"></div><div class="lc-label">Concluded</div></div>
+  <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Audit</div></div>
+  <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Concluded</div></div>
 </div>
 
 <div class="hero">
@@ -190,7 +190,7 @@ footer span{color:var(--gold);}
           <td><span class="pill pill-orange">P1</span></td>
           <td>Platform tooling</td>
           <td><span class="pill pill-red">Open</span></td>
-          <td><code>scorecard.html:1866</code> has <code>&lt;script src="/bug-fab.js?v=4" defer&gt;</code> â€” it IS loaded. Likely a z-index conflict: scorecard has full-screen overlay elements (hole card, nav) that sit above <code>z-index:9999</code> or the FAB is hidden behind the dark overlay backdrop. Also possible: FAB renders but is obscured by the sticky nav or round-summary strip on mobile viewport.</td>
+          <td><code>scorecard.html:1866</code> has <code>&lt;script src="/bug-fab.js?v=5" defer&gt;</code> â€” it IS loaded. Likely a z-index conflict: scorecard has full-screen overlay elements (hole card, nav) that sit above <code>z-index:9999</code> or the FAB is hidden behind the dark overlay backdrop. Also possible: FAB renders but is obscured by the sticky nav or round-summary strip on mobile viewport.</td>
         </tr>
         <tr>
           <td>Artifacts tab not loading without filter</td>
@@ -482,9 +482,9 @@ footer span{color:var(--gold);}
   <span class="exec-badge exec-done">Done</span>
   <div class="exec-body"><strong>Mark resolved bugs completed in platform_bugs</strong> â€” MCP reconnected 2026-05-20 (omen1 session). UPDATE executed: 5 rows â†’ <code>completed</code>: tenant flash, FAB z-index, artifacts tab, app icon, site colors. <code>tourney title</code> (cd91dbaf) left <code>open</code> â€” Rob must verify live first.</div>
 </div>
-<div class="exec-step">
-  <span class="exec-badge" style="background:rgba(41,128,185,0.15);color:#2980b9;border:1px solid rgba(41,128,185,0.3);">Planned</span>
-  <div class="exec-body"><strong>Bug popup opacity â€” 10% less transparent</strong> â€” New bug logged 2026-05-20 (<code>26e81e78</code>). Fix: reduce modal alpha in <code>bug-fab.js</code>. See Runbook Step 9. Not yet executed.</div>
+<div class=”exec-step”>
+  <span class=”exec-badge exec-done”>Done</span>
+  <div class=”exec-body”><strong>Bug popup opacity â€” 10% less transparent</strong> â€” Bumped <code>.gb-content</code> background alpha 0.45â†'0.55, modal overlay 0.18â†'0.28. Version comment v4â†'v5. Cache-bust ?v=4â†'?v=5 across all 34 HTML files. <code>bug-fab.js:4,27,28</code>. 2026-05-19 Â· claude-sonnet-4-6.</div>
 </div>
 <!-- EXECUTING-CONTENT-END -->
 </div>
@@ -530,24 +530,24 @@ footer span{color:var(--gold);}
 <section id="concluded">
 <div class="wrapper">
 <!-- CONCLUDED-CONTENT-START -->
-<div class="section-header">
-  <div class="section-eyebrow">Stage 6 â€” Concluded</div>
-  <div class="section-title">Ticket Partial â€” 1 Rob Action + 1 Planned Bug</div>
-  <p class="section-desc">Updated 2026-05-20 Â· claude-sonnet-4-6 Â· omen1</p>
+<div class=”section-header”>
+  <div class=”section-eyebrow”>Stage 6 â€” Concluded</div>
+  <div class=”section-title”>Ticket Concluded</div>
+  <p class=”section-desc”>2026-05-19 Â· claude-sonnet-4-6</p>
 </div>
-<div class="card">
-  <div class="card-title">Summary</div>
-  <p>12 bugs total. 5 code fixes shipped (2026-05-19): tenant flash guard, FAB z-index 10001, artifacts tab initial load, SW v37, four-team-test colors confirmed. platform_bugs DB updated (2026-05-20, MCP reconnected): 5 rows marked completed. 1 Rob action remains: verify admin title live. 1 new P2 bug planned: bug popup opacity (reduce ~10% in bug-fab.js).</p>
+<div class=”card”>
+  <div class=”card-title”>Summary</div>
+  <p>All engineering items shipped. 6 code fixes: tenant flash guard (tourney-init.js), bug FAB z-index 10001, SW v37 cache bust, four-team-test colors confirmed via REST, bug popup opacity +10% (bug-fab.js v5, ?v=5 across 34 pages), artifacts tab concluded-hidden-by-default. platform_bugs DB: 5 rows marked completed. 1 Rob action remains: verify admin title live at /t/johnston-county-hbca-superball-2026/admin then mark bug cd91dbaf completed.</p>
 </div>
-<div class="card">
-  <div class="card-title">Rob's 1 Remaining Action</div>
+<div class=”card”>
+  <div class=”card-title”>Rob's 1 Remaining Action</div>
   <ul>
-    <li>Visit <code>https://tourney.greenskeeper.studio/t/johnston-county-hbca-superball-2026/admin</code> â€” confirm "Johnston County HBCA Superball" title visible while logged in. Then: <code>UPDATE platform_bugs SET status='completed' WHERE id='cd91dbaf-1a63-4120-b9c1-968e57caef0a';</code></li>
+    <li>Visit <code>https://tourney.greenskeeper.studio/t/johnston-county-hbca-superball-2026/admin</code> â€” confirm “Johnston County HBCA Superball” title visible while logged in. Then mark bug resolved: <code>UPDATE platform_bugs SET status='completed' WHERE id='cd91dbaf-1a63-4120-b9c1-968e57caef0a';</code></li>
   </ul>
 </div>
-<div class="card">
-  <div class="card-title">Next Execute</div>
-  <p>Run <code>/tourney-execute 5-19-26-bugs-review.html</code> to ship the bug popup opacity fix (Runbook Step 9).</p>
+<div class=”card”>
+  <div class=”card-title”>Next Ticket</div>
+  <p>Run <code>/tourney-execute 5-19-26-master-plan.html</code> to begin the engineering sprint (OG tags, onboarding fixes, score admin-edit).</p>
 </div>
 <!-- CONCLUDED-CONTENT-END -->
 </div>
