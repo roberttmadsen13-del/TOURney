@@ -532,24 +532,22 @@ footer span{color:var(--gold);}
 <!-- CONCLUDED-CONTENT-START -->
 <div class="section-header">
   <div class="section-eyebrow">Stage 6 — Concluded</div>
-  <div class="section-title">Ticket Partial — 2 Rob Actions Remain</div>
-  <p class="section-desc">2026-05-19 · claude-sonnet-4-6</p>
+  <div class="section-title">Ticket Partial — 1 Rob Action + 1 Planned Bug</div>
+  <p class="section-desc">Updated 2026-05-20 · claude-sonnet-4-6 · omen1</p>
 </div>
 <div class="card">
   <div class="card-title">Summary</div>
-  <p>5 of 7 runbook steps shipped: tenant branding flash fixed, bug FAB z-index fixed, artifacts tab initial load fixed, SW cache bumped to v37 for PWA icon, four-team-test colors confirmed correct via REST API. The create.html admin seed was already correct. 2 items remain: live URL verification (needs browser) and marking platform_bugs rows completed (needs Supabase MCP reconnect or dashboard).</p>
+  <p>12 bugs total. 5 code fixes shipped (2026-05-19): tenant flash guard, FAB z-index 10001, artifacts tab initial load, SW v37, four-team-test colors confirmed. platform_bugs DB updated (2026-05-20, MCP reconnected): 5 rows marked completed. 1 Rob action remains: verify admin title live. 1 new P2 bug planned: bug popup opacity (reduce ~10% in bug-fab.js).</p>
 </div>
 <div class="card">
-  <div class="card-title">Rob's Action Items</div>
+  <div class="card-title">Rob's 1 Remaining Action</div>
   <ul>
-    <li>Visit <code>https://tourney.greenskeeper.studio/t/johnston-county-hbca-superball-2026/admin</code> — confirm title visible.</li>
-    <li>In Supabase dashboard → SQL Editor: <code>SELECT key, value FROM settings JOIN tournaments t ON t.id=settings.tournament_id WHERE t.slug='four-team-test' AND key IN ('color_primary','color_ink','color_bg');</code> — if empty, open admin Design tab for that tenant and save colors.</li>
-    <li>Run: <code>UPDATE platform_bugs SET status='completed' WHERE id IN ('4152a338-f2ee-4d66-a44d-33f283f18a9b','2ee25633-2c26-434f-88c3-8512bc54c916','493c41f9-351a-4d86-9245-103504e51ba','a2f07a32-7c87-4174-9f9d-5c640263be6f','cd91dbaf-1a63-4120-b9c1-968e57caef0a','82d08d84-f17b-462a-a189-d3cdb68e67ca');</code></li>
+    <li>Visit <code>https://tourney.greenskeeper.studio/t/johnston-county-hbca-superball-2026/admin</code> — confirm "Johnston County HBCA Superball" title visible while logged in. Then: <code>UPDATE platform_bugs SET status='completed' WHERE id='cd91dbaf-1a63-4120-b9c1-968e57caef0a';</code></li>
   </ul>
 </div>
 <div class="card">
-  <div class="card-title">Next Ticket</div>
-  <p>Run <code>/tourney-review security</code> or <code>/tourney-execute 5-19-26-ux-review.html</code> to continue.</p>
+  <div class="card-title">Next Execute</div>
+  <p>Run <code>/tourney-execute 5-19-26-bugs-review.html</code> to ship the bug popup opacity fix (Runbook Step 9).</p>
 </div>
 <!-- CONCLUDED-CONTENT-END -->
 </div>
