@@ -23,15 +23,16 @@
     {
       "id": "review-2026-05-15",
       "category": "review",
-      "stage": "executing",
+      "stage": "audit",
       "title": "Full Platform Review · May 15, 2026",
-      "summary": "Weekly automated review. New finding: duplicate 006 migration prefix (006_drop_is_admin + 006_multi_tourney_players) — schema governance hazard. player_accounts anon SELECT USING(true) exposes billing_status to anonymous visitors (not closed by migration 008). Grades: Arch A-, Feature B+, UX A-, Security B+, Business C+ (blocker), Deploy A-, Perf B, Data B. No axis below C.",
+      "summary": "Execute audit B+. 006b rename shipped, migration 012 applied (player_accounts anon read closed), feed.html skeleton added. 2 blocked: SEND_INSTALL_EMAIL_SECRET + GitHub CI secrets (Rob manual). Arch A, Security A-, Data B+, Perf B+. Business C+ unchanged (LLC blocker).",
       "date": "2026-05-15",
       "author": "claude-sonnet-4-6",
       "url": "/platform/5-15-26-claude-review",
       "file": "5-15-26-claude-review.html",
       "tags": ["review", "audit"],
-      "status": "open"
+      "status": "partial",
+      "updated": "2026-05-19"
     },
     {
       "id": "logo-audit-2026-05-14",

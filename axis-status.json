@@ -4,12 +4,12 @@
   "stages": ["review", "plan", "runbook", "executing", "audit", "concluded"],
   "axes": {
     "architecture": {
-      "status": "review",
-      "grade": "A-",
+      "status": "audit",
+      "grade": "A",
       "artifact": "/platform/5-15-26-claude-review",
-      "last_updated": "2026-05-15",
-      "summary": "Down from A. Duplicate 006 migration prefix (006_drop_is_admin + 006_multi_tourney_players) — schema governance hazard. Rename to 006b required. tourney-init.js solid, tournament_admins canonical otherwise.",
-      "open_items": 2,
+      "last_updated": "2026-05-19",
+      "summary": "006b rename shipped — schema governance clean. 12 migrations unambiguously ordered. Settings store un-typed remains only open item.",
+      "open_items": 1,
       "blocking": false
     },
     "feature-depth": {
@@ -31,12 +31,12 @@
       "blocking": false
     },
     "security": {
-      "status": "review",
-      "grade": "B+",
+      "status": "audit",
+      "grade": "A-",
       "artifact": "/platform/5-15-26-claude-review",
-      "last_updated": "2026-05-15",
-      "summary": "Holds B+. player_accounts anon SELECT USING(true) confirmed still open (migration 005, not closed by 008). CSP unsafe-inline open. SEND_INSTALL_EMAIL_SECRET Rob manual pending. Migration 012 runbook written.",
-      "open_items": 4,
+      "last_updated": "2026-05-19",
+      "summary": "Migration 012 applied — player_accounts anon read closed. CSP unsafe-inline still open. SEND_INSTALL_EMAIL_SECRET Rob manual blocked.",
+      "open_items": 2,
       "blocking": false
     },
     "business": {
@@ -58,21 +58,21 @@
       "blocking": false
     },
     "performance": {
-      "status": "review",
-      "grade": "B",
+      "status": "audit",
+      "grade": "B+",
       "artifact": "/platform/5-15-26-claude-review",
-      "last_updated": "2026-05-15",
-      "summary": "No change. SW v36, 26 precached files. Skeletons on scoreboard+home. Feed, directory, profile, champions still blank-flash. No Lighthouse CI or perf monitoring.",
-      "open_items": 2,
+      "last_updated": "2026-05-19",
+      "summary": "Skeleton added to feed.html. Scoreboard already had skeletons. Directory, profile, champions still blank-flash. No Lighthouse CI.",
+      "open_items": 1,
       "blocking": false
     },
     "data-model": {
-      "status": "review",
-      "grade": "B",
+      "status": "audit",
+      "grade": "B+",
       "artifact": "/platform/5-15-26-claude-review",
-      "last_updated": "2026-05-15",
-      "summary": "Holds B. New: duplicate 006 migration prefix flagged. player_accounts anon SELECT USING(true) still open. settings store un-typed. 11 migrations otherwise sound.",
-      "open_items": 3,
+      "last_updated": "2026-05-19",
+      "summary": "006b rename done. Migration 012 applied — anon read closed. 12 migrations clean. Settings store un-typed remains only gap.",
+      "open_items": 1,
       "blocking": false
     },
     "marketing": {

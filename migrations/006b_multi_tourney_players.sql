@@ -1,4 +1,5 @@
--- Migration 006: Allow players to join multiple tournaments
+-- Originally applied as 006 alongside 006_drop_is_admin. Renamed to 006b for ordering clarity.
+-- Migration 006b: Allow players to join multiple tournaments
 -- Problem: players.email had a global UNIQUE constraint, so one person
 --          could only register once across ALL tournaments.
 -- Fix: drop global email uniqueness, enforce (email, tournament_id) uniqueness

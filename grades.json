@@ -7,6 +7,13 @@
       "cmd": "/tourney-review-architecture",
       "scores": [
         {
+          "date": "2026-05-19",
+          "score": "A",
+          "url": "/platform/5-15-26-claude-review",
+          "review_title": "Execute + Audit · May 19, 2026",
+          "notes": "006b rename shipped — duplicate migration prefix resolved. 12 migrations now clean with unambiguous ordering. Settings store un-typed remains only open item."
+        },
+        {
           "date": "2026-05-15",
           "score": "A-",
           "url": "/platform/5-15-26-claude-review",
@@ -179,6 +186,13 @@
       "cmd": "/tourney-review-security",
       "scores": [
         {
+          "date": "2026-05-19",
+          "score": "A-",
+          "url": "/platform/5-15-26-claude-review",
+          "review_title": "Execute + Audit · May 19, 2026",
+          "notes": "Migration 012 applied — anon read player_accounts policy dropped, auth-scoped read added. Billing data no longer exposed to anonymous visitors. CSP unsafe-inline still open. SEND_INSTALL_EMAIL_SECRET Rob manual (blocked)."
+        },
+        {
           "date": "2026-05-15",
           "score": "B+",
           "url": "/platform/5-15-26-claude-review",
@@ -337,6 +351,13 @@
       "cmd": "/tourney-review-performance",
       "scores": [
         {
+          "date": "2026-05-19",
+          "score": "B+",
+          "url": "/platform/5-15-26-claude-review",
+          "review_title": "Execute + Audit · May 19, 2026",
+          "notes": "Skeleton shimmer added to feed.html (3 skeleton divs, replaces loading-state text). Scoreboard already had skeleton rows. Directory, profile, champions still blank-flash. No Lighthouse CI."
+        },
+        {
           "date": "2026-05-15",
           "score": "B",
           "url": "/platform/5-15-26-claude-review",
@@ -377,6 +398,13 @@
       "label": "Data Model",
       "cmd": "/tourney-review-data-model",
       "scores": [
+        {
+          "date": "2026-05-19",
+          "score": "B+",
+          "url": "/platform/5-15-26-claude-review",
+          "review_title": "Execute + Audit · May 19, 2026",
+          "notes": "006b rename done — migration numbering clean. Migration 012 applied — anon read player_accounts closed. 12 migrations sound. Settings store un-typed remains only open item."
+        },
         {
           "date": "2026-05-15",
           "score": "B",

@@ -1,5 +1,15 @@
 # QA Bug Log — TOURney Platform (updated: 2026-05-15)
 
+### 2026-05-19 — 5-15-26-claude-review execute audit
+- [DONE] Duplicate 006 migration prefix — renamed to `006b_multi_tourney_players.sql` + header comment added. Status: fixed
+- [DONE] player_accounts anon SELECT USING(true) — migration 012 applied to Supabase, anon policy dropped, `auth read own player_account` scoped to `email = auth.email()`. Status: fixed
+- [DONE] feed.html blank-flash on load — 3 skeleton shimmer divs added (`.skeleton` class from tokens.css). Status: fixed
+- [SKIPPED] vercel.json ticket rewrite — `/platform/:slug` catch-all already handles `/platform/5-15-26-claude-review` → `/5-15-26-claude-review.html`. Status: not needed
+- [BLOCKED] SEND_INSTALL_EMAIL_SECRET — Rob manual: Supabase dashboard env var + DB webhook Authorization header. Status: open
+- [BLOCKED] GitHub CI deploy secrets — Rob manual: add SUPABASE_ACCESS_TOKEN + SUPABASE_PROJECT_REF to repo secrets. Status: open
+
+---
+
 ### 2026-05-15 — 5-15-26-claude-review weekly automated review
 
 - [MEDIUM] Schema governance — duplicate migration prefix 006. Both `migrations/006_drop_is_admin.sql` and `migrations/006_multi_tourney_players.sql` carry the 006 prefix. Supabase applies by filename alpha-sort; ordering is implicit, not explicit. Fresh schema apply on a new environment is ambiguous. Fix: rename `006_multi_tourney_players.sql` → `006b_multi_tourney_players.sql`. Add header comment documenting the history. Status: open

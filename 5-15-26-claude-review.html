@@ -145,8 +145,8 @@ footer span{color:var(--gold);}
   <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Review</div></div>
   <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Plan</div></div>
   <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Runbook</div></div>
-  <div class="lc-stage"><div class="lc-pill"></div><div class="lc-label">Executing</div></div>
-  <div class="lc-stage"><div class="lc-pill"></div><div class="lc-label">Audit</div></div>
+  <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Executing</div></div>
+  <div class="lc-stage lc-active"><div class="lc-pill"></div><div class="lc-label">Audit</div></div>
   <div class="lc-stage"><div class="lc-pill"></div><div class="lc-label">Concluded</div></div>
 </div>
 <!-- LIFECYCLE-BAR-END -->
@@ -590,8 +590,38 @@ git push</pre>
 <section id="executing">
 <div class="wrapper">
 <!-- EXECUTING-CONTENT-START -->
-<div class="stage-pending">
-  <p>Awaiting execution. Run <code>/tourney-execute 5-15-26-claude-review.html</code> to proceed.</p>
+<div class="section-header">
+  <div class="section-eyebrow">Stage 4 — Executing</div>
+  <h2 class="section-title">Execution Log</h2>
+  <p class="section-desc">Step-by-step record of what ran. 2026-05-19 · claude-sonnet-4-6</p>
+</div>
+<div class="exec-step">
+  <span class="exec-badge exec-done">Done</span>
+  <div class="exec-body"><strong>Rename duplicate migration 006b</strong>Renamed <code>migrations/006_multi_tourney_players.sql</code> → <code>migrations/006b_multi_tourney_players.sql</code>. Added header comment: "Originally applied as 006 alongside 006_drop_is_admin. Renamed to 006b for ordering clarity." Schema governance hazard resolved.</div>
+</div>
+<div class="exec-step">
+  <span class="exec-badge exec-done">Done</span>
+  <div class="exec-body"><strong>Write + apply migration 012: restrict player_accounts anon SELECT</strong>Created <code>migrations/012_restrict_player_accounts_anon_read.sql</code>. Applied to Supabase (project jllugkiojeoopitdvzsa) via MCP — success. Dropped "anon read player_accounts" policy. Created "auth read own player_account" FOR SELECT TO authenticated USING (email = auth.email()). Billing data no longer exposed to anonymous visitors.</div>
+</div>
+<div class="exec-step">
+  <span class="exec-badge exec-skipped">Skipped</span>
+  <div class="exec-body"><strong>Update vercel.json — add new ticket rewrite</strong>Not needed. <code>/platform/:slug</code> catch-all rewrite already present at vercel.json:77 → maps <code>/platform/5-15-26-claude-review</code> → <code>/5-15-26-claude-review.html</code>. No duplicate entry needed.</div>
+</div>
+<div class="exec-step">
+  <span class="exec-badge exec-blocked">Blocked</span>
+  <div class="exec-body"><strong>[ROB MANUAL] Set SEND_INSTALL_EMAIL_SECRET env var</strong>Requires Supabase dashboard access. Rob must: (1) Supabase → Project Settings → Edge Functions → add <code>SEND_INSTALL_EMAIL_SECRET = &lt;openssl rand -hex 32&gt;</code>. (2) Database → Webhooks → update Authorization header to <code>Bearer &lt;secret&gt;</code>. Install emails blocked until done.</div>
+</div>
+<div class="exec-step">
+  <span class="exec-badge exec-blocked">Blocked</span>
+  <div class="exec-body"><strong>[ROB MANUAL] Set GitHub repo secrets for CI edge deploy</strong>Requires GitHub repo settings access. Rob must: GitHub → roberttmadsen13-del/TOURney → Settings → Secrets → add <code>SUPABASE_ACCESS_TOKEN</code> (from app.supabase.com → Account → Access Tokens) and <code>SUPABASE_PROJECT_REF = jllugkiojeoopitdvzsa</code>. 5-minute task.</div>
+</div>
+<div class="exec-step">
+  <span class="exec-badge exec-skipped">Skipped</span>
+  <div class="exec-body"><strong>Add loading skeletons to scoreboard.html</strong>Already done in a prior sprint. <code>leaderboardBody</code> (lines 277–284) and <code>indLeaderboardBody</code> (lines 303–310) both contain 6 skeleton <code>&lt;tr&gt;</code> rows using <code>.skeleton</code> class from tokens.css.</div>
+</div>
+<div class="exec-step">
+  <span class="exec-badge exec-done">Done</span>
+  <div class="exec-body"><strong>Add loading skeletons to feed.html</strong>Replaced <code>&lt;div class="loading-state"&gt;Loading feed...&lt;/div&gt;</code> (feed.html:223) with 3 skeleton shimmer divs (<code>.skeleton</code> class, height:5rem, border-radius:8px). <code>renderFeed()</code> overwrites on data resolve. Blank-flash eliminated on feed.</div>
 </div>
 <!-- EXECUTING-CONTENT-END -->
 </div>
@@ -600,8 +630,35 @@ git push</pre>
 <section id="audit">
 <div class="wrapper">
 <!-- AUDIT-CONTENT-START -->
-<div class="stage-pending">
-  <p>Awaiting execution. Run <code>/tourney-execute 5-15-26-claude-review.html</code> to proceed.</p>
+<div class="section-header">
+  <div class="section-eyebrow">Stage 5 — Audit</div>
+  <h2 class="section-title">Audit Results</h2>
+  <p class="section-desc">Grade: B+. 2026-05-19 · claude-sonnet-4-6</p>
+</div>
+<div class="score-grid">
+  <div class="score-cell"><div class="score-num score-green">A</div><div class="score-label">Architecture</div></div>
+  <div class="score-cell"><div class="score-num score-green">A-</div><div class="score-label">Security</div></div>
+  <div class="score-cell"><div class="score-num score-gold">B+</div><div class="score-label">Data Model</div></div>
+  <div class="score-cell"><div class="score-num score-gold">B+</div><div class="score-label">Performance</div></div>
+  <div class="score-cell"><div class="score-num score-red">C+</div><div class="score-label">Business</div></div>
+</div>
+<div class="card">
+  <div class="card-title">What Shipped</div>
+  <ul>
+    <li><strong>006b rename.</strong> <code>migrations/006_multi_tourney_players.sql</code> → <code>006b_multi_tourney_players.sql</code>. Header comment added. Schema governance hazard closed. Architecture A.</li>
+    <li><strong>Migration 012 applied.</strong> Dropped "anon read player_accounts" USING(true). Created "auth read own player_account" FOR SELECT TO authenticated USING (email = auth.email()). Applied live to Supabase jllugkiojeoopitdvzsa. Billing data no longer publicly readable. Security A-.</li>
+    <li><strong>feed.html skeleton.</strong> Replaced loading-state text with 3 skeleton shimmer divs. Blank-flash on feed eliminated. Performance B+.</li>
+    <li><strong>scoreboard.html skeletons.</strong> Already present from prior sprint — confirmed live, no action needed.</li>
+  </ul>
+</div>
+<div class="card">
+  <div class="card-title">Still Open</div>
+  <ul>
+    <li><span class="pill pill-orange">BLOCKED — Rob</span> <strong>SEND_INSTALL_EMAIL_SECRET</strong> — Supabase dashboard env var + DB webhook header. Install emails still not firing.</li>
+    <li><span class="pill pill-orange">BLOCKED — Rob</span> <strong>GitHub CI secrets</strong> — SUPABASE_ACCESS_TOKEN + SUPABASE_PROJECT_REF. deploy-functions.yml inactive until set.</li>
+    <li><span class="pill pill-orange">HIGH</span> <strong>CSP unsafe-inline</strong> — script-src unsafe-inline in vercel.json nullifies XSS protection. Requires inline script extraction (~8–12h effort).</li>
+    <li><span class="pill pill-red">BLOCKER</span> <strong>Business: LLC not formed</strong> — Stripe test-mode only, reg_open=false. Revenue path blocked.</li>
+  </ul>
 </div>
 <!-- AUDIT-CONTENT-END -->
 </div>
@@ -610,8 +667,26 @@ git push</pre>
 <section id="concluded">
 <div class="wrapper">
 <!-- CONCLUDED-CONTENT-START -->
-<div class="stage-pending">
-  <p>Awaiting execution. Run <code>/tourney-execute 5-15-26-claude-review.html</code> to proceed.</p>
+<div class="section-header">
+  <div class="section-eyebrow">Stage 6 — Concluded</div>
+  <h2 class="section-title">Ticket Partial — Audit Active</h2>
+  <p class="section-desc">2026-05-19 · claude-sonnet-4-6</p>
+</div>
+<div class="card">
+  <div class="card-title">Summary</div>
+  <p>Core security and schema fixes shipped: migration 006b resolved the duplicate prefix governance hazard, migration 012 closed the player_accounts anon read exposure (billing data now private), and feed.html got skeleton shimmer. Net delta: Architecture A, Security A-, Data Model B+, Performance B+. Two Rob manual actions remain (SEND_INSTALL_EMAIL_SECRET, GitHub CI secrets) and the LLC blocker keeps Business at C+.</p>
+</div>
+<div class="card">
+  <div class="card-title">Rob's Action Items</div>
+  <ul>
+    <li><strong>SEND_INSTALL_EMAIL_SECRET</strong> — Supabase dashboard → Project Settings → Edge Functions → add env var (use <code>openssl rand -hex 32</code>). Then Database → Webhooks → update Authorization header to <code>Bearer &lt;secret&gt;</code>. Unblocks install email flow.</li>
+    <li><strong>GitHub CI secrets</strong> — GitHub → roberttmadsen13-del/TOURney → Settings → Secrets → add <code>SUPABASE_ACCESS_TOKEN</code> + <code>SUPABASE_PROJECT_REF=jllugkiojeoopitdvzsa</code>. 5-minute task. Unblocks edge function auto-deploy.</li>
+    <li><strong>LLC formation</strong> — P0 business blocker. Wyoming or Delaware single-member LLC. Unlocks Stripe live mode, Mercury bank, reg_open=true, first paid revenue.</li>
+  </ul>
+</div>
+<div class="card">
+  <div class="card-title">Next Ticket</div>
+  <p>Run <code>/tourney-review business</code> to drive LLC → Stripe live mode unblock, or <code>/tourney-review security</code> to tackle CSP unsafe-inline extraction.</p>
 </div>
 <!-- CONCLUDED-CONTENT-END -->
 </div>
