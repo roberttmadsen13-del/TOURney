@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -17,8 +17,8 @@
     })();
   </script>
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>TOURney — Run Your Golf Tournament Like a Pro</title>
-  <meta name="description" content="Live scoring, player registration, team management, and a branded PWA — for any golf tournament.">
+  <title>TOURney â€” Run Your Golf Tournament Like a Pro</title>
+  <meta name="description" content="Live scoring, player registration, team management, and a branded PWA â€” for any golf tournament.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,300;0,400;0,600;0,700;1,400;1,700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -32,13 +32,13 @@
     html{scroll-behavior:smooth}
     body{background:var(--ink);color:var(--cream);font-family:'Barlow Condensed',sans-serif;-webkit-font-smoothing:antialiased}
 
-    /* ─── NAV ─── */
+    /* â”€â”€â”€ NAV â”€â”€â”€ */
     nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1.1rem 2rem;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);background:rgba(10,7,3,0.85);backdrop-filter:blur(12px)}
     .nav-logo{font-weight:700;font-size:1rem;letter-spacing:0.28em;text-transform:uppercase;color:var(--gold)}
     .nav-cta{padding:.55rem 1.4rem;background:var(--gold);color:var(--ink);font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;border:none;border-radius:3px;cursor:pointer;text-decoration:none;transition:background .15s}
     .nav-cta:hover{background:#d4a035}
 
-    /* ─── HERO SPLIT ─── */
+    /* â”€â”€â”€ HERO SPLIT â”€â”€â”€ */
     .hero-outer{min-height:100vh;display:flex;align-items:center;position:relative;overflow:hidden;padding-top:70px}
     .hero-outer::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 60% at 68% 50%,rgba(192,144,48,0.07) 0%,transparent 70%);pointer-events:none}
     .hero-inner{max-width:1180px;margin:0 auto;width:100%;padding:4rem 3rem;display:grid;grid-template-columns:1fr 290px;gap:5rem;align-items:center}
@@ -60,7 +60,7 @@
     .btn-ghost:hover{border-color:var(--cream);color:var(--cream)}
     .hero-note{margin-top:1rem;font-family:'DM Mono',monospace;font-size:.56rem;letter-spacing:.12em;color:var(--gold);opacity:.6}
 
-    /* ─── PHONE FRAME ─── */
+    /* â”€â”€â”€ PHONE FRAME â”€â”€â”€ */
     .phone-wrap{position:relative;display:flex;justify-content:center;align-items:center}
     .phone-glow{position:absolute;inset:-30px;background:radial-gradient(ellipse 55% 50% at 50% 50%,rgba(192,144,48,0.22) 0%,transparent 70%);filter:blur(24px);pointer-events:none;z-index:0}
     .phone{position:relative;z-index:1;width:252px;height:508px;border-radius:40px;border:2.5px solid rgba(255,255,255,0.07);background:#0f0d0b;box-shadow:0 50px 100px rgba(0,0,0,0.85),0 0 0 1px rgba(255,255,255,0.025),inset 0 0 0 1px rgba(255,255,255,0.03)}
@@ -69,7 +69,7 @@
     .phone-notch{position:absolute;top:0;left:50%;transform:translateX(-50%);width:82px;height:23px;background:#0f0d0b;border-radius:0 0 15px 15px;z-index:20}
     .phone-screen{width:100%;height:100%;background:#0a0703;display:flex;flex-direction:column;overflow:hidden;border-radius:38px}
 
-    /* ─── PHONE INTERNALS ─── */
+    /* â”€â”€â”€ PHONE INTERNALS â”€â”€â”€ */
     .p-status{display:flex;justify-content:space-between;align-items:center;padding:26px 16px 0;height:42px;font-size:8px;font-family:'DM Mono',monospace;color:rgba(245,237,224,0.32);flex-shrink:0}
     .p-status-r{display:flex;gap:3px;align-items:center;font-size:7px}
     .p-header{padding:5px 13px 9px;border-bottom:1px solid rgba(245,237,224,0.06);flex-shrink:0}
@@ -103,7 +103,7 @@
     .p-nav-item.active{color:#c09030}
     .p-nav-icon{font-size:12px;line-height:1.3}
 
-    /* ─── SCORECARD SCREEN ─── */
+    /* â”€â”€â”€ SCORECARD SCREEN â”€â”€â”€ */
     .sc-player{padding:6px 13px;border-bottom:1px solid rgba(245,237,224,0.06);font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:600;letter-spacing:.06em;color:rgba(245,237,224,0.6);flex-shrink:0}
     .sc-grid{flex:1;overflow:hidden;padding:6px 6px 0}
     .sc-table{width:100%;border-collapse:collapse}
@@ -122,7 +122,7 @@
     .sc-tot-label{font-family:'DM Mono',monospace;font-size:6.5px;color:rgba(245,237,224,0.3);letter-spacing:.08em}
     .sc-tot-right{text-align:right;display:flex;flex-direction:column;gap:2px}
 
-    /* ─── FEED SCREEN ─── */
+    /* â”€â”€â”€ FEED SCREEN â”€â”€â”€ */
     .feed-list{flex:1;overflow:hidden;padding:7px;display:flex;flex-direction:column;gap:5px}
     .feed-card{border-radius:5px;padding:8px 9px;border:1px solid rgba(245,237,224,0.07);background:rgba(245,237,224,0.02)}
     .feed-card.hio{background:rgba(192,144,48,0.09);border-color:rgba(192,144,48,0.3)}
@@ -133,12 +133,12 @@
     .feed-bod{font-family:'DM Mono',monospace;font-size:6.5px;color:rgba(245,237,224,0.38);line-height:1.5}
     .feed-time{font-family:'DM Mono',monospace;font-size:5.5px;color:rgba(245,237,224,0.18);margin-top:3px}
 
-    /* ─── DEMO SCREENS (absolute-stacked inside phone) ─── */
+    /* â”€â”€â”€ DEMO SCREENS (absolute-stacked inside phone) â”€â”€â”€ */
     .demo-screens{width:100%;height:100%;position:relative;overflow:hidden}
     .demo-screen{position:absolute;inset:0;display:flex;flex-direction:column;opacity:0;transition:opacity .28s ease;pointer-events:none}
     .demo-screen.active{opacity:1;pointer-events:auto}
 
-    /* ─── DEMO SECTION ─── */
+    /* â”€â”€â”€ DEMO SECTION â”€â”€â”€ */
     .demo-section{padding:6rem 1.5rem;border-top:1px solid var(--border);background:rgba(245,237,224,0.01)}
     .demo-wrap{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr 300px;gap:5rem;align-items:center}
     @media(max-width:880px){
@@ -161,7 +161,7 @@
     .demo-phone-col{position:relative}
     .demo-phone-col .phone{height:540px}
 
-    /* ─── SECTION BASE ─── */
+    /* â”€â”€â”€ SECTION BASE â”€â”€â”€ */
     section{padding:6rem 1.5rem}
     .inner{max-width:1080px;margin:0 auto}
     .s-eyebrow{font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);margin-bottom:1rem;display:block}
@@ -169,7 +169,7 @@
     .s-title em{color:var(--gold);font-style:italic}
     .s-sub{font-family:'DM Mono',monospace;font-size:.72rem;color:var(--muted);line-height:1.7;max-width:560px}
 
-    /* ─── FEATURES ─── */
+    /* â”€â”€â”€ FEATURES â”€â”€â”€ */
     .features{background:rgba(245,237,224,0.02);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
     .feat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;margin-top:3.5rem}
     @media(max-width:760px){.feat-grid{grid-template-columns:1fr}.pricing-grid{grid-template-columns:1fr!important}}
@@ -178,7 +178,7 @@
     .feat-title{font-size:1.3rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:.6rem}
     .feat-body{font-family:'DM Mono',monospace;font-size:.65rem;color:var(--muted);line-height:1.7}
 
-    /* ─── HOW IT WORKS ─── */
+    /* â”€â”€â”€ HOW IT WORKS â”€â”€â”€ */
     .steps-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:3rem;margin-top:3.5rem}
     @media(max-width:760px){.steps-grid{grid-template-columns:1fr;gap:2rem}}
     .step-num{font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.25em;color:var(--gold);margin-bottom:.75rem}
@@ -186,7 +186,7 @@
     .step-body{font-family:'DM Mono',monospace;font-size:.65rem;color:var(--muted);line-height:1.7}
     .step-divider{width:2rem;height:1px;background:var(--border);margin:1.5rem 0}
 
-    /* ─── STAT BAR ─── */
+    /* â”€â”€â”€ STAT BAR â”€â”€â”€ */
     .stat-bar{border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:3rem 1.5rem}
     .stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;max-width:900px;margin:0 auto}
     @media(max-width:600px){.stat-grid{grid-template-columns:repeat(2,1fr)}}
@@ -194,13 +194,13 @@
     .stat-num{font-size:2.8rem;font-weight:700;letter-spacing:.02em;color:var(--gold);line-height:1}
     .stat-label{font-family:'DM Mono',monospace;font-size:.55rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-top:.35rem}
 
-    /* ─── CTA SECTION ─── */
+    /* â”€â”€â”€ CTA SECTION â”€â”€â”€ */
     .cta-section{text-align:center;padding:7rem 1.5rem;border-top:1px solid var(--border)}
     .cta-title{font-size:clamp(2.5rem,5vw,4rem);font-weight:700;text-transform:uppercase;letter-spacing:.04em;margin-bottom:1.5rem;line-height:.95}
     .cta-title em{color:var(--gold);font-style:italic}
     .cta-sub{font-family:'DM Mono',monospace;font-size:.7rem;color:var(--muted);margin-bottom:2.5rem;letter-spacing:.06em}
 
-    /* ─── FOOTER ─── */
+    /* â”€â”€â”€ FOOTER â”€â”€â”€ */
     footer{padding:2rem;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem}
     .footer-logo{font-weight:700;font-size:.85rem;letter-spacing:.28em;text-transform:uppercase;color:var(--gold)}
     .footer-copy{font-family:'DM Mono',monospace;font-size:.55rem;letter-spacing:.12em;color:var(--muted)}
@@ -214,7 +214,7 @@
     <div style="display:flex;align-items:center;gap:1.5rem">
       <a href="/platform" style="font-family:'DM Mono',monospace;font-size:.55rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(192,144,48,0.45);text-decoration:none;transition:color .15s" onmouseover="this.style.color='rgba(192,144,48,0.85)'" onmouseout="this.style.color='rgba(192,144,48,0.45)'">Platform</a>
       <a href="/player" style="font-family:'DM Mono',monospace;font-size:.55rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(192,144,48,0.45);text-decoration:none;transition:color .15s" onmouseover="this.style.color='rgba(192,144,48,0.85)'" onmouseout="this.style.color='rgba(192,144,48,0.45)'">My Golf</a>
-      <a href="/create" class="nav-cta">Get Started →</a>
+      <a href="/create" class="nav-cta">Get Started â†’</a>
     </div>
   </nav>
 
@@ -224,12 +224,12 @@
 
       <!-- Left: copy -->
       <div>
-        <div class="hero-eyebrow">Golf Tournament Platform · By Greenskeeper Studios</div>
+        <div class="hero-eyebrow">Golf Tournament Platform Â· By Greenskeeper Studios</div>
         <h1 class="hero-title">Your Tournament.<br><em>Your App.</em></h1>
-        <p class="hero-sub">Give your players a real app — live leaderboard, push notifications, offline scoring, player directory. Fully branded. Up in 15 minutes.</p>
+        <p class="hero-sub">Give your players a real app â€” live leaderboard, push notifications, offline scoring, player directory. Fully branded. Up in 15 minutes.</p>
         <div class="hero-actions">
-          <a href="/create" class="btn-primary">Build Your Tournament →</a>
-          <a href="#demo" class="btn-ghost">See It in Action ↓</a>
+          <a href="/create" class="btn-primary">Build Your Tournament â†’</a>
+          <a href="#demo" class="btn-ghost">See It in Action â†“</a>
         </div>
         <div class="hero-note">your-tournament.greenskeeper.studio</div>
       </div>
@@ -241,7 +241,7 @@
           <div class="phone">
             <div class="phone-notch"></div>
             <div class="phone-screen">
-              <div class="p-status"><span>9:41</span><div class="p-status-r"><span>●●●</span><span>▮</span></div></div>
+              <div class="p-status"><span>9:41</span><div class="p-status-r"><span>â—â—â—</span><span>â–®</span></div></div>
               <div class="p-header">
                 <div class="p-tourney">Greenskeeper Cup 2026</div>
                 <div class="p-page-title">Leaderboard <span class="p-badge">LIVE</span></div>
@@ -258,10 +258,10 @@
               </div>
               <div class="lb-list" id="hero-lb"></div>
               <div class="p-nav">
-                <div class="p-nav-item active"><div class="p-nav-icon">🏆</div><div>Board</div></div>
-                <div class="p-nav-item"><div class="p-nav-icon">⛳</div><div>Card</div></div>
-                <div class="p-nav-item"><div class="p-nav-icon">📡</div><div>Feed</div></div>
-                <div class="p-nav-item"><div class="p-nav-icon">👤</div><div>Me</div></div>
+                <div class="p-nav-item active"><div class="p-nav-icon">ðŸ†</div><div>Board</div></div>
+                <div class="p-nav-item"><div class="p-nav-icon">â›³</div><div>Card</div></div>
+                <div class="p-nav-item"><div class="p-nav-icon">ðŸ“¡</div><div>Feed</div></div>
+                <div class="p-nav-item"><div class="p-nav-icon">ðŸ‘¤</div><div>Me</div></div>
               </div>
             </div>
           </div>
@@ -279,7 +279,7 @@
       <div class="demo-meta">
         <span class="s-eyebrow">See It In Action</span>
         <h2 class="s-title">The Whole App.<br><em>Right Here.</em></h2>
-        <p style="font-family:'DM Mono',monospace;font-size:.7rem;color:var(--muted);line-height:1.7;max-width:420px">No redirects. No sign-up required. This is the actual app your players will use — live in the browser.</p>
+        <p style="font-family:'DM Mono',monospace;font-size:.7rem;color:var(--muted);line-height:1.7;max-width:420px">No redirects. No sign-up required. This is the actual app your players will use â€” live in the browser.</p>
         <div class="demo-tabs-row">
           <button class="d-tab active" data-tab="lb" onclick="switchTab('lb')">Leaderboard</button>
           <button class="d-tab" data-tab="sc" onclick="switchTab('sc')">Scorecard</button>
@@ -299,7 +299,7 @@
 
                 <!-- LEADERBOARD SCREEN -->
                 <div class="demo-screen active" id="screen-lb">
-                  <div class="p-status"><span>9:41</span><div class="p-status-r"><span>●●●</span><span>▮</span></div></div>
+                  <div class="p-status"><span>9:41</span><div class="p-status-r"><span>â—â—â—</span><span>â–®</span></div></div>
                   <div class="p-header">
                     <div class="p-tourney">Greenskeeper Cup 2026</div>
                     <div class="p-page-title">Leaderboard <span class="p-badge">LIVE</span></div>
@@ -313,21 +313,21 @@
                   </div>
                   <div class="lb-list" id="demo-lb"></div>
                   <div class="p-nav">
-                    <div class="p-nav-item active"><div class="p-nav-icon">🏆</div><div>Board</div></div>
-                    <div class="p-nav-item"><div class="p-nav-icon">⛳</div><div>Card</div></div>
-                    <div class="p-nav-item"><div class="p-nav-icon">📡</div><div>Feed</div></div>
-                    <div class="p-nav-item"><div class="p-nav-icon">👤</div><div>Me</div></div>
+                    <div class="p-nav-item active"><div class="p-nav-icon">ðŸ†</div><div>Board</div></div>
+                    <div class="p-nav-item"><div class="p-nav-icon">â›³</div><div>Card</div></div>
+                    <div class="p-nav-item"><div class="p-nav-icon">ðŸ“¡</div><div>Feed</div></div>
+                    <div class="p-nav-item"><div class="p-nav-icon">ðŸ‘¤</div><div>Me</div></div>
                   </div>
                 </div>
 
                 <!-- SCORECARD SCREEN -->
                 <div class="demo-screen" id="screen-sc">
-                  <div class="p-status"><span>9:41</span><div class="p-status-r"><span>●●●</span><span>▮</span></div></div>
+                  <div class="p-status"><span>9:41</span><div class="p-status-r"><span>â—â—â—</span><span>â–®</span></div></div>
                   <div class="p-header">
                     <div class="p-tourney">Greenskeeper Cup 2026</div>
                     <div class="p-page-title">Scorecard</div>
                   </div>
-                  <div class="sc-player">J. Sullivan · Scramble · Rd 2</div>
+                  <div class="sc-player">J. Sullivan Â· Scramble Â· Rd 2</div>
                   <div class="sc-grid">
                     <table class="sc-table">
                       <thead>
@@ -368,53 +368,53 @@
                     <div>
                       <div style="display:flex;align-items:baseline;gap:4px">
                         <span class="sc-tot-num">32</span>
-                        <span class="sc-tot-par">−4</span>
+                        <span class="sc-tot-par">âˆ’4</span>
                       </div>
                       <div class="sc-tot-label">Front 9</div>
                     </div>
                     <div class="sc-tot-right">
                       <span style="font-family:'DM Mono',monospace;font-size:6.5px;color:rgba(245,237,224,0.28)">36 par</span>
-                      <span style="font-family:'DM Mono',monospace;font-size:6.5px;color:rgba(192,144,48,0.75)">1 Eagle · 3 Birdies</span>
+                      <span style="font-family:'DM Mono',monospace;font-size:6.5px;color:rgba(192,144,48,0.75)">1 Eagle Â· 3 Birdies</span>
                     </div>
                   </div>
                   <div class="p-nav">
-                    <div class="p-nav-item"><div class="p-nav-icon">🏆</div><div>Board</div></div>
-                    <div class="p-nav-item active"><div class="p-nav-icon">⛳</div><div>Card</div></div>
-                    <div class="p-nav-item"><div class="p-nav-icon">📡</div><div>Feed</div></div>
-                    <div class="p-nav-item"><div class="p-nav-icon">👤</div><div>Me</div></div>
+                    <div class="p-nav-item"><div class="p-nav-icon">ðŸ†</div><div>Board</div></div>
+                    <div class="p-nav-item active"><div class="p-nav-icon">â›³</div><div>Card</div></div>
+                    <div class="p-nav-item"><div class="p-nav-icon">ðŸ“¡</div><div>Feed</div></div>
+                    <div class="p-nav-item"><div class="p-nav-icon">ðŸ‘¤</div><div>Me</div></div>
                   </div>
                 </div>
 
                 <!-- FEED SCREEN -->
                 <div class="demo-screen" id="screen-fd">
-                  <div class="p-status"><span>9:41</span><div class="p-status-r"><span>●●●</span><span>▮</span></div></div>
+                  <div class="p-status"><span>9:41</span><div class="p-status-r"><span>â—â—â—</span><span>â–®</span></div></div>
                   <div class="p-header">
                     <div class="p-tourney">Greenskeeper Cup 2026</div>
                     <div class="p-page-title">Feed</div>
                   </div>
                   <div class="feed-list">
                     <div class="feed-card hio">
-                      <div class="feed-lbl">⛳ Hole In One</div>
-                      <div class="feed-ttl">C. Sullivan — Hole 7</div>
+                      <div class="feed-lbl">â›³ Hole In One</div>
+                      <div class="feed-ttl">C. Sullivan â€” Hole 7</div>
                       <div class="feed-bod">2 iron, 168 yards. Stone cold.</div>
                       <div class="feed-time">2 min ago</div>
                     </div>
                     <div class="feed-card sys">
                       <div class="feed-lbl">System</div>
-                      <div class="feed-ttl">Scoring Open — Round 2</div>
+                      <div class="feed-ttl">Scoring Open â€” Round 2</div>
                       <div class="feed-bod">Scorecards are live. Submit as you play.</div>
                       <div class="feed-time">1 hr ago</div>
                     </div>
                     <div class="feed-card">
                       <div class="feed-lbl">Leaderboard</div>
                       <div class="feed-ttl">J. Harmon moves to #2</div>
-                      <div class="feed-bod">Eagle on 6 drops score to −3 through 16.</div>
+                      <div class="feed-bod">Eagle on 6 drops score to âˆ’3 through 16.</div>
                       <div class="feed-time">47 min ago</div>
                     </div>
                     <div class="feed-card">
                       <div class="feed-lbl">Leaderboard</div>
-                      <div class="feed-ttl">K. Wallace birdie — Hole 14</div>
-                      <div class="feed-bod">Tied for 3rd at −2 through 14 holes.</div>
+                      <div class="feed-ttl">K. Wallace birdie â€” Hole 14</div>
+                      <div class="feed-bod">Tied for 3rd at âˆ’2 through 14 holes.</div>
                       <div class="feed-time">1 hr 12 min ago</div>
                     </div>
                     <div class="feed-card sys">
@@ -425,10 +425,10 @@
                     </div>
                   </div>
                   <div class="p-nav">
-                    <div class="p-nav-item"><div class="p-nav-icon">🏆</div><div>Board</div></div>
-                    <div class="p-nav-item"><div class="p-nav-icon">⛳</div><div>Card</div></div>
-                    <div class="p-nav-item active"><div class="p-nav-icon">📡</div><div>Feed</div></div>
-                    <div class="p-nav-item"><div class="p-nav-icon">👤</div><div>Me</div></div>
+                    <div class="p-nav-item"><div class="p-nav-icon">ðŸ†</div><div>Board</div></div>
+                    <div class="p-nav-item"><div class="p-nav-icon">â›³</div><div>Card</div></div>
+                    <div class="p-nav-item active"><div class="p-nav-icon">ðŸ“¡</div><div>Feed</div></div>
+                    <div class="p-nav-item"><div class="p-nav-icon">ðŸ‘¤</div><div>Me</div></div>
                   </div>
                 </div>
 
@@ -448,34 +448,34 @@
       <h2 class="s-title">Not a Spreadsheet.<br><em>A Real App.</em></h2>
       <div class="feat-grid">
         <div class="feat-card">
-          <div class="feat-icon">📱</div>
+          <div class="feat-icon">ðŸ“±</div>
           <div class="feat-title">Install Like a Native App</div>
-          <div class="feat-body">Players add it to their home screen in one tap — no App Store, no download, no friction. Works offline on the course and syncs when signal returns.</div>
+          <div class="feat-body">Players add it to their home screen in one tap â€” no App Store, no download, no friction. Works offline on the course and syncs when signal returns.</div>
         </div>
         <div class="feat-card">
-          <div class="feat-icon">⛳</div>
+          <div class="feat-icon">â›³</div>
           <div class="feat-title">Live Leaderboard</div>
-          <div class="feat-body">Real-time hole-by-hole scoring. Every player sees every score update as it happens. Scramble, stroke play, best ball, stableford — mix formats per round.</div>
+          <div class="feat-body">Real-time hole-by-hole scoring. Every player sees every score update as it happens. Scramble, stroke play, best ball, stableford â€” mix formats per round.</div>
         </div>
         <div class="feat-card">
-          <div class="feat-icon">🎨</div>
+          <div class="feat-icon">ðŸŽ¨</div>
           <div class="feat-title">100% Your Brand</div>
-          <div class="feat-body">Your logo, your colors, your tournament name on every screen. Players never see TOURney — they see your event. Looks like a custom build. Costs like nothing.</div>
+          <div class="feat-body">Your logo, your colors, your tournament name on every screen. Players never see TOURney â€” they see your event. Looks like a custom build. Costs like nothing.</div>
         </div>
         <div class="feat-card">
-          <div class="feat-icon">🔔</div>
+          <div class="feat-icon">ðŸ””</div>
           <div class="feat-title">Push Notifications</div>
           <div class="feat-body">Hole-in-one alerts. Scoring open. Tee time reminders. Tournament announcements. Blast messages to every player's phone instantly.</div>
         </div>
         <div class="feat-card">
-          <div class="feat-icon">👥</div>
+          <div class="feat-icon">ðŸ‘¥</div>
           <div class="feat-title">Player Registration</div>
-          <div class="feat-body">Built-in registration form, handicap tiers, team assignment, player directory. Your players sign up, you manage the list — all in your admin panel.</div>
+          <div class="feat-body">Built-in registration form, handicap tiers, team assignment, player directory. Your players sign up, you manage the list â€” all in your admin panel.</div>
         </div>
         <div class="feat-card">
-          <div class="feat-icon">🏆</div>
+          <div class="feat-icon">ðŸ†</div>
           <div class="feat-title">Multi-Day Events</div>
-          <div class="feat-body">Up to 7 days. Different format each day if you want. You control when scoring opens and closes for each round — all from your phone.</div>
+          <div class="feat-body">Up to 7 days. Different format each day if you want. You control when scoring opens and closes for each round â€” all from your phone.</div>
         </div>
       </div>
     </div>
@@ -534,13 +534,13 @@
           <div style="font-size:3rem;font-weight:700;line-height:1;color:var(--cream);margin-bottom:.25rem">$3</div>
           <div style="font-family:'DM Mono',monospace;font-size:.58rem;color:var(--muted);letter-spacing:.06em;margin-bottom:1.75rem;line-height:1.6">per month</div>
           <ul style="list-style:none;display:flex;flex-direction:column;gap:.7rem;flex:1;margin-bottom:2rem">
-            <li style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--muted);letter-spacing:.06em;display:flex;gap:.6rem"><span style="color:var(--gold)">✓</span> 1 tournament per month</li>
-            <li style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--muted);letter-spacing:.06em;display:flex;gap:.6rem"><span style="color:var(--gold)">✓</span> Up to 4 players</li>
-            <li style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--muted);letter-spacing:.06em;display:flex;gap:.6rem"><span style="color:var(--gold)">✓</span> 1-day events only</li>
-            <li style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--muted);letter-spacing:.06em;display:flex;gap:.6rem"><span style="color:var(--gold)">✓</span> "Powered by TOURney" branding</li>
-            <li style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--muted);letter-spacing:.06em;display:flex;gap:.6rem"><span style="color:var(--gold)">✓</span> Path-based URL (/t/{slug}/)</li>
+            <li style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--muted);letter-spacing:.06em;display:flex;gap:.6rem"><span style="color:var(--gold)">âœ“</span> 1 tournament per month</li>
+            <li style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--muted);letter-spacing:.06em;display:flex;gap:.6rem"><span style="color:var(--gold)">âœ“</span> Up to 4 players</li>
+            <li style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--muted);letter-spacing:.06em;display:flex;gap:.6rem"><span style="color:var(--gold)">âœ“</span> 1-day events only</li>
+            <li style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--muted);letter-spacing:.06em;display:flex;gap:.6rem"><span style="color:var(--gold)">âœ“</span> "Powered by TOURney" branding</li>
+            <li style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--muted);letter-spacing:.06em;display:flex;gap:.6rem"><span style="color:var(--gold)">âœ“</span> Path-based URL (/t/{slug}/)</li>
           </ul>
-          <a href="/create" style="display:block;text-align:center;padding:.75rem 1.25rem;border:1px solid var(--border);color:var(--cream);font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;text-decoration:none;border-radius:3px;transition:all .15s" onmouseover="this.style.borderColor='var(--gold)';this.style.color='var(--gold)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--cream)'">Get Started →</a>
+          <a href="/create" style="display:block;text-align:center;padding:.75rem 1.25rem;border:1px solid var(--border);color:var(--cream);font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;text-decoration:none;border-radius:3px;transition:all .15s" onmouseover="this.style.borderColor='var(--gold)';this.style.color='var(--gold)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--cream)'">Get Started â†’</a>
         </div>
 
         <!-- Standard -->
@@ -550,14 +550,14 @@
           <div style="font-size:3rem;font-weight:700;line-height:1;color:var(--cream);margin-bottom:.25rem">$49</div>
           <div style="font-family:'DM Mono',monospace;font-size:.58rem;color:var(--muted);letter-spacing:.06em;margin-bottom:1.75rem;line-height:1.6">per tournament</div>
           <ul style="list-style:none;display:flex;flex-direction:column;gap:.7rem;flex:1;margin-bottom:2rem">
-            <li style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--muted);letter-spacing:.06em;display:flex;gap:.6rem"><span style="color:var(--gold)">✓</span> Up to 48 players</li>
-            <li style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--muted);letter-spacing:.06em;display:flex;gap:.6rem"><span style="color:var(--gold)">✓</span> Up to 3-day events</li>
-            <li style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--muted);letter-spacing:.06em;display:flex;gap:.6rem"><span style="color:var(--gold)">✓</span> Custom subdomain</li>
-            <li style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--muted);letter-spacing:.06em;display:flex;gap:.6rem"><span style="color:var(--gold)">✓</span> Full white-label (no branding)</li>
-            <li style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--muted);letter-spacing:.06em;display:flex;gap:.6rem"><span style="color:var(--gold)">✓</span> Push notifications</li>
-            <li style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--muted);letter-spacing:.06em;display:flex;gap:.6rem"><span style="color:var(--gold)">✓</span> All scoring formats</li>
+            <li style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--muted);letter-spacing:.06em;display:flex;gap:.6rem"><span style="color:var(--gold)">âœ“</span> Up to 48 players</li>
+            <li style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--muted);letter-spacing:.06em;display:flex;gap:.6rem"><span style="color:var(--gold)">âœ“</span> Up to 3-day events</li>
+            <li style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--muted);letter-spacing:.06em;display:flex;gap:.6rem"><span style="color:var(--gold)">âœ“</span> Custom subdomain</li>
+            <li style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--muted);letter-spacing:.06em;display:flex;gap:.6rem"><span style="color:var(--gold)">âœ“</span> Full white-label (no branding)</li>
+            <li style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--muted);letter-spacing:.06em;display:flex;gap:.6rem"><span style="color:var(--gold)">âœ“</span> Push notifications</li>
+            <li style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--muted);letter-spacing:.06em;display:flex;gap:.6rem"><span style="color:var(--gold)">âœ“</span> All scoring formats</li>
           </ul>
-          <a href="/create" style="display:block;text-align:center;padding:.75rem 1.25rem;background:var(--gold);color:var(--ink);font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;text-decoration:none;border-radius:3px;transition:background .15s" onmouseover="this.style.background='#d4a035'" onmouseout="this.style.background='var(--gold)'">Get Started →</a>
+          <a href="/create" style="display:block;text-align:center;padding:.75rem 1.25rem;background:var(--gold);color:var(--ink);font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;text-decoration:none;border-radius:3px;transition:background .15s" onmouseover="this.style.background='#d4a035'" onmouseout="this.style.background='var(--gold)'">Get Started â†’</a>
         </div>
 
         <!-- Pro -->
@@ -566,14 +566,14 @@
           <div style="font-size:3rem;font-weight:700;line-height:1;color:var(--cream);margin-bottom:.25rem">$99</div>
           <div style="font-family:'DM Mono',monospace;font-size:.58rem;color:var(--muted);letter-spacing:.06em;margin-bottom:1.75rem;line-height:1.6">per tournament</div>
           <ul style="list-style:none;display:flex;flex-direction:column;gap:.7rem;flex:1;margin-bottom:2rem">
-            <li style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--muted);letter-spacing:.06em;display:flex;gap:.6rem"><span style="color:var(--gold)">✓</span> Unlimited players</li>
-            <li style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--muted);letter-spacing:.06em;display:flex;gap:.6rem"><span style="color:var(--gold)">✓</span> Up to 7-day events</li>
-            <li style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--muted);letter-spacing:.06em;display:flex;gap:.6rem"><span style="color:var(--gold)">✓</span> Everything in Standard</li>
-            <li style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--muted);letter-spacing:.06em;display:flex;gap:.6rem"><span style="color:var(--gold)">✓</span> Priority support</li>
-            <li style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--muted);letter-spacing:.06em;display:flex;gap:.6rem"><span style="color:var(--gold)">✓</span> Analytics dashboard</li>
-            <li style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--muted);letter-spacing:.06em;display:flex;gap:.6rem"><span style="color:var(--gold)">✓</span> Custom domain support</li>
+            <li style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--muted);letter-spacing:.06em;display:flex;gap:.6rem"><span style="color:var(--gold)">âœ“</span> Unlimited players</li>
+            <li style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--muted);letter-spacing:.06em;display:flex;gap:.6rem"><span style="color:var(--gold)">âœ“</span> Up to 7-day events</li>
+            <li style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--muted);letter-spacing:.06em;display:flex;gap:.6rem"><span style="color:var(--gold)">âœ“</span> Everything in Standard</li>
+            <li style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--muted);letter-spacing:.06em;display:flex;gap:.6rem"><span style="color:var(--gold)">âœ“</span> Priority support</li>
+            <li style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--muted);letter-spacing:.06em;display:flex;gap:.6rem"><span style="color:var(--gold)">âœ“</span> Analytics dashboard</li>
+            <li style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--muted);letter-spacing:.06em;display:flex;gap:.6rem"><span style="color:var(--gold)">âœ“</span> Custom domain support</li>
           </ul>
-          <a href="/create" style="display:block;text-align:center;padding:.75rem 1.25rem;border:1px solid var(--border);color:var(--cream);font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;text-decoration:none;border-radius:3px;transition:all .15s" onmouseover="this.style.borderColor='var(--gold)';this.style.color='var(--gold)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--cream)'">Get Started →</a>
+          <a href="/create" style="display:block;text-align:center;padding:.75rem 1.25rem;border:1px solid var(--border);color:var(--cream);font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;text-decoration:none;border-radius:3px;transition:all .15s" onmouseover="this.style.borderColor='var(--gold)';this.style.color='var(--gold)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--cream)'">Get Started â†’</a>
         </div>
 
       </div>
@@ -589,7 +589,7 @@
   <section class="cta-section">
     <h2 class="cta-title">Stop Running Your<br><em>Tournament on a Spreadsheet.</em></h2>
     <p class="cta-sub">Starts at $3/month. Up and running in 15 minutes. Less than a sleeve of balls.</p>
-    <a href="/create" class="btn-primary" style="font-size:.85rem;padding:1rem 3rem">Build Your Tournament →</a>
+    <a href="/create" class="btn-primary" style="font-size:.85rem;padding:1rem 3rem">Build Your Tournament â†’</a>
     <div style="margin-top:1.25rem;display:flex;gap:2rem;justify-content:center;flex-wrap:wrap">
       <span style="font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.12em;color:var(--muted)">From $3/month</span>
       <span style="font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.12em;color:var(--muted)">Live in 15 minutes</span>
@@ -601,7 +601,7 @@
   <!-- Footer -->
   <footer>
     <div class="footer-logo"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 48" style="height:20px;width:auto;display:block;opacity:0.7;" role="img" aria-label="TOURney"><text x="120" y="32" text-anchor="middle" font-family="'Barlow Condensed','Oswald','Arial Narrow',sans-serif" font-weight="700" font-size="26" letter-spacing="6" fill="#f0e6cc">TOUR<tspan fill="#c09030" font-weight="400">NEY</tspan></text><line x1="64" y1="40" x2="176" y2="40" stroke="#c09030" stroke-width="0.6"/></svg></div>
-    <div class="footer-copy">© 2026 Greenskeeper Studios &nbsp;·&nbsp; Built for golfers, by golfers &nbsp;·&nbsp; <a href="mailto:rob@greenskeeper.studio" style="color:var(--gold)">rob@greenskeeper.studio</a></div>
+    <div class="footer-copy">Â© 2026 Greenskeeper Studios &nbsp;Â·&nbsp; Built for golfers, by golfers &nbsp;Â·&nbsp; <a href="mailto:rob@greenskeeper.studio" style="color:var(--gold)">rob@greenskeeper.studio</a></div>
   </footer>
 
   <a href="/create" style="position:fixed;bottom:2rem;right:2rem;z-index:999;padding:.8rem 1.5rem;background:var(--gold);color:var(--ink);font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:.8rem;letter-spacing:.15em;text-transform:uppercase;text-decoration:none;border-radius:50px;box-shadow:0 8px 24px rgba(192,144,48,0.3);transition:transform 0.2s,background 0.2s;display:flex;align-items:center;gap:0.5rem" onmouseover="this.style.transform='translateY(-2px)';this.style.background='#d4a035'" onmouseout="this.style.transform='translateY(0)';this.style.background='var(--gold)'">
@@ -610,7 +610,7 @@
 
 <script>
 (function(){
-  /* ── Leaderboard data ── */
+  /* â”€â”€ Leaderboard data â”€â”€ */
   var BASE = [
     { name:'C. Sullivan', score:-4, thru:18 },
     { name:'J. Harmon',   score:-3, thru:16 },
@@ -666,20 +666,20 @@
     renderLb(demoP, 'demo-lb', flashed);
   }, 2300);
 
-  /* ── Demo tab switching ── */
+  /* â”€â”€ Demo tab switching â”€â”€ */
   var CTX = {
     lb: [
-      '<strong>Live, real-time updates.</strong> Every score change appears instantly for all players — no refresh needed.',
+      '<strong>Live, real-time updates.</strong> Every score change appears instantly for all players â€” no refresh needed.',
       '<strong>Multiple rounds.</strong> Tap R1/R2 to switch days. Each round tracked separately with its own leaderboard.',
       '<strong>Tap any player</strong> to see their full scorecard, handicap tier, and contact info.',
     ],
     sc: [
       '<strong>Hole-by-hole scoring.</strong> Gold ring = birdie. Blue = eagle. Red = bogey. Entered directly on course.',
       '<strong>Offline-first.</strong> Players score with no signal. Syncs automatically when back online.',
-      '<strong>Admin controls the window.</strong> You open and close scoring each round — no unauthorized submissions.',
+      '<strong>Admin controls the window.</strong> You open and close scoring each round â€” no unauthorized submissions.',
     ],
     fd: [
-      '<strong>Hole-in-one alerts</strong> blast to every player\'s phone the second it\'s posted — full celebration mode.',
+      '<strong>Hole-in-one alerts</strong> blast to every player\'s phone the second it\'s posted â€” full celebration mode.',
       '<strong>Push notifications</strong> for scoring opens, leaderboard moves, and tournament announcements.',
       '<strong>Live event timeline.</strong> Everyone sees what\'s happening across all groups in real time.',
     ],
@@ -702,7 +702,7 @@
 })();
 </script>
 <script defer src="/nav-platform.js"></script>
-<script src="/bug-fab.js?v=3" defer></script>
+<script src="/bug-fab.js?v=4" defer></script>
 <script>if('serviceWorker'in navigator)navigator.serviceWorker.register('/sw.js');</script>
 </body>
 </html>

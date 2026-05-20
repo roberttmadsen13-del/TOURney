@@ -1,10 +1,10 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <script src="/lib/util.js"></script>
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>TOURney — QA Hub</title>
+<title>TOURney â€” QA Hub</title>
 <style>
   :root {
     --gold:#c09030;--gold-light:#d4a840;--gold-dim:rgba(192,144,48,0.18);
@@ -16,7 +16,7 @@
   html{scroll-behavior:smooth}
   body{font-family:-apple-system,'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;font-size:15px;min-height:100vh}
 
-  /* ── Nav ── */
+  /* â”€â”€ Nav â”€â”€ */
   nav{position:sticky;top:0;z-index:100;background:rgba(13,10,5,0.96);border-bottom:1px solid var(--border);backdrop-filter:blur(12px);padding:0.6rem 1.5rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap}
   .nav-brand{color:var(--gold);font-weight:700;font-size:1rem;letter-spacing:0.05em;white-space:nowrap}
   .nav-brand span{color:var(--muted);font-weight:400;font-size:0.8rem;margin-left:0.4rem}
@@ -24,20 +24,20 @@
   .nav-links a{color:var(--muted);text-decoration:none;font-size:0.78rem;padding:0.3rem 0.55rem;border-radius:4px;transition:all 0.15s;white-space:nowrap}
   .nav-links a:hover{color:var(--gold);background:var(--gold-dim)}
 
-  /* ── Hero ── */
+  /* â”€â”€ Hero â”€â”€ */
   .hero{padding:2.5rem 1.5rem 1.5rem;text-align:center;border-bottom:1px solid var(--border);background:linear-gradient(180deg,rgba(192,144,48,0.06) 0%,transparent 100%)}
   .hero-eyebrow{display:inline-block;font-size:0.72rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold);border:1px solid var(--border);border-radius:20px;padding:0.25rem 0.85rem;margin-bottom:0.75rem}
   .hero h1{font-size:clamp(1.4rem,4vw,2.2rem);font-weight:800;color:#fff;margin-bottom:0.4rem}
   .hero h1 span{color:var(--gold)}
   .hero-sub{color:var(--muted);max-width:580px;margin:0 auto;font-size:0.88rem}
 
-  /* ── Tabs ── */
+  /* â”€â”€ Tabs â”€â”€ */
   .tabs{display:flex;gap:0;border-bottom:1px solid var(--border);background:var(--surface)}
   .tab-btn{flex:1;max-width:200px;padding:0.7rem 1.25rem;font-family:inherit;font-size:0.8rem;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;background:none;border:none;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all 0.15s}
   .tab-btn:hover{color:var(--gold)}
   .tab-btn.active{color:var(--gold);border-bottom-color:var(--gold)}
 
-  /* ── Hub: Card Grid ── */
+  /* â”€â”€ Hub: Card Grid â”€â”€ */
   .wrapper{max-width:1100px;margin:0 auto;padding:1.75rem 1.5rem 3rem}
   .toolbar{display:flex;gap:0.5rem;align-items:center;flex-wrap:wrap;margin-bottom:1.5rem}
   .filter-btn{background:var(--card);border:1px solid var(--border);color:var(--muted);font-family:inherit;font-size:0.74rem;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;padding:0.4rem 0.85rem;border-radius:20px;cursor:pointer;transition:all 0.15s}
@@ -76,7 +76,7 @@
   .add-card code{font-size:0.78rem;color:var(--gold-light);background:rgba(255,255,255,0.07);padding:0.1rem 0.3rem;border-radius:3px}
   .add-card-title{color:var(--gold);font-weight:700;text-transform:uppercase;letter-spacing:0.08em;font-size:0.74rem;margin-bottom:0.4rem}
 
-  /* ── Checklist ── */
+  /* â”€â”€ Checklist â”€â”€ */
   .cl-wrap{max-width:780px;margin:0 auto;padding:1.5rem 1.25rem 3rem}
   .cl-toolbar{display:flex;gap:0.5rem;align-items:center;margin-bottom:1.25rem;flex-wrap:wrap}
   .slug-label{font-size:0.52rem;font-weight:700;letter-spacing:0.22em;text-transform:uppercase;color:rgba(192,144,48,0.5)}
@@ -142,7 +142,7 @@
 <div class="hero">
   <div class="hero-eyebrow">QA Hub</div>
   <h1><span>Plans</span>, Reviews, Audits &amp; Checklists</h1>
-  <p class="hero-sub">Every review, plan, audit, and manual QA checklist — one page.</p>
+  <p class="hero-sub">Every review, plan, audit, and manual QA checklist â€” one page.</p>
 </div>
 
 <div class="tabs">
@@ -150,7 +150,7 @@
   <button class="tab-btn" id="tab-checklist" onclick="switchTab('checklist')">QA Checklist</button>
 </div>
 
-<!-- ── HUB PANEL ── -->
+<!-- â”€â”€ HUB PANEL â”€â”€ -->
 <div id="panel-hub">
   <div class="wrapper">
     <div class="toolbar">
@@ -160,30 +160,30 @@
       <button class="filter-btn" data-filter="audit">Audits</button>
       <button class="filter-btn" data-filter="runbook">Runbooks</button>
       <button class="filter-btn" data-filter="postmortem">Postmortems</button>
-      <input id="searchBox" type="text" class="search-box" placeholder="Search title, summary, tags…">
-      <span class="count" id="countLabel">—</span>
+      <input id="searchBox" type="text" class="search-box" placeholder="Search title, summary, tagsâ€¦">
+      <span class="count" id="countLabel">â€”</span>
     </div>
-    <div class="grid" id="cardGrid"><div class="empty">Loading registry…</div></div>
+    <div class="grid" id="cardGrid"><div class="empty">Loading registryâ€¦</div></div>
   </div>
 </div>
 
-<!-- ── CHECKLIST PANEL ── -->
+<!-- â”€â”€ CHECKLIST PANEL â”€â”€ -->
 <div id="panel-checklist" style="display:none">
   <div class="cl-wrap">
     <div class="cl-toolbar">
       <span class="slug-label">Slug</span>
       <input class="slug-input" id="slugInput" type="text" placeholder="e.g. bova">
-      <span class="cl-progress" id="progressLabel">— / —</span>
+      <span class="cl-progress" id="progressLabel">â€” / â€”</span>
     </div>
     <div class="cl-sections" id="clSections"></div>
     <button class="reset-btn" onclick="resetAll()">Reset all checks</button>
   </div>
 </div>
 
-<footer>Backed by <span>qa-index.json</span> · TOURney by Greenskeeper Studios</footer>
+<footer>Backed by <span>qa-index.json</span> Â· TOURney by Greenskeeper Studios</footer>
 
 <script>
-/* ── TAB SWITCH ── */
+/* â”€â”€ TAB SWITCH â”€â”€ */
 function switchTab(t) {
   document.getElementById('panel-hub').style.display       = t === 'hub'       ? '' : 'none';
   document.getElementById('panel-checklist').style.display = t === 'checklist' ? '' : 'none';
@@ -194,9 +194,9 @@ function switchTab(t) {
 // Restore last tab
 (function(){ const t = localStorage.getItem('qa_tab') || 'hub'; if (t !== 'hub') switchTab(t); })();
 
-/* ══════════════════════════════════════
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    HUB
-══════════════════════════════════════ */
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 const CATEGORY_META = {
   review:     { pill:'pill-blue',   label:'Review' },
   plan:       { pill:'pill-gold',   label:'Plan' },
@@ -256,71 +256,71 @@ document.querySelectorAll('.filter-btn').forEach(btn => {
 document.getElementById('searchBox').addEventListener('input', e => { activeSearch = e.target.value; renderHub(); });
 loadHub();
 
-/* ══════════════════════════════════════
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    CHECKLIST
-══════════════════════════════════════ */
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 const CL_SECTIONS = [
-  { id:'pairs', title:'Pairs — New Feature', badge:'new', steps:[
-    { id:'p1',  text:'Go to /create — confirm "Pairs" button appears in Team Structure row', link:'/create' },
-    { id:'p2',  text:'Select Pairs — confirm "Number of Pairs" picker appears (options 2–24)', link:'/create' },
-    { id:'p3',  text:'Pick 4 pairs, 8 players, 2 days — confirm price card updates correctly', link:'/create' },
-    { id:'p4',  text:'Complete create wizard — confirm redirects to /admin after creation' },
-    { id:'p5',  text:'Admin → assignment section title reads "Pair Assignment"', link:'/admin' },
-    { id:'p6',  text:'Admin → pair name fields visible (Pair 1 Name, Pair 2 Name…)', link:'/admin' },
-    { id:'p7',  text:'Admin → type a pair name (e.g. "Smith / Jones") → blur → confirm saves', link:'/admin' },
-    { id:'p8',  text:'Admin → assign each player to a pair → Save Pair Assignments', link:'/admin' },
-    { id:'p9',  text:'Scorecard → log in → confirm "Your Pair" label (not "Your Team")', link:'/scorecard' },
-    { id:'p10', text:'Scorecard → confirm opponent section is hidden', link:'/scorecard', note:'"Opponents" panel should not be visible' },
-    { id:'p11', text:'Scorecard → enter scores for a hole → submit → no console errors' },
-    { id:'p12', text:'Scoreboard → "Pairs" tab visible — click it', link:'/scoreboard' },
-    { id:'p13', text:'Scoreboard → pairs leaderboard renders with pair names + scores', link:'/scoreboard' },
-    { id:'p14', text:'Scoreboard → after submitting a score, leaderboard updates', link:'/scoreboard' },
+  { id:'pairs', title:'Pairs â€” New Feature', badge:'new', steps:[
+    { id:'p1',  text:'Go to /create â€” confirm "Pairs" button appears in Team Structure row', link:'/create' },
+    { id:'p2',  text:'Select Pairs â€” confirm "Number of Pairs" picker appears (options 2â€“24)', link:'/create' },
+    { id:'p3',  text:'Pick 4 pairs, 8 players, 2 days â€” confirm price card updates correctly', link:'/create' },
+    { id:'p4',  text:'Complete create wizard â€” confirm redirects to /admin after creation' },
+    { id:'p5',  text:'Admin â†’ assignment section title reads "Pair Assignment"', link:'/admin' },
+    { id:'p6',  text:'Admin â†’ pair name fields visible (Pair 1 Name, Pair 2 Nameâ€¦)', link:'/admin' },
+    { id:'p7',  text:'Admin â†’ type a pair name (e.g. "Smith / Jones") â†’ blur â†’ confirm saves', link:'/admin' },
+    { id:'p8',  text:'Admin â†’ assign each player to a pair â†’ Save Pair Assignments', link:'/admin' },
+    { id:'p9',  text:'Scorecard â†’ log in â†’ confirm "Your Pair" label (not "Your Team")', link:'/scorecard' },
+    { id:'p10', text:'Scorecard â†’ confirm opponent section is hidden', link:'/scorecard', note:'"Opponents" panel should not be visible' },
+    { id:'p11', text:'Scorecard â†’ enter scores for a hole â†’ submit â†’ no console errors' },
+    { id:'p12', text:'Scoreboard â†’ "Pairs" tab visible â€” click it', link:'/scoreboard' },
+    { id:'p13', text:'Scoreboard â†’ pairs leaderboard renders with pair names + scores', link:'/scoreboard' },
+    { id:'p14', text:'Scoreboard â†’ after submitting a score, leaderboard updates', link:'/scoreboard' },
   ]},
-  { id:'individual', title:'Individual — Regression', badge:'regression', steps:[
+  { id:'individual', title:'Individual â€” Regression', badge:'regression', steps:[
     { id:'i1', text:'Create a new Individual tournament via /create', link:'/create' },
-    { id:'i2', text:'Scoreboard → no Team tab visible', link:'/scoreboard' },
-    { id:'i3', text:'Scorecard → no "Your Team" field visible', link:'/scorecard' },
-    { id:'i4', text:'Scorecard → unassigned gate does NOT appear', link:'/scorecard' },
+    { id:'i2', text:'Scoreboard â†’ no Team tab visible', link:'/scoreboard' },
+    { id:'i3', text:'Scorecard â†’ no "Your Team" field visible', link:'/scorecard' },
+    { id:'i4', text:'Scorecard â†’ unassigned gate does NOT appear', link:'/scorecard' },
   ]},
-  { id:'team', title:'Team (2+ Teams) — Regression', badge:'regression', steps:[
+  { id:'team', title:'Team (2+ Teams) â€” Regression', badge:'regression', steps:[
     { id:'t1', text:'Create a 2-team tournament via /create', link:'/create' },
-    { id:'t2', text:'Admin → Team Assignment section (not Pair Assignment)', link:'/admin' },
-    { id:'t3', text:'Admin → assign players to Team A / Team B → save', link:'/admin' },
-    { id:'t4', text:'Scorecard → "Your Team" label (not "Your Pair")', link:'/scorecard' },
-    { id:'t5', text:'Scorecard → opponent section visible', link:'/scorecard' },
-    { id:'t6', text:'Scoreboard → Team tab shows A vs B banners', link:'/scoreboard' },
+    { id:'t2', text:'Admin â†’ Team Assignment section (not Pair Assignment)', link:'/admin' },
+    { id:'t3', text:'Admin â†’ assign players to Team A / Team B â†’ save', link:'/admin' },
+    { id:'t4', text:'Scorecard â†’ "Your Team" label (not "Your Pair")', link:'/scorecard' },
+    { id:'t5', text:'Scorecard â†’ opponent section visible', link:'/scorecard' },
+    { id:'t6', text:'Scoreboard â†’ Team tab shows A vs B banners', link:'/scoreboard' },
   ]},
   { id:'nav', title:'Navigation & Auth', badge:'infra', steps:[
-    { id:'n1', text:'Hamburger menu opens on mobile — all links present', link:'/scoreboard' },
+    { id:'n1', text:'Hamburger menu opens on mobile â€” all links present', link:'/scoreboard' },
     { id:'n2', text:'Admin link appears in nav when logged in as owner', link:'/scoreboard' },
     { id:'n3', text:'Admin link NOT visible when logged out', link:'/scoreboard' },
-    { id:'n4', text:'All nav links route correctly — no 404s', link:'/directory' },
+    { id:'n4', text:'All nav links route correctly â€” no 404s', link:'/directory' },
   ]},
   { id:'console', title:'Console & Network', badge:'infra', steps:[
-    { id:'c1', text:'DevTools → Console → zero errors on scoreboard load', link:'/scoreboard', note:'F12 → Console — red errors = FAIL' },
-    { id:'c2', text:'DevTools → Console → zero errors on scorecard load', link:'/scorecard' },
-    { id:'c3', text:'DevTools → Network → no 4xx/5xx requests on any page', note:'Filter by "status:4" and "status:5"' },
+    { id:'c1', text:'DevTools â†’ Console â†’ zero errors on scoreboard load', link:'/scoreboard', note:'F12 â†’ Console â€” red errors = FAIL' },
+    { id:'c2', text:'DevTools â†’ Console â†’ zero errors on scorecard load', link:'/scorecard' },
+    { id:'c3', text:'DevTools â†’ Network â†’ no 4xx/5xx requests on any page', note:'Filter by "status:4" and "status:5"' },
   ]},
-  { id:'llc', title:'Form LLC — Greenskeeper Studios', badge:'human', steps:[
-    { id:'llc1', text:'Choose your state — home state (WI?) for simplicity. Delaware only worth it if raising VC.', note:'WI ~$130 filing fee. DE ~$90 + $300/yr franchise tax' },
-    { id:'llc2', text:'File Articles of Organization online at your Secretary of State website', note:'WI: wdfi.org — takes 1–2 business days' },
-    { id:'llc3', text:'Get a free EIN from IRS.gov', note:'irs.gov → Businesses → Apply for EIN — instant' },
+  { id:'llc', title:'Form LLC â€” Greenskeeper Studios', badge:'human', steps:[
+    { id:'llc1', text:'Choose your state â€” home state (WI?) for simplicity. Delaware only worth it if raising VC.', note:'WI ~$130 filing fee. DE ~$90 + $300/yr franchise tax' },
+    { id:'llc2', text:'File Articles of Organization online at your Secretary of State website', note:'WI: wdfi.org â€” takes 1â€“2 business days' },
+    { id:'llc3', text:'Get a free EIN from IRS.gov', note:'irs.gov â†’ Businesses â†’ Apply for EIN â€” instant' },
     { id:'llc4', text:'Draft an Operating Agreement (single-member, simple templates online)', note:'Not legally required in most states but protects liability shield' },
     { id:'llc5', text:'Open a business bank account under the LLC (bring EIN + Articles)', note:'Recommended: Mercury (free, online-first)' },
-    { id:'llc6', text:'Register with Stripe under the LLC name + EIN', note:'stripe.com/dashboard — use business bank account for payouts' },
+    { id:'llc6', text:'Register with Stripe under the LLC name + EIN', note:'stripe.com/dashboard â€” use business bank account for payouts' },
     { id:'llc7', text:'Update CLAUDE.md with LLC name, EIN last 4, Stripe account ID' },
   ]},
   { id:'human', title:'Other Human-Required Items', badge:'human', steps:[
     { id:'h1', text:'Confirm Bova tournament formats with Chris Bova', note:'Day 1=Stroke? Day 2=Scramble? Day 3=Best Ball? Shambles mapping unresolved.' },
-    { id:'h2', text:"Add Chris Bova's email as co-admin (admin → Access tab)", note:'Required before Chris can manage his own tournament' },
-    { id:'h3', text:'Smoke test PWA install on your phone (iOS: Share → Add to Home Screen)', note:'Verify manifest, icons, and offline cache work on real device' },
+    { id:'h2', text:"Add Chris Bova's email as co-admin (admin â†’ Access tab)", note:'Required before Chris can manage his own tournament' },
+    { id:'h3', text:'Smoke test PWA install on your phone (iOS: Share â†’ Add to Home Screen)', note:'Verify manifest, icons, and offline cache work on real device' },
     { id:'h4', text:'Buy full US golf course flat-file DB for course selector', note:'Source: Golf-Course-Database.com' },
-    { id:'h5', text:'Enable leaked password protection in Supabase Auth dashboard', note:'Dashboard → Auth → Sign In Methods → Leaked Password Protection' },
+    { id:'h5', text:'Enable leaked password protection in Supabase Auth dashboard', note:'Dashboard â†’ Auth â†’ Sign In Methods â†’ Leaked Password Protection' },
   ]},
-  { id:'security', title:'Security — Human Required', badge:'human', steps:[
-    { id:'sec1', text:'Supabase → Auth → Password → set minimum length to 8 (currently 6)', note:'supabase.com/dashboard → project jllugkiojeoopitdvzsa → Auth → Sign In Methods' },
-    { id:'sec2', text:'Supabase → Auth → Email → enable "Confirm email" toggle' },
-    { id:'sec3', text:'Supabase → Auth → Rate Limits → verify signup + login limits are active' },
+  { id:'security', title:'Security â€” Human Required', badge:'human', steps:[
+    { id:'sec1', text:'Supabase â†’ Auth â†’ Password â†’ set minimum length to 8 (currently 6)', note:'supabase.com/dashboard â†’ project jllugkiojeoopitdvzsa â†’ Auth â†’ Sign In Methods' },
+    { id:'sec2', text:'Supabase â†’ Auth â†’ Email â†’ enable "Confirm email" toggle' },
+    { id:'sec3', text:'Supabase â†’ Auth â†’ Rate Limits â†’ verify signup + login limits are active' },
     { id:'sec4', text:'Verify security headers: Strict-Transport-Security, X-Frame-Options, X-Content-Type-Options', note:'curl -sI https://tourney.greenskeeper.studio | grep -E "Strict|Frame|Content-Type"' },
     { id:'sec5', text:'Pentest: normal player cannot update their own billing_status via console', note:'supabase.from("player_accounts").update({billing_status:"comped"}) must return RLS error' },
   ]},
@@ -349,7 +349,7 @@ function resetAll() { if (!confirm('Reset all checks?')) return; clChecked = {};
 
 function secStatus(s) {
   const done = s.steps.filter(x => clChecked[x.id]).length;
-  if (!done) return { label:'—', cls:'st-pend' };
+  if (!done) return { label:'â€”', cls:'st-pend' };
   if (done === s.steps.length) return { label:'PASS', cls:'st-pass' };
   return { label:`${done}/${s.steps.length}`, cls:'st-pend' };
 }
@@ -364,14 +364,14 @@ function renderChecklist() {
     const { label, cls } = secStatus(sec);
     const isCollapsed = !!clCollapsed[sec.id];
     const humanBanner = sec.badge === 'human'
-      ? `<div class="human-banner">⚠ Human Required — cannot be automated</div>` : '';
+      ? `<div class="human-banner">âš  Human Required â€” cannot be automated</div>` : '';
     const steps = sec.steps.map(step => {
       const isDone = !!clChecked[step.id];
       const linkHtml = step.link && clSlug
-        ? `<a class="step-link" href="${clUrl(step.link)}" target="_blank" onclick="event.stopPropagation()">Open ↗</a>` : '';
+        ? `<a class="step-link" href="${clUrl(step.link)}" target="_blank" onclick="event.stopPropagation()">Open â†—</a>` : '';
       const noteHtml = step.note ? `<div class="step-note">${step.note}</div>` : '';
       return `<li class="cl-step${isDone?' done':''}" onclick="toggleCheck('${step.id}')">
-        <div class="cb"><span class="cb-chk">✓</span></div>
+        <div class="cb"><span class="cb-chk">âœ“</span></div>
         <div class="step-body"><div class="step-text">${step.text}</div>${linkHtml}${noteHtml}</div>
       </li>`;
     }).join('');
@@ -380,7 +380,7 @@ function renderChecklist() {
         <span class="cl-sec-title">${sec.title}</span>
         <span class="cl-badge badge-${sec.badge}">${badgeLabel(sec.badge)}</span>
         <span class="cl-sec-status ${cls}">${label}</span>
-        <span class="cl-chevron">▼</span>
+        <span class="cl-chevron">â–¼</span>
       </div>
       ${humanBanner}
       <ul class="cl-steps">${steps}</ul>
@@ -396,6 +396,6 @@ clLoad();
 document.getElementById('slugInput').value = clSlug;
 renderChecklist();
 </script>
-<script src="/bug-fab.js?v=3" defer></script>
+<script src="/bug-fab.js?v=4" defer></script>
 </body>
 </html>

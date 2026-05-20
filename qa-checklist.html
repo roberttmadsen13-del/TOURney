@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -70,7 +70,7 @@ h1{font-family:'Barlow Condensed',system-ui,sans-serif;font-size:0.72rem;font-we
   <div class="slug-row">
     <span class="slug-label">Slug</span>
     <input class="slug-input" id="slugInput" type="text" placeholder="e.g. bova" value="">
-    <span class="progress" id="progressLabel">— / —</span>
+    <span class="progress" id="progressLabel">â€” / â€”</span>
   </div>
 </div>
 
@@ -81,47 +81,47 @@ h1{font-family:'Barlow Condensed',system-ui,sans-serif;font-size:0.72rem;font-we
 const SECTIONS = [
   {
     id: 'pairs',
-    title: 'Pairs — New Feature',
+    title: 'Pairs â€” New Feature',
     badge: 'new',
     steps: [
-      { id:'p1', text:'Go to /create — confirm "Pairs" button appears in Team Structure row', link:'/create' },
-      { id:'p2', text:'Select Pairs — confirm "Number of Pairs" picker appears with options 2–24', link:'/create' },
-      { id:'p3', text:'Pick 4 pairs, 8 players, 2 days — confirm price card updates correctly', link:'/create' },
-      { id:'p4', text:'Complete create wizard — confirm redirects to /admin after creation' },
-      { id:'p5', text:'Admin → Team Assignment section title reads "Pair Assignment"', link:'/admin' },
-      { id:'p6', text:'Admin → pair name fields visible (Pair 1 Name, Pair 2 Name…)', link:'/admin' },
-      { id:'p7', text:'Admin → type a pair name (e.g. "Smith / Jones") — blur field — confirm saves', link:'/admin' },
-      { id:'p8', text:'Admin → assign each player to a pair via dropdown — click Save Pair Assignments', link:'/admin' },
-      { id:'p9', text:'Scorecard → log in → confirm "Your Pair" label (not "Your Team")', link:'/scorecard' },
-      { id:'p10', text:'Scorecard → confirm opponent section is hidden', link:'/scorecard', note:'"Opponents" panel should not be visible at all' },
-      { id:'p11', text:'Scorecard → enter scores for a hole — submit — no console errors' },
-      { id:'p12', text:'Scoreboard → "Pairs" tab visible — click it', link:'/scoreboard' },
-      { id:'p13', text:'Scoreboard → pairs leaderboard renders with pair names + scores', link:'/scoreboard' },
-      { id:'p14', text:'Scoreboard → after submitting scorecard score, leaderboard updates (may need refresh)', link:'/scoreboard' },
+      { id:'p1', text:'Go to /create â€” confirm "Pairs" button appears in Team Structure row', link:'/create' },
+      { id:'p2', text:'Select Pairs â€” confirm "Number of Pairs" picker appears with options 2â€“24', link:'/create' },
+      { id:'p3', text:'Pick 4 pairs, 8 players, 2 days â€” confirm price card updates correctly', link:'/create' },
+      { id:'p4', text:'Complete create wizard â€” confirm redirects to /admin after creation' },
+      { id:'p5', text:'Admin â†’ Team Assignment section title reads "Pair Assignment"', link:'/admin' },
+      { id:'p6', text:'Admin â†’ pair name fields visible (Pair 1 Name, Pair 2 Nameâ€¦)', link:'/admin' },
+      { id:'p7', text:'Admin â†’ type a pair name (e.g. "Smith / Jones") â€” blur field â€” confirm saves', link:'/admin' },
+      { id:'p8', text:'Admin â†’ assign each player to a pair via dropdown â€” click Save Pair Assignments', link:'/admin' },
+      { id:'p9', text:'Scorecard â†’ log in â†’ confirm "Your Pair" label (not "Your Team")', link:'/scorecard' },
+      { id:'p10', text:'Scorecard â†’ confirm opponent section is hidden', link:'/scorecard', note:'"Opponents" panel should not be visible at all' },
+      { id:'p11', text:'Scorecard â†’ enter scores for a hole â€” submit â€” no console errors' },
+      { id:'p12', text:'Scoreboard â†’ "Pairs" tab visible â€” click it', link:'/scoreboard' },
+      { id:'p13', text:'Scoreboard â†’ pairs leaderboard renders with pair names + scores', link:'/scoreboard' },
+      { id:'p14', text:'Scoreboard â†’ after submitting scorecard score, leaderboard updates (may need refresh)', link:'/scoreboard' },
     ]
   },
   {
     id: 'individual',
-    title: 'Individual — Regression',
+    title: 'Individual â€” Regression',
     badge: 'regression',
     steps: [
       { id:'i1', text:'Create a new Individual tournament via /create', link:'/create' },
-      { id:'i2', text:'Scoreboard → no Team tab visible (or Team tab hidden)', link:'/scoreboard' },
-      { id:'i3', text:'Scorecard → no "Your Team" field visible', link:'/scorecard' },
-      { id:'i4', text:'Scorecard → unassigned gate does NOT appear (individual has no team gate)', link:'/scorecard' },
+      { id:'i2', text:'Scoreboard â†’ no Team tab visible (or Team tab hidden)', link:'/scoreboard' },
+      { id:'i3', text:'Scorecard â†’ no "Your Team" field visible', link:'/scorecard' },
+      { id:'i4', text:'Scorecard â†’ unassigned gate does NOT appear (individual has no team gate)', link:'/scorecard' },
     ]
   },
   {
     id: 'team',
-    title: 'Team (2+ Teams) — Regression',
+    title: 'Team (2+ Teams) â€” Regression',
     badge: 'regression',
     steps: [
       { id:'t1', text:'Create a 2-team tournament via /create', link:'/create' },
-      { id:'t2', text:'Admin → Team Assignment section (not Pair Assignment)', link:'/admin' },
-      { id:'t3', text:'Admin → assign players to Team A / Team B — save', link:'/admin' },
-      { id:'t4', text:'Scorecard → "Your Team" label shows (not "Your Pair")', link:'/scorecard' },
-      { id:'t5', text:'Scorecard → opponent section visible', link:'/scorecard' },
-      { id:'t6', text:'Scoreboard → Team tab shows A vs B banners', link:'/scoreboard' },
+      { id:'t2', text:'Admin â†’ Team Assignment section (not Pair Assignment)', link:'/admin' },
+      { id:'t3', text:'Admin â†’ assign players to Team A / Team B â€” save', link:'/admin' },
+      { id:'t4', text:'Scorecard â†’ "Your Team" label shows (not "Your Pair")', link:'/scorecard' },
+      { id:'t5', text:'Scorecard â†’ opponent section visible', link:'/scorecard' },
+      { id:'t6', text:'Scoreboard â†’ Team tab shows A vs B banners', link:'/scoreboard' },
     ]
   },
   {
@@ -129,23 +129,23 @@ const SECTIONS = [
     title: 'Navigation & Auth',
     badge: 'infra',
     steps: [
-      { id:'n1', text:'Hamburger menu opens on mobile viewport — all links present', link:'/scoreboard' },
+      { id:'n1', text:'Hamburger menu opens on mobile viewport â€” all links present', link:'/scoreboard' },
       { id:'n2', text:'Admin link appears in nav when logged in as owner', link:'/scoreboard' },
       { id:'n3', text:'Admin link NOT visible when logged out', link:'/scoreboard' },
-      { id:'n4', text:'All nav links route correctly — no 404s', link:'/directory' },
+      { id:'n4', text:'All nav links route correctly â€” no 404s', link:'/directory' },
     ]
   },
   {
     id: 'llc',
-    title: 'Form LLC — Greenskeeper Studios',
+    title: 'Form LLC â€” Greenskeeper Studios',
     badge: 'human',
     steps: [
-      { id:'llc1', text:'Choose your state — file in your home state (WI?) for simplicity. Delaware only worth it if raising VC.', note:'LLC filing fee varies: WI ~$130, DE ~$90 + $300/yr franchise tax' },
-      { id:'llc2', text:'File Articles of Organization online at your state Secretary of State website', note:'WI: https://www.wdfi.org — takes 1–2 business days online' },
-      { id:'llc3', text:'Get a free EIN (Employer ID Number) from IRS.gov', note:'IRS EIN online application: irs.gov/businesses/small-businesses-self-employed/apply-for-an-employer-identification-number-ein-online — instant' },
-      { id:'llc4', text:'Draft an Operating Agreement (single-member LLC — keep it simple, templates online)', note:'Not legally required in most states but protects limited liability shield' },
+      { id:'llc1', text:'Choose your state â€” file in your home state (WI?) for simplicity. Delaware only worth it if raising VC.', note:'LLC filing fee varies: WI ~$130, DE ~$90 + $300/yr franchise tax' },
+      { id:'llc2', text:'File Articles of Organization online at your state Secretary of State website', note:'WI: https://www.wdfi.org â€” takes 1â€“2 business days online' },
+      { id:'llc3', text:'Get a free EIN (Employer ID Number) from IRS.gov', note:'IRS EIN online application: irs.gov/businesses/small-businesses-self-employed/apply-for-an-employer-identification-number-ein-online â€” instant' },
+      { id:'llc4', text:'Draft an Operating Agreement (single-member LLC â€” keep it simple, templates online)', note:'Not legally required in most states but protects limited liability shield' },
       { id:'llc5', text:'Open a business bank account under the LLC (bring EIN + Articles)', note:'Recommended: Mercury (free, online-first) or your local bank' },
-      { id:'llc6', text:'Register with Stripe under the LLC name + EIN', note:'stripe.com/dashboard — use business bank account for payouts' },
+      { id:'llc6', text:'Register with Stripe under the LLC name + EIN', note:'stripe.com/dashboard â€” use business bank account for payouts' },
       { id:'llc7', text:'Update CLAUDE.md with LLC name, EIN (last 4 only), Stripe account ID', note:'So future agents know the business entity is set up' },
     ]
   },
@@ -155,23 +155,23 @@ const SECTIONS = [
     badge: 'human',
     steps: [
       { id:'h1', text:'Confirm Bova tournament formats with Chris Bova', note:'Pending: Day 1 = Stroke? Day 2 = Scramble? Day 3 = Best Ball? Shambles mapping unresolved.' },
-      { id:'h2', text:'Add Chris Bova\'s email as co-admin on the Bova tournament (admin → Access tab)', note:'Required before Chris can manage his own tournament' },
-      { id:'h3', text:'Smoke test PWA install on your phone (iOS Safari: Share → Add to Home Screen)', note:'Ensure manifest, icons, and offline cache all work on real device' },
-      { id:'h4', text:'Buy full US golf course flat-file DB for course selector', note:'Source: Golf-Course-Database.com — discussed in early sessions' },
-      { id:'h5', text:'Enable leaked password protection in Supabase Auth dashboard', note:'Dashboard → Auth → Providers → Enable "Leaked password protection"' },
+      { id:'h2', text:'Add Chris Bova\'s email as co-admin on the Bova tournament (admin â†’ Access tab)', note:'Required before Chris can manage his own tournament' },
+      { id:'h3', text:'Smoke test PWA install on your phone (iOS Safari: Share â†’ Add to Home Screen)', note:'Ensure manifest, icons, and offline cache all work on real device' },
+      { id:'h4', text:'Buy full US golf course flat-file DB for course selector', note:'Source: Golf-Course-Database.com â€” discussed in early sessions' },
+      { id:'h5', text:'Enable leaked password protection in Supabase Auth dashboard', note:'Dashboard â†’ Auth â†’ Providers â†’ Enable "Leaked password protection"' },
     ]
   },
   {
     id: 'security',
-    title: 'Security — Human Required',
+    title: 'Security â€” Human Required',
     badge: 'human',
     steps: [
-      { id:'sec1', text:'Supabase Dashboard → Auth → Password → set minimum length to 8 (currently 6)', note:'supabase.com/dashboard → project jllugkiojeoopitdvzsa → Auth → Sign In Methods → Password → Min length' },
-      { id:'sec2', text:'Supabase Dashboard → Auth → Email → enable "Confirm email" toggle', note:'Prevents anyone from registering with an arbitrary email and immediately accessing their invitation slot' },
-      { id:'sec3', text:'Supabase Dashboard → Auth → Rate Limits → verify signup + login limits are active', note:'Default: 5 emails/hr, 30 signins/5min. If changed, reset to defaults.' },
+      { id:'sec1', text:'Supabase Dashboard â†’ Auth â†’ Password â†’ set minimum length to 8 (currently 6)', note:'supabase.com/dashboard â†’ project jllugkiojeoopitdvzsa â†’ Auth â†’ Sign In Methods â†’ Password â†’ Min length' },
+      { id:'sec2', text:'Supabase Dashboard â†’ Auth â†’ Email â†’ enable "Confirm email" toggle', note:'Prevents anyone from registering with an arbitrary email and immediately accessing their invitation slot' },
+      { id:'sec3', text:'Supabase Dashboard â†’ Auth â†’ Rate Limits â†’ verify signup + login limits are active', note:'Default: 5 emails/hr, 30 signins/5min. If changed, reset to defaults.' },
       { id:'sec4', text:'Verify curl -I https://tourney.greenskeeper.studio shows Strict-Transport-Security, X-Frame-Options, X-Content-Type-Options headers', note:'All three must be present. Run: curl -sI https://tourney.greenskeeper.studio | grep -E "Strict|Frame|Content-Type"' },
-      { id:'sec5', text:'Pentest: as a normal player, attempt supabase.from("player_accounts").update({billing_status:"comped"}) — must return RLS error', note:'Open browser console on any page while logged in as a test player and run the query' },
-      { id:'sec6', text:'Pentest: unauthenticated POST to send-push edge function must return 401', note:'curl -X POST https://jllugkiojeoopitdvzsa.supabase.co/functions/v1/send-push -d "{}" — expect 401' },
+      { id:'sec5', text:'Pentest: as a normal player, attempt supabase.from("player_accounts").update({billing_status:"comped"}) â€” must return RLS error', note:'Open browser console on any page while logged in as a test player and run the query' },
+      { id:'sec6', text:'Pentest: unauthenticated POST to send-push edge function must return 401', note:'curl -X POST https://jllugkiojeoopitdvzsa.supabase.co/functions/v1/send-push -d "{}" â€” expect 401' },
     ]
   },
   {
@@ -179,9 +179,9 @@ const SECTIONS = [
     title: 'Console & Network',
     badge: 'infra',
     steps: [
-      { id:'c1', text:'Open DevTools → Console → zero errors on scoreboard load', link:'/scoreboard', note:'F12 → Console tab — red errors = FAIL' },
-      { id:'c2', text:'Open DevTools → Console → zero errors on scorecard load', link:'/scorecard' },
-      { id:'c3', text:'Open DevTools → Network → no 4xx/5xx requests on any page', note:'Filter by "status:4" and "status:5"' },
+      { id:'c1', text:'Open DevTools â†’ Console â†’ zero errors on scoreboard load', link:'/scoreboard', note:'F12 â†’ Console tab â€” red errors = FAIL' },
+      { id:'c2', text:'Open DevTools â†’ Console â†’ zero errors on scorecard load', link:'/scorecard' },
+      { id:'c3', text:'Open DevTools â†’ Network â†’ no 4xx/5xx requests on any page', note:'Filter by "status:4" and "status:5"' },
     ]
   }
 ];
@@ -237,7 +237,7 @@ function updateProgress() {
 function sectionStatus(section) {
   const total = section.steps.length;
   const done = section.steps.filter(s => checked[s.id]).length;
-  if (done === 0) return { label: '—', cls: 'status-pending' };
+  if (done === 0) return { label: 'â€”', cls: 'status-pending' };
   if (done === total) return { label: 'PASS', cls: 'status-pass' };
   return { label: `${done}/${total}`, cls: 'status-pending' };
 }
@@ -252,10 +252,10 @@ function render() {
     const stepsHtml = section.steps.map(step => {
       const isDone = !!checked[step.id];
       const linkHref = step.link ? url(step.link) : null;
-      const linkHtml = linkHref && slug ? `<a class="step-link" href="${linkHref}" target="_blank" onclick="event.stopPropagation()">Open ↗</a>` : '';
+      const linkHtml = linkHref && slug ? `<a class="step-link" href="${linkHref}" target="_blank" onclick="event.stopPropagation()">Open â†—</a>` : '';
       const noteHtml = step.note ? `<div class="step-note">${step.note}</div>` : '';
       return `<li class="step${isDone ? ' done' : ''}" onclick="toggle('${step.id}')">
-        <div class="cb"><span class="cb-check">✓</span></div>
+        <div class="cb"><span class="cb-check">âœ“</span></div>
         <div class="step-body">
           <div class="step-text">${step.text}</div>
           ${linkHtml}${noteHtml}
@@ -264,14 +264,14 @@ function render() {
     }).join('');
     const isCollapsed = !!collapsed[section.id];
     const humanBanner = section.badge === 'human'
-      ? `<div class="human-banner" style="display:flex;align-items:center;gap:0.4rem;padding:0.45rem 1rem;background:rgba(180,60,40,0.06);border-bottom:1px solid rgba(180,60,40,0.15);font-size:0.58rem;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:var(--red);">⚠ Human Required — cannot be automated</div>`
+      ? `<div class="human-banner" style="display:flex;align-items:center;gap:0.4rem;padding:0.45rem 1rem;background:rgba(180,60,40,0.06);border-bottom:1px solid rgba(180,60,40,0.15);font-size:0.58rem;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:var(--red);">âš  Human Required â€” cannot be automated</div>`
       : '';
     return `<div class="section${isCollapsed ? ' collapsed' : ''}">
       <div class="sec-hdr" onclick="toggleSection('${section.id}')">
         <span class="sec-title">${section.title}</span>
         <span class="${badgeCls(section.badge)}">${badgeLabel(section.badge)}</span>
         <span class="sec-status ${cls}">${label}</span>
-        <span class="sec-chevron">▼</span>
+        <span class="sec-chevron">â–¼</span>
       </div>
       ${humanBanner}
       <ul class="steps">${stepsHtml}</ul>
@@ -290,6 +290,6 @@ load();
 document.getElementById('slugInput').value = slug;
 render();
 </script>
-<script src="/bug-fab.js?v=3" defer></script>
+<script src="/bug-fab.js?v=4" defer></script>
 </body>
 </html>
