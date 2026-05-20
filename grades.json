@@ -90,10 +90,17 @@
       "scores": [
         {
           "date": "2026-05-19",
+          "score": "A",
+          "url": "/platform/5-19-26-ux-review",
+          "review_title": "Execute + Audit · May 19, 2026",
+          "notes": "Grade A. All 11 nav-bar pages now use correct nav wordmark SVG (viewBox 0 0 240 48, 24px). login.html viewBox fixed + navLogoImg added. 'The Bova Invitational' hardcoded tenant text removed from 5 pages. tourney-init logo swap fires on every tournament page. Zero blocked items."
+        },
+        {
+          "date": "2026-05-19",
           "score": "A-",
           "url": "/platform/5-19-26-ux-review",
           "review_title": "UX Polish Review · May 19, 2026",
-          "notes": "No grade change. Logo audit: login.html nav SVG has hero viewBox (200x120) instead of nav viewBox (240x48) — renders 2.5× oversized. 5 pages use img not inline SVG for navLogoSvg. scorecard.html nav has zero logo element. marketing.html text-only. 10-step runbook written."
+          "notes": "Logo audit: login.html nav SVG has hero viewBox (200x120) instead of nav viewBox (240x48) — renders 2.5× oversized. 5 pages use img not inline SVG for navLogoSvg. scorecard.html nav has zero logo element. marketing.html text-only. 10-step runbook written."
         },
         {
           "date": "2026-05-15",

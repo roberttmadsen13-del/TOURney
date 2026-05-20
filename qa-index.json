@@ -15,7 +15,10 @@
       "url": "/platform/5-19-26-ux-review",
       "file": "5-19-26-ux-review.html",
       "tags": ["review", "ux", "brand", "logo"],
-      "status": "open"
+      "status": "concluded",
+      "stage": "concluded",
+      "updated": "2026-05-19",
+      "summary": "Grade A. All 10 runbook steps shipped. All 11 nav-bar pages updated to nav wordmark SVG (240×48, 24px). login.html viewBox 200×120→240×48 fixed. navLogoImg added to login. 'The Bova Invitational' hardcoded text removed from 5 pages. tourney-init logo swap fires on all tournament pages. Zero blocked items."
     },
     {
       "id": "review-2026-05-15",

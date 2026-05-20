@@ -22,12 +22,12 @@
       "blocking": false
     },
     "ux": {
-      "status": "executing",
-      "grade": "A-",
+      "status": "concluded",
+      "grade": "A",
       "artifact": "/platform/5-19-26-ux-review",
       "last_updated": "2026-05-19",
-      "summary": "A-. Logo audit: login.html wrong viewBox (200x120→240x48), 5 pages img not inline SVG, scorecard.html nav has zero logo, marketing.html text-only. 10-step runbook written. Run /tourney-execute.",
-      "open_items": 6,
+      "summary": "A. All 11 nav-bar pages use correct nav wordmark SVG (240×48, 24px). login.html viewBox fixed, navLogoImg added. Hardcoded tenant text removed from 5 pages. tourney-init logo swap fires everywhere. Zero open items.",
+      "open_items": 0,
       "blocking": false
     },
     "security": {
