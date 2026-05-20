@@ -1456,7 +1456,7 @@ async function loadAxisBoard() {
   } catch(e){/* silent */}
 }
 /* ══════════════════════ ARTIFACT TICKETS ══════════════════════ */
-let _atFilter='all',_atSearch='',_atShowConcluded=true;
+let _atFilter='all',_atSearch='',_atShowConcluded=false;
 let _atSeen=new Set(JSON.parse(localStorage.getItem('at_seen')||'[]'));
 function _markAtSeen(id){_atSeen.add(id);localStorage.setItem('at_seen',JSON.stringify([..._atSeen]));}
 function openArtifactRow(id,url){_markAtSeen(id);renderArtifactTickets();if(url&&url!=='#')window.open(url,'_blank');}
