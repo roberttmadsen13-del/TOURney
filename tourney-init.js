@@ -3,6 +3,8 @@
 // Usage on every page:
 //   const { db, tournament } = await window.tourney.ready;
 
+(function(){var s=document.createElement('script');s.src='/error-monitor.js';s.async=true;document.head.appendChild(s);})();
+
 (() => {
   // Hide page until brand colors applied — tenant pages only, prevents stale branding flash.
   const _onTenantPath = !!location.pathname.match(/\/t\/([^/?#]+)/);
