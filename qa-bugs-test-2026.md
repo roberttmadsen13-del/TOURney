@@ -1,4 +1,14 @@
-# QA Bug Log — TOURney Platform (updated: 2026-05-15)
+# QA Bug Log — TOURney Platform (updated: 2026-05-20)
+
+### 2026-05-20 — fresh sweep: commits a8b5a8b + 796bb9b
+
+- [CLEAN] tournament_admins id→tournament_id fix (796bb9b): verified all 7 live files. admin.html :885/:901 use `select('email')`, champions.html :284 / profile.html :246 / feed.html :694 / scorecard.html :490 use `select('tournament_id')`, player.html :337/:616 use `select('tournament_id')`. No `select('id')` on tournament_admins anywhere. Fix correct.
+- [CLEAN] admin.html subtitle (a8b5a8b): subtitle sets tournament.name (:954) as loading state, then renderTeamUI() (:993-994) overwrites with team format after settings load. Intended behavior — not a bug.
+- [BLOCKED] SEND_INSTALL_EMAIL_SECRET — Rob manual. Carried from prior audit. Status: open
+- [BLOCKED] GitHub CI deploy secrets — Rob manual. Carried from prior audit. Status: open
+- [OBSERVATION LOW] admin.html :993-994 renderTeamUI() unconditionally overwrites adminPageSub on every settings load. Commit message "shows tournament name in subtitle" is misleading — final subtitle is always team format. Cosmetic only, not a regression.
+
+---
 
 ### 2026-05-19 — 5-15-26-claude-review execute audit
 - [DONE] Duplicate 006 migration prefix — renamed to `006b_multi_tourney_players.sql` + header comment added. Status: fixed
