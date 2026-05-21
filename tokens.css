@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Barlow:wght@300;400;500&family=Barlow+Condensed:ital,wght@0,300;0,400;0,600;0,700;1,400&family=DM+Mono:wght@300;400;500&display=swap');
+
 /* tokens.css — TOURney design system tokens
  *
  * Single source of truth for color, type, spacing, motion.
@@ -28,7 +30,7 @@
   --purple:      #8e44ad;
 
   /* Type */
-  --font-sans:    -apple-system, 'Segoe UI', system-ui, sans-serif;
+  --font-sans:    'Barlow', -apple-system, sans-serif;
   --font-mono:    'Consolas', 'Monaco', monospace;
   --font-display: 'Playfair Display', Georgia, serif;
   --font-condensed: 'Barlow Condensed', sans-serif;
