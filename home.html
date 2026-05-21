@@ -1015,7 +1015,6 @@ async function refreshField() {
     const { tournament } = await window.tourney.ready;
     const { data } = await sb.from('players').select('*').eq('tournament_id', tournament.id).order('created_at', { ascending: true });
     let players = data || [];
-    // Ensure owner/admin player record is included — RLS may exclude it from bulk query
     if (tournament.owner_email) {
       const ownerLower = tournament.owner_email.toLowerCase();
       const alreadyIn = players.some(p => p.email?.toLowerCase() === ownerLower);
