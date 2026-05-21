@@ -832,18 +832,22 @@ window.addEventListener('scroll', () => { document.getElementById('mainNav').cla
 
   const fmtItems = document.getElementById('formatItems');
   if (fmtItems) {
-    let items = '';
-    for (let i = 1; i <= numDays; i++) {
-      const front = map[`format_day${i}_front`] || 'stroke';
-      const back  = map[`format_day${i}_back`]  || 'stroke';
-      if (front === back) {
-        items += `<div class="fi"><div class="fi-head"><div class="fi-day">Day ${DAY_WORDS[i-1]||i} &mdash; Full 18</div><div class="fi-format">${esc(FMT_LABELS[front]||front)}</div></div><div class="fi-body">${esc(FMT_DESC[front]||'')}</div></div>`;
-      } else {
-        items += `<div class="fi"><div class="fi-head"><div class="fi-day">Day ${DAY_WORDS[i-1]||i} &mdash; Front</div><div class="fi-format">${esc(FMT_LABELS[front]||front)}</div></div><div class="fi-body">${esc(FMT_DESC[front]||'')}</div></div>`;
-        items += `<div class="fi"><div class="fi-head"><div class="fi-day">Day ${DAY_WORDS[i-1]||i} &mdash; Back</div><div class="fi-format">${esc(FMT_LABELS[back]||back)}</div></div><div class="fi-body">${esc(FMT_DESC[back]||'')}</div></div>`;
+    if (!roundsData || !roundsData.length) {
+      fmtItems.innerHTML = '<p style="color:var(--muted);font-size:0.85rem;padding:0.5rem 0">Format details coming soon.</p>';
+    } else {
+      let items = '';
+      for (let i = 1; i <= numDays; i++) {
+        const front = map[`format_day${i}_front`] || 'stroke';
+        const back  = map[`format_day${i}_back`]  || 'stroke';
+        if (front === back) {
+          items += `<div class="fi"><div class="fi-head"><div class="fi-day">Day ${DAY_WORDS[i-1]||i} &mdash; Full 18</div><div class="fi-format">${esc(FMT_LABELS[front]||front)}</div></div><div class="fi-body">${esc(FMT_DESC[front]||'')}</div></div>`;
+        } else {
+          items += `<div class="fi"><div class="fi-head"><div class="fi-day">Day ${DAY_WORDS[i-1]||i} &mdash; Front</div><div class="fi-format">${esc(FMT_LABELS[front]||front)}</div></div><div class="fi-body">${esc(FMT_DESC[front]||'')}</div></div>`;
+          items += `<div class="fi"><div class="fi-head"><div class="fi-day">Day ${DAY_WORDS[i-1]||i} &mdash; Back</div><div class="fi-format">${esc(FMT_LABELS[back]||back)}</div></div><div class="fi-body">${esc(FMT_DESC[back]||'')}</div></div>`;
+        }
       }
+      if (items) fmtItems.innerHTML = items;
     }
-    if (items) fmtItems.innerHTML = items;
   }
   const fmtNote = document.getElementById('fmtNote');
   if (fmtNote && map.homepage_format_note) fmtNote.textContent = map.homepage_format_note;
@@ -1010,7 +1014,16 @@ async function refreshField() {
   try {
     const { tournament } = await window.tourney.ready;
     const { data } = await sb.from('players').select('*').eq('tournament_id', tournament.id).order('created_at', { ascending: true });
-    const players = data || [];
+    let players = data || [];
+    // Ensure owner/admin player record is included — RLS may exclude it from bulk query
+    if (tournament.owner_email) {
+      const ownerLower = tournament.owner_email.toLowerCase();
+      const alreadyIn = players.some(p => p.email?.toLowerCase() === ownerLower);
+      if (!alreadyIn) {
+        const { data: ownerRow } = await sb.from('players').select('*').eq('tournament_id', tournament.id).eq('email', ownerLower).maybeSingle();
+        if (ownerRow) players = [ownerRow, ...players];
+      }
+    }
     const n = players.length;
     document.getElementById('statRegistered').textContent = n;
     document.getElementById('spotsLeft').textContent = MAX - n;

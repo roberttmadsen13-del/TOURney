@@ -1381,6 +1381,7 @@ async function loadArtifacts() {
     }
     if(current) localStorage.setItem(SEEN_KEY, current);
     renderRefArtifacts();
+    renderArtifactTickets();
 
     // ── Enable-notifications prompt (one-time, dismissible) ────────────────
     if('Notification' in window && Notification.permission==='default') {
