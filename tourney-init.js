@@ -82,7 +82,7 @@
 
     const { data, error } = await db
       .from('tournaments')
-      .select('id, slug, name, short_name, logo_url')
+      .select('id, slug, name, short_name, logo_url, owner_email')
       .eq('slug', slug)
       .single();
 
