@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TOURney — Competitor Analysis · Unknown Golf · May 21, 2026</title>
+<style>
+:root{--gold:#c09030;--gold-light:#d4a840;--gold-dim:rgba(192,144,48,0.18);--bg:#0d0a05;--surface:#151009;--card:#1c140a;--border:rgba(192,144,48,0.22);--muted:#7a6a54;--text:#e8dcc8;--red:#c0392b;--green:#27ae60;--blue:#2980b9;--orange:#e67e22;--purple:#8e44ad;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:-apple-system,'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;font-size:15px;}
+nav{position:sticky;top:0;z-index:100;background:rgba(13,10,5,0.97);border-bottom:1px solid var(--border);backdrop-filter:blur(12px);}
+.nav-inner{padding:0.6rem 1.5rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap;}
+.nav-brand{color:var(--gold);font-weight:700;font-size:1rem;letter-spacing:0.05em;white-space:nowrap;}
+.nav-brand span{color:var(--muted);font-weight:400;font-size:0.8rem;margin-left:0.4rem;}
+.nav-links{display:flex;gap:0.2rem;flex-wrap:wrap;margin-left:auto;}
+.nav-links a{color:var(--muted);text-decoration:none;font-size:0.78rem;padding:0.3rem 0.55rem;border-radius:4px;transition:all 0.15s;white-space:nowrap;}
+.nav-links a:hover{color:var(--gold);background:var(--gold-dim);}
+.lifecycle-bar{display:flex;gap:3px;padding:0.55rem 1.5rem 0.65rem;background:var(--surface);border-bottom:1px solid var(--border);}
+.lc-stage{flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;}
+.lc-pill{height:5px;width:100%;border-radius:3px;background:rgba(192,144,48,0.1);transition:background 0.25s;}
+.lc-label{font-size:0.58rem;font-weight:700;letter-spacing:0.11em;text-transform:uppercase;color:rgba(122,106,84,0.45);transition:color 0.25s;}
+.lc-done .lc-pill{background:var(--gold);}
+.lc-done .lc-label{color:var(--gold);}
+.lc-active .lc-pill{background:var(--gold-light);box-shadow:0 0 8px rgba(192,144,48,0.45);}
+.lc-active .lc-label{color:var(--gold-light);}
+.hero{padding:3rem 1.5rem 2rem;text-align:center;border-bottom:1px solid var(--border);background:linear-gradient(180deg,rgba(192,144,48,0.06) 0%,transparent 100%);}
+.hero-eyebrow{display:inline-block;font-size:0.7rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold);border:1px solid var(--border);border-radius:20px;padding:0.22rem 0.8rem;margin-bottom:0.9rem;}
+.hero h1{font-size:clamp(1.5rem,3.5vw,2.3rem);font-weight:800;color:#fff;margin-bottom:0.35rem;}
+.hero h1 span{color:var(--gold);}
+.hero-sub{color:var(--muted);max-width:520px;margin:0 auto 1rem;font-size:0.9rem;}
+.hero-meta{display:flex;gap:1.1rem;justify-content:center;flex-wrap:wrap;font-size:0.74rem;color:var(--muted);}
+.hero-meta span{display:flex;align-items:center;gap:0.3rem;}
+.wrapper{max-width:1000px;margin:0 auto;padding:0 1.5rem;}
+section{padding:2.5rem 0;border-bottom:1px solid var(--border);}
+section:last-of-type{border-bottom:none;}
+.section-header{margin-bottom:1.6rem;}
+.section-eyebrow{font-size:0.67rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--gold);margin-bottom:0.3rem;}
+.section-title{font-size:1.35rem;font-weight:800;color:#fff;margin-bottom:0.3rem;}
+.section-desc{color:var(--muted);font-size:0.85rem;max-width:560px;}
+.card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:1.15rem 1.3rem;margin-bottom:0.7rem;}
+.card-title{font-size:0.85rem;font-weight:700;color:var(--gold);margin-bottom:0.45rem;}
+.card p,.card li{font-size:0.84rem;color:var(--text);margin-bottom:0.28rem;}
+.card ul,.card ol{padding-left:1.2rem;}
+.card li{margin-bottom:0.32rem;}
+.grid-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:0.7rem;}
+.grid-3{display:grid;grid-template-columns:repeat(auto-fit,minmax(245px,1fr));gap:0.7rem;}
+.pill{display:inline-block;font-size:0.66rem;font-weight:700;letter-spacing:0.06em;padding:0.15rem 0.5rem;border-radius:20px;text-transform:uppercase;}
+.pill-gold{background:rgba(192,144,48,0.18);color:var(--gold);border:1px solid rgba(192,144,48,0.3);}
+.pill-green{background:rgba(39,174,96,0.15);color:var(--green);border:1px solid rgba(39,174,96,0.3);}
+.pill-red{background:rgba(192,57,43,0.15);color:var(--red);border:1px solid rgba(192,57,43,0.3);}
+.pill-orange{background:rgba(230,126,34,0.15);color:var(--orange);border:1px solid rgba(230,126,34,0.3);}
+.pill-blue{background:rgba(41,128,185,0.15);color:var(--blue);border:1px solid rgba(41,128,185,0.3);}
+.table-wrap{background:var(--card);border:1px solid var(--border);border-radius:8px;overflow:hidden;overflow-x:auto;}
+.page-table{width:100%;border-collapse:collapse;font-size:0.8rem;}
+.page-table th{text-align:left;padding:0.52rem 0.72rem;border-bottom:1px solid var(--border);color:var(--muted);font-size:0.67rem;text-transform:uppercase;letter-spacing:0.08em;background:var(--surface);}
+.page-table td{padding:0.58rem 0.72rem;border-bottom:1px solid rgba(192,144,48,0.08);vertical-align:top;}
+.page-table tr:last-child td{border-bottom:none;}
+.page-table tr:hover td{background:var(--gold-dim);}
+.score-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(125px,1fr));gap:0.52rem;margin-bottom:1.4rem;}
+.score-cell{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:0.85rem;text-align:center;}
+.score-num{font-size:1.85rem;font-weight:900;line-height:1;margin-bottom:0.18rem;}
+.score-label{font-size:0.64rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);}
+.score-green{color:var(--green);}
+.score-gold{color:var(--gold);}
+.score-red{color:var(--red);}
+.idea-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1.25rem;position:relative;overflow:hidden;}
+.idea-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;}
+.idea-1::before{background:var(--gold);}
+.idea-2::before{background:var(--blue);}
+.idea-3::before{background:var(--green);}
+.idea-4::before{background:var(--red);}
+.idea-num{font-size:0.65rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:0.25rem;}
+.idea-title{font-size:0.95rem;font-weight:700;color:#fff;margin-bottom:0.4rem;}
+.idea-body{font-size:0.82rem;color:var(--text);}
+.win-row{display:flex;align-items:flex-start;gap:0.6rem;padding:0.6rem 0;border-bottom:1px solid rgba(192,144,48,0.08);}
+.win-row:last-child{border-bottom:none;}
+.win-icon{font-size:0.9rem;flex-shrink:0;margin-top:0.1rem;}
+.win-text{font-size:0.83rem;color:var(--text);}
+.win-text strong{color:#fff;}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <div class="nav-brand">TOURNEY <span>Competitor Intel</span></div>
+    <div class="nav-links">
+      <a href="/platform">← Platform</a>
+      <a href="/platform/bugs">Bug Log</a>
+    </div>
+  </div>
+</nav>
+
+<div class="lifecycle-bar">
+  <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Review</div></div>
+  <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Plan</div></div>
+  <div class="lc-stage"><div class="lc-pill"></div><div class="lc-label">Runbook</div></div>
+  <div class="lc-stage"><div class="lc-pill"></div><div class="lc-label">Executing</div></div>
+  <div class="lc-stage"><div class="lc-pill"></div><div class="lc-label">Audit</div></div>
+  <div class="lc-stage"><div class="lc-pill"></div><div class="lc-label">Concluded</div></div>
+</div>
+
+<div class="hero">
+  <div class="hero-eyebrow">Competitor Intelligence</div>
+  <h1>Unknown Golf <span>vs TOURney</span></h1>
+  <div class="hero-sub">Feature gap analysis based on 8 screenshots from league.unknowngolf.com. Sourced 2026-05-21.</div>
+  <div class="hero-meta">
+    <span>📅 May 21, 2026</span>
+    <span>🔍 8 screenshots analyzed</span>
+    <span>🎯 league.unknowngolf.com</span>
+    <span>by claude-sonnet-4-6</span>
+  </div>
+</div>
+
+<div class="wrapper">
+
+<!-- §REVIEW -->
+<section id="review">
+  <div class="section-header">
+    <div class="section-eyebrow">§ Review</div>
+    <div class="section-title">Head-to-Head Feature Comparison</div>
+    <div class="section-desc">Tabs analyzed: Home, Scoring, Leaderboards, Payouts, Side Games, Stats, Social, Course.</div>
+  </div>
+
+  <div class="score-grid">
+    <div class="score-cell"><div class="score-num score-green">8</div><div class="score-label">TOURney Wins</div></div>
+    <div class="score-cell"><div class="score-num score-red">10</div><div class="score-label">Their Leads</div></div>
+    <div class="score-cell"><div class="score-num score-gold">2</div><div class="score-label">Critical Gaps</div></div>
+    <div class="score-cell"><div class="score-num score-gold">3</div><div class="score-label">Don't Copy</div></div>
+  </div>
+
+  <div class="grid-2" style="margin-bottom:1rem;">
+    <div class="card">
+      <div class="card-title">✅ Where TOURney Wins</div>
+      <div class="win-row"><div class="win-icon">🏢</div><div class="win-text"><strong>Multi-tenant SaaS</strong> — Unknown Golf appears to be single-league. TOURney hosts multiple tournaments/organizers.</div></div>
+      <div class="win-row"><div class="win-icon">🖥</div><div class="win-text"><strong>Admin platform</strong> — full artifact/ticket system, axis grades, bug log, QA checklist. Unknown Golf has no visible organizer tooling.</div></div>
+      <div class="win-row"><div class="win-icon">📨</div><div class="win-text"><strong>RSVP / invite gate</strong> — controlled access, proper tournament onboarding. Unknown Golf has no visible invite flow.</div></div>
+      <div class="win-row"><div class="win-icon">📲</div><div class="win-text"><strong>PWA install + offline</strong> — confirmed working with service worker cache. Unknown Golf status unclear.</div></div>
+      <div class="win-row"><div class="win-icon">⚡</div><div class="win-text"><strong>Realtime scoring</strong> — Supabase postgres_changes subscriptions. Leaderboard updates live.</div></div>
+      <div class="win-row"><div class="win-icon">🎉</div><div class="win-text"><strong>HIO confetti + trash talk</strong> — player celebration UX. Unknown Golf has no equivalent.</div></div>
+      <div class="win-row"><div class="win-icon">🎨</div><div class="win-text"><strong>Premium brand identity</strong> — dark gold theme, Barlow Condensed, consistent design tokens. Unknown Golf uses generic neon-green UI.</div></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">🔴 Critical Gaps (blocking scale)</div>
+      <div class="win-row"><div class="win-icon">⛳</div><div class="win-text"><strong>Player-facing score entry</strong> — Unknown Golf has +/- hole-by-hole input with player avatars, par/yards/HC per hole. TOURney has ZERO player score entry. Every score must go through an admin manually. This is the biggest operational blocker for every organizer.</div></div>
+      <div class="win-row"><div class="win-icon">💰</div><div class="win-text"><strong>Side games + payouts</strong> — Unknown Golf has dedicated tabs for skins, closest to pin, long drive, and $ winnings tracking per player. This is a major draw for casual tournaments. TOURney has none of this.</div></div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:0.7rem;">
+    <div class="card-title">🟡 Medium Gaps (notable differentiators)</div>
+    <div class="table-wrap" style="margin-top:0.5rem;">
+      <table class="page-table">
+        <thead><tr><th>Feature</th><th>Unknown Golf</th><th>TOURney</th><th>Priority</th></tr></thead>
+        <tbody>
+          <tr><td>Tee selector w/ rating/slope</td><td>Per-hole display, player selects tee</td><td>In DB, not player-facing</td><td><span class="pill pill-orange">P2</span></td></tr>
+          <tr><td>Per-shot stats (FIR, GIR, putts)</td><td>Full stat tracking per round</td><td>Strokes only</td><td><span class="pill pill-gold">P3</span></td></tr>
+          <tr><td>Strokes gained analytics</td><td>Dedicated tab, total + by category</td><td>None</td><td><span class="pill pill-gold">P4</span></td></tr>
+          <tr><td>Social / chat + photo share</td><td>Full group chat with photo upload</td><td>Trash talk text only</td><td><span class="pill pill-gold">P3</span></td></tr>
+          <tr><td>GPS yardage (ball-to-pin)</td><td>Present</td><td>None</td><td><span class="pill pill-blue">Skip</span></td></tr>
+          <tr><td>Live weather (temp/wind/precip)</td><td>Course tab</td><td>None</td><td><span class="pill pill-blue">P5</span></td></tr>
+          <tr><td>Course hole images</td><td>Per-hole photo placeholders</td><td>None</td><td><span class="pill pill-blue">Skip</span></td></tr>
+          <tr><td>"Resume scoring" deep link</td><td>Home tab CTA → active round</td><td>No round state machine</td><td><span class="pill pill-orange">P2</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">⛔ Do NOT Copy (high cost, low leverage)</div>
+    <ul>
+      <li><strong>GPS yardage</strong> — requires Google Maps or similar API (~$200+/mo at scale). Not relevant for private event hosts who know their course.</li>
+      <li><strong>Strokes gained</strong> — requires shot-by-shot data model overhaul. Niche appeal. Unknown Golf targets daily-fee golfers; TOURney targets private invitational hosts.</li>
+      <li><strong>Per-hole course images</strong> — content management nightmare. Low conversion value vs cost to maintain.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- §PLAN -->
+<section id="plan">
+  <div class="section-header">
+    <div class="section-eyebrow">§ Plan</div>
+    <div class="section-title">Strategic Positioning + Roadmap</div>
+    <div class="section-desc">Where to compete, where to ignore, and in what order to close the gaps that matter.</div>
+  </div>
+
+  <div class="card" style="margin-bottom:1rem;">
+    <div class="card-title">Strategic Read</div>
+    <p><strong>Unknown Golf = scoring app that added tournament features.</strong> Their UX is player-first — every tab serves the person playing golf. Score input, stats, GPS, weather, social.</p>
+    <p style="margin-top:0.5rem;"><strong>TOURney = tournament management platform that hasn't built player-facing scoring.</strong> UX is admin-first — organizers get the full platform, players get a leaderboard and trash talk.</p>
+    <p style="margin-top:0.5rem;">These are adjacent but different. TOURney's moat is in the organizer layer: multi-tenant, invite gate, platform artifacts, admin controls. Unknown Golf has no organizer tooling visible. The gap to close is bringing players into the scoring loop without losing the organizer-first positioning.</p>
+  </div>
+
+  <div class="grid-2" style="margin-bottom:1rem;">
+    <div class="idea-card idea-1">
+      <div class="idea-num">P1 — Critical</div>
+      <div class="idea-title">Player-Facing Score Entry</div>
+      <div class="idea-body">Hole-by-hole +/- input on the player home page. Display par/HC per hole. Admin can still override. This single feature removes the biggest operational burden from every organizer and closes the most visible gap vs Unknown Golf.</div>
+    </div>
+    <div class="idea-card idea-2">
+      <div class="idea-num">P2 — High Value</div>
+      <div class="idea-title">Side Games</div>
+      <div class="idea-body">Skins, closest to pin, long drive. Configurable per-tournament. No money tracking required in v1 — just declare winners per game. Casual tournaments care about side games more than the main leaderboard.</div>
+    </div>
+    <div class="idea-card idea-3">
+      <div class="idea-num">P3 — Differentiator</div>
+      <div class="idea-title">Payouts / Money Tracking</div>
+      <div class="idea-body">Track buy-in amounts, side game pots, and distribute winnings. Not necessarily payment processing — even a running scoreboard of who owes what adds massive value for casual invitational organizers.</div>
+    </div>
+    <div class="idea-card idea-4">
+      <div class="idea-num">P4 — Polish</div>
+      <div class="idea-title">Tee Selector + Handicap Display</div>
+      <div class="idea-body">Let players select their tee on registration or at round start. Display adjusted par and net score on the leaderboard. Unknown Golf shows rating/slope per tee. This closes the handicap scoring gap.</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">What TOURney should NOT do to compete</div>
+    <ul>
+      <li>Do not pivot to a B2C scoring app — that's Unknown Golf's market. TOURney's differentiation is the organizer layer, multi-tenancy, and invite-gated private events.</li>
+      <li>Do not add GPS — API cost doesn't justify the value for private club events where players already know the course.</li>
+      <li>Do not add strokes gained analytics before scoring entry is even built — wrong order.</li>
+      <li>Do not chase Unknown Golf's UI aesthetic (neon green, generic dark theme) — TOURney's premium brand is a genuine competitive advantage.</li>
+    </ul>
+  </div>
+</section>
+
+</div><!-- /wrapper -->
+</body>
+</html>

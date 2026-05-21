@@ -1,9 +1,37 @@
 {
   "$schema": "https://tourney.greenskeeper.studio/qa-index-schema.json",
   "version": 1,
-  "updated_at": "2026-05-20T00:00:00Z",
+  "updated_at": "2026-05-21T00:00:00Z",
   "description": "Canonical registry of all TOURney plans, reviews, audits, and QA artifacts. The /platform Artifacts tab renders from this file. Skills (e.g. tourney-review) append new entries when they generate output.",
   "entries": [
+    {
+      "id": "competitor-analysis-2026-05-21",
+      "category": "reference",
+      "stage": "review",
+      "title": "Competitor Analysis · Unknown Golf · May 21, 2026",
+      "summary": "8-screenshot teardown of league.unknowngolf.com vs TOURney. Critical gaps: player score entry (TOURney has none — admins must enter everything), side games + payouts (skins/CTP/LD + money tracking). TOURney wins: multi-tenant, admin platform, RSVP gate, PWA, premium brand. Roadmap: score entry → side games → payouts. Do not copy GPS/strokes-gained — wrong market.",
+      "date": "2026-05-21",
+      "updated": "2026-05-21",
+      "author": "claude-sonnet-4-6",
+      "url": "/platform/5-21-26-competitor-analysis",
+      "file": "5-21-26-competitor-analysis.html",
+      "tags": ["reference", "competitor", "strategy", "product"],
+      "status": "open"
+    },
+    {
+      "id": "session-recap-2026-05-21",
+      "category": "review",
+      "stage": "concluded",
+      "title": "Engineering Session Recap · May 21, 2026",
+      "summary": "10 bugs fixed across 4 commits (42cad92, 6a829b7, 6235c71, 6cf1db0, ee955fb). Migrations 013–016 applied to live Supabase. Schema drift resolved (000_baseline_players). Key fixes: send-push select('id') bug (root cause bugs #6/#9/#10), submitRsvp undefined (#4), PWA meta tags all 3 surfaces (#7), font + opacity polish (#15/#17). Migration 016 fixes qa_runs + platform_tasks RLS (app.platform_email was null — both tables invisible to owner).",
+      "date": "2026-05-21",
+      "updated": "2026-05-21",
+      "author": "claude-sonnet-4-6",
+      "url": null,
+      "file": null,
+      "tags": ["review", "session", "bugs", "migrations"],
+      "status": "concluded"
+    },
     {
       "id": "deployment-review-2026-05-20",
       "category": "review",
