@@ -87,3 +87,11 @@ CREATE POLICY "admin update players"
       SELECT tournament_id FROM public.tournament_admins WHERE email = auth.email()
     )
   );
+
+-- Unique constraint matching live DB
+ALTER TABLE public.players
+  ADD CONSTRAINT IF NOT EXISTS players_email_tournament_key UNIQUE (email, tournament_id);
+
+-- Indexes matching live DB
+CREATE INDEX IF NOT EXISTS idx_players_tournament ON public.players (tournament_id);
+CREATE INDEX IF NOT EXISTS idx_players_email_tournament ON public.players (email, tournament_id);
