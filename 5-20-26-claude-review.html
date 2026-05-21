@@ -562,8 +562,23 @@ footer span{color:var(--gold);}
 <section id="executing">
 <div class="wrapper">
 <!-- EXECUTING-CONTENT-START -->
-<div class="stage-pending">
-  <p>Awaiting execution. Run <code>/tourney-execute 5-20-26-claude-review.html</code> to proceed.</p>
+<div class="executed-log">
+  <h3>Execution Log — 2026-05-21</h3>
+  <h4>STEP 0 — Bug #4: submitRsvp (DONE)</h4>
+  <p><code>home.html:937</code> — changed <code>async function submitRsvp()</code> to <code>window.submitRsvp = async function submitRsvp()</code>. Exposes function on global window scope regardless of script execution order.</p>
+  <p><strong>Bug #5 (formats):</strong> Code analysis shows formats render from <code>rounds</code> table. If Johnston County has no rounds configured, <code>formatItems</code> stays as "Loading…". No code defect found — likely a data/config issue. Flagged for bug review.</p>
+  <h4>STEP 1 — OG / Social Meta Tags (DONE)</h4>
+  <p>Added <code>og:type</code>, <code>og:site_name</code>, <code>og:image</code>, <code>twitter:card</code>, <code>twitter:image</code> to all 18 app pages.</p>
+  <p>Tournament slug pages (home, scorecard, scoreboard, feed, directory, champions, course, profile) also get <code>og:title</code>, <code>og:description</code>, <code>og:url</code> placeholders.</p>
+  <p><code>platform.html</code> gets specific og:title/description. <code>tourney-init.js:181</code> — added <code>og:url</code> dynamic injection alongside existing og:title/og:description.</p>
+  <h4>STEP 2 — Score Admin-Edit UI (DONE)</h4>
+  <p><code>admin.html</code> — added "All Scores" table section above "Edit Historic Scores". Fetches all scores for tournament, renders per-hole rows with Edit button. <code>editScore(id, val)</code> replaces cell with inline input. <code>saveScore(id)</code> calls <code>sb.from('scores').update({ gross_score })</code>.</p>
+  <h4>STEP 3 — Profile Page Loading Skeleton (DONE)</h4>
+  <p><code>profile.html</code> — added shimmer skeleton CSS (<code>@keyframes shimmer</code>, <code>.skeleton</code>, <code>.ps-*</code> classes). Replaced "Loading…" text in <code>#loadingGate</code> with skeleton markup mirroring profile layout (avatar, name, pill, section labels, data rows). Skeleton auto-hides when <code>showProfile()</code> hides <code>#loadingGate</code>.</p>
+  <h4>STEP 4 — RLS Migration 013 (DONE — Rob applies manually)</h4>
+  <p>File created: <code>supabase/migrations/013_lock_invitations_push_subscriptions.sql</code>. Restricts <code>invitations</code> SELECT to authenticated users only. Restricts <code>push_subscriptions</code> SELECT to tournament owner/admin. Not applied via MCP (disconnected).</p>
+  <h4>STEP 5 — Lighthouse CI (DONE)</h4>
+  <p><code>.github/lighthouse-budget.json</code> — performance minScore <code>0.7→0.85</code>, accessibility minScore <code>0.85→0.9</code>. Workflow already triggers on push to main against prod URL.</p>
 </div>
 <!-- EXECUTING-CONTENT-END -->
 </div>

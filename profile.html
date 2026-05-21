@@ -2,6 +2,14 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="TOURney by Greenskeeper Studios">
+<meta property="og:image" content="/icon-512.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="/icon-512.png">
+<meta property="og:title" content="TOURney">
+<meta property="og:description" content="Golf tournament platform by Greenskeeper Studios.">
+<meta property="og:url" content="">
 <script src="/lib/util.js"></script>
 <link rel="icon" href="/icon-192.png" type="image/png">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -99,6 +107,15 @@ a{color:inherit;text-decoration:none;}
   .chips{gap:0.3rem;}
   .chip{font-size:0.65rem;padding:0.25rem 0.55rem;}
 }
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+.skeleton{background:linear-gradient(90deg,var(--card) 25%,rgba(240,230,204,0.06) 50%,var(--card) 75%);background-size:200% 100%;animation:shimmer 1.4s infinite;border-radius:3px;}
+.profile-skeleton{max-width:600px;margin:0 auto;padding:2.5rem 2rem;}
+.ps-avatar{width:64px;height:64px;border-radius:50%;}
+.ps-name{height:2rem;width:55%;margin-top:1rem;margin-bottom:0.6rem;}
+.ps-pill{height:0.9rem;width:28%;margin-bottom:2rem;}
+.ps-sect{height:0.7rem;width:22%;margin-bottom:1rem;}
+.ps-row{height:1rem;width:100%;margin-bottom:0.7rem;}
+.ps-row.half{width:60%;}
 </style>
 <link rel="stylesheet" href="/nav-mobile.css">
 <script defer src="/nav-mobile.js"></script>
@@ -119,9 +136,21 @@ a{color:inherit;text-decoration:none;}
   </div>
 </nav>
 
-<!-- LOADING STATE (shown while checking auth) -->
-<div id="loadingGate" class="login-gate">
-  <div style="font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--muted);">Loading...</div>
+<!-- LOADING STATE / SKELETON -->
+<div id="loadingGate">
+  <div class="profile-skeleton">
+    <div class="skeleton ps-avatar"></div>
+    <div class="skeleton ps-name"></div>
+    <div class="skeleton ps-pill"></div>
+    <div class="skeleton ps-sect"></div>
+    <div class="skeleton ps-row"></div>
+    <div class="skeleton ps-row"></div>
+    <div class="skeleton ps-row half"></div>
+    <div class="skeleton ps-sect" style="margin-top:1.4rem;"></div>
+    <div class="skeleton ps-row"></div>
+    <div class="skeleton ps-row"></div>
+    <div class="skeleton ps-row half"></div>
+  </div>
 </div>
 
 <!-- PROFILE UI -->

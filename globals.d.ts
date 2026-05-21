@@ -28,6 +28,10 @@ interface Window {
     ready: Promise<{ tournament: Record<string, unknown>; player: Record<string, unknown> }>;
     [key: string]: unknown;
   };
+  tourneyTier: {
+    canAccess: (plan: string, feature: string) => boolean;
+    TOURNEY_PLANS: Record<string, Record<string, boolean>>;
+  };
   supabase: unknown;
   _navInjectLink: boolean | undefined;
   _navPlatformInject: boolean | undefined;

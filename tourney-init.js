@@ -180,6 +180,9 @@
       let _ogD = document.querySelector('meta[property="og:description"]');
       if (!_ogD) { _ogD = document.createElement('meta'); _ogD.setAttribute('property', 'og:description'); document.head.appendChild(_ogD); }
       _ogD.setAttribute('content', data.subtitle || data.name);
+      let _ogU = document.querySelector('meta[property="og:url"]');
+      if (!_ogU) { _ogU = document.createElement('meta'); _ogU.setAttribute('property', 'og:url'); document.head.appendChild(_ogU); }
+      _ogU.setAttribute('content', location.href);
 
       // Replace nav wordmark text on every page — preserves svg/img/span siblings.
       const updateNavWordmarks = () => {

@@ -7,8 +7,8 @@
       { "metric": "largest-contentful-paint", "budget": 4000 }
     ],
     "scores": [
-      { "category": "performance", "minScore": 0.7 },
-      { "category": "accessibility", "minScore": 0.85 },
+      { "category": "performance", "minScore": 0.85 },
+      { "category": "accessibility", "minScore": 0.9 },
       { "category": "best-practices", "minScore": 0.85 },
       { "category": "seo", "minScore": 0.8 }
     ]

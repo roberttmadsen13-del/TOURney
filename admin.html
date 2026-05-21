@@ -2,6 +2,11 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="TOURney by Greenskeeper Studios">
+<meta property="og:image" content="/icon-512.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="/icon-512.png">
 <script src="/lib/util.js"></script>
 <script src="/lib/tier-config.js"></script>
 <link rel="icon" href="/icon-192.png" type="image/png">
@@ -455,6 +460,15 @@ td.email a:hover{color:var(--gold);}
         </div>
         <button class="save-teams-btn" onclick="savePairAssignments()">Save Pair Assignments</button>
       </div>
+    </div>
+
+    <!-- SCORES TABLE -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-title">All Scores</div>
+        <button class="action-btn" style="padding:0.45rem 1rem;font-size:0.6rem;letter-spacing:0.12em;" onclick="loadScoresTable()">Refresh</button>
+      </div>
+      <div id="scoresTableWrap"><div style="color:var(--muted);font-size:0.8rem;padding:0.5rem 0;">Select Refresh to load scores.</div></div>
     </div>
 
     <!-- SCORE EDITOR -->
@@ -2160,6 +2174,52 @@ async function removeAdmin(email) {
 }
 
 // ── SCORE EDITOR ─────────────────────────────────────────────────
+// ── SCORES TABLE ─────────────────────────────────────────────────
+async function loadScoresTable() {
+  const wrap = document.getElementById('scoresTableWrap');
+  if (!wrap) return;
+  wrap.innerHTML = '<div style="color:var(--muted);font-size:0.8rem;padding:0.5rem 0;">Loading…</div>';
+  const { data: scores } = await sb.from('scores').select('*').eq('tournament_id', _tid).order('round').order('hole');
+  if (!scores || !scores.length) { wrap.innerHTML = '<div style="color:var(--muted);font-size:0.8rem;padding:0.5rem 0;">No scores found.</div>'; return; }
+  const playerMap = {};
+  players.forEach(p => { playerMap[p.id] = `${p.first_name} ${p.last_name}`; });
+  wrap.innerHTML = `<div style="overflow-x:auto;"><table style="width:100%;border-collapse:collapse;font-size:0.78rem;">
+    <thead><tr style="border-bottom:1px solid var(--border);">
+      <th style="text-align:left;padding:0.45rem 0.6rem;font-family:'DM Mono',monospace;font-size:0.48rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);">Player</th>
+      <th style="text-align:left;padding:0.45rem 0.6rem;font-family:'DM Mono',monospace;font-size:0.48rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);">Round</th>
+      <th style="text-align:center;padding:0.45rem 0.6rem;font-family:'DM Mono',monospace;font-size:0.48rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);">Hole</th>
+      <th style="text-align:center;padding:0.45rem 0.6rem;font-family:'DM Mono',monospace;font-size:0.48rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);">Score</th>
+      <th style="padding:0.45rem 0.6rem;"></th>
+    </tr></thead>
+    <tbody>${scores.map(s => `<tr style="border-bottom:1px solid rgba(192,144,48,0.06);">
+      <td style="padding:0.45rem 0.6rem;">${esc(playerMap[s.player_id] || '—')}</td>
+      <td style="padding:0.45rem 0.6rem;">${esc(s.round)}</td>
+      <td style="text-align:center;padding:0.45rem 0.6rem;">${s.hole}</td>
+      <td style="text-align:center;padding:0.45rem 0.6rem;" id="sc-${s.id}">${s.gross_score ?? '—'}</td>
+      <td style="padding:0.45rem 0.6rem;text-align:right;"><button class="action-btn" style="padding:0.25rem 0.65rem;font-size:0.52rem;letter-spacing:0.1em;" onclick="editScore('${s.id}',${s.gross_score ?? 0})">Edit</button></td>
+    </tr>`).join('')}</tbody>
+  </table></div>`;
+}
+
+function editScore(scoreId, currentVal) {
+  const cell = document.getElementById(`sc-${scoreId}`);
+  if (!cell) return;
+  cell.innerHTML = `<input type="number" value="${currentVal}" min="1" max="15" style="width:3.2rem;background:var(--card);border:1px solid var(--border);color:var(--ink);padding:0.2rem 0.35rem;font-size:0.78rem;text-align:center;" id="si-${scoreId}"> <button class="action-btn" style="padding:0.2rem 0.55rem;font-size:0.52rem;background:var(--gold);color:var(--ink);border-color:var(--gold);" onclick="saveScore('${scoreId}')">Save</button>`;
+  document.getElementById(`si-${scoreId}`)?.focus();
+}
+
+async function saveScore(scoreId) {
+  const input = document.getElementById(`si-${scoreId}`);
+  if (!input) return;
+  const newVal = parseInt(input.value);
+  if (isNaN(newVal) || newVal < 1 || newVal > 15) { showToast('Invalid score (1–15).'); return; }
+  const { error } = await sb.from('scores').update({ gross_score: newVal }).eq('id', scoreId).eq('tournament_id', _tid);
+  if (error) { showToast('Error: ' + error.message); return; }
+  const cell = document.getElementById(`sc-${scoreId}`);
+  if (cell) cell.innerHTML = String(newVal);
+  showToast('Score updated.');
+}
+
 let _editScores = {};
 
 async function loadScoreEditor() {
