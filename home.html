@@ -1018,15 +1018,7 @@ async function refreshField() {
   try {
     const { tournament } = await window.tourney.ready;
     const { data } = await sb.from('players').select('*').eq('tournament_id', tournament.id).order('created_at', { ascending: true });
-    let players = data || [];
-    if (tournament.owner_email) {
-      const ownerLower = tournament.owner_email.toLowerCase();
-      const alreadyIn = players.some(p => p.email?.toLowerCase() === ownerLower);
-      if (!alreadyIn) {
-        const { data: ownerRow } = await sb.from('players').select('*').eq('tournament_id', tournament.id).eq('email', ownerLower).maybeSingle();
-        if (ownerRow) players = [ownerRow, ...players];
-      }
-    }
+    const players = data || [];
     const n = players.length;
     document.getElementById('statRegistered').textContent = n;
     document.getElementById('spotsLeft').textContent = MAX - n;
