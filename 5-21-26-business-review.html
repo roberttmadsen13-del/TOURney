@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TOURney — Business Readiness Review · May 21, 2026</title>
+<style>
+:root{--gold:#c09030;--gold-light:#d4a840;--gold-dim:rgba(192,144,48,0.18);--bg:#0d0a05;--surface:#151009;--card:#1c140a;--border:rgba(192,144,48,0.22);--muted:#7a6a54;--text:#e8dcc8;--red:#c0392b;--green:#27ae60;--blue:#2980b9;--orange:#e67e22;--purple:#8e44ad;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:-apple-system,'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;font-size:15px;}
+nav{position:sticky;top:0;z-index:100;background:rgba(13,10,5,0.97);border-bottom:1px solid var(--border);backdrop-filter:blur(12px);}
+.nav-inner{padding:0.6rem 1.5rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap;}
+.nav-brand{color:var(--gold);font-weight:700;font-size:1rem;letter-spacing:0.05em;white-space:nowrap;}
+.nav-brand span{color:var(--muted);font-weight:400;font-size:0.8rem;margin-left:0.4rem;}
+.nav-links{display:flex;gap:0.2rem;flex-wrap:wrap;margin-left:auto;}
+.nav-links a{color:var(--muted);text-decoration:none;font-size:0.78rem;padding:0.3rem 0.55rem;border-radius:4px;transition:all 0.15s;white-space:nowrap;}
+.nav-links a:hover{color:var(--gold);background:var(--gold-dim);}
+.lifecycle-bar{display:flex;gap:3px;padding:0.55rem 1.5rem 0.65rem;background:var(--surface);border-bottom:1px solid var(--border);}
+.lc-stage{flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;}
+.lc-pill{height:5px;width:100%;border-radius:3px;background:rgba(192,144,48,0.1);transition:background 0.25s;}
+.lc-label{font-size:0.58rem;font-weight:700;letter-spacing:0.11em;text-transform:uppercase;color:rgba(122,106,84,0.45);transition:color 0.25s;}
+.lc-done .lc-pill{background:var(--gold);}
+.lc-done .lc-label{color:var(--gold);}
+.lc-active .lc-pill{background:var(--gold-light);box-shadow:0 0 8px rgba(192,144,48,0.45);}
+.lc-active .lc-label{color:var(--gold-light);}
+.hero{padding:3rem 1.5rem 2rem;text-align:center;border-bottom:1px solid var(--border);background:linear-gradient(180deg,rgba(192,144,48,0.06) 0%,transparent 100%);}
+.hero-eyebrow{display:inline-block;font-size:0.7rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold);border:1px solid var(--border);border-radius:20px;padding:0.22rem 0.8rem;margin-bottom:0.9rem;}
+.hero h1{font-size:clamp(1.5rem,3.5vw,2.3rem);font-weight:800;color:#fff;margin-bottom:0.35rem;}
+.hero h1 span{color:var(--gold);}
+.hero-sub{color:var(--muted);max-width:520px;margin:0 auto 1rem;font-size:0.9rem;}
+.hero-meta{display:flex;gap:1.1rem;justify-content:center;flex-wrap:wrap;font-size:0.74rem;color:var(--muted);}
+.hero-meta span{display:flex;align-items:center;gap:0.3rem;}
+.wrapper{max-width:1000px;margin:0 auto;padding:0 1.5rem;}
+section{padding:2.5rem 0;border-bottom:1px solid var(--border);}
+section:last-of-type{border-bottom:none;}
+.section-header{margin-bottom:1.6rem;}
+.section-eyebrow{font-size:0.67rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--gold);margin-bottom:0.3rem;}
+.section-title{font-size:1.35rem;font-weight:800;color:#fff;margin-bottom:0.3rem;}
+.section-desc{color:var(--muted);font-size:0.85rem;max-width:560px;}
+.card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:1.15rem 1.3rem;margin-bottom:0.7rem;}
+.card-title{font-size:0.85rem;font-weight:700;color:var(--gold);margin-bottom:0.45rem;}
+.card p,.card li{font-size:0.84rem;color:var(--text);margin-bottom:0.28rem;}
+.card ul,.card ol{padding-left:1.2rem;}
+.card li{margin-bottom:0.32rem;}
+.grid-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:0.7rem;}
+.grid-3{display:grid;grid-template-columns:repeat(auto-fit,minmax(245px,1fr));gap:0.7rem;}
+.stack-item{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:0.85rem 1.05rem;}
+.stack-label{font-size:0.65rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--muted);margin-bottom:0.18rem;}
+.stack-value{font-size:0.88rem;font-weight:600;color:#fff;}
+.stack-note{font-size:0.72rem;color:var(--muted);margin-top:0.18rem;}
+.pill{display:inline-block;font-size:0.66rem;font-weight:700;letter-spacing:0.06em;padding:0.15rem 0.5rem;border-radius:20px;text-transform:uppercase;}
+.pill-gold{background:rgba(192,144,48,0.18);color:var(--gold);border:1px solid rgba(192,144,48,0.3);}
+.pill-green{background:rgba(39,174,96,0.15);color:var(--green);border:1px solid rgba(39,174,96,0.3);}
+.pill-red{background:rgba(192,57,43,0.15);color:var(--red);border:1px solid rgba(192,57,43,0.3);}
+.pill-orange{background:rgba(230,126,34,0.15);color:var(--orange);border:1px solid rgba(230,126,34,0.3);}
+.pill-blue{background:rgba(41,128,185,0.15);color:var(--blue);border:1px solid rgba(41,128,185,0.3);}
+.pill-purple{background:rgba(142,68,173,0.15);color:var(--purple);border:1px solid rgba(142,68,173,0.3);}
+.page-table{width:100%;border-collapse:collapse;font-size:0.8rem;}
+.page-table th{text-align:left;padding:0.52rem 0.72rem;border-bottom:1px solid var(--border);color:var(--muted);font-size:0.67rem;text-transform:uppercase;letter-spacing:0.08em;background:var(--surface);}
+.page-table td{padding:0.58rem 0.72rem;border-bottom:1px solid rgba(192,144,48,0.08);vertical-align:top;}
+.page-table tr:last-child td{border-bottom:none;}
+.page-table tr:hover td{background:var(--gold-dim);}
+.page-table .url{font-family:monospace;font-size:0.75rem;color:var(--gold-light);}
+.page-table .file{font-family:monospace;font-size:0.72rem;color:var(--muted);}
+.table-wrap{background:var(--card);border:1px solid var(--border);border-radius:8px;overflow:hidden;overflow-x:auto;}
+.score-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(125px,1fr));gap:0.52rem;margin-bottom:1.4rem;}
+.score-cell{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:0.85rem;text-align:center;}
+.score-num{font-size:1.85rem;font-weight:900;line-height:1;margin-bottom:0.18rem;}
+.score-label{font-size:0.64rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);}
+.score-green{color:var(--green);}
+.score-gold{color:var(--gold);}
+.score-red{color:var(--red);}
+.score-blue{color:var(--blue);}
+.idea-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1.25rem;position:relative;overflow:hidden;}
+.idea-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;}
+.idea-1::before{background:var(--gold);}
+.idea-2::before{background:var(--blue);}
+.idea-3::before{background:var(--green);}
+.idea-4::before{background:var(--orange);}
+.idea-5::before{background:var(--purple);}
+.idea-number{font-size:2rem;font-weight:900;opacity:0.07;position:absolute;top:0.5rem;right:1rem;line-height:1;color:#fff;}
+.idea-tag{margin-bottom:0.42rem;}
+.idea-title{font-size:0.96rem;font-weight:700;color:#fff;margin-bottom:0.42rem;}
+.idea-body{font-size:0.82rem;color:var(--muted);line-height:1.55;margin-bottom:0.65rem;}
+.idea-plan{font-size:0.77rem;color:var(--text);}
+.idea-plan strong{color:var(--gold);}
+.runbook-steps{counter-reset:rb-step;}
+.rb-step{background:var(--card);border:1px solid var(--border);border-left:3px solid rgba(192,144,48,0.3);border-radius:0 8px 8px 0;padding:0.95rem 1.15rem 0.95rem 3.8rem;margin-bottom:0.55rem;position:relative;}
+.rb-step::before{counter-increment:rb-step;content:counter(rb-step);position:absolute;left:0.95rem;top:0.95rem;width:1.75rem;height:1.75rem;background:var(--gold-dim);color:var(--gold);border:1px solid var(--border);border-radius:50%;font-size:0.72rem;font-weight:700;display:grid;place-items:center;}
+.rb-step-title{font-size:0.87rem;font-weight:700;color:#fff;margin-bottom:0.22rem;}
+.rb-step-body{font-size:0.8rem;color:var(--muted);margin-bottom:0.35rem;}
+.rb-verify{font-size:0.76rem;color:var(--text);background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:3px;padding:0.35rem 0.6rem;margin-top:0.3rem;}
+.rb-verify strong{color:var(--gold-light);font-size:0.68rem;text-transform:uppercase;letter-spacing:0.07em;display:block;margin-bottom:0.1rem;}
+.stage-pending{text-align:center;padding:3rem 1.5rem;color:var(--muted);font-size:0.85rem;border:1px dashed rgba(192,144,48,0.2);border-radius:8px;}
+.stage-pending code{color:var(--gold);}
+.exec-step{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:0.85rem 1.05rem;margin-bottom:0.48rem;display:flex;gap:0.7rem;align-items:flex-start;}
+.exec-badge{font-size:0.66rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;padding:0.18rem 0.48rem;border-radius:3px;white-space:nowrap;flex-shrink:0;margin-top:0.08rem;}
+.exec-done{background:rgba(39,174,96,0.14);color:var(--green);border:1px solid rgba(39,174,96,0.28);}
+.exec-skipped{background:rgba(192,144,48,0.1);color:var(--muted);border:1px solid var(--border);}
+.exec-blocked{background:rgba(192,57,43,0.11);color:var(--red);border:1px solid rgba(192,57,43,0.28);}
+.exec-body{font-size:0.81rem;color:var(--text);}
+.exec-body strong{color:#fff;display:block;margin-bottom:0.12rem;font-size:0.83rem;}
+.roadmap-item{display:flex;gap:1.05rem;align-items:flex-start;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:0.95rem 1.15rem;margin-bottom:0.52rem;}
+.roadmap-icon{width:1.9rem;height:1.9rem;border-radius:50%;background:var(--gold-dim);color:var(--gold);display:grid;place-items:center;font-size:0.85rem;flex-shrink:0;border:1px solid var(--border);}
+.roadmap-content{flex:1;}
+.roadmap-title{font-size:0.88rem;font-weight:700;color:#fff;margin-bottom:0.13rem;}
+.roadmap-desc{font-size:0.79rem;color:var(--muted);margin-bottom:0.32rem;}
+.roadmap-action{font-size:0.75rem;color:var(--text);}
+.roadmap-action strong{color:var(--gold-light);}
+code{font-family:'Consolas','Monaco',monospace;background:rgba(255,255,255,0.07);padding:0.09rem 0.27rem;border-radius:3px;font-size:0.81em;color:var(--gold-light);}
+footer{border-top:1px solid var(--border);padding:1.2rem;text-align:center;color:var(--muted);font-size:0.72rem;}
+footer span{color:var(--gold);}
+.checklist-row{display:flex;align-items:center;gap:0.7rem;padding:0.52rem 0;border-bottom:1px solid rgba(192,144,48,0.08);font-size:0.83rem;}
+.checklist-row:last-child{border-bottom:none;}
+.check-icon{width:1.3rem;text-align:center;flex-shrink:0;}
+.check-label{flex:1;color:var(--text);}
+.check-status{flex-shrink:0;}
+@media(max-width:600px){.nav-links{display:none;}.hero{padding:2rem 1rem 1.5rem;}section{padding:2rem 0;}.lc-label{font-size:0.5rem;}}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <div class="nav-brand">TOURney <span>by Greenskeeper Studios</span></div>
+    <div class="nav-links">
+      <a href="#review">Review</a>
+      <a href="#plan">Plan</a>
+      <a href="#runbook">Runbook</a>
+      <a href="#executing">Executing</a>
+      <a href="#audit">Audit</a>
+      <a href="#concluded">Concluded</a>
+    </div>
+  </div>
+</nav>
+
+<!-- LIFECYCLE-BAR-START -->
+<div class="lifecycle-bar">
+  <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Review</div></div>
+  <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Plan</div></div>
+  <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Runbook</div></div>
+  <div class="lc-stage"><div class="lc-pill"></div><div class="lc-label">Executing</div></div>
+  <div class="lc-stage"><div class="lc-pill"></div><div class="lc-label">Audit</div></div>
+  <div class="lc-stage"><div class="lc-pill"></div><div class="lc-label">Concluded</div></div>
+</div>
+<!-- LIFECYCLE-BAR-END -->
+
+<div class="hero">
+  <div class="hero-eyebrow">Business</div>
+  <h1><span>TOURney</span> — Business Readiness Review · May 21, 2026</h1>
+  <p class="hero-sub">Audit of MyGolf account unification, registration flow, pricing model reboot, Stripe wiring, donations, and legal/operational readiness.</p>
+  <div class="hero-meta">
+    <span>📅 May 21, 2026</span>
+    <span>🤖 Claude Sonnet 4.6</span>
+    <span>🏢 Greenskeeper Studios</span>
+    <span>🔒 Internal Only</span>
+  </div>
+</div>
+
+<section id="review">
+<div class="wrapper">
+
+  <div class="section-header">
+    <div class="section-eyebrow">Stage 1 — Review</div>
+    <h2 class="section-title">Business Readiness Audit</h2>
+    <p class="section-desc">Current state across account architecture, monetization, legal, and acquisition. User-assigned grade: D. Evidence from migrations, edge functions, and page source.</p>
+  </div>
+
+  <!-- Score Grid -->
+  <div class="score-grid">
+    <div class="score-cell">
+      <div class="score-num score-red">D</div>
+      <div class="score-label">Business Overall</div>
+    </div>
+    <div class="score-cell">
+      <div class="score-num score-red">❌</div>
+      <div class="score-label">Stripe Live</div>
+    </div>
+    <div class="score-cell">
+      <div class="score-num score-red">❌</div>
+      <div class="score-label">ToS / Privacy</div>
+    </div>
+    <div class="score-cell">
+      <div class="score-num score-red">❌</div>
+      <div class="score-label">LLC Formed</div>
+    </div>
+    <div class="score-cell">
+      <div class="score-num score-red">5%</div>
+      <div class="score-label">Monetization</div>
+    </div>
+    <div class="score-cell">
+      <div class="score-num score-red">❌</div>
+      <div class="score-label">MyGolf Unified</div>
+    </div>
+    <div class="score-cell">
+      <div class="score-num score-red">❌</div>
+      <div class="score-label">Donations</div>
+    </div>
+    <div class="score-cell">
+      <div class="score-num score-gold">C+</div>
+      <div class="score-label">Prior Grade (5-20-26)</div>
+    </div>
+  </div>
+
+  <!-- What This Review Covers -->
+  <div class="card">
+    <div class="card-title">What This Review Covers</div>
+    <p>TOURney is a multi-tenant golf tournament SaaS PWA. This ticket audits the business layer: account unification (MyGolf profile = universal free account across all tournaments), registration flow redesign (admin drops URL → player auto-fills from MyGolf profile), pricing model reboot (pay-per-tournament based on players × rounds × teams + hosting), Stripe go-live path, donation capability, and legal/LLC/ToS prerequisites. Rob assigned D grade against these goals.</p>
+  </div>
+
+  <!-- Legal Checklist -->
+  <div class="card">
+    <div class="card-title">Legal &amp; Entity Checklist</div>
+    <div class="checklist-row">
+      <div class="check-icon">❌</div>
+      <div class="check-label">LLC Formation (Greenskeeper Studios LLC)</div>
+      <div class="check-status"><span class="pill pill-orange">Human Required</span></div>
+    </div>
+    <div class="checklist-row">
+      <div class="check-icon">❌</div>
+      <div class="check-label">EIN from IRS</div>
+      <div class="check-status"><span class="pill pill-orange">Human Required</span></div>
+    </div>
+    <div class="checklist-row">
+      <div class="check-icon">❌</div>
+      <div class="check-label">Business bank account</div>
+      <div class="check-status"><span class="pill pill-orange">Human Required</span></div>
+    </div>
+    <div class="checklist-row">
+      <div class="check-icon">❌</div>
+      <div class="check-label">Terms of Service page (<code>/tos</code>)</div>
+      <div class="check-status"><span class="pill pill-red">Missing</span></div>
+    </div>
+    <div class="checklist-row">
+      <div class="check-icon">❌</div>
+      <div class="check-label">Privacy Policy page (<code>/privacy</code>)</div>
+      <div class="check-status"><span class="pill pill-red">Missing</span></div>
+    </div>
+    <div class="checklist-row">
+      <div class="check-icon">❌</div>
+      <div class="check-label">GDPR / cookie notice</div>
+      <div class="check-status"><span class="pill pill-red">Missing</span></div>
+    </div>
+    <div class="checklist-row">
+      <div class="check-icon">⚠️</div>
+      <div class="check-label">Stripe test mode wired (keys not set)</div>
+      <div class="check-status"><span class="pill pill-gold">Partial</span></div>
+    </div>
+    <div class="checklist-row">
+      <div class="check-icon">❌</div>
+      <div class="check-label">Stripe live keys in Vercel env</div>
+      <div class="check-status"><span class="pill pill-orange">Human Required</span></div>
+    </div>
+  </div>
+
+  <!-- Account Architecture -->
+  <div class="card">
+    <div class="card-title">Account Architecture — The Core Blocker</div>
+    <p><strong style="color:#fff">Current state:</strong> two disconnected tables. <code>player_accounts</code> (migration 005) stores <code>billing_status</code>, <code>billing_expires_at</code>, <code>billing_ref</code>, and Supabase auth UID. <code>players</code> (migration 001) is per-tournament roster with <code>has_account</code> loose-link field. These are not joined in any query.</p>
+    <p style="margin-top:0.5rem"><strong style="color:#fff">The login gate bug (login.html:232-239):</strong> player must already exist in <code>players</code> table for the tournament BEFORE auth signup is allowed. This is a fundamental conflict with MyGolf unification — a universal free profile cannot be gated by roster membership.</p>
+    <p style="margin-top:0.5rem"><strong style="color:#fff">MyGolf goal:</strong> one login works across all tournaments. Profile is free. <code>mygolf_profiles</code> table replaces <code>player_accounts</code> as the universal identity layer. <code>players</code> becomes a tournament-enrollment join record that references <code>mygolf_profiles</code>.</p>
+    <p style="margin-top:0.5rem; color:var(--orange)"><strong>Upstream:</strong> Supabase auth → <code>player_accounts</code> → login.html gate<br>
+    <strong>Downstream:</strong> player.html billing reads, home.html RSVP pre-fill, scoreboard.html player identity, all RLS policies using <code>auth.uid()</code><br>
+    <strong>Risk if wrong:</strong> all pages reading <code>player_accounts</code> break; existing Bova players lose auth access</p>
+  </div>
+
+  <!-- Stripe / Monetization -->
+  <div class="card">
+    <div class="card-title">Stripe &amp; Monetization State</div>
+    <p><strong style="color:#fff">Edge functions found:</strong></p>
+    <ul>
+      <li><code>supabase/functions/create-checkout/index.ts</code> — operator tournament checkout. Auth check present. Reads <code>STRIPE_SECRET_KEY</code> from env — <strong>unset in production</strong>.</li>
+      <li><code>supabase/functions/create-player-checkout/index.ts</code> — player upgrade/premium checkout. Same pattern, same dead env var.</li>
+      <li><code>supabase/functions/stripe-webhook/index.ts</code> — receives Stripe events, updates <code>billing_status</code>. Reads <code>STRIPE_WEBHOOK_SECRET</code> — also unset.</li>
+    </ul>
+    <p style="margin-top:0.5rem"><strong style="color:#fff">create.html:263:</strong> "Billing not yet active — pricing preview only." Pricing formula UI exists (players × days × tier) but calls no Stripe function.</p>
+    <p style="margin-top:0.5rem"><strong style="color:#fff">player-upgrade.html:</strong> UI exists for upgrade flow but <code>create-player-checkout</code> call fails silently — no Stripe key.</p>
+    <p style="margin-top:0.5rem; color:var(--orange)"><strong>Upstream:</strong> Vercel env vars → edge functions → Stripe API<br>
+    <strong>Downstream:</strong> billing_status in player_accounts → player.html gate → create.html plan limits<br>
+    <strong>Risk if wrong:</strong> double-charging, webhook replay attacks if secrets misconfigured</p>
+  </div>
+
+  <!-- Pricing Model -->
+  <div class="card">
+    <div class="card-title">Pricing Model Analysis</div>
+    <p><strong style="color:#fff">Current model (create.html):</strong> <code>players × days × tier</code> formula. Per-day pricing penalizes multi-day events and misaligns with operator value perception.</p>
+    <p style="margin-top:0.5rem"><strong style="color:#fff">Proposed model (Rob's intent):</strong> Free MyGolf profile. Tournament fee = <code>f(players, rounds, teams, hosting_cost)</code>. Individuals count as team of 1. One-time per-tournament charge to operator.</p>
+    <p style="margin-top:0.5rem"><strong style="color:#fff">Recommended pricing (comparable: Golf Genius ~$299/event, TourneyMaster ~$149/event):</strong></p>
+    <ul>
+      <li>1–12 players, 1–2 rounds: <strong style="color:var(--gold)">$49</strong></li>
+      <li>13–24 players, up to 3 rounds: <strong style="color:var(--gold)">$89</strong></li>
+      <li>25–48 players, up to 4 rounds: <strong style="color:var(--gold)">$149</strong></li>
+      <li>49–96 players, unlimited rounds: <strong style="color:var(--gold)">$249</strong></li>
+      <li>Hosting fee component (Supabase + Vercel + domain): ~$8/event at current scale → fold into tier pricing.</li>
+    </ul>
+    <p style="margin-top:0.5rem">Teams vs individuals: each <code>team_size</code> in DB is already tracked. Use <code>CEIL(player_count / avg_team_size)</code> as a pricing multiplier cap — prevents individuals artificially lowering invoice.</p>
+  </div>
+
+  <!-- Registration Flow -->
+  <div class="card">
+    <div class="card-title">Registration Flow — Current vs Target</div>
+    <p><strong style="color:#fff">Current (home.html RSVP form):</strong> 10 manually-entered fields — <code>first_name</code>, <code>last_name</code>, <code>email</code>, <code>phone</code>, <code>handicap</code>, <code>why_me</code>, <code>trash_talk</code>, <code>hat</code>, <code>available_dates</code>, <code>tournament_id</code>. Zero auto-fill. Player must exist in <code>players</code> table first (admin must pre-add). Friction is high.</p>
+    <p style="margin-top:0.5rem"><strong style="color:#fff">Target (MyGolf flow):</strong> Admin drops tournament home URL. Player clicks Register. If logged into MyGolf: <code>first_name</code>, <code>last_name</code>, <code>email</code>, <code>phone</code>, <code>handicap</code> auto-populate from <code>mygolf_profiles</code>. Player only edits tournament-specific fields: <code>hat</code>, <code>why_me</code>, <code>available_dates</code>. If no MyGolf account: inline creation modal (no redirect to login.html).</p>
+    <p style="margin-top:0.5rem; color:var(--orange)"><strong>Upstream:</strong> mygolf_profiles → RSVP pre-fill → players insert<br>
+    <strong>Downstream:</strong> scoreboard.html reads players.first_name/last_name, scorecard.html reads players.handicap, player.html reads players.hat<br>
+    <strong>Risk if wrong:</strong> name/handicap mismatch between profile and tournament record; duplicate player rows if account-linking fails</p>
+  </div>
+
+  <!-- Donations -->
+  <div class="card">
+    <div class="card-title">Donations — Completely Missing</div>
+    <p>Grep for <code>donat|tip|contribut</code> across all HTML/JS returns zero results. No donation UI, no Stripe payment intent for donations, no DB field to record them. Rob's requirement: accept donations from the MyGolf profile page.</p>
+    <p style="margin-top:0.5rem">Implementation path: Stripe Payment Links (zero-code donation URL per operator) or custom <code>create-donation-checkout</code> edge function. Record in new <code>donations</code> table linked to <code>mygolf_profiles</code>.</p>
+    <p style="margin-top:0.5rem; color:var(--orange)"><strong>Upstream:</strong> mygolf_profiles → donations table → Stripe<br>
+    <strong>Downstream:</strong> player.html shows donation history; platform.html shows aggregate donations per operator<br>
+    <strong>Risk if wrong:</strong> PCI scope — never store card data; always use Stripe-hosted checkout</p>
+  </div>
+
+  <!-- Strengths / Gaps -->
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title">Strengths</div>
+      <ul>
+        <li><strong>Edge function scaffold exists</strong> — <code>create-checkout</code>, <code>create-player-checkout</code>, <code>stripe-webhook</code> all present with correct auth pattern. Gap is only missing env keys, not missing code.</li>
+        <li><strong>Billing fields in DB</strong> — <code>player_accounts.billing_status</code>, <code>billing_expires_at</code>, <code>billing_ref</code> (migration 005) ready for webhook writes.</li>
+        <li><strong>Pricing formula UI built</strong> — create.html has a working formula display; needs formula swap + Stripe call wired.</li>
+        <li><strong>Multi-tenant from day 1</strong> — operator isolation already in place; per-tournament billing is architecturally clean.</li>
+        <li><strong>PWA + brand polish</strong> — premium presentation justifies premium pricing vs competitors.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-title">Gaps &amp; Bugs</div>
+      <ul>
+        <li><strong>login.html:232-239</strong> — pre-auth players-table check blocks MyGolf unification. Must be removed/replaced with profile lookup.</li>
+        <li><strong>player_accounts + players split</strong> — no foreign key, no join, no single identity. Two tables for one user is a data model gap that blocks every business goal.</li>
+        <li><strong>create.html:263</strong> — "Billing not yet active" hard-coded. Pricing model is wrong (days-based vs event-based). Stripe call not wired.</li>
+        <li><strong>STRIPE_SECRET_KEY unset</strong> — all 3 Stripe edge functions dead in production. Vercel env not configured.</li>
+        <li><strong>No ToS/Privacy pages</strong> — required for Stripe go-live approval and GDPR baseline.</li>
+        <li><strong>No donation mechanism</strong> — zero code, zero DB table, zero UI.</li>
+        <li><strong>No LLC/EIN/bank</strong> — Stripe payouts have nowhere to land. Human blockers on critical path.</li>
+      </ul>
+    </div>
+  </div>
+
+</div>
+</section>
+
+<section id="plan">
+<div class="wrapper">
+
+  <div class="section-header">
+    <div class="section-eyebrow">Stage 2 — Plan</div>
+    <h2 class="section-title">Strategic Priorities</h2>
+    <p class="section-desc">Ordered by impact and dependency. Human items flagged. Engineering items are executable by tourney-execute.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Priority Stack</div>
+    <ul>
+      <li><strong style="color:var(--red)">P1 — LLC + EIN + bank account</strong> <span class="pill pill-orange">Human Required</span> — Stripe payouts dead without a legal entity. Everything else is blocked on this. No code can unblock it.</li>
+      <li><strong style="color:var(--red)">P2 — ToS + Privacy pages</strong> — Required for Stripe go-live. Two stub HTML pages. Runbook step 1.</li>
+      <li><strong style="color:var(--gold)">P3 — MyGolf profile table + account unification</strong> — New <code>mygolf_profiles</code> migration. Add FK to <code>players</code>. Replace <code>player_accounts</code> as identity layer. Runbook steps 2–3.</li>
+      <li><strong style="color:var(--gold)">P4 — Registration flow overhaul</strong> — home.html: detect MyGolf session → auto-fill → inline account creation if no account. Runbook steps 4–5.</li>
+      <li><strong style="color:var(--gold)">P5 — Pricing model reboot</strong> — create.html: swap formula to <code>players × rounds × team_factor</code> tiered pricing. Wire to <code>create-checkout</code> Stripe call. Runbook step 6.</li>
+      <li><strong style="color:var(--blue)">P6 — Stripe go-live</strong> <span class="pill pill-orange">Human Required</span> — Set <code>STRIPE_SECRET_KEY</code> + <code>STRIPE_WEBHOOK_SECRET</code> in Vercel. Rob must do via Vercel dashboard after LLC formed.</li>
+      <li><strong style="color:var(--blue)">P7 — Donations from MyGolf profile</strong> — New <code>create-donation-checkout</code> edge function + <code>donations</code> table + UI in player.html. Runbook steps 7–8.</li>
+      <li><strong style="color:var(--muted)">P8 — Analytics + operator dashboard billing view</strong> — platform.html billing tab: revenue by tournament, donation totals. Deferred until Stripe live.</li>
+    </ul>
+  </div>
+
+  <div class="grid-2">
+    <div class="idea-card idea-1">
+      <div class="idea-number">1</div>
+      <div class="idea-tag"><span class="pill pill-gold">Identity</span></div>
+      <div class="idea-title">MyGolf Universal Profile</div>
+      <div class="idea-body">Free cross-tournament identity layer. One login, all tournaments. Profile data (name, handicap, phone, email) auto-carries to any TOURney registration. The moat: players don't re-enter data, operators get richer player history.</div>
+      <div class="idea-plan"><strong>Build:</strong> <code>mygolf_profiles</code> table → update login.html gate removal → registration auto-fill → player.html profile page with handicap history.</div>
+    </div>
+    <div class="idea-card idea-2">
+      <div class="idea-number">2</div>
+      <div class="idea-tag"><span class="pill pill-blue">Monetization</span></div>
+      <div class="idea-title">Pay-Per-Tournament Pricing</div>
+      <div class="idea-body">Operator pays once per tournament. Tiered by player count × rounds × team factor. Free profile means player acquisition has zero friction — only operators pay. This is the correct SaaS model for this market.</div>
+      <div class="idea-plan"><strong>Build:</strong> New pricing formula in create.html → Stripe Checkout session → webhook updates tournament.billing_status → tournament activates.</div>
+    </div>
+    <div class="idea-card idea-3">
+      <div class="idea-number">3</div>
+      <div class="idea-tag"><span class="pill pill-green">Revenue</span></div>
+      <div class="idea-title">Donation Stream from MyGolf Profile</div>
+      <div class="idea-body">Players can donate to the operator/cause from their MyGolf profile page between tournaments. Low-friction "tip the organizer" button. Separate from tournament fees — pure goodwill revenue that adds up over a loyal player base.</div>
+      <div class="idea-plan"><strong>Build:</strong> <code>create-donation-checkout</code> edge function → <code>donations</code> table → player.html donate button → platform.html donation totals.</div>
+    </div>
+    <div class="idea-card idea-4">
+      <div class="idea-number">4</div>
+      <div class="idea-tag"><span class="pill pill-orange">Acquisition</span></div>
+      <div class="idea-title">Zero-Friction Registration Gate</div>
+      <div class="idea-body">Admin shares one URL. Player taps Register. MyGolf session auto-fills all profile fields. Only tournament-specific fields require input. No pre-add by admin required. This removes the biggest operator onboarding friction point.</div>
+      <div class="idea-plan"><strong>Build:</strong> home.html RSVP: detect session → fetch mygolf_profiles → pre-fill → inline account creation if no session.</div>
+    </div>
+    <div class="idea-card idea-5">
+      <div class="idea-number">5</div>
+      <div class="idea-tag"><span class="pill pill-purple">Retention</span></div>
+      <div class="idea-title">Handicap + Game History on MyGolf Profile</div>
+      <div class="idea-body">MyGolf profile shows player's tournament history: rounds played, best score, handicap trend across events. This makes the free profile valuable independent of any single tournament — players maintain it because it tracks their golf life.</div>
+      <div class="idea-plan"><strong>Build:</strong> player.html profile view reading scores across all tournaments the profile is enrolled in. Aggregate handicap delta over time.</div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:0.7rem">
+    <div class="card-title">Business Milestones</div>
+    <div class="roadmap-item">
+      <div class="roadmap-icon">⚖️</div>
+      <div class="roadmap-content">
+        <div class="roadmap-title">Legal Entity Complete <span class="pill pill-orange">Human Required</span></div>
+        <div class="roadmap-desc">LLC formed, EIN issued, business bank account open. Prerequisite for Stripe payouts.</div>
+        <div class="roadmap-action"><strong>Action:</strong> Rob files LLC via registered agent (~$150), applies for EIN at IRS.gov (free), opens Mercury or Relay business checking.</div>
+      </div>
+    </div>
+    <div class="roadmap-item">
+      <div class="roadmap-icon">📄</div>
+      <div class="roadmap-content">
+        <div class="roadmap-title">ToS + Privacy Live</div>
+        <div class="roadmap-desc">Stub pages at /tos and /privacy. Required for Stripe approval and any paid player acquisition.</div>
+        <div class="roadmap-action"><strong>Action:</strong> tourney-execute writes tos.html + privacy.html. Rob reviews content before Stripe submission.</div>
+      </div>
+    </div>
+    <div class="roadmap-item">
+      <div class="roadmap-icon">👤</div>
+      <div class="roadmap-content">
+        <div class="roadmap-title">MyGolf Profile Live + Registration Unified</div>
+        <div class="roadmap-desc">mygolf_profiles table deployed, login gate replaced, RSVP auto-fill working, inline account creation working.</div>
+        <div class="roadmap-action"><strong>Action:</strong> tourney-execute runs migration + updates home.html + login.html.</div>
+      </div>
+    </div>
+    <div class="roadmap-item">
+      <div class="roadmap-icon">💳</div>
+      <div class="roadmap-content">
+        <div class="roadmap-title">First Paid Tournament</div>
+        <div class="roadmap-desc">Stripe live, pricing formula updated, operator creates + pays for tournament. Revenue $0 → $49+.</div>
+        <div class="roadmap-action"><strong>Action:</strong> Rob sets Stripe env vars in Vercel. tourney-execute wires create.html to create-checkout. Test with Stripe test card first.</div>
+      </div>
+    </div>
+    <div class="roadmap-item">
+      <div class="roadmap-icon">🏌️</div>
+      <div class="roadmap-content">
+        <div class="roadmap-title">12-Month Revenue Target</div>
+        <div class="roadmap-desc">5 operators × 4 tournaments/year × avg $89/tournament = $1,780/year baseline. 20 operators = $7,120. Donations add 10-15%. Achievable within 6 months of go-live.</div>
+        <div class="roadmap-action"><strong>Action:</strong> Focus on operator acquisition via golf trip groups (core demo: new course, no prior knowledge of layout).</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</section>
+
+<section id="runbook">
+<div class="wrapper">
+
+  <div class="section-header">
+    <div class="section-eyebrow">Stage 3 — Runbook</div>
+    <h2 class="section-title">Execution Steps</h2>
+    <p class="section-desc">Ordered. Code-only steps for tourney-execute. Human-required items flagged and skipped by execute — Rob handles those out-of-band.</p>
+  </div>
+
+  <div class="runbook-steps">
+
+    <div class="rb-step">
+      <div class="rb-step-title">Create ToS and Privacy stub pages</div>
+      <div class="rb-step-body">
+        <strong>Upstream impact:</strong> None — new files.<br>
+        <strong>Downstream impact:</strong> Required for Stripe go-live; marketing.html footer links to these.<br>
+        Write <code>tos.html</code> at repo root. Full TOURney-styled page with standard SaaS ToS covering: account creation, payment terms, data use, DMCA, dispute resolution. Include Greenskeeper Studios as operating entity placeholder.<br>
+        Write <code>privacy.html</code> at repo root. GDPR-baseline privacy policy: data collected (name, email, phone, handicap, scores), how used, retention, deletion request path to robert.t.madsen13@gmail.com.<br>
+        Add links to both pages in <code>marketing.html</code> footer and <code>login.html</code> signup flow.<br>
+        Add Vercel rewrites in <code>vercel.json</code>: <code>/tos</code> → <code>/tos.html</code>, <code>/privacy</code> → <code>/privacy.html</code>.
+      </div>
+      <div class="rb-verify">
+        <strong>Verify</strong>
+        Navigate to <code>/tos</code> and <code>/privacy</code> — pages render with TOURney nav. Footer links on marketing.html point to both. Login signup mode shows ToS link.
+      </div>
+    </div>
+
+    <div class="rb-step">
+      <div class="rb-step-title">Migration: create mygolf_profiles table</div>
+      <div class="rb-step-body">
+        <strong>Upstream impact:</strong> Supabase auth — <code>mygolf_profiles.id</code> = <code>auth.uid()</code>.<br>
+        <strong>Downstream impact:</strong> home.html RSVP pre-fill, player.html profile view, all future cross-tournament player features.<br>
+        Apply migration via Supabase MCP <code>apply_migration</code>:
+        <pre style="background:rgba(0,0,0,0.3);padding:0.6rem;border-radius:4px;font-size:0.75rem;margin-top:0.4rem;overflow-x:auto;color:var(--gold-light)">CREATE TABLE mygolf_profiles (
+  id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
+  first_name TEXT NOT NULL,
+  last_name TEXT NOT NULL,
+  email TEXT NOT NULL,
+  phone TEXT,
+  handicap NUMERIC(4,1),
+  avatar_url TEXT,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+ALTER TABLE mygolf_profiles ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Users read own profile" ON mygolf_profiles
+  FOR SELECT USING (auth.uid() = id);
+CREATE POLICY "Users update own profile" ON mygolf_profiles
+  FOR UPDATE USING (auth.uid() = id);
+CREATE POLICY "Users insert own profile" ON mygolf_profiles
+  FOR INSERT WITH CHECK (auth.uid() = id);</pre>
+      </div>
+      <div class="rb-verify">
+        <strong>Verify</strong>
+        <code>mygolf_profiles</code> table exists in Supabase. RLS enabled. Three policies present. Confirm no USING(true) policies.
+      </div>
+    </div>
+
+    <div class="rb-step">
+      <div class="rb-step-title">Migration: add mygolf_profile_id FK to players table</div>
+      <div class="rb-step-body">
+        <strong>Upstream impact:</strong> <code>mygolf_profiles</code> must exist (step 2).<br>
+        <strong>Downstream impact:</strong> Enables profile lookup from any tournament player row. home.html, scoreboard.html, scorecard.html all read from <code>players</code>.<br>
+        <pre style="background:rgba(0,0,0,0.3);padding:0.6rem;border-radius:4px;font-size:0.75rem;margin-top:0.4rem;overflow-x:auto;color:var(--gold-light)">ALTER TABLE players
+  ADD COLUMN mygolf_profile_id UUID REFERENCES mygolf_profiles(id) ON DELETE SET NULL;
+CREATE INDEX idx_players_mygolf_profile ON players(mygolf_profile_id);</pre>
+        Existing Bova player rows: <code>mygolf_profile_id</code> will be NULL until players link accounts. This is safe — all existing queries still work, column is nullable.
+      </div>
+      <div class="rb-verify">
+        <strong>Verify</strong>
+        <code>players</code> table has <code>mygolf_profile_id</code> column. Existing rows unaffected (NULL). scoreboard.html and scorecard.html load without error.
+      </div>
+    </div>
+
+    <div class="rb-step">
+      <div class="rb-step-title">login.html — remove players-table pre-auth gate</div>
+      <div class="rb-step-body">
+        <strong>Upstream impact:</strong> login.html:232-239 contains check that queries <code>players</code> table before allowing signup.<br>
+        <strong>Downstream impact:</strong> Any new user can now create a MyGolf account without being pre-added to a tournament roster. Existing roster check must move to tournament join flow (not auth flow).<br>
+        In <code>login.html</code> at line 232-239: remove the block that queries <code>players</code> table to validate email before signup. Replace with direct <code>supabase.auth.signUp()</code> call. After successful signup, immediately insert into <code>mygolf_profiles</code> using the returned user UID + form fields.<br>
+        Update signup form to include: first_name, last_name, email, password, phone (optional), handicap (optional). On success: redirect to <code>/player</code> (MyGolf profile page) not to tournament home.
+      </div>
+      <div class="rb-verify">
+        <strong>Verify</strong>
+        New signup with email not in any <code>players</code> table succeeds. <code>mygolf_profiles</code> row created. User lands on /player. Existing login flow (sign in) unaffected.
+      </div>
+    </div>
+
+    <div class="rb-step">
+      <div class="rb-step-title">home.html — RSVP auto-fill from MyGolf profile + inline account creation</div>
+      <div class="rb-step-body">
+        <strong>Upstream impact:</strong> <code>mygolf_profiles</code> table (steps 2–3), Supabase session.<br>
+        <strong>Downstream impact:</strong> <code>players</code> table insert will now set <code>mygolf_profile_id</code> FK. player.html, scoreboard.html, scorecard.html all read from players — names/handicap must match.<br>
+        In <code>home.html</code> RSVP section:<br>
+        1. On page load, call <code>supabase.auth.getSession()</code>. If session exists, fetch <code>mygolf_profiles</code> row for user UID.<br>
+        2. If profile found: pre-populate <code>first_name</code>, <code>last_name</code>, <code>email</code>, <code>phone</code>, <code>handicap</code> inputs. Mark them <code>readonly</code> with a "from your MyGolf profile" note. Only <code>hat</code>, <code>why_me</code>, <code>trash_talk</code>, <code>available_dates</code> remain editable.<br>
+        3. If no session: show "Register with MyGolf" button. Clicking it opens an inline modal (no page redirect) with: first_name, last_name, email, password fields. On submit: create Supabase auth account + insert <code>mygolf_profiles</code> row, then re-render RSVP with auto-fill.<br>
+        4. On RSVP submit: insert into <code>players</code> with <code>mygolf_profile_id</code> = session user UID.
+      </div>
+      <div class="rb-verify">
+        <strong>Verify</strong>
+        Logged-in MyGolf user sees pre-filled RSVP. Editable fields only hat/why_me/trash_talk/dates. New user flow: inline modal → account created → RSVP pre-fills. Submitted player row has mygolf_profile_id set. scoreboard.html still shows player names correctly.
+      </div>
+    </div>
+
+    <div class="rb-step">
+      <div class="rb-step-title">create.html — replace pricing formula with event-based tiers</div>
+      <div class="rb-step-body">
+        <strong>Upstream impact:</strong> create.html pricing UI (current: players × days × tier). <code>tournaments</code> table stores <code>stripe_customer_id</code>, <code>stripe_subscription_id</code> (migration 002).<br>
+        <strong>Downstream impact:</strong> Tournament activation gated on payment. home.html reads <code>tournaments.status</code> — must stay active for reg_open. platform.html billing tab reads tournament billing fields.<br>
+        Replace current formula at create.html:263:<br>
+        New tiers: ≤12 players = $49 | 13-24 = $89 | 25-48 = $149 | 49-96 = $249. Apply round multiplier: ×1.0 for 1-2 rounds, ×1.2 for 3-4 rounds, ×1.4 for 5+.<br>
+        Replace "Billing not yet active" placeholder with live price display + "Pay to Activate" button.<br>
+        "Pay to Activate" button calls <code>create-checkout</code> edge function with <code>tournament_id</code> + computed <code>price_id</code>. Redirect to Stripe Checkout. On success: Stripe webhook fires → tournament activated.<br>
+        Remove create.html:263 hard-coded "billing not active" text entirely.
+      </div>
+      <div class="rb-verify">
+        <strong>Verify</strong>
+        Tournament create form shows correct tier price based on player count + rounds inputs. "Pay to Activate" button present. create-checkout edge function called with correct params. (Full payment test blocked until Rob sets STRIPE_SECRET_KEY.)
+      </div>
+    </div>
+
+    <div class="rb-step">
+      <div class="rb-step-title">Migration: create donations table</div>
+      <div class="rb-step-body">
+        <strong>Upstream impact:</strong> <code>mygolf_profiles</code> (step 2), Stripe webhook.<br>
+        <strong>Downstream impact:</strong> player.html donation history, platform.html revenue totals.<br>
+        <pre style="background:rgba(0,0,0,0.3);padding:0.6rem;border-radius:4px;font-size:0.75rem;margin-top:0.4rem;overflow-x:auto;color:var(--gold-light)">CREATE TABLE donations (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  mygolf_profile_id UUID REFERENCES mygolf_profiles(id) ON DELETE SET NULL,
+  amount_cents INTEGER NOT NULL,
+  currency TEXT NOT NULL DEFAULT 'usd',
+  stripe_payment_intent_id TEXT,
+  message TEXT,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+ALTER TABLE donations ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Users read own donations" ON donations
+  FOR SELECT USING (auth.uid() = mygolf_profile_id);</pre>
+      </div>
+      <div class="rb-verify">
+        <strong>Verify</strong>
+        <code>donations</code> table exists. RLS enabled. No USING(true) policy. Existing tables unaffected.
+      </div>
+    </div>
+
+    <div class="rb-step">
+      <div class="rb-step-title">Deploy create-donation-checkout edge function + player.html donate UI</div>
+      <div class="rb-step-body">
+        <strong>Upstream impact:</strong> <code>donations</code> table (step 7), <code>mygolf_profiles</code>, Stripe.<br>
+        <strong>Downstream impact:</strong> player.html donation history section, platform.html revenue view.<br>
+        Create <code>supabase/functions/create-donation-checkout/index.ts</code>:<br>
+        — Auth required (return 401 if no session).<br>
+        — Accept: <code>amount_cents</code> (integer), <code>message</code> (optional string).<br>
+        — Create Stripe Checkout session: mode=payment, line_items=[{price_data:{currency:'usd',unit_amount:amount_cents,product_data:{name:'TOURney Donation'}},quantity:1}], success_url, cancel_url.<br>
+        — Return Stripe session URL to client.<br>
+        In <code>player.html</code>: add "Support the Platform" section with preset donation amounts ($5, $10, $25, custom) + optional message field. Button calls create-donation-checkout → redirect to Stripe Checkout.<br>
+        In <code>stripe-webhook/index.ts</code>: handle <code>payment_intent.succeeded</code> event — if metadata contains <code>donation:true</code>, insert into <code>donations</code> table.
+      </div>
+      <div class="rb-verify">
+        <strong>Verify</strong>
+        player.html shows donation section. Preset amounts selectable. (Full Stripe flow blocked until Rob sets live keys.) Function deploys without error. stripe-webhook handles donation event case.
+      </div>
+    </div>
+
+    <div class="rb-step">
+      <div class="rb-step-title">HUMAN REQUIRED — Set Stripe live keys in Vercel <span class="pill pill-orange" style="font-size:0.63rem">Rob Action</span></div>
+      <div class="rb-step-body">
+        tourney-execute skips this step. Rob must complete after LLC is formed.<br>
+        Go to Vercel Dashboard → TOURney project → Settings → Environment Variables.<br>
+        Set: <code>STRIPE_SECRET_KEY</code> = sk_live_... (from Stripe dashboard after LLC onboarding complete).<br>
+        Set: <code>STRIPE_WEBHOOK_SECRET</code> = whsec_... (from Stripe Webhooks → endpoint secret).<br>
+        Stripe webhook endpoint: <code>https://&lt;supabase-project&gt;.supabase.co/functions/v1/stripe-webhook</code>.<br>
+        Events to subscribe: <code>checkout.session.completed</code>, <code>payment_intent.succeeded</code>, <code>customer.subscription.updated</code>, <code>customer.subscription.deleted</code>.
+      </div>
+      <div class="rb-verify">
+        <strong>Verify (after Rob completes)</strong>
+        Run Stripe test event from dashboard. stripe-webhook edge function receives it. tournament billing_status updates. Test with Stripe test card $1 tournament.
+      </div>
+    </div>
+
+    <div class="rb-step">
+      <div class="rb-step-title">Update vercel.json — add /tos and /privacy routes</div>
+      <div class="rb-step-body">
+        <strong>Upstream impact:</strong> tos.html + privacy.html from step 1.<br>
+        <strong>Downstream impact:</strong> marketing.html footer links work. Stripe compliance check passes.<br>
+        In <code>vercel.json</code> rewrites array, add:<br>
+        <code>{"source": "/tos", "destination": "/tos.html"}</code><br>
+        <code>{"source": "/privacy", "destination": "/privacy.html"}</code>
+      </div>
+      <div class="rb-verify">
+        <strong>Verify</strong>
+        <code>/tos</code> and <code>/privacy</code> resolve to correct pages. No 404.
+      </div>
+    </div>
+
+  </div>
+
+</div>
+</section>
+
+<section id="executing">
+<div class="wrapper">
+<!-- EXECUTING-CONTENT-START -->
+<div class="stage-pending">
+  <p>Awaiting execution. Run <code>/tourney-execute 5-21-26-business-review.html</code> to proceed.</p>
+</div>
+<!-- EXECUTING-CONTENT-END -->
+</div>
+</section>
+
+<section id="audit">
+<div class="wrapper">
+<!-- AUDIT-CONTENT-START -->
+<div class="stage-pending">
+  <p>Awaiting execution. Run <code>/tourney-execute 5-21-26-business-review.html</code> to proceed.</p>
+</div>
+<!-- AUDIT-CONTENT-END -->
+</div>
+</section>
+
+<section id="concluded">
+<div class="wrapper">
+<!-- CONCLUDED-CONTENT-START -->
+<div class="stage-pending">
+  <p>Awaiting execution. Run <code>/tourney-execute 5-21-26-business-review.html</code> to proceed.</p>
+</div>
+<!-- CONCLUDED-CONTENT-END -->
+</div>
+</section>
+
+<footer>
+  Generated by <span>Claude Sonnet 4.6</span> · Greenskeeper Studios Internal · May 21, 2026
+  <br style="margin-top:0.3rem">
+  <a href="/platform" style="color:var(--muted);font-size:0.7rem;text-decoration:none">← Back to Platform Hub</a>
+</footer>
+
+</body>
+</html>

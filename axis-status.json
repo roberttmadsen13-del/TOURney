@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-05-21T00:00:00Z",
+  "updated_at": "2026-05-21T12:00:00Z",
   "description": "Living state for all TOURney platform axes. One entry per axis. Updated by every tourney-* skill. Agents read this for context (50 tokens) instead of parsing HTML artifacts.",
   "stages": ["review", "plan", "runbook", "executing", "audit", "concluded"],
   "axes": {
@@ -40,12 +40,12 @@
       "blocking": false
     },
     "business": {
-      "status": "review",
-      "grade": "C+",
-      "artifact": "/platform/5-20-26-claude-review",
-      "last_updated": "2026-05-20",
-      "summary": "No change. LLC not formed — Stripe dead in prod. ToS + Privacy live. Revenue path fully blocked. P0: Rob forms LLC → EIN → Stripe.",
-      "open_items": 4,
+      "status": "executing",
+      "grade": "D",
+      "artifact": "/platform/5-21-26-business-review",
+      "last_updated": "2026-05-21",
+      "summary": "Grade D. MyGolf unification + registration overhaul + pricing reboot reviewed. Runbook: mygolf_profiles migration, login gate removal, RSVP auto-fill, event-based pricing, donations. 3 human blockers: LLC, Stripe keys, bank account.",
+      "open_items": 8,
       "blocking": true
     },
     "deployment": {

@@ -1,9 +1,22 @@
 {
   "$schema": "https://tourney.greenskeeper.studio/qa-index-schema.json",
   "version": 1,
-  "updated_at": "2026-05-21T00:00:00Z",
+  "updated_at": "2026-05-21T12:00:00Z",
   "description": "Canonical registry of all TOURney plans, reviews, audits, and QA artifacts. The /platform Artifacts tab renders from this file. Skills (e.g. tourney-review) append new entries when they generate output.",
   "entries": [
+    {
+      "id": "review-2026-05-21-business",
+      "category": "review",
+      "stage": "executing",
+      "title": "Business Readiness Review · May 21, 2026",
+      "summary": "MyGolf account unification audit. Grade D. Core issues: player_accounts + players split blocks universal profile, registration fully manual, Stripe dead (keys unset), no donations, no LLC. Runbook: mygolf_profiles migration, login gate removal, RSVP auto-fill, pricing reboot, donation checkout.",
+      "date": "2026-05-21",
+      "author": "claude-sonnet-4-6",
+      "url": "/platform/5-21-26-business-review",
+      "file": "5-21-26-business-review.html",
+      "tags": ["review", "audit", "business", "mygolf", "pricing"],
+      "status": "open"
+    },
     {
       "id": "review-2026-05-21-feature-depth",
       "category": "review",
