@@ -139,9 +139,9 @@ footer span{color:var(--gold);}
   <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Review</div></div>
   <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Plan</div></div>
   <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Runbook</div></div>
-  <div class="lc-stage"><div class="lc-pill"></div><div class="lc-label">Executing</div></div>
-  <div class="lc-stage"><div class="lc-pill"></div><div class="lc-label">Audit</div></div>
-  <div class="lc-stage"><div class="lc-pill"></div><div class="lc-label">Concluded</div></div>
+  <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Executing</div></div>
+  <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Audit</div></div>
+  <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Concluded</div></div>
 </div>
 <!-- LIFECYCLE-BAR-END -->
 
@@ -743,8 +743,38 @@ footer span{color:var(--gold);}
 <section id="executing">
 <div class="wrapper">
 <!-- EXECUTING-CONTENT-START -->
-<div class="stage-pending">
-  <p>Awaiting execution. Run <code>/tourney-execute 5-21-26-feature-depth-review.html</code> to proceed.</p>
+<div class="section-header">
+  <div class="section-eyebrow">Stage 4 — Executing</div>
+  <h2 class="section-title">Execution Log</h2>
+  <p class="section-desc">May 21, 2026 · claude-sonnet-4-6</p>
+</div>
+<div class="exec-step">
+  <span class="exec-badge exec-skipped">Skipped</span>
+  <div class="exec-body"><strong>Fix home.html format source — fetch from rounds table</strong> — Already done. home.html L731–736 already fetches rounds in <code>loadHomepageContent()</code> and overwrites the settings map with <code>roundsData</code> values. Format section was already reading from the correct source. Finding was stale.</div>
+</div>
+<div class="exec-step">
+  <span class="exec-badge exec-done">Done</span>
+  <div class="exec-body"><strong>Add yardage fetch and display to scoreboard.html scorecard tab</strong> — Added <code>let courseYards = {}</code> module-scope (scoreboard.html:519). Added <code>yards_day%</code> fetch to <code>init()</code> Promise.all as <code>yardsRes</code> (L529). Added yards parse block after par parse (L555–558). Added conditional yards row in <code>renderScorecards</code> after Par row — hidden when no yard data, shows muted per-hole values when present.</div>
+</div>
+<div class="exec-step">
+  <span class="exec-badge exec-done">Done</span>
+  <div class="exec-body"><strong>Neutralize Bova tenant copy in home.html</strong> — home.html:446 changed from <code>"3 Days · 2 Teams · 54 Holes · 2026"</code> to <code>"Tournament details coming soon."</code>. home.html:680 changed from <code>"The Bova &lt;em&gt;Invitational&lt;/em&gt;"</code> to <code>"TOURney"</code>. Both override correctly when <code>homepage_details</code> and <code>logo_url</code> are set via admin.</div>
+</div>
+<div class="exec-step">
+  <span class="exec-badge exec-done">Done</span>
+  <div class="exec-body"><strong>Wire hero_photo_url and color_primary to home.html</strong> — hero_photo_url and about_photo_url were already wired (L895, L900). Added <code>color_primary</code> and <code>tourney_name</code> to the settings keys array. Added DOM wire-ups: <code>color_primary → document.documentElement.style.setProperty('--gold', ...)</code> and <code>tourney_name → .hero-title textContent</code>.</div>
+</div>
+<div class="exec-step">
+  <span class="exec-badge exec-done">Done</span>
+  <div class="exec-body"><strong>Add "Scoring is Open" banner to home.html</strong> — Added <code>rounds</code> fetch to <code>loadHeroScoreboard()</code> Promise.all as <code>roundsRes</code>. After data parse, finds open round and injects <code>.scoring-open-banner</code> div after the hero section. Banner shows "Day N scoring is open — Enter scores →" linking to <code>/t/{slug}/scorecard</code>. Guard prevents duplicate banners on realtime refresh. CSS added in <code>&lt;style&gt;</code> block.</div>
+</div>
+<div class="exec-step">
+  <span class="exec-badge exec-skipped">Skipped</span>
+  <div class="exec-body"><strong>Verify homepage_format_note DOM wire-up</strong> — Already done. home.html:857 has <code>if (fmtNote && map.homepage_format_note) fmtNote.textContent = map.homepage_format_note;</code> with <code>homepage_format_note</code> in the keys array. No change needed.</div>
+</div>
+<div class="exec-step">
+  <span class="exec-badge exec-done">Done</span>
+  <div class="exec-body"><strong>Commit and push</strong> — <code>git commit b1f121c</code>: "fix: cross-page data consistency — yardage on scoreboard, tenant copy neutralized, color_primary/tourney_name wired, scoring-open banner". Pushed to <code>main</code> → Vercel deploy triggered.</div>
 </div>
 <!-- EXECUTING-CONTENT-END -->
 </div>
@@ -753,8 +783,39 @@ footer span{color:var(--gold);}
 <section id="audit">
 <div class="wrapper">
 <!-- AUDIT-CONTENT-START -->
-<div class="stage-pending">
-  <p>Awaiting execution. Run <code>/tourney-execute 5-21-26-feature-depth-review.html</code> to proceed.</p>
+<div class="section-header">
+  <div class="section-eyebrow">Stage 5 — Audit</div>
+  <h2 class="section-title">Audit Results</h2>
+  <p class="section-desc">Grade: A-. May 21, 2026 · claude-sonnet-4-6</p>
+</div>
+<div class="score-grid">
+  <div class="score-cell">
+    <div class="score-axis">Feature Depth</div>
+    <div class="score-grade grade-a">A-</div>
+    <div class="score-note">Post-execute. All runbook items shipped or pre-existing. No blocked items.</div>
+  </div>
+</div>
+<div class="grid-2">
+  <div class="card">
+    <div class="card-title">What Shipped</div>
+    <ul>
+      <li>Yardage fetch + display added to scoreboard.html scorecard tab — admin yards now visible on leaderboard</li>
+      <li>Bova footer hardcoding removed — footer wordmark now "TOURney" by default</li>
+      <li>Bova hero-meta default neutralized — generic "Tournament details coming soon." until admin sets <code>homepage_details</code></li>
+      <li><code>color_primary</code> and <code>tourney_name</code> wired in home.html — admin brand color now applies globally, tourney name drives hero title</li>
+      <li>"Scoring is Open" banner added — gold banner above hero scoreboard when a round is open, links to scorecard</li>
+      <li>Format source already correct (pre-existing fix), format_note already wired (pre-existing)</li>
+    </ul>
+  </div>
+  <div class="card">
+    <div class="card-title">Still Open</div>
+    <ul>
+      <li>Tier-based handicap approximation in <code>loadHeroScoreboard</code> — still uses <code>HANDICAP_STROKES / 18</code> flat distribution, not format-aware per-hole</li>
+      <li>~14 remaining admin Design tab keys still unwired on home.html (hero/about stats, remaining branding fields beyond color_primary/tourney_name)</li>
+      <li>No score admin-edit UI — admins cannot correct wrong scores</li>
+      <li>No tournament series concept</li>
+    </ul>
+  </div>
 </div>
 <!-- AUDIT-CONTENT-END -->
 </div>
@@ -763,8 +824,18 @@ footer span{color:var(--gold);}
 <section id="concluded">
 <div class="wrapper">
 <!-- CONCLUDED-CONTENT-START -->
-<div class="stage-pending">
-  <p>Awaiting execution. Run <code>/tourney-execute 5-21-26-feature-depth-review.html</code> to proceed.</p>
+<div class="section-header">
+  <div class="section-eyebrow">Stage 6 — Concluded</div>
+  <h2 class="section-title">Ticket Concluded</h2>
+  <p class="section-desc">May 21, 2026 · claude-sonnet-4-6</p>
+</div>
+<div class="card">
+  <div class="card-title">Summary</div>
+  <p>All critical and high cross-page data consistency gaps are now resolved. Yardage entered in admin appears on the scoreboard scorecard tab. Tenant-specific Bova copy removed from home.html defaults. Brand color and tournament name from admin Design tab now wire through to the live homepage. A "Scoring is Open" banner surfaces when a round is active. Two runbook steps (format source fix, format_note wire) were pre-existing — the prior review finding was stale. No items blocked.</p>
+</div>
+<div class="card">
+  <div class="card-title">Next Ticket</div>
+  <p>Remaining open items: tier-based handicap approximation in hero scoreboard, ~14 remaining Design tab keys unwired, no admin score-edit UI. Run <code>/tourney-review feature-depth</code> for a follow-up or <code>/tourney-review</code> for a full platform re-grade.</p>
 </div>
 <!-- CONCLUDED-CONTENT-END -->
 </div>

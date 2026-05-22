@@ -63,6 +63,13 @@
       "scores": [
         {
           "date": "2026-05-21",
+          "score": "A-",
+          "url": "/platform/5-21-26-feature-depth-review",
+          "review_title": "Execute + Audit · May 21, 2026",
+          "notes": "Post-execute grade A-. Yardage added to scoreboard scorecard tab. Bova copy removed from home.html defaults. color_primary + tourney_name wired from admin. Scoring-is-Open banner shipped. Format source and format_note were pre-existing fixes. Remaining: tier handicap approximation on hero scoreboard, ~14 Design tab keys unwired, no score admin-edit UI."
+        },
+        {
+          "date": "2026-05-21",
           "score": "B-",
           "url": "/platform/5-21-26-feature-depth-review",
           "review_title": "Feature Depth Review · May 21, 2026",
