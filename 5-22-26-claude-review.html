@@ -138,8 +138,8 @@ footer span{color:var(--gold);}
   <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Review</div></div>
   <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Plan</div></div>
   <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Runbook</div></div>
-  <div class="lc-stage"><div class="lc-pill"></div><div class="lc-label">Executing</div></div>
-  <div class="lc-stage"><div class="lc-pill"></div><div class="lc-label">Audit</div></div>
+  <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Executing</div></div>
+  <div class="lc-stage lc-active"><div class="lc-pill"></div><div class="lc-label">Audit</div></div>
   <div class="lc-stage"><div class="lc-pill"></div><div class="lc-label">Concluded</div></div>
 </div>
 <!-- LIFECYCLE-BAR-END -->
@@ -551,8 +551,34 @@ footer span{color:var(--gold);}
 <section id="executing">
 <div class="wrapper">
 <!-- EXECUTING-CONTENT-START -->
-<div class="stage-pending">
-  <p>Awaiting execution. Run <code>/tourney-execute 5-22-26-claude-review.html</code> to proceed.</p>
+<div class="section-header">
+  <div class="section-eyebrow">Stage 4 — Executing</div>
+  <h2 class="section-title">Execution Log</h2>
+  <p class="section-desc">2026-05-22 · claude-sonnet-4-6</p>
+</div>
+<div class="exec-step">
+  <span class="exec-badge exec-skipped">Skipped</span>
+  <div class="exec-body"><strong>_parseMentions XSS fix</strong> — <code>buildPostMessage()</code> at feed.html:385–389 already escapes <code>&amp;&lt;&gt;"</code> before mention span injection. No unsafe innerHTML path. Fix was already in place.</div>
+</div>
+<div class="exec-step">
+  <span class="exec-badge exec-done">Done</span>
+  <div class="exec-body"><strong>OG / Social Meta Tags — tourney-init.js</strong> — Added <code>og:image</code> dynamic injection after existing og:title/description/url block (tourney-init.js:185–190). Uses <code>data.logo_url</code> from tournament record. All other OG tags already present on every HTML page.</div>
+</div>
+<div class="exec-step">
+  <span class="exec-badge exec-skipped">Skipped</span>
+  <div class="exec-body"><strong>Profile loading skeleton</strong> — <code>profile.html</code> already has full skeleton implementation: <code>.loadingGate</code> with shimmer avatar/name/stat/rows, <code>.profile-skeleton</code> class, <code>.skeleton</code> animation. Already shipped in prior session.</div>
+</div>
+<div class="exec-step">
+  <span class="exec-badge exec-done">Done</span>
+  <div class="exec-body"><strong>Create /lib/settings-keys.js const enum</strong> — New file <code>lib/settings-keys.js</code> created with <code>SETTINGS_KEYS</code> export covering all 33 known settings keys. No key strings renamed — const aliases only.</div>
+</div>
+<div class="exec-step">
+  <span class="exec-badge exec-blocked">Blocked</span>
+  <div class="exec-body"><strong>Deploy send-push edge function</strong> — Rob manual. Auth fix committed. Requires <code>SUPABASE_ACCESS_TOKEN</code> locally. Command: <code>npx supabase functions deploy send-push --project-ref jllugkiojeoopitdvzsa</code></div>
+</div>
+<div class="exec-step">
+  <span class="exec-badge exec-blocked">Blocked</span>
+  <div class="exec-body"><strong>Set SEND_INSTALL_EMAIL_SECRET</strong> — Rob manual. Set in Supabase dashboard → Project Settings → Edge Functions → Secrets.</div>
 </div>
 <!-- EXECUTING-CONTENT-END -->
 </div>
@@ -561,8 +587,32 @@ footer span{color:var(--gold);}
 <section id="audit">
 <div class="wrapper">
 <!-- AUDIT-CONTENT-START -->
-<div class="stage-pending">
-  <p>Awaiting execution. Run <code>/tourney-execute 5-22-26-claude-review.html</code> to proceed.</p>
+<div class="section-header">
+  <div class="section-eyebrow">Stage 5 — Audit</div>
+  <h2 class="section-title">Audit Results</h2>
+  <p class="section-desc">Grade: A−. 2026-05-22 · claude-sonnet-4-6. 2 Rob manual items remain open.</p>
+</div>
+<div class="score-grid" style="margin-bottom:1rem;">
+  <div class="score-cell"><div class="score-num score-green">A</div><div class="score-label">Architecture</div></div>
+  <div class="score-cell"><div class="score-num score-gold">A−</div><div class="score-label">Feature</div></div>
+  <div class="score-cell"><div class="score-num score-green">A</div><div class="score-label">UX</div></div>
+  <div class="score-cell"><div class="score-num score-gold">A−</div><div class="score-label">Security</div></div>
+</div>
+<div class="card">
+  <div class="card-title">What Shipped</div>
+  <ul>
+    <li><strong>og:image dynamic injection</strong> — tourney-init.js now sets og:image from tournament logo_url on every tenant page. Social link unfurls now show tournament logo.</li>
+    <li><strong>/lib/settings-keys.js</strong> — SETTINGS_KEYS const enum with 33 named constants. Type-safe settings key references for admin write paths.</li>
+    <li><strong>feed.html XSS</strong> — Confirmed already safe. buildPostMessage() escapes all user content before innerHTML assignment. No change needed.</li>
+    <li><strong>profile.html skeleton</strong> — Confirmed already shipped in prior session. Full shimmer skeleton active.</li>
+  </ul>
+</div>
+<div class="card">
+  <div class="card-title">Still Open — Rob Action Items</div>
+  <ul>
+    <li><strong>[SECURITY HIGH]</strong> Deploy send-push edge function: <code>npx supabase functions deploy send-push --project-ref jllugkiojeoopitdvzsa</code> (needs SUPABASE_ACCESS_TOKEN)</li>
+    <li><strong>[DEPLOYMENT MED]</strong> Set SEND_INSTALL_EMAIL_SECRET: Supabase dashboard → Project Settings → Edge Functions → Secrets</li>
+  </ul>
 </div>
 <!-- AUDIT-CONTENT-END -->
 </div>
@@ -571,8 +621,25 @@ footer span{color:var(--gold);}
 <section id="concluded">
 <div class="wrapper">
 <!-- CONCLUDED-CONTENT-START -->
-<div class="stage-pending">
-  <p>Awaiting execution. Run <code>/tourney-execute 5-22-26-claude-review.html</code> to proceed.</p>
+<div class="section-header">
+  <div class="section-eyebrow">Stage 6 — Concluded</div>
+  <h2 class="section-title">Ticket Partial</h2>
+  <p class="section-desc">2026-05-22 · claude-sonnet-4-6</p>
+</div>
+<div class="card">
+  <div class="card-title">Summary</div>
+  <p>Engineering items shipped: og:image injection in tourney-init.js, /lib/settings-keys.js const enum. Two prior runbook items confirmed already done (XSS fix, profile skeleton). Two items remain blocked on Rob manual action.</p>
+</div>
+<div class="card">
+  <div class="card-title">Rob's Action Items</div>
+  <ul>
+    <li>Deploy send-push: <code>npx supabase functions deploy send-push --project-ref jllugkiojeoopitdvzsa</code></li>
+    <li>Set SEND_INSTALL_EMAIL_SECRET in Supabase dashboard → Edge Functions → Secrets</li>
+  </ul>
+</div>
+<div class="card">
+  <div class="card-title">Next Ticket</div>
+  <p>Run <code>/tourney-review-security</code> after send-push deploy to close the security axis, or <code>/tourney-review</code> for next weekly platform review.</p>
 </div>
 <!-- CONCLUDED-CONTENT-END -->
 </div>

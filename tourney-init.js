@@ -183,6 +183,11 @@
       let _ogU = document.querySelector('meta[property="og:url"]');
       if (!_ogU) { _ogU = document.createElement('meta'); _ogU.setAttribute('property', 'og:url'); document.head.appendChild(_ogU); }
       _ogU.setAttribute('content', location.href);
+      if (data.logo_url) {
+        let _ogI = document.querySelector('meta[property="og:image"]');
+        if (!_ogI) { _ogI = document.createElement('meta'); _ogI.setAttribute('property', 'og:image'); document.head.appendChild(_ogI); }
+        _ogI.setAttribute('content', data.logo_url);
+      }
 
       // Replace nav wordmark text on every page — preserves svg/img/span siblings.
       const updateNavWordmarks = () => {

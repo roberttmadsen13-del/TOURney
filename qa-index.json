@@ -7,30 +7,30 @@
     {
       "id": "consolidation-2026-05-22",
       "category": "review",
-      "stage": "executing",
+      "stage": "audit",
       "title": "Consolidation Review · May 22, 2026",
-      "summary": "All open engineering items from concluded tickets (5-13 through 5-22) deduplicated into one execute session. 6 engineering steps: _parseMentions XSS fix (HIGH), ~14 Design tab keys wired, score admin-edit UI, OG meta tags, profile.html skeleton, settings-keys.js const enum. 2 Rob manual items blocked (send-push deploy, SEND_INSTALL_EMAIL_SECRET). CSP + player score entry deferred to own sessions.",
+      "summary": "Consolidation sweep executed. 4 of 6 items were already done. Shipped: og:image injection (tourney-init.js), /lib/settings-keys.js const enum (33 keys). Confirmed already fixed: XSS, score edit UI, profile skeleton, Design tab keys. Blocked: send-push deploy + SEND_INSTALL_EMAIL_SECRET (Rob manual). Grade A−.",
       "date": "2026-05-22",
       "updated": "2026-05-22",
       "author": "claude-sonnet-4-6",
       "url": "/platform/5-22-26-consolidation-review",
       "file": "5-22-26-consolidation-review.html",
       "tags": ["review", "consolidation", "plan"],
-      "status": "open"
+      "status": "partial"
     },
     {
       "id": "review-2026-05-22",
       "category": "review",
-      "stage": "executing",
+      "stage": "audit",
       "title": "Full Platform Review · May 22, 2026",
-      "summary": "Weekly automated review. Grades: Arch A, Feature A−, UX A, Security A−, Business B− (blocking), Deployment B+, Performance B+, Data B+. No deep dives — lowest grade B−. Top open items: feed.html:377 _parseMentions XSS (HIGH), send-push auth not deployed, CSP unsafe-inline, LLC/Stripe Rob manual blockers, player score entry critical gap.",
+      "summary": "Executed via consolidation. Shipped: og:image (tourney-init.js), /lib/settings-keys.js. Confirmed already done: XSS, score edit, profile skeleton. Blocked: send-push + SEND_INSTALL_EMAIL_SECRET (Rob manual). Grade A−.",
       "date": "2026-05-22",
       "updated": "2026-05-22",
       "author": "claude-sonnet-4-6",
       "url": "/platform/5-22-26-claude-review",
       "file": "5-22-26-claude-review.html",
       "tags": ["review", "audit", "weekly"],
-      "status": "open"
+      "status": "partial"
     },
     {
       "id": "review-2026-05-21-business",

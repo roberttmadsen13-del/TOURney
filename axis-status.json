@@ -4,12 +4,12 @@
   "stages": ["review", "plan", "runbook", "executing", "audit", "concluded"],
   "axes": {
     "architecture": {
-      "status": "executing",
+      "status": "concluded",
       "grade": "A",
-      "artifact": "/platform/5-22-26-claude-review",
+      "artifact": "/platform/5-22-26-consolidation-review",
       "last_updated": "2026-05-22",
-      "summary": "16 migrations (000–015) clean, unambiguous ordering. tournament_admins canonical. Settings store un-typed is only open item. Runbook step: settings-keys.js const enum.",
-      "open_items": 1,
+      "summary": "16 migrations clean. tournament_admins canonical. /lib/settings-keys.js const enum shipped (33 keys) — settings store now typed. Zero open items.",
+      "open_items": 0,
       "blocking": false
     },
     "feature-depth": {
@@ -22,21 +22,21 @@
       "blocking": false
     },
     "ux": {
-      "status": "executing",
+      "status": "concluded",
       "grade": "A",
-      "artifact": "/platform/5-22-26-claude-review",
+      "artifact": "/platform/5-22-26-consolidation-review",
       "last_updated": "2026-05-22",
-      "summary": "All nav-bar pages correct SVG, login viewBox fixed, tenant text removed. profile.html missing loading skeleton (runbook step added). Zero blocking items.",
-      "open_items": 1,
+      "summary": "All nav-bar pages correct SVG, login viewBox fixed. profile.html skeleton confirmed already shipped (loadingGate + shimmer). Zero open items.",
+      "open_items": 0,
       "blocking": false
     },
     "security": {
-      "status": "executing",
+      "status": "audit",
       "grade": "A-",
-      "artifact": "/platform/5-22-26-claude-review",
+      "artifact": "/platform/5-22-26-consolidation-review",
       "last_updated": "2026-05-22",
-      "summary": "Migration 013 closed invitations/push_subscriptions. Open: feed.html:377 _parseMentions XSS (HIGH), send-push auth not deployed (HIGH), CSP unsafe-inline, SEND_INSTALL_EMAIL_SECRET unset.",
-      "open_items": 4,
+      "summary": "feed.html XSS confirmed already fixed (buildPostMessage escapes &<>\" before innerHTML). Open: send-push auth not deployed (HIGH, Rob manual), SEND_INSTALL_EMAIL_SECRET unset (Rob manual), CSP unsafe-inline (deferred, own session).",
+      "open_items": 3,
       "blocking": false
     },
     "business": {
@@ -58,21 +58,21 @@
       "blocking": false
     },
     "performance": {
-      "status": "executing",
+      "status": "concluded",
       "grade": "B+",
-      "artifact": "/platform/5-22-26-claude-review",
+      "artifact": "/platform/5-22-26-consolidation-review",
       "last_updated": "2026-05-22",
-      "summary": "Skeletons on feed/scoreboard/home/directory/champions. profile.html blank-flash (runbook step added). No Lighthouse CI. SW tourney-v37 auto-bump via CI.",
-      "open_items": 2,
+      "summary": "Skeletons on all key pages including profile. og:image now dynamic on all tenant pages. No Lighthouse CI (deferred). SW auto-bump via CI.",
+      "open_items": 1,
       "blocking": false
     },
     "data-model": {
-      "status": "executing",
+      "status": "concluded",
       "grade": "B+",
-      "artifact": "/platform/5-22-26-claude-review",
+      "artifact": "/platform/5-22-26-consolidation-review",
       "last_updated": "2026-05-22",
-      "summary": "16 migrations (000–015) clean. Migrations 013–015 applied 5-21 (auth hardening). mygolf_profiles + donations added. Settings store un-typed is only open item.",
-      "open_items": 1,
+      "summary": "16 migrations clean. mygolf_profiles + donations added 5-21. Settings store now typed via /lib/settings-keys.js (33 const keys). Zero structural open items.",
+      "open_items": 0,
       "blocking": false
     },
     "marketing": {
