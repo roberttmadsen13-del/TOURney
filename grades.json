@@ -298,6 +298,13 @@
       "scores": [
         {
           "date": "2026-05-21",
+          "score": "B-",
+          "url": "/platform/5-21-26-business-review",
+          "review_title": "Execute + Audit · May 21, 2026",
+          "notes": "Post-execute B−. mygolf_profiles migration live, login gate removed, RSVP auto-fill from profile, donation checkout deployed. Pricing rewritten to $14–$99 cost-up undercut model (97%+ margin). 4 Rob manual blockers remain: LLC, EIN, bank, Stripe live keys."
+        },
+        {
+          "date": "2026-05-21",
           "score": "D",
           "url": "/platform/5-21-26-business-review",
           "review_title": "Business Readiness Review · May 21, 2026",

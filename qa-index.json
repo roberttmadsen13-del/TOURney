@@ -7,15 +7,16 @@
     {
       "id": "review-2026-05-21-business",
       "category": "review",
-      "stage": "executing",
+      "stage": "audit",
       "title": "Business Readiness Review · May 21, 2026",
-      "summary": "MyGolf account unification audit. Grade D. Core issues: player_accounts + players split blocks universal profile, registration fully manual, Stripe dead (keys unset), no donations, no LLC. Runbook: mygolf_profiles migration, login gate removal, RSVP auto-fill, pricing reboot, donation checkout.",
+      "summary": "MyGolf DB layer shipped (3 migrations, login gate removed, RSVP auto-fill, donation checkout, $14–$99 pricing). Grade B−. Blocked: LLC + Stripe live keys (Rob manual). Revenue path 0→ready once Rob unblocks.",
       "date": "2026-05-21",
+      "updated": "2026-05-21",
       "author": "claude-sonnet-4-6",
       "url": "/platform/5-21-26-business-review",
       "file": "5-21-26-business-review.html",
       "tags": ["review", "audit", "business", "mygolf", "pricing"],
-      "status": "open"
+      "status": "partial"
     },
     {
       "id": "review-2026-05-21-feature-depth",

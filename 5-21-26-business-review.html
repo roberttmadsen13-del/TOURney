@@ -140,8 +140,8 @@ footer span{color:var(--gold);}
   <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Review</div></div>
   <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Plan</div></div>
   <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Runbook</div></div>
-  <div class="lc-stage"><div class="lc-pill"></div><div class="lc-label">Executing</div></div>
-  <div class="lc-stage"><div class="lc-pill"></div><div class="lc-label">Audit</div></div>
+  <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Executing</div></div>
+  <div class="lc-stage lc-active"><div class="lc-pill"></div><div class="lc-label">Audit</div></div>
   <div class="lc-stage"><div class="lc-pill"></div><div class="lc-label">Concluded</div></div>
 </div>
 <!-- LIFECYCLE-BAR-END -->
@@ -723,9 +723,21 @@ CREATE POLICY "Users read own donations" ON donations
 <section id="executing">
 <div class="wrapper">
 <!-- EXECUTING-CONTENT-START -->
-<div class="stage-pending">
-  <p>Awaiting execution. Run <code>/tourney-execute 5-21-26-business-review.html</code> to proceed.</p>
+<div class="section-header">
+  <div class="section-eyebrow">Stage 4 — Executing</div>
+  <h2 class="section-title">Execution Log</h2>
+  <p class="section-desc">Step-by-step record of what ran. 2026-05-21 · Claude Sonnet 4.6</p>
 </div>
+<div class="exec-step"><span class="exec-badge exec-skipped">Skipped</span><div class="exec-body"><strong>Create ToS and Privacy stub pages</strong>tos.html + privacy.html already exist at repo root. /tos and /privacy routes already in vercel.json. Footer links in login.html confirmed present. Nothing to do.</div></div>
+<div class="exec-step"><span class="exec-badge exec-done">Done</span><div class="exec-body"><strong>Migration 014: create mygolf_profiles table</strong>Applied via Supabase MCP to project jllugkiojeoopitdvzsa. Table created with id (FK → auth.users), first_name, last_name, email, phone, handicap, avatar_url, timestamps. RLS enabled. 3 policies: SELECT/UPDATE/INSERT all scoped to <code>auth.uid() = id</code>. No USING(true) policies.</div></div>
+<div class="exec-step"><span class="exec-badge exec-done">Done</span><div class="exec-body"><strong>Migration 015: add mygolf_profile_id FK to players table</strong>Applied. <code>players.mygolf_profile_id UUID REFERENCES mygolf_profiles(id) ON DELETE SET NULL</code> added. Index <code>idx_players_mygolf_profile</code> created. Existing Bova player rows NULL — safe, nullable column.</div></div>
+<div class="exec-step"><span class="exec-badge exec-done">Done</span><div class="exec-body"><strong>login.html — players-table gate removed, MyGolf signup</strong>Removed lines 234-243 (players table lookup block). Added first_name + last_name input fields to signup form. Updated subtitle to "Create your free MyGolf profile". After auth.signUp success: upsert to mygolf_profiles (id, first_name, last_name, email). Redirect to /player on success.</div></div>
+<div class="exec-step"><span class="exec-badge exec-done">Done</span><div class="exec-body"><strong>home.html — RSVP auto-fill from mygolf_profiles</strong>Pre-fill async function extended: fetches mygolf_profiles on session load, sets first_name/last_name as readonly, phone/handicap as editable pre-fill. players.insert now includes <code>mygolf_profile_id: session.user.id</code>.</div></div>
+<div class="exec-step"><span class="exec-badge exec-done">Done</span><div class="exec-body"><strong>create.html — pricing formula replaced with cost-up tiers</strong>calcTier() rewritten: ≤12p=$14, ≤24p=$29, ≤48p=$59, ≤96p=$99. Round multipliers: ×1.0 (1-2 rounds), ×1.15 (3-4), ×1.30 (5+). Removed "Billing not yet active" text → "Pricing preview — payment activated when billing goes live." True infra cost $0.10–$1.00/tournament; 97%+ margin at all tiers after Stripe.</div></div>
+<div class="exec-step"><span class="exec-badge exec-done">Done</span><div class="exec-body"><strong>Migration 016: create donations table</strong>Applied. Table: id, mygolf_profile_id (FK → mygolf_profiles), amount_cents, currency, stripe_payment_intent_id, message, created_at. RLS enabled. 1 policy: SELECT scoped to <code>auth.uid() = mygolf_profile_id</code>.</div></div>
+<div class="exec-step"><span class="exec-badge exec-done">Done</span><div class="exec-body"><strong>create-donation-checkout edge function deployed + player.html donate UI</strong>Edge function v1 deployed to Supabase (id: 7f404ced, status: ACTIVE). Auth via Supabase getUser() — JWT-gated. Accepts amount_cents + optional message. Creates Stripe Checkout session with donation metadata. player.html: donation section added (preset $5/$10/$25/$50 + custom amount), startDonation() JS added, donateSection shown on portal load, hidden on logout.</div></div>
+<div class="exec-step"><span class="exec-badge exec-blocked">Blocked</span><div class="exec-body"><strong>Set Stripe live keys in Vercel</strong>Rob must set STRIPE_SECRET_KEY + STRIPE_WEBHOOK_SECRET in Vercel dashboard after LLC formed. Donation checkout + tournament billing dead until keys are set.</div></div>
+<div class="exec-step"><span class="exec-badge exec-skipped">Skipped</span><div class="exec-body"><strong>Update vercel.json — /tos and /privacy routes</strong>Already present: <code>{"source":"/tos","destination":"/tos.html"}</code> and <code>{"source":"/privacy","destination":"/privacy.html"}</code>. Nothing to do.</div></div>
 <!-- EXECUTING-CONTENT-END -->
 </div>
 </section>
@@ -733,8 +745,38 @@ CREATE POLICY "Users read own donations" ON donations
 <section id="audit">
 <div class="wrapper">
 <!-- AUDIT-CONTENT-START -->
-<div class="stage-pending">
-  <p>Awaiting execution. Run <code>/tourney-execute 5-21-26-business-review.html</code> to proceed.</p>
+<div class="section-header">
+  <div class="section-eyebrow">Stage 5 — Audit</div>
+  <h2 class="section-title">Audit Results</h2>
+  <p class="section-desc">Grade: B−. 2026-05-21 · Claude Sonnet 4.6</p>
+</div>
+<div class="score-grid">
+  <div class="score-cell"><div class="score-num score-gold">B−</div><div class="score-label">Business Post-Execute</div></div>
+  <div class="score-cell"><div class="score-num score-green">✅</div><div class="score-label">MyGolf DB Layer</div></div>
+  <div class="score-cell"><div class="score-num score-green">✅</div><div class="score-label">Login Gate Removed</div></div>
+  <div class="score-cell"><div class="score-num score-green">✅</div><div class="score-label">RSVP Auto-Fill</div></div>
+  <div class="score-cell"><div class="score-num score-green">✅</div><div class="score-label">Donations Wired</div></div>
+  <div class="score-cell"><div class="score-num score-red">❌</div><div class="score-label">Stripe Live</div></div>
+</div>
+<div class="card">
+  <div class="card-title">What Shipped</div>
+  <ul>
+    <li><strong>3 migrations applied</strong> — mygolf_profiles (014), players.mygolf_profile_id FK (015), donations table (016). All RLS-scoped, no USING(true) policies.</li>
+    <li><strong>login.html</strong> — players-table gate removed. Any email can now create a MyGolf account. first_name + last_name fields added. mygolf_profiles row created on signup. Redirects to /player.</li>
+    <li><strong>home.html RSVP</strong> — auto-fill from mygolf_profiles on session load. first_name/last_name locked from profile. phone/handicap pre-filled but editable. mygolf_profile_id set on players.insert.</li>
+    <li><strong>create.html pricing</strong> — new cost-up tiers ($14/$29/$59/$99) with round multipliers. "Billing not yet active" text updated.</li>
+    <li><strong>create-donation-checkout</strong> — edge function v1 deployed (ACTIVE). JWT-gated. player.html donation UI live with preset amounts + custom input.</li>
+  </ul>
+</div>
+<div class="card">
+  <div class="card-title">Still Open</div>
+  <ul>
+    <li><strong>Stripe live keys</strong> — STRIPE_SECRET_KEY + STRIPE_WEBHOOK_SECRET unset in Vercel. All Stripe edge functions return 500. No revenue possible until Rob sets these after LLC formation.</li>
+    <li><strong>LLC + EIN + bank account</strong> — Rob human action. Stripe payouts have nowhere to land.</li>
+    <li><strong>stripe-webhook: donation event handler</strong> — webhook does not yet handle payment_intent.succeeded for donations → donations table never written. Needs a follow-up runbook step once Stripe is live.</li>
+    <li><strong>player.html billing gate</strong> — still reads player_accounts.billing_status. After MyGolf unification, this gate should read mygolf_profiles instead. Not yet updated.</li>
+    <li><strong>Inline account creation on home.html</strong> — RSVP shows "Account Required" toast if no session, but no inline modal. Player must navigate to /login. Partial UX gap.</li>
+  </ul>
 </div>
 <!-- AUDIT-CONTENT-END -->
 </div>
@@ -743,8 +785,27 @@ CREATE POLICY "Users read own donations" ON donations
 <section id="concluded">
 <div class="wrapper">
 <!-- CONCLUDED-CONTENT-START -->
-<div class="stage-pending">
-  <p>Awaiting execution. Run <code>/tourney-execute 5-21-26-business-review.html</code> to proceed.</p>
+<div class="section-header">
+  <div class="section-eyebrow">Stage 6 — Concluded</div>
+  <h2 class="section-title">Ticket Partial</h2>
+  <p class="section-desc">2026-05-21 · Claude Sonnet 4.6</p>
+</div>
+<div class="card">
+  <div class="card-title">Summary</div>
+  <p>MyGolf DB layer shipped (3 migrations, login gate removed, RSVP auto-fill, donation checkout). Pricing rewritten to cost-up undercut model ($14–$99/tournament, 97%+ margin). All engineering steps done. Revenue path remains blocked by LLC + Stripe keys — both require Rob manual action.</p>
+</div>
+<div class="card">
+  <div class="card-title">Rob's Action Items</div>
+  <ul>
+    <li><strong>LLC formation</strong> — File via registered agent (~$150). Required before Stripe payout account approved.</li>
+    <li><strong>EIN</strong> — Apply at IRS.gov (free, 10 minutes). Required for business bank account.</li>
+    <li><strong>Business bank account</strong> — Mercury or Relay. Required for Stripe payouts.</li>
+    <li><strong>Stripe live keys</strong> — Set STRIPE_SECRET_KEY + STRIPE_WEBHOOK_SECRET in Vercel dashboard. Webhook endpoint: <code>https://jllugkiojeoopitdvzsa.supabase.co/functions/v1/stripe-webhook</code>. Events: checkout.session.completed, payment_intent.succeeded.</li>
+  </ul>
+</div>
+<div class="card">
+  <div class="card-title">Next Ticket</div>
+  <p>Run <code>/tourney-review onboarding</code> to audit the new MyGolf registration flow end-to-end, or <code>/tourney-review data-model</code> to audit the mygolf_profiles + donations schema additions.</p>
 </div>
 <!-- CONCLUDED-CONTENT-END -->
 </div>

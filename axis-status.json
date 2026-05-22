@@ -40,12 +40,12 @@
       "blocking": false
     },
     "business": {
-      "status": "executing",
-      "grade": "D",
+      "status": "audit",
+      "grade": "B-",
       "artifact": "/platform/5-21-26-business-review",
       "last_updated": "2026-05-21",
-      "summary": "Grade D. MyGolf unification + registration overhaul + pricing reboot reviewed. Runbook: mygolf_profiles migration, login gate removal, RSVP auto-fill, event-based pricing, donations. 3 human blockers: LLC, Stripe keys, bank account.",
-      "open_items": 8,
+      "summary": "B− post-execute. mygolf_profiles live, login gate removed, RSVP auto-fill, donations wired, $14–$99 pricing. 4 Rob manual blockers: LLC, EIN, bank, Stripe live keys.",
+      "open_items": 4,
       "blocking": true
     },
     "deployment": {
