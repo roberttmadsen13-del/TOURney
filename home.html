@@ -1005,8 +1005,9 @@ window.submitRsvp = async function submitRsvp() {
     available_dates: (_dpGroup && _dpGroup.style.display !== 'none') ? [...selectedDates] : [],
     why_me:     document.getElementById('rsvpWhyMe').value.trim(),
     trash_talk: document.getElementById('rsvpTrash').value.trim(),
-    hat:        wantsHat,
-    tournament_id: tournament.id,
+    hat:              wantsHat,
+    tournament_id:    tournament.id,
+    mygolf_profile_id: session.user.id,
   });
 
   if (error) {
@@ -1068,13 +1069,22 @@ sb.channel('players-public')
 
 refreshField();
 
-// Pre-fill email from auth session if already logged in
+// Pre-fill RSVP from MyGolf profile if logged in
 (async () => {
   const { data: { session } } = await sb.auth.getSession();
-  if (session?.user?.email) {
-    const f = document.getElementById('rsvpEmail');
-    if (f) { f.value = session.user.email; f.readOnly = true; f.style.opacity = '0.6'; }
-  }
+  if (!session?.user) return;
+  const fEmail = document.getElementById('rsvpEmail');
+  if (fEmail) { fEmail.value = session.user.email; fEmail.readOnly = true; fEmail.style.opacity = '0.6'; }
+  const { data: profile } = await sb.from('mygolf_profiles')
+    .select('first_name,last_name,phone,handicap')
+    .eq('id', session.user.id)
+    .maybeSingle();
+  if (!profile) return;
+  const locks = [['rsvpFirst', profile.first_name, true], ['rsvpLast', profile.last_name, true], ['rsvpPhone', profile.phone, false], ['rsvpHandicap', profile.handicap, false]];
+  locks.forEach(([id, val, lock]) => {
+    const el = document.getElementById(id);
+    if (el && val != null) { el.value = val; if (lock) { el.readOnly = true; el.style.opacity = '0.6'; } }
+  });
 })();
 
 // HAT TOGGLE

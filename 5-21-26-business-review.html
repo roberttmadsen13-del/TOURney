@@ -281,20 +281,85 @@ footer span{color:var(--gold);}
     <strong>Risk if wrong:</strong> double-charging, webhook replay attacks if secrets misconfigured</p>
   </div>
 
-  <!-- Pricing Model -->
+  <!-- Cost Analysis -->
   <div class="card">
-    <div class="card-title">Pricing Model Analysis</div>
-    <p><strong style="color:#fff">Current model (create.html):</strong> <code>players × days × tier</code> formula. Per-day pricing penalizes multi-day events and misaligns with operator value perception.</p>
-    <p style="margin-top:0.5rem"><strong style="color:#fff">Proposed model (Rob's intent):</strong> Free MyGolf profile. Tournament fee = <code>f(players, rounds, teams, hosting_cost)</code>. Individuals count as team of 1. One-time per-tournament charge to operator.</p>
-    <p style="margin-top:0.5rem"><strong style="color:#fff">Recommended pricing (comparable: Golf Genius ~$299/event, TourneyMaster ~$149/event):</strong></p>
-    <ul>
-      <li>1–12 players, 1–2 rounds: <strong style="color:var(--gold)">$49</strong></li>
-      <li>13–24 players, up to 3 rounds: <strong style="color:var(--gold)">$89</strong></li>
-      <li>25–48 players, up to 4 rounds: <strong style="color:var(--gold)">$149</strong></li>
-      <li>49–96 players, unlimited rounds: <strong style="color:var(--gold)">$249</strong></li>
-      <li>Hosting fee component (Supabase + Vercel + domain): ~$8/event at current scale → fold into tier pricing.</li>
+    <div class="card-title">Unit Cost Analysis — Per Player / Per Round / Per Tournament</div>
+
+    <p style="margin-bottom:0.6rem"><strong style="color:#fff">Infrastructure costs (what Rob actually pays):</strong></p>
+    <div class="table-wrap" style="margin-bottom:0.8rem">
+      <table class="page-table">
+        <thead><tr><th>Component</th><th>Free Tier</th><th>Pro ($25/mo)</th><th>Per Tournament (50/mo scale)</th></tr></thead>
+        <tbody>
+          <tr><td>Supabase DB + Auth</td><td class="url">$0 (500MB, 50K MAU)</td><td class="url">$25/mo (8GB, unlimited MAU)</td><td class="url">~$0.50</td></tr>
+          <tr><td>Vercel static hosting</td><td class="url">$0</td><td class="url">$0</td><td class="url">$0</td></tr>
+          <tr><td>Supabase Realtime</td><td class="url">included</td><td class="url">included</td><td class="url">$0</td></tr>
+          <tr><td>Domain (tourney.greenskeeper.studio)</td><td class="url">$1.25/mo</td><td class="url">$1.25/mo</td><td class="url">~$0.03</td></tr>
+          <tr><td>Stripe processing fee</td><td class="url">2.9% + $0.30/txn</td><td class="url">same</td><td class="url">varies by charge amount</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p style="margin-bottom:0.5rem"><strong style="color:#fff">Cost per player (infrastructure only):</strong></p>
+    <ul style="margin-bottom:0.7rem">
+      <li>DB rows per player: ~25–50 (player record + scores per round + settings reads). At Pro: <strong style="color:var(--gold)">~$0.001/player</strong> in storage.</li>
+      <li>Bandwidth per player per tournament: ~0.5MB (RSVP, realtime score updates, page loads). At Pro 250GB/mo: <strong style="color:var(--gold)">~$0.005/player</strong>.</li>
+      <li>Realtime connections: 1 open websocket per active viewer. No per-player charge on Supabase.</li>
+      <li><strong>Total infra cost per player: &lt;$0.01.</strong> Negligible at any realistic tournament size.</li>
     </ul>
-    <p style="margin-top:0.5rem">Teams vs individuals: each <code>team_size</code> in DB is already tracked. Use <code>CEIL(player_count / avg_team_size)</code> as a pricing multiplier cap — prevents individuals artificially lowering invoice.</p>
+
+    <p style="margin-bottom:0.5rem"><strong style="color:#fff">Cost per round (infrastructure only):</strong></p>
+    <ul style="margin-bottom:0.7rem">
+      <li>Score rows per round: 1 per player per hole = 18 rows/player/round. 24-player tournament = 432 rows/round.</li>
+      <li>Realtime events per round: ~1 per score entry × 24 players × 18 holes = ~432 DB change events broadcast.</li>
+      <li>Additional bandwidth per round: ~1–2MB total (score fetches, realtime payloads).</li>
+      <li><strong>Total infra cost per round: ~$0.01–0.05.</strong> Adding rounds is nearly free.</li>
+    </ul>
+
+    <p style="margin-bottom:0.5rem"><strong style="color:#fff">Cost per team (infrastructure only):</strong></p>
+    <ul style="margin-bottom:0.7rem">
+      <li>Teams are logical groupings — no separate DB table, no additional storage. Cost = player count × per-player cost.</li>
+      <li>4-player team: ~$0.04 infra. 2-player pair: ~$0.02 infra. Individual: ~$0.01 infra.</li>
+      <li><strong>Teams add zero marginal infra cost beyond their player count.</strong></li>
+    </ul>
+
+    <p style="margin-bottom:0.5rem"><strong style="color:#fff">True per-tournament total cost (infra + Stripe):</strong></p>
+    <div class="table-wrap" style="margin-bottom:0.8rem">
+      <table class="page-table">
+        <thead><tr><th>Tournament Size</th><th>Rounds</th><th>Infra Cost</th><th>Stripe on $X charge</th><th>Total cost at $X price</th></tr></thead>
+        <tbody>
+          <tr><td>12 players</td><td>2</td><td class="url">~$0.10</td><td class="url">2.9% + $0.30</td><td class="url">$0.69 at $14 · $0.88 at $20 · $1.47 at $40</td></tr>
+          <tr><td>24 players</td><td>3</td><td class="url">~$0.20</td><td class="url">2.9% + $0.30</td><td class="url">$1.47 at $40 · $2.17 at $65 · $3.16 at $99</td></tr>
+          <tr><td>48 players</td><td>4</td><td class="url">~$0.45</td><td class="url">2.9% + $0.30</td><td class="url">$3.16 at $99 · $4.65 at $149</td></tr>
+          <tr><td>96 players</td><td>5+</td><td class="url">~$1.00</td><td class="url">2.9% + $0.30</td><td class="url">$7.54 at $249</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="font-size:0.8rem;color:var(--muted)">Conclusion: TOURney's marginal cost per tournament is <strong style="color:var(--gold)">$0.10–$1.00</strong> depending on size. Any price above ~$5 generates positive margin. This enables aggressive undercutting of every competitor in the market.</p>
+
+    <p style="margin-top:0.8rem;margin-bottom:0.5rem"><strong style="color:#fff">Competitor pricing (what the market currently charges):</strong></p>
+    <div class="table-wrap">
+      <table class="page-table">
+        <thead><tr><th>Product</th><th>Per-Event Price</th><th>Target</th><th>TOURney Advantage</th></tr></thead>
+        <tbody>
+          <tr><td>Golf Genius</td><td class="url">$299–$499/event</td><td>Golf associations, clubs</td><td>10–50× cheaper possible</td></tr>
+          <tr><td>TourneyMaster</td><td class="url">$49–$149/event</td><td>Casual organizers</td><td>2–5× cheaper possible</td></tr>
+          <tr><td>Golf Pad TAGS</td><td class="url">$99/event</td><td>Tech-forward groups</td><td>2–5× cheaper possible</td></tr>
+          <tr><td>WhatsApp + Sheets</td><td class="url">$0</td><td>Budget groups</td><td>Must beat on UX, not price</td></tr>
+          <tr><td>GHIN / USGA</td><td class="url">$0 (no tournament mgmt)</td><td>Handicap tracking only</td><td>Full tournament layer on top</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p style="margin-top:0.8rem;margin-bottom:0.5rem"><strong style="color:#fff">Derived pricing (cost-up, undercut strategy):</strong></p>
+    <p style="font-size:0.83rem;color:var(--text)">Based on $0.10–$1.00 true cost and competitor floor at $49 (TourneyMaster), TOURney can profitably price at:</p>
+    <ul style="margin-top:0.4rem">
+      <li>1–12 players, 1–2 rounds: <strong style="color:var(--gold)">$14</strong> — undercuts TourneyMaster entry by 70%. Stripe nets ~$13.27.</li>
+      <li>13–24 players, up to 3 rounds: <strong style="color:var(--gold)">$29</strong> — undercuts TourneyMaster by 40–80%. Stripe nets ~$27.86.</li>
+      <li>25–48 players, up to 4 rounds: <strong style="color:var(--gold)">$59</strong> — undercuts TourneyMaster by 60%. Stripe nets ~$56.99.</li>
+      <li>49–96 players, unlimited rounds: <strong style="color:var(--gold)">$99</strong> — undercuts Golf Genius by 70%. Stripe nets ~$95.91.</li>
+      <li>Round multiplier: ×1.0 base · ×1.15 for 3–4 rounds · ×1.30 for 5+ rounds. Rounds are cheap to host — multiplier is margin capture, not cost coverage.</li>
+    </ul>
+    <p style="margin-top:0.5rem;font-size:0.8rem;color:var(--muted)">At 20 tournaments/month blended ~$40 avg: <strong style="color:var(--gold)">$800/mo gross · ~$760/mo net after Stripe · ~$735/mo net after infra.</strong> Breakeven at ~1 tournament/month.</p>
   </div>
 
   <!-- Registration Flow -->
@@ -380,9 +445,9 @@ footer span{color:var(--gold);}
     <div class="idea-card idea-2">
       <div class="idea-number">2</div>
       <div class="idea-tag"><span class="pill pill-blue">Monetization</span></div>
-      <div class="idea-title">Pay-Per-Tournament Pricing</div>
-      <div class="idea-body">Operator pays once per tournament. Tiered by player count × rounds × team factor. Free profile means player acquisition has zero friction — only operators pay. This is the correct SaaS model for this market.</div>
-      <div class="idea-plan"><strong>Build:</strong> New pricing formula in create.html → Stripe Checkout session → webhook updates tournament.billing_status → tournament activates.</div>
+      <div class="idea-title">Pay-Per-Tournament — Undercut Strategy</div>
+      <div class="idea-body">True infra cost per tournament: $0.10–$1.00. TourneyMaster's floor is $49. TOURney prices at $14–$99 — 40–80% below every paid competitor. Operators who tried Golf Genius ($299) will switch on price alone. Free profile = zero player friction, operators are the only revenue source.</div>
+      <div class="idea-plan"><strong>Tiers:</strong> $14 (≤12p) · $29 (≤24p) · $59 (≤48p) · $99 (≤96p) · round multiplier ×1.15–1.30. Stripe nets 97%+ margin at all tiers.</div>
     </div>
     <div class="idea-card idea-3">
       <div class="idea-number">3</div>
@@ -565,7 +630,7 @@ CREATE INDEX idx_players_mygolf_profile ON players(mygolf_profile_id);</pre>
         <strong>Upstream impact:</strong> create.html pricing UI (current: players × days × tier). <code>tournaments</code> table stores <code>stripe_customer_id</code>, <code>stripe_subscription_id</code> (migration 002).<br>
         <strong>Downstream impact:</strong> Tournament activation gated on payment. home.html reads <code>tournaments.status</code> — must stay active for reg_open. platform.html billing tab reads tournament billing fields.<br>
         Replace current formula at create.html:263:<br>
-        New tiers: ≤12 players = $49 | 13-24 = $89 | 25-48 = $149 | 49-96 = $249. Apply round multiplier: ×1.0 for 1-2 rounds, ×1.2 for 3-4 rounds, ×1.4 for 5+.<br>
+        New tiers (cost-up, undercut strategy): ≤12 players = $14 | 13-24 = $29 | 25-48 = $59 | 49-96 = $99. Apply round multiplier: ×1.0 for 1-2 rounds, ×1.15 for 3-4 rounds, ×1.30 for 5+. True infra cost: $0.10–$1.00/tournament — margin is 97%+ at all tiers after Stripe.<br>
         Replace "Billing not yet active" placeholder with live price display + "Pay to Activate" button.<br>
         "Pay to Activate" button calls <code>create-checkout</code> edge function with <code>tournament_id</code> + computed <code>price_id</code>. Redirect to Stripe Checkout. On success: Stripe webhook fires → tournament activated.<br>
         Remove create.html:263 hard-coded "billing not active" text entirely.

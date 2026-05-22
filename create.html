@@ -260,7 +260,7 @@
           <span class="price-total-lbl">Est. per tourney</span>
           <span class="price-total-val" id="pc-total">$—</span>
         </div>
-        <div class="price-note">Billing not yet active — pricing preview only.</div>
+        <div class="price-note">Pricing preview — payment activated when billing goes live.</div>
       </div>
 
       <div class="nav">
@@ -406,11 +406,14 @@
     pairCount: 12,
   };
 
-  function calcTier(players, days) {
-    if (days === 1)                          return { name: 'Round',        price: 9  };
-    if (days <= 3 && players <= 24)          return { name: 'Weekend',      price: 19 };
-    if (days <= 7 && players <= 36)          return { name: 'Invitational', price: 35 };
-    return                                          { name: 'Club',         price: 59 };
+  function calcTier(players, rounds) {
+    let base, name;
+    if (players <= 12)      { name = 'Starter';      base = 49;  }
+    else if (players <= 24) { name = 'Weekend';       base = 89;  }
+    else if (players <= 48) { name = 'Invitational';  base = 149; }
+    else                    { name = 'Club';           base = 249; }
+    const mult = rounds <= 2 ? 1.0 : rounds <= 4 ? 1.2 : 1.4;
+    return { name, price: Math.round(base * mult) };
   }
 
   function updatePriceCard() {

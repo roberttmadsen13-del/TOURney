@@ -117,7 +117,17 @@ a{color:inherit;text-decoration:none;}
     <!-- CREATE ACCOUNT MODE -->
     <div id="signUpMode" style="display:none;">
       <div class="login-title">Create <em>Account</em></div>
-      <div class="login-sub">Registered Players Only</div>
+      <div class="login-sub">Create your free MyGolf profile</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem">
+        <div class="fg">
+          <label>First Name</label>
+          <input type="text" id="signUpFirst" placeholder="First" autocomplete="given-name">
+        </div>
+        <div class="fg">
+          <label>Last Name</label>
+          <input type="text" id="signUpLast" placeholder="Last" autocomplete="family-name">
+        </div>
+      </div>
       <div class="fg">
         <label>Email Address</label>
         <input type="email" id="signUpEmail" placeholder="your@email.com" autocomplete="email">
@@ -201,16 +211,18 @@ async function doSignIn() {
 }
 
 async function doSignUp() {
-  const email = document.getElementById('signUpEmail').value.trim().toLowerCase();
-  const password = document.getElementById('signUpPassword').value;
-  const confirm = document.getElementById('signUpConfirm').value;
-  const err = document.getElementById('signUpErr');
+  const firstName = document.getElementById('signUpFirst').value.trim();
+  const lastName  = document.getElementById('signUpLast').value.trim();
+  const email     = document.getElementById('signUpEmail').value.trim().toLowerCase();
+  const password  = document.getElementById('signUpPassword').value;
+  const confirm   = document.getElementById('signUpConfirm').value;
+  const err     = document.getElementById('signUpErr');
   const success = document.getElementById('signUpSuccess');
-  const btn = document.getElementById('signUpBtn');
+  const btn     = document.getElementById('signUpBtn');
   err.classList.remove('show');
   success.classList.remove('show');
 
-  if (!email || !password || !confirm) {
+  if (!firstName || !lastName || !email || !password || !confirm) {
     err.textContent = 'Please fill in all fields.';
     err.classList.add('show');
     return;
@@ -231,18 +243,6 @@ async function doSignUp() {
   btn.disabled = true;
   btn.textContent = 'Creating account...';
 
-  // Check if email exists in players table
-  const { data: player, error: lookupErr } = await sb.from('players').select('id').eq('email', email).single();
-
-  if (!player) {
-    err.innerHTML = "This email isn't registered as a player. <a href='/marketing.html' style='color:var(--gold);'>Request an invitation →</a>";
-    err.classList.add('show');
-    btn.disabled = false;
-    btn.textContent = 'CREATE ACCOUNT';
-    return;
-  }
-
-  // Create the auth account
   const { data, error } = await sb.auth.signUp({ email, password });
 
   if (error) {
@@ -253,19 +253,22 @@ async function doSignUp() {
     return;
   }
 
-  // Check if email confirmation is required
+  if (data.user) {
+    await sb.from('mygolf_profiles').upsert({
+      id:         data.user.id,
+      first_name: firstName,
+      last_name:  lastName,
+      email:      email,
+    });
+  }
+
   if (data.user && !data.session) {
-    // Email confirmation required
     success.textContent = 'Account created! Check your email to confirm, then sign in.';
     success.classList.add('show');
     btn.disabled = false;
     btn.textContent = 'CREATE ACCOUNT';
   } else if (data.session) {
-    // Auto-confirmed — redirect
-    sb.from('players').update({ has_account: true }).eq('email', email).then(() => {});
-    const _slugM = redirectTo.match(/\/t\/([^/?#]+)/);
-    if (_slugM) localStorage.setItem(`${_slugM[1]}_profile_email`, email);
-    window.location.href = redirectTo;
+    window.location.href = '/player';
   }
 }
 
