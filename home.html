@@ -722,7 +722,7 @@ window.addEventListener('scroll', () => { document.getElementById('mainNav').cla
     'reg_show_hat','reg_min_players','reg_show_dates','team_a_name','team_b_name','team_count',
     'structure','pair_count',
     'team_a_captain','challengers_captain',
-    'color_primary','tourney_name',
+    'color_primary','tourney_name','hero_cta_primary',
     ...fmtDayKeys
   ];
   const [{ data }, { data: roundsData }] = await Promise.all([
@@ -745,6 +745,8 @@ window.addEventListener('scroll', () => { document.getElementById('mainNav').cla
   if (eyebrow && map.homepage_subtitle) eyebrow.textContent = map.homepage_subtitle;
   const heroMeta = document.querySelector('.hero-meta');
   if (heroMeta && map.homepage_details) heroMeta.textContent = map.homepage_details;
+  const heroCta = document.querySelector('.hero-cta .btn-gold');
+  if (heroCta && map.hero_cta_primary) heroCta.textContent = map.hero_cta_primary;
 
   // About sub tagline — derive from structure/team/pair/day counts
   const aboutSubEl = document.getElementById('aboutSub');

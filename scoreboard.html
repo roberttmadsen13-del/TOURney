@@ -341,14 +341,14 @@ details[open] .explainer summary::after,.explainer details[open]>summary::after{
   <div class="trash-compose">
     <div class="trash-compose-label">Tag a player</div>
     <div class="trash-tags" id="trashTagBtns"></div>
-    <textarea class="trash-textarea" id="trashInput" placeholder="Talk your shit..." maxlength="280"></textarea>
+    <textarea class="trash-textarea" id="trashInput" placeholder="Talk your trash..." maxlength="280"></textarea>
     <div class="trash-footer">
       <span class="trash-char" id="trashCharCount">0 / 280</span>
       <button class="trash-send" id="trashSendBtn" onclick="postTrashTalk()">Send It</button>
     </div>
   </div>
   <div class="trash-list" id="trashList">
-    <div class="trash-empty">No shit talk yet. Don't be shy.</div>
+    <div class="trash-empty">No trash talk yet. Don't be shy.</div>
   </div>
 </div>
 
@@ -1101,7 +1101,7 @@ function _renderTrash() {
   const el = document.getElementById('trashList');
   if (!el) return;
   if (!_trashPosts.length) {
-    el.innerHTML = '<div class="trash-empty">No shit talk yet. Don\'t be shy.</div>';
+    el.innerHTML = '<div class="trash-empty">No trash talk yet. Don\'t be shy.</div>';
     return;
   }
   el.innerHTML = _trashPosts.map(p => {
