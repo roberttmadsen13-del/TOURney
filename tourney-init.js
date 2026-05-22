@@ -84,7 +84,7 @@
       .from('tournaments')
       .select('id, slug, name, short_name, logo_url, owner_email')
       .eq('slug', slug)
-      .single();
+      .maybeSingle();
 
     if (error || !data) {
       document.body.innerHTML =
@@ -92,7 +92,7 @@
         '<h2>Tournament not found</h2>' +
         '<p>No tournament matches <code>' + slug + '</code>. Check the URL.</p>' +
         '</div>';
-      throw new Error('Tournament not found: ' + slug);
+      return;
     }
 
     // Fire settings fetch in parallel with sync DOM work below.

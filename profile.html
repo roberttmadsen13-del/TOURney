@@ -246,6 +246,7 @@ let currentPlayer = null;
 let selectedDates = new Set();
 let wantsHat = false;
 let teamAssignments = {};
+let _tournamentCtx = null;
 
 // Character counters
 function updateCounter(inputId, counterId, limit) {
@@ -299,6 +300,7 @@ async function claimPlayerRow(email) {
 
 async function loadProfileByEmail(email) {
   const { tournament } = await window.tourney.ready;
+  _tournamentCtx = tournament;
   const { data: p } = await sb.from('players').select('*').eq('tournament_id', tournament.id).eq('email', email.toLowerCase()).single();
   if (!p) {
     // No email match — check for unclaimed rows (null email) to offer self-serve linking
@@ -353,10 +355,10 @@ function showProfile() {
   const teamEl = document.getElementById('onFileTeam');
   const assignment = teamAssignments[p.id];
   if (assignment === 'A') {
-    teamEl.textContent = tournament.team_a_name || 'Team A';
+    teamEl.textContent = (_tournamentCtx||{}).team_a_name || 'Team A';
     teamEl.style.color = 'var(--gold)';
   } else if (assignment === 'B') {
-    teamEl.textContent = tournament.team_b_name || 'Team B';
+    teamEl.textContent = (_tournamentCtx||{}).team_b_name || 'Team B';
     teamEl.style.color = '#6a8aaa';
   } else {
     teamEl.textContent = 'Not yet assigned';
