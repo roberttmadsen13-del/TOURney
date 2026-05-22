@@ -6,17 +6,19 @@
   "entries": [
     {
       "id": "competitor-analysis-2026-05-21",
-      "category": "reference",
+      "category": "review",
       "stage": "review",
       "title": "Competitor Analysis · Unknown Golf · May 21, 2026",
-      "summary": "8-screenshot teardown of league.unknowngolf.com vs TOURney. Critical gaps: player score entry (TOURney has none — admins must enter everything), side games + payouts (skins/CTP/LD + money tracking). TOURney wins: multi-tenant, admin platform, RSVP gate, PWA, premium brand. Roadmap: score entry → side games → payouts. Do not copy GPS/strokes-gained — wrong market.",
+      "summary": "8-screenshot teardown of league.unknowngolf.com vs TOURney. Critical gaps: player score entry (TOURney has none — admins must enter everything), side games + payouts (skins/CTP/LD + money tracking). GPS + hole view buildable free via browser geo + OSM + SVG. TOURney wins: multi-tenant, admin platform, RSVP gate, PWA, premium brand. Roadmap: score entry → side games → GPS/hole view.",
       "date": "2026-05-21",
       "updated": "2026-05-21",
       "author": "claude-sonnet-4-6",
       "url": "/platform/5-21-26-competitor-analysis",
       "file": "5-21-26-competitor-analysis.html",
-      "tags": ["reference", "competitor", "strategy", "product"],
-      "status": "open"
+      "tags": ["review", "competitor", "strategy", "product"],
+      "status": "open",
+      "axis": "business",
+      "auto": true
     },
     {
       "id": "session-recap-2026-05-21",
