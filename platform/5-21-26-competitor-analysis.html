@@ -159,9 +159,9 @@ section:last-of-type{border-bottom:none;}
           <tr><td>Per-shot stats (FIR, GIR, putts)</td><td>Full stat tracking per round</td><td>Strokes only</td><td><span class="pill pill-gold">P3</span></td></tr>
           <tr><td>Strokes gained analytics</td><td>Dedicated tab, total + by category</td><td>None</td><td><span class="pill pill-gold">P4</span></td></tr>
           <tr><td>Social / chat + photo share</td><td>Full group chat with photo upload</td><td>Trash talk text only</td><td><span class="pill pill-gold">P3</span></td></tr>
-          <tr><td>GPS yardage (ball-to-pin)</td><td>Present</td><td>None</td><td><span class="pill pill-blue">Skip</span></td></tr>
+          <tr><td>GPS yardage (ball-to-pin)</td><td>Present</td><td>None → <strong>Build free</strong>: browser geolocation + OSM green coords + Haversine JS. $0.</td><td><span class="pill pill-gold">P3</span></td></tr>
           <tr><td>Live weather (temp/wind/precip)</td><td>Course tab</td><td>None</td><td><span class="pill pill-blue">P5</span></td></tr>
-          <tr><td>Course hole images</td><td>Per-hole photo placeholders</td><td>None</td><td><span class="pill pill-blue">Skip</span></td></tr>
+          <tr><td>Course hole images (satellite)</td><td>Per-hole photo placeholders</td><td>None → <strong>Build free</strong>: Mapbox Static Satellite API (50k/mo free). Hole coordinates from OSM. Auto-generates per hole.</td><td><span class="pill pill-gold">P3</span></td></tr>
           <tr><td>"Resume scoring" deep link</td><td>Home tab CTA → active round</td><td>No round state machine</td><td><span class="pill pill-orange">P2</span></td></tr>
         </tbody>
       </table>
@@ -169,11 +169,18 @@ section:last-of-type{border-bottom:none;}
   </div>
 
   <div class="card">
+    <div class="card-title">✅ Previously Skipped — Now Build Free</div>
+    <p style="margin-bottom:0.75rem;color:var(--muted);font-size:0.85rem;">TOURney's core demo is <strong>groups going to courses they've never played.</strong> GPS + hole visuals are not luxury features — they're the primary discovery experience for unfamiliar courses. Both can be built at $0 using free-tier APIs.</p>
+    <ul>
+      <li><strong>GPS yardage (ball-to-pin)</strong> — <code>navigator.geolocation.watchPosition()</code> is free in every browser. Store green lat/lon in <code>holes</code> table (already exists). Pull coordinates from OpenStreetMap Overpass API (no key, free). Haversine formula = real-time yards to pin. Cost: $0.</li>
+      <li><strong>Satellite hole view</strong> — Mapbox Static Images API: 50,000 requests/month free. URL is a constructed string: <code>satellite-v9/static/{lon},{lat},16/400x250</code>. Hole coordinates from OSM Overpass. Admin sets course once → all 18 holes auto-generate. Always-current satellite imagery. No manual uploads. Cost: $0 at current scale.</li>
+    </ul>
+  </div>
+
+  <div class="card">
     <div class="card-title">⛔ Do NOT Copy (high cost, low leverage)</div>
     <ul>
-      <li><strong>GPS yardage</strong> — requires Google Maps or similar API (~$200+/mo at scale). Not relevant for private event hosts who know their course.</li>
-      <li><strong>Strokes gained</strong> — requires shot-by-shot data model overhaul. Niche appeal. Unknown Golf targets daily-fee golfers; TOURney targets private invitational hosts.</li>
-      <li><strong>Per-hole course images</strong> — content management nightmare. Low conversion value vs cost to maintain.</li>
+      <li><strong>Strokes gained analytics</strong> — requires shot-by-shot data model overhaul. Niche appeal. Unknown Golf targets daily-fee golfers; TOURney targets private invitational hosts.</li>
     </ul>
   </div>
 </section>
@@ -214,16 +221,31 @@ section:last-of-type{border-bottom:none;}
       <div class="idea-title">Tee Selector + Handicap Display</div>
       <div class="idea-body">Let players select their tee on registration or at round start. Display adjusted par and net score on the leaderboard. Unknown Golf shows rating/slope per tee. This closes the handicap scoring gap.</div>
     </div>
+    <div class="idea-card" style="border-color:rgba(39,174,96,0.4);background:rgba(39,174,96,0.06);">
+      <div class="idea-num" style="color:var(--green);">P3 — Free Win (New Course UX)</div>
+      <div class="idea-title">GPS Yardage + Satellite Hole View</div>
+      <div class="idea-body">
+        <strong>GPS:</strong> <code>navigator.geolocation.watchPosition()</code> → Haversine → live yards to pin. No API cost.<br><br>
+        <strong>Hole image:</strong> Mapbox Static Satellite URL built from hole green lat/lon (stored in <code>holes</code> table, populated via OSM Overpass API). 50k free/month. Always-current aerial. Admin enters course name once → all 18 holes auto-populate.<br><br>
+        Core demo use case: groups going to courses they've never played. This is the moment of wow.
+      </div>
+    </div>
   </div>
 
   <div class="card">
     <div class="card-title">What TOURney should NOT do to compete</div>
     <ul>
       <li>Do not pivot to a B2C scoring app — that's Unknown Golf's market. TOURney's differentiation is the organizer layer, multi-tenancy, and invite-gated private events.</li>
-      <li>Do not add GPS — API cost doesn't justify the value for private club events where players already know the course.</li>
       <li>Do not add strokes gained analytics before scoring entry is even built — wrong order.</li>
+      <li>Do not pay for golf course data APIs (Golfbert, Golf Channel, etc.) — OSM + Mapbox free tier covers the use case at $0.</li>
       <li>Do not chase Unknown Golf's UI aesthetic (neon green, generic dark theme) — TOURney's premium brand is a genuine competitive advantage.</li>
     </ul>
+  </div>
+
+  <div class="card" style="border-color:rgba(39,174,96,0.35);background:rgba(39,174,96,0.04);">
+    <div class="card-title" style="color:var(--green);">🏌️ Core Demo Insight (updated 2026-05-21)</div>
+    <p>TOURney's primary use case is <strong>groups playing courses they've never seen.</strong> GPS yardage and satellite hole views are not "nice to have" — they are the experience differentiator. Unknown Golf wins on these today. TOURney can match both at $0 using browser APIs + OSM + Mapbox free tier. This moves GPS + hole images from Skip → P3, behind player score entry and side games.</p>
+    <p style="margin-top:0.5rem;"><strong>Implementation path:</strong> (1) add lat/lon columns to <code>holes</code> table, (2) Overpass API query populates them when admin enters course name, (3) scorecard page renders Mapbox satellite image + live GPS distance per hole.</p>
   </div>
 </section>
 
