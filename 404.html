@@ -49,6 +49,15 @@ if (_m) {
     if (!h.startsWith('/t/')) a.setAttribute('href', h === '/' ? `/t/${_s}` : `/t/${_s}${h}`);
   });
 }
+// Auto-log 404 hit to platform_bugs
+(function(){
+  const _ep = 'https://jllugkiojeoopitdvzsa.supabase.co/functions/v1/log-client-error';
+  const _payload = { type: 'page-404', message: '404 — ' + location.href, source: document.referrer || '', stack: '', url: location.href };
+  try {
+    if (navigator.sendBeacon) navigator.sendBeacon(_ep, JSON.stringify(_payload));
+    else fetch(_ep, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(_payload), keepalive: true }).catch(()=>{});
+  } catch(_) {}
+})();
 </script>
 <script src="/bug-fab.js?v=5" defer></script>
 </body>

@@ -7,44 +7,44 @@
     {
       "id": "consolidation-2026-05-22",
       "category": "review",
-      "stage": "audit",
+      "stage": "concluded",
       "title": "Consolidation Review · May 22, 2026",
-      "summary": "Consolidation sweep executed. 4 of 6 items were already done. Shipped: og:image injection (tourney-init.js), /lib/settings-keys.js const enum (33 keys). Confirmed already fixed: XSS, score edit UI, profile skeleton, Design tab keys. Blocked: send-push deploy + SEND_INSTALL_EMAIL_SECRET (Rob manual). Grade A−.",
+      "summary": "Consolidation sweep concluded. Shipped: og:image injection (tourney-init.js), /lib/settings-keys.js const enum (33 keys). Confirmed already fixed: XSS, score edit UI, profile skeleton. Grade A−. Rob manual items logged to Checklist.",
       "date": "2026-05-22",
       "updated": "2026-05-22",
       "author": "claude-sonnet-4-6",
       "url": "/platform/5-22-26-consolidation-review",
       "file": "5-22-26-consolidation-review.html",
       "tags": ["review", "consolidation", "plan"],
-      "status": "partial"
+      "status": "concluded"
     },
     {
       "id": "review-2026-05-22",
       "category": "review",
-      "stage": "audit",
+      "stage": "concluded",
       "title": "Full Platform Review · May 22, 2026",
-      "summary": "Executed via consolidation. Shipped: og:image (tourney-init.js), /lib/settings-keys.js. Confirmed already done: XSS, score edit, profile skeleton. Blocked: send-push + SEND_INSTALL_EMAIL_SECRET (Rob manual). Grade A−.",
+      "summary": "Executed via consolidation. Shipped: og:image (tourney-init.js), /lib/settings-keys.js. Confirmed already done: XSS, score edit, profile skeleton. Grade A−. Rob manual items logged to Checklist.",
       "date": "2026-05-22",
       "updated": "2026-05-22",
       "author": "claude-sonnet-4-6",
       "url": "/platform/5-22-26-claude-review",
       "file": "5-22-26-claude-review.html",
       "tags": ["review", "audit", "weekly"],
-      "status": "partial"
+      "status": "concluded"
     },
     {
       "id": "review-2026-05-21-business",
       "category": "review",
-      "stage": "audit",
+      "stage": "concluded",
       "title": "Business Readiness Review · May 21, 2026",
-      "summary": "MyGolf DB layer shipped (3 migrations, login gate removed, RSVP auto-fill, donation checkout, $14–$99 pricing). Grade B−. Blocked: LLC + Stripe live keys (Rob manual). Revenue path 0→ready once Rob unblocks.",
+      "summary": "MyGolf DB layer shipped (3 migrations, login gate removed, RSVP auto-fill, donation checkout, $14–$99 pricing). Grade B−. LLC + Stripe live keys logged to Checklist (Rob manual).",
       "date": "2026-05-21",
-      "updated": "2026-05-21",
+      "updated": "2026-05-22",
       "author": "claude-sonnet-4-6",
       "url": "/platform/5-21-26-business-review",
       "file": "5-21-26-business-review.html",
       "tags": ["review", "audit", "business", "mygolf", "pricing"],
-      "status": "partial"
+      "status": "concluded"
     },
     {
       "id": "review-2026-05-21-feature-depth",

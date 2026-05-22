@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-05-22T12:00:00Z",
+  "updated_at": "2026-05-22T15:00:00Z",
   "description": "Living state for all TOURney platform axes. One entry per axis. Updated by every tourney-* skill. Agents read this for context (50 tokens) instead of parsing HTML artifacts.",
   "stages": ["review", "plan", "runbook", "executing", "audit", "concluded"],
   "axes": {
@@ -31,22 +31,22 @@
       "blocking": false
     },
     "security": {
-      "status": "audit",
+      "status": "concluded",
       "grade": "A-",
       "artifact": "/platform/5-22-26-consolidation-review",
       "last_updated": "2026-05-22",
-      "summary": "feed.html XSS confirmed already fixed (buildPostMessage escapes &<>\" before innerHTML). Open: send-push auth not deployed (HIGH, Rob manual), SEND_INSTALL_EMAIL_SECRET unset (Rob manual), CSP unsafe-inline (deferred, own session).",
+      "summary": "feed.html XSS fixed. Engineering done. Rob manual items (send-push deploy, SEND_INSTALL_EMAIL_SECRET, CSP) logged to Checklist.",
       "open_items": 3,
       "blocking": false
     },
     "business": {
-      "status": "audit",
+      "status": "concluded",
       "grade": "B-",
       "artifact": "/platform/5-21-26-business-review",
       "last_updated": "2026-05-22",
-      "summary": "B− post-execute. mygolf_profiles live, donations wired, RSVP auto-fill, $14–$99 pricing. All engineering done — 4 Rob manual blockers remain: LLC, EIN, bank, Stripe live keys.",
+      "summary": "mygolf_profiles live, donations wired, RSVP auto-fill, $14–$99 pricing. Engineering done. LLC, EIN, bank, Stripe live keys logged to Checklist (Rob manual).",
       "open_items": 4,
-      "blocking": true
+      "blocking": false
     },
     "deployment": {
       "status": "audit",

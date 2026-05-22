@@ -18,7 +18,7 @@
       var m=location.pathname.match(/\/t\/([^/]+)/);
       var home=m?'/t/'+m[1]+'/':'/platform';
       var onHome=location.pathname===home||location.pathname.replace(/\/$/,'')===(m?'/t/'+m[1]:'');
-      if(!onHome)location.replace(home);
+      if(!onHome)location.href=home;
     }
   });
 })();
