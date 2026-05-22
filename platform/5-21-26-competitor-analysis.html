@@ -161,7 +161,7 @@ section:last-of-type{border-bottom:none;}
           <tr><td>Social / chat + photo share</td><td>Full group chat with photo upload</td><td>Trash talk text only</td><td><span class="pill pill-gold">P3</span></td></tr>
           <tr><td>GPS yardage (ball-to-pin)</td><td>Present</td><td>None → <strong>Build free</strong>: browser geolocation + OSM green coords + Haversine JS. $0.</td><td><span class="pill pill-gold">P3</span></td></tr>
           <tr><td>Live weather (temp/wind/precip)</td><td>Course tab</td><td>None</td><td><span class="pill pill-blue">P5</span></td></tr>
-          <tr><td>Course hole images (satellite)</td><td>Per-hole photo placeholders</td><td>None → <strong>Build free</strong>: Mapbox Static Satellite API (50k/mo free). Hole coordinates from OSM. Auto-generates per hole.</td><td><span class="pill pill-gold">P3</span></td></tr>
+          <tr><td>Course hole view (rendered diagram)</td><td>Per-hole photo placeholders</td><td>None → <strong>Build free</strong>: SVG rendered from OSM golf geometry (fairway, green, bunkers, water). Looks like a pro course guide card. Zero API cost.</td><td><span class="pill pill-gold">P3</span></td></tr>
           <tr><td>"Resume scoring" deep link</td><td>Home tab CTA → active round</td><td>No round state machine</td><td><span class="pill pill-orange">P2</span></td></tr>
         </tbody>
       </table>
@@ -173,7 +173,7 @@ section:last-of-type{border-bottom:none;}
     <p style="margin-bottom:0.75rem;color:var(--muted);font-size:0.85rem;">TOURney's core demo is <strong>groups going to courses they've never played.</strong> GPS + hole visuals are not luxury features — they're the primary discovery experience for unfamiliar courses. Both can be built at $0 using free-tier APIs.</p>
     <ul>
       <li><strong>GPS yardage (ball-to-pin)</strong> — <code>navigator.geolocation.watchPosition()</code> is free in every browser. Store green lat/lon in <code>holes</code> table (already exists). Pull coordinates from OpenStreetMap Overpass API (no key, free). Haversine formula = real-time yards to pin. Cost: $0.</li>
-      <li><strong>Satellite hole view</strong> — Mapbox Static Images API: 50,000 requests/month free. URL is a constructed string: <code>satellite-v9/static/{lon},{lat},16/400x250</code>. Hole coordinates from OSM Overpass. Admin sets course once → all 18 holes auto-generate. Always-current satellite imagery. No manual uploads. Cost: $0 at current scale.</li>
+      <li><strong>Hole view (rendered diagram)</strong> — OSM Overpass API returns golf hole geometry (fairway polygon, green, tee boxes, bunkers, water hazards). Render as styled SVG in-browser: green fairway, tan sand, blue water, white OB markers. Looks like a professional course guide card. No API key. No ongoing cost. Zero requests after initial load. Admin sets course once → all 18 holes render from stored geometry.</li>
     </ul>
   </div>
 
@@ -226,7 +226,7 @@ section:last-of-type{border-bottom:none;}
       <div class="idea-title">GPS Yardage + Satellite Hole View</div>
       <div class="idea-body">
         <strong>GPS:</strong> <code>navigator.geolocation.watchPosition()</code> → Haversine → live yards to pin. No API cost.<br><br>
-        <strong>Hole image:</strong> Mapbox Static Satellite URL built from hole green lat/lon (stored in <code>holes</code> table, populated via OSM Overpass API). 50k free/month. Always-current aerial. Admin enters course name once → all 18 holes auto-populate.<br><br>
+        <strong>Hole view:</strong> OSM Overpass API returns fairway/green/bunker/water geometry for each hole. Rendered as styled SVG (green fairway, tan bunkers, blue water). Looks like a pro course guide card. No API key, zero ongoing cost. Admin enters course name once → all 18 holes populate.<br><br>
         Core demo use case: groups going to courses they've never played. This is the moment of wow.
       </div>
     </div>
@@ -245,7 +245,7 @@ section:last-of-type{border-bottom:none;}
   <div class="card" style="border-color:rgba(39,174,96,0.35);background:rgba(39,174,96,0.04);">
     <div class="card-title" style="color:var(--green);">🏌️ Core Demo Insight (updated 2026-05-21)</div>
     <p>TOURney's primary use case is <strong>groups playing courses they've never seen.</strong> GPS yardage and satellite hole views are not "nice to have" — they are the experience differentiator. Unknown Golf wins on these today. TOURney can match both at $0 using browser APIs + OSM + Mapbox free tier. This moves GPS + hole images from Skip → P3, behind player score entry and side games.</p>
-    <p style="margin-top:0.5rem;"><strong>Implementation path:</strong> (1) add lat/lon columns to <code>holes</code> table, (2) Overpass API query populates them when admin enters course name, (3) scorecard page renders Mapbox satellite image + live GPS distance per hole.</p>
+    <p style="margin-top:0.5rem;"><strong>Implementation path:</strong> (1) add lat/lon + geometry columns to <code>holes</code> table, (2) Overpass API query populates coords + fairway/green/bunker GeoJSON when admin enters course name, (3) scorecard page renders SVG hole diagram from geometry + live GPS distance to pin via browser geolocation.</p>
   </div>
 </section>
 
