@@ -722,7 +722,7 @@ window.addEventListener('scroll', () => { document.getElementById('mainNav').cla
     'reg_show_hat','reg_min_players','reg_show_dates','team_a_name','team_b_name','team_count',
     'structure','pair_count',
     'team_a_captain','challengers_captain',
-    'color_primary','tourney_name','hero_cta_primary',
+    'color_primary','tourney_name','hero_cta_primary','admin_show_as_player',
     ...fmtDayKeys
   ];
   const [{ data }, { data: roundsData }] = await Promise.all([
@@ -739,6 +739,8 @@ window.addEventListener('scroll', () => { document.getElementById('mainNav').cla
       map[`format_day${r.day_number}_back`]  = r.format_back  || r.format_front || 'stroke';
     });
   }
+
+  _adminShowAsPlayer = map.admin_show_as_player !== 'false';
 
   // Hero eyebrow & meta
   const eyebrow = document.querySelector('.hero-eyebrow');
@@ -943,6 +945,7 @@ window.addEventListener('scroll', () => { document.getElementById('mainNav').cla
 window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); window.deferredPrompt = e; });
 
 let MAX = 24;
+let _adminShowAsPlayer = true;
 const TIER_MAP = { scratch:{label:'Scratch',cls:'pc-scratch'}, eagle:{label:'Eagle',cls:'pc-eagle'}, birdie:{label:'Birdie',cls:'pc-birdie'}, bogey:{label:'Bogey',cls:'pc-bogey'}, pretender:{label:'The Pretenders',cls:'pc-pretender'}, hacker:{label:'The Dreamers',cls:'pc-hacker'} };
 const DATE_LABELS = { aug21:'Aug 21-24',aug28:'Aug 28-31',sep4:'Sep 4-7',sep11:'Sep 11-14',sep18:'Sep 18-21',sep25:'Sep 25-28',oct2:'Oct 2-5',oct9:'Oct 9-12' };
 let selectedDates = new Set();
@@ -1044,7 +1047,15 @@ async function refreshField() {
   try {
     const { tournament } = await window.tourney.ready;
     const { data } = await sb.from('players').select('*').eq('tournament_id', tournament.id).order('created_at', { ascending: true });
-    const players = data || [];
+    let players = data || [];
+    if (_adminShowAsPlayer && tournament.owner_email) {
+      const ownerEmail = tournament.owner_email.toLowerCase();
+      const adminInField = players.some(p => (p.email || '').toLowerCase() === ownerEmail);
+      if (!adminInField) {
+        const { data: prof } = await sb.from('mygolf_profiles').select('first_name,last_name,handicap').eq('email', tournament.owner_email).maybeSingle();
+        if (prof) players = [{ first_name: prof.first_name, last_name: prof.last_name, handicap: prof.handicap, email: tournament.owner_email, available_dates: [] }, ...players];
+      }
+    }
     const n = players.length;
     document.getElementById('statRegistered').textContent = n;
     document.getElementById('spotsLeft').textContent = MAX - n;
