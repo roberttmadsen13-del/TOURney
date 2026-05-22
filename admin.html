@@ -2146,17 +2146,20 @@ async function addAdmin() {
   const msg = document.getElementById('accessMsg');
   msg.style.display = 'none';
 
+  const existing = await sb.from('tournament_admins')
+    .select('email').eq('tournament_id', _tid).eq('email', email).maybeSingle();
+  if (existing.data) {
+    msg.style.color = '#e08080';
+    msg.textContent = 'That email is already an admin.';
+    msg.style.display = 'block';
+    return;
+  }
   const { error } = await sb.from('tournament_admins')
-    .insert({ tournament_id: _tid, email });
+    .upsert({ tournament_id: _tid, email }, { onConflict: 'tournament_id,email' });
 
   if (error) {
-    if (error.code === '23505') {
-      msg.style.color = '#e08080';
-      msg.textContent = 'That email is already an admin.';
-    } else {
-      msg.style.color = '#e08080';
-      msg.textContent = 'Error: ' + error.message;
-    }
+    msg.style.color = '#e08080';
+    msg.textContent = 'Error: ' + error.message;
     msg.style.display = 'block';
     return;
   }
