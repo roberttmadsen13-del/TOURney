@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TOURney — Feature Depth Review · May 21, 2026</title>
+<style>
+:root{--gold:#c09030;--gold-light:#d4a840;--gold-dim:rgba(192,144,48,0.18);--bg:#0d0a05;--surface:#151009;--card:#1c140a;--border:rgba(192,144,48,0.22);--muted:#7a6a54;--text:#e8dcc8;--red:#c0392b;--green:#27ae60;--blue:#2980b9;--orange:#e67e22;--purple:#8e44ad;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:-apple-system,'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;font-size:15px;}
+nav{position:sticky;top:0;z-index:100;background:rgba(13,10,5,0.97);border-bottom:1px solid var(--border);backdrop-filter:blur(12px);}
+.nav-inner{padding:0.6rem 1.5rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap;}
+.nav-brand{color:var(--gold);font-weight:700;font-size:1rem;letter-spacing:0.05em;white-space:nowrap;}
+.nav-brand span{color:var(--muted);font-weight:400;font-size:0.8rem;margin-left:0.4rem;}
+.nav-links{display:flex;gap:0.2rem;flex-wrap:wrap;margin-left:auto;}
+.nav-links a{color:var(--muted);text-decoration:none;font-size:0.78rem;padding:0.3rem 0.55rem;border-radius:4px;transition:all 0.15s;white-space:nowrap;}
+.nav-links a:hover{color:var(--gold);background:var(--gold-dim);}
+.lifecycle-bar{display:flex;gap:3px;padding:0.55rem 1.5rem 0.65rem;background:var(--surface);border-bottom:1px solid var(--border);}
+.lc-stage{flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;}
+.lc-pill{height:5px;width:100%;border-radius:3px;background:rgba(192,144,48,0.1);transition:background 0.25s;}
+.lc-label{font-size:0.58rem;font-weight:700;letter-spacing:0.11em;text-transform:uppercase;color:rgba(122,106,84,0.45);transition:color 0.25s;}
+.lc-done .lc-pill{background:var(--gold);}
+.lc-done .lc-label{color:var(--gold);}
+.lc-active .lc-pill{background:var(--gold-light);box-shadow:0 0 8px rgba(192,144,48,0.45);}
+.lc-active .lc-label{color:var(--gold-light);}
+.hero{padding:3rem 1.5rem 2rem;text-align:center;border-bottom:1px solid var(--border);background:linear-gradient(180deg,rgba(192,144,48,0.06) 0%,transparent 100%);}
+.hero-eyebrow{display:inline-block;font-size:0.7rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold);border:1px solid var(--border);border-radius:20px;padding:0.22rem 0.8rem;margin-bottom:0.9rem;}
+.hero h1{font-size:clamp(1.5rem,3.5vw,2.3rem);font-weight:800;color:#fff;margin-bottom:0.35rem;}
+.hero h1 span{color:var(--gold);}
+.hero-sub{color:var(--muted);max-width:520px;margin:0 auto 1rem;font-size:0.9rem;}
+.hero-meta{display:flex;gap:1.1rem;justify-content:center;flex-wrap:wrap;font-size:0.74rem;color:var(--muted);}
+.hero-meta span{display:flex;align-items:center;gap:0.3rem;}
+.wrapper{max-width:1000px;margin:0 auto;padding:0 1.5rem;}
+section{padding:2.5rem 0;border-bottom:1px solid var(--border);}
+section:last-of-type{border-bottom:none;}
+.section-header{margin-bottom:1.6rem;}
+.section-eyebrow{font-size:0.67rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--gold);margin-bottom:0.3rem;}
+.section-title{font-size:1.35rem;font-weight:800;color:#fff;margin-bottom:0.3rem;}
+.section-desc{color:var(--muted);font-size:0.85rem;max-width:560px;}
+.card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:1.15rem 1.3rem;margin-bottom:0.7rem;}
+.card-title{font-size:0.85rem;font-weight:700;color:var(--gold);margin-bottom:0.45rem;}
+.card p,.card li{font-size:0.84rem;color:var(--text);margin-bottom:0.28rem;}
+.card ul,.card ol{padding-left:1.2rem;}
+.card li{margin-bottom:0.32rem;}
+.grid-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:0.7rem;}
+.grid-3{display:grid;grid-template-columns:repeat(auto-fit,minmax(245px,1fr));gap:0.7rem;}
+.stack-item{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:0.85rem 1.05rem;}
+.stack-label{font-size:0.65rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--muted);margin-bottom:0.18rem;}
+.stack-value{font-size:0.88rem;font-weight:600;color:#fff;}
+.stack-note{font-size:0.72rem;color:var(--muted);margin-top:0.18rem;}
+.pill{display:inline-block;font-size:0.66rem;font-weight:700;letter-spacing:0.06em;padding:0.15rem 0.5rem;border-radius:20px;text-transform:uppercase;}
+.pill-gold{background:rgba(192,144,48,0.18);color:var(--gold);border:1px solid rgba(192,144,48,0.3);}
+.pill-green{background:rgba(39,174,96,0.15);color:var(--green);border:1px solid rgba(39,174,96,0.3);}
+.pill-red{background:rgba(192,57,43,0.15);color:var(--red);border:1px solid rgba(192,57,43,0.3);}
+.pill-orange{background:rgba(230,126,34,0.15);color:var(--orange);border:1px solid rgba(230,126,34,0.3);}
+.pill-blue{background:rgba(41,128,185,0.15);color:var(--blue);border:1px solid rgba(41,128,185,0.3);}
+.pill-purple{background:rgba(142,68,173,0.15);color:var(--purple);border:1px solid rgba(142,68,173,0.3);}
+.page-table{width:100%;border-collapse:collapse;font-size:0.8rem;}
+.page-table th{text-align:left;padding:0.52rem 0.72rem;border-bottom:1px solid var(--border);color:var(--muted);font-size:0.67rem;text-transform:uppercase;letter-spacing:0.08em;background:var(--surface);}
+.page-table td{padding:0.58rem 0.72rem;border-bottom:1px solid rgba(192,144,48,0.08);vertical-align:top;}
+.page-table tr:last-child td{border-bottom:none;}
+.page-table tr:hover td{background:var(--gold-dim);}
+.page-table .url{font-family:monospace;font-size:0.75rem;color:var(--gold-light);}
+.page-table .file{font-family:monospace;font-size:0.72rem;color:var(--muted);}
+.table-wrap{background:var(--card);border:1px solid var(--border);border-radius:8px;overflow:hidden;overflow-x:auto;}
+.score-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(125px,1fr));gap:0.52rem;margin-bottom:1.4rem;}
+.score-cell{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:0.85rem;text-align:center;}
+.score-num{font-size:1.85rem;font-weight:900;line-height:1;margin-bottom:0.18rem;}
+.score-label{font-size:0.64rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);}
+.score-green{color:var(--green);}
+.score-gold{color:var(--gold);}
+.score-red{color:var(--red);}
+.score-blue{color:var(--blue);}
+.idea-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1.25rem;position:relative;overflow:hidden;}
+.idea-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;}
+.idea-1::before{background:var(--gold);}
+.idea-2::before{background:var(--blue);}
+.idea-3::before{background:var(--green);}
+.idea-4::before{background:var(--orange);}
+.idea-5::before{background:var(--purple);}
+.idea-number{font-size:2rem;font-weight:900;opacity:0.07;position:absolute;top:0.5rem;right:1rem;line-height:1;color:#fff;}
+.idea-tag{margin-bottom:0.42rem;}
+.idea-title{font-size:0.96rem;font-weight:700;color:#fff;margin-bottom:0.42rem;}
+.idea-body{font-size:0.82rem;color:var(--muted);line-height:1.55;margin-bottom:0.65rem;}
+.idea-plan{font-size:0.77rem;color:var(--text);}
+.idea-plan strong{color:var(--gold);}
+.runbook-steps{counter-reset:rb-step;}
+.rb-step{background:var(--card);border:1px solid var(--border);border-left:3px solid rgba(192,144,48,0.3);border-radius:0 8px 8px 0;padding:0.95rem 1.15rem 0.95rem 3.8rem;margin-bottom:0.55rem;position:relative;}
+.rb-step::before{counter-increment:rb-step;content:counter(rb-step);position:absolute;left:0.95rem;top:0.95rem;width:1.75rem;height:1.75rem;background:var(--gold-dim);color:var(--gold);border:1px solid var(--border);border-radius:50%;font-size:0.72rem;font-weight:700;display:grid;place-items:center;}
+.rb-step-title{font-size:0.87rem;font-weight:700;color:#fff;margin-bottom:0.22rem;}
+.rb-step-body{font-size:0.8rem;color:var(--muted);margin-bottom:0.35rem;}
+.rb-verify{font-size:0.76rem;color:var(--text);background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:3px;padding:0.35rem 0.6rem;margin-top:0.3rem;}
+.rb-verify strong{color:var(--gold-light);font-size:0.68rem;text-transform:uppercase;letter-spacing:0.07em;display:block;margin-bottom:0.1rem;}
+.sec-item{background:var(--card);border:1px solid var(--border);border-left:3px solid var(--border);border-radius:0 8px 8px 0;padding:0.9rem 1.15rem;margin-bottom:0.65rem;}
+.sec-item.sev-critical{border-left-color:#8b0000;}
+.sec-item.sev-high{border-left-color:var(--red);}
+.sec-item.sev-med{border-left-color:var(--orange);}
+.sec-item.sev-low{border-left-color:var(--green);}
+.sec-item.sev-info{border-left-color:var(--blue);}
+.sec-header{display:flex;align-items:center;gap:0.52rem;margin-bottom:0.42rem;}
+.sec-title{font-size:0.87rem;font-weight:700;color:#fff;}
+.sec-body{font-size:0.8rem;color:var(--muted);margin-bottom:0.42rem;}
+.sec-fix{font-size:0.77rem;color:var(--text);background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:4px;padding:0.42rem 0.62rem;}
+.sec-fix strong{color:var(--gold-light);display:block;margin-bottom:0.12rem;font-size:0.68rem;text-transform:uppercase;letter-spacing:0.08em;}
+.stage-pending{text-align:center;padding:3rem 1.5rem;color:var(--muted);font-size:0.85rem;border:1px dashed rgba(192,144,48,0.2);border-radius:8px;}
+.stage-pending code{color:var(--gold);}
+.roadmap-item{display:flex;gap:1.05rem;align-items:flex-start;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:0.95rem 1.15rem;margin-bottom:0.52rem;}
+.roadmap-icon{width:1.9rem;height:1.9rem;border-radius:50%;background:var(--gold-dim);color:var(--gold);display:grid;place-items:center;font-size:0.85rem;flex-shrink:0;border:1px solid var(--border);}
+.roadmap-content{flex:1;}
+.roadmap-title{font-size:0.88rem;font-weight:700;color:#fff;margin-bottom:0.13rem;}
+.roadmap-desc{font-size:0.79rem;color:var(--muted);margin-bottom:0.32rem;}
+.roadmap-action{font-size:0.75rem;color:var(--text);}
+.roadmap-action strong{color:var(--gold-light);}
+code{font-family:'Consolas','Monaco',monospace;background:rgba(255,255,255,0.07);padding:0.09rem 0.27rem;border-radius:3px;font-size:0.81em;color:var(--gold-light);}
+footer{border-top:1px solid var(--border);padding:1.2rem;text-align:center;color:var(--muted);font-size:0.72rem;}
+footer span{color:var(--gold);}
+@media(max-width:600px){.nav-links{display:none;}.hero{padding:2rem 1rem 1.5rem;}section{padding:2rem 0;}.lc-label{font-size:0.5rem;}}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <div class="nav-brand">TOURney <span>by Greenskeeper Studios</span></div>
+    <div class="nav-links">
+      <a href="#review">Review</a>
+      <a href="#plan">Plan</a>
+      <a href="#runbook">Runbook</a>
+      <a href="#executing">Executing</a>
+      <a href="#audit">Audit</a>
+      <a href="#concluded">Concluded</a>
+    </div>
+  </div>
+</nav>
+
+<!-- LIFECYCLE-BAR-START -->
+<div class="lifecycle-bar">
+  <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Review</div></div>
+  <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Plan</div></div>
+  <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Runbook</div></div>
+  <div class="lc-stage"><div class="lc-pill"></div><div class="lc-label">Executing</div></div>
+  <div class="lc-stage"><div class="lc-pill"></div><div class="lc-label">Audit</div></div>
+  <div class="lc-stage"><div class="lc-pill"></div><div class="lc-label">Concluded</div></div>
+</div>
+<!-- LIFECYCLE-BAR-END -->
+
+<div class="hero">
+  <div class="hero-eyebrow">Feature Depth</div>
+  <h1><span>TOURney</span> — Feature Depth Review · May 21, 2026</h1>
+  <p class="hero-sub">Focused audit of cross-page data consistency: what admin configures (formats, yardages, course details, design keys) vs. what home, scorecard, and scoreboard actually display.</p>
+  <div class="hero-meta">
+    <span>📅 May 21, 2026</span>
+    <span>🤖 claude-sonnet-4-6</span>
+    <span>🏢 Greenskeeper Studios</span>
+    <span>🔒 Internal Only</span>
+  </div>
+</div>
+
+<section id="review">
+<div class="wrapper">
+
+  <div class="section-header">
+    <div class="section-eyebrow">§ Review</div>
+    <div class="section-title">Cross-Page Data Consistency Audit</div>
+    <div class="section-desc">Evidence-based mapping of every admin-set value and whether it surfaces correctly on every consumer page. Every finding cites file:line.</div>
+  </div>
+
+  <!-- GRADE -->
+  <div class="score-grid">
+    <div class="score-cell">
+      <div class="score-num score-red">B−</div>
+      <div class="score-label">Feature Depth</div>
+    </div>
+    <div class="score-cell">
+      <div class="score-num score-red">↓</div>
+      <div class="score-label">From B+ (5-20-26)</div>
+    </div>
+    <div class="score-cell">
+      <div class="score-num" style="color:var(--orange)">2</div>
+      <div class="score-label">Critical Gaps</div>
+    </div>
+    <div class="score-cell">
+      <div class="score-num score-red">3</div>
+      <div class="score-label">High Gaps</div>
+    </div>
+    <div class="score-cell">
+      <div class="score-num" style="color:var(--orange)">3</div>
+      <div class="score-label">Medium Gaps</div>
+    </div>
+  </div>
+
+  <!-- DATA FLOW MAP -->
+  <div class="card" style="margin-bottom:1.4rem;">
+    <div class="card-title">Admin → Consumer Page Data Flow</div>
+    <div class="table-wrap" style="margin-top:0.5rem;">
+      <table class="page-table">
+        <thead>
+          <tr>
+            <th>Admin Setting</th>
+            <th>Stored In</th>
+            <th>home.html</th>
+            <th>scorecard.html</th>
+            <th>scoreboard.html</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Round Formats (front/back per day)</td>
+            <td><code>rounds.format_front/back</code></td>
+            <td>❌ reads <code>settings.format_day*</code> instead</td>
+            <td>✅ reads rounds table</td>
+            <td>✅ reads rounds table</td>
+            <td><span class="pill pill-red">CRITICAL</span></td>
+          </tr>
+          <tr>
+            <td>Course Yardage (per hole)</td>
+            <td><code>settings.yards_day*</code></td>
+            <td>❌ never fetched</td>
+            <td>✅ fetched + displayed inline</td>
+            <td>❌ never fetched or shown</td>
+            <td><span class="pill pill-red">CRITICAL</span></td>
+          </tr>
+          <tr>
+            <td>Course Pars (per hole)</td>
+            <td><code>settings.pars_day*</code></td>
+            <td>✅ fetched for hero scoreboard</td>
+            <td>✅ fetched + golf_courses fallback</td>
+            <td>✅ fetched, used for scoring</td>
+            <td><span class="pill pill-green">GOOD</span></td>
+          </tr>
+          <tr>
+            <td>Schedule JSON</td>
+            <td><code>settings.schedule_json</code></td>
+            <td>✅ rendered in #schedule section</td>
+            <td>n/a</td>
+            <td>n/a</td>
+            <td><span class="pill pill-green">GOOD</span></td>
+          </tr>
+          <tr>
+            <td>Tournament Name / Year / Location</td>
+            <td><code>settings.*</code></td>
+            <td>✅ loaded by tourney-init.js</td>
+            <td>✅ nav wordmark via tourney-init</td>
+            <td>✅ nav wordmark via tourney-init</td>
+            <td><span class="pill pill-green">GOOD</span></td>
+          </tr>
+          <tr>
+            <td>Hero Photo / About Photo</td>
+            <td><code>settings.hero_photo_url / about_photo_url</code></td>
+            <td>⚠️ pending wire-up (admin.html comment L44)</td>
+            <td>n/a</td>
+            <td>n/a</td>
+            <td><span class="pill pill-orange">HIGH</span></td>
+          </tr>
+          <tr>
+            <td>Brand Colors (primary, ink, bg)</td>
+            <td><code>settings.color_*</code></td>
+            <td>⚠️ pending wire-up (admin.html comment L44)</td>
+            <td>n/a</td>
+            <td>n/a</td>
+            <td><span class="pill pill-orange">HIGH</span></td>
+          </tr>
+          <tr>
+            <td>Footer Wordmark</td>
+            <td>should be <code>settings.tourney_name</code></td>
+            <td>❌ hardcoded "The Bova Invitational" (home.html:L680)</td>
+            <td>n/a</td>
+            <td>n/a</td>
+            <td><span class="pill pill-orange">HIGH</span></td>
+          </tr>
+          <tr>
+            <td>Hero Meta (dates · teams · holes)</td>
+            <td><code>settings.homepage_details</code></td>
+            <td>⚠️ overridden if setting exists; default HTML is Bova copy (L446)</td>
+            <td>n/a</td>
+            <td>n/a</td>
+            <td><span class="pill pill-orange">MED</span></td>
+          </tr>
+          <tr>
+            <td>Handicap (tier-based)</td>
+            <td><code>players.handicap</code></td>
+            <td>⚠️ rough tier approx ÷18 per hole (L1127/L1141)</td>
+            <td>✅ not applied (gross only at scorecard)</td>
+            <td>✅ full format-aware scoring</td>
+            <td><span class="pill pill-orange">MED</span></td>
+          </tr>
+          <tr>
+            <td>Format Note (homepage)</td>
+            <td><code>settings.homepage_format_note</code></td>
+            <td>⚠️ mapped to <code>lpFormatNote</code> — DOM target unverified</td>
+            <td>n/a</td>
+            <td>n/a</td>
+            <td><span class="pill pill-orange">MED</span></td>
+          </tr>
+          <tr>
+            <td>Tee Selection (rating/slope)</td>
+            <td><code>rounds.course_id / tee_name</code></td>
+            <td>❌ not shown</td>
+            <td>✅ loaded from golf_courses, auto-selects White tees</td>
+            <td>❌ not shown</td>
+            <td><span class="pill pill-blue">INFO</span></td>
+          </tr>
+          <tr>
+            <td>"Scoring is Open" CTA</td>
+            <td><code>rounds.status = 'open'</code></td>
+            <td>❌ no active-round banner on home when scoring open</td>
+            <td>n/a</td>
+            <td>n/a</td>
+            <td><span class="pill pill-blue">INFO</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- CRITICAL GAPS -->
+  <div class="section-eyebrow" style="margin-bottom:0.6rem;">Critical Gaps</div>
+
+  <div class="sec-item sev-critical">
+    <div class="sec-header">
+      <span class="pill pill-red">CRITICAL</span>
+      <div class="sec-title">home.html #format section reads from wrong data source — always shows defaults</div>
+    </div>
+    <div class="sec-body">
+      Admin saves round formats to the <code>rounds</code> table (<code>format_front</code>, <code>format_back</code> columns) via <code>saveFormats()</code>. home.html reads formats from the <code>settings</code> table using keys <code>format_day1_front</code>, <code>format_day1_back</code>, etc. (home.html:L845). These are completely decoupled data sources. No code writes <code>format_dayN_front/back</code> to settings. The #format section therefore always falls back to hardcoded defaults: Day 1 = Stroke, Day 2 = Scramble/Shambles, Day 3 = Best Ball/Stroke (home.html:L515–L519 DEFAULT_FORMATS). Any format change in admin is invisible on the homepage.
+    </div>
+    <div class="sec-fix">
+      <strong>Fix</strong>
+      Option A (preferred): in home.html <code>init()</code>, fetch <code>rounds.format_front/back</code> from Supabase (same query as scoreboard.html:L532) and populate the format items. Option B: in admin's <code>saveFormats()</code>, dual-write to <code>settings</code> with keys <code>format_dayN_front/back</code>. Option A is cleaner — single source of truth in <code>rounds</code> table.
+    </div>
+  </div>
+
+  <div class="sec-item sev-critical">
+    <div class="sec-header">
+      <span class="pill pill-red">CRITICAL</span>
+      <div class="sec-title">scoreboard.html never fetches yardage — admin-set yards are silently dropped</div>
+    </div>
+    <div class="sec-body">
+      Admin Course Details saves per-hole yardage to <code>settings.yards_dayN</code> (admin.html <code>saveCourseNameAndPars()</code>). scorecard.html fetches these at init (scorecard.html:L553-L594) and shows them inline per hole. scoreboard.html init() (L528-L534) fetches <code>pars_day%</code> but NOT <code>yards_day%</code>. The Scorecard tab on the leaderboard renders par per hole in <code>.hole-cell.par</code> cells (scoreboard.html:L123) but there is no yardage row at all. Every yard entered in admin vanishes — players reviewing the leaderboard scorecard tab cannot see hole distances.
+    </div>
+    <div class="sec-fix">
+      <strong>Fix</strong>
+      In scoreboard.html <code>init()</code>: add <code>sb.from('settings').select('*').eq('tournament_id', tournament.id).like('key','yards_day%')</code> to the Promise.all. Store in <code>courseYards</code>. In the scorecard tab renderer, add a yard row between the hole-number header and par row (same pattern as scorecard.html's <code>.hole-yd-inline</code>).
+    </div>
+  </div>
+
+  <!-- HIGH GAPS -->
+  <div class="section-eyebrow" style="margin-bottom:0.6rem;margin-top:1.2rem;">High Gaps</div>
+
+  <div class="sec-item sev-high">
+    <div class="sec-header">
+      <span class="pill pill-red">HIGH</span>
+      <div class="sec-title">home.html:L680 footer hardcodes "The Bova Invitational" — tenant leak</div>
+    </div>
+    <div class="sec-body">
+      <code>home.html:L680</code>: <code>&lt;div class="footer-wordmark"&gt;The Bova &lt;em&gt;Invitational&lt;/em&gt;&lt;/div&gt;</code> — raw tenant-specific copy baked into HTML. tourney-init.js replaces <code>.footer-wordmark</code> with the tournament name, so it works when JS succeeds. But any new tenant on a slow connection, PWA cache hit of old HTML, or JS error shows "The Bova Invitational" in their tournament footer.
+    </div>
+    <div class="sec-fix">
+      <strong>Fix</strong>
+      Change L680 default text to a generic fallback: <code>&lt;div class="footer-wordmark"&gt;TOURney&lt;/div&gt;</code>. tourney-init.js already replaces this on load — the default just needs to be tenant-neutral.
+    </div>
+  </div>
+
+  <div class="sec-item sev-high">
+    <div class="sec-header">
+      <span class="pill pill-red">HIGH</span>
+      <div class="sec-title">home.html:L446 hero-meta default HTML is Bova-specific copy</div>
+    </div>
+    <div class="sec-body">
+      <code>home.html:L446</code>: <code>&lt;div class="hero-meta"&gt;3 Days &amp;nbsp;&amp;middot;&amp;nbsp; 2 Teams &amp;nbsp;&amp;middot;&amp;nbsp; 54 Holes...&lt;/div&gt;</code> — this is pre-rendered Bova copy. It is overridden by the <code>homepage_details</code> setting when set. Any new tenant who hasn't configured <code>homepage_details</code> sees Bova's event details ("3 Days · 2 Teams · 54 Holes") in their hero until they set that key. The Design tab admin form has the input but there's no onboarding prompt to fill it.
+    </div>
+    <div class="sec-fix">
+      <strong>Fix</strong>
+      Replace L446 default with generic copy: <code>"Tournament details coming soon"</code> or leave blank. The setting override already works — just neutralize the default.
+    </div>
+  </div>
+
+  <div class="sec-item sev-high">
+    <div class="sec-header">
+      <span class="pill pill-red">HIGH</span>
+      <div class="sec-title">Admin Design tab: hero_photo_url, about_photo_url, color_primary — all saved but not wired to home.html</div>
+    </div>
+    <div class="sec-body">
+      admin.html:L44 comment explicitly lists these keys as <em>"Pending wire-up in index.html"</em>: <code>hero_photo_url</code>, <code>about_photo_url</code>, <code>color_primary</code>, <code>color_ink</code>, <code>color_bg</code>, <code>tourney_name</code>, <code>tourney_year</code>, <code>tourney_location</code>, <code>hero_cta_primary</code>, and the about_stat_ keys. Admins can set these values (they save to Supabase) but nothing reads them on home.html. The Design tab is a partial stub — ~18 of its 24 settings keys have no consumer.
+    </div>
+    <div class="sec-fix">
+      <strong>Fix</strong>
+      home.html's <code>loadHomepageContent()</code> already fetches all settings keys into a map. Wire each pending key to its target DOM element. Priority order: <code>tourney_name</code> → <code>.hero-title</code>, <code>hero_photo_url</code> → <code>.hero-img src</code>, <code>color_primary</code> → <code>--gold</code> CSS var, <code>about_photo_url</code> → <code>.about-photo-wrap img src</code>.
+    </div>
+  </div>
+
+  <!-- MEDIUM GAPS -->
+  <div class="section-eyebrow" style="margin-bottom:0.6rem;margin-top:1.2rem;">Medium Gaps</div>
+
+  <div class="sec-item sev-med">
+    <div class="sec-header">
+      <span class="pill pill-orange">MED</span>
+      <div class="sec-title">home.html hero scoreboard uses rough tier handicap, not format-aware scoring</div>
+    </div>
+    <div class="sec-body">
+      home.html:L1127 defines <code>HANDICAP_STROKES = {scratch:0, eagle:4, birdie:8, bogey:12, pretender:16, hacker:20}</code> and divides evenly across 18 holes (L1141: <code>(HANDICAP_STROKES[player.handicap]||0)/18</code>). This approximation is used for the hero mini-leaderboard. scoreboard.html uses full format-aware scoring (best_ball, stableford, match, scramble — scoreboard.html:L607-L663) with actual <code>coursePars[round]</code>. The two leaderboards can show different standings for the same tournament — home's mini-board is always gross-ish, scoreboard is accurate.
+    </div>
+    <div class="sec-fix">
+      <strong>Fix (optional)</strong>
+      For casual mode, the approximation is acceptable. For competitive mode, home's hero board should use the same <code>calcPlayerRound()</code> logic as scoreboard. Either extract the function to a shared module, or fetch rounds/formats in home's <code>loadHeroScoreboard()</code> and apply the same format logic.
+    </div>
+  </div>
+
+  <div class="sec-item sev-med">
+    <div class="sec-header">
+      <span class="pill pill-orange">MED</span>
+      <div class="sec-title">No "Scoring is Open" CTA on home when a round is active</div>
+    </div>
+    <div class="sec-body">
+      When <code>rounds.status = 'open'</code>, home.html shows the hero scoreboard section but has no banner or prominent call-to-action directing players to <code>/scorecard</code>. Players must discover the scorecard via the nav link. Competitor app (Unknown Golf) has a "Resume scoring" deep-link CTA as the primary player action. This is a player experience gap — players don't know scoring is open without hunting the nav.
+    </div>
+    <div class="sec-fix">
+      <strong>Fix</strong>
+      In home.html's <code>loadHeroScoreboard()</code>, when an open round is detected, inject a gold banner above the hero scoreboard: "Day N scoring is open — <a href='/scorecard'>Enter your scores →</a>". Mirrors the scoreboard.html nav "Enter Scores" button pattern.
+    </div>
+  </div>
+
+  <div class="sec-item sev-med">
+    <div class="sec-header">
+      <span class="pill pill-orange">MED</span>
+      <div class="sec-title">homepage_format_note DOM target unverified — may silently drop value</div>
+    </div>
+    <div class="sec-body">
+      admin.html DS_FIELD_MAP maps <code>homepage_format_note → lpFormatNote</code>. home.html's format section renders format items from <code>format_day${i}_front/back</code> keys (already broken, see Gap 1) and has a <code>.format-note</code> CSS class in the HTML (home.html:L134 style block). Whether a DOM element with id <code>lpFormatNote</code> or class <code>format-note</code> is populated from the setting is unverified — no code path was found setting this element's content.
+    </div>
+    <div class="sec-fix">
+      <strong>Fix</strong>
+      Search home.html for <code>lpFormatNote</code> or <code>format-note</code> DOM writes. If missing, add a wire-up in <code>loadHomepageContent()</code>: <code>const el = document.querySelector('.format-note'); if (el &amp;&amp; map.homepage_format_note) el.innerHTML = esc(map.homepage_format_note);</code>
+    </div>
+  </div>
+
+  <!-- INFO GAPS -->
+  <div class="section-eyebrow" style="margin-bottom:0.6rem;margin-top:1.2rem;">Info / Low Priority</div>
+
+  <div class="sec-item sev-info">
+    <div class="sec-header">
+      <span class="pill pill-blue">INFO</span>
+      <div class="sec-title">Tee selection (rating/slope) not player-facing on scorecard</div>
+    </div>
+    <div class="sec-body">
+      Admin can assign a course + tee box to each round (rounds.course_id + rounds.tee_name). scorecard.html auto-loads the linked course's tees and defaults to White tees (scorecard.html:L601-L603). Players cannot change their tee during scoring. Competitor Unknown Golf shows tee selector with rating/slope per hole. This is a competitor gap but low priority for private invitational format (host picks tees for everyone).
+    </div>
+  </div>
+
+  <div class="sec-item sev-info">
+    <div class="sec-header">
+      <span class="pill pill-blue">INFO</span>
+      <div class="sec-title">Admin score-edit UI still missing — only players can submit scores</div>
+    </div>
+    <div class="sec-body">
+      Known gap from prior reviews. Admin has no UI to directly edit submitted scores (e.g., correct a wrong entry). Scores can only be submitted via scorecard.html player flow. Admin can delete tournament entirely (delete_tournament function) but not correct individual score rows.
+    </div>
+  </div>
+
+  <!-- STRENGTHS -->
+  <div class="section-eyebrow" style="margin-bottom:0.6rem;margin-top:1.2rem;">Confirmed Strengths</div>
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title">scorecard.html — best-wired consumer page</div>
+      <ul>
+        <li>Fetches <code>rounds.format_front/back</code> (correct source) ✅</li>
+        <li>Fetches <code>pars_day%</code> from settings ✅</li>
+        <li>Fetches <code>yards_day%</code> from settings ✅</li>
+        <li>Falls through to <code>golf_courses.pars/tees</code> when course linked ✅</li>
+        <li>Shows yardage inline per hole (<code>.hole-yd-inline</code>) ✅</li>
+        <li>Shows format badge per hole (<code>.format-badge</code>) ✅</li>
+        <li>Realtime score sync + offline queue ✅</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-title">scoreboard.html — format-aware scoring correct</div>
+      <ul>
+        <li>Reads format from <code>rounds</code> table ✅</li>
+        <li>Handles stroke, scramble, best_ball, stableford, mod_stableford, match (L607-L663) ✅</li>
+        <li>Stableford points table complete ✅</li>
+        <li>Match play hole-by-hole tracking ✅</li>
+        <li>Competitive/casual mode badge (L553-L559) ✅</li>
+        <li>Realtime subscriptions live ✅</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-title">home.html — strengths</div>
+      <ul>
+        <li>Pars fetched and used in hero scoreboard (L1124) ✅</li>
+        <li>schedule_json rendered correctly from settings (L807) ✅</li>
+        <li>Team names, logo, tourney_name all dynamic via tourney-init ✅</li>
+        <li>RSVP form: reg_max/min_players, reg_open, reg_bullets all wired ✅</li>
+        <li>Format section rendered dynamically (just reading wrong source) ✅ structure-wise</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-title">admin.html — data saves correctly</div>
+      <ul>
+        <li>Pars saved to <code>settings.pars_dayN</code> (correct key) ✅</li>
+        <li>Yards saved to <code>settings.yards_dayN</code> (correct key) ✅</li>
+        <li>Formats saved to <code>rounds.format_front/back</code> ✅</li>
+        <li>Course search + golf_courses DB link via <code>rounds.course_id</code> ✅</li>
+        <li>Design tab: 24 settings keys all save correctly ✅</li>
+        <li>schedule_json builder writes to settings correctly ✅</li>
+      </ul>
+    </div>
+  </div>
+
+</div>
+</section>
+
+<section id="plan">
+<div class="wrapper">
+
+  <div class="section-header">
+    <div class="section-eyebrow">§ Plan</div>
+    <div class="section-title">Strategic Priorities</div>
+    <div class="section-desc">Ordered by user-visible impact. P1–P2 are data correctness bugs — they ship wrong data today. P3–P5 are wire-up completions.</div>
+  </div>
+
+  <div class="roadmap-item">
+    <div class="roadmap-icon">P1</div>
+    <div class="roadmap-content">
+      <div class="roadmap-title">Fix home.html format source — fetch from rounds table</div>
+      <div class="roadmap-desc">The #format section is the most visible part of the homepage for organizers showing their event. It currently always shows hardcoded defaults regardless of what admin configured. Fix: fetch <code>rounds.format_front/back</code> in home's init and wire to the existing format item renderer (L837–L850). One Supabase query, no schema change.</div>
+      <div class="roadmap-action"><strong>Files:</strong> home.html — add rounds fetch to <code>loadHomepageContent()</code>, populate <code>fmtItems</code> from rounds data.</div>
+    </div>
+  </div>
+
+  <div class="roadmap-item">
+    <div class="roadmap-icon">P2</div>
+    <div class="roadmap-content">
+      <div class="roadmap-title">Add yardage to scoreboard.html scorecard tab</div>
+      <div class="roadmap-desc">Every yard entered in admin vanishes — it shows correctly on scorecard.html but nowhere else. The leaderboard scorecard tab should display yardage below par for each hole, matching scorecard.html's inline display. Fetch <code>yards_day%</code>, render a yardage row in the hole-grid.</div>
+      <div class="roadmap-action"><strong>Files:</strong> scoreboard.html — add <code>yards_day%</code> to Promise.all, add <code>.hole-cell.yards</code> row in scorecard tab renderer.</div>
+    </div>
+  </div>
+
+  <div class="roadmap-item">
+    <div class="roadmap-icon">P3</div>
+    <div class="roadmap-content">
+      <div class="roadmap-title">Neutralize Bova copy in home.html defaults</div>
+      <div class="roadmap-desc">Fix the two tenant-specific hardcoded strings: footer wordmark (L680 → "TOURney") and hero-meta default (L446 → generic event placeholder). Low-risk, two line edits, eliminates tenant leak risk for any tournament that doesn't configure these settings.</div>
+      <div class="roadmap-action"><strong>Files:</strong> home.html:L680 and home.html:L446</div>
+    </div>
+  </div>
+
+  <div class="roadmap-item">
+    <div class="roadmap-icon">P4</div>
+    <div class="roadmap-content">
+      <div class="roadmap-title">Wire remaining Design tab keys to home.html</div>
+      <div class="roadmap-desc">~18 of 24 admin Design tab settings keys have no consumer. Priority wire-ups: <code>hero_photo_url → .hero-img src</code>, <code>color_primary → --gold CSS var</code>, <code>about_photo_url → .about-photo-wrap img</code>, <code>tourney_name → .hero-title</code>. home.html already fetches all settings into a map — just add DOM writes for each key.</div>
+      <div class="roadmap-action"><strong>Files:</strong> home.html — extend <code>loadHomepageContent()</code> wire-up block for each pending key.</div>
+    </div>
+  </div>
+
+  <div class="roadmap-item">
+    <div class="roadmap-icon">P5</div>
+    <div class="roadmap-content">
+      <div class="roadmap-title">Add "Scoring is Open" banner to home.html</div>
+      <div class="roadmap-desc">When a round is active, home.html should surface a prominent CTA directing players to the scorecard. Currently players must find it themselves in the nav. Fetch open round status (already in home's hero scoreboard code path), inject a dismissible gold banner above the hero scoreboard section when <code>rounds.status = 'open'</code>.</div>
+      <div class="roadmap-action"><strong>Files:</strong> home.html — extend <code>loadHeroScoreboard()</code> to inject banner when open round detected.</div>
+    </div>
+  </div>
+
+  <!-- IDEAS -->
+  <div style="margin-top:1.4rem;margin-bottom:0.6rem;font-size:0.67rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--gold);">Forward-Looking Ideas</div>
+  <div class="grid-2">
+    <div class="idea-card idea-1">
+      <div class="idea-number">1</div>
+      <div class="idea-tag"><span class="pill pill-gold">Data Integrity</span></div>
+      <div class="idea-title">Settings type schema</div>
+      <div class="idea-body">The settings table is a key-value store with no type enforcement. A JSON schema or TypeScript type map would catch mismatches (e.g., yards stored as string vs array) before they cause runtime bugs like the format source gap.</div>
+      <div class="idea-plan"><strong>Plan:</strong> Add a <code>lib/settings-schema.ts</code> with all 40+ known keys, their types, and which pages read them. Validate on save in admin.</div>
+    </div>
+    <div class="idea-card idea-2">
+      <div class="idea-number">2</div>
+      <div class="idea-tag"><span class="pill pill-blue">Player Experience</span></div>
+      <div class="idea-title">Admin score correction UI</div>
+      <div class="idea-body">Admins have no way to fix a wrong score. A simple edit-score modal in admin's player table (click player → edit scores by hole by round) would close the biggest workflow gap for tournament day operations.</div>
+      <div class="idea-plan"><strong>Plan:</strong> Admin Players tab → row expand → score grid per round, editable inputs, <code>upsert scores</code> on change.</div>
+    </div>
+    <div class="idea-card idea-3">
+      <div class="idea-number">3</div>
+      <div class="idea-tag"><span class="pill pill-green">Cross-page Consistency</span></div>
+      <div class="idea-title">Shared scoring module</div>
+      <div class="idea-body">home.html, scorecard.html, and scoreboard.html all duplicate scoring logic (DEFAULT_PARS, DEFAULT_FORMATS, format helpers). A single <code>lib/scoring.js</code> would eliminate the divergence that caused the handicap approximation gap on home.</div>
+      <div class="idea-plan"><strong>Plan:</strong> Extract <code>calcPlayerRound()</code>, <code>stablefordPoints()</code>, <code>getHoleFormat()</code> to <code>lib/scoring.js</code>. Import in all three pages.</div>
+    </div>
+    <div class="idea-card idea-4">
+      <div class="idea-number">4</div>
+      <div class="idea-tag"><span class="pill pill-orange">Player UX</span></div>
+      <div class="idea-title">Player tee selection on scorecard</div>
+      <div class="idea-body">Players currently score against whatever tee the admin linked. A pre-round tee selector (Show available tees → pick one → load yardage) would let mixed-ability groups track accurate distances and improve handicap accuracy for competitive mode.</div>
+      <div class="idea-plan"><strong>Plan:</strong> scorecard.html setup screen → tee dropdown from <code>golf_courses.tees[]</code> — already loaded, just expose the selector UI.</div>
+    </div>
+    <div class="idea-card idea-5">
+      <div class="idea-number">5</div>
+      <div class="idea-tag"><span class="pill pill-purple">Admin DX</span></div>
+      <div class="idea-title">Design tab live preview</div>
+      <div class="idea-body">Admin Design tab saves 24 settings keys but organizers have no way to preview how their changes look on home.html without opening a new tab. An embedded iframe preview panel in the Design tab would dramatically reduce configuration iteration time.</div>
+      <div class="idea-plan"><strong>Plan:</strong> Admin Design tab → split-pane layout, right panel = iframe of <code>/t/{slug}/</code>, postMessage updates on each setting change.</div>
+    </div>
+  </div>
+
+</div>
+</section>
+
+<section id="runbook">
+<div class="wrapper">
+
+  <div class="section-header">
+    <div class="section-eyebrow">§ Runbook</div>
+    <div class="section-title">Execution Steps</div>
+    <div class="section-desc">Ordered by priority. Steps 1–3 are correctness bugs. Steps 4–5 are wire-up completions. Each step is self-contained and independently verifiable.</div>
+  </div>
+
+  <div class="runbook-steps">
+
+    <div class="rb-step">
+      <div class="rb-step-title">Fix home.html format section — fetch from rounds table</div>
+      <div class="rb-step-body">
+        In home.html <code>loadHomepageContent()</code>: add a rounds fetch alongside existing settings fetch. Replace the current <code>map[`format_day${i}_front`]</code> reads with data from rounds. The format item renderer at L837–L850 stays unchanged — just feed it the correct data.
+        <br><br>
+        Add to the Promise.all in <code>loadHomepageContent()</code>:<br>
+        <code>sb.from('rounds').select('day_number,format_front,format_back').eq('tournament_id', tournament.id).order('day_number')</code><br><br>
+        Build a <code>roundFmtMap</code>: <code>{ day1: {front:'scramble', back:'shambles'}, ... }</code><br>
+        Replace L843–L845: <code>const front = roundFmtMap[`day${i}`]?.front || DEFAULT_FORMATS[`day${i}`]?.front || 'stroke';</code><br>
+        Same for back.
+      </div>
+      <div class="rb-verify">
+        <strong>Verify</strong>
+        Open admin → change Day 1 format to Stableford → Save Formats. Open home.html #format section → Day 1 card should show "Stableford" with correct description. No page reload of admin needed.
+      </div>
+    </div>
+
+    <div class="rb-step">
+      <div class="rb-step-title">Add yardage fetch and display to scoreboard.html scorecard tab</div>
+      <div class="rb-step-body">
+        In scoreboard.html <code>init()</code> Promise.all (L528), add:<br>
+        <code>sb.from('settings').select('*').eq('tournament_id', tournament.id).like('key','yards_day%')</code><br><br>
+        After the par parse block (L548), add yards parse:<br>
+        <code>let courseYards = {};</code><br>
+        <code>(yardsRes.data || []).forEach(r => { const day = r.key.replace('yards_',''); try { courseYards[day] = JSON.parse(r.value); } catch {} });</code><br><br>
+        In the scorecard tab renderer where <code>.hole-cell.par</code> is built, add a yard row:<br>
+        <code>&lt;div class="hole-cell yards"&gt;${courseYards[selRound]?.[h-1] || '—'}&lt;/div&gt;</code><br><br>
+        Add CSS: <code>.hole-cell.yards { color: var(--muted); font-size:0.42rem; }</code>
+      </div>
+      <div class="rb-verify">
+        <strong>Verify</strong>
+        Admin → Course Details → enter yard values for Day 1 → Save. Open scoreboard.html → Scorecard tab → select Day 1 → yardage row appears under par for each hole. Blank "—" if yards not set.
+      </div>
+    </div>
+
+    <div class="rb-step">
+      <div class="rb-step-title">Neutralize Bova tenant copy in home.html</div>
+      <div class="rb-step-body">
+        Two edits in home.html:<br><br>
+        <strong>Edit 1 — L680:</strong> Change <code>&lt;div class="footer-wordmark"&gt;The Bova &lt;em&gt;Invitational&lt;/em&gt;&lt;/div&gt;</code> to <code>&lt;div class="footer-wordmark"&gt;TOURney&lt;/div&gt;</code><br><br>
+        <strong>Edit 2 — L446:</strong> Change hero-meta default from the Bova-specific "3 Days · 2 Teams · 54 Holes..." string to a generic placeholder like <code>&lt;div class="hero-meta"&gt;Tournament details coming soon.&lt;/div&gt;</code><br><br>
+        tourney-init.js already replaces both elements — the edits only change what displays before JS fires or when settings are empty.
+      </div>
+      <div class="rb-verify">
+        <strong>Verify</strong>
+        Create a test tenant whose <code>homepage_details</code> setting is not set. Visit its home.html. Footer wordmark shows "TOURney", hero-meta shows generic text, not "3 Days · 2 Teams · 54 Holes". Bova tenant remains unaffected (its settings override the defaults).
+      </div>
+    </div>
+
+    <div class="rb-step">
+      <div class="rb-step-title">Wire hero_photo_url and color_primary to home.html</div>
+      <div class="rb-step-body">
+        home.html <code>loadHomepageContent()</code> already fetches all settings into <code>map</code>. Add wire-ups after the existing block:<br><br>
+        <code>// Hero photo</code><br>
+        <code>if (map.hero_photo_url) { const heroImg = document.querySelector('.hero-img'); if (heroImg) { heroImg.src = map.hero_photo_url; heroImg.style.display = 'block'; } }</code><br><br>
+        <code>// About photo</code><br>
+        <code>if (map.about_photo_url) { const abImg = document.querySelector('.about-photo-wrap img'); if (abImg) abImg.src = map.about_photo_url; }</code><br><br>
+        <code>// Brand color</code><br>
+        <code>if (map.color_primary) document.documentElement.style.setProperty('--gold', map.color_primary);</code><br><br>
+        <code>// Hero title</code><br>
+        <code>if (map.tourney_name) { const ht = document.querySelector('.hero-title'); if (ht) ht.textContent = map.tourney_name; }</code>
+      </div>
+      <div class="rb-verify">
+        <strong>Verify</strong>
+        Admin → Design tab → upload a hero photo and set color_primary to a test color → Save. Open home.html → hero image renders, gold accents shift to new color. No console errors.
+      </div>
+    </div>
+
+    <div class="rb-step">
+      <div class="rb-step-title">Add "Scoring is Open" banner to home.html</div>
+      <div class="rb-step-body">
+        In home.html's <code>loadHeroScoreboard()</code> (the function that fetches rounds and scores for the mini leaderboard), when an open round is found, inject a banner:<br><br>
+        <code>const openRound = (roundsData || []).find(r => r.status === 'open');</code><br>
+        <code>if (openRound) {</code><br>
+        <code>&nbsp;&nbsp;const banner = document.createElement('div');</code><br>
+        <code>&nbsp;&nbsp;banner.className = 'scoring-open-banner';</code><br>
+        <code>&nbsp;&nbsp;const slug = window.location.pathname.split('/')[2] || '';</code><br>
+        <code>&nbsp;&nbsp;banner.innerHTML = `&lt;span&gt;Day ${openRound.day_number} scoring is open&lt;/span&gt; &lt;a href="/t/${slug}/scorecard"&gt;Enter scores →&lt;/a&gt;`;</code><br>
+        <code>&nbsp;&nbsp;heroSection.prepend(banner);</code><br>
+        <code>}</code><br><br>
+        CSS: <code>.scoring-open-banner { padding:0.75rem 1.5rem; background:rgba(192,144,48,0.12); border:1px solid var(--gold); text-align:center; font-family:'Barlow Condensed',sans-serif; font-size:0.8rem; letter-spacing:0.15em; text-transform:uppercase; }</code>
+      </div>
+      <div class="rb-verify">
+        <strong>Verify</strong>
+        Admin → open a round. Visit home.html → gold banner appears above hero scoreboard: "Day N scoring is open — Enter scores →". Link goes to /t/{slug}/scorecard. Close the round → banner disappears.
+      </div>
+    </div>
+
+    <div class="rb-step">
+      <div class="rb-step-title">Verify homepage_format_note DOM wire-up</div>
+      <div class="rb-step-body">
+        Search home.html for any element with id <code>lpFormatNote</code> or class <code>format-note</code> that is populated from the settings map. If missing, add:<br><br>
+        <code>const fmtNote = document.querySelector('.format-note');</code><br>
+        <code>if (fmtNote &amp;&amp; map.homepage_format_note) fmtNote.innerHTML = esc(map.homepage_format_note);</code><br><br>
+        This goes inside the existing <code>loadHomepageContent()</code> function after the map is built.
+      </div>
+      <div class="rb-verify">
+        <strong>Verify</strong>
+        Admin → Design tab → set Format Note to "Handicap adjustments apply for competitive scoring." → Save. Open home.html #format section → the italic note block renders the custom text. No console errors.
+      </div>
+    </div>
+
+    <div class="rb-step">
+      <div class="rb-step-title">Commit and push</div>
+      <div class="rb-step-body">
+        <code>cd "C:/Users/Rob/Greenskeeper Studios/01 Repos/TOURney"</code><br>
+        <code>git add home.html scoreboard.html</code><br>
+        <code>git commit -m "fix: cross-page data consistency — format source, yardage on scoreboard, tenant copy"</code><br>
+        <code>git push</code>
+      </div>
+      <div class="rb-verify">
+        <strong>Verify</strong>
+        Push succeeds. Vercel deployment green. Visit bova.greenskeeper.studio — format section shows Bova's actual formats. Leaderboard scorecard tab shows yardage. Footer shows correct wordmark.
+      </div>
+    </div>
+
+  </div>
+
+</div>
+</section>
+
+<section id="executing">
+<div class="wrapper">
+<!-- EXECUTING-CONTENT-START -->
+<div class="stage-pending">
+  <p>Awaiting execution. Run <code>/tourney-execute 5-21-26-feature-depth-review.html</code> to proceed.</p>
+</div>
+<!-- EXECUTING-CONTENT-END -->
+</div>
+</section>
+
+<section id="audit">
+<div class="wrapper">
+<!-- AUDIT-CONTENT-START -->
+<div class="stage-pending">
+  <p>Awaiting execution. Run <code>/tourney-execute 5-21-26-feature-depth-review.html</code> to proceed.</p>
+</div>
+<!-- AUDIT-CONTENT-END -->
+</div>
+</section>
+
+<section id="concluded">
+<div class="wrapper">
+<!-- CONCLUDED-CONTENT-START -->
+<div class="stage-pending">
+  <p>Awaiting execution. Run <code>/tourney-execute 5-21-26-feature-depth-review.html</code> to proceed.</p>
+</div>
+<!-- CONCLUDED-CONTENT-END -->
+</div>
+</section>
+
+<footer>
+  Generated by <span>claude-sonnet-4-6</span> · Greenskeeper Studios Internal · May 21, 2026
+  <br style="margin-top:0.3rem">
+  <a href="/platform" style="color:var(--muted);font-size:0.7rem;text-decoration:none">← Back to Platform Hub</a>
+</footer>
+
+</body>
+</html>

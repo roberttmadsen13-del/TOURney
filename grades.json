@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-05-20T12:00:00Z",
+  "updated_at": "2026-05-21T00:00:00Z",
   "description": "Per-axis grade history for TOURney platform. Updated automatically by review skills. Operations Action Board reads this file.",
   "axes": {
     "architecture": {
@@ -61,6 +61,13 @@
       "label": "Feature Depth",
       "cmd": "/tourney-review-feature-depth",
       "scores": [
+        {
+          "date": "2026-05-21",
+          "score": "B-",
+          "url": "/platform/5-21-26-feature-depth-review",
+          "review_title": "Feature Depth Review · May 21, 2026",
+          "notes": "Down from B+. Critical data source mismatch: home.html reads format from settings.format_dayN_front/back (keys admin never writes) so format always shows hardcoded defaults — rounds.format_front/back is the live source but home never reads it. Scoreboard silently drops yardage (yards_dayN never fetched). Footer and hero-meta still hardcoded Bova copy. 18/24 Design tab keys unwired."
+        },
         {
           "date": "2026-05-20",
           "score": "B+",

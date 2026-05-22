@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-05-20T12:00:00Z",
+  "updated_at": "2026-05-21T00:00:00Z",
   "description": "Living state for all TOURney platform axes. One entry per axis. Updated by every tourney-* skill. Agents read this for context (50 tokens) instead of parsing HTML artifacts.",
   "stages": ["review", "plan", "runbook", "executing", "audit", "concluded"],
   "axes": {
@@ -14,11 +14,11 @@
     },
     "feature-depth": {
       "status": "review",
-      "grade": "B+",
-      "artifact": "/platform/5-20-26-claude-review",
-      "last_updated": "2026-05-20",
-      "summary": "No change. 3 tournament structures, 12 scoring formats, realtime, HIO confetti, trash talk, rounds model. Gaps: no score admin-edit UI, no tournament series.",
-      "open_items": 2,
+      "grade": "B-",
+      "artifact": "/platform/5-21-26-feature-depth-review",
+      "last_updated": "2026-05-21",
+      "summary": "Critical: home.html format reads wrong table (settings vs rounds) — always shows hardcoded defaults. Scoreboard never fetches yardage. Bova copy hardcoded in footer + hero-meta. 18/24 Design tab keys unwired.",
+      "open_items": 8,
       "blocking": false
     },
     "ux": {

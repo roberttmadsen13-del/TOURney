@@ -5,6 +5,20 @@
   "description": "Canonical registry of all TOURney plans, reviews, audits, and QA artifacts. The /platform Artifacts tab renders from this file. Skills (e.g. tourney-review) append new entries when they generate output.",
   "entries": [
     {
+      "id": "review-2026-05-21-feature-depth",
+      "category": "review",
+      "stage": "executing",
+      "title": "Feature Depth Review · May 21, 2026",
+      "summary": "Cross-page data consistency audit. 2 critical: home.html reads format from settings table (keys that don't exist — admin writes to rounds) so format always shows hardcoded defaults; scoreboard.html never fetches yards_dayN so admin yardage is silently dropped. 3 high: footer 'Bova Invitational' hardcoded (home.html:680), hero-meta Bova copy hardcoded (home.html:446), 18/24 admin Design tab keys unwired on home. Grade: B- (down from B+). 7-step runbook ready.",
+      "date": "2026-05-21",
+      "updated": "2026-05-21",
+      "author": "claude-sonnet-4-6",
+      "url": "/platform/5-21-26-feature-depth-review",
+      "file": "5-21-26-feature-depth-review.html",
+      "tags": ["review", "feature-depth", "data-consistency"],
+      "status": "open"
+    },
+    {
       "id": "competitor-analysis-2026-05-21",
       "category": "review",
       "stage": "review",
