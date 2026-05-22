@@ -1114,7 +1114,7 @@ function getArchived(){return getPref('qa_archived');}
 function getFavorites(){return getPref('qa_favorites');}
 function toggleFavorite(id,val){let f=getFavorites();val?f[id]=true:delete f[id];setPref('qa_favorites',f);renderHub();}
 function getStatusOverrides(){return getPref('qa_status_overrides');}
-function setStatusOverride(id,status){const o=getStatusOverrides();if(status==='__clear__')delete o[id];else o[id]=status;setPref('qa_status_overrides',o);renderHub();}
+function setStatusOverride(id,status){const o=getStatusOverrides();if(status==='__clear__')delete o[id];else o[id]=status;setPref('qa_status_overrides',o);renderHub();renderArtifactTickets();if(status==='concluded'||status==='archived'||status==='__clear__'){loadGrades();loadAxisBoard();}}
 function copyExecuteRunbook(url) {
   const full='https://tourney.greenskeeper.studio'+url;
   const axis=(url.match(/-(security|architecture|ux|performance|business|data-model|deployment|feature-depth|finance|marketing|onboarding|aaa)(?:[^a-z]|$)/)||[])[1]||'';
@@ -1898,7 +1898,7 @@ function gradeColor(g){
 function daysSince(d){return d?Math.floor((Date.now()-new Date(d).getTime())/86400000):Infinity;}
 function avgScores(scores){
   if(!scores?.length)return null;
-  const gpas=scores.slice(-3).map(s=>gradeToGpa(s.score)).filter(n=>n!==null);
+  const gpas=scores.slice(0,3).map(s=>gradeToGpa(s.score)).filter(n=>n!==null);
   return gpas.length?gpas.reduce((a,b)=>a+b,0)/gpas.length:null;
 }
 let gradesData=null,modalAxisKey=null;
@@ -1928,7 +1928,7 @@ function renderScorecard(){
   if(!grid)return;
   grid.innerHTML=axes.map(([key,ax])=>{
     const scores=ax.scores||[];
-    const latest=scores.length?scores[scores.length-1]:null;
+    const latest=scores.length?scores[0]:null;
     const gpa=avgScores(scores);const letter=gpa!==null?gpaToGrade(gpa):null;
     const days=latest?daysSince(latest.date):Infinity;
     const isStale=isFinite(days)&&days>14;
@@ -1961,13 +1961,16 @@ function openGradeModal(key){
   if(!scores.length){
     list.innerHTML='<div class="grade-no-data" style="padding:1rem;font-family:\'DM Mono\',monospace;font-size:0.58rem;letter-spacing:0.1em;text-transform:uppercase;">No reviews yet — run '+esc(ax.cmd)+' to generate the first.</div>';
   }else{
-    list.innerHTML=scores.map(s=>'<div class="modal-score">'
-      +'<div class="modal-score-top">'
-      +'<span class="modal-score-letter" style="color:'+gradeColor(s.score)+'">'+esc(s.score)+'</span>'
-      +'<div class="modal-score-meta"><div class="modal-score-title">'+esc(s.review_title||'')+'</div>'
-      +'<div class="modal-score-date">'+esc(s.date)+'</div></div></div>'
-      +(s.notes?'<div class="modal-score-notes">'+esc(s.notes)+'</div>':'')
-      +'</div>').join('');
+    list.innerHTML=scores.map(s=>{
+      const inner='<div class="modal-score-top">'
+        +'<span class="modal-score-letter" style="color:'+gradeColor(s.score)+'">'+esc(s.score)+'</span>'
+        +'<div class="modal-score-meta"><div class="modal-score-title">'+esc(s.review_title||'')+'</div>'
+        +'<div class="modal-score-date">'+esc(s.date)+'</div></div></div>'
+        +(s.notes?'<div class="modal-score-notes">'+esc(s.notes)+'</div>':'');
+      return s.url
+        ?'<a class="modal-score" href="'+esc(s.url)+'" target="_blank" rel="noopener" style="display:block;text-decoration:none;color:inherit;">'+inner+'</a>'
+        :'<div class="modal-score">'+inner+'</div>';
+    }).join('');
   }
   document.getElementById('modalCopied').style.display='none';
   document.getElementById('gradeModal').style.display='flex';
