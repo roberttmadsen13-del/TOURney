@@ -330,3 +330,7 @@ GROUP BY t.slug;
 | `greensomes` | Greensomes | PAIR_TEAM_FMTS |
 | `nassau` | Nassau | stroke play (side bets only) |
 | `skins` | Skins | stroke play (side bets only) |
+
+<!-- 5-22-26-consolidation-review execute audit clean — 2026-05-22 -->
+<!-- 5-22-26-claude-review execute audit clean — 2026-05-22 -->
+<!-- 5-21-26-business-review execute audit clean — 2026-05-22 -->

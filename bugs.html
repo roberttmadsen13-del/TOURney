@@ -164,6 +164,15 @@ footer a:hover{color:var(--gold);}
       <div class="bug-item fixed"><div class="bug-title"><strong>SW cache version not auto-bumped on agent deploys</strong> — every agent push risked stale PWA cache for installed users. Fixed: added <code>bump-sw-cache</code> job to ci.yml that fires on push to main (with bot-push guard to prevent loops). Auto-increments CACHE key using Unix timestamp on every deploy.</div><div class="bug-meta">.github/workflows/ci.yml · commit 14bbdbb · 2026-05-20</div></div>
     </div>
 
+    <div class="session-hdr" onclick="toggleSession('s22')">
+      <span class="session-title">2026-05-22 — Consolidation execute audit <span class="pill pill-green">Clean</span></span>
+      <span class="session-count">0 bugs ▾</span>
+    </div>
+    <div class="session-body collapsed" id="s22">
+      <!-- 5-22-26-consolidation-review execute audit clean — 2026-05-22 -->
+      <!-- og:image injection (tourney-init.js) + /lib/settings-keys.js shipped. XSS/score-edit/profile-skeleton confirmed already fixed. No new bugs found. -->
+    </div>
+
     <div class="session-hdr" onclick="toggleSession('s17')">
       <span class="session-title">Session 17 · 2026-05-14 — XSS fixes (5-14-26-claude-review execute) <span class="pill pill-red">Security</span></span>
       <span class="session-count">2 fixes ▾</span>

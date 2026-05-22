@@ -1,11 +1,18 @@
 {
-  "updated_at": "2026-05-22T00:00:00Z",
+  "updated_at": "2026-05-22T14:00:00Z",
   "description": "Per-axis grade history for TOURney platform. Updated automatically by review skills. Operations Action Board reads this file.",
   "axes": {
     "architecture": {
       "label": "Architecture",
       "cmd": "/tourney-review-architecture",
       "scores": [
+        {
+          "date": "2026-05-22",
+          "score": "A",
+          "url": "/platform/5-22-26-consolidation-review",
+          "review_title": "Execute + Audit · May 22, 2026",
+          "notes": "/lib/settings-keys.js const enum shipped with 33 named keys — settings store now fully typed. Zero open items. Grade holds A."
+        },
         {
           "date": "2026-05-22",
           "score": "A",
@@ -140,6 +147,13 @@
         {
           "date": "2026-05-22",
           "score": "A",
+          "url": "/platform/5-22-26-consolidation-review",
+          "review_title": "Execute + Audit · May 22, 2026",
+          "notes": "profile.html skeleton confirmed already shipped — loadingGate with full shimmer (avatar, name, stats, rounds). Zero open UX items. Grade holds A."
+        },
+        {
+          "date": "2026-05-22",
+          "score": "A",
           "url": "/platform/5-22-26-claude-review",
           "review_title": "Full Platform Review · May 22, 2026",
           "notes": "No change since 5-20. All nav-bar pages correct SVG, login viewBox fixed, hardcoded tenant text removed. profile.html missing loading skeleton (LOW, runbook step added). Zero blocking items."
@@ -241,6 +255,13 @@
       "label": "Security",
       "cmd": "/tourney-review-security",
       "scores": [
+        {
+          "date": "2026-05-22",
+          "score": "A-",
+          "url": "/platform/5-22-26-consolidation-review",
+          "review_title": "Execute + Audit · May 22, 2026",
+          "notes": "feed.html XSS confirmed already fixed — buildPostMessage() escapes &<>\" before innerHTML. send-push auth fix committed but NOT deployed (Rob manual HIGH). SEND_INSTALL_EMAIL_SECRET unset (Rob manual). CSP unsafe-inline deferred (own session). Grade holds A−."
+        },
         {
           "date": "2026-05-22",
           "score": "A-",
@@ -479,6 +500,13 @@
         {
           "date": "2026-05-22",
           "score": "B+",
+          "url": "/platform/5-22-26-consolidation-review",
+          "review_title": "Execute + Audit · May 22, 2026",
+          "notes": "og:image dynamic injection added to tourney-init.js — social shares now show tournament logo. profile.html skeleton confirmed already live. No Lighthouse CI (deferred). Grade holds B+."
+        },
+        {
+          "date": "2026-05-22",
+          "score": "B+",
           "url": "/platform/5-22-26-claude-review",
           "review_title": "Full Platform Review · May 22, 2026",
           "notes": "No change since 5-20. Skeletons live on feed/scoreboard/home/directory/champions. profile.html still blank-flash (runbook step added). SW tourney-v37, CI auto-bump. No Lighthouse CI baseline. No bundle size monitoring."
@@ -538,6 +566,13 @@
       "label": "Data Model",
       "cmd": "/tourney-review-data-model",
       "scores": [
+        {
+          "date": "2026-05-22",
+          "score": "B+",
+          "url": "/platform/5-22-26-consolidation-review",
+          "review_title": "Execute + Audit · May 22, 2026",
+          "notes": "/lib/settings-keys.js const enum (33 keys) addresses un-typed settings store. 16 migrations clean. mygolf_profiles + donations schema solid. Grade holds B+."
+        },
         {
           "date": "2026-05-22",
           "score": "B+",
