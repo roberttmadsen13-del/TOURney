@@ -516,6 +516,7 @@ let teamAssignments = {};
 let roundStates = {};
 let _competitiveMode = false;
 let coursePars = JSON.parse(JSON.stringify(DEFAULT_PARS));
+let courseYards = {};
 let roundFormats = JSON.parse(JSON.stringify(DEFAULT_FORMATS));
 let activeTab = 'team';
 let currentRound = null;
@@ -525,13 +526,14 @@ let selectedScorecardRound = null;
 async function init() {
   const { tournament } = await window.tourney.ready;
   _slug = tournament.slug;
-  const [pRes, sRes, tRes, roundsRes, parRes, modeRes] = await Promise.all([
+  const [pRes, sRes, tRes, roundsRes, parRes, modeRes, yardsRes] = await Promise.all([
     sb.from('players').select('*').eq('tournament_id', tournament.id),
     sb.from('scores').select('*').eq('tournament_id', tournament.id),
     sb.from('settings').select('*').eq('tournament_id', tournament.id).eq('key','team_assignments'),
     sb.from('rounds').select('day_number,status,format_front,format_back').eq('tournament_id', tournament.id).order('day_number'),
     sb.from('settings').select('*').eq('tournament_id', tournament.id).like('key','pars_day%'),
     sb.from('settings').select('value').eq('tournament_id', tournament.id).eq('key','tournament_mode').maybeSingle(),
+    sb.from('settings').select('*').eq('tournament_id', tournament.id).like('key','yards_day%'),
   ]);
 
   players = pRes.data || [];
@@ -548,6 +550,10 @@ async function init() {
   (parRes.data || []).forEach(r => {
     const day = r.key.replace('pars_','');
     try { coursePars[day] = JSON.parse(r.value); } catch {}
+  });
+  (yardsRes.data || []).forEach(r => {
+    const day = r.key.replace('yards_','');
+    try { courseYards[day] = JSON.parse(r.value); } catch {}
   });
   _competitiveMode = modeRes.data?.value === 'competitive';
   const _modeBadge = document.getElementById('scoringModeBadge');
@@ -987,6 +993,14 @@ function renderScorecards(lb) {
               <td style="padding:0.4rem 0.4rem;text-align:center;font-family:'DM Mono',monospace;font-size:0.52rem;color:rgba(240,230,204,0.35);">${backPar}</td>
               <td style="padding:0.4rem 0.4rem;text-align:center;font-family:'DM Mono',monospace;font-size:0.52rem;color:rgba(240,230,204,0.35);">${totalPar}</td>
             </tr>
+            ${courseYards[viewRound]?.length ? `<tr>
+              <td style="padding:0.3rem 0.5rem;font-family:'DM Mono',monospace;font-size:0.42rem;color:rgba(240,230,204,0.2);">Yds</td>
+              ${frontH.map(h=>`<td style="padding:0.3rem 0.3rem;text-align:center;font-family:'DM Mono',monospace;font-size:0.42rem;color:rgba(240,230,204,0.2);">${courseYards[viewRound][h-1]||'—'}</td>`).join('')}
+              <td style="padding:0.3rem 0.4rem;text-align:center;font-family:'DM Mono',monospace;font-size:0.42rem;color:rgba(240,230,204,0.2);">—</td>
+              ${backH.map(h=>`<td style="padding:0.3rem 0.3rem;text-align:center;font-family:'DM Mono',monospace;font-size:0.42rem;color:rgba(240,230,204,0.2);">${courseYards[viewRound][h-1]||'—'}</td>`).join('')}
+              <td style="padding:0.3rem 0.4rem;text-align:center;font-family:'DM Mono',monospace;font-size:0.42rem;color:rgba(240,230,204,0.2);">—</td>
+              <td style="padding:0.3rem 0.4rem;text-align:center;font-family:'DM Mono',monospace;font-size:0.42rem;color:rgba(240,230,204,0.2);">—</td>
+            </tr>` : ''}
             <tr>
               <td style="padding:0.4rem 0.5rem;font-family:'Playfair Display',serif;font-size:0.72rem;font-weight:700;">Score</td>
               ${frontH.map(h=>{const g=getScore(h);const c=holeClass(h);return`<td style="padding:0.3rem 0.3rem;text-align:center;"><div class="hole-cell ${c}" style="margin:0 auto;width:22px;height:22px;display:flex;align-items:center;justify-content:center;font-size:0.55rem;">${g||''}</div></td>`;}).join('')}

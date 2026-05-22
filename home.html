@@ -407,6 +407,10 @@ html { scroll-behavior: smooth; }
 @media (min-width: 481px) and (max-width: 768px) {
   .hero-inner { padding: 0 1.8rem 4rem; align-items: flex-end; text-align: right; }
 }
+.scoring-open-banner { padding:0.75rem 1.5rem; background:rgba(192,144,48,0.12); border-bottom:1px solid var(--gold); text-align:center; font-size:0.8rem; letter-spacing:0.1em; text-transform:uppercase; }
+.scoring-open-banner span { color:var(--gold); margin-right:1rem; }
+.scoring-open-banner a { color:#fff; font-weight:700; text-decoration:none; }
+.scoring-open-banner a:hover { text-decoration:underline; }
 
 </style>
 <link rel="stylesheet" href="/tokens.css">
@@ -443,7 +447,7 @@ html { scroll-behavior: smooth; }
     <div class="hero-eyebrow">Inaugural Edition &nbsp;&middot;&nbsp; Myrtle Beach, SC</div>
     <h1 class="hero-title">The Bova<br><em>Invitational</em></h1>
     <div class="hero-rule"><div class="hero-rule-line"></div><div class="hero-rule-diamond"></div><div class="hero-rule-line"></div></div>
-    <div class="hero-meta">3 Days &nbsp;&middot;&nbsp; 2 Teams &nbsp;&middot;&nbsp; 54 Holes &nbsp;&middot;&nbsp; 2026</div>
+    <div class="hero-meta">Tournament details coming soon.</div>
     <div class="hero-cta">
       <a href="#rsvp" class="btn-gold">Confirm Registration</a>
       <a href="#schedule" class="btn-outline">View Schedule</a>
@@ -677,7 +681,7 @@ html { scroll-behavior: smooth; }
 <footer>
   <div class="footer-logo-wrap">
     <img id="footerLogoImg" src="" alt="" style="height:48px;width:auto;opacity:0.8;display:none;">
-    <div class="footer-wordmark">The Bova <em>Invitational</em></div>
+    <div class="footer-wordmark">TOURney</div>
   </div>
   <div class="footer-copy"><a href="/tos" style="color:var(--muted);font-size:0.72rem;text-decoration:none;margin-right:1rem;">Terms of Service</a><a href="/privacy" style="color:var(--muted);font-size:0.72rem;text-decoration:none;">Privacy Policy</a></div>
 </footer>
@@ -718,6 +722,7 @@ window.addEventListener('scroll', () => { document.getElementById('mainNav').cla
     'reg_show_hat','reg_min_players','reg_show_dates','team_a_name','team_b_name','team_count',
     'structure','pair_count',
     'team_a_captain','challengers_captain',
+    'color_primary','tourney_name',
     ...fmtDayKeys
   ];
   const [{ data }, { data: roundsData }] = await Promise.all([
@@ -889,6 +894,12 @@ window.addEventListener('scroll', () => { document.getElementById('mainNav').cla
   // Hat section
   const hatSec = document.getElementById('hatSection');
   if (hatSec) hatSec.style.display = map.reg_show_hat === 'true' ? '' : 'none';
+
+  // Brand color override
+  if (map.color_primary) document.documentElement.style.setProperty('--gold', map.color_primary);
+
+  // Tournament name in hero title
+  if (map.tourney_name) { const _ht = document.querySelector('.hero-title'); if (_ht) _ht.textContent = map.tourney_name; }
 
   // Hero image — hide if no setting, show if present
   const _heroImg = document.querySelector('.hero-img');
@@ -1107,7 +1118,7 @@ window.addEventListener('scroll', () => {
 async function loadHeroScoreboard(tournamentId) {
   const _lbSk = document.getElementById('heroLeaderboard');
   if (_lbSk) _lbSk.innerHTML = '<div class="skeleton" style="height:2rem;border-radius:4px;margin-bottom:4px;"></div>'.repeat(5);
-  const [pRes, sRes, taRes, p1Res, p2Res, p3Res, capRes] = await Promise.all([
+  const [pRes, sRes, taRes, p1Res, p2Res, p3Res, capRes, roundsRes] = await Promise.all([
     sb.from('players').select('id,first_name,last_name,handicap').eq('tournament_id', tournamentId),
     sb.from('scores').select('player_id,day_number,hole,gross_score').eq('tournament_id', tournamentId),
     sb.from('settings').select('value').eq('tournament_id', tournamentId).eq('key','team_assignments').maybeSingle(),
@@ -1115,6 +1126,7 @@ async function loadHeroScoreboard(tournamentId) {
     sb.from('settings').select('value').eq('tournament_id', tournamentId).eq('key','pars_day2').maybeSingle(),
     sb.from('settings').select('value').eq('tournament_id', tournamentId).eq('key','pars_day3').maybeSingle(),
     sb.from('settings').select('value').eq('tournament_id', tournamentId).eq('key','challengers_captain').maybeSingle(),
+    sb.from('rounds').select('day_number,status').eq('tournament_id', tournamentId),
   ]);
 
   const players = pRes.data || [];
@@ -1123,6 +1135,17 @@ async function loadHeroScoreboard(tournamentId) {
   try { teamAssignments = JSON.parse(taRes.data?.value || '{}'); } catch {}
   const parsDay = [p1Res,p2Res,p3Res].map(r => { try { return JSON.parse(r.data?.value||'[]'); } catch { return []; } });
   const challengersCaptain = capRes.data?.value || 'TBD';
+  const openRound = (roundsRes.data || []).find(r => r.status === 'open');
+  if (openRound) {
+    const heroSection = document.querySelector('.hero');
+    if (heroSection && !document.querySelector('.scoring-open-banner')) {
+      const banner = document.createElement('div');
+      banner.className = 'scoring-open-banner';
+      const slug = window.location.pathname.split('/')[2] || '';
+      banner.innerHTML = `<span>Day ${openRound.day_number} scoring is open</span> <a href="/t/${slug}/scorecard">Enter scores &rarr;</a>`;
+      heroSection.after(banner);
+    }
+  }
 
   const HANDICAP_STROKES = {scratch:0,eagle:4,birdie:8,bogey:12,pretender:16,hacker:20};
 
