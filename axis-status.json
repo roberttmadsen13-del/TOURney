@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-05-22T15:00:00Z",
+  "updated_at": "2026-05-22T18:00:00Z",
   "description": "Living state for all TOURney platform axes. One entry per axis. Updated by every tourney-* skill. Agents read this for context (50 tokens) instead of parsing HTML artifacts.",
   "stages": ["review", "plan", "runbook", "executing", "audit", "concluded"],
   "axes": {
@@ -13,11 +13,11 @@
       "blocking": false
     },
     "feature-depth": {
-      "status": "concluded",
-      "grade": "A-",
-      "artifact": "/platform/5-21-26-feature-depth-review",
-      "last_updated": "2026-05-21",
-      "summary": "Executed. Yardage on scoreboard, Bova copy removed, color_primary + tourney_name wired, scoring-open banner live. 4 medium items remain: handicap approx, ~14 Design tab keys unwired, no score-edit UI, no series. New critical gap: zero player-facing score entry (P1 roadmap).",
+      "status": "executing",
+      "grade": "B+",
+      "artifact": "/platform/5-22-26-feature-depth-review",
+      "last_updated": "2026-05-22",
+      "summary": "Dedicated review B+. course.html missing, no courses/course_holes schema, bug-fab single-image, captain keys unwired in admin. 8-step runbook ready for execute.",
       "open_items": 5,
       "blocking": false
     },

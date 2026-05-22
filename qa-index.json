@@ -1,9 +1,22 @@
 {
   "$schema": "https://tourney.greenskeeper.studio/qa-index-schema.json",
   "version": 1,
-  "updated_at": "2026-05-22T12:00:00Z",
+  "updated_at": "2026-05-22T18:00:00Z",
   "description": "Canonical registry of all TOURney plans, reviews, audits, and QA artifacts. The /platform Artifacts tab renders from this file. Skills (e.g. tourney-review) append new entries when they generate output.",
   "entries": [
+    {
+      "id": "review-feature-depth-2026-05-22",
+      "category": "review",
+      "stage": "executing",
+      "title": "Feature Depth Review · May 22, 2026",
+      "summary": "Dedicated feature-depth audit. Grade B+ (down from A-). Critical: course.html missing from repo root, no courses/course_holes DB schema. bug-fab single-image only. Captain settings keys exist but no admin write path. 8-step runbook: courses migration, admin Course tab, course.html, scorecard yardage, multi-image bug-fab, admin score edit, captain UI, admin-as-player toggle.",
+      "date": "2026-05-22",
+      "author": "claude-sonnet-4-6",
+      "url": "/platform/5-22-26-feature-depth-review",
+      "file": "5-22-26-feature-depth-review.html",
+      "tags": ["review", "feature-depth"],
+      "status": "open"
+    },
     {
       "id": "consolidation-2026-05-22",
       "category": "review",

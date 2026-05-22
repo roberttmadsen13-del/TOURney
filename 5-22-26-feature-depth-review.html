@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TOURney — Feature Depth Review · May 22, 2026</title>
+<style>
+:root{--gold:#c09030;--gold-light:#d4a840;--gold-dim:rgba(192,144,48,0.18);--bg:#0d0a05;--surface:#151009;--card:#1c140a;--border:rgba(192,144,48,0.22);--muted:#7a6a54;--text:#e8dcc8;--red:#c0392b;--green:#27ae60;--blue:#2980b9;--orange:#e67e22;--purple:#8e44ad;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:-apple-system,'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;font-size:15px;}
+nav{position:sticky;top:0;z-index:100;background:rgba(13,10,5,0.97);border-bottom:1px solid var(--border);backdrop-filter:blur(12px);}
+.nav-inner{padding:0.6rem 1.5rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap;}
+.nav-brand{color:var(--gold);font-weight:700;font-size:1rem;letter-spacing:0.05em;white-space:nowrap;}
+.nav-brand span{color:var(--muted);font-weight:400;font-size:0.8rem;margin-left:0.4rem;}
+.nav-links{display:flex;gap:0.2rem;flex-wrap:wrap;margin-left:auto;}
+.nav-links a{color:var(--muted);text-decoration:none;font-size:0.78rem;padding:0.3rem 0.55rem;border-radius:4px;transition:all 0.15s;white-space:nowrap;}
+.nav-links a:hover{color:var(--gold);background:var(--gold-dim);}
+.lifecycle-bar{display:flex;gap:3px;padding:0.55rem 1.5rem 0.65rem;background:var(--surface);border-bottom:1px solid var(--border);}
+.lc-stage{flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;}
+.lc-pill{height:5px;width:100%;border-radius:3px;background:rgba(192,144,48,0.1);transition:background 0.25s;}
+.lc-label{font-size:0.58rem;font-weight:700;letter-spacing:0.11em;text-transform:uppercase;color:rgba(122,106,84,0.45);transition:color 0.25s;}
+.lc-done .lc-pill{background:var(--gold);}
+.lc-done .lc-label{color:var(--gold);}
+.lc-active .lc-pill{background:var(--gold-light);box-shadow:0 0 8px rgba(192,144,48,0.45);}
+.lc-active .lc-label{color:var(--gold-light);}
+.hero{padding:3rem 1.5rem 2rem;text-align:center;border-bottom:1px solid var(--border);background:linear-gradient(180deg,rgba(192,144,48,0.06) 0%,transparent 100%);}
+.hero-eyebrow{display:inline-block;font-size:0.7rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold);border:1px solid var(--border);border-radius:20px;padding:0.22rem 0.8rem;margin-bottom:0.9rem;}
+.hero h1{font-size:clamp(1.5rem,3.5vw,2.3rem);font-weight:800;color:#fff;margin-bottom:0.35rem;}
+.hero h1 span{color:var(--gold);}
+.hero-sub{color:var(--muted);max-width:520px;margin:0 auto 1rem;font-size:0.9rem;}
+.hero-meta{display:flex;gap:1.1rem;justify-content:center;flex-wrap:wrap;font-size:0.74rem;color:var(--muted);}
+.hero-meta span{display:flex;align-items:center;gap:0.3rem;}
+.wrapper{max-width:1000px;margin:0 auto;padding:0 1.5rem;}
+section{padding:2.5rem 0;border-bottom:1px solid var(--border);}
+section:last-of-type{border-bottom:none;}
+.section-header{margin-bottom:1.6rem;}
+.section-eyebrow{font-size:0.67rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--gold);margin-bottom:0.3rem;}
+.section-title{font-size:1.35rem;font-weight:800;color:#fff;margin-bottom:0.3rem;}
+.section-desc{color:var(--muted);font-size:0.85rem;max-width:560px;}
+.card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:1.15rem 1.3rem;margin-bottom:0.7rem;}
+.card-title{font-size:0.85rem;font-weight:700;color:var(--gold);margin-bottom:0.45rem;}
+.card p,.card li{font-size:0.84rem;color:var(--text);margin-bottom:0.28rem;}
+.card ul,.card ol{padding-left:1.2rem;}
+.card li{margin-bottom:0.32rem;}
+.grid-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:0.7rem;}
+.grid-3{display:grid;grid-template-columns:repeat(auto-fit,minmax(245px,1fr));gap:0.7rem;}
+.stack-item{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:0.85rem 1.05rem;}
+.stack-label{font-size:0.65rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--muted);margin-bottom:0.18rem;}
+.stack-value{font-size:0.88rem;font-weight:600;color:#fff;}
+.stack-note{font-size:0.72rem;color:var(--muted);margin-top:0.18rem;}
+.pill{display:inline-block;font-size:0.66rem;font-weight:700;letter-spacing:0.06em;padding:0.15rem 0.5rem;border-radius:20px;text-transform:uppercase;}
+.pill-gold{background:rgba(192,144,48,0.18);color:var(--gold);border:1px solid rgba(192,144,48,0.3);}
+.pill-green{background:rgba(39,174,96,0.15);color:var(--green);border:1px solid rgba(39,174,96,0.3);}
+.pill-red{background:rgba(192,57,43,0.15);color:var(--red);border:1px solid rgba(192,57,43,0.3);}
+.pill-orange{background:rgba(230,126,34,0.15);color:var(--orange);border:1px solid rgba(230,126,34,0.3);}
+.pill-blue{background:rgba(41,128,185,0.15);color:var(--blue);border:1px solid rgba(41,128,185,0.3);}
+.pill-purple{background:rgba(142,68,173,0.15);color:var(--purple);border:1px solid rgba(142,68,173,0.3);}
+.page-table{width:100%;border-collapse:collapse;font-size:0.8rem;}
+.page-table th{text-align:left;padding:0.52rem 0.72rem;border-bottom:1px solid var(--border);color:var(--muted);font-size:0.67rem;text-transform:uppercase;letter-spacing:0.08em;background:var(--surface);}
+.page-table td{padding:0.58rem 0.72rem;border-bottom:1px solid rgba(192,144,48,0.08);vertical-align:top;}
+.page-table tr:last-child td{border-bottom:none;}
+.page-table tr:hover td{background:var(--gold-dim);}
+.page-table .url{font-family:monospace;font-size:0.75rem;color:var(--gold-light);}
+.page-table .file{font-family:monospace;font-size:0.72rem;color:var(--muted);}
+.table-wrap{background:var(--card);border:1px solid var(--border);border-radius:8px;overflow:hidden;overflow-x:auto;}
+.score-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(125px,1fr));gap:0.52rem;margin-bottom:1.4rem;}
+.score-cell{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:0.85rem;text-align:center;}
+.score-num{font-size:1.85rem;font-weight:900;line-height:1;margin-bottom:0.18rem;}
+.score-label{font-size:0.64rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);}
+.score-green{color:var(--green);}
+.score-gold{color:var(--gold);}
+.score-red{color:var(--red);}
+.score-blue{color:var(--blue);}
+.idea-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1.25rem;position:relative;overflow:hidden;}
+.idea-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;}
+.idea-1::before{background:var(--gold);}
+.idea-2::before{background:var(--blue);}
+.idea-3::before{background:var(--green);}
+.idea-4::before{background:var(--orange);}
+.idea-5::before{background:var(--purple);}
+.idea-number{font-size:2rem;font-weight:900;opacity:0.07;position:absolute;top:0.5rem;right:1rem;line-height:1;color:#fff;}
+.idea-tag{margin-bottom:0.42rem;}
+.idea-title{font-size:0.96rem;font-weight:700;color:#fff;margin-bottom:0.42rem;}
+.idea-body{font-size:0.82rem;color:var(--muted);line-height:1.55;margin-bottom:0.65rem;}
+.idea-plan{font-size:0.77rem;color:var(--text);}
+.idea-plan strong{color:var(--gold);}
+.runbook-steps{counter-reset:rb-step;}
+.rb-step{background:var(--card);border:1px solid var(--border);border-left:3px solid rgba(192,144,48,0.3);border-radius:0 8px 8px 0;padding:0.95rem 1.15rem 0.95rem 3.8rem;margin-bottom:0.55rem;position:relative;}
+.rb-step::before{counter-increment:rb-step;content:counter(rb-step);position:absolute;left:0.95rem;top:0.95rem;width:1.75rem;height:1.75rem;background:var(--gold-dim);color:var(--gold);border:1px solid var(--border);border-radius:50%;font-size:0.72rem;font-weight:700;display:grid;place-items:center;}
+.rb-step-title{font-size:0.87rem;font-weight:700;color:#fff;margin-bottom:0.22rem;}
+.rb-step-body{font-size:0.8rem;color:var(--muted);margin-bottom:0.35rem;}
+.rb-verify{font-size:0.76rem;color:var(--text);background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:3px;padding:0.35rem 0.6rem;margin-top:0.3rem;}
+.rb-verify strong{color:var(--gold-light);font-size:0.68rem;text-transform:uppercase;letter-spacing:0.07em;display:block;margin-bottom:0.1rem;}
+.stage-pending{text-align:center;padding:3rem 1.5rem;color:var(--muted);font-size:0.85rem;border:1px dashed rgba(192,144,48,0.2);border-radius:8px;}
+.stage-pending code{color:var(--gold);}
+.exec-step{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:0.85rem 1.05rem;margin-bottom:0.48rem;display:flex;gap:0.7rem;align-items:flex-start;}
+.exec-badge{font-size:0.66rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;padding:0.18rem 0.48rem;border-radius:3px;white-space:nowrap;flex-shrink:0;margin-top:0.08rem;}
+.exec-done{background:rgba(39,174,96,0.14);color:var(--green);border:1px solid rgba(39,174,96,0.28);}
+.exec-skipped{background:rgba(192,144,48,0.1);color:var(--muted);border:1px solid var(--border);}
+.exec-blocked{background:rgba(192,57,43,0.11);color:var(--red);border:1px solid rgba(192,57,43,0.28);}
+.exec-body{font-size:0.81rem;color:var(--text);}
+.exec-body strong{color:#fff;display:block;margin-bottom:0.12rem;font-size:0.83rem;}
+.roadmap-item{display:flex;gap:1.05rem;align-items:flex-start;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:0.95rem 1.15rem;margin-bottom:0.52rem;}
+.roadmap-icon{width:1.9rem;height:1.9rem;border-radius:50%;background:var(--gold-dim);color:var(--gold);display:grid;place-items:center;font-size:0.85rem;flex-shrink:0;border:1px solid var(--border);}
+.roadmap-content{flex:1;}
+.roadmap-title{font-size:0.88rem;font-weight:700;color:#fff;margin-bottom:0.13rem;}
+.roadmap-desc{font-size:0.79rem;color:var(--muted);margin-bottom:0.32rem;}
+.roadmap-action{font-size:0.75rem;color:var(--text);}
+.roadmap-action strong{color:var(--gold-light);}
+code{font-family:'Consolas','Monaco',monospace;background:rgba(255,255,255,0.07);padding:0.09rem 0.27rem;border-radius:3px;font-size:0.81em;color:var(--gold-light);}
+footer{border-top:1px solid var(--border);padding:1.2rem;text-align:center;color:var(--muted);font-size:0.72rem;}
+footer span{color:var(--gold);}
+@media(max-width:600px){.nav-links{display:none;}.hero{padding:2rem 1rem 1.5rem;}section{padding:2rem 0;}.lc-label{font-size:0.5rem;}}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <div class="nav-brand">TOURney <span>by Greenskeeper Studios</span></div>
+    <div class="nav-links">
+      <a href="#review">Review</a>
+      <a href="#plan">Plan</a>
+      <a href="#runbook">Runbook</a>
+      <a href="#executing">Executing</a>
+      <a href="#audit">Audit</a>
+      <a href="#concluded">Concluded</a>
+    </div>
+  </div>
+</nav>
+
+<!-- LIFECYCLE-BAR-START -->
+<div class="lifecycle-bar">
+  <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Review</div></div>
+  <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Plan</div></div>
+  <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Runbook</div></div>
+  <div class="lc-stage"><div class="lc-pill"></div><div class="lc-label">Executing</div></div>
+  <div class="lc-stage"><div class="lc-pill"></div><div class="lc-label">Audit</div></div>
+  <div class="lc-stage"><div class="lc-pill"></div><div class="lc-label">Concluded</div></div>
+</div>
+<!-- LIFECYCLE-BAR-END -->
+
+<div class="hero">
+  <div class="hero-eyebrow">Feature Depth</div>
+  <h1><span>TOURney</span> — Feature Depth Review · May 22, 2026</h1>
+  <p class="hero-sub">Dedicated audit of feature completeness — course data model, scorecard depth, bug-fab capabilities, admin feature surface, and captain designation.</p>
+  <div class="hero-meta">
+    <span>📅 May 22, 2026</span>
+    <span>🤖 Claude Sonnet 4.6</span>
+    <span>🏢 Greenskeeper Studios</span>
+    <span>🔒 Internal Only</span>
+  </div>
+</div>
+
+<section id="review">
+<div class="wrapper">
+
+<div class="section-header">
+  <div class="section-eyebrow">Stage 1 — Review</div>
+  <h2 class="section-title">Feature Depth Audit</h2>
+  <p class="section-desc">Dedicated axis review — what's built, what's shallow, what's missing entirely. Every finding cites file or DB evidence.</p>
+</div>
+
+<div class="score-grid">
+  <div class="score-cell"><div class="score-num score-green">A</div><div class="score-label">Architecture</div></div>
+  <div class="score-cell"><div class="score-num score-gold">B+</div><div class="score-label">Feature Depth</div></div>
+  <div class="score-cell"><div class="score-num score-green">A</div><div class="score-label">UX Polish</div></div>
+  <div class="score-cell"><div class="score-num score-gold">A−</div><div class="score-label">Security</div></div>
+  <div class="score-cell"><div class="score-num score-blue">B−</div><div class="score-label">Business</div></div>
+  <div class="score-cell"><div class="score-num score-gold">B+</div><div class="score-label">Deployment</div></div>
+  <div class="score-cell"><div class="score-num score-gold">B+</div><div class="score-label">Performance</div></div>
+  <div class="score-cell"><div class="score-num score-gold">B+</div><div class="score-label">Data Model</div></div>
+</div>
+
+<div class="card">
+  <div class="card-title">Grade Rationale — Feature Depth B+</div>
+  <p>Down from A− (full-platform reviews). This dedicated axis review surfaces what averaged-grade reviews miss. The core tournament loop is complete and impressive — 12 scoring formats, realtime everywhere, PWA-ready. But three structural gaps hold it off A: (1) <strong>no courses/holes DB table</strong> — the promised course page doesn't exist and scorecard has no per-hole yardage data model; (2) <strong>bug-fab is single-image</strong> — <code>platform_bugs.image_data TEXT</code> means one screenshot per report; (3) <strong>captain designation has settings keys but no admin write path</strong> — <code>team_a_captain</code> and <code>challengers_captain</code> exist in home.html fetch array but admin.html never writes them. Runbook closes all three.</p>
+</div>
+
+<div class="card">
+  <div class="card-title">What TOURney Is</div>
+  <p>Multi-tenant golf tournament SaaS PWA. Each tournament lives at <code>/t/{slug}/</code>. Single-page HTML files served via Vercel static deploy. Supabase for DB + auth + realtime + edge functions. Admin configures everything from <code>/t/{slug}/admin</code>. Players register via home page RSVP form. Scores entered hole-by-hole via scorecard. Scoreboard updates in realtime. Feed shows activity. Bug-fab (owner-only) logs issues to <code>platform_bugs</code> with a screenshot.</p>
+</div>
+
+<div class="grid-3">
+  <div class="stack-item"><div class="stack-label">Frontend</div><div class="stack-value">Vanilla HTML/JS</div><div class="stack-note">MPA — one HTML file per page, no framework</div></div>
+  <div class="stack-item"><div class="stack-label">Backend / DB</div><div class="stack-value">Supabase (PostgreSQL)</div><div class="stack-note">16 migrations (000–015), RLS on all tables</div></div>
+  <div class="stack-item"><div class="stack-label">Hosting</div><div class="stack-value">Vercel Static</div><div class="stack-note">Push to main → instant deploy, full security headers</div></div>
+  <div class="stack-item"><div class="stack-label">PWA Cache</div><div class="stack-value">sw.js tourney-v37</div><div class="stack-note">25 precached files, CI auto-bump on merge</div></div>
+  <div class="stack-item"><div class="stack-label">Init Layer</div><div class="stack-value">tourney-init.js</div><div class="stack-note">Slug detection, brand injection, auth context, back-button guard</div></div>
+  <div class="stack-item"><div class="stack-label">Routing</div><div class="stack-value">vercel.json rewrites</div><div class="stack-note">All /t/:slug/* → tournament HTML pages</div></div>
+</div>
+
+<div class="card" style="margin-top:0.7rem">
+  <div class="card-title">Edge Functions</div>
+  <ul>
+    <li><strong>create-checkout</strong> — Stripe Checkout session creator, JWT-gated (auth.uid required)</li>
+    <li><strong>stripe-webhook</strong> — Stripe event → DB sync, signature-verified</li>
+    <li><strong>send-install-email</strong> — PWA install link on player registration, webhook Authorization header gated (SEND_INSTALL_EMAIL_SECRET unset — Rob manual)</li>
+    <li><strong>send-push</strong> — Web push notifications on score events, auth-checked against tournament_admins</li>
+    <li><strong>log-client-error</strong> — JS error + 404 + fetch failure logging to platform_bugs</li>
+  </ul>
+</div>
+
+<div class="card">
+  <div class="card-title">DB Tables (16 migrations)</div>
+  <ul>
+    <li><strong>tournaments</strong> — anchor table, owner_email, slug, tier, stripe_*</li>
+    <li><strong>tournament_admins</strong> — composite PK (tournament_id, email), canonical admin gate</li>
+    <li><strong>players</strong> — registration rows, handicap, trash_talk, available_dates, hat</li>
+    <li><strong>scores</strong> — hole-by-hole, day_number, player_id, gross_score</li>
+    <li><strong>settings</strong> — key/value per tournament (33 typed keys via /lib/settings-keys.js)</li>
+    <li><strong>rounds</strong> — day_number, format_front, format_back, status, tee_time</li>
+    <li><strong>trash_talk</strong> — scoreboard posts with team + player_name</li>
+    <li><strong>push_subscriptions</strong> — browser push endpoints per player</li>
+    <li><strong>invitations</strong> — invite-code gate (presently bypassed)</li>
+    <li><strong>player_accounts</strong> — billing_status (comped/active/inactive/free)</li>
+    <li><strong>mygolf_profiles</strong> — first_name, last_name, email, handicap, avatar_url (cross-tournament identity)</li>
+    <li><strong>donations</strong> — donation amounts per tournament</li>
+    <li><span class="pill pill-red">MISSING</span> <strong>courses / course_holes</strong> — no migration exists. course.html page also absent from repo root.</li>
+  </ul>
+</div>
+
+<div class="table-wrap" style="margin-bottom:0.7rem">
+  <table class="page-table">
+    <thead><tr><th>Route</th><th>File</th><th>Status</th><th>Feature Depth</th></tr></thead>
+    <tbody>
+      <tr><td class="url">/t/:slug</td><td class="file">home.html</td><td><span class="pill pill-green">Live</span></td><td>Full — hero, about, RSVP, field, schedule, teams, format, standings hero</td></tr>
+      <tr><td class="url">/t/:slug/scoreboard</td><td class="file">scoreboard.html</td><td><span class="pill pill-green">Live</span></td><td>Full — realtime, multi-day, team/individual, format-aware, trash talk</td></tr>
+      <tr><td class="url">/t/:slug/scorecard</td><td class="file">scorecard.html</td><td><span class="pill pill-green">Live</span></td><td>Partial — hole-by-hole input, pars from settings, <strong>no per-hole yardage</strong></td></tr>
+      <tr><td class="url">/t/:slug/feed</td><td class="file">feed.html</td><td><span class="pill pill-green">Live</span></td><td>Full — activity cards, HIO confetti, realtime, skeleton shimmer</td></tr>
+      <tr><td class="url">/t/:slug/profile</td><td class="file">profile.html</td><td><span class="pill pill-green">Live</span></td><td>Partial — stats from scores table, no mygolf cross-tournament history</td></tr>
+      <tr><td class="url">/t/:slug/directory</td><td class="file">directory.html</td><td><span class="pill pill-green">Live</span></td><td>Full — player roster, handicap tiers, team badges</td></tr>
+      <tr><td class="url">/t/:slug/admin</td><td class="file">admin.html</td><td><span class="pill pill-green">Live</span></td><td>Partial — rounds/pairings/Design tab, team assignment. <strong>No course tab, no score edit, no captain toggle</strong></td></tr>
+      <tr><td class="url">/t/:slug/course</td><td class="file">course.html</td><td><span class="pill pill-red">MISSING</span></td><td>File absent from repo root. No courses/course_holes DB table.</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="table-wrap" style="margin-bottom:0.7rem">
+  <table class="page-table">
+    <thead><tr><th>Route</th><th>File</th><th>Status</th></tr></thead>
+    <tbody>
+      <tr><td class="url">/platform</td><td class="file">platform.html</td><td><span class="pill pill-green">Live</span></td></tr>
+      <tr><td class="url">/create</td><td class="file">create.html</td><td><span class="pill pill-green">Live</span></td></tr>
+      <tr><td class="url">/player-upgrade</td><td class="file">player-upgrade.html</td><td><span class="pill pill-green">Live</span></td></tr>
+      <tr><td class="url">/marketing</td><td class="file">marketing.html</td><td><span class="pill pill-green">Live</span></td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="grid-2">
+  <div class="card">
+    <div class="card-title">Strengths</div>
+    <ul>
+      <li><strong>Complete core loop</strong> — register → score → leaderboard → feed. All pages live and realtime. Every score update propagates immediately via Supabase postgres_changes.</li>
+      <li><strong>12 scoring formats</strong> — stroke, scramble, best_ball, stableford, match, alt_shot, chapman, skins, greensomes, mod_stableford, nassau, superball. Format-aware scoring on scoreboard. <code>scorecard.html</code> format_front/format_back from rounds table.</li>
+      <li><strong>RSVP auto-fill from mygolf_profiles</strong> — session email pre-fills registration form. <code>home.html:submitRsvp</code> ties mygolf_profile_id.</li>
+      <li><strong>Admin-as-player auto-include</strong> — <code>home.html:refreshField()</code> now queries <code>mygolf_profiles</code> for <code>tournament.owner_email</code> and prepends admin if not registered. Opt-out via <code>admin_show_as_player=false</code> setting.</li>
+      <li><strong>Admin Design tab depth</strong> — 33 typed settings keys covering hero, about, teams, registration caps, CTA text, colors, logo, format notes, schedule JSON. <code>/lib/settings-keys.js</code> const enum prevents key drift.</li>
+      <li><strong>Bug-fab on every page</strong> — <code>bug-fab.js</code> owner-gated, captures URL + screenshot (base64), logs to <code>platform_bugs</code> + <code>log-client-error</code> edge function auto-captures JS errors and 404s.</li>
+    </ul>
+  </div>
+  <div class="card">
+    <div class="card-title">Gaps / Bugs (Evidence-Cited)</div>
+    <ul>
+      <li>
+        <span class="pill pill-red">HIGH</span> <strong>course.html absent, no courses/holes DB schema</strong><br>
+        SITEMAP.md promises <code>/course → course.html</code> "Course info. Par, yardage, hole layout." File not present in repo root. No <code>courses</code> or <code>course_holes</code> migration in 000–015. scorecard.html reads <code>pars_dayN</code> from settings (flat 18-value array) — no per-hole yardage, no tee box differentiation.<br>
+        <em>Upstream:</em> admin course setup (doesn't exist) → courses table (doesn't exist)<br>
+        <em>Downstream:</em> scorecard.html (no yardage display), course.html (404)
+      </li>
+      <li style="margin-top:0.5rem">
+        <span class="pill pill-orange">MED</span> <strong>bug-fab: single image only</strong><br>
+        <code>platform_bugs.image_data</code> = single TEXT column (base64). bug-fab.js: one <code>&lt;input type="file"&gt;</code>. Users cannot attach multiple screenshots or recordings per bug. Source: bug-fab.js modal HTML + platform_bugs schema (confirmed via SQL).<br>
+        <em>Upstream:</em> bug-fab.js → platform_bugs (single TEXT column)<br>
+        <em>Downstream:</em> platform.html bugs tab (renders image_data only)
+      </li>
+      <li style="margin-top:0.5rem">
+        <span class="pill pill-orange">MED</span> <strong>Captain designation: settings keys exist, no admin write path</strong><br>
+        home.html line 724 fetches <code>team_a_captain</code> and <code>challengers_captain</code> from settings. These keys are never written anywhere in admin.html. Admin has team assignment drag-UI but no captain button. captain display on home/scoreboard is dead — always empty.<br>
+        <em>Upstream:</em> admin.html team assignment → settings (team_a_captain never written)<br>
+        <em>Downstream:</em> home.html hero scoreboard caption, scoreboard.html team header
+      </li>
+      <li style="margin-top:0.5rem">
+        <span class="pill pill-orange">MED</span> <strong>No score admin-edit UI</strong><br>
+        Scores are write-once from scorecard.html. No admin path to correct a wrong gross_score. The scores table has no admin correction mechanism. admin.html player management shows player list but no score rows.<br>
+        <em>Upstream:</em> scorecard.html → scores table<br>
+        <em>Downstream:</em> scoreboard.html leaderboard — wrong score persists
+      </li>
+      <li style="margin-top:0.5rem">
+        <span class="pill pill-blue">LOW</span> <strong>admin-as-player: opt-out setting exists but no admin UI toggle</strong><br>
+        <code>admin_show_as_player</code> key fetched in home.html, <code>_adminShowAsPlayer</code> module-level var set from it. But admin.html Design tab has no checkbox to write this setting. Admin cannot turn it off without direct DB edit.<br>
+        <em>Upstream:</em> admin.html Design tab (missing toggle) → settings table<br>
+        <em>Downstream:</em> home.html refreshField()
+      </li>
+    </ul>
+  </div>
+</div>
+
+</div>
+</section>
+
+<section id="plan">
+<div class="wrapper">
+
+<div class="section-header">
+  <div class="section-eyebrow">Stage 2 — Plan</div>
+  <h2 class="section-title">Strategic Priorities</h2>
+  <p class="section-desc">Ordered by player-facing impact. Course data model unlocks two user-filed bugs simultaneously.</p>
+</div>
+
+<div class="card">
+  <div class="card-title">P1 — Course Data Model + course.html (Unlocks cc8bac7a + 4915b3a7)</div>
+  <p>Create <code>courses</code> + <code>course_holes</code> DB tables. Add Course tab in admin.html to enter tee box name + 18-hole par/yardage. Create <code>course.html</code> page showing hole layout. Wire scorecard.html to show yardage per hole from active course. This is the highest-value unlock: two user bugs closed, a missing page shipped, and the scorecard gets real depth.</p>
+</div>
+<div class="card">
+  <div class="card-title">P2 — Multi-Image Bug Reporting (Closes 5a8ef883)</div>
+  <p>Migrate <code>platform_bugs</code> to support up to 3 images. Add <code>image_data_2 TEXT</code> + <code>image_data_3 TEXT</code> columns (simpler than an array, no client-side change to existing rows). Update bug-fab.js to allow adding up to 3 files sequentially. Update platform.html bugs tab to render all 3. Owner-only so RLS surface is minimal.</p>
+</div>
+<div class="card">
+  <div class="card-title">P3 — Captain Designation UI (Closes half of 17a90993)</div>
+  <p><code>team_a_captain</code> and <code>challengers_captain</code> settings keys already exist and are already fetched by home.html. Just need admin.html to write them. Add "Set Captain" button to each player chip in the team assignment UI. Write to settings. Wire home.html and scoreboard.html to display captain badge. Zero schema change.</p>
+</div>
+<div class="card">
+  <div class="card-title">P4 — Admin Score Edit</div>
+  <p>Add score correction modal in admin.html player management tab. Click a player → slide-in panel shows their scores by day + hole + gross_score. Editable. Save fires UPDATE scores WHERE id = score.id. Prevents locked-in typos from corrupting the leaderboard.</p>
+</div>
+<div class="card">
+  <div class="card-title">P5 — Admin-As-Player Toggle in Admin UI</div>
+  <p>Add checkbox to admin.html Design tab: "Include me as a player in the field." Writes <code>admin_show_as_player=false</code> to settings when unchecked. Zero code change needed on home.html — the opt-out logic is already wired.</p>
+</div>
+
+<div class="grid-2" style="margin-top:1rem">
+  <div class="idea-card idea-1">
+    <div class="idea-number">1</div>
+    <div class="idea-tag"><span class="pill pill-gold">Schema + Pages</span></div>
+    <div class="idea-title">Course Card on Scorecard</div>
+    <div class="idea-body">While scoring hole 7, show: Hole 7 · Par 4 · 387 yards (White tees). Transforms the scorecard from a data entry form into a caddy card. Requires courses + course_holes schema.</div>
+    <div class="idea-plan"><strong>Build:</strong> Migration → admin Course tab → scorecard.html fetch course_holes → inline yardage/par display per hole card</div>
+  </div>
+  <div class="idea-card idea-2">
+    <div class="idea-number">2</div>
+    <div class="idea-tag"><span class="pill pill-blue">Bug Reporting</span></div>
+    <div class="idea-title">Multi-Screenshot Bug Reports</div>
+    <div class="idea-body">One screenshot rarely tells the full story. Allow up to 3 images per bug report. No recordings needed yet — images cover 95% of bug evidence. Columns image_data_2 and image_data_3 added to platform_bugs.</div>
+    <div class="idea-plan"><strong>Build:</strong> Apply migration → update bug-fab.js (add/remove file UI) → platform.html renders all 3 images</div>
+  </div>
+  <div class="idea-card idea-3">
+    <div class="idea-number">3</div>
+    <div class="idea-tag"><span class="pill pill-green">Admin UX</span></div>
+    <div class="idea-title">Captain Badges Everywhere</div>
+    <div class="idea-body">Captain designation shows on the player field, scoreboard team headers, and home page. Uses existing settings keys — zero new schema. High visibility for minimal effort.</div>
+    <div class="idea-plan"><strong>Build:</strong> admin.html team chip "Set Captain" button → write to settings → home.html + scoreboard.html captain badge display</div>
+  </div>
+  <div class="idea-card idea-4">
+    <div class="idea-number">4</div>
+    <div class="idea-tag"><span class="pill pill-orange">Admin Tools</span></div>
+    <div class="idea-title">Score Correction Panel</div>
+    <div class="idea-body">Admin corrects a wrong score without touching the DB. Player tab → click player → score grid by day/hole → inline edit → save. Prevents a wrong number from living in the leaderboard all weekend.</div>
+    <div class="idea-plan"><strong>Build:</strong> admin.html slide-in panel, UPDATE scores WHERE id = row.id, realtime push via postgres_changes propagates to scoreboard</div>
+  </div>
+  <div class="idea-card idea-5">
+    <div class="idea-number">5</div>
+    <div class="idea-tag"><span class="pill pill-purple">Self-Service</span></div>
+    <div class="idea-title">Admin-As-Player Opt-Out</div>
+    <div class="idea-body">The auto-include-admin feature ships with no UI to disable it. A single Design tab checkbox writes admin_show_as_player=false. Critical for multi-admin tournaments where not all admins are players.</div>
+    <div class="idea-plan"><strong>Build:</strong> admin.html Design tab checkbox → write setting → home.html already reads it</div>
+  </div>
+</div>
+
+<div style="margin-top:1rem">
+  <div class="roadmap-item">
+    <div class="roadmap-icon">🏌️</div>
+    <div class="roadmap-content">
+      <div class="roadmap-title">M1 — Course Data Model Ships</div>
+      <div class="roadmap-desc">courses + course_holes tables live. Admin can enter par/yardage for each hole. scorecard.html shows yardage inline. course.html hole layout page live. Two user bugs closed.</div>
+      <div class="roadmap-action"><strong>Gate:</strong> Runbook Steps 1–4 complete</div>
+    </div>
+  </div>
+  <div class="roadmap-item">
+    <div class="roadmap-icon">📸</div>
+    <div class="roadmap-content">
+      <div class="roadmap-title">M2 — Rich Bug Reporting</div>
+      <div class="roadmap-desc">Up to 3 screenshots per bug report. platform.html renders all attached images. One user bug closed.</div>
+      <div class="roadmap-action"><strong>Gate:</strong> Runbook Step 5 complete</div>
+    </div>
+  </div>
+  <div class="roadmap-item">
+    <div class="roadmap-icon">⚙️</div>
+    <div class="roadmap-content">
+      <div class="roadmap-title">M3 — Admin Feature Completeness</div>
+      <div class="roadmap-desc">Captain designation, score edit, and admin-as-player toggle all live. Admin is no longer missing any core tournament management capability.</div>
+      <div class="roadmap-action"><strong>Gate:</strong> Runbook Steps 6–8 complete</div>
+    </div>
+  </div>
+</div>
+
+</div>
+</section>
+
+<section id="runbook">
+<div class="wrapper">
+
+<div class="section-header">
+  <div class="section-eyebrow">Stage 3 — Runbook</div>
+  <h2 class="section-title">Execution Steps</h2>
+  <p class="section-desc">8 ordered steps for tourney-execute. Each step is self-contained with upstream/downstream impact stated.</p>
+</div>
+
+<div class="runbook-steps">
+
+  <div class="rb-step">
+    <div class="rb-step-title">Create courses + course_holes migration</div>
+    <div class="rb-step-body">
+      Apply migration <code>016_course_holes.sql</code> via <code>mcp__claude_ai_Supabase__apply_migration</code>.<br><br>
+      SQL:<br>
+      <code>CREATE TABLE courses (id UUID PRIMARY KEY DEFAULT gen_random_uuid(), tournament_id UUID NOT NULL REFERENCES tournaments(id) ON DELETE CASCADE, name TEXT NOT NULL DEFAULT 'Course', tee_box TEXT NOT NULL DEFAULT 'White', created_at TIMESTAMPTZ DEFAULT now(), UNIQUE(tournament_id, tee_box));</code><br><br>
+      <code>CREATE TABLE course_holes (id UUID PRIMARY KEY DEFAULT gen_random_uuid(), course_id UUID NOT NULL REFERENCES courses(id) ON DELETE CASCADE, hole_number INT NOT NULL CHECK (hole_number BETWEEN 1 AND 18), par INT NOT NULL DEFAULT 4 CHECK (par BETWEEN 3 AND 5), yardage INT CHECK (yardage > 0 AND yardage < 700), UNIQUE(course_id, hole_number));</code><br><br>
+      RLS: <code>ALTER TABLE courses ENABLE ROW LEVEL SECURITY; CREATE POLICY "public read courses" ON courses FOR SELECT USING (true); CREATE POLICY "admin write courses" ON courses FOR ALL TO authenticated USING (EXISTS (SELECT 1 FROM tournament_admins WHERE tournament_id = courses.tournament_id AND email = auth.email())) WITH CHECK (EXISTS (SELECT 1 FROM tournament_admins WHERE tournament_id = courses.tournament_id AND email = auth.email()));</code><br>
+      Same pattern for course_holes (JOIN to courses to get tournament_id).<br><br>
+      <strong>Upstream:</strong> tournaments table (FK)<br>
+      <strong>Downstream:</strong> admin.html Course tab (Step 2), scorecard.html (Step 4), course.html (Step 3)
+    </div>
+    <div class="rb-verify"><strong>Verify</strong> migration listed in Supabase migrations. SELECT from courses and course_holes returns no error. RLS confirmed with anon client (should see rows), auth client (should write).</div>
+  </div>
+
+  <div class="rb-step">
+    <div class="rb-step-title">Add Course tab to admin.html</div>
+    <div class="rb-step-body">
+      Edit <code>admin.html</code>. Add "Course" tab button in the admin tabs nav. Add tab panel with: tee box name input (text, default "White"), 18-row hole grid (columns: Hole #, Par selector 3/4/5, Yardage input), Save Course button.<br><br>
+      Save handler: UPSERT to <code>courses</code> (tournament_id + tee_box), then batch UPSERT all 18 rows to <code>course_holes</code> (course_id + hole_number + par + yardage). On load: fetch existing course for this tournament, populate fields if exists.<br><br>
+      <strong>Upstream:</strong> tournament.id (from tourney-init.js ready), courses + course_holes tables<br>
+      <strong>Downstream:</strong> scorecard.html (reads course_holes), course.html (reads course_holes)
+    </div>
+    <div class="rb-verify"><strong>Verify</strong> admin Course tab renders. Enter 18 holes, save. Check Supabase: SELECT * FROM course_holes WHERE course_id IN (SELECT id FROM courses WHERE tournament_id = '285169ad...') returns 18 rows with correct par/yardage. Load admin again — fields repopulate from DB.</div>
+  </div>
+
+  <div class="rb-step">
+    <div class="rb-step-title">Create course.html (new page)</div>
+    <div class="rb-step-body">
+      Create <code>course.html</code> at repo root. Follows same pattern as directory.html / champions.html — tourney-init.js for brand injection, Supabase client, fetch course + course_holes for tournament.<br><br>
+      Page shows: tee box name header, 18-hole table (Hole | Par | Yardage | Handicap ranking placeholder). Empty state if no course set up. Links to admin course setup if admin viewing.<br><br>
+      Register in vercel.json: <code>{ "source": "/t/:slug/course", "destination": "/course.html" }</code><br><br>
+      Add to sw.js PRECACHE array. Bump SW version to tourney-v38.<br><br>
+      <strong>Upstream:</strong> courses + course_holes tables (Step 1), vercel.json routing<br>
+      <strong>Downstream:</strong> scoreboard.html "Course" nav link (if present), scorecard.html link to course page
+    </div>
+    <div class="rb-verify"><strong>Verify</strong> <code>https://tourney.greenskeeper.studio/t/johnston-county-hbca-superball-2026/course</code> loads (not 404). Shows hole table with JC course data if Step 2 was run, or clean empty state if not. No console errors.</div>
+  </div>
+
+  <div class="rb-step">
+    <div class="rb-step-title">Wire scorecard.html for per-hole yardage</div>
+    <div class="rb-step-body">
+      Edit <code>scorecard.html</code>. In the data fetch Promise.all, add: <code>sb.from('courses').select('id,tee_box').eq('tournament_id', tournamentId).maybeSingle()</code> and conditionally <code>sb.from('course_holes').select('hole_number,par,yardage').eq('course_id', courseRow.id).order('hole_number')</code>.<br><br>
+      Build a map: <code>const holeData = {}; courseHoles.forEach(h => { holeData[h.hole_number] = h; });</code><br><br>
+      In each hole card render: below the hole number, add <code>&lt;div class="hole-meta"&gt;Par {par} · {yardage} yds&lt;/div&gt;</code> (only when holeData[n] exists). Add minimal CSS for .hole-meta (small muted text).<br><br>
+      <strong>Upstream:</strong> courses + course_holes (Step 1 + 2), rounds table (existing)<br>
+      <strong>Downstream:</strong> player experience — scorecard shows contextual data per hole
+    </div>
+    <div class="rb-verify"><strong>Verify</strong> scorecard.html renders hole cards with "Par 4 · 387 yds" (or actual JC data). If no course set up, hole cards render cleanly without error (graceful absence). Existing score-entry flow unaffected — scores still submit correctly.</div>
+  </div>
+
+  <div class="rb-step">
+    <div class="rb-step-title">Multi-image support for bug-fab</div>
+    <div class="rb-step-body">
+      Apply migration <code>017_platform_bugs_multi_image.sql</code>:<br>
+      <code>ALTER TABLE platform_bugs ADD COLUMN image_data_2 TEXT; ALTER TABLE platform_bugs ADD COLUMN image_data_3 TEXT;</code><br><br>
+      Edit <code>bug-fab.js</code>: Replace single <code>&lt;input type="file"&gt;</code> with a "Add screenshot" button that appends up to 3 file inputs sequentially (clicking adds one, each shows a remove ×). On submit, read all 3 inputs and include <code>image_data_2</code> and <code>image_data_3</code> in the INSERT payload (null if not set).<br><br>
+      Edit <code>platform.html</code> bugs tab: Where <code>b.image_data</code> is rendered, also render <code>b.image_data_2</code> and <code>b.image_data_3</code> in a flex row if present.<br><br>
+      <strong>Upstream:</strong> platform_bugs table (schema change), bug-fab.js submit logic<br>
+      <strong>Downstream:</strong> platform.html bugs tab (renders all 3 images)
+    </div>
+    <div class="rb-verify"><strong>Verify</strong> bug-fab modal shows "+ Add screenshot" button. Attach 2 screenshots. Submit. Check platform.html bugs tab — both images render. Old single-image bugs still display correctly (image_data_2 null = no second image shown).</div>
+  </div>
+
+  <div class="rb-step">
+    <div class="rb-step-title">Admin score edit panel</div>
+    <div class="rb-step-body">
+      Edit <code>admin.html</code>. In the Players tab, add "Edit Scores" button per player row. Clicking opens a slide-in panel showing a grid: rows = holes played, columns = day_number, cells = gross_score (editable input). On save: for each changed cell, run <code>sb.from('scores').update({ gross_score: newVal }).eq('id', scoreRow.id)</code>. Show success toast on completion.<br><br>
+      Fetch scores for selected player: <code>sb.from('scores').select('id,day_number,hole,gross_score').eq('player_id', player.id).eq('tournament_id', tournament.id).order('day_number').order('hole')</code>.<br><br>
+      <strong>Upstream:</strong> scores table (reads player scores), tournament.id<br>
+      <strong>Downstream:</strong> scoreboard.html leaderboard — corrected score propagates via realtime postgres_changes subscription
+    </div>
+    <div class="rb-verify"><strong>Verify</strong> admin Players tab shows "Edit Scores" button. Click → score panel opens for a player. Change one gross_score → save. Verify scoreboard.html leaderboard updates within 2 seconds (realtime). Verify the corrected value persists after page reload.</div>
+  </div>
+
+  <div class="rb-step">
+    <div class="rb-step-title">Captain designation in admin team assignment</div>
+    <div class="rb-step-body">
+      Edit <code>admin.html</code>. In the team assignment UI, each player chip in a team column gets a star button "⭐ Captain". Clicking it sets that player as captain. Only one captain per team — clicking another replaces the previous.<br><br>
+      On save: write to settings — <code>sb.from('settings').upsert({ tournament_id, key: 'team_a_captain', value: captainEmail }, { onConflict: 'tournament_id,key' })</code>. Same for challengers_captain.<br><br>
+      In <code>home.html</code>: <code>map.team_a_captain</code> already fetched (line 724). Wire to display "⭐ Captain" badge on the player card in the field grid when player email matches captain. In scoreboard.html, add captain badge to team member list.<br><br>
+      <strong>Upstream:</strong> admin.html team assignment → settings table (team_a_captain / challengers_captain keys)<br>
+      <strong>Downstream:</strong> home.html field grid, scoreboard.html team headers
+    </div>
+    <div class="rb-verify"><strong>Verify</strong> admin team assignment shows ⭐ button per player. Set Rob as captain. Save. Open home.html — field card for Rob shows captain badge. Open scoreboard.html — team header shows captain name. Settings table: SELECT value FROM settings WHERE key='team_a_captain' returns correct email.</div>
+  </div>
+
+  <div class="rb-step">
+    <div class="rb-step-title">Admin-as-player toggle in admin Design tab</div>
+    <div class="rb-step-body">
+      Edit <code>admin.html</code>. In the Design tab (brand settings section), add a checkbox row: "Show me as a player in the registered field" (default checked). On change: if unchecked, UPSERT <code>admin_show_as_player=false</code> to settings; if checked, UPSERT <code>admin_show_as_player=true</code> (or DELETE the key — home.html defaults to true when absent).<br><br>
+      On Design tab load: fetch <code>admin_show_as_player</code> setting, set checkbox state accordingly.<br><br>
+      <strong>Upstream:</strong> settings table (admin_show_as_player key)<br>
+      <strong>Downstream:</strong> home.html refreshField() — <code>_adminShowAsPlayer</code> module-level var already reads this setting
+    </div>
+    <div class="rb-verify"><strong>Verify</strong> admin Design tab shows checkbox, checked by default. Uncheck → save. Reload home.html — admin no longer appears in field grid. Re-check → admin reappears. Existing registered players unaffected in both states.</div>
+  </div>
+
+</div>
+</div>
+</section>
+
+<section id="executing">
+<div class="wrapper">
+<!-- EXECUTING-CONTENT-START -->
+<div class="stage-pending">
+  <p>Awaiting execution. Run <code>/tourney-execute 5-22-26-feature-depth-review.html</code> to proceed.</p>
+</div>
+<!-- EXECUTING-CONTENT-END -->
+</div>
+</section>
+
+<section id="audit">
+<div class="wrapper">
+<!-- AUDIT-CONTENT-START -->
+<div class="stage-pending">
+  <p>Awaiting execution. Run <code>/tourney-execute 5-22-26-feature-depth-review.html</code> to proceed.</p>
+</div>
+<!-- AUDIT-CONTENT-END -->
+</div>
+</section>
+
+<section id="concluded">
+<div class="wrapper">
+<!-- CONCLUDED-CONTENT-START -->
+<div class="stage-pending">
+  <p>Awaiting execution. Run <code>/tourney-execute 5-22-26-feature-depth-review.html</code> to proceed.</p>
+</div>
+<!-- CONCLUDED-CONTENT-END -->
+</div>
+</section>
+
+<footer>
+  Generated by <span>Claude Sonnet 4.6</span> · Greenskeeper Studios Internal · May 22, 2026
+  <br style="margin-top:0.3rem">
+  <a href="/platform" style="color:var(--muted);font-size:0.7rem;text-decoration:none">← Back to Platform Hub</a>
+</footer>
+
+</body>
+</html>

@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-05-22T14:00:00Z",
+  "updated_at": "2026-05-22T18:00:00Z",
   "description": "Per-axis grade history for TOURney platform. Updated automatically by review skills. Operations Action Board reads this file.",
   "axes": {
     "architecture": {
@@ -75,6 +75,13 @@
       "label": "Feature Depth",
       "cmd": "/tourney-review-feature-depth",
       "scores": [
+        {
+          "date": "2026-05-22",
+          "score": "B+",
+          "url": "/platform/5-22-26-feature-depth-review",
+          "review_title": "Feature Depth Review · May 22, 2026",
+          "notes": "Dedicated axis audit reveals B+. course.html absent from repo root. No courses/course_holes DB table in 16 migrations — scorecard has no per-hole yardage data model. bug-fab single-image only (platform_bugs.image_data TEXT). Captain settings keys (team_a_captain, challengers_captain) fetched by home.html but never written by admin.html. 8-step runbook: courses schema, admin Course tab, course.html, scorecard yardage, multi-image bug-fab, admin score edit, captain UI, admin-as-player toggle."
+        },
         {
           "date": "2026-05-22",
           "score": "A-",
