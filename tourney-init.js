@@ -145,7 +145,7 @@
       const isOwner = data.owner_email?.toLowerCase() === email.toLowerCase();
       const { data: adminRow } = isOwner ? { data: null } : await db
         .from('tournament_admins')
-        .select('id')
+        .select('tournament_id')
         .eq('tournament_id', data.id)
         .eq('email', email)
         .maybeSingle();
