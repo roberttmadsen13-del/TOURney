@@ -938,6 +938,8 @@ window.addEventListener('scroll', () => { document.getElementById('mainNav').cla
   loadHeroScoreboard(tournament.id);
 })();
 
+window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); window.deferredPrompt = e; });
+
 let MAX = 24;
 const TIER_MAP = { scratch:{label:'Scratch',cls:'pc-scratch'}, eagle:{label:'Eagle',cls:'pc-eagle'}, birdie:{label:'Birdie',cls:'pc-birdie'}, bogey:{label:'Bogey',cls:'pc-bogey'}, pretender:{label:'The Pretenders',cls:'pc-pretender'}, hacker:{label:'The Dreamers',cls:'pc-hacker'} };
 const DATE_LABELS = { aug21:'Aug 21-24',aug28:'Aug 28-31',sep4:'Sep 4-7',sep11:'Sep 11-14',sep18:'Sep 18-21',sep25:'Sep 25-28',oct2:'Oct 2-5',oct9:'Oct 9-12' };
@@ -1023,6 +1025,16 @@ window.submitRsvp = async function submitRsvp() {
   document.getElementById('successRsvp').classList.add('show');
   showToast(first + ' ' + last + ' is in the field.', 'Registration confirmed!');
   setTimeout(() => document.getElementById('field').scrollIntoView({ behavior: 'smooth' }), 900);
+
+  if (window.deferredPrompt) {
+    setTimeout(() => {
+      const b = document.createElement('div');
+      b.id = 'pwaBanner';
+      b.style.cssText = 'position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);background:#1c140a;border:1px solid rgba(192,144,48,0.4);border-radius:8px;padding:1rem 1.5rem;display:flex;align-items:center;gap:1rem;z-index:9999;box-shadow:0 8px 32px rgba(0,0,0,0.5);max-width:calc(100vw - 3rem)';
+      b.innerHTML = '<span style="font-size:1.5rem">⛳</span><div><div style="font-family:\'Barlow Condensed\',sans-serif;font-weight:700;font-size:.85rem;letter-spacing:.08em;color:#f0e6cc">Add TOURney to Home Screen</div><div style="font-size:.7rem;color:#7a6a54;margin-top:.1rem">Follow scores anywhere — no app store needed.</div></div><button onclick="window.deferredPrompt.prompt();this.closest(\'#pwaBanner\').remove()" style="background:#c09030;color:#0d0a05;border:none;border-radius:4px;padding:.45rem .9rem;font-family:\'Barlow Condensed\',sans-serif;font-weight:700;font-size:.72rem;letter-spacing:.12em;cursor:pointer;white-space:nowrap">Install</button><button onclick="this.closest(\'#pwaBanner\').remove()" style="background:none;border:none;color:#7a6a54;cursor:pointer;font-size:1.2rem;line-height:1;padding:.2rem">×</button>';
+      document.body.appendChild(b);
+    }, 1800);
+  }
 }
 
 async function refreshField() {

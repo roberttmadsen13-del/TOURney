@@ -123,8 +123,8 @@ footer span{color:var(--gold);}
   <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Review</div></div>
   <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Plan</div></div>
   <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Runbook</div></div>
-  <div class="lc-stage"><div class="lc-pill"></div><div class="lc-label">Executing</div></div>
-  <div class="lc-stage"><div class="lc-pill"></div><div class="lc-label">Audit</div></div>
+  <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Executing</div></div>
+  <div class="lc-stage lc-active"><div class="lc-pill"></div><div class="lc-label">Audit</div></div>
   <div class="lc-stage"><div class="lc-pill"></div><div class="lc-label">Concluded</div></div>
 </div>
 <!-- LIFECYCLE-BAR-END -->
@@ -442,9 +442,21 @@ Also create <code>assets/og-image.png</code> (1200×630) — can use logo-hero.s
 <section id="executing">
 <div class="wrapper">
 <!-- EXECUTING-CONTENT-START -->
-<div class="stage-pending">
-  <p>Awaiting execution. Run <code>/tourney-execute 5-19-26-master-plan.html</code> to proceed.</p>
+<div class="section-header">
+  <div class="section-eyebrow">Stage 4 — Executing</div>
+  <h2 class="section-title">Execution Log</h2>
+  <p class="section-desc">2026-05-21 · claude-sonnet-4-6</p>
 </div>
+<div class="exec-step"><span class="exec-badge exec-done">Done</span><div class="exec-body"><strong>OG / Social Meta Tags</strong> — All 18 app pages. og:type, og:site_name, og:image, twitter:card. Tournament slug pages get dynamic og:title/description/url via tourney-init.js. Shipped via 5-20-26-claude-review execution.</div></div>
+<div class="exec-step"><span class="exec-badge exec-done">Done</span><div class="exec-body"><strong>Social Proof Block</strong> — Added "Proven in the Field" section to marketing.html after pricing. 4-stat grid: 22 players, 3 days, 2 HIOs, running since 2025. Inserts before CTA section.</div></div>
+<div class="exec-step"><span class="exec-badge exec-done">Done</span><div class="exec-body"><strong>Invite Gate — Request Access</strong> — login.html signup mode: added "No invite? Request access →" mailto link (robert.t.madsen13@gmail.com, pre-filled subject + body). Visible on the signup form, not just in error state.</div></div>
+<div class="exec-step"><span class="exec-badge exec-done">Done</span><div class="exec-body"><strong>Login Signup Error</strong> — Existing code at login.html:234 already gates non-players with "This email isn't registered as a player. Request an invitation →". Error handling at login.html:246 already shows friendly "already exists" message. No change needed — gate is solid.</div></div>
+<div class="exec-step"><span class="exec-badge exec-done">Done</span><div class="exec-body"><strong>PWA Install Prompt Post-RSVP</strong> — home.html: added window.addEventListener('beforeinstallprompt') to capture deferredPrompt. After submitRsvp() success, shows install banner (⛳ icon, "Add TOURney to Home Screen", Install + dismiss buttons) 1.8s after confirmation toast.</div></div>
+<div class="exec-step"><span class="exec-badge exec-done">Done</span><div class="exec-body"><strong>Score Admin-Edit UI</strong> — admin.html. Shipped via 5-20-26-claude-review execution.</div></div>
+<div class="exec-step"><span class="exec-badge exec-done">Done</span><div class="exec-body"><strong>Profile Loading Skeleton</strong> — profile.html shimmer CSS. Shipped via 5-20-26-claude-review execution.</div></div>
+<div class="exec-step"><span class="exec-badge exec-done">Done</span><div class="exec-body"><strong>Lighthouse CI</strong> — .github/lighthouse-budget.json thresholds raised. Shipped via 5-20-26-claude-review execution.</div></div>
+<div class="exec-step"><span class="exec-badge exec-skipped">Deferred</span><div class="exec-body"><strong>CSP unsafe-inline Removal</strong> — [Large] tagged. Requires audit of all inline handlers + nonce setup. Deferred to dedicated security ticket.</div></div>
+<div class="exec-step"><span class="exec-badge exec-blocked">Blocked</span><div class="exec-body"><strong>LLC + Mercury + Stripe + SEND_INSTALL_EMAIL_SECRET + GitHub CI Secrets + reg_open</strong> — All Rob manual. Cannot execute without human action.</div></div>
 <!-- EXECUTING-CONTENT-END -->
 </div>
 </section>
@@ -452,8 +464,40 @@ Also create <code>assets/og-image.png</code> (1200×630) — can use logo-hero.s
 <section id="audit">
 <div class="wrapper">
 <!-- AUDIT-CONTENT-START -->
-<div class="stage-pending">
-  <p>Awaiting execution. Run <code>/tourney-execute 5-19-26-master-plan.html</code> to proceed.</p>
+<div class="section-header">
+  <div class="section-eyebrow">Stage 5 — Audit</div>
+  <h2 class="section-title">Audit Results</h2>
+  <p class="section-desc">Grade: B+. 2026-05-21 · claude-sonnet-4-6</p>
+</div>
+<div class="card">
+  <div class="card-title">What Shipped (8 of 9 engineering items)</div>
+  <ul>
+    <li>OG / Social meta tags — all 18 pages</li>
+    <li>Social proof block — marketing.html "Proven in the Field" section (22 players, 3 days, 2 HIOs)</li>
+    <li>Invite gate — "No invite? Request access →" mailto link in login.html signup mode</li>
+    <li>Login signup error — existing gate already handles edge case cleanly (no change needed)</li>
+    <li>PWA install prompt — home.html beforeinstallprompt capture + post-RSVP banner</li>
+    <li>Score admin-edit UI — admin.html inline edit flow</li>
+    <li>Profile loading skeleton — profile.html shimmer CSS</li>
+    <li>Lighthouse CI — performance 0.7→0.85, accessibility 0.85→0.9</li>
+  </ul>
+</div>
+<div class="card">
+  <div class="card-title">Deferred</div>
+  <ul>
+    <li><strong>CSP unsafe-inline removal</strong> — [Large] scoped to dedicated security ticket. Nonce setup required across all inline handlers.</li>
+  </ul>
+</div>
+<div class="card">
+  <div class="card-title">Still Blocked — Rob Manual</div>
+  <ul>
+    <li><strong>LLC + EIN</strong> — Greenskeeper Studios LLC. Revenue unlock gate.</li>
+    <li><strong>Mercury business account</strong> — after LLC.</li>
+    <li><strong>Stripe live keys</strong> — STRIPE_SECRET_KEY + STRIPE_WEBHOOK_SECRET in Vercel.</li>
+    <li><strong>SEND_INSTALL_EMAIL_SECRET</strong> — Supabase Edge Function Secrets + DB Webhook.</li>
+    <li><strong>GitHub CI secrets</strong> — SUPABASE_ACCESS_TOKEN + SUPABASE_PROJECT_REF.</li>
+    <li><strong>reg_open = true</strong> — flip when ready to open registration.</li>
+  </ul>
 </div>
 <!-- AUDIT-CONTENT-END -->
 </div>
@@ -462,8 +506,24 @@ Also create <code>assets/og-image.png</code> (1200×630) — can use logo-hero.s
 <section id="concluded">
 <div class="wrapper">
 <!-- CONCLUDED-CONTENT-START -->
-<div class="stage-pending">
-  <p>Awaiting execution. Run <code>/tourney-execute 5-19-26-master-plan.html</code> to proceed.</p>
+<div class="section-header">
+  <div class="section-eyebrow">Stage 6 — Concluded</div>
+  <h2 class="section-title">Ticket Concluded</h2>
+  <p class="section-desc">2026-05-21 · claude-sonnet-4-6</p>
+</div>
+<div class="card">
+  <div class="card-title">Summary</div>
+  <p>8 of 9 engineering items shipped: OG tags, social proof block, invite gate, PWA install prompt, score admin-edit, profile skeleton, Lighthouse CI. CSP deferred (large scope). 6 Rob manual items remain blocking business axis — LLC, Stripe, secrets, reg_open. Platform engineering layer is B+; business axis stays C+ until Rob manual items clear.</p>
+</div>
+<div class="card">
+  <div class="card-title">Rob's Action Items</div>
+  <ul>
+    <li><strong>LLC + EIN</strong> — unlocks Stripe + Mercury.</li>
+    <li><strong>Stripe</strong> — STRIPE_SECRET_KEY + STRIPE_WEBHOOK_SECRET in Vercel → checkout activates.</li>
+    <li><strong>SEND_INSTALL_EMAIL_SECRET</strong> — Supabase secrets + DB webhook auth header.</li>
+    <li><strong>GitHub CI secrets</strong> — SUPABASE_ACCESS_TOKEN + SUPABASE_PROJECT_REF for deploy-functions workflow.</li>
+    <li><strong>reg_open = true</strong> — flip in settings table when ready.</li>
+  </ul>
 </div>
 <!-- CONCLUDED-CONTENT-END -->
 </div>

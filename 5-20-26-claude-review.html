@@ -147,8 +147,8 @@ footer span{color:var(--gold);}
   <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Review</div></div>
   <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Plan</div></div>
   <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Runbook</div></div>
-  <div class="lc-stage"><div class="lc-pill"></div><div class="lc-label">Executing</div></div>
-  <div class="lc-stage"><div class="lc-pill"></div><div class="lc-label">Audit</div></div>
+  <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Executing</div></div>
+  <div class="lc-stage lc-active"><div class="lc-pill"></div><div class="lc-label">Audit</div></div>
   <div class="lc-stage"><div class="lc-pill"></div><div class="lc-label">Concluded</div></div>
 </div>
 <!-- LIFECYCLE-BAR-END -->
@@ -587,8 +587,29 @@ footer span{color:var(--gold);}
 <section id="audit">
 <div class="wrapper">
 <!-- AUDIT-CONTENT-START -->
-<div class="stage-pending">
-  <p>Awaiting execution. Run <code>/tourney-execute 5-20-26-claude-review.html</code> to proceed.</p>
+<div class="section-header">
+  <div class="section-eyebrow">Stage 5 — Audit</div>
+  <h2 class="section-title">Audit Results</h2>
+  <p class="section-desc">Grade: B+. 2026-05-21 · claude-sonnet-4-6</p>
+</div>
+<div class="card">
+  <div class="card-title">What Shipped</div>
+  <ul>
+    <li>OG / Social meta tags on all 18 app pages — og:type, og:site_name, og:image, twitter:card. Tournament pages get dynamic og:title/description/url via tourney-init.js:181.</li>
+    <li>Score admin-edit UI in admin.html — "All Scores" table with per-hole Edit → inline input → saveScore() calling sb.from('scores').update().</li>
+    <li>Profile page loading skeleton — shimmer CSS (@keyframes shimmer, .skeleton, .ps-*). Auto-hides when showProfile() fires.</li>
+    <li>RLS migration 013 — lock invitations + push_subscriptions to authenticated users. Applied to live Supabase.</li>
+    <li>Lighthouse CI — .github/lighthouse-budget.json performance minScore 0.7→0.85, accessibility 0.85→0.9.</li>
+  </ul>
+</div>
+<div class="card">
+  <div class="card-title">Still Open — Rob Manual</div>
+  <ul>
+    <li><strong>SEND_INSTALL_EMAIL_SECRET</strong> — Supabase Edge Function Secrets + DB Webhook Authorization header.</li>
+    <li><strong>LLC formation</strong> — Greenskeeper Studios LLC + EIN. Revenue unlock blocked.</li>
+    <li><strong>Stripe</strong> — live keys in Vercel + webhook endpoint. Checkout flow dead until done.</li>
+    <li><strong>AWS S3 backup</strong> — weekly DB backup bucket + IAM + GitHub secrets.</li>
+  </ul>
 </div>
 <!-- AUDIT-CONTENT-END -->
 </div>
@@ -597,8 +618,27 @@ footer span{color:var(--gold);}
 <section id="concluded">
 <div class="wrapper">
 <!-- CONCLUDED-CONTENT-START -->
-<div class="stage-pending">
-  <p>Awaiting execution. Run <code>/tourney-execute 5-20-26-claude-review.html</code> to proceed.</p>
+<div class="section-header">
+  <div class="section-eyebrow">Stage 6 — Concluded</div>
+  <h2 class="section-title">Ticket Concluded</h2>
+  <p class="section-desc">2026-05-21 · claude-sonnet-4-6</p>
+</div>
+<div class="card">
+  <div class="card-title">Summary</div>
+  <p>All 5 engineering steps shipped clean: OG tags across 18 pages, score admin-edit UI, profile skeleton, RLS migration 013, Lighthouse CI thresholds raised. Grade B+ — engineering layer complete. Business axis remains C+ blocked by 4 Rob manual items (LLC, Stripe, email secret, S3).</p>
+</div>
+<div class="card">
+  <div class="card-title">Rob's Action Items</div>
+  <ul>
+    <li><strong>SEND_INSTALL_EMAIL_SECRET</strong> — Supabase Dashboard → Settings → Edge Function Secrets → add key. Then Database → Webhooks → players INSERT → set Authorization: Bearer {same value}.</li>
+    <li><strong>LLC + EIN</strong> — form Greenskeeper Studios LLC. Required before Stripe can go live.</li>
+    <li><strong>Stripe live keys</strong> — Vercel env STRIPE_SECRET_KEY + STRIPE_WEBHOOK_SECRET. Checkout flow activates immediately after.</li>
+    <li><strong>AWS S3 backup</strong> — create tourney-pg-backups bucket + IAM user + GitHub Actions secrets.</li>
+  </ul>
+</div>
+<div class="card">
+  <div class="card-title">Next Ticket</div>
+  <p>Run <code>/tourney-execute 5-19-26-master-plan.html</code> to execute remaining master plan items (social proof, invite gate, PWA install prompt).</p>
 </div>
 <!-- CONCLUDED-CONTENT-END -->
 </div>
