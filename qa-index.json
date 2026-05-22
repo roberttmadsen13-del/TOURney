@@ -1,9 +1,23 @@
 {
   "$schema": "https://tourney.greenskeeper.studio/qa-index-schema.json",
   "version": 1,
-  "updated_at": "2026-05-22T00:00:00Z",
+  "updated_at": "2026-05-22T12:00:00Z",
   "description": "Canonical registry of all TOURney plans, reviews, audits, and QA artifacts. The /platform Artifacts tab renders from this file. Skills (e.g. tourney-review) append new entries when they generate output.",
   "entries": [
+    {
+      "id": "consolidation-2026-05-22",
+      "category": "review",
+      "stage": "executing",
+      "title": "Consolidation Review · May 22, 2026",
+      "summary": "All open engineering items from concluded tickets (5-13 through 5-22) deduplicated into one execute session. 6 engineering steps: _parseMentions XSS fix (HIGH), ~14 Design tab keys wired, score admin-edit UI, OG meta tags, profile.html skeleton, settings-keys.js const enum. 2 Rob manual items blocked (send-push deploy, SEND_INSTALL_EMAIL_SECRET). CSP + player score entry deferred to own sessions.",
+      "date": "2026-05-22",
+      "updated": "2026-05-22",
+      "author": "claude-sonnet-4-6",
+      "url": "/platform/5-22-26-consolidation-review",
+      "file": "5-22-26-consolidation-review.html",
+      "tags": ["review", "consolidation", "plan"],
+      "status": "open"
+    },
     {
       "id": "review-2026-05-22",
       "category": "review",

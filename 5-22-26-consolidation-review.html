@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TOURney — Consolidation Review · May 22, 2026</title>
+<style>
+:root{--gold:#c09030;--gold-light:#d4a840;--gold-dim:rgba(192,144,48,0.18);--bg:#0d0a05;--surface:#151009;--card:#1c140a;--border:rgba(192,144,48,0.22);--muted:#7a6a54;--text:#e8dcc8;--red:#c0392b;--green:#27ae60;--blue:#2980b9;--orange:#e67e22;--purple:#8e44ad;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:-apple-system,'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;font-size:15px;}
+nav{position:sticky;top:0;z-index:100;background:rgba(13,10,5,0.97);border-bottom:1px solid var(--border);backdrop-filter:blur(12px);}
+.nav-inner{padding:0.6rem 1.5rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap;}
+.nav-brand{color:var(--gold);font-weight:700;font-size:1rem;letter-spacing:0.05em;white-space:nowrap;}
+.nav-brand span{color:var(--muted);font-weight:400;font-size:0.8rem;margin-left:0.4rem;}
+.nav-links{display:flex;gap:0.2rem;flex-wrap:wrap;margin-left:auto;}
+.nav-links a{color:var(--muted);text-decoration:none;font-size:0.78rem;padding:0.3rem 0.55rem;border-radius:4px;transition:all 0.15s;white-space:nowrap;}
+.nav-links a:hover{color:var(--gold);background:var(--gold-dim);}
+.lifecycle-bar{display:flex;gap:3px;padding:0.55rem 1.5rem 0.65rem;background:var(--surface);border-bottom:1px solid var(--border);}
+.lc-stage{flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;}
+.lc-pill{height:5px;width:100%;border-radius:3px;background:rgba(192,144,48,0.1);transition:background 0.25s;}
+.lc-label{font-size:0.58rem;font-weight:700;letter-spacing:0.11em;text-transform:uppercase;color:rgba(122,106,84,0.45);transition:color 0.25s;}
+.lc-done .lc-pill{background:var(--gold);}
+.lc-done .lc-label{color:var(--gold);}
+.lc-active .lc-pill{background:var(--gold-light);box-shadow:0 0 8px rgba(192,144,48,0.45);}
+.lc-active .lc-label{color:var(--gold-light);}
+.hero{padding:3rem 1.5rem 2rem;text-align:center;border-bottom:1px solid var(--border);background:linear-gradient(180deg,rgba(192,144,48,0.06) 0%,transparent 100%);}
+.hero-eyebrow{display:inline-block;font-size:0.7rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold);border:1px solid var(--border);border-radius:20px;padding:0.22rem 0.8rem;margin-bottom:0.9rem;}
+.hero h1{font-size:clamp(1.5rem,3.5vw,2.3rem);font-weight:800;color:#fff;margin-bottom:0.35rem;}
+.hero h1 span{color:var(--gold);}
+.hero-sub{color:var(--muted);max-width:520px;margin:0 auto 1rem;font-size:0.9rem;}
+.hero-meta{display:flex;gap:1.1rem;justify-content:center;flex-wrap:wrap;font-size:0.74rem;color:var(--muted);}
+.hero-meta span{display:flex;align-items:center;gap:0.3rem;}
+.wrapper{max-width:1000px;margin:0 auto;padding:0 1.5rem;}
+section{padding:2.5rem 0;border-bottom:1px solid var(--border);}
+section:last-of-type{border-bottom:none;}
+.section-header{margin-bottom:1.6rem;}
+.section-eyebrow{font-size:0.67rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--gold);margin-bottom:0.3rem;}
+.section-title{font-size:1.35rem;font-weight:800;color:#fff;margin-bottom:0.3rem;}
+.section-desc{color:var(--muted);font-size:0.85rem;max-width:560px;}
+.card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:1.15rem 1.3rem;margin-bottom:0.7rem;}
+.card-title{font-size:0.85rem;font-weight:700;color:var(--gold);margin-bottom:0.45rem;}
+.card p,.card li{font-size:0.84rem;color:var(--text);margin-bottom:0.28rem;}
+.card ul,.card ol{padding-left:1.2rem;}
+.card li{margin-bottom:0.32rem;}
+.grid-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:0.7rem;}
+.score-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(125px,1fr));gap:0.52rem;margin-bottom:1.4rem;}
+.score-cell{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:0.85rem;text-align:center;}
+.score-num{font-size:1.85rem;font-weight:900;line-height:1;margin-bottom:0.18rem;}
+.score-label{font-size:0.64rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);}
+.score-green{color:var(--green);}
+.score-gold{color:var(--gold);}
+.score-red{color:var(--red);}
+.score-blue{color:var(--blue);}
+.pill{display:inline-block;font-size:0.66rem;font-weight:700;letter-spacing:0.06em;padding:0.15rem 0.5rem;border-radius:20px;text-transform:uppercase;}
+.pill-gold{background:rgba(192,144,48,0.18);color:var(--gold);border:1px solid rgba(192,144,48,0.3);}
+.pill-green{background:rgba(39,174,96,0.15);color:var(--green);border:1px solid rgba(39,174,96,0.3);}
+.pill-red{background:rgba(192,57,43,0.15);color:var(--red);border:1px solid rgba(192,57,43,0.3);}
+.pill-orange{background:rgba(230,126,34,0.15);color:var(--orange);border:1px solid rgba(230,126,34,0.3);}
+.pill-blue{background:rgba(41,128,185,0.15);color:var(--blue);border:1px solid rgba(41,128,185,0.3);}
+.page-table{width:100%;border-collapse:collapse;font-size:0.8rem;}
+.page-table th{text-align:left;padding:0.52rem 0.72rem;border-bottom:1px solid var(--border);color:var(--muted);font-size:0.67rem;text-transform:uppercase;letter-spacing:0.08em;background:var(--surface);}
+.page-table td{padding:0.58rem 0.72rem;border-bottom:1px solid rgba(192,144,48,0.08);vertical-align:top;}
+.page-table tr:last-child td{border-bottom:none;}
+.page-table tr:hover td{background:var(--gold-dim);}
+.page-table .url{font-family:monospace;font-size:0.75rem;color:var(--gold-light);}
+.table-wrap{background:var(--card);border:1px solid var(--border);border-radius:8px;overflow:hidden;overflow-x:auto;}
+.idea-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1.25rem;position:relative;overflow:hidden;}
+.idea-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;}
+.idea-1::before{background:var(--gold);}
+.idea-2::before{background:var(--blue);}
+.idea-3::before{background:var(--green);}
+.idea-4::before{background:var(--orange);}
+.idea-5::before{background:var(--purple);}
+.idea-number{font-size:2rem;font-weight:900;opacity:0.07;position:absolute;top:0.5rem;right:1rem;line-height:1;color:#fff;}
+.idea-tag{margin-bottom:0.42rem;}
+.idea-title{font-size:0.96rem;font-weight:700;color:#fff;margin-bottom:0.42rem;}
+.idea-body{font-size:0.82rem;color:var(--muted);line-height:1.55;margin-bottom:0.65rem;}
+.idea-plan{font-size:0.77rem;color:var(--text);}
+.idea-plan strong{color:var(--gold);}
+.runbook-steps{counter-reset:rb-step;}
+.rb-step{background:var(--card);border:1px solid var(--border);border-left:3px solid rgba(192,144,48,0.3);border-radius:0 8px 8px 0;padding:0.95rem 1.15rem 0.95rem 3.8rem;margin-bottom:0.55rem;position:relative;}
+.rb-step::before{counter-increment:rb-step;content:counter(rb-step);position:absolute;left:0.95rem;top:0.95rem;width:1.75rem;height:1.75rem;background:var(--gold-dim);color:var(--gold);border:1px solid var(--border);border-radius:50%;font-size:0.72rem;font-weight:700;display:grid;place-items:center;}
+.rb-step.rb-blocked{border-left-color:var(--red);}
+.rb-step.rb-blocked::before{background:rgba(192,57,43,0.15);color:var(--red);border-color:rgba(192,57,43,0.3);}
+.rb-step-title{font-size:0.87rem;font-weight:700;color:#fff;margin-bottom:0.22rem;}
+.rb-step-body{font-size:0.8rem;color:var(--muted);margin-bottom:0.35rem;}
+.rb-impact{font-size:0.77rem;color:var(--text);background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:3px;padding:0.35rem 0.6rem;margin-top:0.3rem;margin-bottom:0.3rem;}
+.rb-verify{font-size:0.76rem;color:var(--text);background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:3px;padding:0.35rem 0.6rem;margin-top:0.3rem;}
+.rb-verify strong,.rb-impact strong{color:var(--gold-light);font-size:0.68rem;text-transform:uppercase;letter-spacing:0.07em;display:block;margin-bottom:0.1rem;}
+.stage-pending{text-align:center;padding:3rem 1.5rem;color:var(--muted);font-size:0.85rem;border:1px dashed rgba(192,144,48,0.2);border-radius:8px;}
+.stage-pending code{color:var(--gold);}
+.roadmap-item{display:flex;gap:1.05rem;align-items:flex-start;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:0.95rem 1.15rem;margin-bottom:0.52rem;}
+.roadmap-icon{width:1.9rem;height:1.9rem;border-radius:50%;background:var(--gold-dim);color:var(--gold);display:grid;place-items:center;font-size:0.85rem;flex-shrink:0;border:1px solid var(--border);}
+.roadmap-content{flex:1;}
+.roadmap-title{font-size:0.88rem;font-weight:700;color:#fff;margin-bottom:0.13rem;}
+.roadmap-desc{font-size:0.79rem;color:var(--muted);margin-bottom:0.32rem;}
+.roadmap-action{font-size:0.75rem;color:var(--text);}
+.roadmap-action strong{color:var(--gold-light);}
+code{font-family:'Consolas','Monaco',monospace;background:rgba(255,255,255,0.07);padding:0.09rem 0.27rem;border-radius:3px;font-size:0.81em;color:var(--gold-light);}
+footer{border-top:1px solid var(--border);padding:1.2rem;text-align:center;color:var(--muted);font-size:0.72rem;}
+footer span{color:var(--gold);}
+@media(max-width:600px){.nav-links{display:none;}.hero{padding:2rem 1rem 1.5rem;}section{padding:2rem 0;}.lc-label{font-size:0.5rem;}}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <div class="nav-brand">TOURney <span>by Greenskeeper Studios</span></div>
+    <div class="nav-links">
+      <a href="#review">Review</a>
+      <a href="#plan">Plan</a>
+      <a href="#runbook">Runbook</a>
+      <a href="#executing">Executing</a>
+      <a href="#audit">Audit</a>
+      <a href="#concluded">Concluded</a>
+    </div>
+  </div>
+</nav>
+
+<!-- LIFECYCLE-BAR-START -->
+<div class="lifecycle-bar">
+  <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Review</div></div>
+  <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Plan</div></div>
+  <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Runbook</div></div>
+  <div class="lc-stage"><div class="lc-pill"></div><div class="lc-label">Executing</div></div>
+  <div class="lc-stage"><div class="lc-pill"></div><div class="lc-label">Audit</div></div>
+  <div class="lc-stage"><div class="lc-pill"></div><div class="lc-label">Concluded</div></div>
+</div>
+<!-- LIFECYCLE-BAR-END -->
+
+<div class="hero">
+  <div class="hero-eyebrow">Consolidation</div>
+  <h1><span>TOURney</span> — Consolidation Review · May 22, 2026</h1>
+  <p class="hero-sub">All open engineering items harvested from concluded and executing tickets (5-13 through 5-22), deduplicated, and ordered into one execute session.</p>
+  <div class="hero-meta">
+    <span>📅 May 22, 2026</span>
+    <span>🤖 claude-sonnet-4-6</span>
+    <span>🏢 Greenskeeper Studios</span>
+    <span>🔒 Internal Only</span>
+  </div>
+</div>
+
+<section id="review">
+<div class="wrapper">
+
+<div class="section-header">
+  <div class="section-eyebrow">§ Review</div>
+  <div class="section-title">Open Items Across All Concluded Tickets</div>
+  <div class="section-desc">Tickets scanned: 5-13-26-claude-review, 5-19-26-master-plan, 5-20-26-claude-review, 5-20-26-deployment-review, 5-21-26-business-review, 5-21-26-feature-depth-review, 5-22-26-claude-review. Completed work stripped. Only carry-forward items listed.</div>
+</div>
+
+<div class="score-grid">
+  <div class="score-cell"><div class="score-num score-green">A</div><div class="score-label">Architecture</div></div>
+  <div class="score-cell"><div class="score-num score-gold">A−</div><div class="score-label">Feature Depth</div></div>
+  <div class="score-cell"><div class="score-num score-green">A</div><div class="score-label">UX</div></div>
+  <div class="score-cell"><div class="score-num score-gold">A−</div><div class="score-label">Security</div></div>
+  <div class="score-cell"><div class="score-num score-red">B−</div><div class="score-label">Business ⚠</div></div>
+  <div class="score-cell"><div class="score-num score-gold">B+</div><div class="score-label">Deployment</div></div>
+  <div class="score-cell"><div class="score-num score-gold">B+</div><div class="score-label">Performance</div></div>
+  <div class="score-cell"><div class="score-num score-gold">B+</div><div class="score-label">Data Model</div></div>
+</div>
+
+<div class="card" style="border-left:3px solid var(--red);margin-bottom:1rem;">
+  <div class="card-title">🔴 Security — HIGH (1 of 4 items is engineerable now)</div>
+  <ul>
+    <li><strong>feed.html:377 — <code>_parseMentions(p.message)</code> → <code>innerHTML</code> without <code>esc()</code></strong>. Stored XSS on public feed. Carry-forward since 5-13-26-claude-review. This is the only security item tourney-execute can fix. Three others are Rob manual (see below).</li>
+  </ul>
+  <p style="margin-top:0.5rem;font-size:0.8rem;color:var(--muted);">Rob manual (cannot be engineered): deploy send-push edge function (SUPABASE_ACCESS_TOKEN required locally), set SEND_INSTALL_EMAIL_SECRET in Supabase dashboard, LLC/EIN/bank/Stripe live keys.</p>
+</div>
+
+<div class="table-wrap" style="margin-bottom:1rem;">
+  <table class="page-table">
+    <thead>
+      <tr>
+        <th>Item</th>
+        <th>Axis</th>
+        <th>Severity</th>
+        <th>Source Ticket</th>
+        <th>Engineerable?</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>feed.html:377</code> <code>_parseMentions</code> XSS — <code>innerHTML</code> without <code>esc()</code></td>
+        <td>Security</td>
+        <td><span class="pill pill-red">HIGH</span></td>
+        <td>5-13-26 → 5-22-26 carry-forward</td>
+        <td><span class="pill pill-green">Yes</span></td>
+      </tr>
+      <tr>
+        <td>OG / social meta tags — all HTML pages lack <code>og:title</code>, <code>og:description</code>, <code>og:image</code></td>
+        <td>Performance / Social</td>
+        <td><span class="pill pill-orange">MED</span></td>
+        <td>5-20-26-claude-review → 5-22-26 carry-forward</td>
+        <td><span class="pill pill-green">Yes</span></td>
+      </tr>
+      <tr>
+        <td><code>profile.html</code> missing loading skeleton — blank flash on auth gate</td>
+        <td>UX</td>
+        <td><span class="pill pill-gold">LOW</span></td>
+        <td>5-19-26-master-plan → 5-22-26 carry-forward</td>
+        <td><span class="pill pill-green">Yes</span></td>
+      </tr>
+      <tr>
+        <td>Settings keys un-typed — no const enum, raw strings across admin/home/tourney-init</td>
+        <td>Architecture</td>
+        <td><span class="pill pill-gold">LOW</span></td>
+        <td>5-20-26 → 5-22-26 carry-forward</td>
+        <td><span class="pill pill-green">Yes</span></td>
+      </tr>
+      <tr>
+        <td>~14 Design tab settings keys unwired from admin to <code>home.html</code> (color_ink, color_bg, hero_photo_url, about_photo_url, about_stat_days/teams/holes, reg_open, reg_max_players, reg_bullet_1/2/3, tourney_year, tourney_location)</td>
+        <td>Feature Depth</td>
+        <td><span class="pill pill-orange">MED</span></td>
+        <td>5-21-26-feature-depth-review (concluded, carry-forward)</td>
+        <td><span class="pill pill-green">Yes</span></td>
+      </tr>
+      <tr>
+        <td>Score admin-edit UI missing from <code>admin.html</code> — admins cannot correct submitted scores</td>
+        <td>Feature Depth</td>
+        <td><span class="pill pill-orange">MED</span></td>
+        <td>5-19-26-master-plan → 5-21-26-feature-depth carry-forward</td>
+        <td><span class="pill pill-green">Yes</span></td>
+      </tr>
+      <tr>
+        <td>Deploy <code>send-push</code> edge function — auth fix committed but function not deployed to Supabase</td>
+        <td>Security</td>
+        <td><span class="pill pill-red">HIGH</span></td>
+        <td>5-22-26-claude-review (blocked)</td>
+        <td><span class="pill pill-red">Rob Manual</span></td>
+      </tr>
+      <tr>
+        <td>Set <code>SEND_INSTALL_EMAIL_SECRET</code> in Supabase dashboard → Project Settings → Edge Functions</td>
+        <td>Deployment</td>
+        <td><span class="pill pill-orange">MED</span></td>
+        <td>5-20-26-deployment-review → 5-22-26 carry-forward</td>
+        <td><span class="pill pill-red">Rob Manual</span></td>
+      </tr>
+      <tr>
+        <td>CSP <code>unsafe-inline</code> — extract inline JS to <code>/lib/*.js</code> across ~10 pages (~8–12h)</td>
+        <td>Security</td>
+        <td><span class="pill pill-orange">MED</span></td>
+        <td>5-13-26 → 5-22-26 carry-forward</td>
+        <td><span class="pill pill-blue">Own Session</span></td>
+      </tr>
+      <tr>
+        <td>Player-facing score entry — zero player UI for hole-by-hole input (P1 roadmap)</td>
+        <td>Feature Depth</td>
+        <td><span class="pill pill-red">CRITICAL</span></td>
+        <td>5-21-26-feature-depth-review (new, 5-21)</td>
+        <td><span class="pill pill-blue">Own Session</span></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="grid-2">
+  <div class="card">
+    <div class="card-title">In-Scope (this execute session) — 6 Engineering Items</div>
+    <ul>
+      <li><strong>S1</strong> — <code>_parseMentions</code> XSS fix (feed.html:377)</li>
+      <li><strong>S2</strong> — OG meta tags via tourney-init.js dynamic injection</li>
+      <li><strong>S3</strong> — profile.html loading skeleton</li>
+      <li><strong>S4</strong> — Create <code>/lib/settings-keys.js</code> const enum</li>
+      <li><strong>S5</strong> — Wire ~14 Design tab keys in home.html</li>
+      <li><strong>S6</strong> — Score admin-edit UI in admin.html</li>
+    </ul>
+  </div>
+  <div class="card">
+    <div class="card-title">Out of Scope (deferred / Rob manual)</div>
+    <ul>
+      <li><strong>ROB:</strong> Deploy send-push (<code>supabase functions deploy send-push</code>) — needs SUPABASE_ACCESS_TOKEN</li>
+      <li><strong>ROB:</strong> Set SEND_INSTALL_EMAIL_SECRET in Supabase dashboard</li>
+      <li><strong>ROB:</strong> LLC / EIN / bank / Stripe live keys (business unblock)</li>
+      <li><strong>DEFERRED:</strong> CSP unsafe-inline removal — own session, ~8–12h</li>
+      <li><strong>DEFERRED:</strong> Player score entry — P1 roadmap, own session</li>
+    </ul>
+  </div>
+</div>
+
+</div>
+</section>
+
+<section id="plan">
+<div class="wrapper">
+
+<div class="section-header">
+  <div class="section-eyebrow">§ Plan</div>
+  <div class="section-title">Strategic Priority Order</div>
+  <div class="section-desc">Six engineering items ordered by impact and risk. Security first, then polish, then feature completeness.</div>
+</div>
+
+<div class="roadmap-item">
+  <div class="roadmap-icon">P1</div>
+  <div class="roadmap-content">
+    <div class="roadmap-title">Fix _parseMentions XSS — feed.html:377</div>
+    <div class="roadmap-desc">Stored XSS on the public feed page. Any authenticated user can inject HTML/JS by posting a message with a crafted payload. Carry-forward since 5-13-26. Highest risk item on the board.</div>
+    <div class="roadmap-action"><strong>Action:</strong> In <code>_parseMentions(text)</code>, call <code>esc()</code> on the raw text before building the mention-span HTML. Ensures user content is HTML-escaped while <code>@mention</code> spans still render.</div>
+  </div>
+</div>
+
+<div class="roadmap-item">
+  <div class="roadmap-icon">P2</div>
+  <div class="roadmap-content">
+    <div class="roadmap-title">Wire ~14 Design Tab Settings Keys to home.html</div>
+    <div class="roadmap-desc">Admin Design tab has 24 settings keys. Only ~10 are wired to home.html. Remaining keys (color_ink, color_bg, hero_photo_url, about_photo_url, stat counts, reg fields) are stored but never read — the admin form is effectively broken for these fields.</div>
+    <div class="roadmap-action"><strong>Action:</strong> In <code>loadHomepageContent()</code>, add reads for all unwired keys. Map to correct DOM targets. Wire CSS vars for color_ink/color_bg injection.</div>
+  </div>
+</div>
+
+<div class="roadmap-item">
+  <div class="roadmap-icon">P3</div>
+  <div class="roadmap-content">
+    <div class="roadmap-title">Score Admin-Edit UI in admin.html</div>
+    <div class="roadmap-desc">Admins cannot correct scores after submission. Tournament director has no error-recovery path. Medium severity — blocks competitive tournament management.</div>
+    <div class="roadmap-action"><strong>Action:</strong> In admin.html scores table, add per-row edit icon. Toggle row to inline-edit mode. Save calls Supabase update on scores table. Existing admin RLS covers this.</div>
+  </div>
+</div>
+
+<div class="roadmap-item">
+  <div class="roadmap-icon">P4</div>
+  <div class="roadmap-content">
+    <div class="roadmap-title">OG / Social Meta Tags via tourney-init.js</div>
+    <div class="roadmap-desc">Zero social unfurl on any tenant page. Link shares show blank previews. Static fallback tags on all pages; dynamic values injected by tourney-init.js after tournament data resolves.</div>
+    <div class="roadmap-action"><strong>Action:</strong> Add static OG block to all HTML pages. In tourney-init.js, after TOURNAMENT is set, inject og:title, og:description, og:image. Skip for platform/ pages.</div>
+  </div>
+</div>
+
+<div class="roadmap-item">
+  <div class="roadmap-icon">P5</div>
+  <div class="roadmap-content">
+    <div class="roadmap-title">profile.html Loading Skeleton</div>
+    <div class="roadmap-desc">profile.html sits behind auth gate, causing a longer-than-normal blank flash. Shimmer skeleton matches existing token patterns on feed/scoreboard/home.</div>
+    <div class="roadmap-action"><strong>Action:</strong> Display skeleton cards on page load (avatar circle, name bar, stat row, rounds list). Hide on fetchProfile() resolve. Use existing <code>.skeleton</code> CSS tokens.</div>
+  </div>
+</div>
+
+<div class="roadmap-item">
+  <div class="roadmap-icon">P6</div>
+  <div class="roadmap-content">
+    <div class="roadmap-title">Create /lib/settings-keys.js Const Enum</div>
+    <div class="roadmap-desc">47+ settings keys scattered as raw strings across admin.html, home.html, tourney-init.js, scoreboard.html. A typo silently breaks a setting with no error. Const enum catches misuse at read time.</div>
+    <div class="roadmap-action"><strong>Action:</strong> New file <code>/lib/settings-keys.js</code> exporting <code>SETTINGS_KEYS</code> object. Update admin.html save functions to reference named constants. Do NOT rename existing key strings.</div>
+  </div>
+</div>
+
+<div style="margin-top:1.5rem;">
+  <div class="section-eyebrow" style="margin-bottom:0.7rem;">Forward Look — Deferred Items</div>
+  <div class="card">
+    <div class="card-title">Next Sessions (not in this execute)</div>
+    <ul>
+      <li><strong>Player Score Entry (P1 roadmap):</strong> Hole-by-hole +/− input on scorecard.html for authenticated players. Biggest competitive gap vs. Unknown Golf. Own session — 2–3 day build.</li>
+      <li><strong>CSP unsafe-inline Removal:</strong> Extract inline <code>&lt;script&gt;</code> blocks from ~10 pages to <code>/lib/{page}-inline.js</code>. Security grade → A. ~8–12h. Own session.</li>
+      <li><strong>Side Games / Payouts:</strong> Skins, closest-to-pin, long drive, $ tracking. P2 roadmap after score entry lands.</li>
+    </ul>
+  </div>
+</div>
+
+</div>
+</section>
+
+<section id="runbook">
+<div class="wrapper">
+
+<div class="section-header">
+  <div class="section-eyebrow">§ Runbook</div>
+  <div class="section-title">Execute Steps — One Session</div>
+  <div class="section-desc">Steps 1–6 are engineering. tourney-execute can run all of them. Steps 7–8 are Rob manual — documented here but blocked. Run <code>git pull</code> before starting.</div>
+</div>
+
+<div class="runbook-steps">
+
+  <div class="rb-step">
+    <div class="rb-step-title">Fix _parseMentions XSS — feed.html:377</div>
+    <div class="rb-step-body">
+      Open <code>feed.html</code>. Find <code>_parseMentions</code> function (near line 377). Currently returns an HTML string built from <code>p.message</code> (raw user input) and assigns the result to <code>innerHTML</code>.<br><br>
+      Fix: call <code>esc()</code> on the raw text before constructing mention spans. Pattern:
+      <pre style="background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:4px;padding:0.6rem;margin:0.5rem 0;font-size:0.78rem;overflow-x:auto;"><code>function _parseMentions(text) {
+  const safe = esc(text);
+  return safe.replace(/@(\w+)/g, '&lt;span class="mention"&gt;@$1&lt;/span&gt;');
+}</code></pre>
+      Verify <code>esc()</code> is available in scope at line 377. If not, it is defined earlier in feed.html — move or re-reference as needed. Do NOT change the innerHTML assignment pattern; only sanitize the input.
+    </div>
+    <div class="rb-impact"><strong>Upstream:</strong> feed.html reads messages from Supabase posts table. Any authenticated user can post arbitrary text. <strong>Downstream:</strong> All players viewing the public feed see the rendered output. <strong>Risk if wrong:</strong> If esc() double-escapes existing &amp;amp; entities, mentions like @name will render broken. Test with a message containing both &lt;script&gt; and @mention text.</div>
+    <div class="rb-verify"><strong>Verify</strong> Post a feed message containing <code>&lt;img src=x onerror=alert(1)&gt;</code>. Confirm it renders as literal text, not executed. Post a normal message with <code>@mention</code> — confirm mention span still renders with gold styling. Zero console errors.</div>
+  </div>
+
+  <div class="rb-step">
+    <div class="rb-step-title">Wire ~14 Design Tab Settings Keys to home.html</div>
+    <div class="rb-step-body">
+      Open <code>home.html</code>. Find <code>loadHomepageContent()</code> (the function that reads from the settings map and applies values to DOM). Currently wired: <code>homepage_subtitle</code>, <code>homepage_details</code>, <code>homepage_about</code>, <code>logo_url</code>, <code>tourney_name</code>, <code>color_primary</code>.<br><br>
+      Add reads for the following unwired keys:<br><br>
+      <strong>Color CSS vars:</strong> After color_primary injection, add:<br>
+      <code>if (map.color_ink) root.style.setProperty('--ink', map.color_ink);</code><br>
+      <code>if (map.color_bg) root.style.setProperty('--bg', map.color_bg);</code><br><br>
+      <strong>Hero photo:</strong> <code>const heroImg = document.querySelector('.hero-img'); if (heroImg &amp;&amp; map.hero_photo_url) heroImg.src = map.hero_photo_url;</code><br><br>
+      <strong>About photo:</strong> <code>const aboutPhoto = document.querySelector('.about-photo-wrap img'); if (aboutPhoto &amp;&amp; map.about_photo_url) aboutPhoto.src = map.about_photo_url;</code><br><br>
+      <strong>About stats:</strong> Map <code>about_stat_days</code> → <code>.as-val</code> nth-child(1), <code>about_stat_teams</code> → nth-child(2), <code>about_stat_holes</code> → nth-child(3). Use querySelectorAll('.as-val').<br><br>
+      <strong>Registration fields:</strong> <code>reg_open</code> (boolean) → show/hide RSVP section; <code>reg_max_players</code> → cap display; <code>reg_bullet_1/2/3</code> → registration bullet list items.<br><br>
+      <strong>Meta fields:</strong> <code>tourney_year</code> and <code>tourney_location</code> → any DOM elements with class <code>tourney-year</code> or <code>tourney-location</code>. If those classes don't exist in home.html, grep for where tourney_name is displayed and add adjacent spans for year/location.
+    </div>
+    <div class="rb-impact"><strong>Upstream:</strong> admin.html Design tab → Supabase settings table. tourney-init.js reads settings and builds the map. <strong>Downstream:</strong> home.html renders tenant homepage. Changes here are visible to all visitors. <strong>Risk if wrong:</strong> CSS var override of --bg or --ink could cascade to nav/footer — test full page render, not just hero section.</div>
+    <div class="rb-verify"><strong>Verify</strong> In admin Design tab: set hero photo URL, about photo URL, at least one stat, and reg_open=true. Save. Hard-refresh home.html. All values must render. Confirm color_ink/color_bg CSS vars apply without breaking nav contrast. No console errors.</div>
+  </div>
+
+  <div class="rb-step">
+    <div class="rb-step-title">Add Score Admin-Edit UI to admin.html</div>
+    <div class="rb-step-body">
+      Open <code>admin.html</code>. Find the scores table tbody (grep <code>renderScoresTable</code> or the scores section). For each rendered score row, append an edit icon button (<code>✏</code>) at end of row.<br><br>
+      Clicking the edit icon toggles the row: each score cell becomes <code>&lt;input type="number" min="1" max="20" value="{current}"&gt;</code>. A Save button and Cancel button appear at end of row.<br><br>
+      Save handler:
+      <pre style="background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:4px;padding:0.6rem;margin:0.5rem 0;font-size:0.78rem;overflow-x:auto;"><code>const { error } = await supabase
+  .from('scores')
+  .update({ score: newScore })
+  .eq('id', scoreId)
+  .eq('tournament_id', window.TOURNAMENT_ID);</code></pre>
+      On success: restore row to read mode, update displayed value, show a brief "Saved" toast. On error: show error message, leave in edit mode.<br><br>
+      Only admin users see the edit icon — gate behind the same <code>isAdmin</code> check used for other admin-only UI in this file.
+    </div>
+    <div class="rb-impact"><strong>Upstream:</strong> scores table (existing RLS has owner delete/update policies — verify admin can UPDATE via RLS before assuming it works). <strong>Downstream:</strong> scoreboard.html + scorecard.html both read from scores table. An admin edit immediately affects live leaderboard. <strong>Risk if wrong:</strong> If admin RLS doesn't cover UPDATE, the save will 403. Check migration 009 or latest scores RLS policies first.</div>
+    <div class="rb-verify"><strong>Verify</strong> Login as admin. Navigate to a round with scores. Click edit on a row → inputs appear. Change a score → save → value updates in UI. Visit scoreboard.html — new score reflected. Non-admin session: edit icon must not be visible.</div>
+  </div>
+
+  <div class="rb-step">
+    <div class="rb-step-title">Add OG / Social Meta Tags via tourney-init.js</div>
+    <div class="rb-step-body">
+      Two-part change:<br><br>
+      <strong>Part A — Static block on all HTML pages (before <code>&lt;/head&gt;</code>):</strong><br>
+      Add to: home.html, admin.html, scoreboard.html, scorecard.html, feed.html, directory.html, champions.html, course.html, profile.html, install.html, login.html, player.html, player-upgrade.html, create.html, platform.html:<br>
+      <pre style="background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:4px;padding:0.6rem;margin:0.5rem 0;font-size:0.78rem;overflow-x:auto;"><code>&lt;meta property="og:site_name" content="TOURney"&gt;
+&lt;meta property="og:type" content="website"&gt;
+&lt;meta property="og:image" content="https://tourney.greenskeeper.studio/icon-512.png"&gt;
+&lt;meta name="twitter:card" content="summary"&gt;</code></pre>
+      <strong>Part B — Dynamic injection in tourney-init.js:</strong><br>
+      After <code>window.TOURNAMENT</code> is set and settings map is built, inject:
+      <pre style="background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:4px;padding:0.6rem;margin:0.5rem 0;font-size:0.78rem;overflow-x:auto;"><code>try {
+  const setMeta = (prop, val) => {
+    let el = document.querySelector(`meta[property="${prop}"],meta[name="${prop}"]`);
+    if (!el) { el = document.createElement('meta'); el.setAttribute(prop.startsWith('og:') || prop.startsWith('twitter:') ? (prop.startsWith('twitter:') ? 'name' : 'property') : 'name', prop); document.head.appendChild(el); }
+    el.setAttribute('content', val);
+  };
+  setMeta('og:title', window.TOURNAMENT.name + ' — TOURney');
+  if (settingsMap.homepage_subtitle) setMeta('og:description', settingsMap.homepage_subtitle);
+  if (window.TOURNAMENT.logo_url) setMeta('og:image', window.TOURNAMENT.logo_url);
+} catch(e) {}</code></pre>
+      Platform pages (<code>/platform</code>, <code>/login</code>) do not run tourney-init.js — static fallback only, no dynamic injection needed.
+    </div>
+    <div class="rb-impact"><strong>Upstream:</strong> tournaments table (name, logo_url) + settings table (homepage_subtitle). <strong>Downstream:</strong> Social unfurl only — no in-app pages read OG tags. <strong>Risk if wrong:</strong> Meta injection fails silently (try/catch guards it). Zero regression risk on app functionality.</div>
+    <div class="rb-verify"><strong>Verify</strong> Load a tenant page in DevTools → Elements → <code>&lt;head&gt;</code>. Confirm og:title contains tournament name, og:description contains subtitle, og:image contains logo URL. Load <code>/platform</code> — confirm og:title is NOT dynamically overridden. No console errors.</div>
+  </div>
+
+  <div class="rb-step">
+    <div class="rb-step-title">Add profile.html Loading Skeleton</div>
+    <div class="rb-step-body">
+      Open <code>profile.html</code>. Find the loading state — likely a blank div or spinner while <code>fetchProfile()</code> awaits the Supabase session + query.<br><br>
+      Replace with a structured skeleton layout:<br>
+      <ul style="font-size:0.8rem;color:var(--muted);margin:0.4rem 0 0.4rem 1rem;">
+        <li>Avatar circle skeleton: 60px × 60px rounded, class <code>skeleton</code></li>
+        <li>Name bar skeleton: 200px wide × 18px, class <code>skeleton</code></li>
+        <li>Stat row skeletons: 3 columns, 80px each, class <code>skeleton</code></li>
+        <li>Recent rounds list: 3 skeleton rows, full-width</li>
+      </ul>
+      Use existing <code>.skeleton</code> shimmer animation from tokens.css. Show skeletons on page load, hide (<code>display:none</code>) and show real content when fetchProfile() resolves. On error, hide skeletons and show error state.
+    </div>
+    <div class="rb-impact"><strong>Upstream:</strong> Supabase auth session + mygolf_profiles table. <strong>Downstream:</strong> No pages read from profile.html. <strong>Risk if wrong:</strong> If skeletons are not hidden after data loads, they overlay real content. Confirm with both fast and slow connections.</div>
+    <div class="rb-verify"><strong>Verify</strong> DevTools → Network → Slow 3G. Hard-refresh profile.html. Skeleton shimmer cards appear immediately. After ~2s, skeleton hides and real profile data renders. No blank flash. Test with a missing profile (user not in mygolf_profiles) — skeleton hides and error state appears.</div>
+  </div>
+
+  <div class="rb-step">
+    <div class="rb-step-title">Create /lib/settings-keys.js Const Enum</div>
+    <div class="rb-step-body">
+      Create new file <code>/lib/settings-keys.js</code>. Export a single <code>SETTINGS_KEYS</code> object with named string constants for all known settings keys. Do NOT rename existing key strings — only create aliases:
+      <pre style="background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:4px;padding:0.6rem;margin:0.5rem 0;font-size:0.78rem;overflow-x:auto;"><code>export const SETTINGS_KEYS = {
+  TOURNEY_NAME: 'tourney_name',
+  TOURNEY_YEAR: 'tourney_year',
+  TOURNEY_LOCATION: 'tourney_location',
+  COLOR_PRIMARY: 'color_primary',
+  COLOR_INK: 'color_ink',
+  COLOR_BG: 'color_bg',
+  LOGO_URL: 'logo_url',
+  HOMEPAGE_SUBTITLE: 'homepage_subtitle',
+  HOMEPAGE_DETAILS: 'homepage_details',
+  HOMEPAGE_ABOUT: 'homepage_about',
+  HOMEPAGE_FORMAT_NOTE: 'homepage_format_note',
+  HERO_PHOTO_URL: 'hero_photo_url',
+  ABOUT_PHOTO_URL: 'about_photo_url',
+  ABOUT_STAT_DAYS: 'about_stat_days',
+  ABOUT_STAT_TEAMS: 'about_stat_teams',
+  ABOUT_STAT_HOLES: 'about_stat_holes',
+  REG_OPEN: 'reg_open',
+  REG_MAX_PLAYERS: 'reg_max_players',
+  REG_BULLET_1: 'reg_bullet_1',
+  REG_BULLET_2: 'reg_bullet_2',
+  REG_BULLET_3: 'reg_bullet_3',
+};</code></pre>
+      Add <code>&lt;script type="module" src="/lib/settings-keys.js"&gt;&lt;/script&gt;</code> to admin.html. Update admin.html save functions to reference <code>SETTINGS_KEYS.TOURNEY_NAME</code> etc. instead of raw strings. No other files need updating in this step — the const enum is for admin write paths only.
+    </div>
+    <div class="rb-impact"><strong>Upstream:</strong> admin.html write functions call Supabase upsert on settings table using these keys. <strong>Downstream:</strong> home.html, tourney-init.js, scoreboard.html all read by key name. If a key constant is wrong, the admin write goes to a misnamed key and readers silently miss it. <strong>Risk if wrong:</strong> Do NOT rename the string values, only the JS identifiers. A value change would silently break all readers.</div>
+    <div class="rb-verify"><strong>Verify</strong> admin.html loads without console errors. Save a test setting (e.g. tourney_name). Open Supabase Table Editor → settings → confirm the row key is exactly <code>tourney_name</code>, not a new/wrong key name. home.html reads and renders the setting correctly.</div>
+  </div>
+
+  <div class="rb-step rb-blocked">
+    <div class="rb-step-title">🔴 BLOCKED (Rob Manual) — Deploy send-push Edge Function</div>
+    <div class="rb-step-body">
+      Auth fix for <code>supabase/functions/send-push/index.ts</code> is committed to the repo. The live function currently has zero authentication. Deployment requires <code>SUPABASE_ACCESS_TOKEN</code> set in local environment.<br><br>
+      Command: <code>npx supabase functions deploy send-push --project-ref jllugkiojeoopitdvzsa</code><br><br>
+      Before running: confirm <code>SUPABASE_ACCESS_TOKEN</code> is set (<code>echo $env:SUPABASE_ACCESS_TOKEN</code>). If not, generate one in Supabase dashboard → Account → Access Tokens.
+    </div>
+    <div class="rb-verify"><strong>Verify</strong> After deploy: trigger a HIO notification from admin panel. Confirm push received on a subscribed device. POST to send-push endpoint without Authorization header → must return 401.</div>
+  </div>
+
+  <div class="rb-step rb-blocked">
+    <div class="rb-step-title">🔴 BLOCKED (Rob Manual) — Set SEND_INSTALL_EMAIL_SECRET</div>
+    <div class="rb-step-body">
+      Set <code>SEND_INSTALL_EMAIL_SECRET</code> in Supabase dashboard → Project Settings → Edge Functions → Secrets. Value: a strong random string (use <code>openssl rand -hex 32</code>). This secret gates the <code>send-install-email</code> edge function so only authorized callers can trigger install emails.
+    </div>
+    <div class="rb-verify"><strong>Verify</strong> After setting: trigger the install email flow via the app. Confirm email is received. Confirm unauthenticated POST to the function returns 401.</div>
+  </div>
+
+</div>
+
+</div>
+</section>
+
+<section id="executing">
+<div class="wrapper">
+<!-- EXECUTING-CONTENT-START -->
+<div class="stage-pending">
+  <p>Awaiting execution. Run <code>/tourney-execute 5-22-26-consolidation-review.html</code> to proceed.</p>
+</div>
+<!-- EXECUTING-CONTENT-END -->
+</div>
+</section>
+
+<section id="audit">
+<div class="wrapper">
+<!-- AUDIT-CONTENT-START -->
+<div class="stage-pending">
+  <p>Awaiting execution. Run <code>/tourney-execute 5-22-26-consolidation-review.html</code> to proceed.</p>
+</div>
+<!-- AUDIT-CONTENT-END -->
+</div>
+</section>
+
+<section id="concluded">
+<div class="wrapper">
+<!-- CONCLUDED-CONTENT-START -->
+<div class="stage-pending">
+  <p>Awaiting execution. Run <code>/tourney-execute 5-22-26-consolidation-review.html</code> to proceed.</p>
+</div>
+<!-- CONCLUDED-CONTENT-END -->
+</div>
+</section>
+
+<footer>
+  Generated by <span>claude-sonnet-4-6</span> · Greenskeeper Studios Internal · May 22, 2026
+  <br style="margin-top:0.3rem">
+  <a href="/platform" style="color:var(--muted);font-size:0.7rem;text-decoration:none">← Back to Platform Hub</a>
+</footer>
+
+</body>
+</html>
