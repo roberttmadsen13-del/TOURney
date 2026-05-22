@@ -68,12 +68,10 @@ section:last-of-type{border-bottom:none;}
 .score-cell{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:0.85rem;text-align:center;}
 .score-num{font-size:1.85rem;font-weight:900;line-height:1;margin-bottom:0.18rem;}
 .score-label{font-size:0.64rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);}
-.score-change{font-size:0.62rem;margin-top:0.12rem;}
 .score-green{color:var(--green);}
 .score-gold{color:var(--gold);}
 .score-red{color:var(--red);}
 .score-blue{color:var(--blue);}
-.score-orange{color:var(--orange);}
 .idea-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1.25rem;position:relative;overflow:hidden;}
 .idea-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;}
 .idea-1::before{background:var(--gold);}
@@ -94,10 +92,6 @@ section:last-of-type{border-bottom:none;}
 .rb-step-body{font-size:0.8rem;color:var(--muted);margin-bottom:0.35rem;}
 .rb-verify{font-size:0.76rem;color:var(--text);background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:3px;padding:0.35rem 0.6rem;margin-top:0.3rem;}
 .rb-verify strong{color:var(--gold-light);font-size:0.68rem;text-transform:uppercase;letter-spacing:0.07em;display:block;margin-bottom:0.1rem;}
-.rb-impact{font-size:0.74rem;color:var(--muted);background:rgba(41,128,185,0.05);border:1px solid rgba(41,128,185,0.15);border-radius:3px;padding:0.32rem 0.6rem;margin-top:0.25rem;}
-.rb-impact strong{color:var(--blue);font-size:0.66rem;text-transform:uppercase;letter-spacing:0.06em;display:block;margin-bottom:0.08rem;}
-.rb-blocked{border-left-color:var(--red);}
-.rb-blocked::before{background:rgba(192,57,43,0.15);color:var(--red);border-color:rgba(192,57,43,0.3);}
 .sec-item{background:var(--card);border:1px solid var(--border);border-left:3px solid var(--border);border-radius:0 8px 8px 0;padding:0.9rem 1.15rem;margin-bottom:0.65rem;}
 .sec-item.sev-high{border-left-color:var(--red);}
 .sec-item.sev-med{border-left-color:var(--orange);}
@@ -120,9 +114,6 @@ section:last-of-type{border-bottom:none;}
 code{font-family:'Consolas','Monaco',monospace;background:rgba(255,255,255,0.07);padding:0.09rem 0.27rem;border-radius:3px;font-size:0.81em;color:var(--gold-light);}
 footer{border-top:1px solid var(--border);padding:1.2rem;text-align:center;color:var(--muted);font-size:0.72rem;}
 footer span{color:var(--gold);}
-.delta-up{color:var(--green);}
-.delta-nc{color:var(--muted);}
-.delta-down{color:var(--red);}
 @media(max-width:600px){.nav-links{display:none;}.hero{padding:2rem 1rem 1.5rem;}section{padding:2rem 0;}.lc-label{font-size:0.5rem;}}
 </style>
 </head>
@@ -156,10 +147,10 @@ footer span{color:var(--gold);}
 <div class="hero">
   <div class="hero-eyebrow">Full Platform</div>
   <h1><span>TOURney</span> — Full Platform Review · May 22, 2026</h1>
-  <p class="hero-sub">Weekly automated platform audit — all 8 axes, post-sprint-21 state, open gaps and forward roadmap.</p>
+  <p class="hero-sub">Weekly automated full-platform review. Evidence from /platform/bugs live page, grades.json, axis-status.json, 16 migrations, codebase grep, and competitor analysis (5-21-26). Covers all 8 axes.</p>
   <div class="hero-meta">
     <span>📅 May 22, 2026</span>
-    <span>🤖 Claude Sonnet 4.6</span>
+    <span>🤖 claude-sonnet-4-6</span>
     <span>🏢 Greenskeeper Studios</span>
     <span>🔒 Internal Only</span>
   </div>
@@ -170,272 +161,199 @@ footer span{color:var(--gold);}
 
   <div class="section-header">
     <div class="section-eyebrow">§ Review</div>
-    <div class="section-title">Platform Audit — May 22, 2026</div>
-    <div class="section-desc">Post-sprint evidence review. All findings cite file:line or migration name. Sprint-21 shipped 12 bug fixes, 4 migrations, feature-depth execute (A−), business execute (B−), competitor analysis, CI cache auto-bump.</div>
+    <div class="section-title">Platform State · May 22, 2026</div>
+    <div class="section-desc">Evidence-based audit across all 8 axes. Every finding cites file:line, migration name, or policy name. Grades compared to last full review (5-20-26).</div>
   </div>
 
-  <!-- Score Grid -->
   <div class="score-grid">
-    <div class="score-cell">
-      <div class="score-num score-green">A</div>
-      <div class="score-label">Architecture</div>
-      <div class="score-change delta-nc">↔ no change (5-20)</div>
-    </div>
-    <div class="score-cell">
-      <div class="score-num score-green">A−</div>
-      <div class="score-label">Feature Depth</div>
-      <div class="score-change delta-up">↑ from B+ (5-21 exec)</div>
-    </div>
-    <div class="score-cell">
-      <div class="score-num score-green">A</div>
-      <div class="score-label">UX Polish</div>
-      <div class="score-change delta-nc">↔ no change (5-20)</div>
-    </div>
-    <div class="score-cell">
-      <div class="score-num score-gold">A−</div>
-      <div class="score-label">Security</div>
-      <div class="score-change delta-nc">↔ no change (migration 013 ✓)</div>
-    </div>
-    <div class="score-cell">
-      <div class="score-num score-orange">B−</div>
-      <div class="score-label">Business</div>
-      <div class="score-change delta-up">↑ from C+ (5-21 exec)</div>
-    </div>
-    <div class="score-cell">
-      <div class="score-num score-gold">B+</div>
-      <div class="score-label">Deployment</div>
-      <div class="score-change delta-nc">↔ no change (5-20)</div>
-    </div>
-    <div class="score-cell">
-      <div class="score-num score-gold">B+</div>
-      <div class="score-label">Performance</div>
-      <div class="score-change delta-nc">↔ no change (5-20)</div>
-    </div>
-    <div class="score-cell">
-      <div class="score-num score-gold">B+</div>
-      <div class="score-label">Data Model</div>
-      <div class="score-change delta-nc">↔ no change (5-20)</div>
-    </div>
+    <div class="score-cell"><div class="score-num score-green">A</div><div class="score-label">Architecture</div></div>
+    <div class="score-cell"><div class="score-num score-green">A−</div><div class="score-label">Feature Depth</div></div>
+    <div class="score-cell"><div class="score-num score-green">A</div><div class="score-label">UX Polish</div></div>
+    <div class="score-cell"><div class="score-num score-green">A−</div><div class="score-label">Security</div></div>
+    <div class="score-cell"><div class="score-num score-red">B−</div><div class="score-label">Business Ready</div></div>
+    <div class="score-cell"><div class="score-num score-gold">B+</div><div class="score-label">Deployment</div></div>
+    <div class="score-cell"><div class="score-num score-gold">B+</div><div class="score-label">Performance</div></div>
+    <div class="score-cell"><div class="score-num score-gold">B+</div><div class="score-label">Data Model</div></div>
   </div>
 
-  <div class="card" style="margin-bottom:1rem;background:rgba(39,174,96,0.05);border-color:rgba(39,174,96,0.2);">
-    <div class="card-title" style="color:var(--green);">✅ No Deep Dives Required — All Grades B or Above</div>
-    <p>Lowest grade this cycle: B− (Business). Threshold for deep-dive: below C. No axis-specific review triggered. Business remains blocking on Rob manual items (LLC → EIN → Stripe live keys).</p>
-  </div>
-
-  <!-- What TOURney Is -->
   <div class="card">
     <div class="card-title">What TOURney Is</div>
-    <p>Multi-tenant golf tournament SaaS PWA. Organizers create tournaments via <code>/create</code>, configure brand/format via admin, invite players via email gate. Players RSVP, get scorecards, see live leaderboard. Feed with trash talk + hole-in-one push notifications. Realtime scoring via Supabase. Stripe billing gates tier features. Single codebase, infinite tournaments via slug-based multi-tenancy. Live at <code>tourney.greenskeeper.studio</code>. Bova Invitational is the v1 tenant.</p>
-    <p style="margin-top:0.5rem;color:var(--muted);font-size:0.8rem;">Sprint-21 additions: <strong style="color:var(--text);">mygolf_profiles</strong> (cross-tournament player identity), <strong style="color:var(--text);">donations</strong> (donation checkout edge fn), social proof banner, invite gate, PWA install prompt, scoring-open banner, yardage on scoreboard.</p>
+    <p>Multi-tenant golf tournament SaaS PWA. Groups of golfers use it before, during, and after a tournament — organizers manage from an admin dashboard, players get a branded installable PWA with realtime scoring and push notifications. v1 tenant: Bova Invitational (annual golf trip). Platform hub at <code>/platform</code> tracks artifact lifecycle, grades, and ops. Architecture: vanilla MPA (11 tournament pages + 7 platform pages), Supabase backend, Vercel static hosting, service worker PWA.</p>
   </div>
 
-  <!-- Tech Stack -->
-  <div class="grid-3" style="margin-bottom:1rem;">
+  <div class="grid-3" style="margin-bottom:1.4rem;">
     <div class="stack-item">
       <div class="stack-label">Frontend</div>
       <div class="stack-value">Vanilla HTML/CSS/JS</div>
-      <div class="stack-note">No framework. <code>tokens.css</code> design system. <code>tourney-init.js</code> tenant init layer. SW cache v37 (auto-bump via CI).</div>
+      <div class="stack-note">No bundler. Inline scripts per page (~150KB). Multi-page app. CSS design tokens via tokens.css.</div>
     </div>
     <div class="stack-item">
       <div class="stack-label">Backend / DB</div>
-      <div class="stack-value">Supabase (jllugkiojeoopitdvzsa)</div>
-      <div class="stack-note">Postgres + RLS. 16 migrations (000–015). Realtime subscriptions for live scoring.</div>
+      <div class="stack-value">Supabase</div>
+      <div class="stack-note">PostgreSQL + Row Level Security + Realtime. Project: jllugkiojeoopitdvzsa.</div>
+    </div>
+    <div class="stack-item">
+      <div class="stack-label">Edge Functions</div>
+      <div class="stack-value">Deno (4 functions)</div>
+      <div class="stack-note">create-checkout, stripe-webhook, send-push (v7), send-install-email (v4).</div>
     </div>
     <div class="stack-item">
       <div class="stack-label">Hosting</div>
-      <div class="stack-value">Vercel (origin remote)</div>
-      <div class="stack-note">GitHub → Vercel auto-deploy on push to main. HSTS + X-Frame-Options + nosniff headers set.</div>
+      <div class="stack-value">Vercel Static CDN</div>
+      <div class="stack-note">HSTS, X-Frame-Options, nosniff, Referrer-Policy correct. CSP present but unsafe-inline (open item).</div>
     </div>
     <div class="stack-item">
-      <div class="stack-label">PWA Cache</div>
-      <div class="stack-value">tourney-v37</div>
-      <div class="stack-note">Auto-bumped by <code>ci.yml</code> on every push via Unix timestamp injection. Stale PWA risk eliminated.</div>
+      <div class="stack-label">PWA / Service Worker</div>
+      <div class="stack-value">sw.js tourney-v37</div>
+      <div class="stack-note">25+ precached files. CI auto-bumps version on every push. Supabase + JSON bypassed to network.</div>
     </div>
     <div class="stack-item">
       <div class="stack-label">Init Layer</div>
       <div class="stack-value">tourney-init.js</div>
-      <div class="stack-note">Slug detection (path + subdomain), brand color injection, <code>window.TOURNAMENT</code> object, session-scoped localStorage namespacing.</div>
-    </div>
-    <div class="stack-item">
-      <div class="stack-label">Routing</div>
-      <div class="stack-value">vercel.json rewrites</div>
-      <div class="stack-note">Path-based: <code>/t/:slug/*</code> → tenant pages. <code>/platform/:slug</code> → review tickets. CSP set on <code>*.html</code>.</div>
+      <div class="stack-note">Slug detection → tournament fetch → brand color injection → <code>window.tourney.db</code> + <code>window.tourney.ready</code>. localStorage namespaced by slug.</div>
     </div>
   </div>
 
-  <!-- Edge Functions -->
-  <div class="card">
+  <div class="card" style="margin-bottom:1.4rem;">
     <div class="card-title">Edge Functions — supabase/functions/</div>
-    <div class="table-wrap" style="margin-top:0.5rem;">
-      <table class="page-table">
-        <thead><tr><th>Function</th><th>Purpose</th><th>Auth Pattern</th><th>Status</th></tr></thead>
-        <tbody>
-          <tr>
-            <td class="url">create-checkout</td>
-            <td>Stripe Checkout session creator for /player-upgrade flow</td>
-            <td>JWT Bearer required — <code>Authorization: Bearer {token}</code>. Stripe secret key held server-side.</td>
-            <td><span class="pill pill-green">Live ✓</span></td>
-          </tr>
-          <tr>
-            <td class="url">stripe-webhook</td>
-            <td>Stripe → DB sync. Updates <code>player_accounts.billing_status</code> on subscription events.</td>
-            <td>Stripe-Signature header verification (HMAC). No JWT.</td>
-            <td><span class="pill pill-green">Live ✓</span></td>
-          </tr>
-          <tr>
-            <td class="url">send-push</td>
-            <td>Web Push dispatcher for hole-in-one + score notifications</td>
-            <td>Auth fix committed — requires tournament admin JWT. <strong style="color:var(--red);">NOT DEPLOYED. Live function is unauthenticated.</strong> Anyone with tournament_id UUID can spam push to all subscribers.</td>
-            <td><span class="pill pill-red">⚠ Auth Gap</span></td>
-          </tr>
-          <tr>
-            <td class="url">send-install-email</td>
-            <td>PWA install link email on registration</td>
-            <td>Internal call from RSVP flow. <strong style="color:var(--orange);"><code>SEND_INSTALL_EMAIL_SECRET</code> not set in Supabase dashboard.</strong> Function exists, secret missing.</td>
-            <td><span class="pill pill-orange">⚠ Blocked</span></td>
-          </tr>
-          <tr>
-            <td class="url">donate-checkout</td>
-            <td>Donation Stripe Checkout session (added 5-21-26)</td>
-            <td>JWT Bearer required. Wired to donations table.</td>
-            <td><span class="pill pill-green">Live ✓</span></td>
-          </tr>
-        </tbody>
-      </table>
+    <div class="grid-2" style="margin-top:0.6rem;">
+      <div class="stack-item">
+        <div class="stack-label">create-checkout</div>
+        <div class="stack-value">Stripe Checkout session creator</div>
+        <div class="stack-note">Called by /player-upgrade. Auth: Supabase JWT bearer. Stripe secret key server-side only.</div>
+      </div>
+      <div class="stack-item">
+        <div class="stack-label">stripe-webhook</div>
+        <div class="stack-value">Stripe → DB sync</div>
+        <div class="stack-note">Updates <code>player_accounts.billing_status</code> on subscription events. Auth: Stripe signature verification (secure).</div>
+      </div>
+      <div class="stack-item">
+        <div class="stack-label">send-push</div>
+        <div class="stack-value">Web Push notifications</div>
+        <div class="stack-note">HIO + score alerts. Auth: JWT bearer + owner/admin gate (v7). Deployed and working.</div>
+      </div>
+      <div class="stack-item" style="border-left:3px solid var(--orange);">
+        <div class="stack-label">send-install-email ⚠️</div>
+        <div class="stack-value">Player registration email (v4)</div>
+        <div class="stack-note">Auth: SEND_INSTALL_EMAIL_SECRET header gate. <strong style="color:var(--orange)">DB webhook Authorization header not set → emails not firing.</strong> Rob manual fix required.</div>
+      </div>
     </div>
   </div>
 
-  <!-- DB Tables -->
-  <div class="card">
-    <div class="card-title">Database Tables — 16 Migrations (000–015)</div>
-    <ul>
-      <li><code>tournaments</code> — anchor table. <code>owner_email</code>, <code>tier</code> (starter/standard/pro), <code>stripe_customer_id</code>, <code>stripe_subscription_id</code>, <code>stripe_status</code>, <code>status</code>. (001)</li>
-      <li><code>players</code> — per-tournament player profiles. <code>tournament_id</code> FK ON DELETE CASCADE (014). 15 columns, 6 RLS policies (000 baseline applied 5-21). <code>is_admin</code> dropped (006).</li>
-      <li><code>rounds</code> — round format (<code>format_front</code>, <code>format_back</code>), yardage, scoring open/closed flag. Admin writes; scoreboard + scorecard read.</li>
-      <li><code>scores</code> — player scores by round/hole. Realtime subscriptions from scoreboard.html.</li>
-      <li><code>settings</code> — key-value tenant config (47+ keys). Admin writes (RLS-gated to tournament_admins via migration 003). tourney-init.js + home.html + scoreboard.html read.</li>
-      <li><code>tournament_admins</code> — email-based admin membership. Canonical admin model for RLS (migrations 003+004). <code>is_admin</code> on players table is legacy — still written by admin.html but RLS uses this table.</li>
-      <li><code>invitations</code> — invite gate. SELECT locked to authenticated users (migration 013, applied 5-21).</li>
-      <li><code>push_subscriptions</code> — Web Push endpoints. SELECT locked to authenticated (migration 013). INSERT locked to authenticated (migration 015).</li>
-      <li><code>player_accounts</code> — billing status, tier. Anon SELECT removed (migration 012). Auth-scoped read only.</li>
-      <li><code>trash_talk</code> — feed messages. XSS risk: <code>feed.html:377</code> passes message into <code>_parseMentions</code> → <code>innerHTML</code> without escaping.</li>
-      <li><code>mygolf_profiles</code> — cross-tournament persistent player identity (added 5-21-26 migration). email, display_name, handicap, avatar. Login gate removed.</li>
-      <li><code>donations</code> — donation records tied to tournament (added 5-21-26 migration). Wired to donate-checkout edge fn.</li>
+  <div class="card" style="margin-bottom:1.4rem;">
+    <div class="card-title">Database Tables — 16 Migrations (000–015) · No USING(true) on sensitive tables</div>
+    <ul style="margin-top:0.5rem;">
+      <li><code>tournaments</code> — anchor: slug, owner_email, tier (starter/pro/club), stripe_customer_id, stripe_subscription_id, stripe_status, status, reg_open. (001)</li>
+      <li><code>players</code> — email, name, handicap, team, tournament_id FK ON DELETE CASCADE. (001, 014)</li>
+      <li><code>tournament_admins</code> — email-based admin list. Canonical RLS source for settings writes. (004)</li>
+      <li><code>settings</code> — key-value store per tournament. RLS gated to tournament_admins. Un-typed (no const enum). (001, 003)</li>
+      <li><code>scores</code> — hole scores per player per round. (001)</li>
+      <li><code>rounds</code> — format, course, format_front, format_back, yardage per round. (007)</li>
+      <li><code>pairings</code> — group assignments per round. (001)</li>
+      <li><code>trash_talk</code> — feed messages. Authenticated only. (010)</li>
+      <li><code>push_subscriptions</code> — PWA endpoints. SELECT + INSERT locked to authenticated. (011, 013, 015)</li>
+      <li><code>invitations</code> — RSVP records. SELECT locked to authenticated. (013)</li>
+      <li><code>player_accounts</code> — billing_status, plan tier. Anon read closed (012). (005, 008, 012)</li>
+      <li><code>mygolf_profiles</code> — universal cross-tournament player profile. (new, 5-21)</li>
+      <li><code>donations</code> — donation checkout records. (new, 5-21)</li>
     </ul>
-    <p style="margin-top:0.6rem;color:var(--orange);font-size:0.8rem;">⚠ Dual admin source: <code>players.is_admin</code> still written by <code>admin.html</code> and <code>create.html</code> but <code>tournament_admins</code> is canonical for RLS. UI gate may pass while RLS rejects (or vice versa) if they drift.</p>
   </div>
 
-  <!-- Platform Pages -->
-  <div class="section-header" style="margin-top:1.5rem;margin-bottom:0.7rem;">
-    <div class="card-title" style="font-size:0.9rem;color:var(--gold);">Platform Pages</div>
-  </div>
   <div class="table-wrap" style="margin-bottom:1rem;">
     <table class="page-table">
-      <thead><tr><th>Route</th><th>File</th><th>Purpose</th><th>Auth</th></tr></thead>
+      <thead><tr><th>URL</th><th>File</th><th>Purpose</th><th>Connects To</th></tr></thead>
       <tbody>
-        <tr><td class="url">/platform</td><td class="file">platform.html</td><td>Operations Action Board — review tickets, grades, axis status</td><td>Platform owner only (RLS)</td></tr>
-        <tr><td class="url">/platform/:slug</td><td class="file">{slug}.html</td><td>Individual review/audit ticket artifacts</td><td>Public (internal link only)</td></tr>
-        <tr><td class="url">/create</td><td class="file">create.html</td><td>Tournament creation wizard</td><td>Authenticated (billing check)</td></tr>
-        <tr><td class="url">/player</td><td class="file">player.html</td><td>Player profile — handicap, tier, phone</td><td>Authenticated</td></tr>
-        <tr><td class="url">/player-upgrade</td><td class="file">player-upgrade.html</td><td>Stripe Checkout tier upgrade flow</td><td>Authenticated</td></tr>
-        <tr><td class="url">/login</td><td class="file">login.html</td><td>Supabase magic link auth</td><td>Public</td></tr>
-        <tr><td class="url">/marketing (root)</td><td class="file">marketing.html</td><td>Public landing page with animated demo</td><td>Public</td></tr>
+        <tr><td class="url">/platform</td><td class="file">platform.html</td><td>Ops hub: grades, artifacts, live pages, action board</td><td>qa-index.json, grades.json, axis-status.json</td></tr>
+        <tr><td class="url">/platform/bugs</td><td class="file">bugs.html</td><td>QA bug log — FAB logging, 6 open bugs as of 5-22</td><td>Supabase platform_bugs table</td></tr>
+        <tr><td class="url">/create</td><td class="file">create.html</td><td>Tournament creation wizard with billing gate</td><td>Supabase, Stripe create-checkout</td></tr>
+        <tr><td class="url">/player</td><td class="file">player.html</td><td>Player dashboard — cross-tournament profile, my tournaments</td><td>mygolf_profiles, tournaments</td></tr>
+        <tr><td class="url">/tos</td><td class="file">tos.html</td><td>Terms of Service</td><td>—</td></tr>
+        <tr><td class="url">/privacy</td><td class="file">privacy.html</td><td>Privacy Policy</td><td>—</td></tr>
+        <tr><td class="url">/marketing</td><td class="file">marketing.html</td><td>Public landing — in-page demo + pricing ($14–$99)</td><td>/create, /login</td></tr>
       </tbody>
     </table>
   </div>
 
-  <!-- Tournament Pages -->
-  <div class="section-header" style="margin-bottom:0.7rem;">
-    <div class="card-title" style="font-size:0.9rem;color:var(--gold);">Tournament Pages — served at /t/:slug/*</div>
-  </div>
-  <div class="table-wrap" style="margin-bottom:1.5rem;">
+  <div class="table-wrap" style="margin-bottom:1.4rem;">
     <table class="page-table">
-      <thead><tr><th>Route</th><th>File</th><th>Purpose</th><th>Status</th></tr></thead>
+      <thead><tr><th>URL</th><th>File</th><th>Purpose</th><th>Key Data</th></tr></thead>
       <tbody>
-        <tr><td class="url">/t/:slug/</td><td class="file">home.html</td><td>Tournament home — RSVP, hero, about, round status</td><td><span class="pill pill-green">Live ✓</span></td></tr>
-        <tr><td class="url">/t/:slug/admin</td><td class="file">admin.html</td><td>Admin dashboard — players, rounds, scoring, design, settings</td><td><span class="pill pill-green">Live ✓</span></td></tr>
-        <tr><td class="url">/t/:slug/scoreboard</td><td class="file">scoreboard.html</td><td>Live leaderboard with realtime scoring + yardage</td><td><span class="pill pill-green">Live ✓</span></td></tr>
-        <tr><td class="url">/t/:slug/scorecard</td><td class="file">scorecard.html</td><td>Player scorecard — enter/view scores by hole</td><td><span class="pill pill-green">Live ✓</span></td></tr>
-        <tr><td class="url">/t/:slug/feed</td><td class="file">feed.html</td><td>Social feed — trash talk, HIO notifications, activity</td><td><span class="pill pill-orange">⚠ XSS open</span></td></tr>
-        <tr><td class="url">/t/:slug/directory</td><td class="file">directory.html</td><td>Player directory with team/handicap</td><td><span class="pill pill-green">Live ✓</span></td></tr>
-        <tr><td class="url">/t/:slug/profile</td><td class="file">profile.html</td><td>Individual player profile view</td><td><span class="pill pill-gold">Missing skeleton</span></td></tr>
-        <tr><td class="url">/t/:slug/champions</td><td class="file">champions.html</td><td>Past champions hall of fame</td><td><span class="pill pill-green">Live ✓</span></td></tr>
-        <tr><td class="url">/t/:slug/course</td><td class="file">course.html</td><td>Course hole view — SVG diagrams from OSM geometry</td><td><span class="pill pill-green">Live ✓</span></td></tr>
+        <tr><td class="url">/</td><td class="file">home.html</td><td>Tournament landing: hero, about, reg CTA, format display</td><td>settings, players, rounds</td></tr>
+        <tr><td class="url">/admin</td><td class="file">admin.html</td><td>Owner dashboard: rounds, pairings, Design tab, player mgmt</td><td>All tables</td></tr>
+        <tr><td class="url">/scoreboard</td><td class="file">scoreboard.html</td><td>Live leaderboard — realtime team standings</td><td>scores, rounds, players</td></tr>
+        <tr><td class="url">/scorecard</td><td class="file">scorecard.html</td><td>Score entry — hole-by-hole, submits to Supabase</td><td>scores, rounds, pairings</td></tr>
+        <tr><td class="url">/feed</td><td class="file">feed.html</td><td>Activity feed — HIO alerts, trash talk, push</td><td>trash_talk, scores</td></tr>
+        <tr><td class="url">/profile</td><td class="file">profile.html</td><td>Individual player stats (no skeleton — open item)</td><td>players, scores</td></tr>
+        <tr><td class="url">/directory</td><td class="file">directory.html</td><td>Full roster — names, handicaps, teams</td><td>players</td></tr>
+        <tr><td class="url">/course</td><td class="file">course.html</td><td>Course info — par, yardage, hole layout</td><td>rounds</td></tr>
+        <tr><td class="url">/champions</td><td class="file">champions.html</td><td>Hall of fame — past winners</td><td>scores (read-only)</td></tr>
+        <tr><td class="url">/login</td><td class="file">login.html</td><td>Player auth via Supabase email+password</td><td>Supabase auth</td></tr>
+        <tr><td class="url">/install</td><td class="file">install.html</td><td>PWA install guide — add to home screen</td><td>—</td></tr>
       </tbody>
     </table>
   </div>
 
-  <!-- Strengths + Gaps -->
   <div class="grid-2">
     <div class="card">
-      <div class="card-title" style="color:var(--green);">✅ Strengths</div>
+      <div class="card-title">✅ Strengths</div>
       <ul>
-        <li><strong>16 clean migrations</strong> — unambiguous ordering (000–015), tournament_admins canonical, players FK ON DELETE CASCADE. Schema governance solid.</li>
-        <li><strong>CI cache auto-bump</strong> — <code>ci.yml</code> injects Unix timestamp into <code>sw.js</code> on every push. Stale PWA bug eliminated.</li>
-        <li><strong>Auth hardening velocity</strong> — 4 migrations in sprint-21 closed anon read on player_accounts (012), locked invitations + push_subscriptions (013), added players FK (014), locked push_subscriptions INSERT (015).</li>
-        <li><strong>Billing infrastructure complete</strong> — <code>create-checkout</code> + <code>stripe-webhook</code> edge fns live, JWT-gated + signature-verified. <code>tournaments.stripe_*</code> + <code>player_accounts.billing_status</code> columns in schema. Zero code needed to flip Stripe on — Rob manual only.</li>
-        <li><strong>tourney-init.js</strong> — solid tenant init layer. Path + subdomain slug detection. Brand color injection. Visibility-hidden flash prevention. <code>window.TOURNAMENT</code> object.</li>
-        <li><strong>Feature depth spike</strong> — sprint-21 execute promoted feature axis A− (from B+): yardage on scoreboard, tenant copy neutralized, color_primary + tourney_name wired, scoring-open banner live.</li>
-        <li><strong>Security header stack</strong> — HSTS (2yr + preload), X-Content-Type-Options: nosniff, X-Frame-Options: DENY, Referrer-Policy: strict-origin, Permissions-Policy — all set in vercel.json.</li>
-        <li><strong>mygolf_profiles</strong> — cross-tournament persistent identity added (5-21). Login gate removed from flow. RSVP auto-fill from profile. Foundation for social graph.</li>
+        <li><strong>Stripe fully wired end-to-end.</strong> <code>create-checkout</code> JWT-gated, <code>stripe-webhook</code> signature-verified, <code>player_accounts.billing_status</code> + PRICE_TO_PLAN map. Zero engineering needed to accept payments — LLC + live keys only.</li>
+        <li><strong>16 migrations (000–015) clean.</strong> Unambiguous prefix ordering. <code>tournament_admins</code> canonical for RLS. <code>is_admin</code> dropped (006). players FK ON DELETE CASCADE (014). mygolf_profiles + donations added cleanly (5-21).</li>
+        <li><strong>tourney-init.js solid.</strong> Slug → tournament → brand injection. <code>window.tourney.db</code> contract stable. localStorage namespaced by slug. Multi-tenant boundary clean.</li>
+        <li><strong>CI auto-bump SW cache version.</strong> ci.yml bumps tourney-v37 on every push — stale PWA risk eliminated. ESLint + Deno type-check on PRs.</li>
+        <li><strong>Skeleton shimmer on 5 major pages.</strong> feed, scoreboard, home, directory, champions — blank-flash gone. CSP + HSTS + X-Frame + nosniff all correct in vercel.json.</li>
+        <li><strong>mygolf_profiles live (5-21).</strong> Universal cross-tournament profile. RSVP auto-fill from profile. Donation checkout wired. Pricing at $14–$99 cost-up model (97%+ margin).</li>
       </ul>
     </div>
+
     <div class="card">
-      <div class="card-title" style="color:var(--red);">⚠ Gaps &amp; Real Bugs</div>
+      <div class="card-title">🔴 Gaps / Bugs</div>
 
-      <div class="sec-item sev-high">
-        <div class="sec-header"><span class="pill pill-red">🔴 HIGH</span><span class="sec-title">feed.html:377 — _parseMentions XSS</span></div>
-        <div class="sec-body"><code>_parseMentions(p.message)</code> sets <code>d.innerHTML = str</code> then calls replace on the result. <code>str</code> is user-submitted feed message content. HTML tags in the input execute before @mention replacement runs. <code>esc()</code> helper exists at <code>feed.html:658</code> but is not applied to <code>str</code> before it enters <code>d.innerHTML</code>.</div>
-        <div class="sec-fix"><strong>Fix</strong>Apply <code>esc(str)</code> before setting <code>d.innerHTML</code> in <code>_parseMentions</code>. Upstream: trash_talk table → feed.html. Downstream: nothing reads feed.html's DOM output. Risk if wrong: @mention display breaks — test both after fix.</div>
+      <div class="sec-item sev-high" style="margin-top:0.5rem;">
+        <div class="sec-header"><span class="pill pill-red">HIGH</span><span class="sec-title">feed.html:377 — _parseMentions XSS</span></div>
+        <div class="sec-body">User trash talk message rendered to <code>innerHTML</code> via <code>_parseMentions()</code> without escaping. Any authenticated player can inject HTML/script visible to all feed viewers.<br><strong style="color:var(--text)">Upstream:</strong> trash_talk table ← any auth player. <strong style="color:var(--text)">Downstream:</strong> all feed.html readers. <strong style="color:var(--text)">Risk:</strong> auth token theft from localStorage.</div>
+        <div class="sec-fix"><strong>Fix</strong>Wrap message in <code>esc()</code> before <code>_parseMentions()</code> at feed.html:377. One line.</div>
       </div>
 
       <div class="sec-item sev-high">
-        <div class="sec-header"><span class="pill pill-red">🔴 HIGH</span><span class="sec-title">send-push — Auth Fix Not Deployed</span></div>
-        <div class="sec-body">Auth-gated version of <code>supabase/functions/send-push/index.ts</code> is committed but NOT deployed to Supabase. Live function accepts any <code>tournament_id</code> UUID with zero authentication. Any party who discovers the Supabase project ref can spam push notifications to all subscribers of any tournament.</div>
-        <div class="sec-fix"><strong>Fix (Rob manual)</strong><code>npx supabase functions deploy send-push --project-ref jllugkiojeoopitdvzsa</code>. Requires <code>SUPABASE_ACCESS_TOKEN</code>.</div>
+        <div class="sec-header"><span class="pill pill-red">HIGH · ROB MANUAL</span><span class="sec-title">send-install-email not firing</span></div>
+        <div class="sec-body"><code>send-install-email</code> v4 deployed. DB webhook fires on players INSERT but Authorization header does not match <code>SEND_INSTALL_EMAIL_SECRET</code> — edge fn rejects. Install emails never reach new players.<br><strong style="color:var(--text)">Upstream:</strong> players INSERT → DB webhook. <strong style="color:var(--text)">Downstream:</strong> player never gets PWA install guide → lower install rate.</div>
+        <div class="sec-fix"><strong>Fix</strong>Supabase → Database → Webhooks → players INSERT webhook → set Authorization: <code>Bearer {SEND_INSTALL_EMAIL_SECRET}</code>. 2-min dashboard task.</div>
       </div>
 
       <div class="sec-item sev-med">
-        <div class="sec-header"><span class="pill pill-orange">🟠 MEDIUM</span><span class="sec-title">CSP unsafe-inline — Nullifies XSS Protection</span></div>
-        <div class="sec-body">vercel.json CSP header: <code>script-src 'self' 'unsafe-inline'</code>. All HTML pages have substantial inline <code>&lt;script&gt;</code> blocks — that's the blocker. The <code>unsafe-inline</code> directive nullifies the XSS protection CSP is meant to provide. Until inline scripts are extracted to <code>/lib/*.js</code>, a strict CSP cannot be set.</div>
-        <div class="sec-fix"><strong>Upstream:</strong> All 9 tournament HTML pages + 5 platform pages have inline scripts.<br><strong>Downstream:</strong> Strict CSP blocks all inline script execution — must extract first.<br><strong>Fix:</strong> Extract inline scripts to external files, then tighten CSP.</div>
+        <div class="sec-header"><span class="pill pill-orange">MEDIUM</span><span class="sec-title">CSP unsafe-inline persists</span></div>
+        <div class="sec-body">vercel.json CSP has <code>unsafe-inline</code> — nullifies XSS protection. All pages use inline <code>&lt;script&gt;</code> blocks. Blocks strict CSP adoption. Combined with _parseMentions XSS above: injected scripts can run cross-origin requests.</div>
+        <div class="sec-fix"><strong>Long-term fix</strong>Extract inline scripts to per-page .js files, then tighten CSP. Multi-sprint effort.</div>
       </div>
 
       <div class="sec-item sev-med">
-        <div class="sec-header"><span class="pill pill-orange">🟠 MEDIUM</span><span class="sec-title">SEND_INSTALL_EMAIL_SECRET Unset</span></div>
-        <div class="sec-body"><code>send-install-email</code> edge function exists. Secret <code>SEND_INSTALL_EMAIL_SECRET</code> has not been set in the Supabase dashboard. PWA install email never fires on registration. Users must manually navigate to install.</div>
-        <div class="sec-fix"><strong>Fix (Rob manual)</strong> Set <code>SEND_INSTALL_EMAIL_SECRET</code> in Supabase dashboard → Project Settings → Edge Functions → Secrets.</div>
+        <div class="sec-header"><span class="pill pill-orange">MEDIUM</span><span class="sec-title">profile.html — no skeleton shimmer</span></div>
+        <div class="sec-body">profile.html blank-flashes on load. Every other major page has skeleton shimmer (feed, scoreboard, home, directory, champions). Inconsistency is visible when navigating from any of those pages.<br><strong style="color:var(--text)">Upstream:</strong> players + scores tables. <strong style="color:var(--text)">Downstream:</strong> none (read-only).</div>
+        <div class="sec-fix"><strong>Fix</strong>Add skeleton div pattern to profile.html. 30 minutes.</div>
       </div>
 
-      <div class="sec-item sev-med">
-        <div class="sec-header"><span class="pill pill-orange">🟠 MEDIUM</span><span class="sec-title">No Player-Facing Score Entry</span></div>
-        <div class="sec-body">Critical competitive gap vs Unknown Golf. TOURney has zero player score entry UI. Admins must enter all scores. Blocks scale — organizer becomes scorer for all players. Competitor differentiates heavily on per-hole +/- input, par/yards display, player avatars.</div>
-        <div class="sec-fix"><strong>Upstream:</strong> rounds table (format, holes), players table, scores table.<br><strong>Downstream:</strong> scoreboard.html reads scores realtime, scorecard.html reads round scores.<br><strong>Fix:</strong> Build player score entry modal/page gated by round_open flag. Write to scores table. P1 roadmap item.</div>
+      <div class="sec-item sev-info">
+        <div class="sec-header"><span class="pill pill-blue">ROB MANUAL</span><span class="sec-title">GitHub CI secrets not set</span></div>
+        <div class="sec-body"><code>deploy-functions.yml</code> ready but <code>SUPABASE_ACCESS_TOKEN</code> + <code>SUPABASE_PROJECT_REF</code> not in repo secrets. Every edge function deploy is manual CLI. 5-minute task.</div>
+        <div class="sec-fix"><strong>Fix</strong>GitHub → roberttmadsen13-del/TOURney → Settings → Secrets → add both. SUPABASE_PROJECT_REF = jllugkiojeoopitdvzsa.</div>
       </div>
 
-      <div class="sec-item sev-med">
-        <div class="sec-header"><span class="pill pill-orange">🟠 MEDIUM</span><span class="sec-title">Business Blocking — Rob Manual (LLC + Stripe)</span></div>
-        <div class="sec-body">Stripe infrastructure is fully wired (edge fns, DB columns, checkout flow). Revenue is zero because: LLC not formed, EIN not obtained, Mercury bank account not opened, Stripe live keys not set. Engineering is not the blocker — legal/financial entity is.</div>
-        <div class="sec-fix"><strong>Fix (Rob manual, ordered):</strong> 1) Form LLC 2) Obtain EIN 3) Open Mercury business account 4) Create Stripe account with EIN 5) Set <code>STRIPE_SECRET_KEY</code> + <code>STRIPE_WEBHOOK_SECRET</code> in Supabase secrets + Vercel env 6) Verify price IDs match <code>PRICE_TO_PLAN</code> map in player-upgrade.html.</div>
+      <div class="sec-item sev-info">
+        <div class="sec-header"><span class="pill pill-blue">ROB MANUAL</span><span class="sec-title">LLC not formed — Revenue = $0</span></div>
+        <div class="sec-body">LLC not formed, EIN pending, bank account pending, Stripe live keys unset. Stripe infrastructure fully wired engineering-side. Zero engineering blocked on this — entirely business formation.</div>
+        <div class="sec-fix"><strong>Path:</strong> Form LLC → EIN (4 weeks IRS) → Mercury bank → Stripe live keys → flip reg_open=true.</div>
       </div>
 
-      <div class="sec-item sev-low">
-        <div class="sec-header"><span class="pill pill-blue">🔵 LOW</span><span class="sec-title">No OG / Social Meta Tags</span></div>
-        <div class="sec-body">No <code>og:title</code>, <code>og:description</code>, <code>og:image</code>, or <code>twitter:card</code> meta tags on any page. Tournament share links preview as blank. Reduces virality of tournament invites.</div>
-        <div class="sec-fix"><strong>Upstream:</strong> settings table (tourney_name, logo_url). <strong>Downstream:</strong> Social link unfurl. <strong>Fix:</strong> Add dynamic OG meta tag injection to tourney-init.js using window.TOURNAMENT data.</div>
+      <div class="sec-item sev-info">
+        <div class="sec-header"><span class="pill pill-orange">PRODUCT GAP · P1 Roadmap</span><span class="sec-title">No player self-service score entry UX</span></div>
+        <div class="sec-body">scorecard.html exists but lacks: +/− hole-by-hole incrementer, active round state machine, "resume scoring" CTA on home.html. Admin enters most scores. Competitor Unknown Golf has full self-service player entry — this is the #1 scaling blocker per 5-21-26 competitor analysis.<br><strong style="color:var(--text)">Risk:</strong> At 50+ players, admin entry bottleneck blocks growth.</div>
+        <div class="sec-fix"><strong>P1 Roadmap</strong>+/− incrementer on scorecard.html. Active round indicator + resume CTA on home.html.</div>
       </div>
 
-      <div class="sec-item sev-low">
-        <div class="sec-header"><span class="pill pill-blue">🔵 LOW</span><span class="sec-title">profile.html — No Loading Skeleton</span></div>
-        <div class="sec-body">profile.html has no loading skeleton or loading state. Page blank-flashes while fetching player data. Other pages (directory, scoreboard) show empty states but profile.html does not.</div>
-        <div class="sec-fix"><strong>Fix:</strong> Add skeleton shimmer cards while <code>fetchProfile()</code> resolves. No upstream/downstream impact — isolated to profile.html DOM.</div>
-      </div>
-
-      <div class="sec-item sev-low">
-        <div class="sec-header"><span class="pill pill-blue">🔵 LOW</span><span class="sec-title">Settings Store Un-typed</span></div>
-        <div class="sec-body">settings table is a key-value store with no type schema. 47+ keys documented but not enforced. Typo in a key name causes silent miss — page shows blank, no error. No migration or enum defines the allowed keys.</div>
-        <div class="sec-fix"><strong>Fix:</strong> Create <code>settings-keys.js</code> const enum of all known keys. Import in admin.html for writes. Admin.html already has the save functions — this is a naming safety layer only.</div>
+      <div class="sec-item sev-info">
+        <div class="sec-header"><span class="pill pill-blue">OPS</span><span class="sec-title">platform_bugs table — 6 resolved bugs still status=open</span></div>
+        <div class="sec-body">Resolved in 5-21-26 sprint. Was blocked by Supabase MCP disconnect on 5-19. IDs in 5-19-26-bugs-review.html Step 8. Cosmetic but misleading on /platform/bugs.<br><strong style="color:var(--text)">Fix:</strong> Reconnect Supabase MCP → run UPDATE SQL from Step 8.</div>
       </div>
     </div>
   </div>
@@ -448,131 +366,99 @@ footer span{color:var(--gold);}
 
   <div class="section-header">
     <div class="section-eyebrow">§ Plan</div>
-    <div class="section-title">Strategic Priorities — May 22, 2026</div>
-    <div class="section-desc">Platform roadmap ordered by business impact. P1 removes the biggest competitive gap. Engineering items are unblocked and executable now. Rob manual items are called out explicitly.</div>
+    <div class="section-title">Strategic Priorities + Forward Bets</div>
+    <div class="section-desc">P1–P6 ordered by impact. Ideas are next-quarter bets. Business milestones are the revenue path.</div>
   </div>
 
-  <div class="roadmap-item">
-    <div class="roadmap-icon">🥇</div>
-    <div class="roadmap-content">
-      <div class="roadmap-title">P1 — Player-Facing Score Entry (Critical Competitive Gap)</div>
-      <div class="roadmap-desc">TOURney has zero player score entry. Admins score everything. This is the single biggest scaling blocker and the #1 gap vs Unknown Golf. Build a per-hole +/- entry modal gated by <code>rounds.scoring_open</code>. Players submit their own scores. Admin retains override capability via score-edit UI.</div>
-      <div class="roadmap-action"><strong>Build:</strong> score-entry.html or modal in scorecard.html. Per-hole input (+/-), par display, submit to scores table. Gate on <code>rounds.scoring_open = true</code>. Realtime sync to scoreboard. Estimated: 1 session.</div>
-    </div>
+  <div class="card" style="margin-bottom:1.2rem;">
+    <div class="card-title">Strategic Priorities</div>
+    <ol style="padding-left:1.2rem;">
+      <li style="margin-bottom:0.55rem;"><strong style="color:var(--red)">P1 [SECURITY — DAY 1]:</strong> Fix feed.html:377 <code>_parseMentions</code> XSS. One-liner — wrap message in <code>esc()</code>. Zero downstream breakage. Do this before the next Bova session.</li>
+      <li style="margin-bottom:0.55rem;"><strong style="color:var(--orange)">P2 [ROB MANUAL — 5 MIN EACH]:</strong> (a) Wire SEND_INSTALL_EMAIL_SECRET to DB webhook Authorization header. (b) Add GitHub CI secrets (SUPABASE_ACCESS_TOKEN + SUPABASE_PROJECT_REF). Both sitting since 5-15.</li>
+      <li style="margin-bottom:0.55rem;"><strong style="color:var(--gold)">P3 [FEATURE — NEXT SPRINT]:</strong> Player score entry UX: +/− incrementer on scorecard.html, active-round indicator + resume CTA on home.html. Closes #1 competitive gap vs Unknown Golf.</li>
+      <li style="margin-bottom:0.55rem;"><strong style="color:var(--gold)">P4 [UX — QUICK WIN]:</strong> profile.html skeleton shimmer. Last major page without one. 30 min.</li>
+      <li style="margin-bottom:0.55rem;"><strong style="color:var(--blue)">P5 [PRODUCT — SPRINT 2]:</strong> Side games + payouts (skins, closest-to-pin, long drive, money tracking). Competitor's primary casual engagement driver.</li>
+      <li style="margin-bottom:0.55rem;"><strong style="color:var(--muted)">P6 [ARCHITECTURE]:</strong> <code>settings-keys.js</code> const enum. Prevents admin→consumer key drift. Silent bug risk without it.</li>
+    </ol>
   </div>
 
-  <div class="roadmap-item">
-    <div class="roadmap-icon">🔒</div>
-    <div class="roadmap-content">
-      <div class="roadmap-title">P2 — Fix feed.html:377 _parseMentions XSS (High Severity)</div>
-      <div class="roadmap-desc">User-submitted message content flows into <code>d.innerHTML</code> unescaped inside <code>_parseMentions()</code>. <code>esc()</code> helper exists in the same file but isn't applied. One-line fix. Ship before any public launch or broader invite rollout.</div>
-      <div class="roadmap-action"><strong>Fix:</strong> <code>feed.html:377</code> — apply <code>esc(str)</code> before <code>d.innerHTML = str</code> in <code>_parseMentions</code>. Test @mention rendering still works. Estimated: 15 minutes.</div>
-    </div>
-  </div>
-
-  <div class="roadmap-item">
-    <div class="roadmap-icon">📦</div>
-    <div class="roadmap-content">
-      <div class="roadmap-title">P3 — Rob Manual Unblocks (LLC → Revenue)</div>
-      <div class="roadmap-desc">All Stripe plumbing is done. Revenue is blocked purely on legal/financial entity formation. Every week of delay = continued zero revenue. This is the highest-leverage action Rob can take — not engineering.</div>
-      <div class="roadmap-action"><strong>Actions (Rob, ordered):</strong> Form LLC → Get EIN → Open Mercury account → Create Stripe account with EIN → Set STRIPE_SECRET_KEY + STRIPE_WEBHOOK_SECRET in Supabase + Vercel → Set SEND_INSTALL_EMAIL_SECRET → Deploy send-push edge fn (npx supabase functions deploy send-push --project-ref jllugkiojeoopitdvzsa).</div>
-    </div>
-  </div>
-
-  <div class="roadmap-item">
-    <div class="roadmap-icon">🛰️</div>
-    <div class="roadmap-content">
-      <div class="roadmap-title">P4 — GPS Yardage + Satellite Hole View (Free, $0)</div>
-      <div class="roadmap-desc">Revised from Skip to P3 in competitor analysis. TOURney's primary demo use case is groups going to courses they've never played. GPS ball-to-pin + satellite hole view is the experience differentiator. Achievable at $0: <code>navigator.geolocation</code> + OSM Overpass for hole coordinates + Haversine JS for distance. Mapbox Static Satellite API (50k/mo free) for hole imagery.</div>
-      <div class="roadmap-action"><strong>Build:</strong> Add GPS yardage widget to scorecard.html (geolocation → Haversine → display). Add satellite tile to course.html hole view (Mapbox static API with OSM hole lat/lon). Estimated: 1–2 sessions.</div>
-    </div>
-  </div>
-
-  <div class="roadmap-item">
-    <div class="roadmap-icon">💰</div>
-    <div class="roadmap-content">
-      <div class="roadmap-title">P5 — Side Games + Payouts (Competitive Gap)</div>
-      <div class="roadmap-desc">Unknown Golf's #2 differentiator. Skins, closest-to-pin, long drive, $ winnings tracking. Casual tournaments are financially motivated — "what's the payout?" is always the first question. TOURney has none of this. Moderate build scope.</div>
-      <div class="roadmap-action"><strong>Build:</strong> contests.html (new page). Skins calculator (reads scores table). CTP + long drive input fields. Payout split calculator. Admin configures, players see results. Estimated: 2 sessions.</div>
-    </div>
-  </div>
-
-  <!-- Forward-Looking Ideas -->
-  <div style="margin-top:1.5rem;margin-bottom:0.75rem;">
-    <div class="section-eyebrow">Forward-Looking Ideas</div>
-  </div>
-  <div class="grid-2">
+  <div class="grid-2" style="margin-bottom:1.4rem;">
     <div class="idea-card idea-1">
       <div class="idea-number">1</div>
-      <div class="idea-tag"><span class="pill pill-gold">Feature</span></div>
-      <div class="idea-title">Score Admin-Edit UI</div>
-      <div class="idea-body">Admins need to correct player scores after submission (wrong hole, fat-finger). No admin-edit UI exists. Scoring errors currently require direct DB edits. Blocking to any live tournament with player-entry.</div>
-      <div class="idea-plan"><strong>Build:</strong> Edit modal in admin.html scoring tab. Read from scores table, patch on submit. RLS gate: tournament_admins only. 1 session.</div>
+      <div class="idea-tag"><span class="pill pill-gold">P1 Roadmap</span></div>
+      <div class="idea-title">Player Score Entry v2</div>
+      <div class="idea-body">Full self-service hole-by-hole score entry from player's phone. +/− incrementer per hole, par display, running total. Round state machine: round-active → pick group → enter hole-by-hole → submit. Resume CTA on home.html when a round is open. Closes the admin-entry bottleneck at scale.</div>
+      <div class="idea-plan"><strong>Build:</strong> Enhance scorecard.html with +/− buttons (no new page needed). Add active round check to home.html → "Round 2 open — enter your score →". Estimated 1 sprint.</div>
     </div>
     <div class="idea-card idea-2">
       <div class="idea-number">2</div>
-      <div class="idea-tag"><span class="pill pill-blue">Security</span></div>
-      <div class="idea-title">CSP Strict Mode</div>
-      <div class="idea-body">Extract all inline scripts to <code>/lib/*.js</code> external files. Once inline scripts are gone, update vercel.json CSP to remove <code>unsafe-inline</code>. Unlocks strict XSS protection at browser level — makes remaining innerHTML surfaces unexploitable even before individual fixes land.</div>
-      <div class="idea-plan"><strong>Build:</strong> Extract shared utility functions to <code>/lib/util.js</code>. Refactor per-page inline scripts to module imports. Multi-session effort (9 pages). High security payoff.</div>
+      <div class="idea-tag"><span class="pill pill-blue">P2 Roadmap</span></div>
+      <div class="idea-title">Side Games + Payouts</div>
+      <div class="idea-body">Skins, closest to pin, long drive, money tracking. The feature casual golfers actually talk about at the 19th hole. Competitor Unknown Golf's primary draw. Admin sets game rules per round; players see results live on a dedicated tab.</div>
+      <div class="idea-plan"><strong>Build:</strong> Admin sub-tab for side game config. Scoreboard sub-tab for payouts. New Supabase table: <code>side_game_results</code>. Estimated 1–2 sprints.</div>
     </div>
     <div class="idea-card idea-3">
       <div class="idea-number">3</div>
-      <div class="idea-tag"><span class="pill pill-green">Growth</span></div>
-      <div class="idea-title">OG / Social Meta Tags</div>
-      <div class="idea-body">Tournament share links preview as blank cards. Every invite link is a growth opportunity — a rich preview (tournament name, logo, round format) increases click-through. Inject OG tags dynamically from <code>window.TOURNAMENT</code> in tourney-init.js.</div>
-      <div class="idea-plan"><strong>Build:</strong> tourney-init.js injects <code>og:title</code>, <code>og:description</code>, <code>og:image</code> from settings/tournament data. 1 session, no backend changes needed.</div>
+      <div class="idea-tag"><span class="pill pill-green">P3 Roadmap · $0</span></div>
+      <div class="idea-title">Free GPS Yardage + Satellite Hole View</div>
+      <div class="idea-body">Ball-to-pin yardage via <code>navigator.geolocation</code> + OSM Overpass hole coordinates + Haversine JS. Satellite hole images via Mapbox Static API free tier (50k/mo). Both $0. Especially high value for groups playing a course they've never seen — the primary TOURney demo use case per 5-21-26 analysis.</div>
+      <div class="idea-plan"><strong>Build:</strong> GPS widget on scorecard.html. Satellite image on course.html per hole. OSM coords fetched once, cached in localStorage. Est. 1 sprint.</div>
     </div>
     <div class="idea-card idea-4">
       <div class="idea-number">4</div>
-      <div class="idea-tag"><span class="pill pill-orange">Performance</span></div>
-      <div class="idea-title">Lighthouse CI</div>
-      <div class="idea-body">No automated performance budget enforcement. Bundle size and LCP scores are untracked. As pages grow (marketing.html is already 1100+ lines), performance can silently regress. Add Lighthouse CI to GitHub Actions to catch regressions before deploy.</div>
-      <div class="idea-plan"><strong>Build:</strong> Add <code>lighthouse-ci</code> to <code>ci.yml</code> with budget thresholds (perf ≥ 85, a11y ≥ 80). Runs on every PR. 1 session setup.</div>
+      <div class="idea-tag"><span class="pill pill-orange">Architecture</span></div>
+      <div class="idea-title">Settings Keys Const Enum</div>
+      <div class="idea-body">Create <code>settings-keys.js</code> with a frozen const object of all 24+ settings key names. Import in admin.html (writes) and home.html/scorecard.html (reads). Prevents silent key-drift where admin writes <code>format_day1_front</code> but a consumer reads a different key name — a class of bug that produces wrong defaults with no error.</div>
+      <div class="idea-plan"><strong>Build:</strong> One new file. Update 4–5 consumer pages. ~30 min with high long-term payoff.</div>
     </div>
     <div class="idea-card idea-5">
       <div class="idea-number">5</div>
-      <div class="idea-tag"><span class="pill pill-purple">Architecture</span></div>
-      <div class="idea-title">Settings Store Type Safety</div>
-      <div class="idea-body">47+ settings keys stored as raw strings. A typo silently misses — admin saves, page reads nothing. Create a <code>SETTINGS_KEYS</code> const enum in a shared module. Admin uses enum values for writes. Catches typos at dev time, not at runtime.</div>
-      <div class="idea-plan"><strong>Build:</strong> <code>/lib/settings-keys.js</code> with named exports for all 47+ known keys. Update admin.html save functions to import and use. 1 session.</div>
+      <div class="idea-tag"><span class="pill pill-purple">Observability</span></div>
+      <div class="idea-title">Lighthouse CI Baseline</div>
+      <div class="idea-body">Add <code>lighthouse-ci.yml</code> GitHub Action to measure Core Web Vitals on every PR. Currently flying blind on performance — no automated perf gate, no regression detection. Sets an LCP/CLS/FID baseline before the codebase grows further. CI already set up for ESLint and Deno; adding Lighthouse is a one-file extension.</div>
+      <div class="idea-plan"><strong>Build:</strong> Add lighthouse-ci npm package + .lighthouserc.json with budget thresholds. PR comment report. Est. 1 hour.</div>
     </div>
   </div>
 
-  <!-- Business Milestones -->
-  <div style="margin-top:1.5rem;margin-bottom:0.75rem;">
-    <div class="section-eyebrow">Business Milestones</div>
-  </div>
+  <div class="card-title" style="margin-bottom:0.7rem;font-size:0.85rem;font-weight:700;color:var(--gold);">Business Milestones — Revenue Path</div>
   <div class="roadmap-item">
     <div class="roadmap-icon">⚖️</div>
     <div class="roadmap-content">
-      <div class="roadmap-title">1 — Form LLC (Blocking all revenue)</div>
-      <div class="roadmap-desc">Cannot open Stripe, bank, or sign contracts as a sole proprietor with business revenue. LLC is the legal prerequisite to the entire revenue stack.</div>
-      <div class="roadmap-action"><strong>Action:</strong> File with Wyoming/Delaware ($50–$100, same-day online). Costs Rob 30 minutes + fee. Every day without it = zero revenue potential.</div>
-    </div>
-  </div>
-  <div class="roadmap-item">
-    <div class="roadmap-icon">🏦</div>
-    <div class="roadmap-content">
-      <div class="roadmap-title">2 — EIN + Mercury Bank (Prerequisite to Stripe)</div>
-      <div class="roadmap-desc">IRS EIN: free, 15 minutes at irs.gov. Mercury business checking: free, excellent developer experience, fast ACH. Both are required to open Stripe.</div>
-      <div class="roadmap-action"><strong>Action:</strong> IRS EIN → Mercury application → Stripe account with EIN + bank. Then set STRIPE_SECRET_KEY + STRIPE_WEBHOOK_SECRET in Supabase + Vercel env vars.</div>
+      <div class="roadmap-title">1 — Form LLC + EIN + Bank Account (Rob Manual — Unblocks Everything)</div>
+      <div class="roadmap-desc">LLC formation → IRS EIN (4 weeks processing) → Mercury bank account → Stripe live keys. This single action unblocks all revenue. Zero engineering blocked on it.</div>
+      <div class="roadmap-action"><strong>Action:</strong> File LLC (Wyoming or Delaware). Apply for EIN free at IRS.gov. Open Mercury (free business banking). Sign up Stripe with LLC EIN.</div>
     </div>
   </div>
   <div class="roadmap-item">
     <div class="roadmap-icon">💳</div>
     <div class="roadmap-content">
-      <div class="roadmap-title">3 — Flip Revenue Switch (Engineering Already Done)</div>
-      <div class="roadmap-desc">Zero engineering needed to start charging. <code>create-checkout</code> + <code>stripe-webhook</code> are live. <code>player_accounts.billing_status</code> + <code>tournaments.tier</code> + tier gating all functional. Player-upgrade flow exists. Rob sets 2 env vars and TOURney accepts real payments.</div>
-      <div class="roadmap-action"><strong>Action:</strong> Set Stripe live keys → verify PRICE_TO_PLAN price IDs in player-upgrade.html → smoke test checkout flow with real card → done.</div>
+      <div class="roadmap-title">2 — Flip Stripe Live Keys + reg_open = true → First Revenue</div>
+      <div class="roadmap-desc">Set STRIPE_SECRET_KEY + STRIPE_WEBHOOK_SECRET in Supabase. Set reg_open=true. First paying tournament can onboard. Stripe wiring is complete engineering-side.</div>
+      <div class="roadmap-action"><strong>Unlocks:</strong> Revenue. Pricing $14–$99, 97%+ margin. First MRR.</div>
+    </div>
+  </div>
+  <div class="roadmap-item">
+    <div class="roadmap-icon">⛳</div>
+    <div class="roadmap-content">
+      <div class="roadmap-title">3 — Player Score Entry v2 Ships</div>
+      <div class="roadmap-desc">Self-service +/− entry from player's phone. Closes the primary competitive gap. Makes TOURney demo-able as a player product, not just admin tooling. Enables viral demo during the round.</div>
+      <div class="roadmap-action"><strong>Unlocks:</strong> Viral demos. Players show friends mid-round → organic growth.</div>
     </div>
   </div>
   <div class="roadmap-item">
     <div class="roadmap-icon">🏌️</div>
     <div class="roadmap-content">
-      <div class="roadmap-title">4 — First Paying Customer (Target: Bova Invitational 2027 or Equivalent)</div>
-      <div class="roadmap-desc">Bova Invitational 2026 was the v1 PoC. The 2027 tournament should be the first revenue-generating tenant — or find an equivalent small golf group in the meantime. Proof-of-concept → proof-of-revenue. Goal: $49/mo Standard tier, one tenant, before Q3 2026.</div>
-      <div class="roadmap-action"><strong>Action:</strong> Identify 2–3 golf group organizers in network. Offer free Standard tier for one tournament in exchange for feedback + testimonial. Convert to paid after.</div>
+      <div class="roadmap-title">4 — Second Tenant Onboarded</div>
+      <div class="roadmap-desc">Onboard a second golf group (not Bova) end-to-end via /create wizard. Validates multi-tenant architecture, RSVP flow, brand customization, and billing with a real customer who doesn't already know Rob.</div>
+      <div class="roadmap-action"><strong>Unlocks:</strong> PMF signal. First MRR beyond Bova.</div>
+    </div>
+  </div>
+  <div class="roadmap-item">
+    <div class="roadmap-icon">🎲</div>
+    <div class="roadmap-content">
+      <div class="roadmap-title">5 — Side Games + Payouts Shipped</div>
+      <div class="roadmap-desc">Skins, closest-to-pin, long drive, money tracking. The feature casual groups actually talk about post-round. Word-of-mouth growth driver. Differentiates TOURney from scoreboard-only tools.</div>
+      <div class="roadmap-action"><strong>Unlocks:</strong> "The app that tracked our Vegas game" — organic referrals.</div>
     </div>
   </div>
 
@@ -584,69 +470,77 @@ footer span{color:var(--gold);}
 
   <div class="section-header">
     <div class="section-eyebrow">§ Runbook</div>
-    <div class="section-title">Execution Steps for /tourney-execute</div>
-    <div class="section-desc">Ordered steps. Steps 1–3 are pure code changes (execute-safe). Steps 4–6 are Rob manual (blocked on external actions). Each step includes upstream/downstream impact.</div>
+    <div class="section-title">Execution Steps</div>
+    <div class="section-desc">Steps 1–2 are code changes. Steps 3–4 are Rob manual (dashboard + GitHub UI). Step 5 requires Supabase MCP reconnect. Run <code>/tourney-execute 5-22-26-claude-review.html</code> to execute steps 1–2 and 5.</div>
   </div>
 
   <div class="runbook-steps">
 
     <div class="rb-step">
-      <div class="rb-step-title">Fix feed.html:377 — _parseMentions XSS</div>
-      <div class="rb-step-body">In <code>feed.html</code>, locate <code>_parseMentions(str)</code> function. Change the first line from <code>d.innerHTML = str</code> to <code>d.innerHTML = esc(str)</code>. The <code>esc()</code> helper already exists at <code>feed.html:658</code> — no new code needed. Verify @mention display still works (@ symbol followed by name should still highlight).</div>
-      <div class="rb-impact"><strong>Upstream → Downstream</strong>trash_talk table → feed.html _parseMentions() → d.innerHTML. Downstream: nothing reads feed.html's rendered DOM externally. Risk if wrong: @mention highlighting breaks — but esc() only escapes HTML entities, regex replace for @mentions runs on escaped string which is safe.</div>
-      <div class="rb-verify"><strong>Verify</strong>Post a feed message containing <code>&lt;script&gt;alert(1)&lt;/script&gt;</code>. Must render as literal text, not execute. @mentions (e.g. <code>@Player Name</code>) must still render with highlight span.</div>
-    </div>
-
-    <div class="rb-step">
-      <div class="rb-step-title">Add OG / Social Meta Tags via tourney-init.js</div>
-      <div class="rb-step-body">In <code>tourney-init.js</code>, after brand color injection and <code>window.TOURNAMENT</code> is set, inject OG meta tags into <code>&lt;head&gt;</code> dynamically. Use <code>window.TOURNAMENT.name</code> for og:title, settings <code>homepage_subtitle</code> for og:description, <code>window.TOURNAMENT.logo_url</code> for og:image. Add Twitter card meta. For platform pages (non-tenant), skip injection.</div>
-      <div class="rb-impact"><strong>Upstream:</strong> tournaments table (name, logo_url) + settings (homepage_subtitle). <strong>Downstream:</strong> Social link unfurl only — no app pages read OG tags. <strong>Risk if wrong:</strong> Meta injection fails silently (fallback: blank preview, no regression). Guard with try/catch.</div>
-      <div class="rb-verify"><strong>Verify</strong>Load a tenant page (/t/:slug/). In browser DevTools → head → confirm og:title, og:description, og:image meta tags are present with correct tournament values. Non-tenant pages (/platform, /login) must NOT have OG tags injected.</div>
-    </div>
-
-    <div class="rb-step">
-      <div class="rb-step-title">Add Profile Loading Skeleton to profile.html</div>
-      <div class="rb-step-body">Add shimmer skeleton cards to <code>profile.html</code> to show while <code>fetchProfile()</code> resolves. Display skeletons on page load, hide on data ready. Use CSS animation matching existing tokens (gold/muted palette). Pattern: <code>.skeleton { background: linear-gradient(90deg, var(--card) 25%, var(--gold-dim) 50%, var(--card) 75%); animation: shimmer 1.4s infinite; }</code>.</div>
-      <div class="rb-impact"><strong>Upstream:</strong> players table → profile.html fetchProfile(). <strong>Downstream:</strong> Isolated to profile.html DOM — no other pages read this. <strong>Risk if wrong:</strong> Skeleton persists if fetch fails — add error state fallback.</div>
-      <div class="rb-verify"><strong>Verify</strong>Open profile.html on slow connection (DevTools → Network → Slow 3G). Skeleton cards must be visible for 1–2 seconds before content renders. No blank flash. Error state must display if player not found.</div>
-    </div>
-
-    <div class="rb-step">
-      <div class="rb-step-title">Create /lib/settings-keys.js Const Enum</div>
-      <div class="rb-step-body">Create new file <code>/lib/settings-keys.js</code> exporting a <code>SETTINGS_KEYS</code> object with named string constants for all 47+ known settings keys (tourney_name, color_primary, logo_url, homepage_subtitle, etc.). Update <code>admin.html</code> save functions to reference <code>SETTINGS_KEYS.TOURNEY_NAME</code> instead of raw strings. Do not change key values — only add type safety around them.</div>
-      <div class="rb-impact"><strong>Upstream:</strong> admin.html writes to settings table using raw string keys. <strong>Downstream:</strong> home.html, tourney-init.js, scoreboard.html all read settings by key. Bad key name → silent miss. <strong>Risk if wrong:</strong> Key name change breaks all reads. Do NOT rename any existing keys — add const aliases only.</div>
-      <div class="rb-verify"><strong>Verify</strong>After adding constants: admin.html saves a test setting. Confirm key is written correctly to Supabase (no typo introduced). home.html reads and renders the setting correctly.</div>
-    </div>
-
-    <div class="rb-step rb-blocked">
-      <div class="rb-step-title">🔴 BLOCKED (Rob Manual) — Deploy send-push Edge Function</div>
-      <div class="rb-step-body">Auth fix for <code>supabase/functions/send-push/index.ts</code> is committed. Must be deployed to Supabase to take effect. Live function currently has zero auth. Command: <code>npx supabase functions deploy send-push --project-ref jllugkiojeoopitdvzsa</code>. Requires <code>SUPABASE_ACCESS_TOKEN</code> env var set locally.</div>
-      <div class="rb-impact"><strong>Upstream:</strong> feed.html + pwa.js call send-push when HIO or score events fire. <strong>Downstream:</strong> All push_subscriptions for a tournament receive notifications. <strong>Risk if wrong:</strong> Push notifications stop firing if auth header not sent by caller — verify feed.html passes Authorization header.</div>
-      <div class="rb-verify"><strong>Verify</strong>After deploy: trigger a HIO notification in admin. Confirm push received on subscribed device. Confirm unauthenticated POST to send-push returns 401.</div>
-    </div>
-
-    <div class="rb-step rb-blocked">
-      <div class="rb-step-title">🔴 BLOCKED (Rob Manual) — Set SEND_INSTALL_EMAIL_SECRET</div>
-      <div class="rb-step-body">Set <code>SEND_INSTALL_EMAIL_SECRET</code> in Supabase dashboard → Project Settings → Edge Functions → Secrets. Value should be a shared secret matching what <code>send-install-email/index.ts</code> expects. Once set, PWA install email fires automatically when a player RSVPs.</div>
-      <div class="rb-impact"><strong>Upstream:</strong> RSVP flow in home.html calls send-install-email on successful registration. <strong>Downstream:</strong> Player receives email with PWA install link. <strong>Risk if wrong:</strong> If secret value doesn't match function expectation, emails fail silently — test with a real RSVP after setting.</div>
-      <div class="rb-verify"><strong>Verify</strong>RSVP with a real email. Within 2 minutes, verify PWA install email received. Check Supabase Edge Function logs for send-install-email — no errors.</div>
-    </div>
-
-    <div class="rb-step rb-blocked">
-      <div class="rb-step-title">🔴 BLOCKED (Rob Manual) — LLC Formation + Stripe Live Keys</div>
+      <div class="rb-step-title">Fix feed.html:377 — _parseMentions XSS (HIGH security)</div>
       <div class="rb-step-body">
-        Ordered steps:<br>
-        1. File LLC online (Wyoming or Delaware — ~$50, same-day)<br>
-        2. Obtain EIN at irs.gov (free, 15 min)<br>
-        3. Open Mercury business checking (free)<br>
-        4. Create Stripe account with EIN + Mercury account<br>
-        5. In Stripe dashboard: get live Secret Key + Webhook Secret, verify PRICE_TO_PLAN price IDs match player-upgrade.html mapping (starter/standard/pro)<br>
-        6. Set in Vercel: <code>STRIPE_SECRET_KEY</code>, <code>STRIPE_WEBHOOK_SECRET</code><br>
-        7. Set same keys in Supabase Edge Function secrets<br>
-        8. Smoke test checkout with real card on /player-upgrade<br>
+        In <code>feed.html</code> at line ~377, the trash talk message is passed to <code>_parseMentions()</code> and the result assigned to <code>innerHTML</code> without escaping. Fix: wrap the message argument in <code>esc()</code> before the <code>_parseMentions()</code> call, so user-submitted content is HTML-encoded before DOM insertion.<br><br>
+        <strong style="color:var(--text)">Upstream impact:</strong> trash_talk table ← any authenticated player can write. No upstream change needed.<br>
+        <strong style="color:var(--text)">Downstream impact:</strong> All feed.html viewers. Post-fix: trash talk renders as literal text — &lt;img&gt; tags, script payloads display as text, not executed.
       </div>
-      <div class="rb-impact"><strong>Upstream:</strong> player-upgrade.html calls create-checkout. stripe-webhook updates player_accounts.billing_status. <strong>Downstream:</strong> Tournament tier gating reads billing_status. Feature gates unlock/lock based on tier. <strong>Risk if wrong:</strong> Wrong price IDs silently create wrong tier — verify PRICE_TO_PLAN map in player-upgrade.html before go-live.</div>
-      <div class="rb-verify"><strong>Verify</strong>Complete checkout with $1 test price (Stripe test mode first, then live). Confirm tournaments.stripe_status = 'active'. Confirm player_accounts.billing_status updated by webhook. Confirm tier-gated features unlock.</div>
+      <div class="rb-verify">
+        <strong>Verify</strong>
+        Submit a trash talk message containing <code>&lt;img src=x onerror=alert(1)&gt;</code>. In feed, it must display as the literal text string with angle brackets visible — no alert fires, no image request. Also confirm normal @-mention trash talk still highlights names correctly.
+      </div>
+    </div>
+
+    <div class="rb-step">
+      <div class="rb-step-title">Add skeleton shimmer to profile.html</div>
+      <div class="rb-step-body">
+        Add a skeleton loading state to <code>profile.html</code> matching the pattern used in feed.html and scoreboard.html: skeleton divs visible on load, hidden after player + scores data fetch resolves. Skeleton should reflect the profile layout (avatar placeholder, stat bars, scores section).<br><br>
+        <strong style="color:var(--text)">Upstream impact:</strong> profile.html reads players + scores tables. No data model change.<br>
+        <strong style="color:var(--text)">Downstream impact:</strong> None — profile.html is read-only. No other pages read from it.
+      </div>
+      <div class="rb-verify">
+        <strong>Verify</strong>
+        Hard-refresh /profile on throttled connection (DevTools Network → Slow 3G). Skeleton must appear immediately on load, then transition to real content. No blank flash. Existing profile data (name, handicap, scores) still renders correctly after skeleton resolves. Check mobile viewport as well.
+      </div>
+    </div>
+
+    <div class="rb-step">
+      <div class="rb-step-title">[ROB MANUAL] Wire SEND_INSTALL_EMAIL_SECRET to DB webhook Authorization header</div>
+      <div class="rb-step-body">
+        Supabase Dashboard → Database → Webhooks → find the players table INSERT webhook → Edit → HTTP Headers → set Authorization header value to <code>Bearer {SEND_INSTALL_EMAIL_SECRET}</code> (use the exact secret value already set in Supabase edge function environment variables). This is a dashboard copy-paste — cannot be done from code.<br><br>
+        <strong style="color:var(--text)">Upstream impact:</strong> players INSERT event triggers the DB webhook. The webhook calls send-install-email v4.<br>
+        <strong style="color:var(--text)">Downstream impact:</strong> New players receive the PWA install guide email. Improves install rate and first-session engagement.
+      </div>
+      <div class="rb-verify">
+        <strong>Verify</strong>
+        Register a test player via the RSVP/invite flow. Check the email inbox for the install guide within 60 seconds. If not received: Supabase → Edge Functions → send-install-email → Logs — look for the invocation and its response code. 401 = secret still wrong. 200 = working.
+      </div>
+    </div>
+
+    <div class="rb-step">
+      <div class="rb-step-title">[ROB MANUAL] Add GitHub CI secrets for edge function auto-deploy</div>
+      <div class="rb-step-body">
+        GitHub → roberttmadsen13-del/TOURney → Settings → Secrets and variables → Actions → New repository secret. Add two secrets:<br>
+        • <code>SUPABASE_ACCESS_TOKEN</code> — personal Supabase access token from supabase.com → Account → Access Tokens<br>
+        • <code>SUPABASE_PROJECT_REF</code> — value: <code>jllugkiojeoopitdvzsa</code><br><br>
+        <strong style="color:var(--text)">Upstream:</strong> deploy-functions.yml already committed and triggers on push to supabase/functions/**.<br>
+        <strong style="color:var(--text)">Downstream:</strong> Edge functions auto-deploy on every push. Manual <code>supabase functions deploy</code> CLI step no longer required.
+      </div>
+      <div class="rb-verify">
+        <strong>Verify</strong>
+        Add a whitespace comment to any supabase/functions/*/index.ts, commit, push to main. GitHub → Actions → deploy-functions job must complete green. Verify no regressions: send-push still sends notifications, create-checkout still creates sessions.
+      </div>
+    </div>
+
+    <div class="rb-step">
+      <div class="rb-step-title">Mark 6 resolved platform_bugs rows closed in Supabase</div>
+      <div class="rb-step-body">
+        Reconnect Supabase MCP: run <code>! claude mcp list</code> to check connections, then <code>/mcp</code> to reauthorize if needed. Once connected, execute the UPDATE SQL from <code>5-19-26-bugs-review.html</code> Step 8 — sets <code>status='closed'</code> on the 6 bug IDs resolved in the 5-21-26 sprint. These bugs are correctly resolved in code; the DB rows just weren't updated due to the MCP outage on 5-19.<br><br>
+        <strong style="color:var(--text)">Upstream:</strong> platform_bugs table in Supabase.<br>
+        <strong style="color:var(--text)">Downstream:</strong> bugs.html /platform/bugs — Open Bugs section count drops by 6. Bug FAB count corrects.
+      </div>
+      <div class="rb-verify">
+        <strong>Verify</strong>
+        Reload /platform/bugs. Open Bugs (🔴) section must not contain the 6 previously-resolved bugs. FAB counter must reflect correct open count. No other bugs should change state.
+      </div>
     </div>
 
   </div>
@@ -685,7 +579,7 @@ footer span{color:var(--gold);}
 </section>
 
 <footer>
-  Generated by <span>Claude Sonnet 4.6</span> · Greenskeeper Studios Internal · May 22, 2026
+  Generated by <span>claude-sonnet-4-6</span> · Greenskeeper Studios Internal · May 22, 2026
   <br style="margin-top:0.3rem">
   <a href="/platform" style="color:var(--muted);font-size:0.7rem;text-decoration:none">← Back to Platform Hub</a>
 </footer>
