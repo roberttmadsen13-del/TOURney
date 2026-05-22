@@ -1346,7 +1346,7 @@ async function loadArtifacts() {
     const r=await fetch('/qa-index.json',{cache:'no-store'});
     if (!r.ok) throw new Error(`HTTP ${r.status}`);
     const d=await r.json();
-    allEntries=Array.isArray(d.entries)?d.entries:[];
+    allEntries=Array.isArray(d.entries)?d.entries:[];_artifactsReady=true;
 
     // ── Auto-archive concluded artifacts ──────────────────────────────────────
     {
@@ -1473,7 +1473,7 @@ async function loadAxisBoard() {
   } catch(e){/* silent */}
 }
 /* ══════════════════════ ARTIFACT TICKETS ══════════════════════ */
-let _atFilter='all',_atSearch='',_atShowConcluded=false;
+let _atFilter='all',_atSearch='',_atShowConcluded=false,_artifactsReady=false;
 let _atSeen=new Set(JSON.parse(localStorage.getItem('at_seen')||'[]'));
 function _markAtSeen(id){_atSeen.add(id);localStorage.setItem('at_seen',JSON.stringify([..._atSeen]));}
 function openArtifactRow(id,url){_markAtSeen(id);renderArtifactTickets();if(url&&url!=='#')window.open(url,'_blank');}
@@ -1487,10 +1487,11 @@ function toggleAtConcluded(){_atShowConcluded=!_atShowConcluded;renderArtifactTi
 function filterArtifactTickets(){_atSearch=document.getElementById('atSearch')?.value||'';renderArtifactTickets();}
 function renderArtifactTickets(){
   const el=document.getElementById('artifactTickets');
-  if(!el||!allEntries)return;
+  if(!el||!_artifactsReady)return;
   const TICKET_CATS=new Set(['axis','review','plan','runbook','audit','postmortem']);
   const stages=['review','plan','runbook','executing','audit','concluded'];
-  const isClosed=e=>e.status==='concluded'||e.status==='archived'||e.stage==='concluded';
+  const stOverrides=getStatusOverrides();
+  const isClosed=e=>{const s=stOverrides[e.id]||e.status;return s==='concluded'||s==='archived'||e.stage==='concluded';};
   const deleted=new Set(JSON.parse(localStorage.getItem('qt_deleted')||'[]'));
   const unseenCount=(allEntries||[]).filter(e=>TICKET_CATS.has(e.category)&&isClosed(e)&&!_atSeen.has(e.id)&&!deleted.has(e.id)).length;
   const tb=document.getElementById('atConcludedToggle');
@@ -2032,7 +2033,7 @@ function _initTqCollapsed(){
   const saved=_getTqState();
   const defaults={tqSectionChecklist:true,tqSectionDoNow:true,tqSectionWaiting:false,tqSectionAgent:true,tqSectionShipped:true};
   Object.keys(defaults).forEach(id=>{
-    const collapsed=id in saved?saved[id]:defaults[id];
+    const collapsed=(id==='tqSectionChecklist'||id==='tqSectionDoNow')?true:(id in saved?saved[id]:defaults[id]);
     const sec=document.getElementById(id);if(sec)sec.classList.toggle('collapsed',collapsed);
   });
 }
