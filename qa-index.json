@@ -1,9 +1,23 @@
 {
   "$schema": "https://tourney.greenskeeper.studio/qa-index-schema.json",
   "version": 1,
-  "updated_at": "2026-05-21T12:00:00Z",
+  "updated_at": "2026-05-22T00:00:00Z",
   "description": "Canonical registry of all TOURney plans, reviews, audits, and QA artifacts. The /platform Artifacts tab renders from this file. Skills (e.g. tourney-review) append new entries when they generate output.",
   "entries": [
+    {
+      "id": "review-2026-05-22",
+      "category": "review",
+      "stage": "executing",
+      "title": "Full Platform Review · May 22, 2026",
+      "summary": "Weekly automated review. Grades: Arch A, Feature A−, UX A, Security A−, Business B− (blocking), Deployment B+, Performance B+, Data B+. No deep dives — lowest grade B−. Top open items: feed.html:377 _parseMentions XSS (HIGH), send-push auth not deployed, CSP unsafe-inline, LLC/Stripe Rob manual blockers, player score entry critical gap.",
+      "date": "2026-05-22",
+      "updated": "2026-05-22",
+      "author": "claude-sonnet-4-6",
+      "url": "/platform/5-22-26-claude-review",
+      "file": "5-22-26-claude-review.html",
+      "tags": ["review", "audit", "weekly"],
+      "status": "open"
+    },
     {
       "id": "review-2026-05-21-business",
       "category": "review",

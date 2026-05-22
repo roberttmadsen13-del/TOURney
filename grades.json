@@ -1,11 +1,18 @@
 {
-  "updated_at": "2026-05-21T12:00:00Z",
+  "updated_at": "2026-05-22T00:00:00Z",
   "description": "Per-axis grade history for TOURney platform. Updated automatically by review skills. Operations Action Board reads this file.",
   "axes": {
     "architecture": {
       "label": "Architecture",
       "cmd": "/tourney-review-architecture",
       "scores": [
+        {
+          "date": "2026-05-22",
+          "score": "A",
+          "url": "/platform/5-22-26-claude-review",
+          "review_title": "Full Platform Review · May 22, 2026",
+          "notes": "No change since 5-20. 16 migrations (000–015) clean, unambiguous ordering. tournament_admins canonical for RLS. Settings store un-typed remains only open item. mygolf_profiles + donations tables added 5-21 cleanly."
+        },
         {
           "date": "2026-05-20",
           "score": "A",
@@ -61,6 +68,13 @@
       "label": "Feature Depth",
       "cmd": "/tourney-review-feature-depth",
       "scores": [
+        {
+          "date": "2026-05-22",
+          "score": "A-",
+          "url": "/platform/5-22-26-claude-review",
+          "review_title": "Full Platform Review · May 22, 2026",
+          "notes": "No change since 5-21 execute (concluded A−). All critical gaps resolved. 4 medium remain: handicap approximation on hero scoreboard, ~14 Design tab keys unwired, no score admin-edit UI, no tournament series. New critical gap identified: zero player-facing score entry (P1 roadmap)."
+        },
         {
           "date": "2026-05-21",
           "score": "A-",
@@ -123,6 +137,13 @@
       "label": "UX Polish",
       "cmd": "/tourney-review-ux",
       "scores": [
+        {
+          "date": "2026-05-22",
+          "score": "A",
+          "url": "/platform/5-22-26-claude-review",
+          "review_title": "Full Platform Review · May 22, 2026",
+          "notes": "No change since 5-20. All nav-bar pages correct SVG, login viewBox fixed, hardcoded tenant text removed. profile.html missing loading skeleton (LOW, runbook step added). Zero blocking items."
+        },
         {
           "date": "2026-05-20",
           "score": "A",
@@ -221,6 +242,13 @@
       "cmd": "/tourney-review-security",
       "scores": [
         {
+          "date": "2026-05-22",
+          "score": "A-",
+          "url": "/platform/5-22-26-claude-review",
+          "review_title": "Full Platform Review · May 22, 2026",
+          "notes": "Migration 013 applied (5-21) — invitations + push_subscriptions SELECT now locked to authenticated (improvement). Remaining open: feed.html:377 _parseMentions XSS (HIGH — user message into innerHTML unescaped), send-push auth fix committed NOT deployed (live fn unauthenticated), CSP unsafe-inline persists, SEND_INSTALL_EMAIL_SECRET unset (Rob manual)."
+        },
+        {
           "date": "2026-05-20",
           "score": "A-",
           "url": "/platform/5-20-26-claude-review",
@@ -297,6 +325,13 @@
       "cmd": "/tourney-review-business",
       "scores": [
         {
+          "date": "2026-05-22",
+          "score": "B-",
+          "url": "/platform/5-22-26-claude-review",
+          "review_title": "Full Platform Review · May 22, 2026",
+          "notes": "No change since 5-21 execute. mygolf_profiles live, donations wired, RSVP auto-fill, pricing $14–$99. Stripe infrastructure fully wired — zero engineering needed to accept payments. 4 Rob manual blockers remain: LLC not formed, EIN pending, bank account pending, Stripe live keys unset. Revenue = $0."
+        },
+        {
           "date": "2026-05-21",
           "score": "B-",
           "url": "/platform/5-21-26-business-review",
@@ -365,6 +400,13 @@
       "label": "Deployment",
       "cmd": "/tourney-review-deployment",
       "scores": [
+        {
+          "date": "2026-05-22",
+          "score": "B+",
+          "url": "/platform/5-22-26-claude-review",
+          "review_title": "Full Platform Review · May 22, 2026",
+          "notes": "No change since 5-20. CI SW cache auto-bump live (ci.yml). GH Actions ESLint + Deno checks on PRs. SW tourney-v37, 25 precached files. 2 open: SEND_INSTALL_EMAIL_SECRET (Rob manual), Sentry (deferred). No Lighthouse CI. No staging environment."
+        },
         {
           "date": "2026-05-20",
           "score": "B+",
@@ -435,6 +477,13 @@
       "cmd": "/tourney-review-performance",
       "scores": [
         {
+          "date": "2026-05-22",
+          "score": "B+",
+          "url": "/platform/5-22-26-claude-review",
+          "review_title": "Full Platform Review · May 22, 2026",
+          "notes": "No change since 5-20. Skeletons live on feed/scoreboard/home/directory/champions. profile.html still blank-flash (runbook step added). SW tourney-v37, CI auto-bump. No Lighthouse CI baseline. No bundle size monitoring."
+        },
+        {
           "date": "2026-05-20",
           "score": "B+",
           "url": "/platform/5-20-26-claude-review",
@@ -489,6 +538,13 @@
       "label": "Data Model",
       "cmd": "/tourney-review-data-model",
       "scores": [
+        {
+          "date": "2026-05-22",
+          "score": "B+",
+          "url": "/platform/5-22-26-claude-review",
+          "review_title": "Full Platform Review · May 22, 2026",
+          "notes": "Migrations 013–015 applied (5-21): invitations + push_subscriptions SELECT locked to authenticated, players FK ON DELETE CASCADE added, push_subscriptions INSERT locked to authenticated. 16 migrations total, clean progression. mygolf_profiles + donations tables added cleanly. Settings store un-typed remains only open item."
+        },
         {
           "date": "2026-05-20",
           "score": "B+",
