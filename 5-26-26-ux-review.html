@@ -495,6 +495,63 @@ footer span{color:var(--gold);}
 </div>
 </section>
 
+<section id="third-opinion" style="border-top:2px solid var(--purple);">
+<div class="wrapper">
+  <div class="section-header">
+    <div class="section-eyebrow" style="color:var(--purple);">Third Opinion — claude-sonnet-4-6 (fresh read, no prior context)</div>
+    <h2 class="section-title">Independent Audit #2</h2>
+    <p class="section-desc">Direct read of admin.html first, ticket second. Findings formed independently before comparing. May 26, 2026.</p>
+  </div>
+
+  <div class="card" style="border-left:3px solid var(--purple);">
+    <div class="card-title" style="color:var(--purple);">Grade Verdict</div>
+    <p><strong>B — agrees with primary review.</strong> Functional for single-admin beta. Fails on IA (Design tab), mobile score-entry ergonomics, and Access tab completeness. Not production-ready for paid multi-tenant clients.</p>
+  </div>
+
+  <div class="card" style="border-left:3px solid var(--red);">
+    <div class="card-title" style="color:var(--red);">ERRORS Confirmed (agrees with Second Opinion)</div>
+    <ul>
+      <li><strong>Step 6 (color pickers) — INVALID.</strong> Team color inputs already <code>type="color"</code> at lines 613–620 with <code>oninput="onColorPick()"</code>. Strike entirely, or retarget to verify brand fields (<code>color_primary</code>, <code>color_ink</code>, <code>color_bg</code>) specifically.</li>
+      <li><strong>Step 3 (confirmation modals as P2) — INVALID.</strong> Native <code>confirm()</code> guards at lines 1264, 1345, 1357, 2348–2349 (double-confirm), 2401 (typed "CLEAR ALL"). "One misclick wipes scores" claim is false. Demote to P4 polish.</li>
+      <li><strong>Step 4 (Access revoke) — OVER-SCOPED.</strong> <code>toggleAdminAccess()</code> at line 1357 already has revoke logic + confirmation. Verify if it's surfaced in the Access tab UI before building — scope may be much smaller.</li>
+    </ul>
+  </div>
+
+  <div class="card" style="border-left:3px solid var(--orange);">
+    <div class="card-title" style="color:var(--orange);">NEW FINDINGS (not in primary or second review)</div>
+    <ul>
+      <li><strong>Score table headers: <code>font-size: 0.48rem</code> — legibility bug.</strong> ~7.7px at 16px base. Below any legible threshold on any device. Entire score entry table headers are functionally unreadable. This is a functional bug, not polish. Should be P1.</li>
+      <li><strong><code>??</code> lock icon fallback on locked tabs.</strong> <code>id="lockDesign"</code> and <code>id="lockAccess"</code> contain literal <code>??</code> characters as fallback content (display:none on free tier). If the display logic fires incorrectly, users see broken UI. Low probability but easy fix — replace with a proper lock SVG or HTML entity.</li>
+      <li><strong><code>switchAdminTab()</code> has no tab-activation lifecycle.</strong> Adding <code>loadAdminList()</code> in step 4 won't work unless the Access tab branch in <code>switchAdminTab()</code> actually calls it. Runbook step 4 mentions it but doesn't address the lifecycle pattern explicitly. This same gap will recur for every new tab feature added. Fix the pattern, not just the instance.</li>
+      <li><strong>Hat orders stat card: <code>display:none</code> causes grid reflow jank.</strong> When hat merch is off, the card hides and the CSS grid reflows on every page load. Use <code>visibility:hidden</code> to hold the grid slot, or use a fixed grid template. Cosmetic but visibly jarring on load.</li>
+      <li><strong>Score table built entirely with inline <code>style=</code> attributes.</strong> <code>loadScoresTable()</code> hardcodes <code>font-family</code>, <code>font-size</code>, <code>letter-spacing</code>, color values inline on every <code>&lt;th&gt;</code> and <code>&lt;td&gt;</code>. Zero design tokens. Brand color change won't propagate to the score table. Low priority but a maintenance hazard.</li>
+    </ul>
+  </div>
+
+  <div class="card" style="border-left:3px solid var(--green);">
+    <div class="card-title" style="color:var(--green);">Confirmed Findings (all three reviews agree)</div>
+    <ul>
+      <li>Design tab accordion + per-section save: P1, most impactful fix on the page</li>
+      <li>Score table auto-load on Command Center activate: P1</li>
+      <li>Mobile score table needs horizontal scroll: P1 (primary tournament-day use case)</li>
+      <li>Tab bar clips at 375px — needs scroll or condensed layout</li>
+      <li>ARIA tab roles + <code>aria-live</code> toast: should be P2, not P4</li>
+      <li>Access tab: no current admin list or revoke in UI (even if backend logic exists)</li>
+      <li>Captain fields for teams C–H: valid gap</li>
+      <li>Course tab: "Copy Day 1 to all days" shortcut: valid, good lift-to-value ratio</li>
+    </ul>
+  </div>
+
+  <div class="card" style="border-left:3px solid var(--gold);">
+    <div class="card-title">Revised Execution Order (consensus across all 3 reviews)</div>
+    <p>Strike step 6. Demote step 3 to P4. Verify step 4 scope before building. Add 3 new items below.</p>
+    <p style="margin-top:0.6rem;"><strong>Priority order:</strong> Step 5 (Design accordion) → Step 1 (score auto-load + font-size fix) → Step 2 (mobile scroll) → Step 8 (ARIA, promoted to P2) → Step 4 (Access list, verify scope) → Step 7 (captain C-H + dirty guard) → Course copy shortcut (step 9) → Step 3 (custom modals, P4) → Step 10 (round badges, verify DB).</p>
+    <p style="margin-top:0.6rem;color:var(--orange);"><strong>New items to add before execute:</strong> (A) Fix score table header font-size to legible value. (B) Fix <code>??</code> lock icon. (C) Wire <code>loadAdminList()</code> into <code>switchAdminTab()</code> Access branch as lifecycle pattern. (D) Hat card <code>display:none</code> → <code>visibility:hidden</code>.</p>
+    <p style="margin-top:0.6rem;"><strong>Ticket ready to execute as-is? No.</strong> Two steps provably invalid, scope of step 4 unverified, 4 new items unaddressed. Clean up runbook first, then execute.</p>
+  </div>
+</div>
+</section>
+
 <section id="executing">
 <div class="wrapper">
 <!-- EXECUTING-CONTENT-START -->
