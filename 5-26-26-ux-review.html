@@ -444,6 +444,57 @@ footer span{color:var(--gold);}
 </div>
 </section>
 
+<section id="second-opinion" style="border-top:2px solid var(--blue);">
+<div class="wrapper">
+  <div class="section-header">
+    <div class="section-eyebrow" style="color:var(--blue);">Second Opinion — claude-sonnet-4-6 (independent agent)</div>
+    <h2 class="section-title">Independent Review Findings</h2>
+    <p class="section-desc">Fresh read of admin.html + this ticket. No shared context with primary review. May 26, 2026.</p>
+  </div>
+
+  <div class="card" style="border-left:3px solid var(--blue);">
+    <div class="card-title" style="color:var(--blue);">Grade Verdict</div>
+    <p><strong>B is correct.</strong> Functional for basic ops, real UX debt for paid multi-admin. Design tab chaos + missing Access UI + poor states = "ship-ready for beta, not production multi-admin." Agree with primary review grade.</p>
+    <p style="margin-top:0.5rem;color:var(--orange);">Caveat: if color pickers are fully functional (verified: they are), friction is slightly lower than review implies — could argue B+. But missing Access list UI and Design confusion pull it back to B.</p>
+  </div>
+
+  <div class="card" style="border-left:3px solid var(--red);">
+    <div class="card-title" style="color:var(--red);">ERRORS in Primary Review — Steps to Remove or Revise</div>
+    <ul>
+      <li><strong>Runbook Step 6 (Color Pickers) — INVALID.</strong> <code>type="color"</code> inputs already fully implemented for all 8 teams (admin.html:613–620) with <code>oninput="onColorPick()"</code>. The primary review stated "plain text inputs" — factually wrong. Step 6 should be struck or retargeted to brand colors only (verify <code>color_primary</code>, <code>color_ink</code>, <code>color_bg</code> separately).</li>
+      <li><strong>Runbook Step 3 (Confirmation Modals) — INVALID as P2.</strong> <code>confirm()</code> dialogs already exist for every destructive action: close round (line 1264), remove player (1345), revoke admin (1357), clear round scores (2348–2349, <em>double</em>-confirm), clear all scores (2401, requires typing "CLEAR ALL"). The claim "one misclick wipes a round's scores" is false — actual UX is already well-guarded. Custom modal is P4 polish at most, not a P2 blocker.</li>
+      <li><strong>Runbook Step 4 (Access Revoke) — PARTIALLY INVALID.</strong> <code>toggleAdminAccess()</code> at line 1356–1357 already contains revoke logic with confirmation. Verify if revoke is surfaced in the Access tab UI before treating this as a missing feature. The DB operation exists.</li>
+      <li><strong>"No keyboard path for team assignment"</strong> — overstated. Some keyboard support observed in team assignment JS. Not confirmed fully compliant, but stated too broadly.</li>
+    </ul>
+  </div>
+
+  <div class="card" style="border-left:3px solid var(--orange);">
+    <div class="card-title" style="color:var(--orange);">MISSED FINDINGS (Real Gaps Not in Primary Review)</div>
+    <ul>
+      <li><strong>Runbook step 5 underestimates backend scope.</strong> Accordion + per-section save requires splitting the single <code>saveRegistration()</code> transaction into 4 separate conditional saves. This is a non-trivial refactor — estimated effort not stated. Risk of partial-save bugs if split carelessly.</li>
+      <li><strong><code>schedule_json</code> wire-up unknown.</strong> Comment at admin.html:~2560 says "Pending wire-up in index.html." Review flags this but doesn't clarify: is schedule_json a data-entry blocker (no UI = no data = feature broken) or a display blocker (data can be entered via textarea but not rendered)? Must resolve scope before building schedule UI.</li>
+      <li><strong>DB schema pre-flight missing from runbook.</strong> Steps 4 and 10 assume <code>tournament_admins</code> DELETE and <code>rounds.status</code> field work as expected. Neither is verified in the runbook. Add explicit pre-flight: confirm <code>rounds.status</code> is populated and <code>tournament_admins</code> allows DELETE by authenticated user.</li>
+      <li><strong>Mobile tab bar solution not specified.</strong> Step 2 says "add overflow-x:auto" but iOS Safari may not scroll tab bars smoothly — sticky position + overflow interaction is a known Safari bug. Consider dropdown alternative for &lt;600px as fallback.</li>
+    </ul>
+  </div>
+
+  <div class="card" style="border-left:3px solid var(--green);">
+    <div class="card-title" style="color:var(--green);">PRIORITY ADJUSTMENTS</div>
+    <ul>
+      <li><strong>Step 3 (confirmation modals):</strong> Demote P2 → P4. Native <code>confirm()</code> already guards every destructive action. Custom modal is polish.</li>
+      <li><strong>Step 6 (color pickers):</strong> Remove entirely, or retarget to verify brand color fields (<code>color_primary/ink/bg</code>) specifically.</li>
+      <li><strong>Step 8 (ARIA roles):</strong> Promote P4 → P2. Accessibility is non-negotiable for paid SaaS. Tab roles + live region = ~30 min effort. High compliance ROI.</li>
+      <li><strong>Step 10 (round status badges):</strong> Conditional on DB schema pre-flight. Gate behind confirming <code>rounds.status</code> is populated before building the UI.</li>
+    </ul>
+  </div>
+
+  <div class="card" style="border-left:3px solid var(--gold);">
+    <div class="card-title">Revised Runbook Recommendation</div>
+    <p>Before executing: (1) Remove step 6 — color pickers done. (2) Downgrade step 3 to P4 — confirms already exist. (3) Verify Access tab revoke UI — step 4 may be smaller than scoped. (4) Add DB pre-flight for steps 4 + 10. (5) Promote ARIA to P2. Net: 10 steps → ~7 real steps, with corrected priorities.</p>
+  </div>
+</div>
+</section>
+
 <section id="executing">
 <div class="wrapper">
 <!-- EXECUTING-CONTENT-START -->
