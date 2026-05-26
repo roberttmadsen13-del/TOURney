@@ -416,32 +416,32 @@ model: haiku
 
   <div class="grid-2">
     <div class="card">
-      <div class="card-title">â†© Effort drop hurt quality</div>
+      <div class="card-title">↩ Effort drop hurt quality</div>
       <p>Edit <code>settings.json</code> back to <code>"effortLevel": "high"</code> (not xhigh — split the difference). Or use <code>/effort xhigh</code> per-task.</p>
     </div>
 
     <div class="card">
-      <div class="card-title">â†© Sonnet underperforming</div>
+      <div class="card-title">↩ Sonnet underperforming</div>
       <p>Don't revert default. Use <code>/model opus</code> per-task on the few cases that need it. If 30%+ of tasks need Opus, profile which task types — possibly add per-skill overrides.</p>
     </div>
 
     <div class="card">
-      <div class="card-title">â†© Cache breakpoint not landing</div>
+      <div class="card-title">↩ Cache breakpoint not landing</div>
       <p>Move breakpoint earlier in the system block (smaller cached prefix). Verify nothing dynamic is included. Check Anthropic API version supports caching for the model in use.</p>
     </div>
 
     <div class="card">
-      <div class="card-title">â†© Skill model override broke skill</div>
+      <div class="card-title">↩ Skill model override broke skill</div>
       <p>Remove <code>model:</code> field from frontmatter. Skill falls back to global default. Investigate which model failed on what task type.</p>
     </div>
 
     <div class="card">
-      <div class="card-title">â†© ctx_execute_file output too sparse</div>
+      <div class="card-title">↩ ctx_execute_file output too sparse</div>
       <p>Read the file directly when accuracy matters (security review, RLS audit). Save tokens elsewhere instead.</p>
     </div>
 
     <div class="card">
-      <div class="card-title">â†© /compact destroyed important context</div>
+      <div class="card-title">↩ /compact destroyed important context</div>
       <p>Manually re-paste the lost facts. Future: <code>/clear</code> + start fresh with explicit context paste instead of relying on /compact.</p>
     </div>
   </div>

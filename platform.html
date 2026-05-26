@@ -1867,7 +1867,7 @@ async function renderReference() {
 
   function group(title, badge, pages, urlFn) {
     const links = pages.map(p => `<a href="${urlFn(p)}" target="_blank" style="${linkStyle}">${p.label}<span style="${eyeStyle}">${p.path || '/'}</span></a>`).join('');
-    return `<details style="${grpStyle}"><summary style="${sumStyle}"><span>${title}${badge?`<span style="${eyeStyle}">${badge}</span>`:''}</span><span style="color:var(--muted);font-size:.65rem;">â€º</span></summary><div style="${bodyStyle}">${links}</div></details>`;
+    return `<details style="${grpStyle}"><summary style="${sumStyle}"><span>${title}${badge?`<span style="${eyeStyle}">${badge}</span>`:''}</span><span style="color:var(--muted);font-size:.65rem;">›</span></summary><div style="${bodyStyle}">${links}</div></details>`;
   }
 
   let html = '<div>';
