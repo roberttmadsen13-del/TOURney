@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TOURney — UX Polish Review · May 26, 2026</title>
+<style>
+:root{--gold:#c09030;--gold-light:#d4a840;--gold-dim:rgba(192,144,48,0.18);--bg:#0d0a05;--surface:#151009;--card:#1c140a;--border:rgba(192,144,48,0.22);--muted:#7a6a54;--text:#e8dcc8;--red:#c0392b;--green:#27ae60;--blue:#2980b9;--orange:#e67e22;--purple:#8e44ad;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:-apple-system,'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;font-size:15px;}
+nav{position:sticky;top:0;z-index:100;background:rgba(13,10,5,0.97);border-bottom:1px solid var(--border);backdrop-filter:blur(12px);}
+.nav-inner{padding:0.6rem 1.5rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap;}
+.nav-brand{color:var(--gold);font-weight:700;font-size:1rem;letter-spacing:0.05em;white-space:nowrap;}
+.nav-brand span{color:var(--muted);font-weight:400;font-size:0.8rem;margin-left:0.4rem;}
+.nav-links{display:flex;gap:0.2rem;flex-wrap:wrap;margin-left:auto;}
+.nav-links a{color:var(--muted);text-decoration:none;font-size:0.78rem;padding:0.3rem 0.55rem;border-radius:4px;transition:all 0.15s;white-space:nowrap;}
+.nav-links a:hover{color:var(--gold);background:var(--gold-dim);}
+.lifecycle-bar{display:flex;gap:3px;padding:0.55rem 1.5rem 0.65rem;background:var(--surface);border-bottom:1px solid var(--border);}
+.lc-stage{flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;}
+.lc-pill{height:5px;width:100%;border-radius:3px;background:rgba(192,144,48,0.1);transition:background 0.25s;}
+.lc-label{font-size:0.58rem;font-weight:700;letter-spacing:0.11em;text-transform:uppercase;color:rgba(122,106,84,0.45);transition:color 0.25s;}
+.lc-done .lc-pill{background:var(--gold);}
+.lc-done .lc-label{color:var(--gold);}
+.lc-active .lc-pill{background:var(--gold-light);box-shadow:0 0 8px rgba(192,144,48,0.45);}
+.lc-active .lc-label{color:var(--gold-light);}
+.hero{padding:3rem 1.5rem 2rem;text-align:center;border-bottom:1px solid var(--border);background:linear-gradient(180deg,rgba(192,144,48,0.06) 0%,transparent 100%);}
+.hero-eyebrow{display:inline-block;font-size:0.7rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold);border:1px solid var(--border);border-radius:20px;padding:0.22rem 0.8rem;margin-bottom:0.9rem;}
+.hero h1{font-size:clamp(1.5rem,3.5vw,2.3rem);font-weight:800;color:#fff;margin-bottom:0.35rem;}
+.hero h1 span{color:var(--gold);}
+.hero-sub{color:var(--muted);max-width:520px;margin:0 auto 1rem;font-size:0.9rem;}
+.hero-meta{display:flex;gap:1.1rem;justify-content:center;flex-wrap:wrap;font-size:0.74rem;color:var(--muted);}
+.hero-meta span{display:flex;align-items:center;gap:0.3rem;}
+.wrapper{max-width:1000px;margin:0 auto;padding:0 1.5rem;}
+section{padding:2.5rem 0;border-bottom:1px solid var(--border);}
+section:last-of-type{border-bottom:none;}
+.section-header{margin-bottom:1.6rem;}
+.section-eyebrow{font-size:0.67rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--gold);margin-bottom:0.3rem;}
+.section-title{font-size:1.35rem;font-weight:800;color:#fff;margin-bottom:0.3rem;}
+.section-desc{color:var(--muted);font-size:0.85rem;max-width:560px;}
+.card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:1.15rem 1.3rem;margin-bottom:0.7rem;}
+.card-title{font-size:0.85rem;font-weight:700;color:var(--gold);margin-bottom:0.45rem;}
+.card p,.card li{font-size:0.84rem;color:var(--text);margin-bottom:0.28rem;}
+.card ul,.card ol{padding-left:1.2rem;}
+.card li{margin-bottom:0.32rem;}
+.grid-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:0.7rem;}
+.grid-3{display:grid;grid-template-columns:repeat(auto-fit,minmax(245px,1fr));gap:0.7rem;}
+.stack-item{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:0.85rem 1.05rem;}
+.stack-label{font-size:0.65rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--muted);margin-bottom:0.18rem;}
+.stack-value{font-size:0.88rem;font-weight:600;color:#fff;}
+.stack-note{font-size:0.72rem;color:var(--muted);margin-top:0.18rem;}
+.pill{display:inline-block;font-size:0.66rem;font-weight:700;letter-spacing:0.06em;padding:0.15rem 0.5rem;border-radius:20px;text-transform:uppercase;}
+.pill-gold{background:rgba(192,144,48,0.18);color:var(--gold);border:1px solid rgba(192,144,48,0.3);}
+.pill-green{background:rgba(39,174,96,0.15);color:var(--green);border:1px solid rgba(39,174,96,0.3);}
+.pill-red{background:rgba(192,57,43,0.15);color:var(--red);border:1px solid rgba(192,57,43,0.3);}
+.pill-orange{background:rgba(230,126,34,0.15);color:var(--orange);border:1px solid rgba(230,126,34,0.3);}
+.pill-blue{background:rgba(41,128,185,0.15);color:var(--blue);border:1px solid rgba(41,128,185,0.3);}
+.pill-purple{background:rgba(142,68,173,0.15);color:var(--purple);border:1px solid rgba(142,68,173,0.3);}
+.page-table{width:100%;border-collapse:collapse;font-size:0.8rem;}
+.page-table th{text-align:left;padding:0.52rem 0.72rem;border-bottom:1px solid var(--border);color:var(--muted);font-size:0.67rem;text-transform:uppercase;letter-spacing:0.08em;background:var(--surface);}
+.page-table td{padding:0.58rem 0.72rem;border-bottom:1px solid rgba(192,144,48,0.08);vertical-align:top;}
+.page-table tr:last-child td{border-bottom:none;}
+.page-table tr:hover td{background:var(--gold-dim);}
+.page-table .url{font-family:monospace;font-size:0.75rem;color:var(--gold-light);}
+.page-table .file{font-family:monospace;font-size:0.72rem;color:var(--muted);}
+.table-wrap{background:var(--card);border:1px solid var(--border);border-radius:8px;overflow:hidden;overflow-x:auto;}
+.score-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(125px,1fr));gap:0.52rem;margin-bottom:1.4rem;}
+.score-cell{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:0.85rem;text-align:center;}
+.score-num{font-size:1.85rem;font-weight:900;line-height:1;margin-bottom:0.18rem;}
+.score-label{font-size:0.64rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);}
+.score-green{color:var(--green);}
+.score-gold{color:var(--gold);}
+.score-red{color:var(--red);}
+.score-blue{color:var(--blue);}
+.idea-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1.25rem;position:relative;overflow:hidden;}
+.idea-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;}
+.idea-1::before{background:var(--gold);}
+.idea-2::before{background:var(--blue);}
+.idea-3::before{background:var(--green);}
+.idea-4::before{background:var(--orange);}
+.idea-5::before{background:var(--purple);}
+.idea-number{font-size:2rem;font-weight:900;opacity:0.07;position:absolute;top:0.5rem;right:1rem;line-height:1;color:#fff;}
+.idea-tag{margin-bottom:0.42rem;}
+.idea-title{font-size:0.96rem;font-weight:700;color:#fff;margin-bottom:0.42rem;}
+.idea-body{font-size:0.82rem;color:var(--muted);line-height:1.55;margin-bottom:0.65rem;}
+.idea-plan{font-size:0.77rem;color:var(--text);}
+.idea-plan strong{color:var(--gold);}
+.runbook-steps{counter-reset:rb-step;}
+.rb-step{background:var(--card);border:1px solid var(--border);border-left:3px solid rgba(192,144,48,0.3);border-radius:0 8px 8px 0;padding:0.95rem 1.15rem 0.95rem 3.8rem;margin-bottom:0.55rem;position:relative;}
+.rb-step::before{counter-increment:rb-step;content:counter(rb-step);position:absolute;left:0.95rem;top:0.95rem;width:1.75rem;height:1.75rem;background:var(--gold-dim);color:var(--gold);border:1px solid var(--border);border-radius:50%;font-size:0.72rem;font-weight:700;display:grid;place-items:center;}
+.rb-step-title{font-size:0.87rem;font-weight:700;color:#fff;margin-bottom:0.22rem;}
+.rb-step-body{font-size:0.8rem;color:var(--muted);margin-bottom:0.35rem;}
+.rb-verify{font-size:0.76rem;color:var(--text);background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:3px;padding:0.35rem 0.6rem;margin-top:0.3rem;}
+.rb-verify strong{color:var(--gold-light);font-size:0.68rem;text-transform:uppercase;letter-spacing:0.07em;display:block;margin-bottom:0.1rem;}
+.sec-item{background:var(--card);border:1px solid var(--border);border-left:3px solid var(--border);border-radius:0 8px 8px 0;padding:0.9rem 1.15rem;margin-bottom:0.65rem;}
+.sec-item.sev-high{border-left-color:var(--red);}
+.sec-item.sev-med{border-left-color:var(--orange);}
+.sec-item.sev-low{border-left-color:var(--green);}
+.sec-item.sev-info{border-left-color:var(--blue);}
+.sec-header{display:flex;align-items:center;gap:0.52rem;margin-bottom:0.42rem;}
+.sec-title{font-size:0.87rem;font-weight:700;color:#fff;}
+.sec-body{font-size:0.8rem;color:var(--muted);margin-bottom:0.42rem;}
+.sec-fix{font-size:0.77rem;color:var(--text);background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:4px;padding:0.42rem 0.62rem;}
+.sec-fix strong{color:var(--gold-light);display:block;margin-bottom:0.12rem;font-size:0.68rem;text-transform:uppercase;letter-spacing:0.08em;}
+.stage-pending{text-align:center;padding:3rem 1.5rem;color:var(--muted);font-size:0.85rem;border:1px dashed rgba(192,144,48,0.2);border-radius:8px;}
+.stage-pending code{color:var(--gold);}
+.exec-step{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:0.85rem 1.05rem;margin-bottom:0.48rem;display:flex;gap:0.7rem;align-items:flex-start;}
+.exec-badge{font-size:0.66rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;padding:0.18rem 0.48rem;border-radius:3px;white-space:nowrap;flex-shrink:0;margin-top:0.08rem;}
+.exec-done{background:rgba(39,174,96,0.14);color:var(--green);border:1px solid rgba(39,174,96,0.28);}
+.exec-skipped{background:rgba(192,144,48,0.1);color:var(--muted);border:1px solid var(--border);}
+.exec-blocked{background:rgba(192,57,43,0.11);color:var(--red);border:1px solid rgba(192,57,43,0.28);}
+.exec-body{font-size:0.81rem;color:var(--text);}
+.exec-body strong{color:#fff;display:block;margin-bottom:0.12rem;font-size:0.83rem;}
+code{font-family:'Consolas','Monaco',monospace;background:rgba(255,255,255,0.07);padding:0.09rem 0.27rem;border-radius:3px;font-size:0.81em;color:var(--gold-light);}
+footer{border-top:1px solid var(--border);padding:1.2rem;text-align:center;color:var(--muted);font-size:0.72rem;}
+footer span{color:var(--gold);}
+@media(max-width:600px){.nav-links{display:none;}.hero{padding:2rem 1rem 1.5rem;}section{padding:2rem 0;}.lc-label{font-size:0.5rem;}}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <div class="nav-brand">TOURney <span>by Greenskeeper Studios</span></div>
+    <div class="nav-links">
+      <a href="#review">Review</a>
+      <a href="#plan">Plan</a>
+      <a href="#runbook">Runbook</a>
+      <a href="#executing">Executing</a>
+      <a href="#audit">Audit</a>
+      <a href="#concluded">Concluded</a>
+    </div>
+  </div>
+</nav>
+
+<!-- LIFECYCLE-BAR-START -->
+<div class="lifecycle-bar">
+  <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Review</div></div>
+  <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Plan</div></div>
+  <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Runbook</div></div>
+  <div class="lc-stage lc-active"><div class="lc-pill"></div><div class="lc-label">Executing</div></div>
+  <div class="lc-stage"><div class="lc-pill"></div><div class="lc-label">Audit</div></div>
+  <div class="lc-stage"><div class="lc-pill"></div><div class="lc-label">Concluded</div></div>
+</div>
+<!-- LIFECYCLE-BAR-END -->
+
+<div class="hero">
+  <div class="hero-eyebrow">UX Polish</div>
+  <h1><span>TOURney</span> — UX Polish Review · May 26, 2026</h1>
+  <p class="hero-sub">Deep audit of admin.html — all tabs (Command Center, Design, Access, Course, Team Assignment). Focused on UX, information architecture, usability, feature completeness, and polish gaps. Brutally honest.</p>
+  <div class="hero-meta">
+    <span>&#x1F4C5; May 26, 2026</span>
+    <span>&#x1F916; claude-sonnet-4-6</span>
+    <span>&#x1F3E2; Greenskeeper Studios</span>
+    <span>&#x1F512; Internal Only</span>
+  </div>
+</div>
+
+<section id="review">
+<div class="wrapper">
+  <div class="section-header">
+    <div class="section-eyebrow">Stage 1 — Review</div>
+    <h2 class="section-title">Admin UX Audit</h2>
+    <p class="section-desc">Every gap, friction point, inconsistency, and missing capability across all admin surfaces. No softening.</p>
+  </div>
+
+  <div class="score-grid">
+    <div class="score-cell"><div class="score-num score-gold">B</div><div class="score-label">UX Grade</div></div>
+    <div class="score-cell"><div class="score-num score-gold">B+</div><div class="score-label">Design Consistency</div></div>
+    <div class="score-cell"><div class="score-num score-red">D+</div><div class="score-label">Empty State Coverage</div></div>
+    <div class="score-cell"><div class="score-num score-red">C+</div><div class="score-label">Mobile Score</div></div>
+    <div class="score-cell"><div class="score-num score-red">C</div><div class="score-label">a11y Score</div></div>
+    <div class="score-cell"><div class="score-num score-gold">B-</div><div class="score-label">Feature Completeness</div></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Verdict</div>
+    <p>Admin works. But "works" is not the bar for a pro SaaS product. The Design tab is a wall of 33+ unorganized inputs with no sections, no save-per-group, and no feedback when settings aren't wired to the homepage. The score table requires manual Refresh instead of auto-loading. Loading states are text-only. Empty states provide zero guidance. Mobile admin — especially score entry and the Design tab — is painful. Access tab has invite-only, no admin revoke. Several settings keys (<code>team_a_color</code>–<code>team_h_color</code>, captains for teams C-H, <code>schedule_json</code>) have no usable UI. Grade: <strong>B</strong>. Significant UX debt for a paying-customer surface.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Tab 1 — Command Center: Findings</div>
+    <ul>
+      <li><strong>Score table requires manual Refresh.</strong> Default state: <em>"Select Refresh to load scores."</em> (admin.html:471). On-tab-open auto-load is table stakes for any dashboard.</li>
+      <li><strong>No round open/close status badges.</strong> Rounds table shows format but no visual status indicator (open vs. closed vs. not-started). Admin must mentally track which rounds are live.</li>
+      <li><strong>Stats show counts only — no context.</strong> "12 players" tells you nothing. "12 / 16 max (2 unassigned)" gives actual signal.</li>
+      <li><strong>Clear Scores is a nuclear option with no confirmation dialog.</strong> admin.html:514 shows the destructive clear-scores button. No are-you-sure gate. One misclick wipes a round's scores.</li>
+      <li><strong>No player edit/delete from Command Center.</strong> Players table is read-only. If Rob typed a name wrong or needs to remove someone, there's no path — requires Supabase dashboard.</li>
+      <li><strong>Hat orders stat card conditionally hidden</strong> (good), but stat grid layout shifts when cards hide — visual jank on load when hat merch is off.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Tab 2 — Design: Findings (Biggest Problem Area)</div>
+    <ul>
+      <li><strong>No visual section grouping.</strong> 33+ settings keys render as a single continuous form. Brand, Registration config, Team settings, and Schedule are interleaved with no accordion, no card grouping, no visual hierarchy. Scrolling 400px to find "team captain" is a usability failure.</li>
+      <li><strong>One giant save at bottom.</strong> Editing brand colors AND team names AND registration toggles triggers one save for everything. Partial saves impossible. No per-section save.</li>
+      <li><strong>No unsaved-changes guard.</strong> Editing anything in Design tab then switching to Course tab: all edits silently lost. No <code>beforeunload</code> warning, no "you have unsaved changes" prompt.</li>
+      <li><strong>Color fields (<code>team_a_color</code>–<code>team_h_color</code>, <code>color_primary</code>, <code>color_ink</code>, <code>color_bg</code>) are plain text inputs.</strong> Admin must type hex codes from memory. No color picker, no preview swatch. This is 2026.</li>
+      <li><strong>Captain fields only for Team A and "Challengers" (Team B).</strong> <code>DS_FIELD_MAP</code> maps <code>team_a_captain</code> and <code>challengers_captain</code> only. Teams C-H have no captain designation path even though up to 8 teams are supported.</li>
+      <li><strong><code>schedule_json</code> has no structured UI.</strong> Raw JSON key exists in <code>DS_ALL_KEYS</code> but no schedule builder. Admin either has no way to set schedule from the UI, or there's a textarea expecting raw JSON — neither is acceptable for a paying customer.</li>
+      <li><strong>Comment says "Pending wire-up in index.html"</strong> (admin.html:~2560). Multiple settings written by this tab may not actually render anywhere. Admin edits settings that silently do nothing. No feedback, no preview link, no visual confirmation.</li>
+      <li><strong>Tab label "Design" is misleading.</strong> This tab controls Brand, Content, Registration settings, Team config, AND Schedule. "Design" undersells it and makes team-related settings impossible to find intuitively.</li>
+      <li><strong>Logo upload has no dimensions guidance.</strong> Admin uploads a file with no hint of recommended size. Oversized images just break the nav.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Tab 3 — Access: Findings</div>
+    <ul>
+      <li><strong>No list of current admins.</strong> Access tab provides an invite-by-email flow but no display of who is currently an admin on this tournament. You can't see what you've done or who has access.</li>
+      <li><strong>No revoke path.</strong> Once invited, an admin can't be removed from the UI. Requires Supabase dashboard. This is a basic security requirement for any multi-admin surface.</li>
+      <li><strong>No role differentiation.</strong> All admins have full access (edit settings, manage players, enter scores). No read-only viewer role, no score-entry-only role. Not blocking now but becomes painful as you scale to clients with multiple co-admins.</li>
+      <li><strong>Invite status not shown.</strong> After inviting someone, there's no "pending / accepted" status display. Admin doesn't know if the invite worked.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Tab 4 — Course: Findings</div>
+    <ul>
+      <li><strong>Per-day accordion is well built</strong> — search vs. custom mode toggle, front/back nine inputs, yardage support. Strongest tab on the page.</li>
+      <li><strong>No "copy Day 1 to Day 2 and 3" shortcut.</strong> If the same course is used all days (common), admin must re-enter identical data 3 times. A "Copy to all days" button would eliminate this entirely.</li>
+      <li><strong>Course search results have no source attribution.</strong> Results come from <code>golf_courses</code> DB. No indication of data freshness or "request a correction" path for bad data.</li>
+      <li><strong>No confirmation after save.</strong> After <code>saveCoursePars()</code>, feedback is only a toast. No visible persistent indicator that "Course: Augusta National — saved for Day 1" is set. Next visit: unclear if data persisted.</li>
+      <li><strong>Par input grid wraps to 9 columns at 600px</strong> (admin.html CSS: <code>.par-inputs{grid-template-columns:repeat(9,1fr)}</code>). At narrow widths the 9 front + 9 back inputs cramp to ~30px each — usable but barely.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Team Assignment (within Command Center): Findings</div>
+    <ul>
+      <li><strong>Chip-click assignment works but has no keyboard path.</strong> Mouse/touch only. No keyboard access to assign a player to a team.</li>
+      <li><strong>Auto Balance doesn't explain its algorithm.</strong> One click redistributes players silently. No undo. If the balance is wrong, admin must re-drag manually.</li>
+      <li><strong>Team count selector is text buttons</strong> — not visually obvious that "2 3 4 5 6 7 8" are selectable modes. No active state ring or clear selection affordance beyond font weight.</li>
+      <li><strong>Unassigned pool label "click to assign" but assignment target is unclear.</strong> Which team gets the clicked player? Behavior depends on state. Not self-explanatory.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <div class="card-title">State Coverage Matrix</div>
+    <div class="table-wrap">
+      <table class="page-table">
+        <thead><tr><th>Surface</th><th>Empty State</th><th>Loading State</th><th>Error State</th></tr></thead>
+        <tbody>
+          <tr><td>Command Center — Players</td><td style="color:var(--red)">&#10060; No guidance</td><td style="color:var(--orange)">&#9888;&#65039; Text only</td><td style="color:var(--red)">&#10060; Silent</td></tr>
+          <tr><td>Command Center — Scores</td><td style="color:var(--red)">&#10060; "Select Refresh" not empty state</td><td style="color:var(--orange)">&#9888;&#65039; Text only</td><td style="color:var(--red)">&#10060; Silent</td></tr>
+          <tr><td>Command Center — Rounds</td><td style="color:var(--red)">&#10060; Nothing rendered</td><td style="color:var(--orange)">&#9888;&#65039; Text only</td><td style="color:var(--red)">&#10060; Silent</td></tr>
+          <tr><td>Design Tab — on load</td><td style="color:var(--green)">&#9989; Inputs default to empty</td><td style="color:var(--orange)">&#9888;&#65039; Text only</td><td style="color:var(--red)">&#10060; Silent</td></tr>
+          <tr><td>Access Tab — admin list</td><td style="color:var(--red)">&#10060; No list shown at all</td><td style="color:var(--orange)">&#9888;&#65039; Text only</td><td style="color:var(--red)">&#10060; Silent</td></tr>
+          <tr><td>Course Tab — on load</td><td style="color:var(--green)">&#9989; Inputs default to par 4</td><td style="color:var(--green)">&#9989; Has search spinner</td><td style="color:var(--red)">&#10060; Upload fail only</td></tr>
+          <tr><td>Team Assignment — no players</td><td style="color:var(--red)">&#10060; Grid renders empty silently</td><td style="color:var(--orange)">&#9888;&#65039; Text only</td><td style="color:var(--red)">&#10060; Silent</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Mobile / Responsive Audit</div>
+    <ul>
+      <li><strong>Score entry table on mobile.</strong> Score entry table has no <code>overflow-x:auto</code> wrapper. On a 375px iPhone, 18 columns + player name clips horizontally. Scores entered on-course via mobile are the primary use case — this is a critical gap.</li>
+      <li><strong>Design tab scrolling on mobile.</strong> 33+ inputs = ~2000px of vertical scroll. No section anchors or accordion. Mobile admin cannot efficiently manage settings.</li>
+      <li><strong>Tab row on mobile.</strong> 5 tabs at <code>padding:0.75rem 1.5rem</code> each = ~7.5rem minimum width per tab. Total tab bar ~400px on a 375px screen. Tabs clip or wrap. No mobile tab solution (swipe, dropdown, etc.).</li>
+      <li><strong>Team assignment on mobile.</strong> Chip pool collapses to single column (good), but drag-to-assign may not work correctly on touch devices — no touch event handling observed. Click-to-assign should be verified on iOS/Android.</li>
+      <li><strong>Nav mobile hamburger.</strong> <code>nav-mobile.css</code> + <code>nav-mobile.js</code> loaded (good), but admin-specific nav (logout button, Admin badge) may not integrate cleanly with mobile nav overlay.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Accessibility (a11y)</div>
+    <ul>
+      <li><strong>Tab list has no ARIA roles.</strong> The 5 <code>&lt;button class="admin-tab"&gt;</code> elements function as a tab interface but have no <code>role="tablist"</code>, <code>role="tab"</code>, or <code>aria-selected</code> attributes. Screen readers see 5 buttons, not a tab navigation.</li>
+      <li><strong>Tab panels not aria-labelled.</strong> Tab content <code>&lt;div&gt;</code>s have no <code>role="tabpanel"</code> or <code>aria-labelledby</code>. Hidden panels use <code>display:none</code> (correct) but panel identity is not exposed.</li>
+      <li><strong>Color inputs have no label for blind users.</strong> Color picker fields (if implemented as <code>&lt;input type="color"&gt;</code>) need accessible labels — team color for what, which team, etc.</li>
+      <li><strong>Toast notifications.</strong> Toast feedback (<code>showToast()</code>) is visual-only. No <code>role="alert"</code> or <code>aria-live</code> region. Screen reader users get zero feedback when saves succeed or fail.</li>
+      <li><strong>Stat cards have no semantic structure.</strong> Numbers in <code>&lt;span id="sTotal"&gt;</code> etc. with no accessible label connecting the number to its meaning.</li>
+    </ul>
+  </div>
+</div>
+</section>
+
+<section id="plan">
+<div class="wrapper">
+  <div class="section-header">
+    <div class="section-eyebrow">Stage 2 — Plan</div>
+    <h2 class="section-title">Prioritized Fix Plan</h2>
+    <p class="section-desc">Ordered by impact. P1 = ship-blocker for pro customers. P5 = polish.</p>
+  </div>
+
+  <div class="grid-2">
+    <div class="idea-card idea-1">
+      <div class="idea-number">1</div>
+      <div class="idea-tag"><span class="pill pill-red">P1</span> <span class="pill pill-gold">Design Tab</span></div>
+      <div class="idea-title">Design Tab: Section Grouping + Per-Section Save</div>
+      <div class="idea-body">Break the 33-input wall into 4 collapsible accordion sections: <strong>Brand &amp; Content</strong> (logo, hero photo, about, name, location, year, CTA, colors), <strong>Registration</strong> (open toggle, max/min, bullets, field toggles), <strong>Teams</strong> (count, names, colors, captains), <strong>Schedule</strong> (structured schedule builder). Each section has its own Save button. Unsaved-changes badge per section.</div>
+      <div class="idea-plan"><strong>Files:</strong> admin.html — restructure Design tab HTML, split <code>saveRegistration()</code> into 4 focused functions, add accordion JS.</div>
+    </div>
+
+    <div class="idea-card idea-1">
+      <div class="idea-number">2</div>
+      <div class="idea-tag"><span class="pill pill-red">P1</span> <span class="pill pill-gold">Command Center</span></div>
+      <div class="idea-title">Score Table: Auto-Load on Tab Open</div>
+      <div class="idea-body">Remove "Select Refresh to load scores." Replace with auto-call to <code>loadScoreEditor()</code> when Command Center tab activates. Add skeleton loader while fetching. Refresh button stays for manual re-fetch. This is the most-used admin workflow and the current state wastes two clicks every visit.</div>
+      <div class="idea-plan"><strong>Files:</strong> admin.html — <code>switchAdminTab('command')</code> calls <code>loadScoreEditor()</code>; add skeleton HTML inside <code>#scoresTableWrap</code>.</div>
+    </div>
+
+    <div class="idea-card idea-2">
+      <div class="idea-number">3</div>
+      <div class="idea-tag"><span class="pill pill-orange">P2</span> <span class="pill pill-gold">Command Center</span></div>
+      <div class="idea-title">Destructive Action Confirmation Guards</div>
+      <div class="idea-body">"Clear scores for a round" needs a confirmation modal: "This will permanently delete all scores for Round N. This cannot be undone." Two-button: Cancel / Delete Scores. Same pattern for any future destructive actions (remove player, revoke admin). One misclick on a live tournament day = catastrophic data loss.</div>
+      <div class="idea-plan"><strong>Files:</strong> admin.html — add <code>confirmAction(title, body, onConfirm)</code> modal helper; replace inline <code>onclick</code> on clear-scores button.</div>
+    </div>
+
+    <div class="idea-card idea-2">
+      <div class="idea-number">4</div>
+      <div class="idea-tag"><span class="pill pill-orange">P2</span> <span class="pill pill-gold">Access Tab</span></div>
+      <div class="idea-title">Access Tab: Current Admin List + Revoke</div>
+      <div class="idea-body">On Access tab load, fetch <code>tournament_admins</code> where <code>tournament_id = _tid</code>. Render a list of emails with a Revoke button per row. Revoke calls <code>DELETE FROM tournament_admins WHERE tournament_id=_tid AND email=x</code> (with confirmation). This is basic access hygiene and required before selling to any paying client who shares admin with collaborators.</div>
+      <div class="idea-plan"><strong>Files:</strong> admin.html — add <code>loadAdminList()</code>, render into new <code>#adminListWrap</code>, add revoke handler with confirmation guard.</div>
+    </div>
+
+    <div class="idea-card idea-3">
+      <div class="idea-number">5</div>
+      <div class="idea-tag"><span class="pill pill-orange">P2</span> <span class="pill pill-gold">Mobile</span></div>
+      <div class="idea-title">Score Entry Table: Horizontal Scroll Wrapper</div>
+      <div class="idea-body">Score entry table (18 holes + player name) must scroll horizontally on mobile — the primary tournament-day use case is admin on their phone entering scores hole-by-hole. Wrap <code>#scoresTableWrap</code> in <code>overflow-x:auto;-webkit-overflow-scrolling:touch</code>. Also: tab bar needs a horizontal scroll or condensed mobile layout — 5 tabs currently clips at 375px.</div>
+      <div class="idea-plan"><strong>Files:</strong> admin.html — CSS: add <code>overflow-x:auto</code> to <code>#scoresTableWrap</code>; tab bar: add <code>overflow-x:auto;white-space:nowrap</code> to tab container.</div>
+    </div>
+
+    <div class="idea-card idea-3">
+      <div class="idea-number">6</div>
+      <div class="idea-tag"><span class="pill pill-blue">P3</span> <span class="pill pill-gold">Design Tab</span></div>
+      <div class="idea-title">Color Pickers for Team Colors and Brand Colors</div>
+      <div class="idea-body">Replace plain text inputs for <code>team_a_color</code>–<code>team_h_color</code>, <code>color_primary</code>, <code>color_ink</code>, <code>color_bg</code> with <code>&lt;input type="color"&gt;</code> + a live hex value display. No library needed — native color picker + <code>oninput</code> to sync hex text. Add a small swatch preview next to each team name showing current color.</div>
+      <div class="idea-plan"><strong>Files:</strong> admin.html — replace text inputs for color keys with <code>&lt;input type="color"&gt;</code>; add swatch span next to each team row.</div>
+    </div>
+
+    <div class="idea-card idea-4">
+      <div class="idea-number">7</div>
+      <div class="idea-tag"><span class="pill pill-blue">P3</span> <span class="pill pill-gold">Design Tab</span></div>
+      <div class="idea-title">Captain Fields for Teams C–H + Unsaved-Changes Guard</div>
+      <div class="idea-body">Add <code>dsTeamCCaptain</code>–<code>dsTeamHCaptain</code> inputs alongside existing team name inputs (only render if team count &gt;= that team). Wire to <code>team_c_captain</code>–<code>team_h_captain</code> settings keys. Also add <code>window.addEventListener('beforeunload', ...)</code> guard when Design tab has unsaved changes — set dirty flag on any input event, clear on save.</div>
+      <div class="idea-plan"><strong>Files:</strong> admin.html — extend teams section in Design tab; add new settings keys to <code>DS_ALL_KEYS</code>, <code>DS_FIELD_MAP</code>, and <code>saveRegistration()</code>; add dirty tracking.</div>
+    </div>
+
+    <div class="idea-card idea-5">
+      <div class="idea-number">8</div>
+      <div class="idea-tag"><span class="pill pill-purple">P4</span> <span class="pill pill-gold">a11y</span></div>
+      <div class="idea-title">ARIA Tab Roles + Live Region for Toast</div>
+      <div class="idea-body">Add <code>role="tablist"</code> to tab container, <code>role="tab"</code> + <code>aria-selected</code> + <code>aria-controls</code> to each tab button, <code>role="tabpanel"</code> + <code>aria-labelledby</code> to each tab content div. Add a hidden <code>&lt;div role="status" aria-live="polite" id="toastLive"&gt;</code> — update its text whenever <code>showToast()</code> fires so screen readers announce saves. Quick wins, high a11y ROI.</div>
+      <div class="idea-plan"><strong>Files:</strong> admin.html — tab buttons + tab panels HTML; <code>showToast()</code> function.</div>
+    </div>
+
+    <div class="idea-card idea-5">
+      <div class="idea-number">9</div>
+      <div class="idea-tag"><span class="pill pill-purple">P4</span> <span class="pill pill-gold">Course Tab</span></div>
+      <div class="idea-title">Course Tab: "Copy to All Days" Shortcut</div>
+      <div class="idea-body">Add a "Copy Day 1 to Days 2 &amp; 3" button at the top of the Course tab. Reads current par/yardage values from Day 1 inputs, writes identical values to Day 2 and Day 3 inputs. In-memory only until admin saves. Eliminates the most common Course tab workflow (same course all days) from 3 repetitions to 1.</div>
+      <div class="idea-plan"><strong>Files:</strong> admin.html — add button above day accordion; JS: read <code>coursePars['day1']</code> + <code>courseYards['day1']</code>, write to <code>day2</code> + <code>day3</code> inputs, rebuild par editor for those days.</div>
+    </div>
+
+    <div class="idea-card idea-5">
+      <div class="idea-number">10</div>
+      <div class="idea-tag"><span class="pill pill-purple">P5</span> <span class="pill pill-gold">Command Center</span></div>
+      <div class="idea-title">Round Status Badges + Stat Context</div>
+      <div class="idea-body">Add status badge (Open / Closed / Not Started) next to each round in the rounds table based on <code>rounds.status</code> DB field. Upgrade stat counts: "12 players (2 unassigned)" instead of bare "12". These are low-effort, high-signal improvements that make Command Center actually command-center-like rather than a number display.</div>
+      <div class="idea-plan"><strong>Files:</strong> admin.html — <code>renderRounds()</code>: append status badge; <code>renderStats()</code>: compose contextual strings instead of bare counts.</div>
+    </div>
+  </div>
+</div>
+</section>
+
+<section id="runbook">
+<div class="wrapper">
+  <div class="section-header">
+    <div class="section-eyebrow">Stage 3 — Runbook</div>
+    <h2 class="section-title">Execution Steps</h2>
+    <p class="section-desc">Concrete, file:line-precise steps. Executable by tourney-execute without questions.</p>
+  </div>
+
+  <div class="runbook-steps">
+
+    <div class="rb-step">
+      <div class="rb-step-title">Score Editor: Auto-Load on Command Center Activate</div>
+      <div class="rb-step-body">In <code>switchAdminTab()</code> in admin.html, find the branch for <code>case 'command'</code> (or the equivalent condition). Add a call to <code>loadScoreEditor()</code> when the command tab activates if scores haven't been loaded yet. Guard with a flag (e.g. <code>_scoresLoaded = false</code>, set true after first load, reset on round-change) to avoid redundant fetches on re-visit. Replace the placeholder text "Select Refresh to load scores." in <code>#scoresTableWrap</code> with a skeleton loader div.</div>
+      <div class="rb-verify"><strong>Verify</strong> Open admin → Command Center tab → scores load automatically. Refresh button still triggers reload. No double-fetch on tab re-enter.</div>
+    </div>
+
+    <div class="rb-step">
+      <div class="rb-step-title">Score Entry Table: Horizontal Scroll + Tab Bar Mobile Fix</div>
+      <div class="rb-step-body">In admin.html CSS, find the existing <code>@media(max-width:600px)</code> block. Add: <code>#scoresTableWrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }</code>. For the tab bar: find the tab bar container element and add CSS: <code>overflow-x: auto; white-space: nowrap; -webkit-overflow-scrolling: touch;</code> to allow horizontal scrolling on narrow screens. Ensure individual <code>.admin-tab</code> buttons have <code>white-space: nowrap;</code>.</div>
+      <div class="rb-verify"><strong>Upstream:</strong> scores table populated by loadScoreEditor() — no DB change. <strong>Downstream:</strong> no other pages use this CSS. <strong>Verify</strong> at 375px viewport: score table scrolls horizontally, tab bar is fully accessible.</div>
+    </div>
+
+    <div class="rb-step">
+      <div class="rb-step-title">Clear Scores: Confirmation Modal</div>
+      <div class="rb-step-body">Add a reusable <code>confirmAction(title, body, onConfirm)</code> helper function in admin.html JS. Renders a simple modal overlay: title, body text, Cancel + Confirm buttons. Cancel closes modal. Confirm calls <code>onConfirm()</code> then closes. Wire the "Clear scores for a round" button to call <code>confirmAction('Clear Scores for Round N', 'This permanently deletes all scores for this round and cannot be undone.', () =&gt; clearRound(n))</code>. Add the modal HTML (backdrop + card) to admin.html body.</div>
+      <div class="rb-verify"><strong>Verify</strong> clicking Clear Scores shows modal. Cancel = no action. Confirm = scores cleared. Modal dismisses cleanly. Keyboard: Escape key closes modal.</div>
+    </div>
+
+    <div class="rb-step">
+      <div class="rb-step-title">Access Tab: Current Admin List + Revoke</div>
+      <div class="rb-step-body">Add a <code>loadAdminList()</code> function that fetches <code>SELECT email FROM tournament_admins WHERE tournament_id = _tid ORDER BY created_at</code>. Render results into a new <code>&lt;div id="adminListWrap"&gt;</code> above the invite form in the Access tab HTML. Each row: email address + Revoke button. Revoke button calls <code>confirmAction('Revoke Admin Access', 'Remove [email] as admin? They will lose access immediately.', () =&gt; revokeAdmin(email))</code>. <code>revokeAdmin(email)</code>: DELETE from tournament_admins where tournament_id=_tid and email=email. Guard: cannot revoke self (current logged-in email). Call <code>loadAdminList()</code> when Access tab activates.</div>
+      <div class="rb-verify"><strong>Upstream:</strong> tournament_admins table. <strong>Downstream:</strong> login gate checks same table — revoke takes effect on next admin login attempt. <strong>Verify</strong> admin list loads, revoke with confirmation removes row, cannot revoke self.</div>
+    </div>
+
+    <div class="rb-step">
+      <div class="rb-step-title">Design Tab: Section Grouping (Accordion)</div>
+      <div class="rb-step-body">Restructure the Design tab HTML into 4 accordion sections. Each section: a header button with arrow toggle + a collapsible content div. Sections: <strong>1. Brand &amp; Content</strong> (logo upload, hero/about photos, tourney name/year/location/CTA, color_primary/ink/bg), <strong>2. Registration</strong> (reg_open, reg_max/min, reg_bullet_1/2/3, reg_show_dates/why_me/hat, admin_show_as_player), <strong>3. Teams</strong> (tournament_mode, team_count, team A–H names/colors/captains), <strong>4. Schedule</strong> (schedule_json textarea with note: JSON format). Each section gets its own Save button calling a scoped save function. Default: Brand section open, rest collapsed. CSS: add <code>.ds-accordion</code>, <code>.ds-accordion-header</code>, <code>.ds-accordion-body</code> classes with transition.</div>
+      <div class="rb-verify"><strong>Verify</strong> all 4 sections open/close independently. Each section Save button saves only that section's keys. All 33 keys still saved correctly. No data loss on section re-open.</div>
+    </div>
+
+    <div class="rb-step">
+      <div class="rb-step-title">Design Tab: Color Pickers for Brand + Team Colors</div>
+      <div class="rb-step-body">Replace <code>&lt;input type="text"&gt;</code> for <code>color_primary</code>, <code>color_ink</code>, <code>color_bg</code>, and <code>team_a_color</code>–<code>team_h_color</code> with <code>&lt;input type="color" id="ds[Key]" value="#c09030"&gt;</code> + an adjacent <code>&lt;span class="color-swatch"&gt;</code> showing the current hex code. Use <code>oninput</code> to keep them in sync. Add CSS: <code>.color-swatch { display:inline-block; width:20px; height:20px; border-radius:3px; border:1px solid var(--border); vertical-align:middle; margin-left:4px; }</code>. Load existing color values from settings into these inputs in <code>loadDesignSettings()</code>.</div>
+      <div class="rb-verify"><strong>Verify</strong> color pickers open native color chooser. Saved hex value persists after page reload. Swatch updates live as color changes.</div>
+    </div>
+
+    <div class="rb-step">
+      <div class="rb-step-title">Design Tab: Captain Fields for Teams C–H + Unsaved-Changes Guard</div>
+      <div class="rb-step-body">In the Teams section of the accordion (step 5), add captain text inputs for teams C–H: <code>&lt;input type="text" id="dsTeamCCaptain" placeholder="Captain name"&gt;</code> etc. Only render/show the input when <code>_teamCount &gt;= N</code> (same visibility logic as team name inputs). Add to <code>DS_ALL_KEYS</code>: <code>'team_c_captain','team_d_captain','team_e_captain','team_f_captain','team_g_captain','team_h_captain'</code>. Add to <code>DS_FIELD_MAP</code>. Wire in Teams section save function. For unsaved-changes guard: set <code>let _designDirty = false;</code>. Add <code>oninput</code> listeners on all Design tab inputs that set <code>_designDirty = true</code>. Clear on save. Add <code>window.addEventListener('beforeunload', e =&gt; { if (_designDirty) { e.preventDefault(); e.returnValue = ''; }})</code>. Also guard tab switches within admin: if <code>_designDirty</code> and switching away from Design tab, prompt confirm.</div>
+      <div class="rb-verify"><strong>Verify</strong> captain field appears for teams 3-8 when team count set accordingly. Dirty guard fires on browser close with unsaved changes. Dirty flag clears after save.</div>
+    </div>
+
+    <div class="rb-step">
+      <div class="rb-step-title">Course Tab: "Copy Day 1 to All Days" Button</div>
+      <div class="rb-step-body">Add a button at the top of the Course tab (above the day1 accordion): <code>&lt;button class="save-teams-btn" onclick="copyDay1ToAll()" style="margin-bottom:1rem;"&gt;Copy Day 1 to Days 2 &amp; 3&lt;/button&gt;</code>. Implement <code>copyDay1ToAll()</code>: read current values of all 18 par inputs and 18 yardage inputs for day1, write identical values to day2 and day3 inputs. Update in-memory <code>coursePars['day2']</code>, <code>coursePars['day3']</code>, <code>courseYards['day2']</code>, <code>courseYards['day3']</code> arrays. Call <code>buildParEditor()</code> for day2 and day3 to re-render with new values. Show toast "Day 1 settings copied to Days 2 and 3. Save to persist."</div>
+      <div class="rb-verify"><strong>Verify</strong> copy button visible at top of Course tab. After clicking: day2 and day3 inputs match day1. After saving: day2 and day3 persist in DB. Day1 is unchanged.</div>
+    </div>
+
+    <div class="rb-step">
+      <div class="rb-step-title">ARIA Tab Roles + Toast Live Region</div>
+      <div class="rb-step-body">Tab container: add <code>role="tablist"</code> to the <code>&lt;div&gt;</code> wrapping the 4 <code>.admin-tab</code> buttons. Each button: add <code>role="tab"</code>, <code>aria-selected="true/false"</code> (true for active), <code>aria-controls="tab-[name]"</code>. Each tab panel div: add <code>id="tab-[name]"</code>, <code>role="tabpanel"</code>, <code>aria-labelledby="tabBtn-[name]"</code>. Update <code>switchAdminTab()</code> to update <code>aria-selected</code> on all buttons when tab changes. Add hidden live region to body: <code>&lt;div id="toastLive" role="status" aria-live="polite" style="position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden;"&gt;&lt;/div&gt;</code>. In <code>showToast(msg)</code>: also set <code>document.getElementById('toastLive').textContent = msg</code>.</div>
+      <div class="rb-verify"><strong>Downstream:</strong> no other pages affected — admin-only change. <strong>Verify</strong> HTML inspection shows correct ARIA attributes. Tab active state updates aria-selected. Toast fires live region update.</div>
+    </div>
+
+    <div class="rb-step">
+      <div class="rb-step-title">Command Center: Round Status Badges + Contextual Stat Strings</div>
+      <div class="rb-step-body">In <code>renderRounds()</code> (or equivalent): after rendering round format, append a status badge using <code>rounds.status</code> value. Map: <code>'open' → &lt;span class="pill pill-green"&gt;Live&lt;/span&gt;</code>, <code>'closed' → &lt;span class="pill pill-gold"&gt;Closed&lt;/span&gt;</code>, <code>null/'pending' → &lt;span class="pill" style="..."&gt;Not Started&lt;/span&gt;</code>. In <code>renderStats()</code>: change player count to show <code>"${n} players (${n - assigned} unassigned)"</code> when team mode is active. Change team A/B stat to show assigned counts as <code>"${assignedA} / ${n}"</code> fractions.</div>
+      <div class="rb-verify"><strong>Upstream:</strong> rounds.status from DB. <strong>Verify</strong> each round shows correct status badge. Stat cards show contextual counts. Counts update after team save.</div>
+    </div>
+
+  </div>
+</div>
+</section>
+
+<section id="executing">
+<div class="wrapper">
+<!-- EXECUTING-CONTENT-START -->
+<div class="stage-pending">Stage 4 pending. Run <code>/tourney-execute 5-26-26-ux-review.html</code> to execute this runbook.</div>
+<!-- EXECUTING-CONTENT-END -->
+</div>
+</section>
+
+<section id="audit">
+<div class="wrapper">
+<!-- AUDIT-CONTENT-START -->
+<div class="stage-pending">Stage 5 pending. Populated after execution.</div>
+<!-- AUDIT-CONTENT-END -->
+</div>
+</section>
+
+<section id="concluded">
+<div class="wrapper">
+<!-- CONCLUDED-CONTENT-START -->
+<div class="stage-pending">Stage 6 pending. Populated after audit.</div>
+<!-- CONCLUDED-CONTENT-END -->
+</div>
+</section>
+
+<footer>
+  Generated by <span>claude-sonnet-4-6</span> · Greenskeeper Studios Internal · May 26, 2026
+  <br style="margin-top:0.3rem">
+  <a href="/platform" style="color:var(--muted);font-size:0.7rem;text-decoration:none">&#x2190; Back to Platform Hub</a>
+</footer>
+
+</body>
+</html>

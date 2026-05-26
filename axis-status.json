@@ -22,12 +22,12 @@
       "blocking": false
     },
     "ux": {
-      "status": "concluded",
-      "grade": "A",
-      "artifact": "/platform/5-22-26-consolidation-review",
-      "last_updated": "2026-05-22",
-      "summary": "All nav-bar pages correct SVG, login viewBox fixed. profile.html skeleton confirmed already shipped (loadingGate + shimmer). Zero open items.",
-      "open_items": 0,
+      "status": "runbook",
+      "grade": "B",
+      "artifact": "/platform/5-26-26-ux-review",
+      "last_updated": "2026-05-26",
+      "summary": "Admin UX deep audit. Design tab monolithic form, score table manual refresh, empty states D+, mobile C+, a11y C. 10-step runbook ready.",
+      "open_items": 10,
       "blocking": false
     },
     "security": {

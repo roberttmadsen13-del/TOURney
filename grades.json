@@ -159,6 +159,13 @@
       "cmd": "/tourney-review-ux",
       "scores": [
         {
+          "date": "2026-05-26",
+          "score": "B",
+          "url": "/platform/5-26-26-ux-review",
+          "review_title": "Admin UX Deep Audit · May 26, 2026",
+          "notes": "Focused admin.html audit. Grade B. Design tab is a 33-input wall with no sections, no per-section save, no unsaved-changes guard. Score table requires manual Refresh. Empty states D+, mobile C+, a11y C. 10-step runbook: accordion redesign, auto-load scores, confirmation modals, Access tab admin list + revoke, mobile scroll fixes, color pickers, captain fields C-H, dirty guard, Course tab copy shortcut, ARIA roles + live toast."
+        },
+        {
           "date": "2026-05-22",
           "score": "A",
           "url": "/platform/5-22-26-consolidation-review",
