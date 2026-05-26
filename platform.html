@@ -1956,7 +1956,7 @@ function openGradeModal(key){
   modalAxisKey=key;
   document.getElementById('modalAxis').textContent=ax.label;
   document.getElementById('modalCmd').textContent=ax.cmd;
-  const scores=(ax.scores||[]).slice().reverse().slice(0,3);
+  const scores=(ax.scores||[]).slice(0,6).reverse();
   const list=document.getElementById('modalScores');
   if(!scores.length){
     list.innerHTML='<div class="grade-no-data" style="padding:1rem;font-family:\'DM Mono\',monospace;font-size:0.58rem;letter-spacing:0.1em;text-transform:uppercase;">No reviews yet — run '+esc(ax.cmd)+' to generate the first.</div>';
