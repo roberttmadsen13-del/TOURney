@@ -552,6 +552,70 @@ footer span{color:var(--gold);}
 </div>
 </section>
 
+<section id="fourth-opinion" style="border-top:2px solid var(--orange);">
+<div class="wrapper">
+  <div class="section-header">
+    <div class="section-eyebrow" style="color:var(--orange);">Fourth Opinion — claude-opus-4-7 (product design lens)</div>
+    <h2 class="section-title">Independent Audit #3</h2>
+    <p class="section-desc">Senior product designer perspective. Read admin.html cold before the ticket. Focused on task flows, mental models, IA — not just code patterns. May 26, 2026.</p>
+  </div>
+
+  <div class="card" style="border-left:3px solid var(--orange);">
+    <div class="card-title" style="color:var(--orange);">Grade: B−</div>
+    <p>Primary review graded B. Fourth opinion drops to <strong>B−</strong>. Functional admin tool wearing SaaS clothing. Competent for the founder running his own event; the IA betrays a code-first mental model that will frustrate any non-technical paying admin the moment they're not Rob.</p>
+  </div>
+
+  <div class="card" style="border-left:3px solid var(--orange);">
+    <div class="card-title" style="color:var(--orange);">Root Cause Identified: Setup vs. Live-Day IA Split</div>
+    <p>Prior opinions called the Design tab "chaotic" without naming why. The actual root cause: admin's work splits into two distinct mental modes — <strong>Setup</strong> (pre-tournament: course, teams, branding, schedule, access) and <strong>Run-Day</strong> (live: score entry, round state, leaderboard). The 5-tab layout mixes both modes into every tab. "Command Center" contains stat cards (run-day) AND team assignment (setup). A product-grade admin would split into a top-level <strong>Setup ↔ Live</strong> mode or clearly separated nav sections. This is the structural fix every other improvement flows from.</p>
+  </div>
+
+  <div class="card" style="border-left:3px solid var(--red);">
+    <div class="card-title" style="color:var(--red);">New Findings (not in any prior opinion)</div>
+    <ul>
+      <li><strong>"Design" tab label is a category error.</strong> The tab controls registration rules, team rosters, captains, schedule, and branding. "Design" signals styling — admins hunting for registration settings will never look here. Rename to <strong>"Setup"</strong> or <strong>"Tournament Settings"</strong>. Trivial diff, massive orientation win.</li>
+      <li><strong>No "View live site" link adjacent to save.</strong> Every setting in Design writes to <code>settings</code> table that renders on the public homepage — but there's zero preview link. Admin saves blind, opens a new tab, hunts the URL, refreshes. This is why "settings silently do nothing" feels true even when wires work. Feedback loop is broken, not the plumbing.</li>
+      <li><strong>No persistent tournament context header.</strong> Nothing in the admin chrome tells the admin <em>which tournament</em> they're editing. In a multi-tenant world, opening admin on the wrong subdomain = silently editing the wrong event. Needs tournament name + tenant badge in the sticky nav.</li>
+      <li><strong>Stat cards are dead affordances.</strong> <code>sTotal</code>, <code>sTeamA</code> etc. render counts but clicking them does nothing. In every modern SaaS admin (Stripe, Linear, Vercel) stat cards are filter-shortcuts. These look interactive but aren't — false affordance.</li>
+      <li><strong><code>buildScheduleEditor()</code> already exists.</strong> The ticket implies schedule is raw JSON textarea. There IS a structured UI built — the gap is wire-up to the public display, not missing data entry. Ticket framing wrong on this.</li>
+      <li><strong>Course mode (Search/Custom) is per-day, should be tournament-level.</strong> <code>setCourseMode('day1','search')</code> — admin running a 3-round one-course event must toggle mode 3 times. Mode should default tournament-level with per-day override.</li>
+      <li><strong>No autosave on single-key toggles.</strong> <code>reg_open</code>, notification toggles — these are boolean flips. Requiring Save for a toggle is archaic in 2026. Single-key settings should write immediately on change.</li>
+      <li><strong>No "last saved" timestamp anywhere.</strong> Admin can't verify a change persisted across sessions. Silent save + no timestamp = zero trust.</li>
+      <li><strong><code>celebrationStyle</code> select has no preview.</strong> Admins won't know what each style does. Needs inline mini-preview or "Preview" button next to the select.</li>
+      <li><strong>No keyboard shortcuts for score entry.</strong> Tab → next hole, Enter → save row. A clubhouse admin entering scores in real-time is entirely mouse-dependent. High-frequency task with zero keyboard optimization.</li>
+    </ul>
+  </div>
+
+  <div class="card" style="border-left:3px solid var(--blue);">
+    <div class="card-title" style="color:var(--blue);">Disagreements with Accumulated Ticket</div>
+    <ul>
+      <li><strong>Custom confirmation modal (Step 3): keep as P2–P3, not P4.</strong> Third opinion demoted because <code>confirm()</code> exists. Disagreed — native <code>confirm()</code> is a UX smell in paid SaaS. Looks like 2008, breaks brand trust, can't be styled. For a product charging $14–$99/event, "are you sure?" dialogs should be on-brand. Keep custom modal but scope narrowly: one reusable helper, used everywhere.</li>
+      <li><strong>Step 6 (color pickers) replacement:</strong> Don't just strike it — retarget to a WCAG contrast validator between <code>color_primary</code>, <code>color_ink</code>, and <code>color_bg</code>. Admin can pick colors that are unreadable together. A live contrast ratio warning adjacent to the color fields is more valuable than the pickers themselves (which already exist).</li>
+      <li><strong>Mobile tab fix: overflow-x:auto is a band-aid.</strong> A 5-tab admin on 375px needs a real mobile pattern — bottom-sheet tab picker, dropdown, or an icon-only collapsed nav — not a scrollable row of text tabs. Scrollable tab bars on mobile violate standard mobile nav conventions (iOS HIG, Material).</li>
+    </ul>
+  </div>
+
+  <div class="card" style="border-left:3px solid var(--gold);">
+    <div class="card-title">Single Highest-Leverage Fix</div>
+    <p><strong>Rename "Design" → "Setup" + reorganize into 4 collapsible sections + add "View public page →" link in tab header.</strong> One shippable unit that fixes naming (mental model), IA (progressive disclosure), and the silent-save feedback loop. Transforms the worst surface into the best without touching any other code path. Every other P1 is local; this one is structural and lifts perceived quality from "internal tool" to "SaaS product."</p>
+  </div>
+
+  <div class="card" style="border-left:3px solid var(--red);">
+    <div class="card-title" style="color:var(--red);">Execute Readiness: Not Ready — Required Changes Before Runbook Runs</div>
+    <ol style="padding-left:1.2rem;">
+      <li>Strike Step 6 (color pickers done). Replace with: WCAG contrast validator for color triad.</li>
+      <li>Re-scope Step 4: add "render list above invite form" + wire <code>loadAdminList()</code> into <code>switchAdminTab('access')</code> lifecycle explicitly.</li>
+      <li>Add new P1: rename "Design" tab → "Setup" across HTML + <code>data-tab</code> attribute + lock-icon IDs.</li>
+      <li>Add new P1: fix 0.48rem score header font (legibility bug confirmed by third opinion).</li>
+      <li>Add new P2: "View public page →" link in Setup tab header. Kills the silent-save problem.</li>
+      <li>Add DB pre-flight: verify <code>rounds.status</code> populated + <code>tournament_admins</code> DELETE policy before steps 4 + 10.</li>
+      <li>Add atomicity note to Step 5: <code>saveRegistration()</code> split must succeed-or-rollback per section — no orphaned partial state.</li>
+    </ol>
+    <p style="margin-top:0.6rem;color:var(--muted);">Current runbook: 10 steps, 2 invalid, 1 over-scoped, 4+ missing. After cleanup: ~11–12 well-formed steps. Clean first, then execute.</p>
+  </div>
+</div>
+</section>
+
 <section id="executing">
 <div class="wrapper">
 <!-- EXECUTING-CONTENT-START -->
