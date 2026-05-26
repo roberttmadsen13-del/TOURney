@@ -379,7 +379,7 @@ td{padding:0.7rem 0.75rem;font-size:0.88rem;vertical-align:middle;}
 .ceo-item.done{opacity:0.4;}
 .ceo-cb{width:18px;height:18px;min-width:18px;border:1px solid var(--border);cursor:pointer;display:flex;align-items:center;justify-content:center;margin-top:2px;transition:all .12s;}
 .ceo-cb.checked{border-color:var(--gold);background:var(--gold-dim);}
-.ceo-cb.checked::after{content:'âœ“';color:var(--gold);font-size:0.65rem;}
+.ceo-cb.checked::after{content:'✓';color:var(--gold);font-size:0.65rem;}
 .ceo-body{flex:1;}
 .ceo-text{font-family:'Barlow',sans-serif;font-size:0.85rem;color:var(--text);line-height:1.4;}
 .ceo-why{font-family:'DM Mono',monospace;font-size:0.46rem;letter-spacing:0.06em;color:var(--muted);margin-top:0.35rem;line-height:1.55;}
@@ -390,7 +390,7 @@ td{padding:0.7rem 0.75rem;font-size:0.88rem;vertical-align:middle;}
 .axis-overall-card{background:rgba(192,144,48,.04);}
 .tq-cb{width:16px;height:16px;min-width:16px;border:1px solid var(--border);cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:3px;transition:all .12s;}
 .tq-cb.checked{border-color:var(--gold);background:var(--gold-dim);}
-.tq-cb.checked::after{content:'âœ“';color:var(--gold);font-size:.6rem;}
+.tq-cb.checked::after{content:'✓';color:var(--gold);font-size:.6rem;}
 .tq-item-links{display:flex;flex-wrap:wrap;gap:.3rem;margin-top:.3rem;}
 .at-filters{display:flex;align-items:center;gap:.4rem;margin-bottom:.65rem;flex-wrap:wrap;}
 .at-search{background:rgba(255,255,255,.04);border:1px solid var(--border);color:var(--text);font-family:'DM Mono',monospace;font-size:.72rem;padding:.28rem .55rem;outline:none;width:140px;min-width:80px;flex-shrink:0;transition:border-color .15s;}
@@ -521,12 +521,12 @@ td{padding:0.7rem 0.75rem;font-size:0.88rem;vertical-align:middle;}
         <div class="tbl-wrap">
           <table>
             <thead><tr>
-              <th style="cursor:pointer;white-space:nowrap;user-select:none" onclick="sortComps('email')">Email â†•</th>
-              <th style="cursor:pointer;white-space:nowrap;user-select:none" onclick="sortComps('status')">Status â†•</th>
-              <th style="cursor:pointer;white-space:nowrap;user-select:none;text-align:center" onclick="sortComps('tourneys')">Tourneys â†•</th>
-              <th style="cursor:pointer;white-space:nowrap;user-select:none;text-align:center" onclick="sortComps('rounds')">Rounds â†•</th>
-              <th style="cursor:pointer;white-space:nowrap;user-select:none" onclick="sortComps('first_login')">First Login â†•</th>
-              <th style="cursor:pointer;white-space:nowrap;user-select:none" onclick="sortComps('last_login')">Last Login â†•</th>
+              <th style="cursor:pointer;white-space:nowrap;user-select:none" onclick="sortComps('email')">Email ↕</th>
+              <th style="cursor:pointer;white-space:nowrap;user-select:none" onclick="sortComps('status')">Status ↕</th>
+              <th style="cursor:pointer;white-space:nowrap;user-select:none;text-align:center" onclick="sortComps('tourneys')">Tourneys ↕</th>
+              <th style="cursor:pointer;white-space:nowrap;user-select:none;text-align:center" onclick="sortComps('rounds')">Rounds ↕</th>
+              <th style="cursor:pointer;white-space:nowrap;user-select:none" onclick="sortComps('first_login')">First Login ↕</th>
+              <th style="cursor:pointer;white-space:nowrap;user-select:none" onclick="sortComps('last_login')">Last Login ↕</th>
               <th></th>
             </tr></thead>
             <tbody id="compBody"></tbody>
@@ -727,11 +727,11 @@ td{padding:0.7rem 0.75rem;font-size:0.88rem;vertical-align:middle;}
         </div>
         <div class="today-queue">
           <div class="tq-section" id="tqSectionChecklist">
-            <div class="tq-hdr" onclick="toggleTqSection('tqSectionChecklist')"><span class="tq-title">Checklist — Rob Only</span><span class="tq-badge" id="ceoOpenCount" style="background:rgba(192,144,48,.15);color:var(--gold);border-color:rgba(192,144,48,.3);">0</span><span class="tq-chevron">â–¼</span></div>
+            <div class="tq-hdr" onclick="toggleTqSection('tqSectionChecklist')"><span class="tq-title">Checklist — Rob Only</span><span class="tq-badge" id="ceoOpenCount" style="background:rgba(192,144,48,.15);color:var(--gold);border-color:rgba(192,144,48,.3);">0</span><span class="tq-chevron">▼</span></div>
             <div class="ceo-list" id="ceoList"></div>
           </div>
           <div class="tq-section" id="tqSectionDoNow">
-            <div class="tq-hdr" onclick="toggleTqSection('tqSectionDoNow')"><span class="tq-title">Do Now</span><span class="tq-badge" id="doNowBadge">0</span><span class="tq-chevron">â–¼</span></div>
+            <div class="tq-hdr" onclick="toggleTqSection('tqSectionDoNow')"><span class="tq-title">Do Now</span><span class="tq-badge" id="doNowBadge">0</span><span class="tq-chevron">▼</span></div>
             <div class="ceo-list" id="tqDoNow"><div class="tq-empty">Loading…</div></div>
           </div>
         </div>
@@ -787,7 +787,7 @@ td{padding:0.7rem 0.75rem;font-size:0.88rem;vertical-align:middle;}
         </div>
         <div class="modal-score-list" id="modalScores"></div>
         <button class="modal-run-btn" onclick="runReview()">Copy Review Command to Clipboard</button>
-        <div class="modal-copied" id="modalCopied">âœ“ Copied — paste in Claude Code terminal</div>
+        <div class="modal-copied" id="modalCopied">✓ Copied — paste in Claude Code terminal</div>
       </div>
     </div>
   </div>
@@ -965,7 +965,7 @@ async function grantComp() {
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { errEl.textContent='Invalid email.'; errEl.style.display='block'; return; }
   const { error } = await sb.functions.invoke('platform-action', { body:{ action:'comp', email } });
   if (error) { errEl.textContent=error.message; errEl.style.display='block'; return; }
-  okEl.textContent=`âœ“ ${email} granted player account`; okEl.style.display='block';
+  okEl.textContent=`✓ ${email} granted player account`; okEl.style.display='block';
   document.getElementById('compEmail').value='';
   loadCompAccounts();
 }
@@ -1032,7 +1032,7 @@ async function generateCode() {
   errEl.style.display='none'; okEl.style.display='none';
   const { error } = await sb.from('create_codes').insert({ code, label:label||null });
   if (error) { errEl.textContent=error.message; errEl.style.display='block'; return; }
-  okEl.textContent=`âœ“ Code created: ${code}`; okEl.style.display='block';
+  okEl.textContent=`✓ Code created: ${code}`; okEl.style.display='block';
   document.getElementById('codeLabel').value=''; document.getElementById('codeVal').value='';
   loadCodes();
 }
@@ -1143,7 +1143,7 @@ Commit cadence: one commit per logical step. Concise commit messages. Always pus
 Do NOT skip phases. Do NOT bypass gates. Do NOT --no-verify. If you are unsure about a step, ask before running it.${ctxBlock}`;
   navigator.clipboard.writeText(cmd).then(()=>{
     const t=document.createElement('div');
-    t.textContent='âœ“ Execute prompt copied';
+    t.textContent='✓ Execute prompt copied';
     t.style.cssText='position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);background:var(--gold);color:#111;padding:.5rem 1.1rem;border-radius:6px;font-size:.78rem;font-weight:700;z-index:9999;pointer-events:none;max-width:90vw;text-align:center;';
     document.body.appendChild(t); setTimeout(()=>t.remove(),2800);
   }).catch(()=>{});
@@ -1237,7 +1237,7 @@ Per bug:
   };
   const cmd=(TEMPLATES[next]||(()=>urls.join(' ')))();
   navigator.clipboard.writeText(cmd).then(()=>{
-    const label=next==='fix'?'âœ“ Debug prompt copied':'âœ“ Skill prompt copied';
+    const label=next==='fix'?'✓ Debug prompt copied':'✓ Skill prompt copied';
     const t=document.createElement('div');
     t.textContent=label;
     t.style.cssText='position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);background:var(--gold);color:#111;padding:.5rem 1.1rem;border-radius:6px;font-size:.78rem;font-weight:700;z-index:9999;pointer-events:none;max-width:90vw;text-align:center;';
@@ -1332,7 +1332,7 @@ function renderHub() {
           <select class="status-sel" onclick="event.preventDefault();event.stopPropagation();" onchange="event.preventDefault();event.stopPropagation();setStatusOverride('${esc(e.id)}',this.value)">${statusOpts}</select>
           ${e.category==='runbook'?`<button class="nxt-btn" onclick="event.preventDefault();event.stopPropagation();copyExecuteRunbook('${esc(e.url||'')}')" title="Copy AI execution prompt for this runbook" style="background:rgba(39,174,96,0.12);border-color:rgba(39,174,96,0.35);color:var(--green);">â–¶ Execute</button>`:''}
           ${nextCat?`<button class="nxt-btn" onclick="event.preventDefault();event.stopPropagation();copyNextStep('${esc(e.category==='axis'?e.stage:e.category)}','${esc(e.url||'')}')" title="Copy next step command">→ ${esc(NEXT_LABEL[nextCat])}</button>`:''}
-          <button class="fav-btn${isFav?' fav-active':''}" onclick="event.preventDefault();event.stopPropagation();toggleFavorite('${esc(e.id)}',${!isFav})" title="${isFav?'Remove from favorites':'Add to favorites'}">${isFav?'â˜…':'â˜†'}</button>
+          <button class="fav-btn${isFav?' fav-active':''}" onclick="event.preventDefault();event.stopPropagation();toggleFavorite('${esc(e.id)}',${!isFav})" title="${isFav?'Remove from favorites':'Add to favorites'}">${isFav?'★':'☆'}</button>
           <button class="archive-btn" onclick="event.preventDefault();event.stopPropagation();archiveEntry('${esc(e.id)}',${!isAr})">${isAr?'Unarchive':'Archive'}</button>
         </div>
       </div></a>`;
@@ -1571,7 +1571,7 @@ function openTicketDrawer(id){
     const cmdLabel=cmd.split('\n')[0];
     cmdEl.innerHTML=ci<stages.length-1
       ?`<button class="drawer-copy-btn" data-label="${esc(cmdLabel)}" onclick="navigator.clipboard.writeText(document.getElementById('drawerNextCmd')._cmd).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent=this.dataset.label,1200)})">${esc(cmdLabel)}</button>`
-      :'<div style="font-size:.75rem;color:#4aaa4a;padding:.5rem 0;">âœ“ Concluded</div>';
+      :'<div style="font-size:.75rem;color:#4aaa4a;padding:.5rem 0;">✓ Concluded</div>';
   }
   document.getElementById('drawerGradeHistory').innerHTML='';
   // delete button
@@ -1791,12 +1791,12 @@ function renderChecklist() {
       ?`<div class="human-banner">âš  Human Required — cannot be automated</div>`:'';
     const steps=sec.steps.map(step=>{
       const isDone=!!clChecked[step.id];
-      const linkHtml=step.link&&clSlug?`<a class="step-link" href="${clUrl(step.link)}" target="_blank" onclick="event.stopPropagation()">Open â†—</a>`:'';
+      const linkHtml=step.link&&clSlug?`<a class="step-link" href="${clUrl(step.link)}" target="_blank" onclick="event.stopPropagation()">Open ↗</a>`:'';
       const deviceHtml=step.device?`<span class="step-device">${step.device} →</span>`:'';
       const howHtml=step.how?`<div class="step-how">${step.how.replace(/\n/g,'<br>')}</div>`:'';
       const noteHtml=step.note?`<div class="step-note">${step.note}</div>`:'';
       return `<li class="cl-step${isDone?' done':''}" onclick="toggleCheck('${step.id}')">
-        <div class="cb"><span class="cb-chk">âœ“</span></div>
+        <div class="cb"><span class="cb-chk">✓</span></div>
         <div class="step-body">
           <div class="step-text">${deviceHtml}${step.text}</div>
           ${linkHtml}${howHtml}${noteHtml}
@@ -1808,7 +1808,7 @@ function renderChecklist() {
         <span class="cl-sec-title">${sec.title}</span>
         <span class="cl-badge badge-${sec.badge}">${badgeLabel(sec.badge)}</span>
         <span class="cl-sec-status ${cls}">${label}</span>
-        <span class="cl-chevron">â–¼</span>
+        <span class="cl-chevron">▼</span>
       </div>
       ${humanBanner}
       <ul class="cl-steps">${steps}</ul>
@@ -2244,7 +2244,7 @@ function openAxisDrawer(key) {
   const cmd = `/tourney-${nextStage}-${key}`;
   document.getElementById('drawerNextCmd').innerHTML = ci < stages.length-1
     ? `<div class="drawer-next-cmd"><span class="drawer-next-text">${esc(cmd)}</span><button class="drawer-copy-btn" onclick="navigator.clipboard.writeText('${esc(cmd)}').then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy',1200)})">Copy</button></div>`
-    : '<div style="font-size:.75rem;color:#4aaa4a;padding:.5rem 0;">âœ“ Concluded</div>';
+    : '<div style="font-size:.75rem;color:#4aaa4a;padding:.5rem 0;">✓ Concluded</div>';
 
   // Grade history from gradesData
   const scores = (gradesData?.axes?.[key]?.scores) || [];
@@ -2365,7 +2365,7 @@ async function loadBugsTab() {
         <button onclick="bugDel('${b.id}')" style="${btnS}border:1px solid rgba(200,80,60,0.3);color:var(--red);">Delete</button>
       </div></div>`;
   };
-  elOpen.innerHTML = open.length ? open.map(b => rowHtml(b, true)).join('') : '<div style="padding:1rem;color:var(--green);font-family:\'DM Mono\',monospace;font-size:.65rem;text-transform:uppercase;letter-spacing:.1em;">âœ“ No open bugs</div>';
+  elOpen.innerHTML = open.length ? open.map(b => rowHtml(b, true)).join('') : '<div style="padding:1rem;color:var(--green);font-family:\'DM Mono\',monospace;font-size:.65rem;text-transform:uppercase;letter-spacing:.1em;">✓ No open bugs</div>';
   if (elComp) elComp.innerHTML = done.length ? done.map(b => rowHtml(b, false)).join('') : '<div style="padding:.75rem 0;color:var(--muted);font-family:\'DM Mono\',monospace;font-size:.62rem;">No completed bugs yet.</div>';
   if (!_bugsRealtimeWired) {
     _bugsRealtimeWired = true;
@@ -2379,10 +2379,10 @@ function _buildBugDump() {
   return _bugsCache.filter(b=>b.status==='open').map((b,i)=>({idx:i+1,id:b.id,title:b.title||'(no title)',description:b.description||'',url:b.url||'',logged_at:b.created_at}));
 }
 function _flashFloater(msg){const t=document.createElement('div');t.textContent=msg;t.style.cssText='position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);background:var(--gold);color:#111;padding:.5rem 1.1rem;border-radius:6px;font-size:.78rem;font-weight:700;z-index:9999;pointer-events:none;max-width:90vw;text-align:center;';document.body.appendChild(t);setTimeout(()=>t.remove(),2800);}
-window.copyTriagePrompt=()=>{const bugs=_buildBugDump();if(!bugs.length)return _flashFloater('No open bugs');const cmd=`You are a senior product engineer triaging the open bug backlog for TOURney.\n\nOrganize ALL bugs into 3-5 shippable sprints. Per sprint: name, theme, priority (P0/P1/P2), effort (dev-days), dependencies, acceptance criteria, bug IDs.\n\nBias toward grouping by axis, P0 first, 1-3 days each.\n\nFinish with 5-line exec summary: what ships this week, next week, defer.\n\nRepo: C:\\Users\\Rob\\OneDrive\\Desktop\\Greenskeeper Studios\\Bova Invitational\\\n\nLive bug backlog (${bugs.length} open):\n\`\`\`json\n${JSON.stringify(bugs,null,2)}\n\`\`\``;navigator.clipboard.writeText(cmd).then(()=>_flashFloater('âœ“ Triage prompt copied ('+bugs.length+' bugs)'));};
-window.copyRunSprintPrompt=()=>{const bugs=_buildBugDump();if(!bugs.length)return _flashFloater('No open bugs');const cmd=`Execute the highest-priority cohesive cluster of TOURney bugs.\n\nPer bug: reproduce → root cause (file:line) → minimal fix → verify → commit + push → mark done in Supabase platform_bugs.\n\nPick 3-6 bugs from the same area. Ship as one sprint. Report what closed + what's next.\n\nRepo: C:\\Users\\Rob\\OneDrive\\Desktop\\Greenskeeper Studios\\Bova Invitational\\\n\nBacklog (${bugs.length} open):\n\`\`\`json\n${JSON.stringify(bugs,null,2)}\n\`\`\``;navigator.clipboard.writeText(cmd).then(()=>_flashFloater('âœ“ Sprint prompt copied'));};
-window.copyTopBugPrompt=()=>{const bugs=_buildBugDump();if(!bugs.length)return _flashFloater('No open bugs');const cmd=`Fix the single most critical open TOURney bug. Pick by impact/integrity/revenue. Reproduce → root cause → fix → verify → commit → mark done.\n\nRepo: C:\\Users\\Rob\\OneDrive\\Desktop\\Greenskeeper Studios\\Bova Invitational\\\n\nBacklog (${bugs.length} open):\n\`\`\`json\n${JSON.stringify(bugs,null,2)}\n\`\`\``;navigator.clipboard.writeText(cmd).then(()=>_flashFloater('âœ“ Top-P0 prompt copied'));};
-window.copyExportPrompt=()=>{const bugs=_buildBugDump();if(!bugs.length)return _flashFloater('No open bugs');navigator.clipboard.writeText(JSON.stringify(bugs,null,2)).then(()=>_flashFloater('âœ“ Raw JSON copied ('+bugs.length+' bugs)'));};
+window.copyTriagePrompt=()=>{const bugs=_buildBugDump();if(!bugs.length)return _flashFloater('No open bugs');const cmd=`You are a senior product engineer triaging the open bug backlog for TOURney.\n\nOrganize ALL bugs into 3-5 shippable sprints. Per sprint: name, theme, priority (P0/P1/P2), effort (dev-days), dependencies, acceptance criteria, bug IDs.\n\nBias toward grouping by axis, P0 first, 1-3 days each.\n\nFinish with 5-line exec summary: what ships this week, next week, defer.\n\nRepo: C:\\Users\\Rob\\OneDrive\\Desktop\\Greenskeeper Studios\\Bova Invitational\\\n\nLive bug backlog (${bugs.length} open):\n\`\`\`json\n${JSON.stringify(bugs,null,2)}\n\`\`\``;navigator.clipboard.writeText(cmd).then(()=>_flashFloater('✓ Triage prompt copied ('+bugs.length+' bugs)'));};
+window.copyRunSprintPrompt=()=>{const bugs=_buildBugDump();if(!bugs.length)return _flashFloater('No open bugs');const cmd=`Execute the highest-priority cohesive cluster of TOURney bugs.\n\nPer bug: reproduce → root cause (file:line) → minimal fix → verify → commit + push → mark done in Supabase platform_bugs.\n\nPick 3-6 bugs from the same area. Ship as one sprint. Report what closed + what's next.\n\nRepo: C:\\Users\\Rob\\OneDrive\\Desktop\\Greenskeeper Studios\\Bova Invitational\\\n\nBacklog (${bugs.length} open):\n\`\`\`json\n${JSON.stringify(bugs,null,2)}\n\`\`\``;navigator.clipboard.writeText(cmd).then(()=>_flashFloater('✓ Sprint prompt copied'));};
+window.copyTopBugPrompt=()=>{const bugs=_buildBugDump();if(!bugs.length)return _flashFloater('No open bugs');const cmd=`Fix the single most critical open TOURney bug. Pick by impact/integrity/revenue. Reproduce → root cause → fix → verify → commit → mark done.\n\nRepo: C:\\Users\\Rob\\OneDrive\\Desktop\\Greenskeeper Studios\\Bova Invitational\\\n\nBacklog (${bugs.length} open):\n\`\`\`json\n${JSON.stringify(bugs,null,2)}\n\`\`\``;navigator.clipboard.writeText(cmd).then(()=>_flashFloater('✓ Top-P0 prompt copied'));};
+window.copyExportPrompt=()=>{const bugs=_buildBugDump();if(!bugs.length)return _flashFloater('No open bugs');navigator.clipboard.writeText(JSON.stringify(bugs,null,2)).then(()=>_flashFloater('✓ Raw JSON copied ('+bugs.length+' bugs)'));};
 
 /* â•â• INIT â•â• */
 clLoad();

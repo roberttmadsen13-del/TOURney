@@ -368,10 +368,10 @@ function renderChecklist() {
     const steps = sec.steps.map(step => {
       const isDone = !!clChecked[step.id];
       const linkHtml = step.link && clSlug
-        ? `<a class="step-link" href="${clUrl(step.link)}" target="_blank" onclick="event.stopPropagation()">Open â†—</a>` : '';
+        ? `<a class="step-link" href="${clUrl(step.link)}" target="_blank" onclick="event.stopPropagation()">Open ↗</a>` : '';
       const noteHtml = step.note ? `<div class="step-note">${step.note}</div>` : '';
       return `<li class="cl-step${isDone?' done':''}" onclick="toggleCheck('${step.id}')">
-        <div class="cb"><span class="cb-chk">âœ“</span></div>
+        <div class="cb"><span class="cb-chk">✓</span></div>
         <div class="step-body"><div class="step-text">${step.text}</div>${linkHtml}${noteHtml}</div>
       </li>`;
     }).join('');
@@ -380,7 +380,7 @@ function renderChecklist() {
         <span class="cl-sec-title">${sec.title}</span>
         <span class="cl-badge badge-${sec.badge}">${badgeLabel(sec.badge)}</span>
         <span class="cl-sec-status ${cls}">${label}</span>
-        <span class="cl-chevron">â–¼</span>
+        <span class="cl-chevron">▼</span>
       </div>
       ${humanBanner}
       <ul class="cl-steps">${steps}</ul>

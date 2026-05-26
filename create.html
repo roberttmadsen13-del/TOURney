@@ -726,7 +726,7 @@
         ht.textContent = 'Already taken — try a different slug.'; ht.className = 'hint err';
         S.slugOk = false;
       } else {
-        st.textContent = 'âœ“'; st.style.color = 'var(--green)';
+        st.textContent = '✓'; st.style.color = 'var(--green)';
         ht.textContent = 'Available!'; ht.className = 'hint ok';
         S.slugOk = true;
       }
@@ -764,7 +764,7 @@
     const reader = new FileReader();
     reader.onload = e => { prev.src = e.target.result; prev.style.display = 'block'; };
     reader.readAsDataURL(file);
-    lbl.textContent = 'âœ“ Ready — uploads on create';
+    lbl.textContent = '✓ Ready — uploads on create';
   }
 
   function next4() { launch(); }

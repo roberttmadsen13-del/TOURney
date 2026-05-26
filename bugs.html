@@ -447,7 +447,7 @@ function toggleSession(id) {
     setTimeout(() => { btn.textContent = o; }, 1200);
   }
   window.lbugCopyUrl = (btn, url) => {
-    navigator.clipboard.writeText(url).then(() => flash(btn, 'âœ“ Copied'));
+    navigator.clipboard.writeText(url).then(() => flash(btn, '✓ Copied'));
   };
   window.lbugCopyShare = (id) => {
     const b = cache.find(x => x.id === id);
@@ -462,7 +462,7 @@ function toggleSession(id) {
     ].join('\n');
     navigator.clipboard.writeText(txt).then(() => {
       const btn = event.target;
-      flash(btn, 'âœ“ Copied');
+      flash(btn, '✓ Copied');
     });
   };
   window.lbugSet = async (id, status) => {
@@ -525,7 +525,7 @@ Live bug backlog (${bugs.length} open):
 \`\`\`json
 ${JSON.stringify(bugs, null, 2)}
 \`\`\``;
-    navigator.clipboard.writeText(cmd).then(() => flashFloater('âœ“ Triage prompt copied (' + bugs.length + ' bugs)'));
+    navigator.clipboard.writeText(cmd).then(() => flashFloater('✓ Triage prompt copied (' + bugs.length + ' bugs)'));
   };
   window.copyRunSprintPrompt = () => {
     const bugs = buildBugDump();
@@ -551,7 +551,7 @@ Live bug backlog (${bugs.length} open):
 \`\`\`json
 ${JSON.stringify(bugs, null, 2)}
 \`\`\``;
-    navigator.clipboard.writeText(cmd).then(() => flashFloater('âœ“ Sprint runner prompt copied'));
+    navigator.clipboard.writeText(cmd).then(() => flashFloater('✓ Sprint runner prompt copied'));
   };
   window.copyTopBugPrompt = () => {
     const bugs = buildBugDump();
@@ -572,12 +572,12 @@ Live bug backlog (${bugs.length} open):
 \`\`\`json
 ${JSON.stringify(bugs, null, 2)}
 \`\`\``;
-    navigator.clipboard.writeText(cmd).then(() => flashFloater('âœ“ Top-P0 prompt copied'));
+    navigator.clipboard.writeText(cmd).then(() => flashFloater('✓ Top-P0 prompt copied'));
   };
   window.copyExportPrompt = () => {
     const bugs = buildBugDump();
     if (!bugs.length) return flashFloater('No open bugs');
-    navigator.clipboard.writeText(JSON.stringify(bugs, null, 2)).then(() => flashFloater('âœ“ Raw JSON copied (' + bugs.length + ' bugs)'));
+    navigator.clipboard.writeText(JSON.stringify(bugs, null, 2)).then(() => flashFloater('✓ Raw JSON copied (' + bugs.length + ' bugs)'));
   };
   // Realtime: re-fetch on any change to platform_bugs.
   db.channel('platform_bugs_live')

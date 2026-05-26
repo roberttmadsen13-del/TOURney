@@ -252,10 +252,10 @@ function render() {
     const stepsHtml = section.steps.map(step => {
       const isDone = !!checked[step.id];
       const linkHref = step.link ? url(step.link) : null;
-      const linkHtml = linkHref && slug ? `<a class="step-link" href="${linkHref}" target="_blank" onclick="event.stopPropagation()">Open â†—</a>` : '';
+      const linkHtml = linkHref && slug ? `<a class="step-link" href="${linkHref}" target="_blank" onclick="event.stopPropagation()">Open ↗</a>` : '';
       const noteHtml = step.note ? `<div class="step-note">${step.note}</div>` : '';
       return `<li class="step${isDone ? ' done' : ''}" onclick="toggle('${step.id}')">
-        <div class="cb"><span class="cb-check">âœ“</span></div>
+        <div class="cb"><span class="cb-check">✓</span></div>
         <div class="step-body">
           <div class="step-text">${step.text}</div>
           ${linkHtml}${noteHtml}
@@ -271,7 +271,7 @@ function render() {
         <span class="sec-title">${section.title}</span>
         <span class="${badgeCls(section.badge)}">${badgeLabel(section.badge)}</span>
         <span class="sec-status ${cls}">${label}</span>
-        <span class="sec-chevron">â–¼</span>
+        <span class="sec-chevron">▼</span>
       </div>
       ${humanBanner}
       <ul class="steps">${stepsHtml}</ul>

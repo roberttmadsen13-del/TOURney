@@ -61,7 +61,7 @@
   .checklist ul{list-style:none;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:0.4rem}
   .checklist li{font-size:0.82rem;padding-left:1.5rem;position:relative}
   .checklist li::before{content:'â˜';position:absolute;left:0;color:var(--muted)}
-  .checklist li.done::before{content:'âœ“';color:var(--green)}
+  .checklist li.done::before{content:'✓';color:var(--green)}
   .checklist li.done{color:var(--muted)}
   .seq-card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin-bottom:0.7rem}
   .seq-card-title{font-size:0.88rem;font-weight:700;color:var(--gold);margin-bottom:0.5rem}
@@ -129,16 +129,16 @@
   </div>
   <div class="status-snap">
     <h3>Done in this session</h3>
-    <div class="status-row s-done"><span class="ck">âœ“</span><span><code>tokens.css</code> — design system tokens, skeleton CSS, offline-dot CSS, reduced-motion respect</span><span class="note">A2</span></div>
-    <div class="status-row s-done"><span class="ck">âœ“</span><span><code>lib/util.js</code> — shared esc / escAttr / fmtDate / fmtPhone / copyToClipboard / haptic / debounce / throttle / toast</span><span class="note">A1 partial</span></div>
-    <div class="status-row s-done"><span class="ck">âœ“</span><span><code>lib/empty-states.js</code> — 13 brand-voice empty-state copies + render helper</span><span class="note">U6</span></div>
-    <div class="status-row s-done"><span class="ck">âœ“</span><span><code>lib/observability.js</code> — Sentry stub (gated on DSN), offline indicator, perf marks</span><span class="note">A6 + U15</span></div>
-    <div class="status-row s-done"><span class="ck">âœ“</span><span><code>components/copy-link.js</code> — &lt;copy-link&gt; web component with copy-confirm animation</span><span class="note">U14</span></div>
-    <div class="status-row s-done"><span class="ck">âœ“</span><span><code>print.css</code> — paper-backup print stylesheet for scorecard</span><span class="note">F8 partial</span></div>
-    <div class="status-row s-done"><span class="ck">âœ“</span><span><code>tsconfig.json</code> — JSDoc type-check setup, no-emit, includes lib/ + components/</span><span class="note">A3 setup</span></div>
-    <div class="status-row s-done"><span class="ck">âœ“</span><span><code>migrations/006_drop_is_admin.sql</code> — drafted, NOT applied (gated on client-side cutover)</span><span class="note">A7</span></div>
-    <div class="status-row s-done"><span class="ck">âœ“</span><span><code>migrations/007_round_model.sql</code> — drafted, NOT applied (rounds table + scores.round_id backfill)</span><span class="note">A7</span></div>
-    <div class="status-row s-done"><span class="ck">âœ“</span><span><code>vercel.json</code> — security headers (CSP / HSTS / XFO / Referrer-Policy / Permissions-Policy) added</span><span class="note">Sec Â§6</span></div>
+    <div class="status-row s-done"><span class="ck">✓</span><span><code>tokens.css</code> — design system tokens, skeleton CSS, offline-dot CSS, reduced-motion respect</span><span class="note">A2</span></div>
+    <div class="status-row s-done"><span class="ck">✓</span><span><code>lib/util.js</code> — shared esc / escAttr / fmtDate / fmtPhone / copyToClipboard / haptic / debounce / throttle / toast</span><span class="note">A1 partial</span></div>
+    <div class="status-row s-done"><span class="ck">✓</span><span><code>lib/empty-states.js</code> — 13 brand-voice empty-state copies + render helper</span><span class="note">U6</span></div>
+    <div class="status-row s-done"><span class="ck">✓</span><span><code>lib/observability.js</code> — Sentry stub (gated on DSN), offline indicator, perf marks</span><span class="note">A6 + U15</span></div>
+    <div class="status-row s-done"><span class="ck">✓</span><span><code>components/copy-link.js</code> — &lt;copy-link&gt; web component with copy-confirm animation</span><span class="note">U14</span></div>
+    <div class="status-row s-done"><span class="ck">✓</span><span><code>print.css</code> — paper-backup print stylesheet for scorecard</span><span class="note">F8 partial</span></div>
+    <div class="status-row s-done"><span class="ck">✓</span><span><code>tsconfig.json</code> — JSDoc type-check setup, no-emit, includes lib/ + components/</span><span class="note">A3 setup</span></div>
+    <div class="status-row s-done"><span class="ck">✓</span><span><code>migrations/006_drop_is_admin.sql</code> — drafted, NOT applied (gated on client-side cutover)</span><span class="note">A7</span></div>
+    <div class="status-row s-done"><span class="ck">✓</span><span><code>migrations/007_round_model.sql</code> — drafted, NOT applied (rounds table + scores.round_id backfill)</span><span class="note">A7</span></div>
+    <div class="status-row s-done"><span class="ck">✓</span><span><code>vercel.json</code> — security headers (CSP / HSTS / XFO / Referrer-Policy / Permissions-Policy) added</span><span class="note">Sec Â§6</span></div>
   </div>
   <div class="status-snap">
     <h3>Queued — Larger surgical refactors</h3>
