@@ -588,6 +588,13 @@
       "cmd": "/tourney-review-data-model",
       "scores": [
         {
+          "date": "2026-05-26",
+          "score": "B+",
+          "url": "/platform/5-26-26-data-model-review",
+          "review_title": "Data Model Review · May 26, 2026",
+          "notes": "19 migrations, 16 tables. courses + course_holes added (20260526000017). 2 new bugs: courses write RLS missing (admin writes will 403), delete_tournament() RPC not updated for courses cascade. 3 index gaps on FK columns. Grade holds B+, 5 runbook steps ready."
+        },
+        {
           "date": "2026-05-22",
           "score": "B+",
           "url": "/platform/5-22-26-consolidation-review",

@@ -5,6 +5,20 @@
   "description": "Canonical registry of all TOURney plans, reviews, audits, and QA artifacts. The /platform Artifacts tab renders from this file. Skills (e.g. tourney-review) append new entries when they generate output.",
   "entries": [
     {
+      "id": "review-data-model-2026-05-26",
+      "category": "review",
+      "stage": "executing",
+      "title": "Data Model Review · May 26, 2026",
+      "summary": "Grade B+. 19 migrations, 16 tables. courses + course_holes added same day. 2 new bugs found: missing write RLS on courses (admin Course tab will 403), delete_tournament() RPC gap. 3 FK index gaps. 5-step runbook ready.",
+      "date": "2026-05-26",
+      "updated": "2026-05-26",
+      "author": "claude-sonnet-4-6",
+      "url": "/platform/5-26-26-data-model-review",
+      "file": "5-26-26-data-model-review.html",
+      "tags": ["review", "data-model", "schema", "rls", "migrations"],
+      "status": "open"
+    },
+    {
       "id": "review-ux-2026-05-26",
       "category": "review",
       "stage": "runbook",

@@ -67,12 +67,12 @@
       "blocking": false
     },
     "data-model": {
-      "status": "concluded",
+      "status": "executing",
       "grade": "B+",
-      "artifact": "/platform/5-22-26-consolidation-review",
-      "last_updated": "2026-05-22",
-      "summary": "16 migrations clean. mygolf_profiles + donations added 5-21. Settings store now typed via /lib/settings-keys.js (33 const keys). Zero structural open items.",
-      "open_items": 0,
+      "artifact": "/platform/5-26-26-data-model-review",
+      "last_updated": "2026-05-26",
+      "summary": "19 migrations, 16 tables. courses + course_holes live (5-26). 2 bugs: courses write RLS missing, delete_tournament() RPC gap. 3 FK index gaps. 5-step runbook: migrations 018-020 (RLS, delete fix, indexes).",
+      "open_items": 5,
       "blocking": false
     },
     "marketing": {

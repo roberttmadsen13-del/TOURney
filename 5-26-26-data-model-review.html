@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TOURney — Data Model Review · May 26, 2026</title>
+<style>
+:root{--gold:#c09030;--gold-light:#d4a840;--gold-dim:rgba(192,144,48,0.18);--bg:#0d0a05;--surface:#151009;--card:#1c140a;--border:rgba(192,144,48,0.22);--muted:#7a6a54;--text:#e8dcc8;--red:#c0392b;--green:#27ae60;--blue:#2980b9;--orange:#e67e22;--purple:#8e44ad;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:-apple-system,'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;font-size:15px;}
+nav{position:sticky;top:0;z-index:100;background:rgba(13,10,5,0.97);border-bottom:1px solid var(--border);backdrop-filter:blur(12px);}
+.nav-inner{padding:0.6rem 1.5rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap;}
+.nav-brand{color:var(--gold);font-weight:700;font-size:1rem;letter-spacing:0.05em;white-space:nowrap;}
+.nav-brand span{color:var(--muted);font-weight:400;font-size:0.8rem;margin-left:0.4rem;}
+.nav-links{display:flex;gap:0.2rem;flex-wrap:wrap;margin-left:auto;}
+.nav-links a{color:var(--muted);text-decoration:none;font-size:0.78rem;padding:0.3rem 0.55rem;border-radius:4px;transition:all 0.15s;white-space:nowrap;}
+.nav-links a:hover{color:var(--gold);background:var(--gold-dim);}
+.lifecycle-bar{display:flex;gap:3px;padding:0.55rem 1.5rem 0.65rem;background:var(--surface);border-bottom:1px solid var(--border);}
+.lc-stage{flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;}
+.lc-pill{height:5px;width:100%;border-radius:3px;background:rgba(192,144,48,0.1);transition:background 0.25s;}
+.lc-label{font-size:0.58rem;font-weight:700;letter-spacing:0.11em;text-transform:uppercase;color:rgba(122,106,84,0.45);transition:color 0.25s;}
+.lc-done .lc-pill{background:var(--gold);}
+.lc-done .lc-label{color:var(--gold);}
+.lc-active .lc-pill{background:var(--gold-light);box-shadow:0 0 8px rgba(192,144,48,0.45);}
+.lc-active .lc-label{color:var(--gold-light);}
+.hero{padding:3rem 1.5rem 2rem;text-align:center;border-bottom:1px solid var(--border);background:linear-gradient(180deg,rgba(192,144,48,0.06) 0%,transparent 100%);}
+.hero-eyebrow{display:inline-block;font-size:0.7rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold);border:1px solid var(--border);border-radius:20px;padding:0.22rem 0.8rem;margin-bottom:0.9rem;}
+.hero h1{font-size:clamp(1.5rem,3.5vw,2.3rem);font-weight:800;color:#fff;margin-bottom:0.35rem;}
+.hero h1 span{color:var(--gold);}
+.hero-sub{color:var(--muted);max-width:520px;margin:0 auto 1rem;font-size:0.9rem;}
+.hero-meta{display:flex;gap:1.1rem;justify-content:center;flex-wrap:wrap;font-size:0.74rem;color:var(--muted);}
+.hero-meta span{display:flex;align-items:center;gap:0.3rem;}
+.wrapper{max-width:1000px;margin:0 auto;padding:0 1.5rem;}
+section{padding:2.5rem 0;border-bottom:1px solid var(--border);}
+section:last-of-type{border-bottom:none;}
+.section-header{margin-bottom:1.6rem;}
+.section-eyebrow{font-size:0.67rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--gold);margin-bottom:0.3rem;}
+.section-title{font-size:1.35rem;font-weight:800;color:#fff;margin-bottom:0.3rem;}
+.section-desc{color:var(--muted);font-size:0.85rem;max-width:560px;}
+.card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:1.15rem 1.3rem;margin-bottom:0.7rem;}
+.card-title{font-size:0.85rem;font-weight:700;color:var(--gold);margin-bottom:0.45rem;}
+.card p,.card li{font-size:0.84rem;color:var(--text);margin-bottom:0.28rem;}
+.card ul,.card ol{padding-left:1.2rem;}
+.card li{margin-bottom:0.32rem;}
+.grid-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:0.7rem;}
+.grid-3{display:grid;grid-template-columns:repeat(auto-fit,minmax(245px,1fr));gap:0.7rem;}
+.stack-item{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:0.85rem 1.05rem;}
+.stack-label{font-size:0.65rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--muted);margin-bottom:0.18rem;}
+.stack-value{font-size:0.88rem;font-weight:600;color:#fff;}
+.stack-note{font-size:0.72rem;color:var(--muted);margin-top:0.18rem;}
+.pill{display:inline-block;font-size:0.66rem;font-weight:700;letter-spacing:0.06em;padding:0.15rem 0.5rem;border-radius:20px;text-transform:uppercase;}
+.pill-gold{background:rgba(192,144,48,0.18);color:var(--gold);border:1px solid rgba(192,144,48,0.3);}
+.pill-green{background:rgba(39,174,96,0.15);color:var(--green);border:1px solid rgba(39,174,96,0.3);}
+.pill-red{background:rgba(192,57,43,0.15);color:var(--red);border:1px solid rgba(192,57,43,0.3);}
+.pill-orange{background:rgba(230,126,34,0.15);color:var(--orange);border:1px solid rgba(230,126,34,0.3);}
+.pill-blue{background:rgba(41,128,185,0.15);color:var(--blue);border:1px solid rgba(41,128,185,0.3);}
+.page-table{width:100%;border-collapse:collapse;font-size:0.8rem;}
+.page-table th{text-align:left;padding:0.52rem 0.72rem;border-bottom:1px solid var(--border);color:var(--muted);font-size:0.67rem;text-transform:uppercase;letter-spacing:0.08em;background:var(--surface);}
+.page-table td{padding:0.58rem 0.72rem;border-bottom:1px solid rgba(192,144,48,0.08);vertical-align:top;}
+.page-table tr:last-child td{border-bottom:none;}
+.page-table tr:hover td{background:var(--gold-dim);}
+.page-table .url{font-family:monospace;font-size:0.75rem;color:var(--gold-light);}
+.page-table .file{font-family:monospace;font-size:0.72rem;color:var(--muted);}
+.table-wrap{background:var(--card);border:1px solid var(--border);border-radius:8px;overflow:hidden;overflow-x:auto;}
+.score-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(125px,1fr));gap:0.52rem;margin-bottom:1.4rem;}
+.score-cell{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:0.85rem;text-align:center;}
+.score-num{font-size:1.85rem;font-weight:900;line-height:1;margin-bottom:0.18rem;}
+.score-label{font-size:0.64rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);}
+.score-green{color:var(--green);}
+.score-gold{color:var(--gold);}
+.score-red{color:var(--red);}
+.score-blue{color:var(--blue);}
+.score-orange{color:var(--orange);}
+.idea-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1.25rem;position:relative;overflow:hidden;}
+.idea-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;}
+.idea-1::before{background:var(--gold);}
+.idea-2::before{background:var(--blue);}
+.idea-3::before{background:var(--green);}
+.idea-4::before{background:var(--orange);}
+.idea-5::before{background:var(--purple);}
+.idea-number{font-size:2rem;font-weight:900;opacity:0.07;position:absolute;top:0.5rem;right:1rem;line-height:1;color:#fff;}
+.idea-tag{margin-bottom:0.42rem;}
+.idea-title{font-size:0.96rem;font-weight:700;color:#fff;margin-bottom:0.42rem;}
+.idea-body{font-size:0.82rem;color:var(--muted);line-height:1.55;margin-bottom:0.65rem;}
+.idea-plan{font-size:0.77rem;color:var(--text);}
+.idea-plan strong{color:var(--gold);}
+.runbook-steps{counter-reset:rb-step;}
+.rb-step{background:var(--card);border:1px solid var(--border);border-left:3px solid rgba(192,144,48,0.3);border-radius:0 8px 8px 0;padding:0.95rem 1.15rem 0.95rem 3.8rem;margin-bottom:0.55rem;position:relative;}
+.rb-step::before{counter-increment:rb-step;content:counter(rb-step);position:absolute;left:0.95rem;top:0.95rem;width:1.75rem;height:1.75rem;background:var(--gold-dim);color:var(--gold);border:1px solid var(--border);border-radius:50%;font-size:0.72rem;font-weight:700;display:grid;place-items:center;}
+.rb-step-title{font-size:0.87rem;font-weight:700;color:#fff;margin-bottom:0.22rem;}
+.rb-step-body{font-size:0.8rem;color:var(--muted);margin-bottom:0.35rem;}
+.rb-verify{font-size:0.76rem;color:var(--text);background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:3px;padding:0.35rem 0.6rem;margin-top:0.3rem;}
+.rb-verify strong{color:var(--gold-light);font-size:0.68rem;text-transform:uppercase;letter-spacing:0.07em;display:block;margin-bottom:0.1rem;}
+.sec-item{background:var(--card);border:1px solid var(--border);border-left:3px solid var(--border);border-radius:0 8px 8px 0;padding:0.9rem 1.15rem;margin-bottom:0.65rem;}
+.sec-item.sev-high{border-left-color:var(--red);}
+.sec-item.sev-med{border-left-color:var(--orange);}
+.sec-item.sev-low{border-left-color:var(--green);}
+.sec-item.sev-info{border-left-color:var(--blue);}
+.sec-header{display:flex;align-items:center;gap:0.52rem;margin-bottom:0.42rem;}
+.sec-title{font-size:0.87rem;font-weight:700;color:#fff;}
+.sec-body{font-size:0.8rem;color:var(--muted);margin-bottom:0.42rem;}
+.sec-fix{font-size:0.77rem;color:var(--text);background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:4px;padding:0.42rem 0.62rem;}
+.sec-fix strong{color:var(--gold-light);display:block;margin-bottom:0.12rem;font-size:0.68rem;text-transform:uppercase;letter-spacing:0.08em;}
+.stage-pending{text-align:center;padding:3rem 1.5rem;color:var(--muted);font-size:0.85rem;border:1px dashed rgba(192,144,48,0.2);border-radius:8px;}
+.stage-pending code{color:var(--gold);}
+.roadmap-item{display:flex;gap:1.05rem;align-items:flex-start;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:0.95rem 1.15rem;margin-bottom:0.52rem;}
+.roadmap-icon{width:1.9rem;height:1.9rem;border-radius:50%;background:var(--gold-dim);color:var(--gold);display:grid;place-items:center;font-size:0.85rem;flex-shrink:0;border:1px solid var(--border);}
+.roadmap-content{flex:1;}
+.roadmap-title{font-size:0.88rem;font-weight:700;color:#fff;margin-bottom:0.13rem;}
+.roadmap-desc{font-size:0.79rem;color:var(--muted);margin-bottom:0.32rem;}
+.roadmap-action{font-size:0.75rem;color:var(--text);}
+.roadmap-action strong{color:var(--gold-light);}
+code{font-family:'Consolas','Monaco',monospace;background:rgba(255,255,255,0.07);padding:0.09rem 0.27rem;border-radius:3px;font-size:0.81em;color:var(--gold-light);}
+footer{border-top:1px solid var(--border);padding:1.2rem;text-align:center;color:var(--muted);font-size:0.72rem;}
+footer span{color:var(--gold);}
+@media(max-width:600px){.nav-links{display:none;}.hero{padding:2rem 1rem 1.5rem;}section{padding:2rem 0;}.lc-label{font-size:0.5rem;}}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <div class="nav-brand">TOURney <span>by Greenskeeper Studios</span></div>
+    <div class="nav-links">
+      <a href="#review">Review</a>
+      <a href="#plan">Plan</a>
+      <a href="#runbook">Runbook</a>
+      <a href="#executing">Executing</a>
+      <a href="#audit">Audit</a>
+      <a href="#concluded">Concluded</a>
+    </div>
+  </div>
+</nav>
+
+<!-- LIFECYCLE-BAR-START -->
+<div class="lifecycle-bar">
+  <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Review</div></div>
+  <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Plan</div></div>
+  <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Runbook</div></div>
+  <div class="lc-stage"><div class="lc-pill"></div><div class="lc-label">Executing</div></div>
+  <div class="lc-stage"><div class="lc-pill"></div><div class="lc-label">Audit</div></div>
+  <div class="lc-stage"><div class="lc-pill"></div><div class="lc-label">Concluded</div></div>
+</div>
+<!-- LIFECYCLE-BAR-END -->
+
+<div class="hero">
+  <div class="hero-eyebrow">Data Model</div>
+  <h1><span>TOURney</span> — Data Model Review · May 26, 2026</h1>
+  <p class="hero-sub">Comprehensive audit of every table, column, RLS policy, migration quality, index coverage, normalization, and schema design decisions.</p>
+  <div class="hero-meta">
+    <span>&#128197; May 26, 2026</span>
+    <span>&#129302; claude-sonnet-4-6</span>
+    <span>&#127962; Greenskeeper Studios</span>
+    <span>&#128274; Internal Only</span>
+  </div>
+</div>
+
+<section id="review">
+<div class="wrapper">
+
+<div class="section-header">
+  <div class="section-eyebrow">&#167; Review</div>
+  <div class="section-title">Data Model Audit — May 26, 2026</div>
+  <div class="section-desc">Evidence-based audit of all 16 active tables, 19 migrations across two directories, RLS policy coverage, index gaps, and schema design decisions. Prior grade B+ (5-22-26). Focused axis review.</div>
+</div>
+
+<!-- Score Grid -->
+<div class="score-grid">
+  <div class="score-cell">
+    <div class="score-num score-gold">B+</div>
+    <div class="score-label">Data Model</div>
+  </div>
+  <div class="score-cell">
+    <div class="score-num score-blue">16</div>
+    <div class="score-label">Active Tables</div>
+  </div>
+  <div class="score-cell">
+    <div class="score-num score-green">19</div>
+    <div class="score-label">Migrations</div>
+  </div>
+  <div class="score-cell">
+    <div class="score-num score-orange">2</div>
+    <div class="score-label">Open USING(true)</div>
+  </div>
+  <div class="score-cell">
+    <div class="score-num score-red">3</div>
+    <div class="score-label">Missing Indexes</div>
+  </div>
+  <div class="score-cell">
+    <div class="score-num score-red">2</div>
+    <div class="score-label">Courses Bugs (new)</div>
+  </div>
+</div>
+
+<!-- Migration History -->
+<div class="card">
+  <div class="card-title">Migration History — Two Directories</div>
+  <p style="font-size:0.8rem;color:var(--orange);margin-bottom:0.6rem;">&#9888; Two migration directories exist: <code>migrations/</code> (root, legacy manual applies 001–013) and <code>supabase/migrations/</code> (Supabase CLI, 000_baseline + 013–016 + 20260526000017). The <code>000_baseline_players.sql</code> snapshots all pre-existing schema. CLI migrations (013+) are the canonical forward path. The "013" numbering overlaps between directories — confusing but not a deploy risk since they operate on different tables.</p>
+  <div class="table-wrap">
+    <table class="page-table">
+      <thead><tr><th>File</th><th>Dir</th><th>Tables Affected</th><th>Verdict</th></tr></thead>
+      <tbody>
+        <tr><td><span class="file">000_baseline_players.sql</span></td><td>supabase/</td><td>players, scores, settings, trash_talk, push_subscriptions — full pre-existing snapshot</td><td><span class="pill pill-green">&#10003; Baseline</span></td></tr>
+        <tr><td><span class="file">001_add_tournaments.sql</span></td><td>migrations/</td><td>tournaments (new), players.tournament_id, scores.tournament_id, settings.tournament_id. Indexes: idx_scores_tournament, idx_scores_player</td><td><span class="pill pill-green">&#10003; Clean</span></td></tr>
+        <tr><td><span class="file">002_add_billing.sql</span></td><td>migrations/</td><td>player_accounts (new), tournaments.status</td><td><span class="pill pill-green">&#10003; Clean</span></td></tr>
+        <tr><td><span class="file">003_tighten_settings_rls.sql</span></td><td>migrations/</td><td>settings RLS hardening</td><td><span class="pill pill-green">&#10003; Clean</span></td></tr>
+        <tr><td><span class="file">004_tournament_admins_email_based.sql</span></td><td>migrations/</td><td>tournament_admins (new) — email-based admin model</td><td><span class="pill pill-green">&#10003; Clean</span></td></tr>
+        <tr><td><span class="file">005_invitations_and_accounts.sql</span></td><td>migrations/</td><td>invitations (new), player_accounts RLS. Had USING(true) — fixed by 013</td><td><span class="pill pill-orange">&#9888; Fixed later</span></td></tr>
+        <tr><td><span class="file">006_drop_is_admin.sql</span></td><td>migrations/</td><td>players.is_admin column dropped</td><td><span class="pill pill-green">&#10003; Clean</span></td></tr>
+        <tr><td><span class="file">006b_multi_tourney_players.sql</span></td><td>migrations/</td><td>players unique constraint (email, tournament_id)</td><td><span class="pill pill-green">&#10003; Clean</span></td></tr>
+        <tr><td><span class="file">007_round_model.sql</span></td><td>migrations/</td><td>rounds (new)</td><td><span class="pill pill-green">&#10003; Clean</span></td></tr>
+        <tr><td><span class="file">008_security_rls_hardening.sql</span></td><td>migrations/</td><td>players RLS — owner/admin update/delete policies</td><td><span class="pill pill-green">&#10003; Clean</span></td></tr>
+        <tr><td><span class="file">009_fix_rls_self_join_bugs.sql</span></td><td>migrations/</td><td>players RLS self-join fix</td><td><span class="pill pill-green">&#10003; Clean</span></td></tr>
+        <tr><td><span class="file">010_tighten_push_subscriptions...</span></td><td>migrations/</td><td>push_subscriptions, tournament_admins RLS</td><td><span class="pill pill-green">&#10003; Clean</span></td></tr>
+        <tr><td><span class="file">011_trash_talk_rate_limit...</span></td><td>migrations/</td><td>trash_talk — player-scoped insert</td><td><span class="pill pill-green">&#10003; Clean</span></td></tr>
+        <tr><td><span class="file">012_restrict_player_accounts_anon_read</span></td><td>migrations/</td><td>player_accounts — closed anon SELECT</td><td><span class="pill pill-green">&#10003; Clean</span></td></tr>
+        <tr><td><span class="file">013_lock_invite_rls.sql</span></td><td>migrations/</td><td>invitations, push_subscriptions — locked USING(true)</td><td><span class="pill pill-green">&#10003; Clean</span></td></tr>
+        <tr><td><span class="file">013_lock_invitations_push_subscriptions.sql</span></td><td>supabase/</td><td>Same tables — CLI-format equivalent of legacy 013</td><td><span class="pill pill-orange">&#9888; Naming overlap</span></td></tr>
+        <tr><td><span class="file">014_players_tournament_fk.sql</span></td><td>supabase/</td><td>players.tournament_id FK ON DELETE CASCADE — version-controlled</td><td><span class="pill pill-green">&#10003; Clean</span></td></tr>
+        <tr><td><span class="file">015_player_upsert_push_subscriptions</span></td><td>supabase/</td><td>push_subscriptions INSERT policy for authenticated players</td><td><span class="pill pill-green">&#10003; Clean</span></td></tr>
+        <tr><td><span class="file">016_fix_qa_platform_rls.sql</span></td><td>supabase/</td><td>qa_runs, platform_tasks — owner-only (hardcoded email)</td><td><span class="pill pill-green">&#10003; Clean</span></td></tr>
+        <tr><td><span class="file">20260526000017_courses_course_holes.sql</span></td><td>supabase/</td><td>courses (new), course_holes (new). SELECT USING(true). No INSERT/UPDATE/DELETE policies. Not in delete_tournament().</td><td><span class="pill pill-red">&#10007; 2 bugs</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Per-Table Analysis -->
+<div class="card">
+  <div class="card-title">Per-Table Analysis</div>
+  <div class="table-wrap" style="margin-bottom:0;">
+    <table class="page-table">
+      <thead><tr><th>Table</th><th>Key Columns</th><th>RLS Policies</th><th>Indexes</th><th>Verdict</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><strong>tournaments</strong></td>
+          <td><span class="file">id uuid PK, name, short_name, owner_email, slug, year, logo_url, primary_color, secondary_color, status, created_at</span></td>
+          <td>Public SELECT USING(true); owner INSERT/UPDATE; admin UPDATE via tournament_admins join</td>
+          <td>PK only — no idx on <code>slug</code> or <code>owner_email</code></td>
+          <td><span class="pill pill-orange">&#9888; Missing slug idx</span></td>
+        </tr>
+        <tr>
+          <td><strong>players</strong></td>
+          <td><span class="file">id uuid PK, tournament_id FK CASCADE, first_name, last_name, email, team TEXT, handicap, trash_talk, hat, note, phone_number, has_account, why_me</span></td>
+          <td>Self read/update; owner full CRUD; admin update/delete; UNIQUE(email, tournament_id)</td>
+          <td>idx_players_tournament &#10003;, idx_players_email_tournament &#10003;</td>
+          <td><span class="pill pill-gold">B+ — team is TEXT</span></td>
+        </tr>
+        <tr>
+          <td><strong>settings</strong></td>
+          <td><span class="file">tournament_id FK, key TEXT, value TEXT</span></td>
+          <td>Tournament-scoped read/write; pairing keys require authenticated</td>
+          <td><strong style="color:var(--red)">None</strong> — 40+ key reads per page via .in('key',[...])</td>
+          <td><span class="pill pill-red">Missing (tournament_id,key) idx</span></td>
+        </tr>
+        <tr>
+          <td><strong>rounds</strong></td>
+          <td><span class="file">id uuid PK, tournament_id FK, name, format_front, format_back, yards_front, yards_back, created_at</span></td>
+          <td>Tournament-scoped</td>
+          <td>Unknown — not explicit in migrations</td>
+          <td><span class="pill pill-orange">&#9888; Verify idx</span></td>
+        </tr>
+        <tr>
+          <td><strong>scores</strong></td>
+          <td><span class="file">tournament_id FK, player_id, hole scores</span></td>
+          <td>Tournament-scoped</td>
+          <td>idx_scores_tournament &#10003;, idx_scores_player &#10003;</td>
+          <td><span class="pill pill-green">&#10003; Clean</span></td>
+        </tr>
+        <tr>
+          <td><strong>tournament_admins</strong></td>
+          <td><span class="file">tournament_id FK, email TEXT</span></td>
+          <td>Owner manages admins; every RLS policy on players/settings does subquery <code>WHERE email = auth.email()</code></td>
+          <td><strong style="color:var(--red)">None on email</strong> — full scan on every RLS check</td>
+          <td><span class="pill pill-red">Critical — missing email idx</span></td>
+        </tr>
+        <tr>
+          <td><strong>invitations</strong></td>
+          <td><span class="file">tournament_id FK, code, email, used_at</span></td>
+          <td>Locked to authenticated (mig 013). Owner/admin SELECT.</td>
+          <td>Unknown</td>
+          <td><span class="pill pill-gold">&#10003; RLS clean</span></td>
+        </tr>
+        <tr>
+          <td><strong>player_accounts</strong></td>
+          <td><span class="file">id uuid PK, email, billing_status, plan, stripe_customer_id</span></td>
+          <td>Self read/write; anon read closed (mig 012)</td>
+          <td>PK only</td>
+          <td><span class="pill pill-green">&#10003; Clean</span></td>
+        </tr>
+        <tr>
+          <td><strong>push_subscriptions</strong></td>
+          <td><span class="file">tournament_id FK, user_id, endpoint, p256dh, auth</span></td>
+          <td>SELECT owner-or-admin (mig 013); INSERT authenticated (mig 015). No UPDATE/DELETE policy.</td>
+          <td>Unknown</td>
+          <td><span class="pill pill-orange">&#9888; No UPDATE/DELETE RLS</span></td>
+        </tr>
+        <tr>
+          <td><strong>trash_talk</strong></td>
+          <td><span class="file">tournament_id FK, player_id, message, created_at</span></td>
+          <td>Player-scoped insert (mig 011); rate-limited</td>
+          <td>Unknown</td>
+          <td><span class="pill pill-gold">&#10003; Likely ok</span></td>
+        </tr>
+        <tr>
+          <td><strong>mygolf_profiles</strong></td>
+          <td><span class="file">id, email, handicap, ghin_id, home_course, created_at (est.)</span></td>
+          <td>Added ~5-21. No migration file found in evidence.</td>
+          <td>Unknown</td>
+          <td><span class="pill pill-orange">&#9888; No migration in scope</span></td>
+        </tr>
+        <tr>
+          <td><strong>donations</strong></td>
+          <td><span class="file">id, tournament_id, amount, stripe_session_id, created_at (est.)</span></td>
+          <td>Added ~5-21. No migration file found in evidence.</td>
+          <td>Unknown</td>
+          <td><span class="pill pill-orange">&#9888; No migration in scope</span></td>
+        </tr>
+        <tr>
+          <td><strong>courses</strong> &#x1F195;</td>
+          <td><span class="file">id uuid PK, tournament_id FK CASCADE, name TEXT, holes INT, created_at</span></td>
+          <td>SELECT USING(true) only. <strong style="color:var(--red)">No INSERT/UPDATE/DELETE policies.</strong> Authenticated users cannot write.</td>
+          <td>None — missing idx_courses_tournament_id</td>
+          <td><span class="pill pill-red">BUG — write RLS missing</span></td>
+        </tr>
+        <tr>
+          <td><strong>course_holes</strong> &#x1F195;</td>
+          <td><span class="file">id uuid PK, course_id FK CASCADE, hole_number INT, par INT, si INT, created_at</span></td>
+          <td>SELECT USING(true) only. <strong style="color:var(--red)">No INSERT/UPDATE/DELETE policies.</strong></td>
+          <td>None — missing idx_course_holes_course_id</td>
+          <td><span class="pill pill-red">BUG — write RLS missing</span></td>
+        </tr>
+        <tr>
+          <td><strong>qa_runs</strong></td>
+          <td><span class="file">id uuid PK, slug, passed, total, notes, created_at</span></td>
+          <td>Owner-only (hardcoded email, mig 016)</td>
+          <td>PK only</td>
+          <td><span class="pill pill-green">&#10003; Internal only</span></td>
+        </tr>
+        <tr>
+          <td><strong>platform_tasks</strong></td>
+          <td><span class="file">id uuid PK, ...</span></td>
+          <td>Owner-only (hardcoded email, mig 016)</td>
+          <td>PK only</td>
+          <td><span class="pill pill-green">&#10003; Internal only</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Schema Design Decisions -->
+<div class="card">
+  <div class="card-title">Schema Design Decisions</div>
+  <ul>
+    <li><strong>settings key-value store</strong> — <code>settings(tournament_id, key TEXT, value TEXT)</code>. 33 named keys in <code>/lib/settings-keys.js</code> const enum (shipped 5-22). Type enforcement is JS-side only — DB accepts any string. <strong style="color:var(--orange)">No composite index on (tournament_id, key)</strong> — admin.html fetches 50+ keys per load via <code>.in('key', [...50 keys...])</code> with no index to accelerate the lookup.</li>
+    <li><strong>players.team = TEXT</strong> — team assignment stored as a plain string on each player row (<code>team TEXT</code>). No FK to any teams table, no enum constraint. Works for the current single-tournament-per-player model. Will need normalization when multi-tournament player profiles become real.</li>
+    <li><strong>tournament_admins email-based</strong> — canonical admin model (<code>tournament_admins(tournament_id, email)</code>). Clean. Every RLS subquery does <code>WHERE email = auth.email()</code> — no index on email means a full table scan on every RLS evaluation for every players/settings operation.</li>
+    <li><strong>delete_tournament() manual cascade</strong> — stored procedure in <code>007_round_model.sql</code> deletes: push_subscriptions, scores, trash_talk, tournament_admins, invitations, players, settings, rounds, tournaments. <strong style="color:var(--red)">Missing courses and course_holes</strong> — added 5-26 in migration 017 but not added to the function. Deleting a tournament leaves orphaned course rows.</li>
+    <li><strong>Dual migration directories</strong> — <code>migrations/</code> (root) = legacy manual applied 001–013. <code>supabase/migrations/</code> = Supabase CLI format, starts at 000_baseline which snapshots all legacy schema. Forward migrations (013+) go to supabase/ only. Risk: the naming overlap at 013 creates confusion but the 000_baseline makes a fresh CLI apply safe.</li>
+  </ul>
+</div>
+
+<!-- Gaps / Bugs -->
+<div class="grid-2">
+  <div class="card">
+    <div class="card-title" style="color:var(--green)">Strengths</div>
+    <ul>
+      <li>19 migrations, unambiguous progression (000_baseline + sequential)</li>
+      <li>tournament_admins canonical admin model — is_admin column dropped (mig 006)</li>
+      <li>FK ON DELETE CASCADE on players ↔ tournaments (mig 014)</li>
+      <li>FK ON DELETE CASCADE on courses ↔ tournaments, course_holes ↔ courses (mig 017)</li>
+      <li>Indexes on high-traffic players columns (<code>idx_players_tournament</code>, <code>idx_players_email_tournament</code>)</li>
+      <li>Indexes on scores (<code>idx_scores_tournament</code>, <code>idx_scores_player</code>)</li>
+      <li><code>/lib/settings-keys.js</code> const enum — 33 typed setting keys, prevents typo drift</li>
+      <li>player_accounts anon read closed (mig 012) — billing data protected</li>
+      <li>push_subscriptions and invitations SELECT locked (mig 013, 015)</li>
+    </ul>
+  </div>
+  <div class="card">
+    <div class="card-title" style="color:var(--red)">Gaps &amp; Bugs</div>
+    <ul>
+      <li><strong style="color:var(--red)">[BUG] courses write RLS missing</strong> — <code>20260526000017_courses_course_holes.sql</code> defines only SELECT USING(true). Admin Course tab INSERT/UPDATE will 403 for authenticated users. <strong>Upstream:</strong> admin.html Course tab writes. <strong>Downstream:</strong> scorecard yardage reads from course_holes.</li>
+      <li><strong style="color:var(--red)">[BUG] delete_tournament() missing courses/course_holes</strong> — stored procedure does not delete from courses or course_holes tables. Tournament delete leaves orphaned rows. <strong>Upstream:</strong> admin.html "Delete Tournament" action. <strong>Downstream:</strong> orphaned course_holes on FK-safe course, but course rows remain.</li>
+      <li><strong style="color:var(--orange)">[PERF] tournament_admins missing email index</strong> — every RLS check on players/settings does <code>SELECT tournament_id FROM tournament_admins WHERE email = auth.email()</code> without an index. Full table scan per policy evaluation.</li>
+      <li><strong style="color:var(--orange)">[PERF] settings missing composite index</strong> — <code>settings(tournament_id, key)</code> composite index absent. Admin page reads 50+ keys per load — sequential scan on every fetch.</li>
+      <li><strong style="color:var(--orange)">[PERF] tournaments missing slug index</strong> — <code>tourney-init.js</code> detects slug on every page load. Full scan on tournaments table.</li>
+      <li><strong style="color:var(--blue)">[DESIGN] push_subscriptions no UPDATE/DELETE RLS</strong> — authenticated users can INSERT (mig 015) but cannot remove stale subscriptions. Subscription cleanup blocked.</li>
+      <li><strong style="color:var(--blue)">[DESIGN] mygolf_profiles + donations no migration in scope</strong> — tables reportedly added 5-21 but no migration files found in supabase/migrations/ for either. Schema not version-controlled.</li>
+    </ul>
+  </div>
+</div>
+
+</div>
+</section>
+
+<section id="plan">
+<div class="wrapper">
+
+<div class="section-header">
+  <div class="section-eyebrow">&#167; Plan</div>
+  <div class="section-title">Data Model Priorities</div>
+  <div class="section-desc">Ordered by severity. P1–P2 are live bugs blocking the courses feature shipped today. P3–P5 are performance/governance. P6+ are structural improvements.</div>
+</div>
+
+<div class="roadmap-item">
+  <div class="roadmap-icon">P1</div>
+  <div class="roadmap-content">
+    <div class="roadmap-title">Fix courses + course_holes write RLS</div>
+    <div class="roadmap-desc">Migration 017 defines only SELECT USING(true). Admin Course tab cannot insert/update/delete courses or holes — every write 403s for authenticated users. Ship migration 018 with owner + admin INSERT/UPDATE/DELETE policies.</div>
+    <div class="roadmap-action"><strong>Impact:</strong> Unblocks admin Course tab data entry. scorecard yardage only populates if admin can write holes.</div>
+  </div>
+</div>
+
+<div class="roadmap-item">
+  <div class="roadmap-icon">P2</div>
+  <div class="roadmap-content">
+    <div class="roadmap-title">Add courses/course_holes to delete_tournament()</div>
+    <div class="roadmap-desc">The stored procedure in mig 007 does not know about courses or course_holes. Deleting a tournament leaves orphaned course rows. The FK CASCADE from course_holes → courses is wired, but courses → tournaments is not respected by the RPC.</div>
+    <div class="roadmap-action"><strong>Impact:</strong> Tournament delete is a destructive admin operation — orphaned data is a correctness bug.</div>
+  </div>
+</div>
+
+<div class="roadmap-item">
+  <div class="roadmap-icon">P3</div>
+  <div class="roadmap-content">
+    <div class="roadmap-title">Add tournament_admins(email) index</div>
+    <div class="roadmap-desc">Every RLS policy on players, settings, and rounds evaluates a subquery against tournament_admins.email. Without an index, each policy check does a full table scan. As tournaments and admin counts grow, this compounds per request.</div>
+    <div class="roadmap-action"><strong>Impact:</strong> Reduces RLS overhead on every authenticated DB operation involving players or settings.</div>
+  </div>
+</div>
+
+<div class="roadmap-item">
+  <div class="roadmap-icon">P4</div>
+  <div class="roadmap-content">
+    <div class="roadmap-title">Add settings(tournament_id, key) composite index</div>
+    <div class="roadmap-desc">Admin page reads 50+ settings keys per load using <code>.in('key', [...50 keys...])</code>. Without a composite index the DB scans the full settings table filtered by tournament_id. Add <code>CREATE INDEX idx_settings_tid_key ON settings(tournament_id, key)</code>.</div>
+    <div class="roadmap-action"><strong>Impact:</strong> Admin page DB latency reduction. Also helps scorecard and scoreboard which read 5–10 keys per load.</div>
+  </div>
+</div>
+
+<div class="roadmap-item">
+  <div class="roadmap-icon">P5</div>
+  <div class="roadmap-content">
+    <div class="roadmap-title">Add tournaments(slug) index + version-control mygolf_profiles/donations migrations</div>
+    <div class="roadmap-desc">tourney-init.js detects slug on every tournament page load — full scan on tournaments table. Additionally, mygolf_profiles and donations tables have no migration file in supabase/migrations/ — schema not version-controlled, cannot be reproduced from source.</div>
+    <div class="roadmap-action"><strong>Impact:</strong> Slug index: fast tenant detection. Missing migrations: schema governance — blocking for any future fresh-deploy scenario.</div>
+  </div>
+</div>
+
+<div class="roadmap-item">
+  <div class="roadmap-icon">P6</div>
+  <div class="roadmap-content">
+    <div class="roadmap-title">Add push_subscriptions UPDATE/DELETE RLS + subscription cleanup</div>
+    <div class="roadmap-desc">Players can INSERT (mig 015) but cannot remove stale push subscriptions. When a subscription expires or a browser unregisters, the row cannot be cleaned up via the API. Add DELETE policy for own subscriptions.</div>
+    <div class="roadmap-action"><strong>Impact:</strong> Enables subscription lifecycle management. Prevents accumulation of dead push endpoints.</div>
+  </div>
+</div>
+
+<div class="grid-2">
+  <div class="idea-card idea-1">
+    <div class="idea-number">1</div>
+    <div class="idea-tag"><span class="pill pill-gold">Future</span></div>
+    <div class="idea-title">Tournament Teams Table</div>
+    <div class="idea-body">players.team is a plain TEXT field with no FK, no enum, and no constraint. Works for now but limits queries like "all players on Team A" to string matching. A tournament_teams table with id/name/tournament_id would enable proper relational queries and team-level stats.</div>
+    <div class="idea-plan"><strong>Plan:</strong> Migration adds tournament_teams table, backfills from settings team_A_name etc., adds FK on players.team_id. Multi-sprint effort — not blocking.</div>
+  </div>
+  <div class="idea-card idea-2">
+    <div class="idea-number">2</div>
+    <div class="idea-tag"><span class="pill pill-blue">Future</span></div>
+    <div class="idea-title">Audit Log Table</div>
+    <div class="idea-body">No audit trail for admin actions — player add/edit/delete, score corrections, round changes. A simple audit_log(tournament_id, actor_email, action, table_name, row_id, old_value, new_value, created_at) table would give full admin accountability. Essential before multi-tenant goes public.</div>
+    <div class="idea-plan"><strong>Plan:</strong> Trigger-based or application-level insert to audit_log. Start with scores (high dispute risk) then players.</div>
+  </div>
+  <div class="idea-card idea-3">
+    <div class="idea-number">3</div>
+    <div class="idea-tag"><span class="pill pill-green">Future</span></div>
+    <div class="idea-title">Soft Deletes on Players</div>
+    <div class="idea-body">Players are hard-deleted. Soft deletes (deleted_at TIMESTAMPTZ) would enable "undo remove player" and preserve historical score data integrity. All RLS policies would need a <code>WHERE deleted_at IS NULL</code> filter — manageable addition.</div>
+    <div class="idea-plan"><strong>Plan:</strong> Migration adds deleted_at column + updates all SELECT policies + application-side filter. Medium complexity.</div>
+  </div>
+  <div class="idea-card idea-4">
+    <div class="idea-number">4</div>
+    <div class="idea-tag"><span class="pill pill-orange">Future</span></div>
+    <div class="idea-title">Consolidate Migration Directories</div>
+    <div class="idea-body">The dual directory situation (migrations/ + supabase/migrations/) creates confusion. The 000_baseline already captures legacy schema. A clean migration doc explaining the history + marking root migrations/ as "applied-only, archived" would eliminate the governance ambiguity.</div>
+    <div class="idea-plan"><strong>Plan:</strong> Add README to migrations/ marking it archived. All new migrations go to supabase/migrations/ with timestamped prefixes only.</div>
+  </div>
+  <div class="idea-card idea-5">
+    <div class="idea-number">5</div>
+    <div class="idea-tag"><span class="pill pill-purple">Future</span></div>
+    <div class="idea-title">updated_at on All Tables</div>
+    <div class="idea-body">Most tables lack an updated_at column. Difficult to implement cache invalidation, incremental sync, or "last modified" displays without it. Add updated_at TIMESTAMPTZ DEFAULT now() + a trigger to auto-update on row mutation to players, tournaments, settings, rounds.</div>
+    <div class="idea-plan"><strong>Plan:</strong> One migration, one trigger function, applies to 4–6 tables. Low risk.</div>
+  </div>
+</div>
+
+</div>
+</section>
+
+<section id="runbook">
+<div class="wrapper">
+
+<div class="section-header">
+  <div class="section-eyebrow">&#167; Runbook</div>
+  <div class="section-title">Execution Steps</div>
+  <div class="section-desc">5 ordered steps. Steps 1–2 fix live bugs introduced by the courses migration shipped today. Steps 3–5 fix index gaps. All steps are SQL migrations to apply via Supabase.</div>
+</div>
+
+<div class="runbook-steps">
+
+  <div class="rb-step">
+    <div class="rb-step-title">Migration 018 — courses + course_holes write RLS</div>
+    <div class="rb-step-body">
+      File: <code>supabase/migrations/20260526000018_courses_write_rls.sql</code><br><br>
+      <strong>Upstream:</strong> admin.html Course tab — INSERT to courses, INSERT/UPDATE/DELETE to course_holes. tournament_admins table (for admin predicate).<br>
+      <strong>Downstream:</strong> scorecard.html reads course_holes for yardage. Any future course management UI.<br><br>
+      SQL to write and apply:
+      <pre style="background:rgba(0,0,0,0.3);padding:0.6rem 0.8rem;border-radius:4px;font-size:0.74rem;color:var(--gold-light);overflow-x:auto;margin-top:0.5rem;">
+-- Tournament owner can INSERT/UPDATE/DELETE courses
+DROP POLICY IF EXISTS "owner write courses" ON courses;
+CREATE POLICY "owner write courses" ON courses
+  FOR ALL TO authenticated
+  USING (tournament_id IN (
+    SELECT id FROM tournaments WHERE owner_email = auth.email()
+  ))
+  WITH CHECK (tournament_id IN (
+    SELECT id FROM tournaments WHERE owner_email = auth.email()
+  ));
+
+-- Tournament admin can INSERT/UPDATE/DELETE courses
+DROP POLICY IF EXISTS "admin write courses" ON courses;
+CREATE POLICY "admin write courses" ON courses
+  FOR ALL TO authenticated
+  USING (tournament_id IN (
+    SELECT tournament_id FROM tournament_admins WHERE email = auth.email()
+  ))
+  WITH CHECK (tournament_id IN (
+    SELECT tournament_id FROM tournament_admins WHERE email = auth.email()
+  ));
+
+-- Owner/admin write course_holes (via course ownership)
+DROP POLICY IF EXISTS "owner write course_holes" ON course_holes;
+CREATE POLICY "owner write course_holes" ON course_holes
+  FOR ALL TO authenticated
+  USING (course_id IN (
+    SELECT c.id FROM courses c
+    JOIN tournaments t ON t.id = c.tournament_id
+    WHERE t.owner_email = auth.email()
+  ))
+  WITH CHECK (course_id IN (
+    SELECT c.id FROM courses c
+    JOIN tournaments t ON t.id = c.tournament_id
+    WHERE t.owner_email = auth.email()
+  ));
+
+DROP POLICY IF EXISTS "admin write course_holes" ON course_holes;
+CREATE POLICY "admin write course_holes" ON course_holes
+  FOR ALL TO authenticated
+  USING (course_id IN (
+    SELECT c.id FROM courses c
+    WHERE c.tournament_id IN (
+      SELECT tournament_id FROM tournament_admins WHERE email = auth.email()
+    )
+  ))
+  WITH CHECK (course_id IN (
+    SELECT c.id FROM courses c
+    WHERE c.tournament_id IN (
+      SELECT tournament_id FROM tournament_admins WHERE email = auth.email()
+    )
+  ));</pre>
+    </div>
+    <div class="rb-verify">
+      <strong>Verify</strong>
+      Open admin.html Course tab as tournament owner. Create a test course — confirm 201 response, no 403. Add holes to the course — confirm rows appear. As a non-admin authenticated user, attempt direct Supabase REST INSERT to courses — confirm 403. Scorecard still loads yardage from course_holes.
+    </div>
+  </div>
+
+  <div class="rb-step">
+    <div class="rb-step-title">Update delete_tournament() to include courses + course_holes</div>
+    <div class="rb-step-body">
+      File: <code>supabase/migrations/20260526000019_delete_tournament_courses.sql</code><br><br>
+      <strong>Upstream:</strong> admin.html "Delete Tournament" button calls <code>sb.rpc('delete_tournament', { p_id: tid })</code>.<br>
+      <strong>Downstream:</strong> All tournament data; courses/course_holes rows currently orphaned on delete.<br><br>
+      SQL to write and apply:
+      <pre style="background:rgba(0,0,0,0.3);padding:0.6rem 0.8rem;border-radius:4px;font-size:0.74rem;color:var(--gold-light);overflow-x:auto;margin-top:0.5rem;">
+CREATE OR REPLACE FUNCTION delete_tournament(p_id uuid)
+RETURNS void LANGUAGE plpgsql SECURITY DEFINER AS $$
+BEGIN
+  DELETE FROM push_subscriptions  WHERE tournament_id = p_id;
+  DELETE FROM scores               WHERE tournament_id = p_id;
+  DELETE FROM trash_talk           WHERE tournament_id = p_id;
+  DELETE FROM tournament_admins    WHERE tournament_id = p_id;
+  DELETE FROM invitations          WHERE tournament_id = p_id;
+  DELETE FROM players              WHERE tournament_id = p_id;
+  DELETE FROM settings             WHERE tournament_id = p_id;
+  DELETE FROM rounds               WHERE tournament_id = p_id;
+  -- course_holes cascade-deletes when courses deleted (FK ON DELETE CASCADE)
+  DELETE FROM courses              WHERE tournament_id = p_id;
+  DELETE FROM mygolf_profiles      WHERE tournament_id = p_id;
+  DELETE FROM donations            WHERE tournament_id = p_id;
+  DELETE FROM tournaments          WHERE id = p_id;
+END;
+$$;</pre>
+      Note: mygolf_profiles and donations included here preemptively — verify column names match actual schema before applying.
+    </div>
+    <div class="rb-verify">
+      <strong>Verify</strong>
+      In Supabase SQL editor: create a test tournament, add a course + holes. Call <code>SELECT delete_tournament('&lt;test-id&gt;')</code>. Confirm: SELECT from courses WHERE tournament_id = test-id returns 0 rows. SELECT from course_holes returns 0 rows. The FK CASCADE means course_holes clean up automatically when courses deleted — but verify explicitly.
+    </div>
+  </div>
+
+  <div class="rb-step">
+    <div class="rb-step-title">Migration 020 — tournament_admins email index</div>
+    <div class="rb-step-body">
+      File: <code>supabase/migrations/20260526000020_indexes_performance.sql</code><br><br>
+      <strong>Upstream:</strong> Every authenticated RLS policy on players, settings, rounds, courses evaluates a subquery against tournament_admins.email.<br>
+      <strong>Downstream:</strong> All pages that read players or settings — home, admin, scoreboard, scorecard, directory, champions, profile.<br><br>
+      SQL (combine with Step 4 and 5 in one migration):
+      <pre style="background:rgba(0,0,0,0.3);padding:0.6rem 0.8rem;border-radius:4px;font-size:0.74rem;color:var(--gold-light);overflow-x:auto;margin-top:0.5rem;">
+-- P3: tournament_admins email lookup (RLS critical path)
+CREATE INDEX IF NOT EXISTS idx_tournament_admins_email
+  ON tournament_admins(email);
+
+CREATE INDEX IF NOT EXISTS idx_tournament_admins_tid
+  ON tournament_admins(tournament_id);</pre>
+    </div>
+    <div class="rb-verify">
+      <strong>Verify</strong>
+      Apply migration. In Supabase SQL editor run: <code>EXPLAIN SELECT tournament_id FROM tournament_admins WHERE email = 'test@example.com'</code>. Confirm plan shows Index Scan instead of Seq Scan.
+    </div>
+  </div>
+
+  <div class="rb-step">
+    <div class="rb-step-title">Migration 020 cont — settings + tournaments + courses indexes</div>
+    <div class="rb-step-body">
+      Add to the same <code>20260526000020_indexes_performance.sql</code> migration:<br><br>
+      <strong>Upstream:</strong> admin.html, scorecard.html, scoreboard.html all read settings by key. tourney-init.js reads tournaments by slug on every page load.<br>
+      <strong>Downstream:</strong> All tournament pages (slug idx affects every tenant page load).<br><br>
+      <pre style="background:rgba(0,0,0,0.3);padding:0.6rem 0.8rem;border-radius:4px;font-size:0.74rem;color:var(--gold-light);overflow-x:auto;margin-top:0.5rem;">
+-- P4: settings composite index (40+ key reads per admin page load)
+CREATE INDEX IF NOT EXISTS idx_settings_tid_key
+  ON settings(tournament_id, key);
+
+-- P5: tournaments slug lookup (tourney-init.js on every page)
+CREATE INDEX IF NOT EXISTS idx_tournaments_slug
+  ON tournaments(slug);
+
+-- courses tournament_id (scorecard, admin Course tab)
+CREATE INDEX IF NOT EXISTS idx_courses_tournament_id
+  ON courses(tournament_id);
+
+-- course_holes course_id (scorecard per-hole yardage)
+CREATE INDEX IF NOT EXISTS idx_course_holes_course_id
+  ON course_holes(course_id);</pre>
+    </div>
+    <div class="rb-verify">
+      <strong>Verify</strong>
+      Run EXPLAIN on: (1) <code>SELECT key,value FROM settings WHERE tournament_id='...' AND key IN ('structure','team_count')</code> — confirm index scan. (2) <code>SELECT id FROM tournaments WHERE slug='bova-2026'</code> — confirm index scan. Admin page settings load latency should drop visibly.
+    </div>
+  </div>
+
+  <div class="rb-step">
+    <div class="rb-step-title">Write mygolf_profiles + donations migration files</div>
+    <div class="rb-step-body">
+      <strong>Upstream:</strong> login.html, player.html read mygolf_profiles. Donations checkout writes to donations table.<br>
+      <strong>Downstream:</strong> schema version control — enables fresh-deploy reproducibility.<br><br>
+      Check actual schema in Supabase dashboard → Table Editor → inspect mygolf_profiles and donations column definitions. Then write:
+      <ul style="margin-top:0.4rem;padding-left:1.2rem;font-size:0.8rem;color:var(--muted);">
+        <li><code>supabase/migrations/20260521000015_mygolf_profiles.sql</code> — CREATE TABLE IF NOT EXISTS with all columns + RLS</li>
+        <li><code>supabase/migrations/20260521000016_donations.sql</code> — CREATE TABLE IF NOT EXISTS with all columns + RLS</li>
+      </ul>
+      Use timestamped filenames that pre-date current migrations so ordering is logical. Apply with IF NOT EXISTS guards — tables already exist in live DB.
+    </div>
+    <div class="rb-verify">
+      <strong>Verify</strong>
+      <code>supabase db diff</code> (or Supabase CLI schema diff) shows no drift between migration files and live schema for these two tables. Fresh schema apply from supabase/migrations/ produces a complete schema.
+    </div>
+  </div>
+
+</div>
+
+</div>
+</section>
+
+<section id="executing">
+<div class="wrapper">
+<!-- EXECUTING-CONTENT-START -->
+<div class="stage-pending">
+  <p>Awaiting execution. Run <code>/tourney-execute 5-26-26-data-model-review.html</code> to proceed.</p>
+</div>
+<!-- EXECUTING-CONTENT-END -->
+</div>
+</section>
+
+<section id="audit">
+<div class="wrapper">
+<!-- AUDIT-CONTENT-START -->
+<div class="stage-pending">
+  <p>Awaiting execution. Run <code>/tourney-execute 5-26-26-data-model-review.html</code> to proceed.</p>
+</div>
+<!-- AUDIT-CONTENT-END -->
+</div>
+</section>
+
+<section id="concluded">
+<div class="wrapper">
+<!-- CONCLUDED-CONTENT-START -->
+<div class="stage-pending">
+  <p>Awaiting execution. Run <code>/tourney-execute 5-26-26-data-model-review.html</code> to proceed.</p>
+</div>
+<!-- CONCLUDED-CONTENT-END -->
+</div>
+</section>
+
+<footer>
+  Generated by <span>claude-sonnet-4-6</span> · Greenskeeper Studios Internal · May 26, 2026
+  <br style="margin-top:0.3rem">
+  <a href="/platform" style="color:var(--muted);font-size:0.7rem;text-decoration:none">&#8592; Back to Platform Hub</a>
+</footer>
+
+</body>
+</html>
