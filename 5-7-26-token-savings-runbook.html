@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>TOURney â€” Runbook: Claude Token Savings · May 7, 2026</title>
+<title>TOURney — Runbook: Claude Token Savings · May 7, 2026</title>
 <style>
   :root {
     --gold: #c09030; --gold-light: #d4a840; --gold-dim: rgba(192,144,48,0.18);
@@ -90,7 +90,7 @@
 
 <div class="hero">
   <div class="hero-eyebrow">Operational Runbook</div>
-  <h1><span>Claude Token Savings</span> â€” Apply The 5 Wins</h1>
+  <h1><span>Claude Token Savings</span> — Apply The 5 Wins</h1>
   <p class="hero-sub">Exact commands and JSON edits. Apply in order. Each step has expected output + failure path. Total time: ~90 min for full pass, savings start same-day.</p>
   <div class="hero-meta">
     <span>ðŸ“… May 7, 2026</span>
@@ -110,7 +110,7 @@
   <div class="card">
     <div class="card-title">ðŸ“‹ What This Runbook Does</div>
     <ul>
-      <li><strong>Scope:</strong> Reduce monthly Anthropic API spend on Claude Code CLI sessions running on Rob's Windows machine. Targets 25â€“50% reduction without quality loss.</li>
+      <li><strong>Scope:</strong> Reduce monthly Anthropic API spend on Claude Code CLI sessions running on Rob's Windows machine. Targets 25–50% reduction without quality loss.</li>
       <li><strong>Trigger:</strong> Monthly Anthropic bill exceeds budget OR baseline measurement shows wasteful patterns (no caching, default Opus, xhigh effort everywhere).</li>
       <li><strong>Owner:</strong> Rob Madsen (Greenskeeper Studios, sole engineer).</li>
       <li><strong>Estimated duration:</strong> 90 min initial setup + 14 days behavior change observation.</li>
@@ -121,8 +121,8 @@
   <div class="card">
     <div class="card-title">ðŸ”— References</div>
     <ul>
-      <li><strong>Burn audit:</strong> <a href="/platform/5-7-26-claude-token-burn-claude-review" style="color:var(--gold-light)">/platform/5-7-26-claude-token-burn-claude-review</a> â€” current state, score grid, leak findings.</li>
-      <li><strong>Business plan:</strong> <a href="/platform/5-7-26-token-savings-plan-business" style="color:var(--gold-light)">/platform/5-7-26-token-savings-plan-business</a> â€” financial case, decision framework, sprint plan.</li>
+      <li><strong>Burn audit:</strong> <a href="/platform/5-7-26-claude-token-burn-claude-review" style="color:var(--gold-light)">/platform/5-7-26-claude-token-burn-claude-review</a> — current state, score grid, leak findings.</li>
+      <li><strong>Business plan:</strong> <a href="/platform/5-7-26-token-savings-plan-business" style="color:var(--gold-light)">/platform/5-7-26-token-savings-plan-business</a> — financial case, decision framework, sprint plan.</li>
       <li><strong>Anthropic docs:</strong> <code>platform.claude.com/docs/en/build-with-claude/prompt-caching.md</code></li>
     </ul>
   </div>
@@ -166,7 +166,7 @@
 
       <div class="step-action">â–¸ Action</div>
       <ol style="padding-left:1.2rem;font-size:0.85rem">
-        <li>Open <code>console.anthropic.com</code> â†’ Usage tab â†’ set range to "Last 7 days"</li>
+        <li>Open <code>console.anthropic.com</code> → Usage tab → set range to "Last 7 days"</li>
         <li>Screenshot the spend bar chart + total $ + token breakdown (input vs output)</li>
         <li>Note: cache_read_input_tokens (likely 0) and cache_creation_input_tokens (likely 0)</li>
         <li>Save to mempalace: <code>mempalace_kg_add</code> drawer <code>token-burn-baseline-2026-05-07</code></li>
@@ -179,12 +179,12 @@
 
       <div class="step-failure">
         <strong>Failure path</strong>
-        Console shows no usage data â†’ check API key is active in correct workspace. If billing is paused â†’ resolve before proceeding.
+        Console shows no usage data → check API key is active in correct workspace. If billing is paused → resolve before proceeding.
       </div>
     </div>
 
     <div class="step-card">
-      <div class="step-title">Drop Effort Level: xhigh â†’ medium</div>
+      <div class="step-title">Drop Effort Level: xhigh → medium</div>
       <div class="step-desc">Lowest-risk change. Cuts thinking budget on simple turns. Re-promote per-task when needed.</div>
 
       <div class="step-action">â–¸ Action</div>
@@ -203,12 +203,12 @@
 
       <div class="step-failure">
         <strong>Failure path</strong>
-        Output quality drops noticeably on hard tasks â†’ temporarily revert to <code>"effortLevel": "high"</code> for the task or use <code>/effort xhigh</code> per-prompt if supported.
+        Output quality drops noticeably on hard tasks → temporarily revert to <code>"effortLevel": "high"</code> for the task or use <code>/effort xhigh</code> per-prompt if supported.
       </div>
     </div>
 
     <div class="step-card">
-      <div class="step-title">Demote Default Model: opus â†’ sonnet</div>
+      <div class="step-title">Demote Default Model: opus → sonnet</div>
       <div class="step-desc">Largest single dollar win. Sonnet 4.6 handles 90% of work indistinguishably. Opus stays opt-in.</div>
 
       <div class="step-action">â–¸ Action</div>
@@ -227,7 +227,7 @@
 
       <div class="step-failure">
         <strong>Failure path</strong>
-        On a hard reasoning task (security review, complex RLS), output feels shallow â†’ escalate that task with <code>/model opus</code>. Don't revert default.
+        On a hard reasoning task (security review, complex RLS), output feels shallow → escalate that task with <code>/model opus</code>. Don't revert default.
       </div>
     </div>
 
@@ -252,7 +252,7 @@
   ],
   ...
 }</code></pre>
-      <p style="font-size:0.85rem;margin-top:0.5rem">For Claude Code-managed system context, the harness handles this via the SDK call wrapper. Check <code>~/.claude/settings.json</code> for a <code>cache</code> or <code>caching</code> field. If absent, file an issue with claude-code maintainers â€” the harness should expose this.</p>
+      <p style="font-size:0.85rem;margin-top:0.5rem">For Claude Code-managed system context, the harness handles this via the SDK call wrapper. Check <code>~/.claude/settings.json</code> for a <code>cache</code> or <code>caching</code> field. If absent, file an issue with claude-code maintainers — the harness should expose this.</p>
       <p style="font-size:0.85rem;margin-top:0.5rem">Workaround: use <code>claude-api</code> skill which already includes prompt caching. For Claude Code CLI itself, this may require waiting for harness support OR opting into the SDK directly for your most common workflows.</p>
 
       <div class="step-expected">
@@ -262,7 +262,7 @@
 
       <div class="step-failure">
         <strong>Failure path</strong>
-        cache_read still 0 after 2 turns â†’ the cache key shifted. Likely cause: tool definitions changed between turns OR system content has dynamic parts (timestamp, etc.). Move breakpoint to genuinely-static prefix only. Cache requires identical bytes for hit.
+        cache_read still 0 after 2 turns → the cache key shifted. Likely cause: tool definitions changed between turns OR system content has dynamic parts (timestamp, etc.). Move breakpoint to genuinely-static prefix only. Cache requires identical bytes for hit.
       </div>
     </div>
 
@@ -273,18 +273,18 @@
       <div class="step-action">â–¸ Action</div>
       <p style="font-size:0.85rem">Each skill at <code>C:\Users\Rob\.claude\skills\tourney-*/SKILL.md</code> has YAML frontmatter. Add <code>model:</code> field.</p>
       <p style="font-size:0.85rem;margin-top:0.5rem"><strong>Haiku (8 skills):</strong></p>
-      <pre><code>tourney-reference, tourney-reference-*  â†’  model: haiku
-tourney-audit, tourney-audit-*          â†’  model: haiku</code></pre>
+      <pre><code>tourney-reference, tourney-reference-*  →  model: haiku
+tourney-audit, tourney-audit-*          →  model: haiku</code></pre>
       <p style="font-size:0.85rem;margin-top:0.5rem"><strong>Sonnet (24 skills):</strong></p>
-      <pre><code>tourney-review (excl. -security)        â†’  model: sonnet
-tourney-plan (excl. -security)          â†’  model: sonnet
-tourney-runbook (excl. -security)       â†’  model: sonnet
-tourney-postmortem (all)                â†’  model: sonnet
-tourney-bug (all)                       â†’  model: sonnet</code></pre>
+      <pre><code>tourney-review (excl. -security)        →  model: sonnet
+tourney-plan (excl. -security)          →  model: sonnet
+tourney-runbook (excl. -security)       →  model: sonnet
+tourney-postmortem (all)                →  model: sonnet
+tourney-bug (all)                       →  model: sonnet</code></pre>
       <p style="font-size:0.85rem;margin-top:0.5rem"><strong>Opus (3 skills, keep premium):</strong></p>
-      <pre><code>tourney-review-security                 â†’  model: opus
-tourney-plan-security                   â†’  model: opus
-tourney-runbook-security                â†’  model: opus</code></pre>
+      <pre><code>tourney-review-security                 →  model: opus
+tourney-plan-security                   →  model: opus
+tourney-runbook-security                →  model: opus</code></pre>
       <p style="font-size:0.85rem;margin-top:0.5rem">Edit each frontmatter:</p>
       <pre><code>---
 name: tourney-reference
@@ -299,22 +299,22 @@ model: haiku
 
       <div class="step-failure">
         <strong>Failure path</strong>
-        Status line still shows global default model â†’ frontmatter <code>model:</code> not honored by harness version. Fall back to using <code>/model haiku</code> manually before invoking the skill.
+        Status line still shows global default model → frontmatter <code>model:</code> not honored by harness version. Fall back to using <code>/model haiku</code> manually before invoking the skill.
       </div>
     </div>
 
     <div class="step-card">
-      <div class="step-title">Habit · Read â†’ ctx_execute_file On Large Outputs</div>
+      <div class="step-title">Habit · Read → ctx_execute_file On Large Outputs</div>
       <div class="step-desc">Read for files about to Edit (sends content to context for editing). For analysis-only tasks on files &gt; 500 lines, use ctx_execute_file (sandbox stays out of context).</div>
 
       <div class="step-action">â–¸ Action</div>
       <p style="font-size:0.85rem">Add hard rule to <code>C:\Users\Rob\.claude\CLAUDE.md</code>:</p>
       <pre><code>## Token Hygiene Rules
 
-- Files â‰¥ 500 lines for ANALYSIS only â†’ ctx_execute_file
-- Files ANY size for EDIT â†’ Read (Edit needs content in context)
-- Directory listings &gt; 50 entries â†’ Glob/Grep, never `ls -R` via Bash
-- Tool call result &gt; 100 lines â†’ consider ctx_batch_execute or pipe to script</code></pre>
+- Files â‰¥ 500 lines for ANALYSIS only → ctx_execute_file
+- Files ANY size for EDIT → Read (Edit needs content in context)
+- Directory listings &gt; 50 entries → Glob/Grep, never `ls -R` via Bash
+- Tool call result &gt; 100 lines → consider ctx_batch_execute or pipe to script</code></pre>
 
       <div class="step-expected">
         <strong>Expected</strong>
@@ -323,7 +323,7 @@ model: haiku
 
       <div class="step-failure">
         <strong>Failure path</strong>
-        Habit doesn't form â†’ savings ratio stays low â†’ audit recent transcripts for big Reads, refine the rule, add more concrete examples to CLAUDE.md.
+        Habit doesn't form → savings ratio stays low → audit recent transcripts for big Reads, refine the rule, add more concrete examples to CLAUDE.md.
       </div>
     </div>
 
@@ -335,8 +335,8 @@ model: haiku
       <p style="font-size:0.85rem">Add to CLAUDE.md after the Token Hygiene Rules section:</p>
       <pre><code>## Session Hygiene
 
-- Topic switch (e.g. linkSmith â†’ TOURney) â†’ /clear
-- Token meter â‰¥ 80K â†’ /compact
+- Topic switch (e.g. linkSmith → TOURney) → /clear
+- Token meter â‰¥ 80K → /compact
 - Avoid 4h+ sessions unless caching verified working
 - One slash command per session (don't chain unrelated skills)</code></pre>
 
@@ -347,7 +347,7 @@ model: haiku
 
       <div class="step-failure">
         <strong>Failure path</strong>
-        /clear breaks something mid-task â†’ undo with new session. /compact loses important context â†’ re-paste relevant facts manually.
+        /clear breaks something mid-task → undo with new session. /compact loses important context → re-paste relevant facts manually.
       </div>
     </div>
 
@@ -364,7 +364,7 @@ model: haiku
   </div>
 
   <div class="card">
-    <div class="card-title">âœ“ Day 1 (after Steps 1â€“3)</div>
+    <div class="card-title">âœ“ Day 1 (after Steps 1–3)</div>
     <ul class="check-list">
       <li>Status line shows <code>sonnet</code>, not <code>opus</code></li>
       <li>Effort feels lower on simple turns (under 3s response on trivial questions)</li>
@@ -383,11 +383,11 @@ model: haiku
   </div>
 
   <div class="card">
-    <div class="card-title">âœ“ Week 1 (after Steps 5â€“7)</div>
+    <div class="card-title">âœ“ Week 1 (after Steps 5–7)</div>
     <ul class="check-list">
-      <li><code>/tourney-reference</code> dry run â†’ status line shows Haiku</li>
-      <li><code>/tourney-review</code> dry run â†’ status line shows Sonnet</li>
-      <li><code>/tourney-review-security</code> dry run â†’ status line shows Opus</li>
+      <li><code>/tourney-reference</code> dry run → status line shows Haiku</li>
+      <li><code>/tourney-review</code> dry run → status line shows Sonnet</li>
+      <li><code>/tourney-review-security</code> dry run → status line shows Opus</li>
       <li><code>/context-mode:ctx-stats</code> savings ratio â‰¥ 50% (was likely &lt; 30%)</li>
       <li>Recent sessions average &lt; 2h (no marathons)</li>
     </ul>
@@ -396,7 +396,7 @@ model: haiku
   <div class="card">
     <div class="card-title">âœ“ Day 14 (final delta)</div>
     <ul class="check-list">
-      <li>Anthropic Console â†’ Usage â†’ 7-day window vs Day-1 baseline</li>
+      <li>Anthropic Console → Usage → 7-day window vs Day-1 baseline</li>
       <li>Total $ spend down â‰¥ 27% (conservative target)</li>
       <li>Stretch: â‰¥ 45% (aggressive target with all wins fully landed)</li>
       <li>Output volume similar (proves savings from cost-side, not work reduction)</li>
@@ -417,12 +417,12 @@ model: haiku
   <div class="grid-2">
     <div class="card">
       <div class="card-title">â†© Effort drop hurt quality</div>
-      <p>Edit <code>settings.json</code> back to <code>"effortLevel": "high"</code> (not xhigh â€” split the difference). Or use <code>/effort xhigh</code> per-task.</p>
+      <p>Edit <code>settings.json</code> back to <code>"effortLevel": "high"</code> (not xhigh — split the difference). Or use <code>/effort xhigh</code> per-task.</p>
     </div>
 
     <div class="card">
       <div class="card-title">â†© Sonnet underperforming</div>
-      <p>Don't revert default. Use <code>/model opus</code> per-task on the few cases that need it. If 30%+ of tasks need Opus, profile which task types â€” possibly add per-skill overrides.</p>
+      <p>Don't revert default. Use <code>/model opus</code> per-task on the few cases that need it. If 30%+ of tasks need Opus, profile which task types — possibly add per-skill overrides.</p>
     </div>
 
     <div class="card">
@@ -458,9 +458,9 @@ model: haiku
   <div class="card">
     <div class="card-title">âš  Stop The Runbook If:</div>
     <ul>
-      <li>Day-7 spend is HIGHER than baseline â†’ something is misconfigured. Don't ship more changes. Audit.</li>
-      <li>Output quality drops on multiple unrelated task types â†’ likely model demotion went too aggressive. Promote one tier.</li>
-      <li>Cache writes happening but no reads â†’ static content has dynamic bytes mixed in. Pause caching until fixed.</li>
+      <li>Day-7 spend is HIGHER than baseline → something is misconfigured. Don't ship more changes. Audit.</li>
+      <li>Output quality drops on multiple unrelated task types → likely model demotion went too aggressive. Promote one tier.</li>
+      <li>Cache writes happening but no reads → static content has dynamic bytes mixed in. Pause caching until fixed.</li>
     </ul>
   </div>
 
@@ -468,10 +468,10 @@ model: haiku
     <div class="card-title">ðŸ“ž Contacts &amp; Resources</div>
     <ul>
       <li><strong>Owner:</strong> Rob Madsen (only person)</li>
-      <li><strong>SME:</strong> claude-code-guide subagent â€” re-spawn for follow-up research</li>
+      <li><strong>SME:</strong> claude-code-guide subagent — re-spawn for follow-up research</li>
       <li><strong>Docs:</strong> <code>platform.claude.com/docs/en/build-with-claude/prompt-caching.md</code></li>
       <li><strong>Anthropic support:</strong> via console.anthropic.com if billing anomaly</li>
-      <li><strong>Related runbooks:</strong> none yet â€” this is the first ops runbook in the cost domain</li>
+      <li><strong>Related runbooks:</strong> none yet — this is the first ops runbook in the cost domain</li>
     </ul>
   </div>
 </div>
@@ -480,7 +480,7 @@ model: haiku
 <footer>
   Generated by <span>Claude Opus 4.7 + Claude Code Guide SME</span> · Greenskeeper Studios Internal · May 7, 2026
   <br style="margin-top:0.3rem">
-  <a href="/platform" style="color:var(--muted); font-size:0.72rem; text-decoration:none">â† TOURney Operations</a>
+  <a href="/platform" style="color:var(--muted); font-size:0.72rem; text-decoration:none">← TOURney Operations</a>
 </footer>
 
 <script src="/bug-fab.js?v=6" defer></script>

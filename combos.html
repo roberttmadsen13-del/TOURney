@@ -1,9 +1,9 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>TOURney â€” All Combinations</title>
+<title>TOURney — All Combinations</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{--gold:#c09030;--ink:#1a1008;--bg:#f5ede0;--card:#ede2d2;--dark:#0f0a04;--muted:#7a6a54;--border:rgba(192,144,48,0.22);--red:#b43c28}
@@ -55,7 +55,7 @@ td.cta{width:4.5rem;text-align:right}
 <div class="hdr">
   <div class="hdr-top">
     <h1>TOURney Combinations</h1>
-    <span class="count-badge" id="countBadge">â€”</span>
+    <span class="count-badge" id="countBadge">—</span>
   </div>
   <div class="filters">
     <div class="filter-row">
@@ -199,7 +199,7 @@ function render() {
       <td class="players">${c.players}</td>
       <td class="tier"><span class="tier-pill ${c.tier.cls}">${c.tier.name}</span></td>
       <td style="font-family:monospace;font-size:0.78rem;color:var(--muted)">${price}</td>
-      <td class="cta"><a class="create-btn" href="${createLink(c.days, c.structure.val, c.players)}">Create â†’</a></td>
+      <td class="cta"><a class="create-btn" href="${createLink(c.days, c.structure.val, c.players)}">Create →</a></td>
     </tr>`;
   });
   tbody.innerHTML = html;
