@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -634,7 +634,7 @@ td{padding:0.7rem 0.75rem;font-size:0.88rem;vertical-align:middle;}
 
       <div class="ref-section">
         <div class="ref-sec-hdr">
-          <div class="ref-sec-meta"><div class="ref-sec-title">Review Skills</div><div class="ref-sec-desc">Type in Claude Code â†’ generates live page Â· appears in Artifacts</div></div>
+          <div class="ref-sec-meta"><div class="ref-sec-title">Review Skills</div><div class="ref-sec-desc">Type in Claude Code â†’ generates live page · appears in Artifacts</div></div>
         </div>
         <div class="skills-grid">
           <div class="skill-card"><div class="skill-cmd">/tourney-review</div><div class="skill-desc">Full platform review â€” code-to-business, council of 5, QA protocol, business roadmap, security</div></div>
@@ -660,7 +660,7 @@ td{padding:0.7rem 0.75rem;font-size:0.88rem;vertical-align:middle;}
 
       <div class="ref-section">
         <div class="ref-sec-hdr">
-          <div class="ref-sec-meta"><div class="ref-sec-title">Setting Keys â€” Ground Truth</div><div class="ref-sec-desc">Canonical key names Â· source: create.html line 759+</div></div>
+          <div class="ref-sec-meta"><div class="ref-sec-title">Setting Keys â€” Ground Truth</div><div class="ref-sec-desc">Canonical key names · source: create.html line 759+</div></div>
         </div>
         <div class="tbl-wrap">
           <table class="ref-table">
@@ -691,7 +691,7 @@ td{padding:0.7rem 0.75rem;font-size:0.88rem;vertical-align:middle;}
 
       <div class="ref-section">
         <div class="ref-sec-hdr">
-          <div class="ref-sec-meta"><div class="ref-sec-title">Format Values â€” Ground Truth</div><div class="ref-sec-desc">Canonical scoring format values Â· source: create.html</div></div>
+          <div class="ref-sec-meta"><div class="ref-sec-title">Format Values â€” Ground Truth</div><div class="ref-sec-desc">Canonical scoring format values · source: create.html</div></div>
         </div>
         <div class="tbl-wrap">
           <table class="ref-table">
@@ -1446,7 +1446,7 @@ async function loadAxisBoard() {
       <div class="axis-label" style="color:var(--gold);font-weight:700;">Platform Overall</div>
       <div class="axis-grade" style="color:${gradeColor(avgGrade)}">${esc(avgGrade)}</div>
       <div class="axis-open">${totalOpen} open</div>
-      <div class="axis-summary">${axes.length} axes Â· ${axes.filter(([,a])=>a.status==='concluded').length} concluded Â· ${axes.filter(([,a])=>a.blocking).length} blocking</div>
+      <div class="axis-summary">${axes.length} axes · ${axes.filter(([,a])=>a.status==='concluded').length} concluded · ${axes.filter(([,a])=>a.blocking).length} blocking</div>
       <div class="axis-stages">${overallPips}</div>
     </div>`;
 
@@ -1496,7 +1496,7 @@ function renderArtifactTickets(){
   const unseenCount=(allEntries||[]).filter(e=>TICKET_CATS.has(e.category)&&isClosed(e)&&!_atSeen.has(e.id)&&!deleted.has(e.id)).length;
   const tb=document.getElementById('atConcludedToggle');
   if(tb){
-    tb.textContent=_atShowConcluded?'Hide concluded':('Show concluded'+(unseenCount?` Â· ${unseenCount} new`:''));
+    tb.textContent=_atShowConcluded?'Hide concluded':('Show concluded'+(unseenCount?` · ${unseenCount} new`:''));
     unseenCount&&!_atShowConcluded?tb.classList.add('at-concluded-unseen'):tb.classList.remove('at-concluded-unseen');
   }
   let entries=(allEntries||[]).filter(e=>TICKET_CATS.has(e.category)&&!deleted.has(e.id));
@@ -1544,7 +1544,7 @@ function openTicketDrawer(id){
   const gEl=document.getElementById('drawerGrade');
   gEl.textContent='';gEl.style.color='';
   document.getElementById('drawerStatus').textContent=stageKey;
-  document.getElementById('drawerMeta').textContent=(e.author||'')+(e.updated?` Â· updated ${e.updated}`:'');
+  document.getElementById('drawerMeta').textContent=(e.author||'')+(e.updated?` · updated ${e.updated}`:'');
   document.getElementById('drawerSummary').textContent=e.summary||'';
   document.getElementById('drawerArtifactBtn').href=e.url||'#';
   document.getElementById('drawerLifecycle').innerHTML=stages.map((s,i)=>{
@@ -1941,12 +1941,12 @@ function renderScorecard(){
       +(isStale?'<span class="grade-stale">STALE</span>':'')
       +'</div><div class="grade-axis">'+esc(ax.label)+'</div>'
       +'<div class="grade-date '+(daysStr?'':'grade-no-data')+'">'
-      +(daysStr?esc(daysStr)+' Â· '+scores.length+' review'+(scores.length!==1?'s':''):'No reviews yet')
+      +(daysStr?esc(daysStr)+' · '+scores.length+' review'+(scores.length!==1?'s':''):'No reviews yet')
       +'</div></div>';
   }).join('');
   const banner=document.getElementById('staleBanner'),bannerText=document.getElementById('staleBannerText');
   if(staleAxes.length&&banner&&bannerText){
-    bannerText.textContent=staleAxes.map(a=>a.label).join(', ')+' â€” no review in 14+ days. Paste in Claude Code: '+staleAxes.map(a=>a.cmd).join('  Â·  ');
+    bannerText.textContent=staleAxes.map(a=>a.label).join(', ')+' â€” no review in 14+ days. Paste in Claude Code: '+staleAxes.map(a=>a.cmd).join('  ·  ');
     banner.style.display='flex';
   }else if(banner)banner.style.display='none';
 }
@@ -2094,7 +2094,7 @@ function renderTodayQueue(){
       .map(([k,a])=>{
         const next=NEXT[a.status];
         const skill=NEXT_SKILL[next];
-        return{title:k+': '+NEXT_LABEL[next],sub:(a.grade||'?')+' Â· currently '+a.status,tag:a.status.toUpperCase(),tagCls:'tq-tag-gold',cmd:skill?skill+k:null};
+        return{title:k+': '+NEXT_LABEL[next],sub:(a.grade||'?')+' · currently '+a.status,tag:a.status.toUpperCase(),tagCls:'tq-tag-gold',cmd:skill?skill+k:null};
       });
   }
 
@@ -2178,7 +2178,7 @@ window.renderBugLog = function() {
     return '<div class="qb-item" style="background:var(--card);border:1px solid var(--border);border-radius:8px;padding:1rem;display:flex;gap:1rem;align-items:flex-start;">'
       + '<div style="flex:1;"><div style="font-family:\'Barlow Condensed\',sans-serif;font-weight:700;font-size:1.1rem;color:var(--text);margin-bottom:.3rem;">' + esc(b.title) + '</div>'
       + (b.desc ? '<div style="font-size:.85rem;color:var(--muted);line-height:1.5;margin-bottom:.75rem;white-space:pre-wrap;">' + esc(b.desc) + '</div>' : '')
-      + '<div style="font-family:\'DM Mono\',monospace;font-size:.6rem;color:rgba(240,230,204,0.3);">' + d + (b.url ? ' Â· ' + esc(b.url) : '') + '</div>'
+      + '<div style="font-family:\'DM Mono\',monospace;font-size:.6rem;color:rgba(240,230,204,0.3);">' + d + (b.url ? ' · ' + esc(b.url) : '') + '</div>'
       + (b.img ? '<img src="' + b.img + '" style="max-height:120px;border-radius:6px;margin-top:.75rem;cursor:pointer;border:1px solid rgba(255,255,255,0.1);" onclick="window.open(this.src)">' : '')
       + '</div>'
       + '<div style="display:flex;flex-direction:column;gap:.5rem;">'
@@ -2229,7 +2229,7 @@ function openAxisDrawer(key) {
   gEl.textContent = d.grade || 'â€”';
   gEl.style.color = _mcGradeColor(d.grade||'');
   document.getElementById('drawerStatus').textContent = cur;
-  document.getElementById('drawerMeta').textContent = (d.open_items||0) + ' open items Â· updated ' + (d.last_updated||'');
+  document.getElementById('drawerMeta').textContent = (d.open_items||0) + ' open items · updated ' + (d.last_updated||'');
   document.getElementById('drawerSummary').textContent = d.summary || '';
   document.getElementById('drawerArtifactBtn').href = d.artifact || '#';
 
@@ -2358,7 +2358,7 @@ async function loadBugsTab() {
     const d = new Date(b.created_at).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
     return `<div style="background:var(--card);border:1px solid var(--border);border-left:3px solid ${isOpen?'var(--red)':'var(--green)'};border-radius:0 6px 6px 0;padding:.75rem 1rem;margin-bottom:.45rem;">
       <div style="font-size:.85rem;color:var(--text);line-height:1.45;margin-bottom:.2rem;">${b.title?`<strong style="color:#fff;">${esc(b.title)}</strong>`:'<em>(no title)</em>'}${b.description?' â€” '+esc(b.description):''}</div>
-      <div style="font-family:'DM Mono',monospace;font-size:.52rem;color:var(--muted);">${d}${b.url?' Â· '+esc(b.url):''}</div>
+      <div style="font-family:'DM Mono',monospace;font-size:.52rem;color:var(--muted);">${d}${b.url?' · '+esc(b.url):''}</div>
       ${b.image_data||b.image_data_2||b.image_data_3?`<div style="display:flex;gap:.4rem;flex-wrap:wrap;margin-top:.5rem;">${[b.image_data,b.image_data_2,b.image_data_3].filter(Boolean).map(img=>`<img src="${esc(img)}" style="max-height:120px;border-radius:6px;cursor:pointer;border:1px solid rgba(255,255,255,0.1);" onclick="window.open(this.src)">`).join('')}</div>`:''}
       <div style="margin-top:.5rem;display:flex;gap:.4rem;flex-wrap:wrap;">
         <button onclick="bugSetStatus('${b.id}','${isOpen?'completed':'open'}')" style="${btnS}border:1px solid ${isOpen?'rgba(58,158,95,0.4)':'rgba(192,144,48,0.3)'};color:${isOpen?'var(--green)':'var(--muted)'};">${isOpen?'Mark Done':'Reopen'}</button>

@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -161,7 +161,7 @@
     .tc-price span{font-size:.58rem;font-family:'DM Mono',monospace;color:var(--muted);font-weight:400;margin-left:.1rem}
     .tc-features{list-style:none;display:flex;flex-direction:column;gap:.3rem}
     .tc-features li{font-family:'DM Mono',monospace;font-size:.57rem;color:var(--muted);padding-left:.85rem;position:relative}
-    .tc-features li::before{content:'Â·';position:absolute;left:0;color:var(--gold)}
+    .tc-features li::before{content:'·';position:absolute;left:0;color:var(--gold)}
     .tier-card.active .tc-features li{color:rgba(245,237,224,.75)}
     .tc-carry{font-family:'DM Mono',monospace;font-size:.53rem;color:var(--gold);margin-top:.6rem;padding-top:.5rem;border-top:1px solid var(--border)}
   </style>
@@ -323,7 +323,7 @@
         <label>Logo <span style="font-weight:400;opacity:.6">(optional)</span></label>
         <div class="upload-zone" id="logoZone" onclick="document.getElementById('logoFile').click()">
           <img id="logoPrev" class="upload-preview" style="display:none">
-          <div class="upload-lbl" id="logoLbl">Click to upload Â· PNG or SVG recommended</div>
+          <div class="upload-lbl" id="logoLbl">Click to upload · PNG or SVG recommended</div>
         </div>
         <input type="file" id="logoFile" accept="image/*" style="display:none" onchange="uploadLogo(this)">
       </div>
@@ -833,8 +833,8 @@
         { key:'tourney_name',      value: name },
         { key:'tourney_year',      value: year },
         { key:'tourney_location',  value: loc },
-        { key:'homepage_subtitle', value: sub || [year, loc].filter(Boolean).join(' Â· ') },
-        { key:'homepage_details',  value: `${S.days} Day${S.days>1?'s':''} Â· ${S.structure==='individual'?'Individual':S.structure==='pairs'?S.pairCount+' Pairs':S.teamCount+' Teams'} Â· ${S.days*18} Holes Â· ${year}` },
+        { key:'homepage_subtitle', value: sub || [year, loc].filter(Boolean).join(' · ') },
+        { key:'homepage_details',  value: `${S.days} Day${S.days>1?'s':''} · ${S.structure==='individual'?'Individual':S.structure==='pairs'?S.pairCount+' Pairs':S.teamCount+' Teams'} · ${S.days*18} Holes · ${year}` },
         { key:'homepage_about',    value: `${name} is a ${S.days}-day golf tournament${loc?' in '+loc:''}. ${S.structure==='individual'?'Individual scoring â€” every stroke counts.':S.structure==='pairs'?S.pairCount+' pairs compete â€” combined best-ball score per pair.':'Two teams compete across all rounds â€” every stroke feeds the team score.'} Set up your tournament details from the admin page.` },
         { key:'hero_cta_primary',  value: 'Request Your Spot' },
         { key:'color_primary',     value: accent },
@@ -847,7 +847,7 @@
         { key:'reg_max_players',   value: String(S.maxPlayers) },
         { key:'reg_min_players',   value: String(Math.max(1, Math.floor(S.maxPlayers * 0.6))) },
         { key:'reg_bullet_1',      value: 'Open to invited players only' },
-        { key:'reg_bullet_2',      value: `${S.days}-day tournament Â· ${S.days*18} holes` },
+        { key:'reg_bullet_2',      value: `${S.days}-day tournament · ${S.days*18} holes` },
         { key:'reg_bullet_3',      value: loc || 'Location TBD' },
         { key:'reg_show_dates',    value: 'false' },
         { key:'reg_show_why_me',   value: 'false' },

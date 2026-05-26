@@ -1,9 +1,9 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>TOURney â€” Business Plan: Claude Token Spend Â· May 7, 2026</title>
+<title>TOURney â€” Business Plan: Claude Token Spend · May 7, 2026</title>
 <style>
   :root {
     --gold: #c09030; --gold-light: #d4a840; --gold-dim: rgba(192,144,48,0.18);
@@ -90,7 +90,7 @@
 
 <div class="hero">
   <div class="hero-eyebrow">Business Plan â€” Claude Token Spend</div>
-  <h1><span>Cut</span> Anthropic Spend 25â€“40% Â· Zero Quality Loss</h1>
+  <h1><span>Cut</span> Anthropic Spend 25â€“40% · Zero Quality Loss</h1>
   <p class="hero-sub">Greenskeeper Studios is paying Opus 4.7 + xhigh effort + zero caching for work that Sonnet/Haiku could finish identically. Here's the financial case + adoption plan.</p>
   <div class="hero-meta">
     <span>ðŸ“… May 7, 2026</span>
@@ -104,7 +104,7 @@
 <div class="wrapper">
   <div class="section-header">
     <div class="section-eyebrow">Â§1 â€” Financial Snapshot</div>
-    <h2 class="section-title">Where We Are Today Â· Where We Could Be Tomorrow</h2>
+    <h2 class="section-title">Where We Are Today · Where We Could Be Tomorrow</h2>
     <p class="section-desc">Status quo is ~$55/mo for 20 sessions. Stacked wins land us at ~$33â€“41/mo at the same output. Annual: $660 â†’ $396â€“492. Savings reinvested into TOURney customer-facing infra (Vercel scaling, Supabase tier upgrade, monitoring).</p>
   </div>
 
@@ -189,7 +189,7 @@
 <div class="wrapper">
   <div class="section-header">
     <div class="section-eyebrow">Â§3 â€” Stacked Savings Model</div>
-    <h2 class="section-title">Apply Each Win Â· Watch The Cost Curve Drop</h2>
+    <h2 class="section-title">Apply Each Win · Watch The Cost Curve Drop</h2>
     <p class="section-desc">Each row = applying one win on top of all rows above. % savings compound multiplicatively, not additively.</p>
   </div>
 
@@ -242,7 +242,7 @@
 <div class="wrapper">
   <div class="section-header">
     <div class="section-eyebrow">Â§4 â€” Decision Framework</div>
-    <h2 class="section-title">When To Pay Premium Â· When To Save</h2>
+    <h2 class="section-title">When To Pay Premium · When To Save</h2>
     <p class="section-desc">Don't abandon Opus â€” use it where it earns its price. Cheap models for structured tasks, premium for novel reasoning.</p>
   </div>
 
@@ -330,14 +330,14 @@
 <div class="wrapper">
   <div class="section-header">
     <div class="section-eyebrow">Â§6 â€” Sprint Plan</div>
-    <h2 class="section-title">Adoption Order Â· By ROI + Risk</h2>
+    <h2 class="section-title">Adoption Order · By ROI + Risk</h2>
     <p class="section-desc">Lowest-risk highest-ROI first. Each step has a verification check before proceeding.</p>
   </div>
 
   <div class="roadmap-item">
     <div class="roadmap-icon">1</div>
     <div class="roadmap-content">
-      <div class="roadmap-title">Day 1 (15 min) Â· Baseline + Effort Drop</div>
+      <div class="roadmap-title">Day 1 (15 min) · Baseline + Effort Drop</div>
       <div class="roadmap-desc">Capture current spend, then drop effort to medium. Zero risk â€” just lower default thinking.</div>
       <div class="roadmap-action"><strong>Action:</strong> Anthropic Console â†’ Usage screenshot. Edit <code>~/.claude/settings.json</code> line 46: <code>"effortLevel": "medium"</code>. <strong>Verify:</strong> next session feels snappier on simple turns, no degradation on complex.</div>
     </div>
@@ -346,7 +346,7 @@
   <div class="roadmap-item">
     <div class="roadmap-icon">2</div>
     <div class="roadmap-content">
-      <div class="roadmap-title">Day 1 (10 min) Â· Default Model â†’ Sonnet</div>
+      <div class="roadmap-title">Day 1 (10 min) · Default Model â†’ Sonnet</div>
       <div class="roadmap-desc">Drop default model. Keep Opus as opt-in via <code>/model opus</code>. Largest single $$$ win.</div>
       <div class="roadmap-action"><strong>Action:</strong> <code>~/.claude/settings.json</code> line 56: <code>"model": "sonnet"</code>. <strong>Verify:</strong> 1-week of normal work. Compare output quality memory. Should be indistinguishable on 90% of tasks.</div>
     </div>
@@ -355,7 +355,7 @@
   <div class="roadmap-item">
     <div class="roadmap-icon">3</div>
     <div class="roadmap-content">
-      <div class="roadmap-title">Day 2 (45 min) Â· Cache CLAUDE.md + companyAnnouncements</div>
+      <div class="roadmap-title">Day 2 (45 min) · Cache CLAUDE.md + companyAnnouncements</div>
       <div class="roadmap-desc">Wrap user-level CLAUDE.md (~3.5K tokens) + companyAnnouncements + DECISIONS + DISAGREEMENTS in single <code>cache_control</code> breakpoint. 5-min TTL ephemeral.</div>
       <div class="roadmap-action"><strong>Action:</strong> Configure via Claude Code SDK system block or <code>extra_body</code>. <strong>Verify:</strong> <code>usage.cache_read_input_tokens &gt; 0</code> on turn 2+ of a fresh session. Should see ~3.5K cached tokens billed at 10% of normal rate.</div>
     </div>
@@ -364,7 +364,7 @@
   <div class="roadmap-item">
     <div class="roadmap-icon">4</div>
     <div class="roadmap-content">
-      <div class="roadmap-title">Week 1 (2 h) Â· Skill Model Overrides</div>
+      <div class="roadmap-title">Week 1 (2 h) · Skill Model Overrides</div>
       <div class="roadmap-desc">Edit each <code>~/.claude/skills/tourney-*/SKILL.md</code> frontmatter to add <code>model:</code> field. Haiku for reference/audit/feature-depth. Sonnet for review/plan/runbook. Opus for security skills only.</div>
       <div class="roadmap-action"><strong>Action:</strong> One commit. Test 3 skills (1 per tier). <strong>Verify:</strong> running <code>/tourney-reference</code> shows Haiku in status, <code>/tourney-review-security</code> shows Opus.</div>
     </div>
@@ -373,7 +373,7 @@
   <div class="roadmap-item">
     <div class="roadmap-icon">5</div>
     <div class="roadmap-content">
-      <div class="roadmap-title">Week 1 (ongoing) Â· Habit Â· Read â†’ ctx_execute_file</div>
+      <div class="roadmap-title">Week 1 (ongoing) · Habit · Read â†’ ctx_execute_file</div>
       <div class="roadmap-desc">Behavior change. When about to Read a file &gt; 500 lines for analysis, switch to <code>ctx_execute_file</code>. Read still correct for files about to Edit.</div>
       <div class="roadmap-action"><strong>Action:</strong> Add hard rule to CLAUDE.md: "Analysis â‰¥ 500 lines â†’ ctx_execute_file. Edit any size â†’ Read." <strong>Verify:</strong> weekly <code>/context-mode:ctx-stats</code> â€” savings ratio should rise from current to â‰¥ 60%.</div>
     </div>
@@ -382,7 +382,7 @@
   <div class="roadmap-item">
     <div class="roadmap-icon">6</div>
     <div class="roadmap-content">
-      <div class="roadmap-title">Week 1 (ongoing) Â· Session Hygiene</div>
+      <div class="roadmap-title">Week 1 (ongoing) · Session Hygiene</div>
       <div class="roadmap-desc">Behavior. <code>/clear</code> on topic switch. <code>/compact</code> at 80K tokens. Avoid 4h+ marathons.</div>
       <div class="roadmap-action"><strong>Action:</strong> CLAUDE.md rule. <strong>Verify:</strong> session count goes up, avg session size goes down. Cache hit rate should improve as sessions stay cleaner.</div>
     </div>
@@ -391,7 +391,7 @@
   <div class="roadmap-item">
     <div class="roadmap-icon">7</div>
     <div class="roadmap-content">
-      <div class="roadmap-title">Day 14 Â· Measure + Iterate</div>
+      <div class="roadmap-title">Day 14 · Measure + Iterate</div>
       <div class="roadmap-desc">7-day delta vs baseline. Target: â‰¥ 27% reduction (conservative). Stretch: 45%.</div>
       <div class="roadmap-action"><strong>Action:</strong> Anthropic Console 7-day comparison. Mempalace diary entry. If &lt; 25%, audit which win didn't land â€” likely #5 or #6 (behavior changes). <strong>Verify:</strong> writeup published as <code>5-21-26-token-savings-postmortem.html</code> in artifacts hub.</div>
     </div>
@@ -400,7 +400,7 @@
 </section>
 
 <footer>
-  Generated by <span>Claude Opus 4.7 + Claude Code Guide SME</span> Â· Greenskeeper Studios Internal Â· May 7, 2026
+  Generated by <span>Claude Opus 4.7 + Claude Code Guide SME</span> · Greenskeeper Studios Internal · May 7, 2026
   <br style="margin-top:0.3rem">
   <a href="/platform" style="color:var(--muted); font-size:0.72rem; text-decoration:none">â† TOURney Operations</a>
 </footer>

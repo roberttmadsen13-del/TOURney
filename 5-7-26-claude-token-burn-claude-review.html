@@ -1,9 +1,9 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>TOURney â€” Claude Token Burn Review Â· May 7, 2026</title>
+<title>TOURney â€” Claude Token Burn Review · May 7, 2026</title>
 <style>
   :root {
     --gold: #c09030;
@@ -171,7 +171,7 @@
 <div class="wrapper">
   <div class="section-header">
     <div class="section-eyebrow">Â§1 â€” The Audit</div>
-    <h2 class="section-title">Current Burn Profile Â· Where The Tokens Go</h2>
+    <h2 class="section-title">Current Burn Profile · Where The Tokens Go</h2>
     <p class="section-desc">Evidence-based audit of Rob's Claude Code setup on Windows. Grades each lever Aâ€“F. Scored against the SME findings + this machine's <code>settings.json</code>, hooks, and observed session pattern.</p>
   </div>
 
@@ -248,7 +248,7 @@
 <div class="wrapper">
   <div class="section-header">
     <div class="section-eyebrow">Â§2 â€” Council of 5</div>
-    <h2 class="section-title">Five Token-Saving Wins Â· Ranked by ROI</h2>
+    <h2 class="section-title">Five Token-Saving Wins · Ranked by ROI</h2>
     <p class="section-desc">Each win cites the exact lever. Numbers are from the SME brief + Anthropic public pricing.</p>
   </div>
 
@@ -377,14 +377,14 @@
 <div class="wrapper">
   <div class="section-header">
     <div class="section-eyebrow">Â§4 â€” Adoption Roadmap</div>
-    <h2 class="section-title">Week-By-Week Â· How To Land All 5 Wins</h2>
+    <h2 class="section-title">Week-By-Week · How To Land All 5 Wins</h2>
     <p class="section-desc">Sequenced by ROI and dependency. Quick wins early, behavior changes last.</p>
   </div>
 
   <div class="roadmap-item">
     <div class="roadmap-icon">1</div>
     <div class="roadmap-content">
-      <div class="roadmap-title">Day 1 Â· Capture Baseline</div>
+      <div class="roadmap-title">Day 1 · Capture Baseline</div>
       <div class="roadmap-desc">Before changing anything: screenshot last-7-day Anthropic Console usage. Note model split, total spend, cache_read ratio (likely 0).</div>
       <div class="roadmap-action"><strong>Action:</strong> Save to <code>mempalace</code> drawer <code>token-burn-baseline-2026-05-07</code>. Confirm cache_read â‰ˆ 0 (proves no caching today).</div>
     </div>
@@ -393,7 +393,7 @@
   <div class="roadmap-item">
     <div class="roadmap-icon">2</div>
     <div class="roadmap-content">
-      <div class="roadmap-title">Day 1 Â· Drop Effort + Model Default</div>
+      <div class="roadmap-title">Day 1 · Drop Effort + Model Default</div>
       <div class="roadmap-desc">Lowest-risk, highest-immediate-savings change. settings.json edits.</div>
       <div class="roadmap-action"><strong>Action:</strong> <code>"effortLevel": "medium"</code> (was xhigh) + <code>"model": "sonnet"</code> (was opus). Re-promote per-task with <code>/model opus</code> when needed.</div>
     </div>
@@ -402,7 +402,7 @@
   <div class="roadmap-item">
     <div class="roadmap-icon">3</div>
     <div class="roadmap-content">
-      <div class="roadmap-title">Day 2 Â· Cache CLAUDE.md</div>
+      <div class="roadmap-title">Day 2 · Cache CLAUDE.md</div>
       <div class="roadmap-desc">Single <code>cache_control</code> breakpoint over the user-level CLAUDE.md + companyAnnouncements + DECISIONS + DISAGREEMENTS. 5-min TTL, ephemeral type.</div>
       <div class="roadmap-action"><strong>Action:</strong> Configure via Claude Code SDK or <code>extra_body</code> on the Anthropic API client. Verify with <code>cache_read_input_tokens</code> &gt; 0 after turn 2.</div>
     </div>
@@ -411,7 +411,7 @@
   <div class="roadmap-item">
     <div class="roadmap-icon">4</div>
     <div class="roadmap-content">
-      <div class="roadmap-title">Week 1 Â· Skill Model Overrides</div>
+      <div class="roadmap-title">Week 1 · Skill Model Overrides</div>
       <div class="roadmap-desc">Audit all <code>~/.claude/skills/tourney-*/SKILL.md</code>. Add <code>model: haiku</code> frontmatter to reference/audit/feature-depth skills. <code>model: sonnet</code> to review/plan/runbook. Leave Opus only for <code>tourney-review-security</code> and <code>tourney-plan-security</code>.</div>
       <div class="roadmap-action"><strong>Action:</strong> One commit per skill set. Verify with <code>/tourney-reference</code> dry run â€” status line should show Haiku.</div>
     </div>
@@ -420,7 +420,7 @@
   <div class="roadmap-item">
     <div class="roadmap-icon">5</div>
     <div class="roadmap-content">
-      <div class="roadmap-title">Week 1 Â· Habit Fix Â· Read â†’ ctx_execute_file</div>
+      <div class="roadmap-title">Week 1 · Habit Fix · Read â†’ ctx_execute_file</div>
       <div class="roadmap-desc">Behavior change. Add a UserPromptSubmit reminder that nudges toward <code>ctx_execute_file</code> when about to Read &gt; 500-line files.</div>
       <div class="roadmap-action"><strong>Action:</strong> Tip already exists in PreToolUse hook â€” confirm it fires. Document the rule in CLAUDE.md as a hard preference.</div>
     </div>
@@ -429,7 +429,7 @@
   <div class="roadmap-item">
     <div class="roadmap-icon">6</div>
     <div class="roadmap-content">
-      <div class="roadmap-title">Week 1 Â· Session Hygiene</div>
+      <div class="roadmap-title">Week 1 · Session Hygiene</div>
       <div class="roadmap-desc">Behavior change. Use <code>/clear</code> on topic switch. <code>/compact</code> when token meter approaches 80K. Avoid 4-hour marathons unless caching is working.</div>
       <div class="roadmap-action"><strong>Action:</strong> Add a CLAUDE.md rule: "Topic switch â†’ /clear. â‰¥ 80K tokens â†’ /compact."</div>
     </div>
@@ -438,7 +438,7 @@
   <div class="roadmap-item">
     <div class="roadmap-icon">7</div>
     <div class="roadmap-content">
-      <div class="roadmap-title">Day 14 Â· Measure</div>
+      <div class="roadmap-title">Day 14 · Measure</div>
       <div class="roadmap-desc">7-day window comparison vs baseline. Should see â‰¥ 25% reduction in total spend. If not, audit which win didn't land.</div>
       <div class="roadmap-action"><strong>Action:</strong> Anthropic Console â†’ Usage â†’ 7-day delta. Write retro to mempalace. Update <code>5-7-26-claude-token-burn-postmortem.md</code> if any wins underperformed.</div>
     </div>
@@ -450,7 +450,7 @@
 <div class="wrapper">
   <div class="section-header">
     <div class="section-eyebrow">Â§5 â€” Leak Audit</div>
-    <h2 class="section-title">Specific Findings Â· File:Line Citations</h2>
+    <h2 class="section-title">Specific Findings · File:Line Citations</h2>
     <p class="section-desc">Every claim cited to <code>settings.json</code> or hook script. No theoretical findings.</p>
   </div>
 
@@ -569,7 +569,7 @@
 </section>
 
 <footer>
-  Generated by <span>Claude Opus 4.7 + Claude Code Guide SME</span> Â· Greenskeeper Studios Internal Â· May 7, 2026
+  Generated by <span>Claude Opus 4.7 + Claude Code Guide SME</span> · Greenskeeper Studios Internal · May 7, 2026
   <br style="margin-top:0.3rem">
   <a href="/" style="color:var(--muted); font-size:0.72rem; text-decoration:none">â† tourney.greenskeeper.studio</a>
 </footer>

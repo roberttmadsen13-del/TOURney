@@ -1,9 +1,9 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>TOURney â€” AAA Implementation Runbook Â· May 11, 2026</title>
+<title>TOURney â€” AAA Implementation Runbook · May 11, 2026</title>
 <style>
   :root {
     --gold: #c09030;
@@ -201,7 +201,7 @@ git tag aaa-runbook-start-$(date +%Y%m%d-%H%M)</pre>
   </div>
 
   <!-- â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ PHASE 0 â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
-  <div class="phase-banner"><span class="phase-num">P0</span><span class="phase-name">Pre-flight Verification</span><span class="phase-meta">15 min Â· zero risk</span></div>
+  <div class="phase-banner"><span class="phase-num">P0</span><span class="phase-name">Pre-flight Verification</span><span class="phase-meta">15 min · zero risk</span></div>
 
   <div class="step">
     <div class="step-head"><span class="step-id">0.1</span><span class="step-title">Pull latest, verify clean tree</span><span class="pill pill-blue">read-only</span></div>
@@ -235,7 +235,7 @@ git status</pre>
   </div>
 
   <!-- â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ PHASE 1 â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
-  <div class="phase-banner"><span class="phase-num">P1</span><span class="phase-name">A1: Finish Shared Module Layer</span><span class="phase-meta">~6 hours Â· refactor only</span></div>
+  <div class="phase-banner"><span class="phase-num">P1</span><span class="phase-name">A1: Finish Shared Module Layer</span><span class="phase-meta">~6 hours · refactor only</span></div>
 
   <div class="step">
     <div class="step-head"><span class="step-id">1.1</span><span class="step-title">Inventory duplicates</span><span class="pill pill-blue">read-only</span></div>
@@ -290,7 +290,7 @@ git push origin main</pre>
   </div>
 
   <!-- â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ PHASE 2 â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
-  <div class="phase-banner"><span class="phase-num">P2</span><span class="phase-name">A3: Wire Type-Checked CI</span><span class="phase-meta">~1 hour Â· CI only, no runtime impact</span></div>
+  <div class="phase-banner"><span class="phase-num">P2</span><span class="phase-name">A3: Wire Type-Checked CI</span><span class="phase-meta">~1 hour · CI only, no runtime impact</span></div>
 
   <div class="step">
     <div class="step-head"><span class="step-id">2.1</span><span class="step-title">Create tsconfig.json</span><span class="pill pill-orange">write</span></div>
@@ -341,7 +341,7 @@ git push origin main</pre>
   </div>
 
   <!-- â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ PHASE 3 â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
-  <div class="phase-banner"><span class="phase-num">P3</span><span class="phase-name">A8: Weekly Backup Drill</span><span class="phase-meta">~1 hour Â· defensive, prereq for risky migrations</span></div>
+  <div class="phase-banner"><span class="phase-num">P3</span><span class="phase-name">A8: Weekly Backup Drill</span><span class="phase-meta">~1 hour · defensive, prereq for risky migrations</span></div>
 
   <div class="step">
     <div class="step-head"><span class="step-id">3.1</span><span class="step-title">Provision backup storage</span><span class="pill pill-orange">setup</span></div>
@@ -373,7 +373,7 @@ git push origin main</pre>
   </div>
 
   <!-- â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ PHASE 4 â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
-  <div class="phase-banner"><span class="phase-num">P4</span><span class="phase-name">A7: Apply Migration 006 â€” drop is_admin</span><span class="phase-meta">30 min Â· schema, gated</span></div>
+  <div class="phase-banner"><span class="phase-num">P4</span><span class="phase-name">A7: Apply Migration 006 â€” drop is_admin</span><span class="phase-meta">30 min · schema, gated</span></div>
 
   <div class="step">
     <div class="step-head"><span class="step-id">4.1</span><span class="step-title">Audit code for residual is_admin references</span><span class="pill pill-blue">read-only</span></div>
@@ -399,7 +399,7 @@ npx supabase db push --linked</pre>
   </div>
 
   <!-- â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ PHASE 5 â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
-  <div class="phase-banner"><span class="phase-num">P5</span><span class="phase-name">A7: Apply Migration 007 â€” rounds table</span><span class="phase-meta">30 min Â· schema, gated</span></div>
+  <div class="phase-banner"><span class="phase-num">P5</span><span class="phase-name">A7: Apply Migration 007 â€” rounds table</span><span class="phase-meta">30 min · schema, gated</span></div>
 
   <div class="step">
     <div class="step-head"><span class="step-id">5.1</span><span class="step-title">Review migration 007</span><span class="pill pill-blue">read-only</span></div>
@@ -424,7 +424,7 @@ npx supabase db push --linked</pre>
   </div>
 
   <!-- â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ PHASE 6 â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
-  <div class="phase-banner"><span class="phase-num">P6</span><span class="phase-name">A4: Test Suite Scaffold</span><span class="phase-meta">~4 hours Â· setup only, deeper backfill is its own sprint</span></div>
+  <div class="phase-banner"><span class="phase-num">P6</span><span class="phase-name">A4: Test Suite Scaffold</span><span class="phase-meta">~4 hours · setup only, deeper backfill is its own sprint</span></div>
 
   <div class="step">
     <div class="step-head"><span class="step-id">6.1</span><span class="step-title">Install Vitest + Playwright</span><span class="pill pill-orange">setup</span></div>
@@ -463,7 +463,7 @@ npx playwright install chromium</pre>
   </div>
 
   <!-- â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ PHASE 7 â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
-  <div class="phase-banner"><span class="phase-num">P7</span><span class="phase-name">A5: Staging Environment</span><span class="phase-meta">~2 hours Â· isolated from prod</span></div>
+  <div class="phase-banner"><span class="phase-num">P7</span><span class="phase-name">A5: Staging Environment</span><span class="phase-meta">~2 hours · isolated from prod</span></div>
 
   <div class="step">
     <div class="step-head"><span class="step-id">7.1</span><span class="step-title">Create staging Supabase project</span><span class="pill pill-orange">setup</span></div>
@@ -496,7 +496,7 @@ npx supabase db push --linked</pre>
   </div>
 
   <!-- â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ PHASE 8 â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
-  <div class="phase-banner"><span class="phase-num">P8</span><span class="phase-name">F7: Tier Gating (Stripe â†’ Revenue)</span><span class="phase-meta">~6 hours Â· revenue-affecting, staging-first</span></div>
+  <div class="phase-banner"><span class="phase-num">P8</span><span class="phase-name">F7: Tier Gating (Stripe â†’ Revenue)</span><span class="phase-meta">~6 hours · revenue-affecting, staging-first</span></div>
 
   <div class="step">
     <div class="step-head"><span class="step-id">8.1</span><span class="step-title">Define tier config</span><span class="pill pill-orange">write</span></div>
@@ -668,7 +668,7 @@ git push origin main</pre>
 </section>
 
 <footer>
-  Generated by <span>Claude Opus 4.7</span> Â· Greenskeeper Studios Internal Â· May 11, 2026
+  Generated by <span>Claude Opus 4.7</span> · Greenskeeper Studios Internal · May 11, 2026
   <br style="margin-top:0.3rem">
   <a href="/platform" style="color:var(--muted);font-size:0.72rem;text-decoration:none">â† TOURney Operations</a>
 </footer>

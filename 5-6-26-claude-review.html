@@ -1,9 +1,9 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>TOURney â€” Claude Review Â· May 6, 2026</title>
+<title>TOURney â€” Claude Review · May 6, 2026</title>
 <style>
   :root {
     --gold: #c09030;
@@ -318,7 +318,7 @@
   <div class="grid-2" style="margin-bottom:0.75rem">
     <div class="idea-card idea-1">
       <div class="idea-number">1</div>
-      <div class="idea-tag"><span class="pill pill-gold">UX Â· High Impact</span></div>
+      <div class="idea-tag"><span class="pill pill-gold">UX · High Impact</span></div>
       <div class="idea-title">Extend Email Beyond /install â€” Welcome, Round Open, Results Recap</div>
       <div class="idea-body">The <code>send-install-email</code> edge function already exists, so the email pipeline is half-built. Extend it. Today only one transactional email goes out (PWA install). Players get nothing on registration confirm, nothing when a round opens, nothing when the tournament ends. Add three more templates triggered on database events: <strong>Welcome</strong> (after RSVP confirm), <strong>Round Open</strong> (when admin flips round_state), <strong>Final Recap</strong> (at tournament_end with leaderboard + standout scores). The recap email is the viral moment â€” it lands in the group chat the night the tournament ends.</div>
       <div class="idea-why"><strong>Build:</strong> Generalize <code>send-install-email</code> into a <code>send-email</code> edge function with template parameter. Add Postgres triggers (or invoke from admin actions) to fire each template. Ship before Bova 2026.</div>
@@ -326,7 +326,7 @@
 
     <div class="idea-card idea-2">
       <div class="idea-number">2</div>
-      <div class="idea-tag"><span class="pill pill-blue">Data Â· High Impact</span></div>
+      <div class="idea-tag"><span class="pill pill-blue">Data · High Impact</span></div>
       <div class="idea-title">Live Score Feed with Animations on Scoreboard</div>
       <div class="idea-body">The scoreboard has Supabase Realtime wired up â€” but there's no visual reaction when a score comes in. No row highlight, no rank-change animation, no "just submitted" indicator. A score drops and the board silently re-sorts. That's a missed moment. When someone eagles hole 7 and the leaderboard reshuffles with a subtle animation and a "ðŸ¦… Eagle â€” Team A" toast, everyone in the cart looks up.</div>
       <div class="idea-why"><strong>Build:</strong> Track previous rank per team in JS. On Realtime update, CSS transition the row, fire a toast for birdie/eagle/hole-in-one events. ~1 day of work, massive perceived quality lift.</div>
@@ -334,7 +334,7 @@
 
     <div class="idea-card idea-3">
       <div class="idea-number">3</div>
-      <div class="idea-tag"><span class="pill pill-green">Polish Â· Medium Impact</span></div>
+      <div class="idea-tag"><span class="pill pill-green">Polish · Medium Impact</span></div>
       <div class="idea-title">Onboarding Checklist in Admin Dashboard</div>
       <div class="idea-body">A new tournament owner finishes the creation wizard and lands in admin.html staring at a dense UI. There's no "you're 70% set up â€” here's what's left" moment. An onboarding checklist (Add your logo â†’ Set your course â†’ Open registration â†’ Add players â†’ Open scoring) would make the product feel finished and guide owners to the aha moment faster. Right now they have to figure it out themselves.</div>
       <div class="idea-why"><strong>Build:</strong> Read settings from Supabase, render a sticky progress bar or collapsible checklist at the top of admin. Each item links to the relevant admin tab. Pure front-end, no schema changes. ~4 hours.</div>
@@ -342,7 +342,7 @@
 
     <div class="idea-card idea-4">
       <div class="idea-number">4</div>
-      <div class="idea-tag"><span class="pill pill-orange">Business Â· Medium Impact</span></div>
+      <div class="idea-tag"><span class="pill pill-orange">Business · Medium Impact</span></div>
       <div class="idea-title">Post-Tournament Recap Page (Auto-Generated)</div>
       <div class="idea-body">After a tournament ends, there's no canonical "here's what happened" artifact. The champions.html hall of fame is a static list. What if closing a tournament auto-generated a recap page with the final leaderboard, team highlights, round-by-round progression, best scores, and a shareable link? This becomes marketing â€” organizers share it on social, and it's the best possible ad for TOURney because it shows the product doing real work.</div>
       <div class="idea-why"><strong>Build:</strong> New <code>recap.html</code> page, same pattern as other pages. Tournament recap is read-only â€” just queries scores/players. Could be a shareable static URL with no login required. Screenshots automatically become social posts.</div>
@@ -351,7 +351,7 @@
 
   <div class="idea-card idea-5">
     <div class="idea-number">5</div>
-    <div class="idea-tag"><span class="pill pill-purple">Infrastructure Â· High Leverage</span></div>
+    <div class="idea-tag"><span class="pill pill-purple">Infrastructure · High Leverage</span></div>
     <div class="idea-title">Error Monitoring + Lightweight Analytics (Sentry / Posthog)</div>
     <div class="idea-body">You're flying blind in production. If a player's scorecard crashes on hole 12, you don't know until they text you. If 40% of people drop off on step 3 of the creation wizard, you have no data. Sentry (free tier) catches unhandled JS exceptions with stack traces and the Supabase query that triggered them. Posthog (free tier, self-hostable) tracks page views, funnel conversion, and feature usage â€” all without violating GDPR if configured correctly. This is the difference between building on feelings and building on facts.</div>
     <div class="idea-why"><strong>Build:</strong> Drop a Sentry CDN snippet into tourney-init.js (one line). Add Posthog pageview tracking. Both are free, both are 30-minute setups, both pay dividends on every future feature decision. Do this before Bova 2026 runs â€” you want data from the live event.</div>
@@ -796,7 +796,7 @@
 </section>
 
 <footer>
-  Generated by <span>Claude Sonnet 4.6</span> Â· Greenskeeper Studios Internal Â· May 6, 2026
+  Generated by <span>Claude Sonnet 4.6</span> · Greenskeeper Studios Internal · May 6, 2026
   <br style="margin-top:0.3rem">
   <a href="/" style="color:var(--muted); font-size:0.72rem; text-decoration:none">â† tourney.greenskeeper.studio</a>
 </footer>

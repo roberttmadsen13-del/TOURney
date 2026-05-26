@@ -1,9 +1,9 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>TOURney â€” Security Plan Â· May 7, 2026</title>
+<title>TOURney â€” Security Plan · May 7, 2026</title>
 <style>
   :root {
     --gold: #c09030; --gold-light: #d4a840; --gold-dim: rgba(192,144,48,0.18);
@@ -504,7 +504,7 @@ await supabase.from('invitations')
     <div class="checklist-body">
       <div class="checklist-title">Run migration 012 â€” tighten invitations + player_accounts RLS</div>
       <div class="checklist-detail">Drops anon update policy on invitations. Scopes auth manage to owner/admin. Drops anon read on player_accounts. Supabase dashboard â†’ SQL Editor â†’ paste migration 012 â†’ run.</div>
-      <div class="checklist-effort">~15min Â· migration file in this plan Â· Closes: critical #1, high #2, high #3</div>
+      <div class="checklist-effort">~15min · migration file in this plan · Closes: critical #1, high #2, high #3</div>
     </div>
     <span class="pill pill-red">CRITICAL</span>
   </div>
@@ -514,7 +514,7 @@ await supabase.from('invitations')
     <div class="checklist-body">
       <div class="checklist-title">Add auth to send-install-email edge function</div>
       <div class="checklist-detail">Add Authorization header check + getUser() + tournament owner verification. Redeploy: <code>supabase functions deploy send-install-email</code>.</div>
-      <div class="checklist-effort">~30min Â· code in this plan Â· Closes: critical #2</div>
+      <div class="checklist-effort">~30min · code in this plan · Closes: critical #2</div>
     </div>
     <span class="pill pill-red">CRITICAL</span>
   </div>
@@ -524,7 +524,7 @@ await supabase.from('invitations')
     <div class="checklist-body">
       <div class="checklist-title">Create accept-invitation edge function</div>
       <div class="checklist-detail">Token-based accept flow to replace the dropped anon RLS policy. Also add access_token column (included in migration 012). Update invite email link to include <code>?token={access_token}</code>. Update accept UI to call the edge function instead of direct Supabase update.</div>
-      <div class="checklist-effort">~2hr Â· code scaffold in this plan</div>
+      <div class="checklist-effort">~2hr · code scaffold in this plan</div>
     </div>
     <span class="pill pill-red">CRITICAL</span>
   </div>
@@ -536,7 +536,7 @@ await supabase.from('invitations')
     <div class="checklist-body">
       <div class="checklist-title">Fix _parseMentions XSS â€” escape before regex</div>
       <div class="checklist-detail">scoreboard.html + feed.html: escape raw message text before running mention regex. One-line fix per file.</div>
-      <div class="checklist-effort">~15min Â· Closes: medium XSS #1</div>
+      <div class="checklist-effort">~15min · Closes: medium XSS #1</div>
     </div>
     <span class="pill pill-orange">HIGH</span>
   </div>
@@ -546,7 +546,7 @@ await supabase.from('invitations')
     <div class="checklist-body">
       <div class="checklist-title">Add safeUrl() to admin.html â€” sanitize url before innerHTML</div>
       <div class="checklist-detail">admin.html:2044 + 2194: wrap url variable with protocol validation. Reject javascript: and data: schemes.</div>
-      <div class="checklist-effort">~30min Â· Closes: medium XSS #2</div>
+      <div class="checklist-effort">~30min · Closes: medium XSS #2</div>
     </div>
     <span class="pill pill-orange">HIGH</span>
   </div>
@@ -556,7 +556,7 @@ await supabase.from('invitations')
     <div class="checklist-body">
       <div class="checklist-title">Verify no service_role key in git history</div>
       <div class="checklist-detail">Run: <code>git log -p | grep -i service_role</code>. If any commit shows the key in source, rotate it immediately in Supabase dashboard then force-push a history rewrite.</div>
-      <div class="checklist-effort">~5min Â· One-time audit</div>
+      <div class="checklist-effort">~5min · One-time audit</div>
     </div>
     <span class="pill pill-orange">HIGH</span>
   </div>
@@ -568,7 +568,7 @@ await supabase.from('invitations')
     <div class="checklist-body">
       <div class="checklist-title">Remove CSP unsafe-inline â€” move JS to external files</div>
       <div class="checklist-detail">Move each page's inline script block to a companion .js file. Remove 'unsafe-inline' from vercel.json script-src. Add CORP + COOP headers. This makes CSP actually block injected scripts.</div>
-      <div class="checklist-effort">~2 days Â· Biggest security lift remaining</div>
+      <div class="checklist-effort">~2 days · Biggest security lift remaining</div>
     </div>
     <span class="pill pill-gold">PRE-LAUNCH</span>
   </div>
@@ -578,7 +578,7 @@ await supabase.from('invitations')
     <div class="checklist-body">
       <div class="checklist-title">Replace PLATFORM_EMAIL hardcoded auth with magic link</div>
       <div class="checklist-detail">Remove plaintext email from platform.html source. Use Supabase <code>signInWithOtp()</code> instead. Eliminates password brute-force surface and exposed email in source.</div>
-      <div class="checklist-effort">~2hr Â· platform.html only</div>
+      <div class="checklist-effort">~2hr · platform.html only</div>
     </div>
     <span class="pill pill-gold">PRE-LAUNCH</span>
   </div>
@@ -588,7 +588,7 @@ await supabase.from('invitations')
     <div class="checklist-body">
       <div class="checklist-title">Add server-side score validation</div>
       <div class="checklist-detail">Reject score submissions after round_closed_at timestamp. Add gross_score range validation at DB level (CHECK constraint already partially exists). Prevent backdated score injection via offline queue manipulation.</div>
-      <div class="checklist-effort">~3hr Â· migration + edge function or DB trigger</div>
+      <div class="checklist-effort">~3hr · migration + edge function or DB trigger</div>
     </div>
     <span class="pill pill-gold">PRE-LAUNCH</span>
   </div>
@@ -685,7 +685,7 @@ await supabase.from('invitations')
     <div class="roadmap-content">
       <div class="roadmap-title">S1 â€” Run migration 012</div>
       <div class="roadmap-desc">Supabase SQL Editor â†’ paste migration 012 â†’ run. Drops anon update on invitations. Scopes auth manage to owner/admin. Drops anon read on player_accounts.</div>
-      <div class="roadmap-action"><strong>15 min Â· No code deploy.</strong> Immediate effect. Verify: try updating an invitation row via REST with anon key â€” should 403.</div>
+      <div class="roadmap-action"><strong>15 min · No code deploy.</strong> Immediate effect. Verify: try updating an invitation row via REST with anon key â€” should 403.</div>
     </div>
   </div>
 
@@ -694,7 +694,7 @@ await supabase.from('invitations')
     <div class="roadmap-content">
       <div class="roadmap-title">S2 â€” Auth-gate send-install-email</div>
       <div class="roadmap-desc">Edit supabase/functions/send-install-email/index.ts. Add auth header check + getUser() + tournament owner verification. Redeploy function.</div>
-      <div class="roadmap-action"><strong>30 min Â· supabase functions deploy send-install-email</strong></div>
+      <div class="roadmap-action"><strong>30 min · supabase functions deploy send-install-email</strong></div>
     </div>
   </div>
 
@@ -703,7 +703,7 @@ await supabase.from('invitations')
     <div class="roadmap-content">
       <div class="roadmap-title">S3 â€” Build accept-invitation edge function</div>
       <div class="roadmap-desc">New function: validate access_token, update status as service_role. Update invite email template to include token in link. Update client accept flow to call edge function instead of direct Supabase update.</div>
-      <div class="roadmap-action"><strong>2 hr Â· New file: supabase/functions/accept-invitation/index.ts</strong></div>
+      <div class="roadmap-action"><strong>2 hr · New file: supabase/functions/accept-invitation/index.ts</strong></div>
     </div>
   </div>
 
@@ -714,7 +714,7 @@ await supabase.from('invitations')
     <div class="roadmap-content">
       <div class="roadmap-title">S4 â€” Fix _parseMentions XSS</div>
       <div class="roadmap-desc">scoreboard.html + feed.html: escape raw message before regex. One line per file.</div>
-      <div class="roadmap-action"><strong>15 min each Â· git add, commit "fix: escape message before parseMentions", push</strong></div>
+      <div class="roadmap-action"><strong>15 min each · git add, commit "fix: escape message before parseMentions", push</strong></div>
     </div>
   </div>
 
@@ -723,7 +723,7 @@ await supabase.from('invitations')
     <div class="roadmap-content">
       <div class="roadmap-title">S5 â€” safeUrl() in admin.html</div>
       <div class="roadmap-desc">Add helper + wrap url at admin.html:2044 and :2194. 30-minute fix.</div>
-      <div class="roadmap-action"><strong>30 min Â· commit "fix: sanitize url before innerHTML in admin"</strong></div>
+      <div class="roadmap-action"><strong>30 min · commit "fix: sanitize url before innerHTML in admin"</strong></div>
     </div>
   </div>
 
@@ -743,7 +743,7 @@ await supabase.from('invitations')
     <div class="roadmap-content">
       <div class="roadmap-title">S7 â€” Magic link auth for platform.html</div>
       <div class="roadmap-desc">Replace signInWithPassword + PLATFORM_EMAIL with Supabase magic link. Remove hardcoded email from source. 2hr change on platform.html only.</div>
-      <div class="roadmap-action"><strong>2 hr Â· commit "feat: platform auth via magic link, remove hardcoded email"</strong></div>
+      <div class="roadmap-action"><strong>2 hr · commit "feat: platform auth via magic link, remove hardcoded email"</strong></div>
     </div>
   </div>
 
@@ -752,7 +752,7 @@ await supabase.from('invitations')
     <div class="roadmap-content">
       <div class="roadmap-title">S8 â€” Server-side score validation</div>
       <div class="roadmap-desc">Add round_closed_at column to tournaments. Reject score INSERTs after close via RLS CHECK or DB trigger. Prevents offline queue injection after round closes.</div>
-      <div class="roadmap-action"><strong>3 hr Â· migration + RLS update</strong></div>
+      <div class="roadmap-action"><strong>3 hr · migration + RLS update</strong></div>
     </div>
   </div>
 
@@ -761,7 +761,7 @@ await supabase.from('invitations')
     <div class="roadmap-content">
       <div class="roadmap-title">S9 â€” Remove CSP unsafe-inline (external JS files)</div>
       <div class="roadmap-desc">Move inline script blocks to external .js files per page. Remove 'unsafe-inline' from vercel.json. Add CORP/COOP headers. Full 2-day refactor but makes XSS defense actually work at the network layer.</div>
-      <div class="roadmap-action"><strong>2 days Â· largest item Â· do before Bova 2026 event date</strong></div>
+      <div class="roadmap-action"><strong>2 days · largest item · do before Bova 2026 event date</strong></div>
     </div>
   </div>
 
@@ -772,7 +772,7 @@ await supabase.from('invitations')
     <div class="roadmap-content">
       <div class="roadmap-title">S10 â€” Audit log table</div>
       <div class="roadmap-desc">Migration: audit_log table + DB triggers on scores/players/settings. Admin-only read policy. Required for dispute resolution when charging real money.</div>
-      <div class="roadmap-action"><strong>1 day Â· migration + triggers</strong></div>
+      <div class="roadmap-action"><strong>1 day · migration + triggers</strong></div>
     </div>
   </div>
 
@@ -781,7 +781,7 @@ await supabase.from('invitations')
     <div class="roadmap-content">
       <div class="roadmap-title">S11 â€” Multi-tenant RLS audit</div>
       <div class="roadmap-desc">Before Phase 2 (multiple organizers): audit every SELECT policy for cross-tenant data leakage. Confirm Organizer A cannot query Organizer B's players. Add explicit tournament_id scoping to all public-read policies.</div>
-      <div class="roadmap-action"><strong>1 day Â· audit + migration Â· Phase 2 prerequisite</strong></div>
+      <div class="roadmap-action"><strong>1 day · audit + migration · Phase 2 prerequisite</strong></div>
     </div>
   </div>
 
@@ -790,7 +790,7 @@ await supabase.from('invitations')
     <div class="roadmap-content">
       <div class="roadmap-title">S12 â€” CSP violation reporting + security.txt</div>
       <div class="roadmap-desc">Edge function for CSP report-uri. Add /.well-known/security.txt. Creates a professional responsible disclosure path and early-warning system for any XSS that makes it to production.</div>
-      <div class="roadmap-action"><strong>4 hr Â· post-launch hardening</strong></div>
+      <div class="roadmap-action"><strong>4 hr · post-launch hardening</strong></div>
     </div>
   </div>
 
@@ -798,10 +798,10 @@ await supabase.from('invitations')
 </section>
 
 <footer>
-  Generated by <span>claude-sonnet-4-6</span> Â· Greenskeeper Studios Internal Â· May 7, 2026
+  Generated by <span>claude-sonnet-4-6</span> · Greenskeeper Studios Internal · May 7, 2026
   <br style="margin-top:0.3rem">
   <a href="/platform/5-7-26-claude-review-security" style="color:var(--muted);font-size:0.72rem;text-decoration:none">â† Security Review</a>
-  &nbsp;Â·&nbsp;
+  &nbsp;·&nbsp;
   <a href="/platform" style="color:var(--muted);font-size:0.72rem;text-decoration:none">TOURney Operations</a>
 </footer>
 
