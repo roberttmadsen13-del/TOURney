@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-05-22T18:00:00Z",
+  "updated_at": "2026-05-26T00:00:00Z",
   "description": "Living state for all TOURney platform axes. One entry per axis. Updated by every tourney-* skill. Agents read this for context (50 tokens) instead of parsing HTML artifacts.",
   "stages": ["review", "plan", "runbook", "executing", "audit", "concluded"],
   "axes": {
@@ -13,12 +13,12 @@
       "blocking": false
     },
     "feature-depth": {
-      "status": "executing",
-      "grade": "B+",
+      "status": "concluded",
+      "grade": "A-",
       "artifact": "/platform/5-22-26-feature-depth-review",
-      "last_updated": "2026-05-22",
-      "summary": "Dedicated review B+. course.html missing, no courses/course_holes schema, bug-fab single-image, captain keys unwired in admin. 8-step runbook ready for execute.",
-      "open_items": 5,
+      "last_updated": "2026-05-26",
+      "summary": "All 8 runbook items resolved. courses/course_holes live, scorecard yardage from DB, multi-image bug-fab (v6), captain on scoreboard, admin-as-player toggle. Grade B+ → A−.",
+      "open_items": 0,
       "blocking": false
     },
     "ux": {

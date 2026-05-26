@@ -253,43 +253,6 @@ a{color:inherit;text-decoration:none;}
 const sb = window.tourney.db;
 const esc = s => (s == null ? '' : String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'));
 
-const DEFAULT_HOLES = [
-  {hole:1,par:4,yards:380,hcp:7},{hole:2,par:4,yards:395,hcp:11},{hole:3,par:3,yards:170,hcp:17},
-  {hole:4,par:4,yards:410,hcp:3},{hole:5,par:5,yards:530,hcp:1},{hole:6,par:3,yards:155,hcp:15},
-  {hole:7,par:4,yards:375,hcp:9},{hole:8,par:4,yards:400,hcp:5},{hole:9,par:5,yards:510,hcp:13},
-  {hole:10,par:4,yards:390,hcp:8},{hole:11,par:3,yards:175,hcp:16},{hole:12,par:5,yards:525,hcp:2},
-  {hole:13,par:4,yards:385,hcp:6},{hole:14,par:4,yards:405,hcp:4},{hole:15,par:3,yards:160,hcp:18},
-  {hole:16,par:5,yards:540,hcp:10},{hole:17,par:4,yards:380,hcp:12},{hole:18,par:4,yards:420,hcp:14}
-];
-
-async function init() {
-  const { tournament } = await window.tourney.ready;
-  const [courseRes, logoRes] = await Promise.all([
-    sb.from('settings').select('value').eq('tournament_id', tournament.id).eq('key','course_info').maybeSingle(),
-    sb.from('settings').select('value').eq('tournament_id', tournament.id).eq('key','logo_url').maybeSingle(),
-  ]);
-
-  loadNavLogo(logoRes.data?.value);
-
-  const info = parseJson(courseRes.data?.value, {});
-  renderCourseInfo(info);
-
-  document.getElementById('loadingState').style.display = 'none';
-  document.getElementById('courseContent').style.display = 'block';
-}
-
-function parseJson(str, fallback) {
-  if (!str) return fallback;
-  try { return JSON.parse(str); } catch { return fallback; }
-}
-
-function loadNavLogo(url) {
-  if (!url) return;
-  const img = document.getElementById('navLogoImg');
-  const svg = document.getElementById('navLogoSvg');
-  if (img) { img.src = url; img.style.display = 'block'; }
-  if (svg) svg.style.display = 'none';
-}
 
 function setField(id, val, fallback='TBD') {
   const el = document.getElementById(id);
@@ -300,33 +263,62 @@ function setField(id, val, fallback='TBD') {
   else el.classList.remove('tbd');
 }
 
-function renderCourseInfo(info) {
-  setField('courseName', info.name);
-  setField('courseAddress', info.address);
-  setField('coursePhone', info.phone);
-
-  const webEl = document.getElementById('courseWebsite');
-  if (info.website) {
-    webEl.textContent = info.website;
-    webEl.classList.remove('tbd');
-    const wrap = webEl.parentElement;
-    const link = document.createElement('a');
-    link.href = info.website;
+function setLink(linkId, valId, url, label) {
+  const link = document.getElementById(linkId);
+  const val  = document.getElementById(valId);
+  if (!link || !val) return;
+  if (url) {
+    link.href = url;
     link.target = '_blank';
     link.rel = 'noopener';
-    link.appendChild(webEl);
-    wrap.appendChild(link);
-  } else {
-    webEl.textContent = 'TBD';
-    webEl.classList.add('tbd');
+    val.textContent = label;
+    val.classList.remove('tbd');
+  }
+}
+
+async function init() {
+  const { tournament } = await window.tourney.ready;
+
+  const { data: courseRow } = await sb.from('courses')
+    .select('id,name,tee_box')
+    .eq('tournament_id', tournament.id)
+    .maybeSingle();
+
+  document.getElementById('loadingState').style.display = 'none';
+
+  if (!courseRow) {
+    document.getElementById('courseContent').style.display = 'block';
+    setField('courseName', null);
+    renderScorecard([]);
+    return;
   }
 
-  setField('courseRating', info.rating, '—');
-  setField('courseSlope', info.slope, '—');
+  setField('courseName', courseRow.name);
+  document.getElementById('courseAddress').textContent = 'TBD';
+  document.getElementById('coursePhone').textContent = 'TBD';
+  document.getElementById('courseWebsite').textContent = 'TBD';
 
-  const holes = info.holes && info.holes.length === 18 ? info.holes : DEFAULT_HOLES;
-  const front = holes.slice(0, 9);
-  const back  = holes.slice(9, 18);
+  const { data: holes } = await sb.from('course_holes')
+    .select('hole_number,par,yardage')
+    .eq('course_id', courseRow.id)
+    .order('hole_number');
+
+  const teeBox = courseRow.tee_box || 'White';
+  document.getElementById('courseSlope').textContent = teeBox;
+  document.getElementById('courseRating').parentElement.querySelector('.rating-label').textContent = 'Tee Box';
+
+  renderScorecard(holes || []);
+  document.getElementById('courseContent').style.display = 'block';
+}
+
+function renderScorecard(holes) {
+  const filled = Array.from({length:18}, (_, i) => {
+    const h = holes.find(r => r.hole_number === i+1) || {};
+    return { hole: i+1, par: h.par || 4, yards: h.yardage || null };
+  });
+
+  const front = filled.slice(0, 9);
+  const back  = filled.slice(9, 18);
   const frontPar = front.reduce((s,h)=>s+h.par,0);
   const backPar  = back.reduce((s,h)=>s+h.par,0);
   const frontYds = front.reduce((s,h)=>s+(h.yards||0),0);
@@ -344,11 +336,11 @@ function renderCourseInfo(info) {
       <td class="hole-num">${h.hole}</td>
       <td class="par-cell">${h.par}</td>
       <td class="yds-cell">${h.yards ? h.yards.toLocaleString() : '—'}</td>
-      <td class="yds-cell">${h.hcp || '—'}</td>
+      <td class="yds-cell">—</td>
     </tr>`;
   });
   html += `<tr class="nine-total">
-    <td class="total-label" colspan="1">Out</td>
+    <td class="total-label">Out</td>
     <td class="par-cell">${frontPar}</td>
     <td class="yds-cell">${frontYds > 0 ? frontYds.toLocaleString() : '—'}</td>
     <td class="yds-cell">—</td>
@@ -360,54 +352,24 @@ function renderCourseInfo(info) {
       <td class="hole-num">${h.hole}</td>
       <td class="par-cell">${h.par}</td>
       <td class="yds-cell">${h.yards ? h.yards.toLocaleString() : '—'}</td>
-      <td class="yds-cell">${h.hcp || '—'}</td>
+      <td class="yds-cell">—</td>
     </tr>`;
   });
   html += `<tr class="nine-total">
-    <td class="total-label" colspan="1">In</td>
+    <td class="total-label">In</td>
     <td class="par-cell">${backPar}</td>
     <td class="yds-cell">${backYds > 0 ? backYds.toLocaleString() : '—'}</td>
     <td class="yds-cell">—</td>
   </tr>`;
 
   html += `<tr class="grand-total">
-    <td class="total-label" colspan="1">Total</td>
+    <td class="total-label">Total</td>
     <td class="par-cell">${frontPar + backPar}</td>
     <td class="yds-cell">${(frontYds + backYds) > 0 ? (frontYds + backYds).toLocaleString() : '—'}</td>
     <td class="yds-cell">—</td>
   </tr>`;
 
   tbody.innerHTML = html;
-
-  if (info.local_rules && info.local_rules.length) {
-    const list = info.local_rules.map((r,i) =>
-      `<li class="rule-item"><span class="rule-num">${i+1}</span><span class="rule-text">${esc(r)}</span></li>`
-    ).join('');
-    document.getElementById('localRulesContent').innerHTML = `<ul class="rule-list">${list}</ul>`;
-  }
-
-  if (info.map_url) {
-    document.getElementById('mapArea').innerHTML =
-      `<img src="${info.map_url}" alt="Course map" style="width:100%;height:100%;object-fit:cover;">`;
-  }
-
-  setLink('teeTimesLink', 'teeTimesVal', info.tee_times_url, 'Book Tee Times');
-  setLink('proShopLink', 'proShopVal', info.pro_shop_url, 'Pro Shop');
-  setLink('drivingRangeLink', 'drivingRangeVal', info.driving_range_url, 'Practice Facility');
-  setLink('restaurantLink', 'restaurantVal', info.restaurant_url, 'Clubhouse / Dining');
-}
-
-function setLink(linkId, valId, url, label) {
-  const link = document.getElementById(linkId);
-  const val  = document.getElementById(valId);
-  if (!link || !val) return;
-  if (url) {
-    link.href = url;
-    link.target = '_blank';
-    link.rel = 'noopener';
-    val.textContent = label;
-    val.classList.remove('tbd');
-  }
 }
 
 init();
@@ -425,6 +387,7 @@ init();
   }
 })();
 </script>
-<script src="/bug-fab.js?v=5" defer></script>
+<script src="/bug-fab.js?v=6" defer></script>
 </body>
 </html>
+

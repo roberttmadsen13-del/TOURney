@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -10,7 +10,7 @@
 <link rel="icon" href="/icon-192.png" type="image/png">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#1a1008">
-<title>Get Player Account — TOURney</title>
+<title>Get Player Account â€” TOURney</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Mono:wght@300;400;500&family=Barlow+Condensed:wght@300;400;600;700;800&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
 :root{--ink:#1a1008;--gold:#c09030;--gold-l:#d4aa50;--gold-p:#e8cc80;--cream:#f0e6cc;--red:#8a1e10;--border:rgba(192,144,48,0.28);--bg:#1a1008;--card:#231a0a;--muted:rgba(240,230,204,0.38);}
@@ -80,15 +80,15 @@ a{color:inherit;text-decoration:none;}
     <svg width="11" height="15" viewBox="0 0 11 15" fill="none"><line x1="2" y1="1" x2="2" y2="14" stroke="#c09030" stroke-width="1.5" stroke-linecap="round"/><path d="M2 2L9.5 4.8L2 7.8Z" fill="#c09030"/></svg>
     TOURney <em>Player</em>
   </div>
-  <a href="/player" class="nav-back">← My Golf</a>
+  <a href="/player" class="nav-back">â† My Golf</a>
   <button id="puHam" class="pu-ham" aria-label="Menu" aria-expanded="false">
     <svg width="18" height="14" viewBox="0 0 18 14" fill="none" aria-hidden="true"><line x1="0" y1="1" x2="18" y2="1" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><line x1="0" y1="7" x2="18" y2="7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><line x1="0" y1="13" x2="18" y2="13" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
   </button>
 </nav>
 <div id="puDrawer" class="pu-drawer" role="menu">
   <div class="pu-drawer-inner">
-    <a href="/player">← My Golf</a>
-    <a href="https://tourney.greenskeeper.studio">← TOURney Platform</a>
+    <a href="/player">â† My Golf</a>
+    <a href="https://tourney.greenskeeper.studio">â† TOURney Platform</a>
   </div>
 </div>
 
@@ -98,7 +98,7 @@ a{color:inherit;text-decoration:none;}
   <div id="formState">
     <div class="eyebrow">TOURney Player Account</div>
     <div class="headline">Get in the <em>Game.</em></div>
-    <div class="sub">One account follows you across every TOURney tournament — live scoring, leaderboard, push notifications, and your full golf history.</div>
+    <div class="sub">One account follows you across every TOURney tournament â€” live scoring, leaderboard, push notifications, and your full golf history.</div>
 
     <div class="price-badge">
       <div class="price-val">$2</div>
@@ -106,12 +106,12 @@ a{color:inherit;text-decoration:none;}
     </div>
 
     <div class="features">
-      <div class="feature"><div class="feature-icon">✓</div>Live hole-by-hole scoring from your phone</div>
-      <div class="feature"><div class="feature-icon">✓</div>Real-time leaderboard + push notifications</div>
-      <div class="feature"><div class="feature-icon">✓</div>Hole-in-one alerts with full celebration</div>
-      <div class="feature"><div class="feature-icon">✓</div>Full tournament history across all events</div>
-      <div class="feature"><div class="feature-icon">✓</div>Player directory, team rosters, trash talk feed</div>
-      <div class="feature"><div class="feature-icon">✓</div>Offline scoring — works without cell service</div>
+      <div class="feature"><div class="feature-icon">âœ“</div>Live hole-by-hole scoring from your phone</div>
+      <div class="feature"><div class="feature-icon">âœ“</div>Real-time leaderboard + push notifications</div>
+      <div class="feature"><div class="feature-icon">âœ“</div>Hole-in-one alerts with full celebration</div>
+      <div class="feature"><div class="feature-icon">âœ“</div>Full tournament history across all events</div>
+      <div class="feature"><div class="feature-icon">âœ“</div>Player directory, team rosters, trash talk feed</div>
+      <div class="feature"><div class="feature-icon">âœ“</div>Offline scoring â€” works without cell service</div>
     </div>
 
     <div class="divider"></div>
@@ -129,7 +129,7 @@ a{color:inherit;text-decoration:none;}
       </div>
       <label class="form-label" for="signupEmail">Email</label>
       <input class="form-input" type="email" id="signupEmail" placeholder="you@email.com" autocomplete="email" required>
-      <button type="submit" class="btn-join" id="joinBtn">Get Player Account — $2/mo</button>
+      <button type="submit" class="btn-join" id="joinBtn">Get Player Account â€” $2/mo</button>
       <div id="formErr" class="form-err"></div>
       <div class="fine-print">You'll receive payment instructions by email. Account activates on payment confirmation. Cancel anytime.</div>
     </form>
@@ -137,10 +137,10 @@ a{color:inherit;text-decoration:none;}
 
   <!-- CONFIRMATION -->
   <div id="confirmState" class="confirm">
-    <div class="confirm-icon">⛳</div>
+    <div class="confirm-icon">â›³</div>
     <div class="confirm-title" id="confirmTitle">You're in.</div>
     <div class="confirm-body" id="confirmBody"></div>
-    <a href="/player" class="confirm-cta">← Back to My Golf</a>
+    <a href="/player" class="confirm-cta">â† Back to My Golf</a>
   </div>
 
 </div>
@@ -201,13 +201,13 @@ document.getElementById('signupForm').addEventListener('submit', async (ev) => {
 
   if (!first || !last || !email) return;
   btn.disabled = true;
-  btn.textContent = 'Connecting to payment…';
+  btn.textContent = 'Connecting to paymentâ€¦';
   err.classList.remove('show');
 
   // Never overwrite comped/active status
   const { data: existing } = await sb.from('player_accounts').select('billing_status').eq('email', email).maybeSingle();
   if (existing?.billing_status === 'comped' || existing?.billing_status === 'active') {
-    showConfirm('Already active.', `<strong>${first} ${last}</strong> — your Player Account is already active. Good to go.`);
+    showConfirm('Already active.', `<strong>${first} ${last}</strong> â€” your Player Account is already active. Good to go.`);
     return;
   }
 
@@ -234,13 +234,14 @@ document.getElementById('signupForm').addEventListener('submit', async (ev) => {
     err.textContent = 'Something went wrong. Try again or contact us.';
     err.classList.add('show');
     btn.disabled = false;
-    btn.textContent = 'Get Player Account — $2/mo';
+    btn.textContent = 'Get Player Account â€” $2/mo';
     return;
   }
 
-  showConfirm('You\'re on the list.', `We've got your info, <strong>${first} ${last}</strong>.<br>Payment instructions are on the way to <strong>${email}</strong>.<br><br>Your account activates as soon as payment is confirmed — usually within a few hours.`);
+  showConfirm('You\'re on the list.', `We've got your info, <strong>${first} ${last}</strong>.<br>Payment instructions are on the way to <strong>${email}</strong>.<br><br>Your account activates as soon as payment is confirmed â€” usually within a few hours.`);
 });
 </script>
-<script src="/bug-fab.js?v=5" defer></script>
+<script src="/bug-fab.js?v=6" defer></script>
 </body>
 </html>
+

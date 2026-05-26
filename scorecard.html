@@ -603,6 +603,15 @@ async function init() {
       if (tee?.yards?.length === 18) courseYards = tee.yards;
     }
   }
+  // Tournament-specific courses/course_holes table takes final precedence
+  const { data: tCourse } = await sb.from('courses').select('id').eq('tournament_id', tournament.id).maybeSingle();
+  if (tCourse) {
+    const { data: cHoles } = await sb.from('course_holes').select('hole_number,par,yardage').eq('course_id', tCourse.id).order('hole_number');
+    if (cHoles?.length === 18) {
+      coursePars = cHoles.map(h => h.par || 4);
+      courseYards = cHoles.map(h => h.yardage || null);
+    }
+  }
 
   if (!currentRound) {
     document.getElementById('noRoundMsg').style.display = 'block';
@@ -1871,6 +1880,7 @@ sb.channel('hole-in-one').on('broadcast', { event: 'ace' }, function(msg) {
 }).subscribe();
 </script>
 <script src="/pwa.js"></script>
-<script src="/bug-fab.js?v=5" defer></script>
+<script src="/bug-fab.js?v=6" defer></script>
 </body>
 </html>
+

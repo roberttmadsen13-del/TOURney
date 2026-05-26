@@ -1,11 +1,11 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <script src="/lib/util.js"></script>
 <link rel="icon" href="/icon-192.png" type="image/png">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Bug Log — TOURney</title>
+<title>Bug Log â€” TOURney</title>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -69,233 +69,233 @@ footer a:hover{color:var(--gold);}
 
 <div class="topbar">
   <div class="topbar-brand">TOURney <span>Bug Log</span></div>
-  <a class="topbar-back" href="/platform">← Operations</a>
+  <a class="topbar-back" href="/platform">â† Operations</a>
 </div>
 
 <div class="wrap">
 
   <div class="hero">
-    <div class="hero-eye">Internal · Engineering</div>
+    <div class="hero-eye">Internal Â· Engineering</div>
     <h1>QA Bug Log</h1>
-    <div class="hero-meta">TOURney Platform · Updated 2026-05-20 · Last logged: /create missing from Live Pages App Pages group (P1)</div>
+    <div class="hero-meta">TOURney Platform Â· Updated 2026-05-20 Â· Last logged: /create missing from Live Pages App Pages group (P1)</div>
   </div>
 
   <!-- LIVE LOGGED BUGS (from FAB across all properties) -->
   <div id="loggedBugsSection" class="section" style="display:none;">
-    <div class="sec-title">🐛 Logged via FAB <span class="sec-count" id="loggedOpenCount">0 open</span></div>
+    <div class="sec-title">ðŸ› Logged via FAB <span class="sec-count" id="loggedOpenCount">0 open</span></div>
     <div id="sprintActions" style="display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:.85rem;">
-      <button onclick="copyTriagePrompt()" style="background:rgba(192,144,48,0.12);border:1px solid rgba(192,144,48,0.35);color:var(--gold);padding:.45rem .9rem;border-radius:6px;cursor:pointer;font-family:monospace;font-size:.65rem;text-transform:uppercase;letter-spacing:.08em;">🗂️ Organize into Sprints</button>
-      <button onclick="copyRunSprintPrompt()" style="background:rgba(39,174,96,0.12);border:1px solid rgba(39,174,96,0.4);color:var(--green);padding:.45rem .9rem;border-radius:6px;cursor:pointer;font-family:monospace;font-size:.65rem;text-transform:uppercase;letter-spacing:.08em;">▶ Run Next Sprint</button>
-      <button onclick="copyTopBugPrompt()" style="background:rgba(192,57,43,0.12);border:1px solid rgba(192,57,43,0.4);color:var(--red);padding:.45rem .9rem;border-radius:6px;cursor:pointer;font-family:monospace;font-size:.65rem;text-transform:uppercase;letter-spacing:.08em;">⚡ Fix Top P0 Now</button>
-      <button onclick="copyExportPrompt()" style="background:rgba(41,128,185,0.12);border:1px solid rgba(41,128,185,0.4);color:var(--blue);padding:.45rem .9rem;border-radius:6px;cursor:pointer;font-family:monospace;font-size:.65rem;text-transform:uppercase;letter-spacing:.08em;">📋 Export All Open</button>
+      <button onclick="copyTriagePrompt()" style="background:rgba(192,144,48,0.12);border:1px solid rgba(192,144,48,0.35);color:var(--gold);padding:.45rem .9rem;border-radius:6px;cursor:pointer;font-family:monospace;font-size:.65rem;text-transform:uppercase;letter-spacing:.08em;">ðŸ—‚ï¸ Organize into Sprints</button>
+      <button onclick="copyRunSprintPrompt()" style="background:rgba(39,174,96,0.12);border:1px solid rgba(39,174,96,0.4);color:var(--green);padding:.45rem .9rem;border-radius:6px;cursor:pointer;font-family:monospace;font-size:.65rem;text-transform:uppercase;letter-spacing:.08em;">â–¶ Run Next Sprint</button>
+      <button onclick="copyTopBugPrompt()" style="background:rgba(192,57,43,0.12);border:1px solid rgba(192,57,43,0.4);color:var(--red);padding:.45rem .9rem;border-radius:6px;cursor:pointer;font-family:monospace;font-size:.65rem;text-transform:uppercase;letter-spacing:.08em;">âš¡ Fix Top P0 Now</button>
+      <button onclick="copyExportPrompt()" style="background:rgba(41,128,185,0.12);border:1px solid rgba(41,128,185,0.4);color:var(--blue);padding:.45rem .9rem;border-radius:6px;cursor:pointer;font-family:monospace;font-size:.65rem;text-transform:uppercase;letter-spacing:.08em;">ðŸ“‹ Export All Open</button>
     </div>
     <div id="loggedOpen" style="display:flex;flex-direction:column;gap:.4rem;"></div>
     <div class="session-hdr" id="loggedCompletedHdr" style="cursor:pointer;margin-top:.75rem;display:none;" onclick="toggleSession('loggedCompletedBody')">
-      <span class="session-title">✅ Completed <span class="pill pill-green">FAB</span></span>
-      <span class="session-count" id="loggedCompletedCount">0 ▾</span>
+      <span class="session-title">âœ… Completed <span class="pill pill-green">FAB</span></span>
+      <span class="session-count" id="loggedCompletedCount">0 â–¾</span>
     </div>
     <div class="session-body collapsed" id="loggedCompletedBody" style="margin-top:.5rem;"></div>
   </div>
 
   <!-- OPEN BUGS -->
   <div class="section">
-    <div class="sec-title">🔴 Open Bugs — Must Fix <span class="sec-count">6 open</span></div>
+    <div class="sec-title">ðŸ”´ Open Bugs â€” Must Fix <span class="sec-count">6 open</span></div>
     <div class="bug-item open">
-      <div class="bug-title"><strong>Supabase MCP disconnected</strong> — claude.ai Supabase MCP returns "Server not found" in current session. Rob has 2 Claude accounts — MCP authorized on one, active session on the other. Blocks all Supabase admin ops (platform_bugs UPDATE, migrations, SQL queries).</div>
-      <div class="bug-meta">OPEN · 2026-05-19 · Fix: run <code>! claude mcp list</code>, reconnect via <code>/mcp</code>, or switch to account with Supabase MCP auth</div>
+      <div class="bug-title"><strong>Supabase MCP disconnected</strong> â€” claude.ai Supabase MCP returns "Server not found" in current session. Rob has 2 Claude accounts â€” MCP authorized on one, active session on the other. Blocks all Supabase admin ops (platform_bugs UPDATE, migrations, SQL queries).</div>
+      <div class="bug-meta">OPEN Â· 2026-05-19 Â· Fix: run <code>! claude mcp list</code>, reconnect via <code>/mcp</code>, or switch to account with Supabase MCP auth</div>
     </div>
     <div class="bug-item open">
-      <div class="bug-title"><strong>platform_bugs rows not marked complete</strong> — 6 resolved bugs in Supabase <code>platform_bugs</code> table still show <code>status=open</code>. Could not UPDATE — blocked by Supabase MCP outage. IDs in <code>5-19-26-bugs-review.html</code> Step 8.</div>
-      <div class="bug-meta">OPEN · 2026-05-19 · Fix: reconnect MCP, then run UPDATE SQL from ticket Step 8 · Blocked by: Supabase MCP bug above</div>
+      <div class="bug-title"><strong>platform_bugs rows not marked complete</strong> â€” 6 resolved bugs in Supabase <code>platform_bugs</code> table still show <code>status=open</code>. Could not UPDATE â€” blocked by Supabase MCP outage. IDs in <code>5-19-26-bugs-review.html</code> Step 8.</div>
+      <div class="bug-meta">OPEN Â· 2026-05-19 Â· Fix: reconnect MCP, then run UPDATE SQL from ticket Step 8 Â· Blocked by: Supabase MCP bug above</div>
     </div>
     <div class="bug-item blocked">
-      <div class="bug-title"><strong>[ROB MANUAL] SEND_INSTALL_EMAIL_SECRET not wired to DB webhook</strong> — <code>send-install-email</code> edge function deployed (v4) and env var may be set, but DB webhook Authorization header still needs to match. Install emails not firing on player registration. Fix: Supabase → Database → Webhooks → players INSERT webhook → set <code>Authorization: Bearer {SEND_INSTALL_EMAIL_SECRET}</code>.</div>
-      <div class="bug-meta">BLOCKED · Rob manual · 2026-05-19 · Source: 5-15-26-claude-review runbook step 4</div>
+      <div class="bug-title"><strong>[ROB MANUAL] SEND_INSTALL_EMAIL_SECRET not wired to DB webhook</strong> â€” <code>send-install-email</code> edge function deployed (v4) and env var may be set, but DB webhook Authorization header still needs to match. Install emails not firing on player registration. Fix: Supabase â†’ Database â†’ Webhooks â†’ players INSERT webhook â†’ set <code>Authorization: Bearer {SEND_INSTALL_EMAIL_SECRET}</code>.</div>
+      <div class="bug-meta">BLOCKED Â· Rob manual Â· 2026-05-19 Â· Source: 5-15-26-claude-review runbook step 4</div>
     </div>
     <div class="bug-item blocked">
-      <div class="bug-title"><strong>[ROB MANUAL] GitHub CI secrets not set — edge functions deploy manually only</strong> — <code>.github/workflows/deploy-functions.yml</code> ready but <code>SUPABASE_ACCESS_TOKEN</code> and <code>SUPABASE_PROJECT_REF</code> secrets not added to repo. Every edge function deploy requires manual CLI. Fix: GitHub → roberttmadsen13-del/TOURney → Settings → Secrets → add both. 5-min task.</div>
-      <div class="bug-meta">BLOCKED · Rob manual · 2026-05-19 · SUPABASE_PROJECT_REF = jllugkiojeoopitdvzsa · Source: 5-15-26-claude-review runbook step 5</div>
+      <div class="bug-title"><strong>[ROB MANUAL] GitHub CI secrets not set â€” edge functions deploy manually only</strong> â€” <code>.github/workflows/deploy-functions.yml</code> ready but <code>SUPABASE_ACCESS_TOKEN</code> and <code>SUPABASE_PROJECT_REF</code> secrets not added to repo. Every edge function deploy requires manual CLI. Fix: GitHub â†’ roberttmadsen13-del/TOURney â†’ Settings â†’ Secrets â†’ add both. 5-min task.</div>
+      <div class="bug-meta">BLOCKED Â· Rob manual Â· 2026-05-19 Â· SUPABASE_PROJECT_REF = jllugkiojeoopitdvzsa Â· Source: 5-15-26-claude-review runbook step 5</div>
     </div>
     <div class="bug-item open">
-      <div class="bug-title"><strong>/create missing from Live Pages → App Pages group on /platform</strong> — <code>/create</code> page not appearing in the App Pages accordion in the Live Pages section of the /platform Ref tab. <code>platform.html:1821</code> shows entry present post-commit <code>7c2261e</code> (Live Pages consolidation pass). Observed on live site — may be deploy cache lag or was present before consolidation commit. P1: CEO sees /platform daily.</div>
-      <div class="bug-meta">OPEN · 2026-05-20 · platform.html:1821 · Fix: verify live deploy reflects 7c2261e; if still missing check APP_PAGES render path in renderReference()</div>
+      <div class="bug-title"><strong>/create missing from Live Pages â†’ App Pages group on /platform</strong> â€” <code>/create</code> page not appearing in the App Pages accordion in the Live Pages section of the /platform Ref tab. <code>platform.html:1821</code> shows entry present post-commit <code>7c2261e</code> (Live Pages consolidation pass). Observed on live site â€” may be deploy cache lag or was present before consolidation commit. P1: CEO sees /platform daily.</div>
+      <div class="bug-meta">OPEN Â· 2026-05-20 Â· platform.html:1821 Â· Fix: verify live deploy reflects 7c2261e; if still missing check APP_PAGES render path in renderReference()</div>
     </div>
     <div class="bug-item open">
-      <div class="bug-title"><strong>Bova formats unconfirmed</strong> — Day1=stroke, Day2=scramble, Day3=best_ball seeded by guess. Shambles not mapped to a day.</div>
-      <div class="bug-meta">BLOCKED · Human verification required · Verify with Chris Bova before tournament runs</div>
+      <div class="bug-title"><strong>Bova formats unconfirmed</strong> â€” Day1=stroke, Day2=scramble, Day3=best_ball seeded by guess. Shambles not mapped to a day.</div>
+      <div class="bug-meta">BLOCKED Â· Human verification required Â· Verify with Chris Bova before tournament runs</div>
     </div>
   </div>
 
   <!-- PENDING FEATURES -->
   <div class="section">
-    <div class="sec-title">💡 Pending Features <span class="sec-count">5 items</span></div>
+    <div class="sec-title">ðŸ’¡ Pending Features <span class="sec-count">5 items</span></div>
     <div class="bug-item blocked">
-      <div class="bug-title"><strong>Stripe payment gate</strong> — activate at reg_open flip, not at /create. BLOCKED — waiting on Rob to form LLC.</div>
-      <div class="bug-meta">BLOCKED · Waiting on LLC formation</div>
+      <div class="bug-title"><strong>Stripe payment gate</strong> â€” activate at reg_open flip, not at /create. BLOCKED â€” waiting on Rob to form LLC.</div>
+      <div class="bug-meta">BLOCKED Â· Waiting on LLC formation</div>
     </div>
     <div class="bug-item pending">
-      <div class="bug-title"><strong>Test scores</strong> — solo-stroke-test has 72 seeded scores. Other test tourneys still need scores for leaderboard/scorecard regression testing.</div>
+      <div class="bug-title"><strong>Test scores</strong> â€” solo-stroke-test has 72 seeded scores. Other test tourneys still need scores for leaderboard/scorecard regression testing.</div>
       <div class="bug-meta">Low priority</div>
     </div>
     <div class="bug-item pending">
-      <div class="bug-title"><strong>RLS hardening</strong> — SECURITY_PLAN.md identifies permissive policies on <code>players</code>, <code>scores</code>, <code>push_subscriptions</code>. Needs SQL migrations before Stripe goes live.</div>
-      <div class="bug-meta">Required before launch · See SECURITY_PLAN.md</div>
+      <div class="bug-title"><strong>RLS hardening</strong> â€” SECURITY_PLAN.md identifies permissive policies on <code>players</code>, <code>scores</code>, <code>push_subscriptions</code>. Needs SQL migrations before Stripe goes live.</div>
+      <div class="bug-meta">Required before launch Â· See SECURITY_PLAN.md</div>
     </div>
     <div class="bug-item done">
-      <div class="bug-title"><strong>Supabase edge functions deploy</strong> — ✅ send-push v7 + send-install-email v4 deployed via Supabase MCP (session 14). ⚠️ MANUAL STILL NEEDED (Rob): set <code>SEND_INSTALL_EMAIL_SECRET</code> env var in Supabase dashboard → Edge Functions → Secrets + update DB webhook Authorization header.</div>
-      <div class="bug-meta">Deployed 2026-05-12 · session 14</div>
+      <div class="bug-title"><strong>Supabase edge functions deploy</strong> â€” âœ… send-push v7 + send-install-email v4 deployed via Supabase MCP (session 14). âš ï¸ MANUAL STILL NEEDED (Rob): set <code>SEND_INSTALL_EMAIL_SECRET</code> env var in Supabase dashboard â†’ Edge Functions â†’ Secrets + update DB webhook Authorization header.</div>
+      <div class="bug-meta">Deployed 2026-05-12 Â· session 14</div>
     </div>
     <div class="bug-item pending">
-      <div class="bug-title"><strong>Tournament series concept</strong> — one brand → many events/years. Schema + UX TBD.</div>
+      <div class="bug-title"><strong>Tournament series concept</strong> â€” one brand â†’ many events/years. Schema + UX TBD.</div>
       <div class="bug-meta">Future feature</div>
     </div>
   </div>
 
   <!-- SESSION HISTORY -->
   <div class="section">
-    <div class="sec-title">✅ Fix History by Session</div>
+    <div class="sec-title">âœ… Fix History by Session</div>
 
     <div class="session-hdr" onclick="toggleSession('s20b')">
-      <span class="session-title">2026-05-20 — Deployment Review Execute <span class="pill pill-green">Deploy</span> <span class="pill pill-gold">B+</span></span>
-      <span class="session-count">2 fixes ▾</span>
+      <span class="session-title">2026-05-20 â€” Deployment Review Execute <span class="pill pill-green">Deploy</span> <span class="pill pill-gold">B+</span></span>
+      <span class="session-count">2 fixes â–¾</span>
     </div>
     <div class="session-body collapsed" id="s20b">
-      <div class="bug-item fixed"><div class="bug-title"><strong>send-push .select('id') on tournament_admins</strong> — table has composite PK (tournament_id + email), no id column. Query returned 400, breaking admin push notification auth for all tournaments. Root cause of bugs #6/#9/#10. Fixed: changed to <code>.select('tournament_id')</code>.</div><div class="bug-meta">supabase/functions/send-push/index.ts:53 · commit 14bbdbb · 2026-05-20</div></div>
-      <div class="bug-item fixed"><div class="bug-title"><strong>SW cache version not auto-bumped on agent deploys</strong> — every agent push risked stale PWA cache for installed users. Fixed: added <code>bump-sw-cache</code> job to ci.yml that fires on push to main (with bot-push guard to prevent loops). Auto-increments CACHE key using Unix timestamp on every deploy.</div><div class="bug-meta">.github/workflows/ci.yml · commit 14bbdbb · 2026-05-20</div></div>
+      <div class="bug-item fixed"><div class="bug-title"><strong>send-push .select('id') on tournament_admins</strong> â€” table has composite PK (tournament_id + email), no id column. Query returned 400, breaking admin push notification auth for all tournaments. Root cause of bugs #6/#9/#10. Fixed: changed to <code>.select('tournament_id')</code>.</div><div class="bug-meta">supabase/functions/send-push/index.ts:53 Â· commit 14bbdbb Â· 2026-05-20</div></div>
+      <div class="bug-item fixed"><div class="bug-title"><strong>SW cache version not auto-bumped on agent deploys</strong> â€” every agent push risked stale PWA cache for installed users. Fixed: added <code>bump-sw-cache</code> job to ci.yml that fires on push to main (with bot-push guard to prevent loops). Auto-increments CACHE key using Unix timestamp on every deploy.</div><div class="bug-meta">.github/workflows/ci.yml Â· commit 14bbdbb Â· 2026-05-20</div></div>
     </div>
 
     <div class="session-hdr" onclick="toggleSession('s22')">
-      <span class="session-title">2026-05-22 — Consolidation execute audit <span class="pill pill-green">Clean</span></span>
-      <span class="session-count">0 bugs ▾</span>
+      <span class="session-title">2026-05-22 â€” Consolidation execute audit <span class="pill pill-green">Clean</span></span>
+      <span class="session-count">0 bugs â–¾</span>
     </div>
     <div class="session-body collapsed" id="s22">
-      <!-- 5-22-26-consolidation-review execute audit clean — 2026-05-22 -->
+      <!-- 5-22-26-consolidation-review execute audit clean â€” 2026-05-22 -->
       <!-- og:image injection (tourney-init.js) + /lib/settings-keys.js shipped. XSS/score-edit/profile-skeleton confirmed already fixed. No new bugs found. -->
     </div>
 
     <div class="session-hdr" onclick="toggleSession('s17')">
-      <span class="session-title">Session 17 · 2026-05-14 — XSS fixes (5-14-26-claude-review execute) <span class="pill pill-red">Security</span></span>
-      <span class="session-count">2 fixes ▾</span>
+      <span class="session-title">Session 17 Â· 2026-05-14 â€” XSS fixes (5-14-26-claude-review execute) <span class="pill pill-red">Security</span></span>
+      <span class="session-count">2 fixes â–¾</span>
     </div>
     <div class="session-body" id="s17">
-      <div class="bug-item fixed"><div class="bug-title"><strong>XSS — feed.html buildPostMessage DOM escape pattern</strong> — <code>buildPostMessage</code> at feed.html:375 used <code>d.textContent=text; d.innerHTML</code> DOM side-effect for escaping then regex-replaced mention spans. Fragile: relies on implicit DOM behaviour. Fixed: explicit escaping chain (<code>&amp; &lt; &gt; "</code>) + mention regex on clean string. Mention capture only matches <code>[A-Za-z '.\-]</code> — no injection surface.</div><div class="bug-meta">feed.html:375-378 · commit a562e7d · 2026-05-14</div></div>
-      <div class="bug-item fixed"><div class="bug-title"><strong>XSS — admin.html url innerHTML in image previews</strong> — <code>renderLogoPreview</code> (admin.html:2187) and <code>renderPhotoPreview</code> (admin.html:2342) both used <code>el.innerHTML = \`&lt;img src="${url}"...&gt;\`</code> with unescaped <code>url</code> from DB. Fixed: DOM methods — <code>img.src = url</code> property assignment, no string interpolation into innerHTML.</div><div class="bug-meta">admin.html:2185-2191, 2340-2348 · commit a562e7d · 2026-05-14</div></div>
+      <div class="bug-item fixed"><div class="bug-title"><strong>XSS â€” feed.html buildPostMessage DOM escape pattern</strong> â€” <code>buildPostMessage</code> at feed.html:375 used <code>d.textContent=text; d.innerHTML</code> DOM side-effect for escaping then regex-replaced mention spans. Fragile: relies on implicit DOM behaviour. Fixed: explicit escaping chain (<code>&amp; &lt; &gt; "</code>) + mention regex on clean string. Mention capture only matches <code>[A-Za-z '.\-]</code> â€” no injection surface.</div><div class="bug-meta">feed.html:375-378 Â· commit a562e7d Â· 2026-05-14</div></div>
+      <div class="bug-item fixed"><div class="bug-title"><strong>XSS â€” admin.html url innerHTML in image previews</strong> â€” <code>renderLogoPreview</code> (admin.html:2187) and <code>renderPhotoPreview</code> (admin.html:2342) both used <code>el.innerHTML = \`&lt;img src="${url}"...&gt;\`</code> with unescaped <code>url</code> from DB. Fixed: DOM methods â€” <code>img.src = url</code> property assignment, no string interpolation into innerHTML.</div><div class="bug-meta">admin.html:2185-2191, 2340-2348 Â· commit a562e7d Â· 2026-05-14</div></div>
     </div>
 
     <div class="session-hdr" onclick="toggleSession('s16')">
-      <span class="session-title">Session 16 · 2026-05-13 — RLS hardening migration 008 <span class="pill pill-red">Security</span></span>
-      <span class="session-count">2 fixes ▾</span>
+      <span class="session-title">Session 16 Â· 2026-05-13 â€” RLS hardening migration 008 <span class="pill pill-red">Security</span></span>
+      <span class="session-count">2 fixes â–¾</span>
     </div>
     <div class="session-body" id="s16">
-      <div class="bug-item fixed"><div class="bug-title"><strong>tournament_players anon write surface</strong> — legacy table (superseded by <code>players</code>) had <code>auth manage FOR ALL USING(true)</code> + anon INSERT/SELECT. Any auth user could write/delete all rows cross-tenant. Replaced with owner/admin-scoped read + write policies.</div><div class="bug-meta">migration 008 · 20260513000008_rls_hardening.sql · applied 2026-05-13</div></div>
-      <div class="bug-item fixed"><div class="bug-title"><strong>settings pairing_% anon write</strong> — any unauthenticated client could INSERT/UPDATE pairing keys for any tournament. Scorecard requires auth before writing pairings. Changed policy from <code>anon</code> → <code>authenticated</code>.</div><div class="bug-meta">migration 008 · 20260513000008_rls_hardening.sql · applied 2026-05-13</div></div>
+      <div class="bug-item fixed"><div class="bug-title"><strong>tournament_players anon write surface</strong> â€” legacy table (superseded by <code>players</code>) had <code>auth manage FOR ALL USING(true)</code> + anon INSERT/SELECT. Any auth user could write/delete all rows cross-tenant. Replaced with owner/admin-scoped read + write policies.</div><div class="bug-meta">migration 008 Â· 20260513000008_rls_hardening.sql Â· applied 2026-05-13</div></div>
+      <div class="bug-item fixed"><div class="bug-title"><strong>settings pairing_% anon write</strong> â€” any unauthenticated client could INSERT/UPDATE pairing keys for any tournament. Scorecard requires auth before writing pairings. Changed policy from <code>anon</code> â†’ <code>authenticated</code>.</div><div class="bug-meta">migration 008 Â· 20260513000008_rls_hardening.sql Â· applied 2026-05-13</div></div>
     </div>
 
     <div class="session-hdr" onclick="toggleSession('s15')">
-      <span class="session-title">Session 15 · 2026-05-13 — UX Polish sprint <span class="pill pill-blue">UX</span> <span class="pill pill-green">A11y</span></span>
-      <span class="session-count">7 fixes ▾</span>
+      <span class="session-title">Session 15 Â· 2026-05-13 â€” UX Polish sprint <span class="pill pill-blue">UX</span> <span class="pill pill-green">A11y</span></span>
+      <span class="session-count">7 fixes â–¾</span>
     </div>
     <div class="session-body" id="s15">
-      <div class="bug-item fixed"><div class="bug-title"><strong>login.html raw Supabase errors (×3)</strong> — <code>doSignIn</code> :181 now returns <code>'Invalid email or password.'</code> literal (no raw message passthrough). <code>doSignUp</code> :240 maps "already" → friendly string. <code>doForgot</code> :288 returns <code>'Password reset failed. Check your email address and try again.'</code></div><div class="bug-meta">login.html:181/240/288 · commit 10a676f</div></div>
-      <div class="bug-item fixed"><div class="bug-title"><strong>No loading skeletons — scoreboard</strong> — <code>tokens.css</code> linked in head; 6 shimmer rows in <code>#leaderboardBody</code> and <code>#indLeaderboardBody</code> with <code>aria-live="polite" aria-atomic="true"</code>. Data replace clears skeleton on resolve.</div><div class="bug-meta">scoreboard.html:206/276/302 · commit 10a676f</div></div>
-      <div class="bug-item fixed"><div class="bug-title"><strong>No loading skeleton — home hero leaderboard</strong> — <code>tokens.css</code> linked; <code>#heroLeaderboard</code> gets 5 shimmer divs as initial HTML + JS injection at start of <code>loadHeroScoreboard()</code>. <code>aria-live="polite"</code> added to container.</div><div class="bug-meta">home.html:401/450/1072 · commit 10a676f</div></div>
-      <div class="bug-item fixed"><div class="bug-title"><strong>No prefers-reduced-motion guard — home.html</strong> — <code>@media (prefers-reduced-motion: reduce)</code> block added after <code>.day-block</code> rules. Disables all hero + section entrance animations. WCAG 2.3.3 compliant.</div><div class="bug-meta">home.html:381 · commit 10a676f</div></div>
-      <div class="bug-item fixed"><div class="bug-title"><strong>Install app orphaned from player journey</strong> — <code>#installBanner</code> added to <code>player.html</code> above logout-row. Shown only when <code>!window.matchMedia('(display-mode: standalone)').matches</code>. Links to <code>/install</code>.</div><div class="bug-meta">player.html:237 · commit 10a676f</div></div>
-      <div class="bug-item fixed"><div class="bug-title"><strong>No aria-live on toast or leaderboard</strong> — <code>aria-live="polite" aria-atomic="true"</code> added to <code>#toast</code> (home.html), <code>#heroLeaderboard</code> (home.html), <code>#leaderboardBody</code> + <code>#indLeaderboardBody</code> (scoreboard.html). Screen readers now announce score updates and toasts.</div><div class="bug-meta">home.html:450/666 · scoreboard.html:276/302 · commit 10a676f</div></div>
-      <div class="bug-item fixed"><div class="bug-title"><strong>Leaderboard tables clip on 375px mobile</strong> — <code>div style="overflow-x:auto"</code> wrapper added around both main leaderboard tables (team + individual views) in <code>scoreboard.html</code>.</div><div class="bug-meta">scoreboard.html:264/289 · commit 10a676f</div></div>
+      <div class="bug-item fixed"><div class="bug-title"><strong>login.html raw Supabase errors (Ã—3)</strong> â€” <code>doSignIn</code> :181 now returns <code>'Invalid email or password.'</code> literal (no raw message passthrough). <code>doSignUp</code> :240 maps "already" â†’ friendly string. <code>doForgot</code> :288 returns <code>'Password reset failed. Check your email address and try again.'</code></div><div class="bug-meta">login.html:181/240/288 Â· commit 10a676f</div></div>
+      <div class="bug-item fixed"><div class="bug-title"><strong>No loading skeletons â€” scoreboard</strong> â€” <code>tokens.css</code> linked in head; 6 shimmer rows in <code>#leaderboardBody</code> and <code>#indLeaderboardBody</code> with <code>aria-live="polite" aria-atomic="true"</code>. Data replace clears skeleton on resolve.</div><div class="bug-meta">scoreboard.html:206/276/302 Â· commit 10a676f</div></div>
+      <div class="bug-item fixed"><div class="bug-title"><strong>No loading skeleton â€” home hero leaderboard</strong> â€” <code>tokens.css</code> linked; <code>#heroLeaderboard</code> gets 5 shimmer divs as initial HTML + JS injection at start of <code>loadHeroScoreboard()</code>. <code>aria-live="polite"</code> added to container.</div><div class="bug-meta">home.html:401/450/1072 Â· commit 10a676f</div></div>
+      <div class="bug-item fixed"><div class="bug-title"><strong>No prefers-reduced-motion guard â€” home.html</strong> â€” <code>@media (prefers-reduced-motion: reduce)</code> block added after <code>.day-block</code> rules. Disables all hero + section entrance animations. WCAG 2.3.3 compliant.</div><div class="bug-meta">home.html:381 Â· commit 10a676f</div></div>
+      <div class="bug-item fixed"><div class="bug-title"><strong>Install app orphaned from player journey</strong> â€” <code>#installBanner</code> added to <code>player.html</code> above logout-row. Shown only when <code>!window.matchMedia('(display-mode: standalone)').matches</code>. Links to <code>/install</code>.</div><div class="bug-meta">player.html:237 Â· commit 10a676f</div></div>
+      <div class="bug-item fixed"><div class="bug-title"><strong>No aria-live on toast or leaderboard</strong> â€” <code>aria-live="polite" aria-atomic="true"</code> added to <code>#toast</code> (home.html), <code>#heroLeaderboard</code> (home.html), <code>#leaderboardBody</code> + <code>#indLeaderboardBody</code> (scoreboard.html). Screen readers now announce score updates and toasts.</div><div class="bug-meta">home.html:450/666 Â· scoreboard.html:276/302 Â· commit 10a676f</div></div>
+      <div class="bug-item fixed"><div class="bug-title"><strong>Leaderboard tables clip on 375px mobile</strong> â€” <code>div style="overflow-x:auto"</code> wrapper added around both main leaderboard tables (team + individual views) in <code>scoreboard.html</code>.</div><div class="bug-meta">scoreboard.html:264/289 Â· commit 10a676f</div></div>
     </div>
 
     <div class="session-hdr" onclick="toggleSession('s14')">
-      <span class="session-title">Session 14 · 2026-05-12 — Rounds table migration <span class="pill pill-gold">Schema</span></span>
-      <span class="session-count">1 fix ▾</span>
+      <span class="session-title">Session 14 Â· 2026-05-12 â€” Rounds table migration <span class="pill pill-gold">Schema</span></span>
+      <span class="session-count">1 fix â–¾</span>
     </div>
     <div class="session-body" id="s14">
-      <div class="bug-item fixed"><div class="bug-title"><strong>scoreboard.html reading stale settings keys</strong> — <code>round_day%</code> + <code>round_formats</code> from settings was the old source of truth. scorecard.html + admin.html were already on the <code>rounds</code> table; scoreboard was the last holdout. Fixed: dropped both settings queries, now reads <code>rounds</code> table directly (day_number, status, format_front, format_back).</div><div class="bug-meta">scoreboard.html:508–532 · 2026-05-12</div></div>
+      <div class="bug-item fixed"><div class="bug-title"><strong>scoreboard.html reading stale settings keys</strong> â€” <code>round_day%</code> + <code>round_formats</code> from settings was the old source of truth. scorecard.html + admin.html were already on the <code>rounds</code> table; scoreboard was the last holdout. Fixed: dropped both settings queries, now reads <code>rounds</code> table directly (day_number, status, format_front, format_back).</div><div class="bug-meta">scoreboard.html:508â€“532 Â· 2026-05-12</div></div>
     </div>
 
     <div class="session-hdr" onclick="toggleSession('s13')">
-      <span class="session-title">Session 13 · 2026-05-07 — Security hardening <span class="pill pill-red">Security</span></span>
-      <span class="session-count">8 fixes ▾</span>
+      <span class="session-title">Session 13 Â· 2026-05-07 â€” Security hardening <span class="pill pill-red">Security</span></span>
+      <span class="session-count">8 fixes â–¾</span>
     </div>
     <div class="session-body" id="s13">
-      <div class="bug-item fixed"><div class="bug-title">admin auth consolidated to tournament_admins — removed legacy <code>player.is_admin</code> check from <code>doLogin()</code> + <code>checkSession()</code></div><div class="bug-meta">admin.html · commit e477457</div></div>
-      <div class="bug-item fixed"><div class="bug-title">Admin player table admin badge — <code>renderTable()</code> now marks players via <code>_admins</code> array, not stale <code>p.is_admin</code></div><div class="bug-meta">admin.html · commit e477457</div></div>
-      <div class="bug-item fixed"><div class="bug-title">removePlayer name lookup — no longer requires caller to pass name, looks up from local <code>players</code> array</div><div class="bug-meta">admin.html · commit e477457</div></div>
-      <div class="bug-item fixed"><div class="bug-title">home.html XSS helper — added <code>esc()</code> sanitizer for safe DOM interpolation</div><div class="bug-meta">home.html · commit e477457</div></div>
-      <div class="bug-item fixed"><div class="bug-title">create-checkout CORS locked — <code>Access-Control-Allow-Origin: *</code> → only <code>*.greenskeeper.studio</code></div><div class="bug-meta">supabase/functions/create-checkout/index.ts · commit e477457</div></div>
-      <div class="bug-item fixed"><div class="bug-title">create-checkout email from JWT — removed <code>user_email</code> from request body; ownership verified via JWT — prevents email spoofing</div><div class="bug-meta">supabase/functions/create-checkout/index.ts · commit e477457</div></div>
-      <div class="bug-item fixed"><div class="bug-title">send-push CORS locked + auth required — restricted CORS; now requires authenticated owner/admin before sending push notifications</div><div class="bug-meta">supabase/functions/send-push/index.ts · commit e477457</div></div>
-      <div class="bug-item fixed"><div class="bug-title">SECURITY_PLAN.md added — full audit, baseline D+, target A, RLS gaps identified</div><div class="bug-meta">commit e477457</div></div>
+      <div class="bug-item fixed"><div class="bug-title">admin auth consolidated to tournament_admins â€” removed legacy <code>player.is_admin</code> check from <code>doLogin()</code> + <code>checkSession()</code></div><div class="bug-meta">admin.html Â· commit e477457</div></div>
+      <div class="bug-item fixed"><div class="bug-title">Admin player table admin badge â€” <code>renderTable()</code> now marks players via <code>_admins</code> array, not stale <code>p.is_admin</code></div><div class="bug-meta">admin.html Â· commit e477457</div></div>
+      <div class="bug-item fixed"><div class="bug-title">removePlayer name lookup â€” no longer requires caller to pass name, looks up from local <code>players</code> array</div><div class="bug-meta">admin.html Â· commit e477457</div></div>
+      <div class="bug-item fixed"><div class="bug-title">home.html XSS helper â€” added <code>esc()</code> sanitizer for safe DOM interpolation</div><div class="bug-meta">home.html Â· commit e477457</div></div>
+      <div class="bug-item fixed"><div class="bug-title">create-checkout CORS locked â€” <code>Access-Control-Allow-Origin: *</code> â†’ only <code>*.greenskeeper.studio</code></div><div class="bug-meta">supabase/functions/create-checkout/index.ts Â· commit e477457</div></div>
+      <div class="bug-item fixed"><div class="bug-title">create-checkout email from JWT â€” removed <code>user_email</code> from request body; ownership verified via JWT â€” prevents email spoofing</div><div class="bug-meta">supabase/functions/create-checkout/index.ts Â· commit e477457</div></div>
+      <div class="bug-item fixed"><div class="bug-title">send-push CORS locked + auth required â€” restricted CORS; now requires authenticated owner/admin before sending push notifications</div><div class="bug-meta">supabase/functions/send-push/index.ts Â· commit e477457</div></div>
+      <div class="bug-item fixed"><div class="bug-title">SECURITY_PLAN.md added â€” full audit, baseline D+, target A, RLS gaps identified</div><div class="bug-meta">commit e477457</div></div>
     </div>
 
     <div class="session-hdr" onclick="toggleSession('s12')">
-      <span class="session-title">Session 12 · 2026-05-06 — Hero/about photo leak <span class="pill pill-red">Critical</span></span>
-      <span class="session-count">1 fix ▾</span>
+      <span class="session-title">Session 12 Â· 2026-05-06 â€” Hero/about photo leak <span class="pill pill-red">Critical</span></span>
+      <span class="session-count">1 fix â–¾</span>
     </div>
     <div class="session-body collapsed" id="s12">
-      <div class="bug-item fixed"><div class="bug-title"><strong>CRITICAL: Hero/about photo leaking to all tourneys</strong> — <code>hero_photo_url</code> hardcoded Unsplash src shown for every tourney; <code>about_photo_url</code> had no JS handler. Fixed: both hidden by default, shown from settings keys.</div><div class="bug-meta">home.html:417/455/686/845-853 · commit 4276116</div></div>
+      <div class="bug-item fixed"><div class="bug-title"><strong>CRITICAL: Hero/about photo leaking to all tourneys</strong> â€” <code>hero_photo_url</code> hardcoded Unsplash src shown for every tourney; <code>about_photo_url</code> had no JS handler. Fixed: both hidden by default, shown from settings keys.</div><div class="bug-meta">home.html:417/455/686/845-853 Â· commit 4276116</div></div>
     </div>
 
     <div class="session-hdr" onclick="toggleSession('s11')">
-      <span class="session-title">Session 11 · 2026-05-05 — Nav/hamburger + billing gate + admin team names</span>
-      <span class="session-count">7 fixes ▾</span>
+      <span class="session-title">Session 11 Â· 2026-05-05 â€” Nav/hamburger + billing gate + admin team names</span>
+      <span class="session-count">7 fixes â–¾</span>
     </div>
     <div class="session-body collapsed" id="s11">
-      <div class="bug-item fixed"><div class="bug-title">Duplicate HOME in tourney drawer — <code>href="/"</code> normalization bug in dedup logic</div><div class="bug-meta">nav-mobile.js · commit a613da5</div></div>
-      <div class="bug-item fixed"><div class="bug-title">player-upgrade.html no hamburger — added inline hamburger + drawer</div><div class="bug-meta">player-upgrade.html · commit a613da5</div></div>
-      <div class="bug-item fixed"><div class="bug-title">player.html myGolf portal missing phone — <code>phone_number</code> added + <code>tel:</code> link</div><div class="bug-meta">player.html · commit a567171</div></div>
-      <div class="bug-item fixed"><div class="bug-title">player.html myGolf portal missing handicap range — "My Golf Profile" section with tier + avg score after 5+ rounds</div><div class="bug-meta">player.html · commit a567171</div></div>
-      <div class="bug-item fixed"><div class="bug-title">create.html no billing gate — anyone with auth could access /create. Added billing_status check → redirect to /player-upgrade if not billing-ok.</div><div class="bug-meta">create.html · commit c486ac2</div></div>
-      <div class="bug-item fixed"><div class="bug-title">admin Design tab missing team names C–H — only A+B existed. Added C–H inputs with show/hide by team_count.</div><div class="bug-meta">admin.html · commit 2f0795b</div></div>
+      <div class="bug-item fixed"><div class="bug-title">Duplicate HOME in tourney drawer â€” <code>href="/"</code> normalization bug in dedup logic</div><div class="bug-meta">nav-mobile.js Â· commit a613da5</div></div>
+      <div class="bug-item fixed"><div class="bug-title">player-upgrade.html no hamburger â€” added inline hamburger + drawer</div><div class="bug-meta">player-upgrade.html Â· commit a613da5</div></div>
+      <div class="bug-item fixed"><div class="bug-title">player.html myGolf portal missing phone â€” <code>phone_number</code> added + <code>tel:</code> link</div><div class="bug-meta">player.html Â· commit a567171</div></div>
+      <div class="bug-item fixed"><div class="bug-title">player.html myGolf portal missing handicap range â€” "My Golf Profile" section with tier + avg score after 5+ rounds</div><div class="bug-meta">player.html Â· commit a567171</div></div>
+      <div class="bug-item fixed"><div class="bug-title">create.html no billing gate â€” anyone with auth could access /create. Added billing_status check â†’ redirect to /player-upgrade if not billing-ok.</div><div class="bug-meta">create.html Â· commit c486ac2</div></div>
+      <div class="bug-item fixed"><div class="bug-title">admin Design tab missing team names Câ€“H â€” only A+B existed. Added Câ€“H inputs with show/hide by team_count.</div><div class="bug-meta">admin.html Â· commit 2f0795b</div></div>
     </div>
 
     <div class="session-hdr" onclick="toggleSession('s10')">
-      <span class="session-title">Session 10 · 2026-05-05 — Logo leak + multi-tenant cleanup <span class="pill pill-red">Critical</span></span>
-      <span class="session-count">9 fixes ▾</span>
+      <span class="session-title">Session 10 Â· 2026-05-05 â€” Logo leak + multi-tenant cleanup <span class="pill pill-red">Critical</span></span>
+      <span class="session-count">9 fixes â–¾</span>
     </div>
     <div class="session-body collapsed" id="s10">
-      <div class="bug-item fixed"><div class="bug-title"><strong>CRITICAL: All tourneys showing Bova logo</strong> — 3 hardcoded base64 PNG img tags replaced with JS-populated handles</div><div class="bug-meta">home.html:400/423/657 · commit 4276116</div></div>
-      <div class="bug-item fixed"><div class="bug-title">footer-copy hardcoded "Inaugural Edition · Myrtle Beach, SC" — now patched from tourney-init.js</div><div class="bug-meta">tourney-init.js:200 · commit 4276116</div></div>
-      <div class="bug-item fixed"><div class="bug-title">scoreboard.html DEFAULT_FORMATS <code>shamble</code> typo → <code>shambles</code></div><div class="bug-meta">scoreboard.html:463 · commit f0d8f10</div></div>
-      <div class="bug-item fixed"><div class="bug-title"><code>bova_profile_email</code> localStorage dead code — written but never read, deleted</div><div class="bug-meta">login.html:190/257, profile.html:246/383 · commit f0d8f10</div></div>
-      <div class="bug-item fixed"><div class="bug-title"><code>bova_install_dismissed</code> sessionStorage key hardcoded → <code>tourney_install_dismissed</code></div><div class="bug-meta">pwa.js:100/113 · commit f0d8f10</div></div>
-      <div class="bug-item fixed"><div class="bug-title">navLogoImg not set on non-home pages — tourney-init.js now sets <code>#navLogoImg</code> src</div><div class="bug-meta">tourney-init.js · commit f0d8f10</div></div>
-      <div class="bug-item fixed"><div class="bug-title">admin FORMAT_OPTIONS <code>shamble</code> typo → <code>shambles</code>. Expanded from 4 → 12 canonical formats.</div><div class="bug-meta">admin.html · commit 6681b92</div></div>
-      <div class="bug-item fixed"><div class="bug-title">admin renderFormatSection: <code>DEFAULT_FORMATS[d.key].front</code> throws on day4+ — fixed with optional chaining</div><div class="bug-meta">admin.html · commit 6681b92</div></div>
-      <div class="bug-item fixed"><div class="bug-title">admin loadRoundStates: hardcoded day1/2/3 init polluted 1-day tourneys — reset to <code>{}</code> before merge</div><div class="bug-meta">admin.html:1015 · commit fe78ee6</div></div>
+      <div class="bug-item fixed"><div class="bug-title"><strong>CRITICAL: All tourneys showing Bova logo</strong> â€” 3 hardcoded base64 PNG img tags replaced with JS-populated handles</div><div class="bug-meta">home.html:400/423/657 Â· commit 4276116</div></div>
+      <div class="bug-item fixed"><div class="bug-title">footer-copy hardcoded "Inaugural Edition Â· Myrtle Beach, SC" â€” now patched from tourney-init.js</div><div class="bug-meta">tourney-init.js:200 Â· commit 4276116</div></div>
+      <div class="bug-item fixed"><div class="bug-title">scoreboard.html DEFAULT_FORMATS <code>shamble</code> typo â†’ <code>shambles</code></div><div class="bug-meta">scoreboard.html:463 Â· commit f0d8f10</div></div>
+      <div class="bug-item fixed"><div class="bug-title"><code>bova_profile_email</code> localStorage dead code â€” written but never read, deleted</div><div class="bug-meta">login.html:190/257, profile.html:246/383 Â· commit f0d8f10</div></div>
+      <div class="bug-item fixed"><div class="bug-title"><code>bova_install_dismissed</code> sessionStorage key hardcoded â†’ <code>tourney_install_dismissed</code></div><div class="bug-meta">pwa.js:100/113 Â· commit f0d8f10</div></div>
+      <div class="bug-item fixed"><div class="bug-title">navLogoImg not set on non-home pages â€” tourney-init.js now sets <code>#navLogoImg</code> src</div><div class="bug-meta">tourney-init.js Â· commit f0d8f10</div></div>
+      <div class="bug-item fixed"><div class="bug-title">admin FORMAT_OPTIONS <code>shamble</code> typo â†’ <code>shambles</code>. Expanded from 4 â†’ 12 canonical formats.</div><div class="bug-meta">admin.html Â· commit 6681b92</div></div>
+      <div class="bug-item fixed"><div class="bug-title">admin renderFormatSection: <code>DEFAULT_FORMATS[d.key].front</code> throws on day4+ â€” fixed with optional chaining</div><div class="bug-meta">admin.html Â· commit 6681b92</div></div>
+      <div class="bug-item fixed"><div class="bug-title">admin loadRoundStates: hardcoded day1/2/3 init polluted 1-day tourneys â€” reset to <code>{}</code> before merge</div><div class="bug-meta">admin.html:1015 Â· commit fe78ee6</div></div>
     </div>
 
     <div class="session-hdr" onclick="toggleSession('s9')">
-      <span class="session-title">Session 9 · 2026-05-05 — Creation flow QA + individual tourney support</span>
-      <span class="session-count">5 fixes ▾</span>
+      <span class="session-title">Session 9 Â· 2026-05-05 â€” Creation flow QA + individual tourney support</span>
+      <span class="session-count">5 fixes â–¾</span>
     </div>
     <div class="session-body collapsed" id="s9">
-      <div class="bug-item fixed"><div class="bug-title">player.html billing gate blocks tournament admins — admins bypass gate via isAdmin check</div><div class="bug-meta">player.html:356 · commit 2237c4d</div></div>
-      <div class="bug-item fixed"><div class="bug-title">No way to view player portal from admin — added "Portal" button per player row + gold admin-view banner</div><div class="bug-meta">admin.html:1123 · commit 2237c4d</div></div>
-      <div class="bug-item fixed"><div class="bug-title">home.html schedule subtitle hardcoded "Myrtle Beach, SC" → dynamic from tournament.location</div><div class="bug-meta">home.html:481 · commit 3b6c829</div></div>
-      <div class="bug-item fixed"><div class="bug-title">Teams nav link visible for individual tourneys — hides when team_count ≤ 1</div><div class="bug-meta">home.html:819 · commit 3b6c829</div></div>
-      <div class="bug-item fixed"><div class="bug-title">Team tab visible for individual tourneys on scoreboard — hides when team_count ≤ 1</div><div class="bug-meta">scoreboard.html:368 · commit 3b6c829</div></div>
+      <div class="bug-item fixed"><div class="bug-title">player.html billing gate blocks tournament admins â€” admins bypass gate via isAdmin check</div><div class="bug-meta">player.html:356 Â· commit 2237c4d</div></div>
+      <div class="bug-item fixed"><div class="bug-title">No way to view player portal from admin â€” added "Portal" button per player row + gold admin-view banner</div><div class="bug-meta">admin.html:1123 Â· commit 2237c4d</div></div>
+      <div class="bug-item fixed"><div class="bug-title">home.html schedule subtitle hardcoded "Myrtle Beach, SC" â†’ dynamic from tournament.location</div><div class="bug-meta">home.html:481 Â· commit 3b6c829</div></div>
+      <div class="bug-item fixed"><div class="bug-title">Teams nav link visible for individual tourneys â€” hides when team_count â‰¤ 1</div><div class="bug-meta">home.html:819 Â· commit 3b6c829</div></div>
+      <div class="bug-item fixed"><div class="bug-title">Team tab visible for individual tourneys on scoreboard â€” hides when team_count â‰¤ 1</div><div class="bug-meta">scoreboard.html:368 Â· commit 3b6c829</div></div>
     </div>
 
     <div class="session-hdr" onclick="toggleSession('s6')">
-      <span class="session-title">Sessions 1–8 · 2026-05-02–05 — Foundation + content isolation</span>
-      <span class="session-count">28+ fixes ▾</span>
+      <span class="session-title">Sessions 1â€“8 Â· 2026-05-02â€“05 â€” Foundation + content isolation</span>
+      <span class="session-count">28+ fixes â–¾</span>
     </div>
     <div class="session-body collapsed" id="s6">
-      <div class="bug-item fixed"><div class="bug-title">platform.html cascade delete FK error — correct order: push_subscriptions → scores → trash_talk → tournament_admins → invitations → players → settings → tournaments</div><div class="bug-meta">commit d972fbd</div></div>
-      <div class="bug-item fixed"><div class="bug-title">home.html about section hardcoded Bova text → from <code>homepage_about</code> setting</div><div class="bug-meta">commit 59a18f7</div></div>
-      <div class="bug-item fixed"><div class="bug-title">create.html → scorecard.html format key mismatches: <code>bestball</code> → <code>best_ball</code>, <code>alternate</code> → <code>alt_shot</code></div><div class="bug-meta">commit 96b349d</div></div>
-      <div class="bug-item fixed"><div class="bug-title">No hamburger on platform pages (marketing, create, player) — created <code>nav-platform.js</code> universal hamburger</div><div class="bug-meta">commit baed796</div></div>
-      <div class="bug-item fixed"><div class="bug-title">Opp2/scorecard opponent panel not real-time — live postgres_changes subscription on settings</div><div class="bug-meta">scorecard.html · commit 5784039</div></div>
-      <div class="bug-item fixed"><div class="bug-title">favicon.ico 404 — added link rel="icon" to all HTML files</div><div class="bug-meta">commit d0f0984</div></div>
-      <div class="bug-item fixed"><div class="bug-title">Auth redirect to /t/default/login — slug not initialized when authGuard fires</div><div class="bug-meta">Early session</div></div>
-      <div class="bug-item fixed"><div class="bug-title">SW stale cache — bumped tourney-v10 → tourney-v11</div><div class="bug-meta">sw.js</div></div>
+      <div class="bug-item fixed"><div class="bug-title">platform.html cascade delete FK error â€” correct order: push_subscriptions â†’ scores â†’ trash_talk â†’ tournament_admins â†’ invitations â†’ players â†’ settings â†’ tournaments</div><div class="bug-meta">commit d972fbd</div></div>
+      <div class="bug-item fixed"><div class="bug-title">home.html about section hardcoded Bova text â†’ from <code>homepage_about</code> setting</div><div class="bug-meta">commit 59a18f7</div></div>
+      <div class="bug-item fixed"><div class="bug-title">create.html â†’ scorecard.html format key mismatches: <code>bestball</code> â†’ <code>best_ball</code>, <code>alternate</code> â†’ <code>alt_shot</code></div><div class="bug-meta">commit 96b349d</div></div>
+      <div class="bug-item fixed"><div class="bug-title">No hamburger on platform pages (marketing, create, player) â€” created <code>nav-platform.js</code> universal hamburger</div><div class="bug-meta">commit baed796</div></div>
+      <div class="bug-item fixed"><div class="bug-title">Opp2/scorecard opponent panel not real-time â€” live postgres_changes subscription on settings</div><div class="bug-meta">scorecard.html Â· commit 5784039</div></div>
+      <div class="bug-item fixed"><div class="bug-title">favicon.ico 404 â€” added link rel="icon" to all HTML files</div><div class="bug-meta">commit d0f0984</div></div>
+      <div class="bug-item fixed"><div class="bug-title">Auth redirect to /t/default/login â€” slug not initialized when authGuard fires</div><div class="bug-meta">Early session</div></div>
+      <div class="bug-item fixed"><div class="bug-title">SW stale cache â€” bumped tourney-v10 â†’ tourney-v11</div><div class="bug-meta">sw.js</div></div>
     </div>
   </div>
 
   <!-- CREATION FLOW VERIFICATION -->
   <div class="section">
-    <div class="sec-title">📊 Creation Flow Verification — 2026-05-05</div>
+    <div class="sec-title">ðŸ“Š Creation Flow Verification â€” 2026-05-05</div>
     <p style="font-size:0.76rem;color:var(--muted);margin-bottom:0.85rem;">DB check: all 4 test tourneys have zero missing critical keys.</p>
     <div style="overflow-x:auto;">
       <table class="ref-table">
@@ -324,13 +324,13 @@ GROUP BY t.slug;
 
   <!-- SETTING KEYS -->
   <div class="section ref-section">
-    <div class="sec-title">📐 Setting Keys — Ground Truth <span class="sec-count">source: create.html line 759+</span></div>
+    <div class="sec-title">ðŸ“ Setting Keys â€” Ground Truth <span class="sec-count">source: create.html line 759+</span></div>
     <div style="overflow-x:auto;">
       <table class="ref-table">
         <thead><tr><th>Key</th><th>Values</th><th>Notes</th></tr></thead>
         <tbody>
           <tr><td><code>tournament_mode</code></td><td><code>'competitive' | 'casual'</code></td><td>NOT <code>tourney_mode</code></td></tr>
-          <tr><td><code>team_count</code></td><td><code>'1'</code>–<code>'8'</code></td><td></td></tr>
+          <tr><td><code>team_count</code></td><td><code>'1'</code>â€“<code>'8'</code></td><td></td></tr>
           <tr><td><code>reg_max_players</code></td><td><code>'24'</code></td><td></td></tr>
           <tr><td><code>reg_min_players</code></td><td><code>'14'</code></td><td></td></tr>
           <tr><td><code>reg_show_dates</code></td><td><code>'true' | 'false'</code></td><td>NOT <code>reg_show_date_picker</code></td></tr>
@@ -354,7 +354,7 @@ GROUP BY t.slug;
 
   <!-- FORMAT VALUES -->
   <div class="section ref-section">
-    <div class="sec-title">📐 Format Values — Ground Truth</div>
+    <div class="sec-title">ðŸ“ Format Values â€” Ground Truth</div>
     <div style="overflow-x:auto;">
       <table class="ref-table">
         <thead><tr><th>Value</th><th>Label</th><th>Scorecard behavior</th></tr></thead>
@@ -380,8 +380,8 @@ GROUP BY t.slug;
 </div>
 
 <footer>
-  TOURney · Greenskeeper Studios Internal ·
-  <a href="/platform">← Operations</a>
+  TOURney Â· Greenskeeper Studios Internal Â·
+  <a href="/platform">â† Operations</a>
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.105.3/dist/umd/supabase.min.js" integrity="sha384-iWpUQPQzWsFiosLgsS8o+e6E8y3Gm+EW2m/vAAo7A2H3fuc4KOKEx+5CAord2H2z" crossorigin="anonymous"></script>
@@ -406,14 +406,14 @@ function toggleSession(id) {
   function rowHtml(b, isOpen){
     return '<div class="bug-item ' + (isOpen?'open':'fixed') + '" id="lbug-' + b.id + '">'
       + '<div class="bug-title">' + (b.title?'<strong>'+esc(b.title)+'</strong>':'<em>(no title)</em>')
-      + (b.description?' — '+esc(b.description):'')+'</div>'
-      + '<div class="bug-meta">' + fmtDate(b.created_at) + ' · ' + esc(b.email)
-      + (b.url?' · <a href="'+esc(b.url)+'" target="_blank" style="color:rgba(192,144,48,0.5);">'+esc(b.url)+'</a>':'')
+      + (b.description?' â€” '+esc(b.description):'')+'</div>'
+      + '<div class="bug-meta">' + fmtDate(b.created_at) + ' Â· ' + esc(b.email)
+      + (b.url?' Â· <a href="'+esc(b.url)+'" target="_blank" style="color:rgba(192,144,48,0.5);">'+esc(b.url)+'</a>':'')
       + '</div>'
       + (b.image_data?'<img src="'+esc(b.image_data)+'" style="max-height:180px;margin-top:.5rem;border-radius:6px;cursor:pointer;border:1px solid rgba(255,255,255,0.1);" onclick="window.open(this.src)">':'')
       + '<div style="margin-top:.5rem;display:flex;gap:.4rem;flex-wrap:wrap;">'
-      + (b.url?'<button onclick="lbugCopyUrl(this,\''+esc(b.url).replace(/\\/g,"\\\\").replace(/\x27/g,"\\\x27")+'\')" style="'+btnStyle+'border:1px solid rgba(41,128,185,0.4);color:var(--blue);">📋 Copy URL</button>':'')
-      + '<button onclick="lbugCopyShare(\''+b.id+'\')" style="'+btnStyle+'border:1px solid rgba(192,144,48,0.4);color:var(--gold);">📋 Copy for AI</button>'
+      + (b.url?'<button onclick="lbugCopyUrl(this,\''+esc(b.url).replace(/\\/g,"\\\\").replace(/\x27/g,"\\\x27")+'\')" style="'+btnStyle+'border:1px solid rgba(41,128,185,0.4);color:var(--blue);">ðŸ“‹ Copy URL</button>':'')
+      + '<button onclick="lbugCopyShare(\''+b.id+'\')" style="'+btnStyle+'border:1px solid rgba(192,144,48,0.4);color:var(--gold);">ðŸ“‹ Copy for AI</button>'
       + (isOpen
           ? '<button onclick="lbugSet(\''+b.id+'\',\'completed\')" style="'+btnStyle+'border:1px solid rgba(58,158,95,0.4);color:var(--green);">Mark Done</button>'
           : '<button onclick="lbugSet(\''+b.id+'\',\'open\')" style="'+btnStyle+'border:1px solid rgba(192,144,48,0.3);color:var(--muted);">Reopen</button>')
@@ -437,7 +437,7 @@ function toggleSession(id) {
       : '<div style="font-family:monospace;font-size:.62rem;color:var(--muted);padding:.4rem 0;">No open bugs logged yet.</div>';
     if (done.length) {
       document.getElementById('loggedCompletedHdr').style.display = '';
-      document.getElementById('loggedCompletedCount').textContent = done.length + ' ▾';
+      document.getElementById('loggedCompletedCount').textContent = done.length + ' â–¾';
       document.getElementById('loggedCompletedBody').innerHTML = done.map(b => rowHtml(b, false)).join('');
     }
   }
@@ -447,7 +447,7 @@ function toggleSession(id) {
     setTimeout(() => { btn.textContent = o; }, 1200);
   }
   window.lbugCopyUrl = (btn, url) => {
-    navigator.clipboard.writeText(url).then(() => flash(btn, '✓ Copied'));
+    navigator.clipboard.writeText(url).then(() => flash(btn, 'âœ“ Copied'));
   };
   window.lbugCopyShare = (id) => {
     const b = cache.find(x => x.id === id);
@@ -462,7 +462,7 @@ function toggleSession(id) {
     ].join('\n');
     navigator.clipboard.writeText(txt).then(() => {
       const btn = event.target;
-      flash(btn, '✓ Copied');
+      flash(btn, 'âœ“ Copied');
     });
   };
   window.lbugSet = async (id, status) => {
@@ -496,7 +496,7 @@ function toggleSession(id) {
   window.copyTriagePrompt = () => {
     const bugs = buildBugDump();
     if (!bugs.length) return flashFloater('No open bugs to organize');
-    const cmd = `You are a senior product engineer triaging the open bug backlog for TOURney (Bova Invitational — a multi-tenant tournament SaaS PWA).
+    const cmd = `You are a senior product engineer triaging the open bug backlog for TOURney (Bova Invitational â€” a multi-tenant tournament SaaS PWA).
 
 Below is the live dump of every open bug logged via the platform FAB. Each entry includes the URL where the bug was reported, the title, and the description.
 
@@ -525,7 +525,7 @@ Live bug backlog (${bugs.length} open):
 \`\`\`json
 ${JSON.stringify(bugs, null, 2)}
 \`\`\``;
-    navigator.clipboard.writeText(cmd).then(() => flashFloater('✓ Triage prompt copied (' + bugs.length + ' bugs)'));
+    navigator.clipboard.writeText(cmd).then(() => flashFloater('âœ“ Triage prompt copied (' + bugs.length + ' bugs)'));
   };
   window.copyRunSprintPrompt = () => {
     const bugs = buildBugDump();
@@ -534,14 +534,14 @@ ${JSON.stringify(bugs, null, 2)}
 
 Procedure for each bug you address:
 1. **Reproduce or trace** the issue against the canonical repo (\`C:\\Users\\Rob\\OneDrive\\Desktop\\Greenskeeper Studios\\Bova Invitational\\\`). Visit the URL where it was logged.
-2. **Root cause** with file:line citation — do not guess.
-3. **Minimal targeted fix** — no scope creep, no premature abstraction, no "while I'm here" cleanups.
+2. **Root cause** with file:line citation â€” do not guess.
+3. **Minimal targeted fix** â€” no scope creep, no premature abstraction, no "while I'm here" cleanups.
 4. **Verify** golden path + obvious edge cases still work (console clean, network clean, mobile viewport OK).
 5. **Commit** with concise message. Push to origin (auto-mirrors to tourney remote).
 6. **Mark the bug completed** in Supabase: \`update platform_bugs set status='completed' where id='<bug-id>'\` (use the Supabase MCP \`execute_sql\` tool).
 7. If the bug is deferred or out of scope: skip it, leave status='open', note why in your report.
 
-Pick the most cohesive 3-6 bugs that touch the same area of code or the same user flow. Ship them as one logical sprint. Stop after the cluster — do not span the entire backlog.
+Pick the most cohesive 3-6 bugs that touch the same area of code or the same user flow. Ship them as one logical sprint. Stop after the cluster â€” do not span the entire backlog.
 
 After the cluster ships, report: which bugs closed, which deferred + why, what regressed (if anything), what's the next cluster to target.
 
@@ -551,14 +551,14 @@ Live bug backlog (${bugs.length} open):
 \`\`\`json
 ${JSON.stringify(bugs, null, 2)}
 \`\`\``;
-    navigator.clipboard.writeText(cmd).then(() => flashFloater('✓ Sprint runner prompt copied'));
+    navigator.clipboard.writeText(cmd).then(() => flashFloater('âœ“ Sprint runner prompt copied'));
   };
   window.copyTopBugPrompt = () => {
     const bugs = buildBugDump();
     if (!bugs.length) return flashFloater('No open bugs');
     const cmd = `Fix the single most critical open bug below. Steps:
 
-1. Scan the backlog. Pick the one bug with the highest user impact OR data integrity risk OR revenue blocker — judge based on title, description, URL surface.
+1. Scan the backlog. Pick the one bug with the highest user impact OR data integrity risk OR revenue blocker â€” judge based on title, description, URL surface.
 2. State your pick with a one-line rationale.
 3. Reproduce the issue against the canonical repo (\`C:\\Users\\Rob\\OneDrive\\Desktop\\Greenskeeper Studios\\Bova Invitational\\\`).
 4. Cite root cause file:line.
@@ -572,12 +572,12 @@ Live bug backlog (${bugs.length} open):
 \`\`\`json
 ${JSON.stringify(bugs, null, 2)}
 \`\`\``;
-    navigator.clipboard.writeText(cmd).then(() => flashFloater('✓ Top-P0 prompt copied'));
+    navigator.clipboard.writeText(cmd).then(() => flashFloater('âœ“ Top-P0 prompt copied'));
   };
   window.copyExportPrompt = () => {
     const bugs = buildBugDump();
     if (!bugs.length) return flashFloater('No open bugs');
-    navigator.clipboard.writeText(JSON.stringify(bugs, null, 2)).then(() => flashFloater('✓ Raw JSON copied (' + bugs.length + ' bugs)'));
+    navigator.clipboard.writeText(JSON.stringify(bugs, null, 2)).then(() => flashFloater('âœ“ Raw JSON copied (' + bugs.length + ' bugs)'));
   };
   // Realtime: re-fetch on any change to platform_bugs.
   db.channel('platform_bugs_live')
@@ -587,7 +587,8 @@ ${JSON.stringify(bugs, null, 2)}
 })();
 </script>
 
-<script src="/bug-fab.js?v=5" defer></script>
+<script src="/bug-fab.js?v=6" defer></script>
 <script>if(window.self!==window.top)document.documentElement.classList.add('in-iframe');</script>
 </body>
 </html>
+

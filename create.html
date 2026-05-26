@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -24,7 +24,7 @@
     html,body{min-height:100vh;background:var(--ink);color:var(--cream);font-family:'Barlow Condensed',sans-serif}
     a{color:var(--gold);cursor:pointer;text-decoration:none}
 
-    /* ─── Header ─── */
+    /* â”€â”€â”€ Header â”€â”€â”€ */
     .hdr{padding:1.25rem 2rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
     .wordmark{font-weight:700;font-size:1rem;letter-spacing:0.28em;text-transform:uppercase;color:var(--gold)}
     .byline{font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.18em;color:var(--muted)}
@@ -32,7 +32,7 @@
     .hdr-nav-link{font-family:'DM Mono',monospace;font-size:.55rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(192,144,48,0.45);text-decoration:none;transition:color .15s}
     .hdr-nav-link:hover{color:rgba(192,144,48,0.85)}
 
-    /* ─── Step indicator ─── */
+    /* â”€â”€â”€ Step indicator â”€â”€â”€ */
     .steps{display:flex;align-items:center;justify-content:center;padding:2rem 1rem 1rem;gap:0}
     .dot{width:1.9rem;height:1.9rem;border-radius:50%;border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:0.6rem;color:var(--muted);background:var(--ink);transition:all .2s;position:relative;z-index:1}
     .dot.active{border-color:var(--gold);color:var(--gold)}
@@ -41,16 +41,16 @@
     .line.done{background:var(--gold)}
     @media(max-width:480px){.line{width:1.2rem}}
 
-    /* ─── Layout ─── */
+    /* â”€â”€â”€ Layout â”€â”€â”€ */
     .main{max-width:540px;margin:0 auto;padding:1.5rem 1.5rem 5rem}
     .panel{display:none}
     .panel.active{display:block}
 
-    /* ─── Typography ─── */
+    /* â”€â”€â”€ Typography â”€â”€â”€ */
     .step-title{font-size:1.9rem;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;margin-bottom:.2rem}
     .step-sub{font-family:'DM Mono',monospace;font-size:0.65rem;color:var(--muted);letter-spacing:0.08em;margin-bottom:2rem}
 
-    /* ─── Form ─── */
+    /* â”€â”€â”€ Form â”€â”€â”€ */
     .field{margin-bottom:1.4rem}
     .field label,.fl{display:block;font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-bottom:.45rem}
     input[type=text],input[type=email],input[type=password],input[type=number],select,textarea{
@@ -68,14 +68,14 @@
     .row2{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
     @media(max-width:420px){.row2{grid-template-columns:1fr}}
 
-    /* ─── Slug field ─── */
+    /* â”€â”€â”€ Slug field â”€â”€â”€ */
     .slug-wrap{display:flex;align-items:center;gap:.4rem;background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:.7rem 1rem;transition:border-color .15s}
     .slug-wrap:focus-within{border-color:var(--gold)}
     .slug-pre{font-family:'DM Mono',monospace;font-size:.72rem;color:var(--muted);white-space:nowrap;flex-shrink:0}
     .slug-in{background:none!important;border:none!important;padding:0!important;flex:1;color:var(--gold);font-family:'DM Mono',monospace;font-size:.78rem;outline:none;min-width:0}
     .slug-status{font-size:.8rem;flex-shrink:0}
 
-    /* ─── Color pickers ─── */
+    /* â”€â”€â”€ Color pickers â”€â”€â”€ */
     .color-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.75rem;margin-bottom:1rem}
     @media(max-width:420px){.color-grid{grid-template-columns:1fr 1fr}}
     .cp-wrap{display:flex;align-items:center;gap:.5rem;background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:.45rem .75rem}
@@ -85,13 +85,13 @@
     .cp-dot{width:.6rem;height:.6rem;border-radius:50%;flex-shrink:0}
     .cp-label{font-size:.75rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase}
 
-    /* ─── Upload zone ─── */
+    /* â”€â”€â”€ Upload zone â”€â”€â”€ */
     .upload-zone{border:1px dashed var(--border);border-radius:6px;padding:1.5rem;text-align:center;cursor:pointer;transition:border-color .15s}
     .upload-zone:hover{border-color:var(--gold)}
     .upload-lbl{font-family:'DM Mono',monospace;font-size:.62rem;color:var(--muted);letter-spacing:.08em}
     .upload-preview{max-height:3.5rem;max-width:10rem;margin:0 auto .5rem;display:block;object-fit:contain}
 
-    /* ─── Mode cards (competitive / casual) ─── */
+    /* â”€â”€â”€ Mode cards (competitive / casual) â”€â”€â”€ */
     .mode-cards{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-bottom:.5rem}
     @media(max-width:420px){.mode-cards{grid-template-columns:1fr}}
     .mode-card{border:1.5px solid var(--border);border-radius:6px;padding:1.1rem 1rem;cursor:pointer;transition:all .18s;background:var(--surface)}
@@ -102,7 +102,7 @@
     .mc-desc{font-family:'DM Mono',monospace;font-size:.57rem;color:var(--muted);line-height:1.55}
     .mode-card.active .mc-desc{color:rgba(245,237,224,.7)}
 
-    /* ─── Format ─── */
+    /* â”€â”€â”€ Format â”€â”€â”€ */
     .days-row{display:flex;gap:.5rem;margin-bottom:1.5rem;flex-wrap:wrap}
     .day-btn{width:2.4rem;height:2.4rem;border:1px solid var(--border);border-radius:4px;background:var(--surface);color:var(--muted);font-family:'DM Mono',monospace;font-size:.7rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s}
     .day-btn.on{border-color:var(--gold);color:var(--gold);background:rgba(192,144,48,.1)}
@@ -111,7 +111,7 @@
     .fmt-day{font-size:.58rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);padding-top:.35rem}
     .fmt-select{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:.42rem .55rem;color:var(--cream);font-family:'DM Mono',monospace;font-size:.65rem;outline:none;appearance:none}
     .fmt-nine-lbl{font-family:'DM Mono',monospace;font-size:.46rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:.22rem}
-    /* ─── Pricing card ─── */
+    /* â”€â”€â”€ Pricing card â”€â”€â”€ */
     .price-card{border:1px solid rgba(192,144,48,.3);border-radius:6px;padding:1.1rem 1.2rem;margin-top:1.5rem;background:rgba(192,144,48,.04)}
     .price-row{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:.35rem}
     .price-lbl{font-family:'DM Mono',monospace;font-size:.55rem;letter-spacing:.15em;text-transform:uppercase;color:var(--muted)}
@@ -123,33 +123,33 @@
     .fmt-select option{background:#1a1008}
     .fmt-desc{font-family:'DM Mono',monospace;font-size:.44rem;letter-spacing:.06em;color:var(--muted);margin-top:.3rem;min-height:.9rem;line-height:1.4}
 
-    /* ─── Review ─── */
+    /* â”€â”€â”€ Review â”€â”€â”€ */
     .review-item{display:flex;justify-content:space-between;align-items:flex-start;padding:.65rem 0;border-bottom:1px solid var(--border);gap:1rem}
     .rv-k{font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);flex-shrink:0}
     .rv-v{font-family:'DM Mono',monospace;font-size:.7rem;color:var(--cream);text-align:right;word-break:break-all}
 
-    /* ─── Nav buttons ─── */
+    /* â”€â”€â”€ Nav buttons â”€â”€â”€ */
     .nav{display:flex;gap:1rem;margin-top:2.5rem}
     .btn-back{flex:0 0 auto;padding:.7rem 1.4rem;background:none;border:1px solid var(--border);border-radius:4px;color:var(--muted);font-family:'Barlow Condensed',sans-serif;font-size:.7rem;font-weight:600;letter-spacing:.2em;text-transform:uppercase;cursor:pointer;transition:all .15s}
     .btn-back:hover{border-color:var(--cream);color:var(--cream)}
     .btn-next{flex:1;padding:.8rem 2rem;background:var(--gold);border:1px solid var(--gold);border-radius:4px;color:var(--ink);font-family:'Barlow Condensed',sans-serif;font-size:.72rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;cursor:pointer;transition:all .15s}
     .btn-next:hover{background:#d4a035}.btn-next:disabled{opacity:.4;cursor:not-allowed}
 
-    /* ─── Alert ─── */
+    /* â”€â”€â”€ Alert â”€â”€â”€ */
     .alert{padding:.7rem 1rem;border-radius:4px;font-family:'DM Mono',monospace;font-size:.68rem;margin-bottom:1rem}
     .ae{background:rgba(231,76,60,.13);border:1px solid rgba(231,76,60,.35);color:#e74c3c}
     .ao{background:rgba(39,174,96,.13);border:1px solid rgba(39,174,96,.35);color:#27ae60}
 
-    /* ─── Auth toggle ─── */
+    /* â”€â”€â”€ Auth toggle â”€â”€â”€ */
     .auth-foot{text-align:center;font-family:'DM Mono',monospace;font-size:.62rem;color:var(--muted);margin-top:1.25rem}
     .or{display:flex;align-items:center;gap:1rem;margin:1.25rem 0;color:var(--muted);font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.12em}
     .or::before,.or::after{content:'';flex:1;height:1px;background:var(--border)}
 
-    /* ─── Spinner ─── */
+    /* â”€â”€â”€ Spinner â”€â”€â”€ */
     .spin{display:inline-block;width:.85em;height:.85em;border:2px solid rgba(255,255,255,.25);border-top-color:currentColor;border-radius:50%;animation:sp .55s linear infinite;vertical-align:middle;margin-right:.35em}
     @keyframes sp{to{transform:rotate(360deg)}}
 
-    /* ─── Tier cards ─── */
+    /* â”€â”€â”€ Tier cards â”€â”€â”€ */
     .tier-cards{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.65rem;margin-bottom:1.75rem}
     @media(max-width:520px){.tier-cards{grid-template-columns:1fr}}
     .tier-card{border:1.5px solid var(--border);border-radius:6px;padding:1rem .9rem;cursor:pointer;transition:all .18s;background:var(--surface)}
@@ -161,7 +161,7 @@
     .tc-price span{font-size:.58rem;font-family:'DM Mono',monospace;color:var(--muted);font-weight:400;margin-left:.1rem}
     .tc-features{list-style:none;display:flex;flex-direction:column;gap:.3rem}
     .tc-features li{font-family:'DM Mono',monospace;font-size:.57rem;color:var(--muted);padding-left:.85rem;position:relative}
-    .tc-features li::before{content:'·';position:absolute;left:0;color:var(--gold)}
+    .tc-features li::before{content:'Â·';position:absolute;left:0;color:var(--gold)}
     .tier-card.active .tc-features li{color:rgba(245,237,224,.75)}
     .tc-carry{font-family:'DM Mono',monospace;font-size:.53rem;color:var(--gold);margin-top:.6rem;padding-top:.5rem;border-top:1px solid var(--border)}
   </style>
@@ -170,7 +170,7 @@
   <header class="hdr">
     <div class="wordmark">TOURney</div>
     <div class="hdr-nav">
-      <a href="/" class="hdr-nav-link">← Platform</a>
+      <a href="/" class="hdr-nav-link">â† Platform</a>
       <a href="/player" class="hdr-nav-link">My Golf</a>
     </div>
   </header>
@@ -184,7 +184,7 @@
       <label>Code</label>
       <input type="text" id="codeInput" placeholder="e.g. GKS2026" autocomplete="off" style="text-transform:uppercase;letter-spacing:.18em" onkeydown="if(event.key==='Enter')submitCode()">
     </div>
-    <button class="btn-next" onclick="submitCode()">Continue →</button>
+    <button class="btn-next" onclick="submitCode()">Continue â†’</button>
   </div>
 
   <!-- Main flow (hidden until code validated) -->
@@ -213,13 +213,13 @@
       <div class="field"><label>Email</label><input type="email" id="aEmail" autocomplete="email" placeholder="you@example.com"></div>
       <div class="field"><label>Password</label><input type="password" id="aPass" autocomplete="new-password" placeholder="Min. 8 characters"></div>
       <div class="nav" style="margin-top:1rem">
-        <button class="btn-next" id="btnAuth" onclick="doAuth()">Create Account →</button>
+        <button class="btn-next" id="btnAuth" onclick="doAuth()">Create Account â†’</button>
       </div>
       <div class="or">or</div>
       <div class="auth-foot" id="authFoot">Already have an account? <a onclick="toggleMode()">Sign in</a></div>
     </div>
 
-    <!-- Step 2: Format — competitive/casual + days + round format -->
+    <!-- Step 2: Format â€” competitive/casual + days + round format -->
     <div class="panel" id="s2">
       <div class="step-title">Tournament Format</div>
       <div class="step-sub">Days, rounds, and how competitive you want to get</div>
@@ -238,10 +238,6 @@
 
       <div class="fl" style="margin-top:1.75rem;margin-bottom:.65rem">Team Structure</div>
       <div class="days-row" id="teamCountBtns"></div>
-      <div id="pairsCountRow" style="display:none;margin-top:.75rem;">
-        <div class="fl" style="margin-bottom:.5rem">Number of Pairs</div>
-        <div class="days-row" id="pairsCountBtns"></div>
-      </div>
 
       <div class="fl" style="margin-top:1.75rem;margin-bottom:.75rem">Number of Rounds</div>
       <div class="days-row" id="daysBtns"></div>
@@ -253,19 +249,19 @@
       <div id="fmtRows"></div>
 
       <div class="price-card" id="priceCard">
-        <div style="font-family:'DM Mono',monospace;font-size:.5rem;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);margin-bottom:.6rem;" id="pc-tier">—</div>
-        <div class="price-row"><span class="price-lbl">Players</span><span class="price-val" id="pc-players">—</span></div>
-        <div class="price-row"><span class="price-lbl">Rounds</span><span class="price-val" id="pc-days">—</span></div>
+        <div style="font-family:'DM Mono',monospace;font-size:.5rem;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);margin-bottom:.6rem;" id="pc-tier">â€”</div>
+        <div class="price-row"><span class="price-lbl">Players</span><span class="price-val" id="pc-players">â€”</span></div>
+        <div class="price-row"><span class="price-lbl">Rounds</span><span class="price-val" id="pc-days">â€”</span></div>
         <div class="price-total">
           <span class="price-total-lbl">Est. per tourney</span>
-          <span class="price-total-val" id="pc-total">$—</span>
+          <span class="price-total-val" id="pc-total">$â€”</span>
         </div>
-        <div class="price-note">Pricing preview — payment activated when billing goes live.</div>
+        <div class="price-note">Pricing preview â€” payment activated when billing goes live.</div>
       </div>
 
       <div class="nav">
-        <button class="btn-back" onclick="back()">← Back</button>
-        <button class="btn-next" onclick="next2()">Your Tournament →</button>
+        <button class="btn-back" onclick="back()">â† Back</button>
+        <button class="btn-next" onclick="next2()">Your Tournament â†’</button>
       </div>
     </div>
 
@@ -284,7 +280,7 @@
           <input class="slug-in" id="tSlug" placeholder="my-tourney-2026" oninput="onSlug(this.value)">
           <span class="slug-status" id="slugSt"></span>
         </div>
-        <div class="hint" id="slugHint">Auto-generated from name — edit to customize.</div>
+        <div class="hint" id="slugHint">Auto-generated from name â€” edit to customize.</div>
       </div>
       <div class="row2">
         <div class="field"><label>Year</label><input type="text" id="tYear" maxlength="4" placeholder="2026"></div>
@@ -292,18 +288,18 @@
       </div>
       <div class="field">
         <label>Tagline</label>
-        <input type="text" id="tSub" placeholder="Inaugural Edition — An annual tradition begins">
+        <input type="text" id="tSub" placeholder="Inaugural Edition â€” An annual tradition begins">
       </div>
       <div class="nav">
-        <button class="btn-back" onclick="back()">← Back</button>
-        <button class="btn-next" onclick="next3()">Brand & Colors →</button>
+        <button class="btn-back" onclick="back()">â† Back</button>
+        <button class="btn-next" onclick="next3()">Brand & Colors â†’</button>
       </div>
     </div>
 
     <!-- Step 4: Brand -->
     <div class="panel" id="s4">
       <div class="step-title">Brand & Design</div>
-      <div class="step-sub">Colors and logo — applied automatically on every page</div>
+      <div class="step-sub">Colors and logo â€” applied automatically on every page</div>
       <div class="fl" style="margin-bottom:.75rem">Site Colors</div>
       <div class="color-grid">
         <div>
@@ -327,14 +323,14 @@
         <label>Logo <span style="font-weight:400;opacity:.6">(optional)</span></label>
         <div class="upload-zone" id="logoZone" onclick="document.getElementById('logoFile').click()">
           <img id="logoPrev" class="upload-preview" style="display:none">
-          <div class="upload-lbl" id="logoLbl">Click to upload · PNG or SVG recommended</div>
+          <div class="upload-lbl" id="logoLbl">Click to upload Â· PNG or SVG recommended</div>
         </div>
         <input type="file" id="logoFile" accept="image/*" style="display:none" onchange="uploadLogo(this)">
       </div>
       <div id="launchAlert" class="alert ae" style="display:none"></div>
       <div class="nav">
-        <button class="btn-back" onclick="back()">← Back</button>
-        <button class="btn-next" id="btnLaunch" onclick="launch()">Create Tournament →</button>
+        <button class="btn-back" onclick="back()">â† Back</button>
+        <button class="btn-next" id="btnLaunch" onclick="launch()">Create Tournament â†’</button>
       </div>
     </div>
 
@@ -346,7 +342,7 @@
   const SB_KEY = 'sb_publishable_DnBMNLaSu61ykJ6P_fI2fw_D9DdAScn';
   const db = supabase.createClient(SB_URL, SB_KEY, { auth: { persistSession: true, autoRefreshToken: true } });
 
-  // ─── Invite code gate ───
+  // â”€â”€â”€ Invite code gate â”€â”€â”€
   function unlockFlow() {
     document.getElementById('codeGate').style.display = 'none';
     document.getElementById('mainFlow').style.display = 'block';
@@ -378,9 +374,9 @@
     { value:'chapman',      label:'Chapman / Pinehurst',  desc:'Both players hit drives, swap balls, then choose the best to finish alternate shot.' },
     { value:'skins',        label:'Skins',                desc:'Each hole is worth a skin. Ties carry the skin forward. Winner takes the pot.' },
     { value:'greensomes',   label:'Greensomes',           desc:'Both partners drive, best drive chosen, then alternate shots into the hole.' },
-    { value:'mod_stableford', label:'Modified Stableford', desc:'Points scale with score vs par — double bogey loses a point, eagle earns 5. Aggressive play rewarded.' },
+    { value:'mod_stableford', label:'Modified Stableford', desc:'Points scale with score vs par â€” double bogey loses a point, eagle earns 5. Aggressive play rewarded.' },
     { value:'nassau',       label:'Nassau',               desc:'Three bets in one: front 9, back 9, and overall. Classic side-bet format.' },
-    { value:'superball',    label:'Superball',             desc:'Scramble with a twist — one player per team is the designated "super ball" player and their tee shot must be used on pre-set holes, regardless of where it lands.' },
+    { value:'superball',    label:'Superball',             desc:'Scramble with a twist â€” one player per team is the designated "super ball" player and their tee shot must be used on pre-set holes, regardless of where it lands.' },
   ];
 
   const DAY_DEFAULTS = [
@@ -430,7 +426,7 @@
     return f;
   }
 
-  // ─── Init ───
+  // â”€â”€â”€ Init â”€â”€â”€
   (async () => {
     document.getElementById('tYear').value = new Date().getFullYear();
 
@@ -450,7 +446,7 @@
         if (p.bg)      { const el = document.getElementById('cBg');      if (el) el.value = p.bg; }
         onColor();
         const banner = document.getElementById('prefillBanner');
-        if (banner && p.from) { banner.textContent = `Cloning from "${p.from}" — review all steps before creating.`; banner.style.display = 'block'; }
+        if (banner && p.from) { banner.textContent = `Cloning from "${p.from}" â€” review all steps before creating.`; banner.style.display = 'block'; }
       } catch(e) {}
     }
 
@@ -458,7 +454,7 @@
     if (session?.user) { checkBillingThenGo(session.user); }
   })();
 
-  // ─── Step indicator ───
+  // â”€â”€â”€ Step indicator â”€â”€â”€
   function updateDots() {
     for (let i = 1; i <= 4; i++) {
       const d = document.getElementById(`dot-${i}`);
@@ -479,8 +475,8 @@
     if (n === 2) renderFormat();
   }
 
-  // ─── Billing gate ───
-  // Allowed statuses — 'comped' covers founders/Rob, 'trial' covers test accounts
+  // â”€â”€â”€ Billing gate â”€â”€â”€
+  // Allowed statuses â€” 'comped' covers founders/Rob, 'trial' covers test accounts
   const BILLING_OK = new Set(['active', 'comped', 'trial']);
   async function checkBillingThenGo(user) {
     S.user = user;
@@ -502,7 +498,7 @@
     go(S.step - 1);
   }
 
-  // ─── Step 1: Auth ───
+  // â”€â”€â”€ Step 1: Auth â”€â”€â”€
   let signupMode = true;
 
   function toggleMode() {
@@ -510,10 +506,10 @@
     const btn = document.getElementById('btnAuth');
     const foot = document.getElementById('authFoot');
     if (signupMode) {
-      btn.textContent = 'Create Account →';
+      btn.textContent = 'Create Account â†’';
       foot.innerHTML = 'Already have an account? <a onclick="toggleMode()">Sign in</a>';
     } else {
-      btn.textContent = 'Sign In →';
+      btn.textContent = 'Sign In â†’';
       foot.innerHTML = 'Need an account? <a onclick="toggleMode()">Create one</a>';
     }
   }
@@ -525,7 +521,7 @@
     const btn   = document.getElementById('btnAuth');
     if (!email || !pw) { showAlert(alrt, 'Email and password required.'); return; }
     if (signupMode && pw.length < 8) { showAlert(alrt, 'Password must be at least 8 characters.'); return; }
-    btn.innerHTML = '<span class="spin"></span>Working…';
+    btn.innerHTML = '<span class="spin"></span>Workingâ€¦';
     btn.disabled = true;
     alrt.style.display = 'none';
     try {
@@ -536,7 +532,7 @@
         if (!res.data?.session) {
           showAlert(alrt, 'Check your email to confirm, then come back to sign in.', true);
           toggleMode();
-          btn.textContent = 'Sign In →';
+          btn.textContent = 'Sign In â†’';
           btn.disabled = false;
           return;
         }
@@ -548,7 +544,7 @@
     } catch(e) {
       showAlert(alrt, e.message || 'Authentication failed. Try again.');
     } finally {
-      btn.innerHTML = signupMode ? 'Create Account →' : 'Sign In →';
+      btn.innerHTML = signupMode ? 'Create Account â†’' : 'Sign In â†’';
       btn.disabled = false;
     }
   }
@@ -559,7 +555,7 @@
     el.style.display = 'block';
   }
 
-  // ─── Step 2: Format ───
+  // â”€â”€â”€ Step 2: Format â”€â”€â”€
   function pickMode(m) {
     S.mode = m;
     ['competitive','casual'].forEach(k => {
@@ -568,7 +564,7 @@
   }
 
   function renderFormat() {
-    // Hide back when user is already authed — no step 1 to return to
+    // Hide back when user is already authed â€” no step 1 to return to
     const backBtn = document.querySelector('#s2 .btn-back');
     if (backBtn) backBtn.style.display = S.user ? 'none' : '';
     const row = document.getElementById('daysBtns');
@@ -593,18 +589,18 @@
       pRow.appendChild(b);
     });
 
-    // Structure buttons: Individual | 2–8 Teams | Pairs
+    // Structure buttons: Individual | 2â€“8 Teams | Pairs
     const tcRow = document.getElementById('teamCountBtns');
     tcRow.innerHTML = '';
     const structOpts = [
       { s:'individual', n:1,  label:'Individual' },
+      { s:'pairs',      n:-1, label:'Pairs' },
       { s:'team',       n:2,  label:'2 Teams' },
       { s:'team',       n:3,  label:'3 Teams' },
       { s:'team',       n:4,  label:'4 Teams' },
       { s:'team',       n:5,  label:'5 Teams' },
       { s:'team',       n:6,  label:'6 Teams' },
       { s:'team',       n:8,  label:'8 Teams' },
-      { s:'pairs',      n:-1, label:'Pairs' },
     ];
     structOpts.forEach(o => {
       const b = document.createElement('button');
@@ -618,25 +614,14 @@
         S.structure = o.s;
         if (o.s === 'individual') S.teamCount = 1;
         else if (o.s === 'team') S.teamCount = o.n;
-        else S.teamCount = S.pairCount; // pairs: teamCount mirrors pairCount
+        else { S.pairCount = Math.floor(S.maxPlayers / 2); S.teamCount = S.pairCount; }
         renderFormat();
       };
       tcRow.appendChild(b);
     });
 
-    // Pairs count selector
-    const pairsRow = document.getElementById('pairsCountRow');
-    pairsRow.style.display = S.structure === 'pairs' ? '' : 'none';
-    const pcBtns = document.getElementById('pairsCountBtns');
-    pcBtns.innerHTML = '';
-    [2,3,4,6,8,10,12,16,24].forEach(n => {
-      const b = document.createElement('button');
-      b.className = 'day-btn' + (n === S.pairCount ? ' on' : '');
-      b.textContent = n;
-      b.style.cssText = 'width:auto;padding:0 .75rem;min-width:2.4rem;';
-      b.onclick = () => { S.pairCount = n; S.teamCount = n; renderFormat(); };
-      pcBtns.appendChild(b);
-    });
+    // Auto-sync pairCount from maxPlayers when structure=pairs
+    if (S.structure === 'pairs') { S.pairCount = Math.floor(S.maxPlayers / 2); S.teamCount = S.pairCount; }
 
     // Hide per-nine format section for pairs (scoring auto-handled)
     const fmtSection = document.getElementById('fmtRows');
@@ -696,7 +681,7 @@
     go(3);
   }
 
-  // ─── Step 3: Identity ───
+  // â”€â”€â”€ Step 3: Identity â”€â”€â”€
   let slugTimer;
 
   function onName(val) {
@@ -727,7 +712,7 @@
     if (!slug || slug.length < 3) {
       st.textContent = ''; ht.textContent = 'Min. 3 characters.'; ht.className = 'hint'; return;
     }
-    st.textContent = '⋯'; st.style.color = 'var(--muted)';
+    st.textContent = 'â‹¯'; st.style.color = 'var(--muted)';
     slugTimer = setTimeout(() => checkSlug(slug), 500);
   }
 
@@ -737,11 +722,11 @@
     try {
       const { data } = await db.from('tournaments').select('id').eq('slug', slug).maybeSingle();
       if (data) {
-        st.textContent = '✗'; st.style.color = '#e74c3c';
-        ht.textContent = 'Already taken — try a different slug.'; ht.className = 'hint err';
+        st.textContent = 'âœ—'; st.style.color = '#e74c3c';
+        ht.textContent = 'Already taken â€” try a different slug.'; ht.className = 'hint err';
         S.slugOk = false;
       } else {
-        st.textContent = '✓'; st.style.color = 'var(--green)';
+        st.textContent = 'âœ“'; st.style.color = 'var(--green)';
         ht.textContent = 'Available!'; ht.className = 'hint ok';
         S.slugOk = true;
       }
@@ -757,7 +742,7 @@
     go(4);
   }
 
-  // ─── Step 4: Brand ───
+  // â”€â”€â”€ Step 4: Brand â”€â”€â”€
   function onColor() {
     const p = document.getElementById('cPrimary').value;
     const i = document.getElementById('cInk').value;
@@ -779,7 +764,7 @@
     const reader = new FileReader();
     reader.onload = e => { prev.src = e.target.result; prev.style.display = 'block'; };
     reader.readAsDataURL(file);
-    lbl.textContent = '✓ Ready — uploads on create';
+    lbl.textContent = 'âœ“ Ready â€” uploads on create';
   }
 
   function next4() { launch(); }
@@ -796,7 +781,7 @@
     const ink    = document.getElementById('cInk').value;
     const bg     = document.getElementById('cBg').value;
 
-    btn.innerHTML = '<span class="spin"></span>Creating…';
+    btn.innerHTML = '<span class="spin"></span>Creatingâ€¦';
     btn.disabled = true;
     alrt.style.display = 'none';
 
@@ -815,7 +800,7 @@
       // 2. Add creator as admin
       await db.from('tournament_admins').insert({ tournament_id: tid, email: S.user.email });
 
-      // 3. Add creator as player — pull name from any existing player row, fallback to email parse
+      // 3. Add creator as player â€” pull name from any existing player row, fallback to email parse
       const { data: existingP } = await db.from('players').select('first_name,last_name,handicap').eq('email', S.user.email).limit(1).maybeSingle();
       const emailLocal = S.user.email.split('@')[0].replace(/[._\-\d]+/g, ' ').trim().split(' ');
       const creatorFirst = existingP?.first_name || (emailLocal[0] ? emailLocal[0].charAt(0).toUpperCase() + emailLocal[0].slice(1) : '');
@@ -848,9 +833,9 @@
         { key:'tourney_name',      value: name },
         { key:'tourney_year',      value: year },
         { key:'tourney_location',  value: loc },
-        { key:'homepage_subtitle', value: sub || [year, loc].filter(Boolean).join(' · ') },
-        { key:'homepage_details',  value: `${S.days} Day${S.days>1?'s':''} · ${S.structure==='individual'?'Individual':S.structure==='pairs'?S.pairCount+' Pairs':S.teamCount+' Teams'} · ${S.days*18} Holes · ${year}` },
-        { key:'homepage_about',    value: `${name} is a ${S.days}-day golf tournament${loc?' in '+loc:''}. ${S.structure==='individual'?'Individual scoring — every stroke counts.':S.structure==='pairs'?S.pairCount+' pairs compete — combined best-ball score per pair.':'Two teams compete across all rounds — every stroke feeds the team score.'} Set up your tournament details from the admin page.` },
+        { key:'homepage_subtitle', value: sub || [year, loc].filter(Boolean).join(' Â· ') },
+        { key:'homepage_details',  value: `${S.days} Day${S.days>1?'s':''} Â· ${S.structure==='individual'?'Individual':S.structure==='pairs'?S.pairCount+' Pairs':S.teamCount+' Teams'} Â· ${S.days*18} Holes Â· ${year}` },
+        { key:'homepage_about',    value: `${name} is a ${S.days}-day golf tournament${loc?' in '+loc:''}. ${S.structure==='individual'?'Individual scoring â€” every stroke counts.':S.structure==='pairs'?S.pairCount+' pairs compete â€” combined best-ball score per pair.':'Two teams compete across all rounds â€” every stroke feeds the team score.'} Set up your tournament details from the admin page.` },
         { key:'hero_cta_primary',  value: 'Request Your Spot' },
         { key:'color_primary',     value: accent },
         { key:'color_ink',         value: ink },
@@ -862,7 +847,7 @@
         { key:'reg_max_players',   value: String(S.maxPlayers) },
         { key:'reg_min_players',   value: String(Math.max(1, Math.floor(S.maxPlayers * 0.6))) },
         { key:'reg_bullet_1',      value: 'Open to invited players only' },
-        { key:'reg_bullet_2',      value: `${S.days}-day tournament · ${S.days*18} holes` },
+        { key:'reg_bullet_2',      value: `${S.days}-day tournament Â· ${S.days*18} holes` },
         { key:'reg_bullet_3',      value: loc || 'Location TBD' },
         { key:'reg_show_dates',    value: 'false' },
         { key:'reg_show_why_me',   value: 'false' },
@@ -907,13 +892,14 @@
         await db.from('settings').delete().eq('tournament_id', tid);
         await db.from('tournaments').delete().eq('id', tid);
       }
-      showAlert(alrt, e.message || 'Creation failed — please try again.');
-      btn.innerHTML = 'Create Tournament →';
+      showAlert(alrt, e.message || 'Creation failed â€” please try again.');
+      btn.innerHTML = 'Create Tournament â†’';
       btn.disabled = false;
     }
   }
   </script>
 <script defer src="/nav-platform.js"></script>
-<script src="/bug-fab.js?v=5" defer></script>
+<script src="/bug-fab.js?v=6" defer></script>
 </body>
 </html>
+

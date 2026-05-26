@@ -1,16 +1,16 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>TOURney — URL Map</title>
+<title>TOURney â€” URL Map</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{--gold:#c09030;--ink:#1a1008;--bg:#f5ede0;--card:#ede2d2;--dark:#0f0a04;--muted:#7a6a54;--border:rgba(192,144,48,0.25);--red:#b43c28;--green:#2a7a20}
 body{font-family:-apple-system,system-ui,sans-serif;background:var(--bg);color:var(--ink);padding:1rem;max-width:640px;margin:0 auto;font-size:14px;line-height:1.5}
 h1{font-size:1rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--gold);margin-bottom:0.15rem}
 .subtitle{font-size:0.68rem;color:var(--muted);font-family:monospace;letter-spacing:0.05em;margin-bottom:1.75rem}
-/* Section group — collapsible wrapper */
+/* Section group â€” collapsible wrapper */
 .sec-group{background:none!important;border:none!important;border-radius:0!important;margin-bottom:0!important;overflow:visible!important}
 .sec-group>summary{padding:0;list-style:none;cursor:pointer;display:block}
 .sec-group>summary::-webkit-details-marker{display:none}
@@ -65,58 +65,58 @@ td:last-child{color:var(--muted);font-size:0.72rem}
 </head>
 <body>
 
-<h1>TOURney — URL Map</h1>
-<div class="subtitle">tourney.greenskeeper.studio · every route · every link · 2026-05-20</div>
+<h1>TOURney â€” URL Map</h1>
+<div class="subtitle">tourney.greenskeeper.studio Â· every route Â· every link Â· 2026-05-20</div>
 
-<!-- ═══ PLATFORM FLOW ═══ -->
+<!-- â•â•â• PLATFORM FLOW â•â•â• -->
 <div class="sec">Platform Flow</div>
 <div class="flow">
   <span class="flow-node gold">/</span>
-  <span class="arrow">→</span>
+  <span class="arrow">â†’</span>
   <span class="flow-node">/create</span>
-  <span class="arrow">→</span>
+  <span class="arrow">â†’</span>
   <span class="flow-node gold">/t/{slug}</span>
-  <span class="arrow">→</span>
+  <span class="arrow">â†’</span>
   <span class="flow-node">all pages</span>
 </div>
 <div class="flow">
   <span class="flow-node">/player</span>
-  <span class="arrow">↔</span>
+  <span class="arrow">â†”</span>
   <span class="flow-node">/player-upgrade</span>
   &nbsp;&nbsp;
   <span class="flow-node red">/platform</span>
-  <span class="arrow">→</span>
+  <span class="arrow">â†’</span>
   <span class="flow-node red">/t/{slug}/admin</span>
 </div>
 
-<!-- ═══ TOURNAMENT NAV (shared) ═══ -->
-<div class="sec">Shared Nav — every tournament page</div>
+<!-- â•â•â• TOURNAMENT NAV (shared) â•â•â• -->
+<div class="sec">Shared Nav â€” every tournament page</div>
 <div class="callout">
-  <div class="callout-title">Nav drawer — nav-mobile.js (static) + tourney-init.js (auth-gated)</div>
+  <div class="callout-title">Nav drawer â€” nav-mobile.js (static) + tourney-init.js (auth-gated)</div>
   <div class="nav-chips">
-    <span class="chip">/t/{slug} · Home</span>
+    <span class="chip">/t/{slug} Â· Home</span>
     <span class="chip">/scoreboard</span>
     <span class="chip">/directory</span>
     <span class="chip">/feed</span>
     <span class="chip">/profile</span>
-    <span class="chip">/player · ⛳ My Golf</span>
-    <span class="chip">tourney.greenskeeper.studio · ← Platform</span>
-    <span class="chip fab">FAB → /scorecard (mobile only)</span>
-    <span class="chip auth">⚙ Admin → /t/{slug}/admin · admins only</span>
-    <span class="chip auth">⬡ Platform → /platform · Rob only</span>
+    <span class="chip">/player Â· â›³ My Golf</span>
+    <span class="chip">tourney.greenskeeper.studio Â· â† Platform</span>
+    <span class="chip fab">FAB â†’ /scorecard (mobile only)</span>
+    <span class="chip auth">âš™ Admin â†’ /t/{slug}/admin Â· admins only</span>
+    <span class="chip auth">â¬¡ Platform â†’ /platform Â· Rob only</span>
   </div>
 </div>
 
-<!-- ═══ APP PAGES ═══ -->
+<!-- â•â•â• APP PAGES â•â•â• -->
 <details class="sec-group">
-<summary><div class="sec">App Pages <span class="sec-arrow">›</span></div></summary>
+<summary><div class="sec">App Pages <span class="sec-arrow">â€º</span></div></summary>
 <div class="sec-body">
 
 <details class="card">
   <summary>
     <span class="sum-path">/</span>
     <span class="sum-desc">Marketing landing</span>
-    <span class="sum-arrow">›</span>
+    <span class="sum-arrow">â€º</span>
   </summary>
   <div class="card-body">
     <div>
@@ -141,13 +141,13 @@ td:last-child{color:var(--muted);font-size:0.72rem}
   <summary>
     <span class="sum-path">/create</span>
     <span class="sum-desc">Create new tournament</span>
-    <span class="sum-arrow">›</span>
+    <span class="sum-arrow">â€º</span>
   </summary>
   <div class="card-body">
     <div>
       <div class="link-group-label">Nav</div>
       <div class="link-list">
-        <div class="link-row"><span class="link-href">/</span><span class="link-label">← Back to platform</span></div>
+        <div class="link-row"><span class="link-href">/</span><span class="link-label">â† Back to platform</span></div>
         <div class="link-row"><span class="link-href">/player</span><span class="link-label">My Golf</span></div>
       </div>
     </div>
@@ -163,14 +163,14 @@ td:last-child{color:var(--muted);font-size:0.72rem}
 <details class="card">
   <summary>
     <span class="sum-path">/player</span>
-    <span class="sum-desc">My Golf — platform player profile</span>
-    <span class="sum-arrow">›</span>
+    <span class="sum-desc">My Golf â€” platform player profile</span>
+    <span class="sum-arrow">â€º</span>
   </summary>
   <div class="card-body">
     <div>
       <div class="link-group-label">Nav</div>
       <div class="link-list">
-        <div class="link-row"><span class="link-href ext">tourney.greenskeeper.studio</span><span class="link-label">← Platform home</span></div>
+        <div class="link-row"><span class="link-href ext">tourney.greenskeeper.studio</span><span class="link-label">â† Platform home</span></div>
         <div class="link-row"><span class="link-href">/create</span><span class="link-label">Create tournament</span></div>
         <div class="link-row"><span class="link-href">/player</span><span class="link-label">Self (reload)</span></div>
       </div>
@@ -183,7 +183,7 @@ td:last-child{color:var(--muted);font-size:0.72rem}
       </div>
     </div>
     <div>
-      <div class="link-group-label">Dynamic — per tournament (injected)</div>
+      <div class="link-group-label">Dynamic â€” per tournament (injected)</div>
       <div class="link-list">
         <div class="link-row"><span class="link-href dynamic">{tourney}/</span><span class="link-label">Tourney home</span></div>
         <div class="link-row"><span class="link-href dynamic">{tourney}/scoreboard</span><span class="link-label">Leaderboard</span></div>
@@ -199,11 +199,11 @@ td:last-child{color:var(--muted);font-size:0.72rem}
   <summary>
     <span class="sum-path">/player-upgrade</span>
     <span class="sum-desc">Upgrade player account</span>
-    <span class="sum-arrow">›</span>
+    <span class="sum-arrow">â€º</span>
   </summary>
   <div class="card-body">
     <div class="link-list">
-      <div class="link-row"><span class="link-href">/player</span><span class="link-label">← Back</span></div>
+      <div class="link-row"><span class="link-href">/player</span><span class="link-label">â† Back</span></div>
     </div>
   </div>
 </details>
@@ -211,8 +211,8 @@ td:last-child{color:var(--muted);font-size:0.72rem}
 <details class="card">
   <summary>
     <span class="sum-path">/login</span>
-    <span class="sum-desc">Auth — platform level</span>
-    <span class="sum-arrow">›</span>
+    <span class="sum-desc">Auth â€” platform level</span>
+    <span class="sum-arrow">â€º</span>
   </summary>
   <div class="card-body">
     <div class="link-list">
@@ -225,11 +225,11 @@ td:last-child{color:var(--muted);font-size:0.72rem}
   <summary>
     <span class="sum-path">/tos</span>
     <span class="sum-desc">Terms of service</span>
-    <span class="sum-arrow">›</span>
+    <span class="sum-arrow">â€º</span>
   </summary>
   <div class="card-body">
     <div class="link-list">
-      <div class="link-row"><span class="link-href">/</span><span class="link-label">← Home</span></div>
+      <div class="link-row"><span class="link-href">/</span><span class="link-label">â† Home</span></div>
     </div>
   </div>
 </details>
@@ -238,11 +238,11 @@ td:last-child{color:var(--muted);font-size:0.72rem}
   <summary>
     <span class="sum-path">/privacy</span>
     <span class="sum-desc">Privacy policy</span>
-    <span class="sum-arrow">›</span>
+    <span class="sum-arrow">â€º</span>
   </summary>
   <div class="card-body">
     <div class="link-list">
-      <div class="link-row"><span class="link-href">/</span><span class="link-label">← Home</span></div>
+      <div class="link-row"><span class="link-href">/</span><span class="link-label">â† Home</span></div>
     </div>
   </div>
 </details>
@@ -250,26 +250,26 @@ td:last-child{color:var(--muted);font-size:0.72rem}
 </div>
 </details>
 
-<!-- ═══ PLATFORM — INTERNAL ═══ -->
+<!-- â•â•â• PLATFORM â€” INTERNAL â•â•â• -->
 <details class="sec-group">
-<summary><div class="sec">Platform — Internal <span class="tag tag-rob" style="font-size:0.5rem;vertical-align:middle">Rob only</span> <span class="sec-arrow">›</span></div></summary>
+<summary><div class="sec">Platform â€” Internal <span class="tag tag-rob" style="font-size:0.5rem;vertical-align:middle">Rob only</span> <span class="sec-arrow">â€º</span></div></summary>
 <div class="sec-body">
 
 <details class="card">
   <summary>
     <span class="sum-path">/platform</span>
     <span class="sum-desc">Superadmin hub</span>
-    <span class="sum-arrow">›</span>
+    <span class="sum-arrow">â€º</span>
   </summary>
   <div class="card-body">
     <div>
       <div class="link-group-label">Tabs</div>
       <div class="link-list">
-        <div class="link-row"><span class="link-href anchor">#action · #tenants · #bugs · #qa · #ref</span></div>
+        <div class="link-row"><span class="link-href anchor">#action Â· #tenants Â· #bugs Â· #qa Â· #ref</span></div>
       </div>
     </div>
     <div>
-      <div class="link-group-label">Dynamic — per tenant row</div>
+      <div class="link-group-label">Dynamic â€” per tenant row</div>
       <div class="link-list">
         <div class="link-row"><span class="link-href dynamic">/t/{slug}/admin</span><span class="link-label">Admin for each tourney</span></div>
       </div>
@@ -281,11 +281,11 @@ td:last-child{color:var(--muted);font-size:0.72rem}
   <summary>
     <span class="sum-path">/platform/bugs</span>
     <span class="sum-desc">Bug tracker</span>
-    <span class="sum-arrow">›</span>
+    <span class="sum-arrow">â€º</span>
   </summary>
   <div class="card-body">
     <div class="link-list">
-      <div class="link-row"><span class="link-href">/platform</span><span class="link-label">← Hub</span></div>
+      <div class="link-row"><span class="link-href">/platform</span><span class="link-label">â† Hub</span></div>
     </div>
   </div>
 </details>
@@ -294,11 +294,11 @@ td:last-child{color:var(--muted);font-size:0.72rem}
   <summary>
     <span class="sum-path">/platform/aaa-plan</span>
     <span class="sum-desc">AAA plan / roadmap</span>
-    <span class="sum-arrow">›</span>
+    <span class="sum-arrow">â€º</span>
   </summary>
   <div class="card-body">
     <div class="link-list">
-      <div class="link-row"><span class="link-href">/platform</span><span class="link-label">← Hub</span></div>
+      <div class="link-row"><span class="link-href">/platform</span><span class="link-label">â† Hub</span></div>
     </div>
   </div>
 </details>
@@ -306,12 +306,12 @@ td:last-child{color:var(--muted);font-size:0.72rem}
 <details class="card">
   <summary>
     <span class="sum-path">/urls</span>
-    <span class="sum-desc">This page — URL map</span>
-    <span class="sum-arrow">›</span>
+    <span class="sum-desc">This page â€” URL map</span>
+    <span class="sum-arrow">â€º</span>
   </summary>
   <div class="card-body">
     <div class="link-list">
-      <div class="link-row"><span class="link-href">/platform</span><span class="link-label">← Hub</span></div>
+      <div class="link-row"><span class="link-href">/platform</span><span class="link-label">â† Hub</span></div>
     </div>
   </div>
 </details>
@@ -320,11 +320,11 @@ td:last-child{color:var(--muted);font-size:0.72rem}
   <summary>
     <span class="sum-path">/combos</span>
     <span class="sum-desc">Dev combos / scratch pad</span>
-    <span class="sum-arrow">›</span>
+    <span class="sum-arrow">â€º</span>
   </summary>
   <div class="card-body">
     <div class="link-list">
-      <div class="link-row"><span class="link-href">/platform</span><span class="link-label">← Hub</span></div>
+      <div class="link-row"><span class="link-href">/platform</span><span class="link-label">â† Hub</span></div>
     </div>
   </div>
 </details>
@@ -332,16 +332,16 @@ td:last-child{color:var(--muted);font-size:0.72rem}
 </div>
 </details>
 
-<!-- ═══ TOURNAMENT PAGES ═══ -->
+<!-- â•â•â• TOURNAMENT PAGES â•â•â• -->
 <details class="sec-group">
-<summary><div class="sec">Tournament Pages — /t/{slug}/… <span class="sec-arrow">›</span></div></summary>
+<summary><div class="sec">Tournament Pages â€” /t/{slug}/â€¦ <span class="sec-arrow">â€º</span></div></summary>
 <div class="sec-body">
 
 <details class="card">
   <summary>
     <span class="sum-path">/t/{slug}</span>
     <span class="sum-desc">Tournament home</span>
-    <span class="sum-arrow">›</span>
+    <span class="sum-arrow">â€º</span>
   </summary>
   <div class="card-body">
     <div>
@@ -356,7 +356,7 @@ td:last-child{color:var(--muted);font-size:0.72rem}
     <div>
       <div class="link-group-label">Anchor links (on-page)</div>
       <div class="link-list">
-        <div class="link-row"><span class="link-href anchor">#about · #format · #schedule · #teams · #rsvp</span></div>
+        <div class="link-row"><span class="link-href anchor">#about Â· #format Â· #schedule Â· #teams Â· #rsvp</span></div>
       </div>
     </div>
     <div>
@@ -373,7 +373,7 @@ td:last-child{color:var(--muted);font-size:0.72rem}
   <summary>
     <span class="sum-path">/t/{slug}/scoreboard</span>
     <span class="sum-desc">Live leaderboard</span>
-    <span class="sum-arrow">›</span>
+    <span class="sum-arrow">â€º</span>
   </summary>
   <div class="card-body">
     <div>
@@ -381,7 +381,7 @@ td:last-child{color:var(--muted);font-size:0.72rem}
       <div class="link-list">
         <div class="link-row"><span class="link-href">/</span><span class="link-label">Home</span></div>
         <div class="link-row"><span class="link-href">/scoreboard</span><span class="link-label">Self (active)</span></div>
-        <div class="link-row"><span class="link-href">/feed · /directory · /profile</span></div>
+        <div class="link-row"><span class="link-href">/feed Â· /directory Â· /profile</span></div>
       </div>
     </div>
     <div>
@@ -398,14 +398,14 @@ td:last-child{color:var(--muted);font-size:0.72rem}
   <summary>
     <span class="sum-path">/t/{slug}/scorecard</span>
     <span class="sum-desc">Score entry</span>
-    <span class="sum-arrow">›</span>
+    <span class="sum-arrow">â€º</span>
   </summary>
   <div class="card-body">
     <div>
       <div class="link-group-label">Nav (static)</div>
       <div class="link-list">
         <div class="link-row"><span class="link-href">/</span><span class="link-label">Home</span></div>
-        <div class="link-row"><span class="link-href">/scoreboard · /feed · /directory · /profile</span></div>
+        <div class="link-row"><span class="link-href">/scoreboard Â· /feed Â· /directory Â· /profile</span></div>
       </div>
     </div>
     <div>
@@ -422,14 +422,14 @@ td:last-child{color:var(--muted);font-size:0.72rem}
   <summary>
     <span class="sum-path">/t/{slug}/directory</span>
     <span class="sum-desc">Player directory</span>
-    <span class="sum-arrow">›</span>
+    <span class="sum-arrow">â€º</span>
   </summary>
   <div class="card-body">
     <div>
       <div class="link-group-label">Nav (static)</div>
       <div class="link-list">
         <div class="link-row"><span class="link-href">/</span><span class="link-label">Home</span></div>
-        <div class="link-row"><span class="link-href">/scoreboard · /feed · /directory · /profile</span></div>
+        <div class="link-row"><span class="link-href">/scoreboard Â· /feed Â· /directory Â· /profile</span></div>
       </div>
     </div>
     <div>
@@ -439,7 +439,7 @@ td:last-child{color:var(--muted);font-size:0.72rem}
       </div>
     </div>
     <div>
-      <div class="link-group-label">Dynamic — per player row</div>
+      <div class="link-group-label">Dynamic â€” per player row</div>
       <div class="link-list">
         <div class="link-row"><span class="link-href dynamic">mailto:{email}</span><span class="link-label">Email player</span></div>
         <div class="link-row"><span class="link-href dynamic">tel:{phone}</span><span class="link-label">Call player</span></div>
@@ -453,14 +453,14 @@ td:last-child{color:var(--muted);font-size:0.72rem}
   <summary>
     <span class="sum-path">/t/{slug}/profile</span>
     <span class="sum-desc">Player profile</span>
-    <span class="sum-arrow">›</span>
+    <span class="sum-arrow">â€º</span>
   </summary>
   <div class="card-body">
     <div>
       <div class="link-group-label">Nav (static)</div>
       <div class="link-list">
         <div class="link-row"><span class="link-href">/</span><span class="link-label">Home</span></div>
-        <div class="link-row"><span class="link-href">/scoreboard · /feed · /directory · /profile</span></div>
+        <div class="link-row"><span class="link-href">/scoreboard Â· /feed Â· /directory Â· /profile</span></div>
       </div>
     </div>
     <div>
@@ -483,14 +483,14 @@ td:last-child{color:var(--muted);font-size:0.72rem}
   <summary>
     <span class="sum-path">/t/{slug}/feed</span>
     <span class="sum-desc">Activity feed</span>
-    <span class="sum-arrow">›</span>
+    <span class="sum-arrow">â€º</span>
   </summary>
   <div class="card-body">
     <div>
       <div class="link-group-label">Nav (static)</div>
       <div class="link-list">
         <div class="link-row"><span class="link-href">/</span><span class="link-label">Home</span></div>
-        <div class="link-row"><span class="link-href">/scoreboard · /feed · /directory · /profile</span></div>
+        <div class="link-row"><span class="link-href">/scoreboard Â· /feed Â· /directory Â· /profile</span></div>
       </div>
     </div>
     <div>
@@ -507,18 +507,18 @@ td:last-child{color:var(--muted);font-size:0.72rem}
   <summary>
     <span class="sum-path">/t/{slug}/admin</span>
     <span class="sum-desc">Admin dashboard <span class="tag tag-admin">Admin only</span></span>
-    <span class="sum-arrow">›</span>
+    <span class="sum-arrow">â€º</span>
   </summary>
   <div class="card-body">
     <div>
       <div class="link-group-label">Nav (static)</div>
       <div class="link-list">
         <div class="link-row"><span class="link-href">/</span><span class="link-label">Home</span></div>
-        <div class="link-row"><span class="link-href">/scoreboard · /feed · /directory · /profile</span></div>
+        <div class="link-row"><span class="link-href">/scoreboard Â· /feed Â· /directory Â· /profile</span></div>
       </div>
     </div>
     <div>
-      <div class="link-group-label">Dynamic — per player row</div>
+      <div class="link-group-label">Dynamic â€” per player row</div>
       <div class="link-list">
         <div class="link-row"><span class="link-href dynamic">/player?as={email}</span><span class="link-label">View as player</span></div>
         <div class="link-row"><span class="link-href dynamic">mailto:{email}</span><span class="link-label">Email player</span></div>
@@ -533,14 +533,14 @@ td:last-child{color:var(--muted);font-size:0.72rem}
   <summary>
     <span class="sum-path">/t/{slug}/champions</span>
     <span class="sum-desc">Past champions</span>
-    <span class="sum-arrow">›</span>
+    <span class="sum-arrow">â€º</span>
   </summary>
   <div class="card-body">
     <div>
       <div class="link-group-label">Nav (static)</div>
       <div class="link-list">
         <div class="link-row"><span class="link-href">/</span><span class="link-label">Home</span></div>
-        <div class="link-row"><span class="link-href">/scoreboard · /feed · /directory · /profile</span></div>
+        <div class="link-row"><span class="link-href">/scoreboard Â· /feed Â· /directory Â· /profile</span></div>
       </div>
     </div>
     <div>
@@ -557,14 +557,14 @@ td:last-child{color:var(--muted);font-size:0.72rem}
   <summary>
     <span class="sum-path">/t/{slug}/course</span>
     <span class="sum-desc">Course info</span>
-    <span class="sum-arrow">›</span>
+    <span class="sum-arrow">â€º</span>
   </summary>
   <div class="card-body">
     <div>
       <div class="link-group-label">Nav (static)</div>
       <div class="link-list">
         <div class="link-row"><span class="link-href">/</span><span class="link-label">Home</span></div>
-        <div class="link-row"><span class="link-href">/scoreboard · /feed · /directory · /profile</span></div>
+        <div class="link-row"><span class="link-href">/scoreboard Â· /feed Â· /directory Â· /profile</span></div>
       </div>
     </div>
     <div>
@@ -580,8 +580,8 @@ td:last-child{color:var(--muted);font-size:0.72rem}
 <details class="card">
   <summary>
     <span class="sum-path">/t/{slug}/login</span>
-    <span class="sum-desc">Auth — tournament level</span>
-    <span class="sum-arrow">›</span>
+    <span class="sum-desc">Auth â€” tournament level</span>
+    <span class="sum-arrow">â€º</span>
   </summary>
   <div class="card-body">
     <div class="link-list">
@@ -594,11 +594,11 @@ td:last-child{color:var(--muted);font-size:0.72rem}
   <summary>
     <span class="sum-path">/t/{slug}/install</span>
     <span class="sum-desc">PWA install guide</span>
-    <span class="sum-arrow">›</span>
+    <span class="sum-arrow">â€º</span>
   </summary>
   <div class="card-body">
     <div class="link-list">
-      <div class="link-row"><span class="link-href">/t/{slug}</span><span class="link-label">← Home</span></div>
+      <div class="link-row"><span class="link-href">/t/{slug}</span><span class="link-label">â† Home</span></div>
     </div>
   </div>
 </details>
@@ -606,26 +606,27 @@ td:last-child{color:var(--muted);font-size:0.72rem}
 </div>
 </details>
 
-<!-- ═══ REDIRECTS ═══ -->
+<!-- â•â•â• REDIRECTS â•â•â• -->
 <details class="sec-group">
-<summary><div class="sec">Active Redirects <span class="sec-arrow">›</span></div></summary>
+<summary><div class="sec">Active Redirects <span class="sec-arrow">â€º</span></div></summary>
 <div class="sec-body">
 <div style="margin-top:0.6rem">
 <table>
-  <tr><td>/favicon.ico</td><td>→ /favicon.svg (302)</td></tr>
-  <tr><td>/qa-checklist</td><td>→ /platform (301)</td></tr>
-  <tr><td>/qa</td><td>→ /platform (301)</td></tr>
-  <tr><td>/bugs</td><td>→ /platform/bugs (301)</td></tr>
-  <tr><td>/aaa-plan</td><td>→ /platform/aaa-plan (301)</td></tr>
-  <tr><td>/5-6-26-claude-review</td><td>→ /platform/5-6-26-claude-review (301)</td></tr>
-  <tr><td>/t/bova-2026/:path*</td><td>→ /t/bova/:path* (301)</td></tr>
-  <tr><td>bova-app.vercel.app/:path*</td><td>→ bova.greenskeeper.studio/t/bova/ (301)</td></tr>
+  <tr><td>/favicon.ico</td><td>â†’ /favicon.svg (302)</td></tr>
+  <tr><td>/qa-checklist</td><td>â†’ /platform (301)</td></tr>
+  <tr><td>/qa</td><td>â†’ /platform (301)</td></tr>
+  <tr><td>/bugs</td><td>â†’ /platform/bugs (301)</td></tr>
+  <tr><td>/aaa-plan</td><td>â†’ /platform/aaa-plan (301)</td></tr>
+  <tr><td>/5-6-26-claude-review</td><td>â†’ /platform/5-6-26-claude-review (301)</td></tr>
+  <tr><td>/t/bova-2026/:path*</td><td>â†’ /t/bova/:path* (301)</td></tr>
+  <tr><td>bova-app.vercel.app/:path*</td><td>â†’ bova.greenskeeper.studio/t/bova/ (301)</td></tr>
 </table>
 </div>
 </div>
 </details>
 
 <div style="height:2rem"></div>
-<script src="/bug-fab.js?v=5" defer></script>
+<script src="/bug-fab.js?v=6" defer></script>
 </body>
 </html>
+

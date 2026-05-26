@@ -374,6 +374,7 @@ let _teamNames = {A:'Team One',B:'Team Two',C:'Team C',D:'Team D',E:'Team E',F:'
     .in('key', ['tourney_name','tourney_year','tourney_location','team_count','structure','pair_count',
                 'team_a_name','team_b_name','team_c_name','team_d_name',
                 'team_e_name','team_f_name','team_g_name','team_h_name',
+                'team_a_captain','challengers_captain',
                 ...pairNameKeys]);
   const map = {};
   (data || []).forEach(r => { map[r.key] = r.value; });
@@ -432,6 +433,7 @@ let _teamNames = {A:'Team One',B:'Team Two',C:'Team C',D:'Team D',E:'Team E',F:'
   }
 
   // Rebuild team banners dynamically
+  const captainMap = {A: map.team_a_captain, B: map.challengers_captain};
   const bannersEl = document.getElementById('teamBanners');
   if (bannersEl) {
     bannersEl.style.gridTemplateColumns = `repeat(${_teamCount}, 1fr)`;
@@ -439,6 +441,7 @@ let _teamNames = {A:'Team One',B:'Team Two',C:'Team C',D:'Team D',E:'Team E',F:'
       <div class="team-banner">
         <div class="tb-label team-${L.toLowerCase()}">${_teamNames[L]}</div>
         <div class="tb-name" id="team${L}Name">${_teamNames[L]}</div>
+        ${captainMap[L]?`<div class="tb-captain-label">Captain</div><div class="tb-name" style="font-size:.75rem;opacity:.75;">${captainMap[L]}</div>`:''}
         <div class="tb-score even" id="team${L}Score">—</div>
         <div class="tb-score-label">Cumulative To Par</div>
       </div>`).join('');
@@ -1216,6 +1219,7 @@ sb.channel('hole-in-one').on('broadcast', { event: 'ace' }, function(msg) {
 }).subscribe();
 </script>
 <script src="/pwa.js"></script>
-<script src="/bug-fab.js?v=5" defer></script>
+<script src="/bug-fab.js?v=6" defer></script>
 </body>
 </html>
+

@@ -76,6 +76,13 @@
       "cmd": "/tourney-review-feature-depth",
       "scores": [
         {
+          "date": "2026-05-26",
+          "score": "A-",
+          "url": "/platform/5-22-26-feature-depth-review",
+          "review_title": "Execute + Audit · May 26, 2026",
+          "notes": "All 8 runbook items resolved. Shipped: courses/course_holes migration, scorecard per-hole yardage from DB, multi-image bug-fab (3 slots + platform render, v6), captain badge on scoreboard, admin-as-player Design tab toggle. 3 steps already done from prior work. Zero blocked. Grade B+ → A−."
+        },
+        {
           "date": "2026-05-22",
           "score": "B+",
           "url": "/platform/5-22-26-feature-depth-review",

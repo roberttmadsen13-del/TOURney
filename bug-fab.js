@@ -3,7 +3,7 @@
 // only if absent. Auth-gated to ALLOWED list. Captures location.href.
 // v6 — modal content opacity +10% (rgba 0.55→0.65); modal overlay 0.28→0.38.
 (function () {
-  console.log('[bug-fab] v5 loaded');
+  console.log('[bug-fab] v6 loaded');
   const ALLOWED = ['robert.t.madsen13@gmail.com', 'jmalber2021@gmail.com'];
   const SUPABASE_URL = 'https://jllugkiojeoopitdvzsa.supabase.co';
   const SUPABASE_KEY = 'sb_publishable_DnBMNLaSu61ykJ6P_fI2fw_D9DdAScn';
@@ -51,12 +51,8 @@
         <div class="gb-url" id="gbUrl"></div>
         <input type="text" id="gbTitle" class="gb-input" placeholder="Title">
         <textarea id="gbDesc" class="gb-input gb-ta" placeholder="Description, repro steps..."></textarea>
-        <div style="display:flex;align-items:center;gap:1rem;">
-          <label style="cursor:pointer;background:rgba(255,255,255,0.04);padding:.35rem .7rem;border-radius:6px;font-family:'DM Mono',monospace;font-size:.55rem;color:rgba(255,255,255,0.6);border:1px solid rgba(255,255,255,0.08);text-transform:uppercase;letter-spacing:.1em;">+ Screenshot
-            <input type="file" id="gbImg" accept="image/*" style="display:none;">
-          </label>
-          <img id="gbImgThumb" style="max-height:44px;border-radius:6px;display:none;border:1px solid rgba(255,255,255,0.1);">
-        </div>
+        <div id="gbImgArea"></div>
+        <button type="button" id="gbAddImg" style="background:rgba(255,255,255,0.04);padding:.35rem .7rem;border-radius:6px;font-family:'DM Mono',monospace;font-size:.55rem;color:rgba(255,255,255,0.6);border:1px solid rgba(255,255,255,0.08);text-transform:uppercase;letter-spacing:.1em;cursor:pointer;">+ Screenshot</button>
         <button class="gb-btn" id="gbSubmitBtn" type="button">Save to Bug Log</button>
       </div>`;
     document.body.appendChild(modal);
@@ -71,16 +67,39 @@
     modal.onclick = () => { modal.style.display = 'none'; };
     modal.querySelector('.gb-close').onclick = (e) => { e.stopPropagation(); modal.style.display = 'none'; };
 
-    let imgData = null;
-    const imgInput = document.getElementById('gbImg');
-    const thumb = document.getElementById('gbImgThumb');
-    imgInput.onchange = () => {
-      const f = imgInput.files[0];
-      if (!f) return;
-      const r = new FileReader();
-      r.onload = (e) => { imgData = e.target.result; thumb.src = imgData; thumb.style.display = 'block'; };
-      r.readAsDataURL(f);
-    };
+    const imgSlots = [];
+    const imgArea = document.getElementById('gbImgArea');
+    const addImgBtn = document.getElementById('gbAddImg');
+    function addImgSlot() {
+      if (imgSlots.length >= 3) { addImgBtn.style.display = 'none'; return; }
+      const slot = document.createElement('div');
+      slot.style.cssText = 'display:flex;align-items:center;gap:.5rem;margin-bottom:.3rem;';
+      const inp = document.createElement('input');
+      inp.type = 'file'; inp.accept = 'image/*';
+      inp.style.cssText = 'font-family:\'DM Mono\',monospace;font-size:.52rem;color:rgba(255,255,255,0.6);flex:1;background:none;border:none;';
+      const thumb = document.createElement('img');
+      thumb.style.cssText = 'max-height:40px;border-radius:4px;display:none;border:1px solid rgba(255,255,255,0.1);';
+      const rm = document.createElement('button');
+      rm.type = 'button'; rm.textContent = '✕';
+      rm.style.cssText = 'background:none;border:none;color:rgba(255,255,255,0.4);cursor:pointer;font-size:.8rem;flex-shrink:0;';
+      const slotData = { data: null };
+      imgSlots.push(slotData);
+      inp.onchange = () => {
+        const f = inp.files[0]; if (!f) return;
+        const r = new FileReader();
+        r.onload = (ev) => { slotData.data = ev.target.result; thumb.src = slotData.data; thumb.style.display = 'block'; };
+        r.readAsDataURL(f);
+      };
+      rm.onclick = () => {
+        imgSlots.splice(imgSlots.indexOf(slotData), 1);
+        slot.remove();
+        if (imgSlots.length < 3) addImgBtn.style.display = '';
+      };
+      slot.appendChild(inp); slot.appendChild(thumb); slot.appendChild(rm);
+      imgArea.appendChild(slot);
+      if (imgSlots.length >= 3) addImgBtn.style.display = 'none';
+    }
+    addImgBtn.onclick = addImgSlot;
 
     const submitBtn = document.getElementById('gbSubmitBtn');
     submitBtn.onclick = async () => {
@@ -95,7 +114,9 @@
         title: t || null,
         description: d || null,
         url: location.href,
-        image_data: imgData,
+        image_data: imgSlots[0]?.data || null,
+        image_data_2: imgSlots[1]?.data || null,
+        image_data_3: imgSlots[2]?.data || null,
         status: 'open'
       });
       submitBtn.disabled = false;
@@ -110,9 +131,9 @@
         submitBtn.textContent = origLabel;
         document.getElementById('gbTitle').value = '';
         document.getElementById('gbDesc').value = '';
-        imgInput.value = '';
-        thumb.style.display = 'none';
-        imgData = null;
+        imgSlots.length = 0;
+        imgArea.innerHTML = '';
+        addImgBtn.style.display = '';
         modal.style.display = 'none';
       }, 600);
     };

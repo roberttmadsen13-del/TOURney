@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -7,7 +7,7 @@
 <meta property="og:image" content="/icon-512.png">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="/icon-512.png">
-<meta property="og:title" content="TOURney Platform — Greenskeeper Studios">
+<meta property="og:title" content="TOURney Platform â€” Greenskeeper Studios">
 <meta property="og:description" content="Tournament management platform. Internal operations hub.">
 <script src="/lib/util.js"></script>
 <link rel="icon" href="/icon-192.png" type="image/png">
@@ -18,7 +18,7 @@
 <meta name="theme-color" content="#0d0a06">
 <link rel="manifest" href="/platform-manifest.json">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Operations — TOURney</title>
+<title>Operations â€” TOURney</title>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,400;0,600;0,700;1,400&family=DM+Mono:wght@400;500&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -31,7 +31,7 @@
 html{scroll-behavior:smooth}
 body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;min-height:100vh;}
 
-/* ── Auth wall ── */
+/* â”€â”€ Auth wall â”€â”€ */
 #loginWrap{max-width:400px;margin:8rem auto;padding:2.5rem;background:var(--surface);border:1px solid var(--border);}
 #loginWrap h2{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:1.2rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold);margin-bottom:1.5rem;}
 .field{margin-bottom:1rem;}
@@ -43,7 +43,7 @@ body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;min-
 .err{color:var(--red);font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.1em;margin-top:0.75rem;display:none;}
 .err.show{display:block;}
 
-/* ── Topbar ── */
+/* â”€â”€ Topbar â”€â”€ */
 .topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:0 1.75rem;display:flex;align-items:center;height:52px;gap:1rem;position:sticky;top:0;z-index:100;}
 .topbar-brand{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:0.95rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);}
 .topbar-brand span{color:var(--muted);font-weight:400;font-size:0.75rem;margin-left:0.4rem;letter-spacing:0.08em;}
@@ -51,13 +51,13 @@ body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;min-
 .btn-sm{font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:0.65rem;letter-spacing:0.14em;text-transform:uppercase;padding:0.35rem 0.8rem;border:1px solid rgba(192,144,48,0.35);background:none;color:var(--gold);cursor:pointer;transition:all 0.2s;}
 .btn-sm:hover{background:var(--gold-dim);}
 
-/* ── Tabs ── */
+/* â”€â”€ Tabs â”€â”€ */
 .tabs{display:flex;background:var(--surface);border-bottom:1px solid var(--border);position:sticky;top:52px;z-index:99;}
 .tab-btn{flex:1 1 0;min-width:0;padding:0.7rem 0.6rem;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:0.72rem;letter-spacing:0.12em;text-transform:uppercase;background:none;border:none;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all 0.15s;white-space:nowrap;text-align:center;}
 .tab-btn:hover{color:var(--gold);}
 .tab-btn.active{color:var(--gold);border-bottom-color:var(--gold);}
 
-/* ── Dashboard ── */
+/* â”€â”€ Dashboard â”€â”€ */
 .main{max-width:1100px;margin:0 auto;padding:2.25rem 1.75rem 4rem;}
 .page-hd{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:1.5rem;}
 .page-title{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:1.5rem;letter-spacing:0.06em;text-transform:uppercase;color:var(--text);}
@@ -99,7 +99,7 @@ td{padding:0.7rem 0.75rem;font-size:0.88rem;vertical-align:middle;}
 .search-field:focus{border-color:rgba(192,144,48,0.45);}
 .section-gap{margin-top:2.75rem;}
 
-/* ── Artifact Hub ── */
+/* â”€â”€ Artifact Hub â”€â”€ */
 .hub-wrap{max-width:1100px;margin:0 auto;padding:1.75rem 1.75rem 4rem;}
 .toolbar{display:flex;gap:0.5rem;align-items:center;flex-wrap:wrap;margin-bottom:1.5rem;}
 .filter-btn{background:var(--card);border:1px solid var(--border);color:var(--muted);font-family:'Barlow',sans-serif;font-size:0.72rem;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;padding:0.38rem 0.8rem;border-radius:20px;cursor:pointer;transition:all 0.15s;}
@@ -116,7 +116,7 @@ td{padding:0.7rem 0.75rem;font-size:0.88rem;vertical-align:middle;}
 .ref-artifact-link:hover{border-color:rgba(192,144,48,0.4);}
 .ref-artifact-title{font-size:.85rem;font-weight:600;color:var(--text);}
 .ref-artifact-sum{font-size:.75rem;color:var(--muted);}
-/* ── Axis Ticket Board ── */
+/* â”€â”€ Axis Ticket Board â”€â”€ */
 .axis-board{margin-bottom:1.5rem;}
 .axis-board-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:.6rem;}
 .axis-board-title{font-size:.72rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;}
@@ -144,7 +144,7 @@ td{padding:0.7rem 0.75rem;font-size:0.88rem;vertical-align:middle;}
 .at-tag-executing{background:rgba(42,26,26,.9);color:#d94a4a;border:1px solid rgba(217,74,74,.2);}
 .at-tag-audit{background:rgba(42,26,42,.9);color:#9a4ad9;border:1px solid rgba(154,74,217,.2);}
 .at-tag-concluded{background:rgba(26,26,42,.9);color:#6a6ab4;border:1px solid rgba(100,100,180,.2);}
-/* ── Mission Control ── */
+/* â”€â”€ Mission Control â”€â”€ */
 .mc-wrap{max-width:1100px;margin:0 auto;padding:1.75rem 1.75rem 4rem;}
 .mc-hdr{font-size:.72rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin:1.5rem 0 .75rem;}
 .mc-hdr:first-child{margin-top:0;}
@@ -172,7 +172,7 @@ td{padding:0.7rem 0.75rem;font-size:0.88rem;vertical-align:middle;}
 .tq-tag-gray{background:rgba(255,255,255,.06);color:var(--muted);}
 .tq-empty{padding:.7rem .9rem;font-size:.75rem;color:var(--muted);font-style:italic;}
 @media(max-width:640px){.tq-2col{grid-template-columns:1fr;}.axis-row{grid-template-columns:120px 40px 40px;}.axis-summary,.axis-stages{display:none;}.tq-item-title{white-space:normal;}}
-/* ── Axis Drawer ── */
+/* â”€â”€ Axis Drawer â”€â”€ */
 #axisDrawer{position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:1000;display:flex;justify-content:flex-end;backdrop-filter:blur(2px);}
 .drawer-panel{width:min(480px,100vw);background:var(--surface);border-left:1px solid var(--border);height:100%;overflow-y:auto;display:flex;flex-direction:column;}
 .drawer-hdr{padding:1.25rem 1.25rem .75rem;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;justify-content:space-between;gap:.75rem;background:rgba(255,255,255,.02);}
@@ -202,7 +202,7 @@ td{padding:0.7rem 0.75rem;font-size:0.88rem;vertical-align:middle;}
 .drawer-copy-btn:hover{opacity:.85;}
 .drawer-artifact-btn{display:inline-block;padding:.45rem .9rem;border:1px solid rgba(192,144,48,.35);border-radius:6px;color:var(--gold);font-size:.75rem;text-decoration:none;transition:border-color .15s;}
 .drawer-artifact-btn:hover{border-color:var(--gold);}
-/* ── Ops Timeline ── */
+/* â”€â”€ Ops Timeline â”€â”€ */
 .timeline-feed{display:flex;flex-direction:column;background:var(--card);border:1px solid var(--border);border-radius:8px;overflow:hidden;}
 .tl-item{display:flex;gap:.75rem;padding:.5rem .9rem;border-bottom:1px solid var(--border);font-size:.78rem;align-items:flex-start;}
 .tl-item:last-child{border:none;}
@@ -250,7 +250,7 @@ td{padding:0.7rem 0.75rem;font-size:0.88rem;vertical-align:middle;}
 .add-card code{font-size:0.74rem;color:var(--gold-light);background:rgba(255,255,255,0.06);padding:0.08rem 0.28rem;border-radius:3px;}
 .add-card-title{color:var(--gold);font-weight:700;text-transform:uppercase;letter-spacing:0.08em;font-size:0.7rem;margin-bottom:0.35rem;}
 
-/* ── QA Run History ── */
+/* â”€â”€ QA Run History â”€â”€ */
 .qa-runs{margin-top:1.5rem;border-top:1px solid var(--border);padding-top:1rem;}
 .qa-runs-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:.6rem;}
 .qa-runs-title{font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);}
@@ -264,7 +264,7 @@ td{padding:0.7rem 0.75rem;font-size:0.88rem;vertical-align:middle;}
 .qa-run-del:hover{color:#d94a4a;opacity:1;}
 .btn-log-run{background:var(--gold);color:#111;border:none;border-radius:5px;padding:.35rem .8rem;font-size:.68rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;cursor:pointer;white-space:nowrap;flex-shrink:0;}
 .btn-log-run:hover{opacity:.85;}
-/* ── Checklist ── */
+/* â”€â”€ Checklist â”€â”€ */
 .cl-wrap{max-width:780px;margin:0 auto;padding:1.75rem 1.75rem 4rem;}
 .cl-toolbar{display:flex;gap:0.5rem;align-items:center;margin-bottom:1.25rem;flex-wrap:wrap;}
 .slug-label{font-size:0.48rem;font-weight:700;letter-spacing:0.22em;text-transform:uppercase;color:var(--muted);}
@@ -308,7 +308,7 @@ td{padding:0.7rem 0.75rem;font-size:0.88rem;vertical-align:middle;}
 .reset-btn{font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.1em;text-transform:uppercase;padding:0.22rem 0.6rem;background:transparent;color:rgba(240,230,204,0.25);border:1px solid rgba(240,230,204,0.1);cursor:pointer;transition:all .12s;margin-top:0.75rem;display:block;margin-left:auto;}
 .reset-btn:hover{color:var(--red);border-color:rgba(200,80,60,0.35);}
 
-/* ── Reference ── */
+/* â”€â”€ Reference â”€â”€ */
 .ref-wrap{max-width:1100px;margin:0 auto;padding:1.75rem 1.75rem 4rem;}
 .ref-section{margin-bottom:2.25rem;}
 .ref-sec-hdr{display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-bottom:1rem;flex-wrap:wrap;}
@@ -344,7 +344,7 @@ td{padding:0.7rem 0.75rem;font-size:0.88rem;vertical-align:middle;}
 .ref-table tr:last-child td{border-bottom:none;}
 .ref-table code{font-family:'DM Mono',monospace;font-size:0.7rem;background:rgba(192,144,48,0.1);color:var(--gold-light);padding:0.05rem 0.28rem;border-radius:2px;}
 
-/* ── Action Board ── */
+/* â”€â”€ Action Board â”€â”€ */
 .action-wrap{max-width:1100px;margin:0 auto;padding:1.75rem 1.75rem 4rem;}
 .action-section{margin-bottom:2.5rem;}
 .action-hd{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:0.5rem;}
@@ -379,7 +379,7 @@ td{padding:0.7rem 0.75rem;font-size:0.88rem;vertical-align:middle;}
 .ceo-item.done{opacity:0.4;}
 .ceo-cb{width:18px;height:18px;min-width:18px;border:1px solid var(--border);cursor:pointer;display:flex;align-items:center;justify-content:center;margin-top:2px;transition:all .12s;}
 .ceo-cb.checked{border-color:var(--gold);background:var(--gold-dim);}
-.ceo-cb.checked::after{content:'✓';color:var(--gold);font-size:0.65rem;}
+.ceo-cb.checked::after{content:'âœ“';color:var(--gold);font-size:0.65rem;}
 .ceo-body{flex:1;}
 .ceo-text{font-family:'Barlow',sans-serif;font-size:0.85rem;color:var(--text);line-height:1.4;}
 .ceo-why{font-family:'DM Mono',monospace;font-size:0.46rem;letter-spacing:0.06em;color:var(--muted);margin-top:0.35rem;line-height:1.55;}
@@ -390,7 +390,7 @@ td{padding:0.7rem 0.75rem;font-size:0.88rem;vertical-align:middle;}
 .axis-overall-card{background:rgba(192,144,48,.04);}
 .tq-cb{width:16px;height:16px;min-width:16px;border:1px solid var(--border);cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:3px;transition:all .12s;}
 .tq-cb.checked{border-color:var(--gold);background:var(--gold-dim);}
-.tq-cb.checked::after{content:'✓';color:var(--gold);font-size:.6rem;}
+.tq-cb.checked::after{content:'âœ“';color:var(--gold);font-size:.6rem;}
 .tq-item-links{display:flex;flex-wrap:wrap;gap:.3rem;margin-top:.3rem;}
 .at-filters{display:flex;align-items:center;gap:.4rem;margin-bottom:.65rem;flex-wrap:wrap;}
 .at-search{background:rgba(255,255,255,.04);border:1px solid var(--border);color:var(--text);font-family:'DM Mono',monospace;font-size:.72rem;padding:.28rem .55rem;outline:none;width:140px;min-width:80px;flex-shrink:0;transition:border-color .15s;}
@@ -464,7 +464,7 @@ td{padding:0.7rem 0.75rem;font-size:0.88rem;vertical-align:middle;}
 </head>
 <body>
 
-<!-- ══ LOGIN ══ -->
+<!-- â•â• LOGIN â•â• -->
 <div id="loginWrap">
   <h2>Operations <span style="color:var(--text)">Hub</span></h2>
   <div class="field"><label>Email</label><input type="email" id="loginEmail" placeholder="rob@greenskeeper.studio"></div>
@@ -473,7 +473,7 @@ td{padding:0.7rem 0.75rem;font-size:0.88rem;vertical-align:middle;}
   <div class="err" id="loginErr">Access denied.</div>
 </div>
 
-<!-- ══ DASHBOARD ══ -->
+<!-- â•â• DASHBOARD â•â• -->
 <div id="dashboard" style="display:none;">
   <div class="topbar">
     <div class="topbar-brand"><svg id="navLogoSvg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 120" style="height:32px;width:auto;display:block;flex-shrink:0;" role="img" aria-label="TOURNEY"><g transform="translate(100,22)"><line x1="0" y1="0" x2="0" y2="34" stroke="#f0e6cc" stroke-width="1.4"/><polygon points="0,0 12,3.8 0,7.6" fill="#c09030"/><circle cx="0" cy="34" r="1.6" fill="#f0e6cc"/></g><line x1="60" y1="72" x2="140" y2="72" stroke="#c09030" stroke-width="0.6"/><text x="100" y="100" text-anchor="middle" font-family="'Barlow Condensed','Oswald','Arial Narrow',sans-serif" font-weight="700" font-size="26" letter-spacing="6" fill="#f0e6cc">TOUR<tspan fill="#c09030" font-weight="400">NEY</tspan></text></svg></div>
@@ -492,16 +492,16 @@ td{padding:0.7rem 0.75rem;font-size:0.88rem;vertical-align:middle;}
     <button class="tab-btn"        id="tab-reference" data-short="Ref"    onclick="switchTab('reference')">Reference</button>
   </div>
 
-  <!-- ── TAB: TENANTS ── -->
+  <!-- â”€â”€ TAB: TENANTS â”€â”€ -->
   <div id="panel-tenants" style="display:none;">
     <div class="main">
       <div class="page-hd"><div class="page-title">All <span>Tournaments</span></div></div>
-      <input type="text" class="search-field" placeholder="Search tournaments…" oninput="filterTourneys(this.value)">
+      <input type="text" class="search-field" placeholder="Search tournamentsâ€¦" oninput="filterTourneys(this.value)">
       <div class="stat-row">
-        <div class="stat"><div class="stat-val" id="statTotal">—</div><div class="stat-label">Total Tournaments</div></div>
-        <div class="stat"><div class="stat-val" id="statPlayers">—</div><div class="stat-label">Total Players</div></div>
-        <div class="stat"><div class="stat-val" id="statOwners">—</div><div class="stat-label">Unique Owners</div></div>
-        <div class="stat"><div class="stat-val" id="statActive">—</div><div class="stat-label">Active Tournaments</div></div>
+        <div class="stat"><div class="stat-val" id="statTotal">â€”</div><div class="stat-label">Total Tournaments</div></div>
+        <div class="stat"><div class="stat-val" id="statPlayers">â€”</div><div class="stat-label">Total Players</div></div>
+        <div class="stat"><div class="stat-val" id="statOwners">â€”</div><div class="stat-label">Unique Owners</div></div>
+        <div class="stat"><div class="stat-val" id="statActive">â€”</div><div class="stat-label">Active Tournaments</div></div>
       </div>
       <div id="tourneyBody"></div>
       <div style="text-align:center;margin:.75rem 0;display:none;" id="tourneyLoadMore">
@@ -511,7 +511,7 @@ td{padding:0.7rem 0.75rem;font-size:0.88rem;vertical-align:middle;}
 
       <div class="section-gap">
         <div class="page-hd"><div class="page-title">Player <span>Accounts</span></div></div>
-        <input type="text" class="search-field" placeholder="Search by email…" oninput="filterComps(this.value)">
+        <input type="text" class="search-field" placeholder="Search by emailâ€¦" oninput="filterComps(this.value)">
         <div style="display:flex;gap:0.75rem;margin-bottom:1.5rem;align-items:flex-end;">
           <div class="field" style="flex:1;margin:0;"><label>Email to comp</label><input type="email" id="compEmail" placeholder="player@email.com"></div>
           <button class="btn-login" style="width:auto;margin:0;padding:0.65rem 1.5rem;white-space:nowrap;" onclick="grantComp()">Grant Access</button>
@@ -521,12 +521,12 @@ td{padding:0.7rem 0.75rem;font-size:0.88rem;vertical-align:middle;}
         <div class="tbl-wrap">
           <table>
             <thead><tr>
-              <th style="cursor:pointer;white-space:nowrap;user-select:none" onclick="sortComps('email')">Email ↕</th>
-              <th style="cursor:pointer;white-space:nowrap;user-select:none" onclick="sortComps('status')">Status ↕</th>
-              <th style="cursor:pointer;white-space:nowrap;user-select:none;text-align:center" onclick="sortComps('tourneys')">Tourneys ↕</th>
-              <th style="cursor:pointer;white-space:nowrap;user-select:none;text-align:center" onclick="sortComps('rounds')">Rounds ↕</th>
-              <th style="cursor:pointer;white-space:nowrap;user-select:none" onclick="sortComps('first_login')">First Login ↕</th>
-              <th style="cursor:pointer;white-space:nowrap;user-select:none" onclick="sortComps('last_login')">Last Login ↕</th>
+              <th style="cursor:pointer;white-space:nowrap;user-select:none" onclick="sortComps('email')">Email â†•</th>
+              <th style="cursor:pointer;white-space:nowrap;user-select:none" onclick="sortComps('status')">Status â†•</th>
+              <th style="cursor:pointer;white-space:nowrap;user-select:none;text-align:center" onclick="sortComps('tourneys')">Tourneys â†•</th>
+              <th style="cursor:pointer;white-space:nowrap;user-select:none;text-align:center" onclick="sortComps('rounds')">Rounds â†•</th>
+              <th style="cursor:pointer;white-space:nowrap;user-select:none" onclick="sortComps('first_login')">First Login â†•</th>
+              <th style="cursor:pointer;white-space:nowrap;user-select:none" onclick="sortComps('last_login')">Last Login â†•</th>
               <th></th>
             </tr></thead>
             <tbody id="compBody"></tbody>
@@ -561,14 +561,14 @@ td{padding:0.7rem 0.75rem;font-size:0.88rem;vertical-align:middle;}
     </div>
   </div>
 
-  <!-- ── TAB: BUGS ── -->
+  <!-- â”€â”€ TAB: BUGS â”€â”€ -->
   <div id="panel-bugs" style="display:none;">
     <div class="action-wrap">
       <div style="display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:1.25rem;">
-        <button onclick="copyTriagePrompt()" style="background:rgba(192,144,48,0.12);border:1px solid rgba(192,144,48,0.35);color:var(--gold);padding:.45rem .9rem;border-radius:6px;cursor:pointer;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;">🗂 Organize into Sprints</button>
-        <button onclick="copyRunSprintPrompt()" style="background:rgba(39,174,96,0.12);border:1px solid rgba(39,174,96,0.4);color:var(--green);padding:.45rem .9rem;border-radius:6px;cursor:pointer;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;">▶ Run Next Sprint</button>
-        <button onclick="copyTopBugPrompt()" style="background:rgba(192,57,43,0.12);border:1px solid rgba(192,57,43,0.4);color:var(--red);padding:.45rem .9rem;border-radius:6px;cursor:pointer;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;">⚡ Fix Top P0 Now</button>
-        <button onclick="copyExportPrompt()" style="background:rgba(41,128,185,0.12);border:1px solid rgba(41,128,185,0.4);color:var(--blue);padding:.45rem .9rem;border-radius:6px;cursor:pointer;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;">📋 Export All Open</button>
+        <button onclick="copyTriagePrompt()" style="background:rgba(192,144,48,0.12);border:1px solid rgba(192,144,48,0.35);color:var(--gold);padding:.45rem .9rem;border-radius:6px;cursor:pointer;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;">ðŸ—‚ Organize into Sprints</button>
+        <button onclick="copyRunSprintPrompt()" style="background:rgba(39,174,96,0.12);border:1px solid rgba(39,174,96,0.4);color:var(--green);padding:.45rem .9rem;border-radius:6px;cursor:pointer;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;">â–¶ Run Next Sprint</button>
+        <button onclick="copyTopBugPrompt()" style="background:rgba(192,57,43,0.12);border:1px solid rgba(192,57,43,0.4);color:var(--red);padding:.45rem .9rem;border-radius:6px;cursor:pointer;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;">âš¡ Fix Top P0 Now</button>
+        <button onclick="copyExportPrompt()" style="background:rgba(41,128,185,0.12);border:1px solid rgba(41,128,185,0.4);color:var(--blue);padding:.45rem .9rem;border-radius:6px;cursor:pointer;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;">ðŸ“‹ Export All Open</button>
       </div>
       <div class="action-section">
         <div class="action-hd">
@@ -587,15 +587,15 @@ td{padding:0.7rem 0.75rem;font-size:0.88rem;vertical-align:middle;}
     </div>
   </div>
 
-  <!-- ── TAB: CHECKLIST ── -->
+  <!-- â”€â”€ TAB: CHECKLIST â”€â”€ -->
   <div id="panel-checklist" style="display:none;">
     <div class="cl-wrap">
       <div class="cl-toolbar">
         <span class="slug-label">Test Slug</span>
         <input class="slug-input" id="slugInput" type="text" placeholder="e.g. bova">
-        <span class="cl-progress" id="progressLabel">— / —</span>
+        <span class="cl-progress" id="progressLabel">â€” / â€”</span>
         <button class="btn-log-run" onclick="logQaRun()" style="margin-left:auto;">Log Run</button>
-        <button onclick="switchTab('bugs')" style="background:rgba(192,144,48,.12);border:1px solid rgba(192,144,48,.3);color:var(--gold);font-family:'Barlow Condensed',sans-serif;font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:.35rem .85rem;border-radius:5px;cursor:pointer;white-space:nowrap;">Bug Log →</button>
+        <button onclick="switchTab('bugs')" style="background:rgba(192,144,48,.12);border:1px solid rgba(192,144,48,.3);color:var(--gold);font-family:'Barlow Condensed',sans-serif;font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:.35rem .85rem;border-radius:5px;cursor:pointer;white-space:nowrap;">Bug Log â†’</button>
       </div>
       <div class="cl-sections" id="clSections"></div>
       <div class="qa-runs" id="qaRunHistory"></div>
@@ -603,22 +603,22 @@ td{padding:0.7rem 0.75rem;font-size:0.88rem;vertical-align:middle;}
     </div>
   </div>
 
-  <!-- ── TAB: REFERENCE ── -->
+  <!-- â”€â”€ TAB: REFERENCE â”€â”€ -->
   <div id="panel-reference" style="display:none;">
     <div class="ref-wrap">
 
       <div class="ref-section">
         <div class="ref-sec-hdr">
-          <div class="ref-sec-meta"><div class="ref-sec-title">Agent Can Do</div><div class="ref-sec-desc">Tasks ready for Claude to execute — copy the command and run in Claude Code</div></div>
+          <div class="ref-sec-meta"><div class="ref-sec-title">Agent Can Do</div><div class="ref-sec-desc">Tasks ready for Claude to execute â€” copy the command and run in Claude Code</div></div>
         </div>
-        <div id="refAgentQueue"><div style="padding:.75rem;color:var(--muted);font-size:.8rem;">Loading…</div></div>
+        <div id="refAgentQueue"><div style="padding:.75rem;color:var(--muted);font-size:.8rem;">Loadingâ€¦</div></div>
       </div>
 
       <div class="ref-section">
         <div class="ref-sec-hdr">
           <div class="ref-sec-meta"><div class="ref-sec-title">Live Pages</div><div class="ref-sec-desc">Tap to open any live page. Groups mirror /urls. Full technical map at <a href="/urls" target="_blank" style="color:var(--gold);">/urls</a>.</div></div>
         </div>
-        <div id="refLivePages"><div style="padding:.75rem;color:var(--muted);font-size:.8rem;">Loading…</div></div>
+        <div id="refLivePages"><div style="padding:.75rem;color:var(--muted);font-size:.8rem;">Loadingâ€¦</div></div>
       </div>
 
       <div class="ref-section">
@@ -626,18 +626,18 @@ td{padding:0.7rem 0.75rem;font-size:0.88rem;vertical-align:middle;}
           <div class="ref-sec-meta"><div class="ref-sec-title">Quick Links</div><div class="ref-sec-desc">Internal tools and reference pages</div></div>
         </div>
         <div class="quick-links">
-          <a class="quick-card" href="/urls" target="_blank"><div class="qc-icon">🗺</div><div class="qc-title">URL Map</div><div class="qc-desc">All platform URLs, routes, redirect flows</div><div class="qc-url">/urls</div></a>
-          <a class="quick-card" href="/combos" target="_blank"><div class="qc-icon">⚙</div><div class="qc-title">URL Combos</div><div class="qc-desc">Tournament URL pattern combinations</div><div class="qc-url">/combos</div></a>
-          <a class="quick-card" href="/platform/aaa-plan" target="_blank"><div class="qc-icon">🎯</div><div class="qc-title">AAA Roadmap</div><div class="qc-desc">22-sprint plan to A+ Architecture, Features, UX</div><div class="qc-url">/platform/aaa-plan</div></a>
+          <a class="quick-card" href="/urls" target="_blank"><div class="qc-icon">ðŸ—º</div><div class="qc-title">URL Map</div><div class="qc-desc">All platform URLs, routes, redirect flows</div><div class="qc-url">/urls</div></a>
+          <a class="quick-card" href="/combos" target="_blank"><div class="qc-icon">âš™</div><div class="qc-title">URL Combos</div><div class="qc-desc">Tournament URL pattern combinations</div><div class="qc-url">/combos</div></a>
+          <a class="quick-card" href="/platform/aaa-plan" target="_blank"><div class="qc-icon">ðŸŽ¯</div><div class="qc-title">AAA Roadmap</div><div class="qc-desc">22-sprint plan to A+ Architecture, Features, UX</div><div class="qc-url">/platform/aaa-plan</div></a>
         </div>
       </div>
 
       <div class="ref-section">
         <div class="ref-sec-hdr">
-          <div class="ref-sec-meta"><div class="ref-sec-title">Review Skills</div><div class="ref-sec-desc">Type in Claude Code → generates live page · appears in Artifacts</div></div>
+          <div class="ref-sec-meta"><div class="ref-sec-title">Review Skills</div><div class="ref-sec-desc">Type in Claude Code â†’ generates live page Â· appears in Artifacts</div></div>
         </div>
         <div class="skills-grid">
-          <div class="skill-card"><div class="skill-cmd">/tourney-review</div><div class="skill-desc">Full platform review — code-to-business, council of 5, QA protocol, business roadmap, security</div></div>
+          <div class="skill-card"><div class="skill-cmd">/tourney-review</div><div class="skill-desc">Full platform review â€” code-to-business, council of 5, QA protocol, business roadmap, security</div></div>
           <div class="skill-card"><div class="skill-cmd">/tourney-review-architecture</div><div class="skill-desc">Data model, RLS design, routing, init layer, edge functions, code organization</div></div>
           <div class="skill-card"><div class="skill-cmd">/tourney-review-feature-depth</div><div class="skill-desc">Tournament structures, scoring modes, player/admin flows, what's built vs planned</div></div>
           <div class="skill-card"><div class="skill-cmd">/tourney-review-ux</div><div class="skill-desc">Design system, mobile, empty/loading/error states, accessibility</div></div>
@@ -647,7 +647,7 @@ td{padding:0.7rem 0.75rem;font-size:0.88rem;vertical-align:middle;}
           <div class="skill-card"><div class="skill-cmd">/tourney-review-performance</div><div class="skill-desc">Page sizes, DB query patterns (N+1/parallel), third-party origins, caching</div></div>
           <div class="skill-card"><div class="skill-cmd">/tourney-review-data-model</div><div class="skill-desc">Every table, column, RLS policy verbatim, migration quality, schema decisions</div></div>
           <div class="skill-card"><div class="skill-cmd">/tourney-review-marketing</div><div class="skill-desc">Landing page messaging, SEO meta, brand positioning, CTA clarity, pricing, competitive differentiation</div></div>
-          <div class="skill-card"><div class="skill-cmd">/tourney-review-onboarding</div><div class="skill-desc">New user journey from landing page through first tournament creation — conversion flow quality</div></div>
+          <div class="skill-card"><div class="skill-cmd">/tourney-review-onboarding</div><div class="skill-desc">New user journey from landing page through first tournament creation â€” conversion flow quality</div></div>
         </div>
       </div>
 
@@ -655,19 +655,19 @@ td{padding:0.7rem 0.75rem;font-size:0.88rem;vertical-align:middle;}
         <div class="ref-sec-hdr">
           <div class="ref-sec-meta"><div class="ref-sec-title">Reference Artifacts</div><div class="ref-sec-desc">Reference-category documents from the QA hub</div></div>
         </div>
-        <div id="refArtifactsList"><div style="padding:.75rem;color:var(--muted);font-size:.8rem;">Loading…</div></div>
+        <div id="refArtifactsList"><div style="padding:.75rem;color:var(--muted);font-size:.8rem;">Loadingâ€¦</div></div>
       </div>
 
       <div class="ref-section">
         <div class="ref-sec-hdr">
-          <div class="ref-sec-meta"><div class="ref-sec-title">Setting Keys — Ground Truth</div><div class="ref-sec-desc">Canonical key names · source: create.html line 759+</div></div>
+          <div class="ref-sec-meta"><div class="ref-sec-title">Setting Keys â€” Ground Truth</div><div class="ref-sec-desc">Canonical key names Â· source: create.html line 759+</div></div>
         </div>
         <div class="tbl-wrap">
           <table class="ref-table">
             <thead><tr><th>Key</th><th>Values</th><th>Notes</th></tr></thead>
             <tbody>
               <tr><td><code>tournament_mode</code></td><td><code>'competitive' | 'casual'</code></td><td>NOT <code>tourney_mode</code></td></tr>
-              <tr><td><code>team_count</code></td><td><code>'1'</code>–<code>'8'</code></td><td></td></tr>
+              <tr><td><code>team_count</code></td><td><code>'1'</code>â€“<code>'8'</code></td><td></td></tr>
               <tr><td><code>reg_max_players</code></td><td><code>'24'</code></td><td></td></tr>
               <tr><td><code>reg_min_players</code></td><td><code>'14'</code></td><td></td></tr>
               <tr><td><code>reg_show_dates</code></td><td><code>'true' | 'false'</code></td><td>NOT <code>reg_show_date_picker</code></td></tr>
@@ -691,7 +691,7 @@ td{padding:0.7rem 0.75rem;font-size:0.88rem;vertical-align:middle;}
 
       <div class="ref-section">
         <div class="ref-sec-hdr">
-          <div class="ref-sec-meta"><div class="ref-sec-title">Format Values — Ground Truth</div><div class="ref-sec-desc">Canonical scoring format values · source: create.html</div></div>
+          <div class="ref-sec-meta"><div class="ref-sec-title">Format Values â€” Ground Truth</div><div class="ref-sec-desc">Canonical scoring format values Â· source: create.html</div></div>
         </div>
         <div class="tbl-wrap">
           <table class="ref-table">
@@ -717,22 +717,22 @@ td{padding:0.7rem 0.75rem;font-size:0.88rem;vertical-align:middle;}
     </div>
   </div>
 
-  <!-- ── TAB: ACTION BOARD ── -->
+  <!-- â”€â”€ TAB: ACTION BOARD â”€â”€ -->
   <div id="panel-action" style="display:none;">
     <div class="action-wrap">
 
       <div class="action-section">
         <div class="action-hd">
-          <span class="action-title">Today — <span id="mcTodayDate" style="font-weight:400;text-transform:none;letter-spacing:0;"></span></span>
+          <span class="action-title">Today â€” <span id="mcTodayDate" style="font-weight:400;text-transform:none;letter-spacing:0;"></span></span>
         </div>
         <div class="today-queue">
           <div class="tq-section" id="tqSectionChecklist">
-            <div class="tq-hdr" onclick="toggleTqSection('tqSectionChecklist')"><span class="tq-title">Checklist — Rob Only</span><span class="tq-badge" id="ceoOpenCount" style="background:rgba(192,144,48,.15);color:var(--gold);border-color:rgba(192,144,48,.3);">0</span><span class="tq-chevron">▼</span></div>
+            <div class="tq-hdr" onclick="toggleTqSection('tqSectionChecklist')"><span class="tq-title">Checklist â€” Rob Only</span><span class="tq-badge" id="ceoOpenCount" style="background:rgba(192,144,48,.15);color:var(--gold);border-color:rgba(192,144,48,.3);">0</span><span class="tq-chevron">â–¼</span></div>
             <div class="ceo-list" id="ceoList"></div>
           </div>
           <div class="tq-section" id="tqSectionDoNow">
-            <div class="tq-hdr" onclick="toggleTqSection('tqSectionDoNow')"><span class="tq-title">Do Now</span><span class="tq-badge" id="doNowBadge">0</span><span class="tq-chevron">▼</span></div>
-            <div class="ceo-list" id="tqDoNow"><div class="tq-empty">Loading…</div></div>
+            <div class="tq-hdr" onclick="toggleTqSection('tqSectionDoNow')"><span class="tq-title">Do Now</span><span class="tq-badge" id="doNowBadge">0</span><span class="tq-chevron">â–¼</span></div>
+            <div class="ceo-list" id="tqDoNow"><div class="tq-empty">Loadingâ€¦</div></div>
           </div>
         </div>
       </div>
@@ -740,10 +740,10 @@ td{padding:0.7rem 0.75rem;font-size:0.88rem;vertical-align:middle;}
       <div class="action-section" style="margin-top:2rem;">
         <div class="action-hd">
           <span class="action-title">Tickets</span>
-          <span class="action-sub" id="atTicketSub">—</span>
+          <span class="action-sub" id="atTicketSub">â€”</span>
         </div>
         <div class="at-filters">
-          <input type="text" id="atSearch" class="at-search" placeholder="Search…" oninput="filterArtifactTickets()">
+          <input type="text" id="atSearch" class="at-search" placeholder="Searchâ€¦" oninput="filterArtifactTickets()">
           <div class="at-pills">
             <button class="at-pill active" onclick="setAtFilter('all',this)">All</button>
             <button class="at-pill" onclick="setAtFilter('review',this)">Review</button>
@@ -754,7 +754,7 @@ td{padding:0.7rem 0.75rem;font-size:0.88rem;vertical-align:middle;}
           </div>
           <button class="at-concluded-toggle" id="atConcludedToggle" onclick="toggleAtConcluded()">Show concluded</button>
         </div>
-        <div id="artifactTickets"><div style="color:var(--muted);font-size:.8rem;padding:.5rem 0;">Loading…</div></div>
+        <div id="artifactTickets"><div style="color:var(--muted);font-size:.8rem;padding:.5rem 0;">Loadingâ€¦</div></div>
       </div>
 
       <div class="action-section" style="margin-top:2rem;">
@@ -764,12 +764,12 @@ td{padding:0.7rem 0.75rem;font-size:0.88rem;vertical-align:middle;}
           <button onclick="loadGrades()" style="margin-left:auto;background:none;border:1px solid var(--border);color:var(--muted);font-family:'DM Mono',monospace;font-size:.52rem;letter-spacing:.1em;text-transform:uppercase;padding:.2rem .5rem;cursor:pointer;transition:all .12s;" onmouseenter="this.style.borderColor='rgba(192,144,48,0.4)';this.style.color='var(--gold)'" onmouseleave="this.style.borderColor='';this.style.color=''">Refresh</button>
         </div>
         <div id="gradeAvgBar" style="margin-bottom:.5rem;"></div>
-        <div class="grade-grid grade-grid-compact" id="gradeGrid"><div class="grade-no-data" style="padding:1rem;font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.1em;text-transform:uppercase;">Loading grades…</div></div>
+        <div class="grade-grid grade-grid-compact" id="gradeGrid"><div class="grade-no-data" style="padding:1rem;font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.1em;text-transform:uppercase;">Loading gradesâ€¦</div></div>
       </div>
 
       <div class="action-section" style="margin-top:2rem;">
         <div class="action-hd"><span class="action-title">Recent Activity</span></div>
-        <div class="timeline-feed" id="timelineFeed"><div style="padding:.75rem .9rem;font-size:.75rem;color:var(--muted);">Loading…</div></div>
+        <div class="timeline-feed" id="timelineFeed"><div style="padding:.75rem .9rem;font-size:.75rem;color:var(--muted);">Loadingâ€¦</div></div>
       </div>
 
     </div>
@@ -783,11 +783,11 @@ td{padding:0.7rem 0.75rem;font-size:0.88rem;vertical-align:middle;}
             <div class="modal-axis" id="modalAxis"></div>
             <div class="modal-cmd" id="modalCmd"></div>
           </div>
-          <button class="modal-close" onclick="closeModal()">✕ Close</button>
+          <button class="modal-close" onclick="closeModal()">âœ• Close</button>
         </div>
         <div class="modal-score-list" id="modalScores"></div>
         <button class="modal-run-btn" onclick="runReview()">Copy Review Command to Clipboard</button>
-        <div class="modal-copied" id="modalCopied">✓ Copied — paste in Claude Code terminal</div>
+        <div class="modal-copied" id="modalCopied">âœ“ Copied â€” paste in Claude Code terminal</div>
       </div>
     </div>
   </div>
@@ -801,7 +801,7 @@ const sb = supabase.createClient(
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpsbHVna2lvamVvb3BpdGR2enNhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYyNjc2MzYsImV4cCI6MjA5MTg0MzYzNn0.gvvK5IhTYdUPxsdmxq8pFiCD4CAINJ-fmnKuwDN0KLs'
 );
 
-/* ══════════════════════ AUTH ══════════════════════ */
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• AUTH â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 async function doLogin() {
   const email = document.getElementById('loginEmail').value.trim().toLowerCase();
   const pass  = document.getElementById('loginPass').value;
@@ -830,7 +830,7 @@ function showDashboard(email) {
   switchTab(saved);
 }
 
-/* ══════════════════════ TABS ══════════════════════ */
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• TABS â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 function switchTab(t) {
   if(t==='dash') t='action';
   ['action','tenants','bugs','checklist','reference'].forEach(id => {
@@ -841,7 +841,7 @@ function switchTab(t) {
   if (!tabLoaded[t]) { tabLoaded[t] = true; loadTabData(t); }
 }
 
-/* ══════════════════════ DASHBOARD ══════════════════════ */
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• DASHBOARD â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 function deriveStatus(rounds) {
   if (!rounds.length) return 'notlive';
   const vals = rounds.map(r => (r.status||'').toLowerCase());
@@ -922,17 +922,17 @@ async function loadTournaments(append=false) {
     const rc = (roundsByT[t.id]||[]).length;
     const rDone = roundsComplete[t.id]||0;
     const sc = scoreCounts[t.id]||0;
-    const lastAct = lastPlayer[t.id] ? new Date(lastPlayer[t.id]).toLocaleDateString('en-US',{month:'short',day:'numeric'}) : '—';
+    const lastAct = lastPlayer[t.id] ? new Date(lastPlayer[t.id]).toLocaleDateString('en-US',{month:'short',day:'numeric'}) : 'â€”';
     return `<div class="t-card" data-search="${esc((t.name||t.slug||'').toLowerCase()+' '+(t.owner_email||'').toLowerCase())}">
       <div class="t-card-top">
         <div>
-          <div class="t-name">${esc(t.name||t.short_name||'—')}</div>
+          <div class="t-name">${esc(t.name||t.short_name||'â€”')}</div>
           <div class="t-slug">${esc(t.slug)}</div>
         </div>
         ${statusBadge(status)}
       </div>
       <div class="t-card-mid">
-        <span class="t-meta">Owner: ${esc(t.owner_email||'—')}</span>
+        <span class="t-meta">Owner: ${esc(t.owner_email||'â€”')}</span>
         <span class="t-meta">Created: ${created}</span>
       </div>
       <div class="t-card-stats">
@@ -942,7 +942,7 @@ async function loadTournaments(append=false) {
         <span>Last activity: <strong>${lastAct}</strong></span>
       </div>
       <div class="t-card-actions">
-        <a class="btn-action btn-admin" href="/t/${esc(t.slug)}/admin">Admin →</a>
+        <a class="btn-action btn-admin" href="/t/${esc(t.slug)}/admin">Admin â†’</a>
         <button class="btn-action btn-delete" onclick="deleteTourney('${t.id}','${esc(t.name||t.slug)}')">Delete</button>
       </div>
     </div>`;
@@ -965,7 +965,7 @@ async function grantComp() {
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { errEl.textContent='Invalid email.'; errEl.style.display='block'; return; }
   const { error } = await sb.functions.invoke('platform-action', { body:{ action:'comp', email } });
   if (error) { errEl.textContent=error.message; errEl.style.display='block'; return; }
-  okEl.textContent=`✓ ${email} granted player account`; okEl.style.display='block';
+  okEl.textContent=`âœ“ ${email} granted player account`; okEl.style.display='block';
   document.getElementById('compEmail').value='';
   loadCompAccounts();
 }
@@ -984,7 +984,7 @@ let _compPage = 1;
 function renderCompAccounts(append=false) {
   if (!append) _compPage = 1;
   const tbody = document.getElementById('compBody'), empty = document.getElementById('compEmpty');
-  const searchInput = document.querySelector('input[placeholder="Search by email…"]');
+  const searchInput = document.querySelector('input[placeholder="Search by emailâ€¦"]');
   const q = searchInput ? searchInput.value.toLowerCase() : '';
 
   let data = compAccountsData.filter(a => !q || a.email.toLowerCase().includes(q));
@@ -1032,7 +1032,7 @@ async function generateCode() {
   errEl.style.display='none'; okEl.style.display='none';
   const { error } = await sb.from('create_codes').insert({ code, label:label||null });
   if (error) { errEl.textContent=error.message; errEl.style.display='block'; return; }
-  okEl.textContent=`✓ Code created: ${code}`; okEl.style.display='block';
+  okEl.textContent=`âœ“ Code created: ${code}`; okEl.style.display='block';
   document.getElementById('codeLabel').value=''; document.getElementById('codeVal').value='';
   loadCodes();
 }
@@ -1060,7 +1060,7 @@ async function loadCodes(append=false) {
     const sc=c.active?'var(--green)':'rgba(240,230,204,0.25)';
     return `<tr>
       <td><div class="t-name" style="font-size:.82rem;letter-spacing:.12em;">${esc(c.code)}</div></td>
-      <td><div class="t-owner">${esc(c.label||'—')}</div></td>
+      <td><div class="t-owner">${esc(c.label||'â€”')}</div></td>
       <td><span class="badge" style="color:${sc};border-color:${sc}40;">${c.active?'Active':'Inactive'}</span></td>
       <td><div class="t-date">${created}</div></td>
       <td><div class="actions"><button class="btn-action ${c.active?'btn-delete':'btn-admin'}" onclick="toggleCode('${c.id}',${c.active})">${c.active?'Deactivate':'Activate'}</button></div></td>
@@ -1071,7 +1071,7 @@ async function loadCodes(append=false) {
 }
 function loadMoreCodes() { loadCodes(true); }
 
-/* ══════════════════════ ARTIFACTS ══════════════════════ */
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• ARTIFACTS â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 const CAT_META = {
   review:{pill:'pill-blue',label:'Review'}, plan:{pill:'pill-gold',label:'Plan'},
   audit:{pill:'pill-red',label:'Audit'}, runbook:{pill:'pill-green',label:'Runbook'},
@@ -1122,7 +1122,7 @@ function copyExecuteRunbook(url) {
     .filter(e=>e.url&&e.url!==url&&axis&&e.url.includes('-'+axis))
     .map(e=>'https://tourney.greenskeeper.studio'+e.url);
   const ctxBlock=related.length?'\n\nRelated context:\n'+related.map(u=>'- '+u).join('\n'):'';
-  const cmd=`Execute the operational runbook at ${full}. This is a real production change — follow the procedure exactly.
+  const cmd=`Execute the operational runbook at ${full}. This is a real production change â€” follow the procedure exactly.
 
 Procedure:
 1. Read the entire runbook first. Note the phase count, go/no-go gates, and rollback section.
@@ -1131,19 +1131,19 @@ Procedure:
    a. Run each step exactly as written (copy-paste the command block, do not improvise).
    b. After each step, confirm the "Expected" block matches reality. If it does not, run that step's rollback and stop.
    c. After completing all steps in a phase, run every "Verify" check in that phase.
-   d. At each "🚦 Gate" between phases: report results to me and WAIT for explicit go-ahead before continuing to the next phase.
+   d. At each "ðŸš¦ Gate" between phases: report results to me and WAIT for explicit go-ahead before continuing to the next phase.
 4. After the final gate, run the Verification Checklist (Section 4). Report any failed items.
 5. If anything regresses at any point: stop, run the matching Rollback Procedure (Section 5), log a bug via the Bug FAB, then report.
 
 Working directory: C:\\Users\\Rob\\OneDrive\\Desktop\\Greenskeeper Studios\\Bova Invitational (canonical, not the stale source/repos clone).
-Remotes: origin (bova-invt, Vercel-deployed) and tourney (mirror) — push to origin auto-mirrors.
+Remotes: origin (bova-invt, Vercel-deployed) and tourney (mirror) â€” push to origin auto-mirrors.
 Supabase project: jllugkiojeoopitdvzsa. Use the Supabase MCP for migrations and edge function deploys.
 Commit cadence: one commit per logical step. Concise commit messages. Always push to origin after each commit.
 
 Do NOT skip phases. Do NOT bypass gates. Do NOT --no-verify. If you are unsure about a step, ask before running it.${ctxBlock}`;
   navigator.clipboard.writeText(cmd).then(()=>{
     const t=document.createElement('div');
-    t.textContent='✓ Execute prompt copied';
+    t.textContent='âœ“ Execute prompt copied';
     t.style.cssText='position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);background:var(--gold);color:#111;padding:.5rem 1.1rem;border-radius:6px;font-size:.78rem;font-weight:700;z-index:9999;pointer-events:none;max-width:90vw;text-align:center;';
     document.body.appendChild(t); setTimeout(()=>t.remove(),2800);
   }).catch(()=>{});
@@ -1152,7 +1152,7 @@ function copyNextStep(cat, url) {
   const next=NEXT_STEP[cat]; if(!next) return;
   const axis=(url.match(/[/\-](security|architecture|ux|performance|business|data-model|deployment|feature-depth|finance|marketing|onboarding)(?:[^a-z]|$)/)||[])[1]||'';
   const CHAIN=['review','plan','runbook','audit','postmortem','bugs']; // postmortem aliased to audit tier
-  // Collect related entries (same axis) sorted by chain order — gives the skill full context.
+  // Collect related entries (same axis) sorted by chain order â€” gives the skill full context.
   const seen=new Set();
   const urls=allEntries
     .filter(e=>e.url&&(axis?e.url.includes('-'+axis):e.url===url))
@@ -1194,7 +1194,7 @@ Order steps by safe-deploy sequence. Insert explicit go/no-go gates between phas
     audit:()=>`/tourney-audit${axisFlag} ${urls.join(' ')}
 
 Source runbook/plan: ${full}
-Goal: Audit live production against the runbook. No speculation — evidence only.
+Goal: Audit live production against the runbook. No speculation â€” evidence only.
 
 Required per runbook step:
 - Verify it actually shipped (cite file:line, commit SHA, deployed URL, SQL row, edge fn version)
@@ -1208,10 +1208,10 @@ Source audit: ${full}
 Goal: Blameless postmortem of any regression, incident, or silent failure surfaced by the audit.
 
 Required:
-- Precise timeline in UTC (event → detection → mitigation → resolution)
+- Precise timeline in UTC (event â†’ detection â†’ mitigation â†’ resolution)
 - Root cause isolated to file:line + commit SHA
 - Impact quantified (users affected, data integrity, downtime minutes, revenue)
-- Contributing factors (process, monitoring, test gaps) — blameless
+- Contributing factors (process, monitoring, test gaps) â€” blameless
 - Action items with owners, severity, and target date${ctxBlock}`,
 
     bugs:()=>`/tourney-bug${axisFlag} ${urls.join(' ')}
@@ -1229,7 +1229,7 @@ Per bug:
     fix:()=>`Read the open bugs documented at ${full}. For each:
 
 1. Reproduce or trace the issue in the canonical TOURney repo (Bova Invitational workspace).
-2. Identify root cause with file:line citation — no guessing.
+2. Identify root cause with file:line citation â€” no guessing.
 3. Implement a minimal, targeted fix. No scope creep, no premature abstraction, no "while I'm here" cleanups.
 4. Verify the golden path + obvious edge cases still work (run dev server, exercise the flow as a real user).
 5. Commit with a concise message describing the fix. Push to origin.
@@ -1237,7 +1237,7 @@ Per bug:
   };
   const cmd=(TEMPLATES[next]||(()=>urls.join(' ')))();
   navigator.clipboard.writeText(cmd).then(()=>{
-    const label=next==='fix'?'✓ Debug prompt copied':'✓ Skill prompt copied';
+    const label=next==='fix'?'âœ“ Debug prompt copied':'âœ“ Skill prompt copied';
     const t=document.createElement('div');
     t.textContent=label;
     t.style.cssText='position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);background:var(--gold);color:#111;padding:.5rem 1.1rem;border-radius:6px;font-size:.78rem;font-weight:700;z-index:9999;pointer-events:none;max-width:90vw;text-align:center;';
@@ -1250,9 +1250,9 @@ function renderRefArtifacts() {
   el.innerHTML=refs.length?refs.map(e=>`<a class="ref-artifact-link" href="${esc(e.url||'#')}" target="_blank">
     <div class="ref-artifact-title">${esc(e.title)}</div>
     <div class="ref-artifact-sum">${esc(e.summary||'')}</div>
-  </a>`).join(''):'<div style="padding:.75rem;color:var(--muted);font-size:.8rem;">No reference artifacts yet — run /tourney-reference to generate one.</div>';
+  </a>`).join(''):'<div style="padding:.75rem;color:var(--muted);font-size:.8rem;">No reference artifacts yet â€” run /tourney-reference to generate one.</div>';
 }
-// Lifecycle auto-archive: review → plan → runbook → audit (postmortem = same rank as audit).
+// Lifecycle auto-archive: review â†’ plan â†’ runbook â†’ audit (postmortem = same rank as audit).
 // When a higher-rank artifact exists for the same topic (shared non-stage tag),
 // older-stage artifacts are auto-archived. Manual unarchive overrides this.
 const STAGE_RANK={review:1,plan:2,runbook:3,audit:4,postmortem:4};
@@ -1330,9 +1330,9 @@ function renderHub() {
           ${e.author?`<span>${esc(e.author)}</span>`:''}
           <div class="card-tags">${tags}</div>
           <select class="status-sel" onclick="event.preventDefault();event.stopPropagation();" onchange="event.preventDefault();event.stopPropagation();setStatusOverride('${esc(e.id)}',this.value)">${statusOpts}</select>
-          ${e.category==='runbook'?`<button class="nxt-btn" onclick="event.preventDefault();event.stopPropagation();copyExecuteRunbook('${esc(e.url||'')}')" title="Copy AI execution prompt for this runbook" style="background:rgba(39,174,96,0.12);border-color:rgba(39,174,96,0.35);color:var(--green);">▶ Execute</button>`:''}
-          ${nextCat?`<button class="nxt-btn" onclick="event.preventDefault();event.stopPropagation();copyNextStep('${esc(e.category==='axis'?e.stage:e.category)}','${esc(e.url||'')}')" title="Copy next step command">→ ${esc(NEXT_LABEL[nextCat])}</button>`:''}
-          <button class="fav-btn${isFav?' fav-active':''}" onclick="event.preventDefault();event.stopPropagation();toggleFavorite('${esc(e.id)}',${!isFav})" title="${isFav?'Remove from favorites':'Add to favorites'}">${isFav?'★':'☆'}</button>
+          ${e.category==='runbook'?`<button class="nxt-btn" onclick="event.preventDefault();event.stopPropagation();copyExecuteRunbook('${esc(e.url||'')}')" title="Copy AI execution prompt for this runbook" style="background:rgba(39,174,96,0.12);border-color:rgba(39,174,96,0.35);color:var(--green);">â–¶ Execute</button>`:''}
+          ${nextCat?`<button class="nxt-btn" onclick="event.preventDefault();event.stopPropagation();copyNextStep('${esc(e.category==='axis'?e.stage:e.category)}','${esc(e.url||'')}')" title="Copy next step command">â†’ ${esc(NEXT_LABEL[nextCat])}</button>`:''}
+          <button class="fav-btn${isFav?' fav-active':''}" onclick="event.preventDefault();event.stopPropagation();toggleFavorite('${esc(e.id)}',${!isFav})" title="${isFav?'Remove from favorites':'Add to favorites'}">${isFav?'â˜…':'â˜†'}</button>
           <button class="archive-btn" onclick="event.preventDefault();event.stopPropagation();archiveEntry('${esc(e.id)}',${!isAr})">${isAr?'Unarchive':'Archive'}</button>
         </div>
       </div></a>`;
@@ -1348,7 +1348,7 @@ async function loadArtifacts() {
     const d=await r.json();
     allEntries=Array.isArray(d.entries)?d.entries:[];_artifactsReady=true;
 
-    // ── Auto-archive concluded artifacts ──────────────────────────────────────
+    // â”€â”€ Auto-archive concluded artifacts â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     {
       const arKey='qa_archived';
       let ar={};try{ar=JSON.parse(localStorage.getItem(arKey)||'{}');}catch{}
@@ -1362,7 +1362,7 @@ async function loadArtifacts() {
       if(changed) localStorage.setItem(arKey,JSON.stringify(ar));
     }
 
-    // ── Artifact change notifications ──────────────────────────────────────
+    // â”€â”€ Artifact change notifications â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     const SEEN_KEY='platform_last_updated';
     const lastSeen=localStorage.getItem(SEEN_KEY)||'';
     const current=d.updated_at||'';
@@ -1373,7 +1373,7 @@ async function loadArtifacts() {
       if(newCount>0) {
         if('Notification' in window && Notification.permission==='granted') {
           navigator.serviceWorker.ready.then(reg=>reg.showNotification('TOURney Platform',{
-            body:`${newCount} new artifact${newCount===1?'':'s'} — tap to view`,
+            body:`${newCount} new artifact${newCount===1?'':'s'} â€” tap to view`,
             icon:'/icon-192.png', badge:'/icon-192.png',
             tag:'platform-update', renotify:true,
             data:{url:'/platform'},
@@ -1385,7 +1385,7 @@ async function loadArtifacts() {
     renderRefArtifacts();
     renderArtifactTickets();
 
-    // ── Enable-notifications prompt (one-time, dismissible) ────────────────
+    // â”€â”€ Enable-notifications prompt (one-time, dismissible) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     if('Notification' in window && Notification.permission==='default') {
       const bannerKey='platform_notif_dismissed';
       if(!localStorage.getItem(bannerKey)) {
@@ -1394,7 +1394,7 @@ async function loadArtifacts() {
         banner.style.cssText='display:flex;align-items:center;gap:.75rem;background:rgba(212,175,55,.12);border:1px solid rgba(212,175,55,.3);border-radius:8px;padding:.6rem 1rem;margin-bottom:1rem;font-size:.8rem;';
         banner.innerHTML=`<span style="flex:1">Enable notifications to get alerted when new artifacts are added.</span>
           <button id="notif-enable" style="background:var(--gold);color:#111;border:none;border-radius:5px;padding:.3rem .7rem;font-size:.75rem;cursor:pointer;font-weight:700;">Enable</button>
-          <button id="notif-dismiss" style="background:none;border:none;color:rgba(240,230,204,.4);cursor:pointer;font-size:1rem;line-height:1;">✕</button>`;
+          <button id="notif-dismiss" style="background:none;border:none;color:rgba(240,230,204,.4);cursor:pointer;font-size:1rem;line-height:1;">âœ•</button>`;
         const grid=document.getElementById('cardGrid');
         if(grid) grid.parentNode.insertBefore(banner, grid);
         document.getElementById('notif-enable').onclick=async()=>{
@@ -1446,7 +1446,7 @@ async function loadAxisBoard() {
       <div class="axis-label" style="color:var(--gold);font-weight:700;">Platform Overall</div>
       <div class="axis-grade" style="color:${gradeColor(avgGrade)}">${esc(avgGrade)}</div>
       <div class="axis-open">${totalOpen} open</div>
-      <div class="axis-summary">${axes.length} axes · ${axes.filter(([,a])=>a.status==='concluded').length} concluded · ${axes.filter(([,a])=>a.blocking).length} blocking</div>
+      <div class="axis-summary">${axes.length} axes Â· ${axes.filter(([,a])=>a.status==='concluded').length} concluded Â· ${axes.filter(([,a])=>a.blocking).length} blocking</div>
       <div class="axis-stages">${overallPips}</div>
     </div>`;
 
@@ -1464,7 +1464,7 @@ async function loadAxisBoard() {
       }).join('');
       return `<div class="axis-row${a.blocking?' blocking':''}" onclick="openAxisDrawer('${esc(key)}')" style="cursor:pointer;">
         <div class="axis-label">${esc(key)}</div>
-        <div class="axis-grade" style="color:${gradeColor(a.grade||'')}">${esc(a.grade||'—')}</div>
+        <div class="axis-grade" style="color:${gradeColor(a.grade||'')}">${esc(a.grade||'â€”')}</div>
         <div class="axis-open">${esc(String(a.open_items||0))} open</div>
         <div class="axis-summary" title="${esc(a.summary||'')}">${esc(a.summary||'')}</div>
         <div class="axis-stages">${pips}</div>
@@ -1472,7 +1472,7 @@ async function loadAxisBoard() {
     }).join('');
   } catch(e){/* silent */}
 }
-/* ══════════════════════ ARTIFACT TICKETS ══════════════════════ */
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• ARTIFACT TICKETS â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 let _atFilter='all',_atSearch='',_atShowConcluded=false,_artifactsReady=false;
 let _atSeen=new Set(JSON.parse(localStorage.getItem('at_seen')||'[]'));
 function _markAtSeen(id){_atSeen.add(id);localStorage.setItem('at_seen',JSON.stringify([..._atSeen]));}
@@ -1496,7 +1496,7 @@ function renderArtifactTickets(){
   const unseenCount=(allEntries||[]).filter(e=>TICKET_CATS.has(e.category)&&isClosed(e)&&!_atSeen.has(e.id)&&!deleted.has(e.id)).length;
   const tb=document.getElementById('atConcludedToggle');
   if(tb){
-    tb.textContent=_atShowConcluded?'Hide concluded':('Show concluded'+(unseenCount?` · ${unseenCount} new`:''));
+    tb.textContent=_atShowConcluded?'Hide concluded':('Show concluded'+(unseenCount?` Â· ${unseenCount} new`:''));
     unseenCount&&!_atShowConcluded?tb.classList.add('at-concluded-unseen'):tb.classList.remove('at-concluded-unseen');
   }
   let entries=(allEntries||[]).filter(e=>TICKET_CATS.has(e.category)&&!deleted.has(e.id));
@@ -1544,7 +1544,7 @@ function openTicketDrawer(id){
   const gEl=document.getElementById('drawerGrade');
   gEl.textContent='';gEl.style.color='';
   document.getElementById('drawerStatus').textContent=stageKey;
-  document.getElementById('drawerMeta').textContent=(e.author||'')+(e.updated?` · updated ${e.updated}`:'');
+  document.getElementById('drawerMeta').textContent=(e.author||'')+(e.updated?` Â· updated ${e.updated}`:'');
   document.getElementById('drawerSummary').textContent=e.summary||'';
   document.getElementById('drawerArtifactBtn').href=e.url||'#';
   document.getElementById('drawerLifecycle').innerHTML=stages.map((s,i)=>{
@@ -1564,14 +1564,14 @@ function openTicketDrawer(id){
   const artifactUrl=e.url?`tourney.greenskeeper.studio${e.url}`:'';
   const cmd=e.category==='review'
     ?[`/tourney-execute ${fileArg}`,artifactUrl,openItems?`Open items: ${openItems}`:''].filter(Boolean).join('\n')
-    :[`/tourney-${nextStage}-${axisKey}${related.length?' '+related.map(x=>`tourney.greenskeeper.studio${x.url}`).join(' '):''}`,``,`Axis: ${axisKey} | Stage: ${stageKey} → ${nextStage}`,urlLines?`Artifacts:\n${urlLines}`:'',openItems?`Open items: ${openItems}`:''].filter(Boolean).join('\n');
+    :[`/tourney-${nextStage}-${axisKey}${related.length?' '+related.map(x=>`tourney.greenskeeper.studio${x.url}`).join(' '):''}`,``,`Axis: ${axisKey} | Stage: ${stageKey} â†’ ${nextStage}`,urlLines?`Artifacts:\n${urlLines}`:'',openItems?`Open items: ${openItems}`:''].filter(Boolean).join('\n');
   const cmdEl=document.getElementById('drawerNextCmd');
   if(cmdEl){
     cmdEl._cmd=cmd;
     const cmdLabel=cmd.split('\n')[0];
     cmdEl.innerHTML=ci<stages.length-1
       ?`<button class="drawer-copy-btn" data-label="${esc(cmdLabel)}" onclick="navigator.clipboard.writeText(document.getElementById('drawerNextCmd')._cmd).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent=this.dataset.label,1200)})">${esc(cmdLabel)}</button>`
-      :'<div style="font-size:.75rem;color:#4aaa4a;padding:.5rem 0;">✓ Concluded</div>';
+      :'<div style="font-size:.75rem;color:#4aaa4a;padding:.5rem 0;">âœ“ Concluded</div>';
   }
   document.getElementById('drawerGradeHistory').innerHTML='';
   // delete button
@@ -1593,7 +1593,7 @@ document.querySelectorAll('.filter-btn:not(.archived-toggle)').forEach(btn => {
     const isActive=btn.classList.contains('active');
     document.querySelectorAll('.filter-btn:not(.archived-toggle)').forEach(b=>b.classList.remove('active'));
     if(isActive && btn.dataset.filter!=='all') {
-      // deselect — snap back to All
+      // deselect â€” snap back to All
       document.querySelector('.filter-btn[data-filter="all"]').classList.add('active');
       activeFilter='all';
     } else {
@@ -1604,111 +1604,111 @@ document.querySelectorAll('.filter-btn:not(.archived-toggle)').forEach(btn => {
 });
 const _hs=document.getElementById('hubSearch');if(_hs)_hs.addEventListener('input', e => { activeSearch=e.target.value; renderHub(); });
 
-/* ══════════════════════ CHECKLIST ══════════════════════ */
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• CHECKLIST â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 const CL_SECTIONS = [
-  { id:'pairs', title:'Pairs — New Feature', badge:'new', steps:[
-    { id:'p1',  text:'Go to /create — confirm "Pairs" button in Team Structure row', link:'/create' },
-    { id:'p2',  text:'Select Pairs — "Number of Pairs" picker appears (options 2–24)', link:'/create' },
-    { id:'p3',  text:'Pick 4 pairs, 8 players, 2 days — price card updates correctly', link:'/create' },
-    { id:'p4',  text:'Complete wizard — redirects to /admin after creation' },
-    { id:'p5',  text:'Admin → assignment section reads "Pair Assignment"', link:'/admin' },
-    { id:'p6',  text:'Admin → pair name fields visible (Pair 1 Name, Pair 2 Name…)', link:'/admin' },
-    { id:'p7',  text:'Admin → type a pair name (e.g. "Smith / Jones") → blur → saves', link:'/admin' },
-    { id:'p8',  text:'Admin → assign each player to a pair → Save Pair Assignments', link:'/admin' },
-    { id:'p9',  text:'Scorecard → log in → "Your Pair" label visible (not "Your Team")', link:'/scorecard' },
-    { id:'p10', text:'Scorecard → opponent section hidden', link:'/scorecard', note:'"Opponents" panel should not appear' },
-    { id:'p11', text:'Scorecard → enter scores for a hole → submit → no console errors' },
-    { id:'p12', text:'Scoreboard → "Pairs" tab visible — click it', link:'/scoreboard' },
-    { id:'p13', text:'Scoreboard → pairs leaderboard renders with pair names + scores', link:'/scoreboard' },
-    { id:'p14', text:'Scoreboard → submit a score on scorecard, confirm leaderboard updates', link:'/scoreboard' },
+  { id:'pairs', title:'Pairs â€” New Feature', badge:'new', steps:[
+    { id:'p1',  text:'Go to /create â€” confirm "Pairs" button in Team Structure row', link:'/create' },
+    { id:'p2',  text:'Select Pairs â€” "Number of Pairs" picker appears (options 2â€“24)', link:'/create' },
+    { id:'p3',  text:'Pick 4 pairs, 8 players, 2 days â€” price card updates correctly', link:'/create' },
+    { id:'p4',  text:'Complete wizard â€” redirects to /admin after creation' },
+    { id:'p5',  text:'Admin â†’ assignment section reads "Pair Assignment"', link:'/admin' },
+    { id:'p6',  text:'Admin â†’ pair name fields visible (Pair 1 Name, Pair 2 Nameâ€¦)', link:'/admin' },
+    { id:'p7',  text:'Admin â†’ type a pair name (e.g. "Smith / Jones") â†’ blur â†’ saves', link:'/admin' },
+    { id:'p8',  text:'Admin â†’ assign each player to a pair â†’ Save Pair Assignments', link:'/admin' },
+    { id:'p9',  text:'Scorecard â†’ log in â†’ "Your Pair" label visible (not "Your Team")', link:'/scorecard' },
+    { id:'p10', text:'Scorecard â†’ opponent section hidden', link:'/scorecard', note:'"Opponents" panel should not appear' },
+    { id:'p11', text:'Scorecard â†’ enter scores for a hole â†’ submit â†’ no console errors' },
+    { id:'p12', text:'Scoreboard â†’ "Pairs" tab visible â€” click it', link:'/scoreboard' },
+    { id:'p13', text:'Scoreboard â†’ pairs leaderboard renders with pair names + scores', link:'/scoreboard' },
+    { id:'p14', text:'Scoreboard â†’ submit a score on scorecard, confirm leaderboard updates', link:'/scoreboard' },
   ]},
-  { id:'individual', title:'Individual — Regression', badge:'regression', steps:[
+  { id:'individual', title:'Individual â€” Regression', badge:'regression', steps:[
     { id:'i1', text:'Create an Individual tournament via /create', link:'/create' },
-    { id:'i2', text:'Scoreboard → no Team tab', link:'/scoreboard' },
-    { id:'i3', text:'Scorecard → no "Your Team" field', link:'/scorecard' },
-    { id:'i4', text:'Scorecard → unassigned gate does NOT appear', link:'/scorecard' },
+    { id:'i2', text:'Scoreboard â†’ no Team tab', link:'/scoreboard' },
+    { id:'i3', text:'Scorecard â†’ no "Your Team" field', link:'/scorecard' },
+    { id:'i4', text:'Scorecard â†’ unassigned gate does NOT appear', link:'/scorecard' },
   ]},
-  { id:'team', title:'Team (2+ Teams) — Regression', badge:'regression', steps:[
+  { id:'team', title:'Team (2+ Teams) â€” Regression', badge:'regression', steps:[
     { id:'t1', text:'Create a 2-team tournament via /create', link:'/create' },
-    { id:'t2', text:'Admin → "Team Assignment" section (not Pair)', link:'/admin' },
-    { id:'t3', text:'Admin → assign players to Team A / Team B → save', link:'/admin' },
-    { id:'t4', text:'Scorecard → "Your Team" label (not "Your Pair")', link:'/scorecard' },
-    { id:'t5', text:'Scorecard → opponent section visible', link:'/scorecard' },
-    { id:'t6', text:'Scoreboard → Team tab with A vs B banners', link:'/scoreboard' },
+    { id:'t2', text:'Admin â†’ "Team Assignment" section (not Pair)', link:'/admin' },
+    { id:'t3', text:'Admin â†’ assign players to Team A / Team B â†’ save', link:'/admin' },
+    { id:'t4', text:'Scorecard â†’ "Your Team" label (not "Your Pair")', link:'/scorecard' },
+    { id:'t5', text:'Scorecard â†’ opponent section visible', link:'/scorecard' },
+    { id:'t6', text:'Scoreboard â†’ Team tab with A vs B banners', link:'/scoreboard' },
   ]},
-  { id:'superball', title:'Superball Format — New', badge:'new', steps:[
-    { id:'sb1', text:'Create wizard Step 2 → "Superball" appears in front/back 9 format dropdowns', link:'/create' },
-    { id:'sb2', text:'Select Superball → description appears below select immediately', link:'/create', note:'"Scramble with a twist — one player is the designated super ball and their tee shot must be used on pre-set holes..."' },
-    { id:'sb3', text:'Admin → Rounds tab → Superball option present in front/back selects', link:'/admin' },
-    { id:'sb4', text:'Set a round format to Superball → Save Formats → no console errors', link:'/admin' },
-    { id:'sb5', text:'Scorecard with Superball round → format badge reads "Superball"', link:'/scorecard' },
-    { id:'sb6', text:'Scorecard Superball hole — scoring behaves as scramble (shared team score)', link:'/scorecard', note:'Treat same as scramble — one team score per hole' },
-    { id:'sb7', text:'Scoreboard with Superball round — leaderboard calculates correctly', link:'/scoreboard' },
+  { id:'superball', title:'Superball Format â€” New', badge:'new', steps:[
+    { id:'sb1', text:'Create wizard Step 2 â†’ "Superball" appears in front/back 9 format dropdowns', link:'/create' },
+    { id:'sb2', text:'Select Superball â†’ description appears below select immediately', link:'/create', note:'"Scramble with a twist â€” one player is the designated super ball and their tee shot must be used on pre-set holes..."' },
+    { id:'sb3', text:'Admin â†’ Rounds tab â†’ Superball option present in front/back selects', link:'/admin' },
+    { id:'sb4', text:'Set a round format to Superball â†’ Save Formats â†’ no console errors', link:'/admin' },
+    { id:'sb5', text:'Scorecard with Superball round â†’ format badge reads "Superball"', link:'/scorecard' },
+    { id:'sb6', text:'Scorecard Superball hole â€” scoring behaves as scramble (shared team score)', link:'/scorecard', note:'Treat same as scramble â€” one team score per hole' },
+    { id:'sb7', text:'Scoreboard with Superball round â€” leaderboard calculates correctly', link:'/scoreboard' },
     { id:'sb8', text:'Home page format section shows Superball label + description', link:'/' },
   ]},
   { id:'nav', title:'Navigation & Auth', badge:'infra', steps:[
-    { id:'n1', text:'Hamburger opens on mobile — all links present', link:'/scoreboard' },
+    { id:'n1', text:'Hamburger opens on mobile â€” all links present', link:'/scoreboard' },
     { id:'n2', text:'Admin link in nav when logged in as owner', link:'/scoreboard' },
     { id:'n3', text:'Admin link NOT visible when logged out', link:'/scoreboard' },
-    { id:'n4', text:'All nav links route correctly — no 404s', link:'/directory' },
+    { id:'n4', text:'All nav links route correctly â€” no 404s', link:'/directory' },
   ]},
   { id:'console', title:'Console & Network', badge:'infra', steps:[
-    { id:'c1', text:'DevTools Console → zero errors on scoreboard load', link:'/scoreboard', note:'F12 → Console — red errors = FAIL' },
-    { id:'c2', text:'DevTools Console → zero errors on scorecard load', link:'/scorecard' },
-    { id:'c3', text:'DevTools Network → no 4xx/5xx on any page', note:'Filter "status:4" and "status:5"' },
+    { id:'c1', text:'DevTools Console â†’ zero errors on scoreboard load', link:'/scoreboard', note:'F12 â†’ Console â€” red errors = FAIL' },
+    { id:'c2', text:'DevTools Console â†’ zero errors on scorecard load', link:'/scorecard' },
+    { id:'c3', text:'DevTools Network â†’ no 4xx/5xx on any page', note:'Filter "status:4" and "status:5"' },
   ]},
-  { id:'llc', title:'Form LLC — Greenskeeper Studios', badge:'human', steps:[
-    { id:'llc1', text:'Choose your state for filing', device:'💻 Computer',
-      how:'Google "[your state] LLC filing" → go to Secretary of State website. File in your home state (WI = wdfi.org). Delaware only makes sense if raising VC — $300/yr franchise tax otherwise.',
-      note:'WI fee ~$130. Takes 1–2 business days online.' },
-    { id:'llc2', text:'File Articles of Organization online', device:'💻 Computer',
-      how:'WI: wdfi.org → Business → File a New Business → LLC → Articles of Organization. Fill in: name "Greenskeeper Studios LLC", registered agent (yourself), purpose (software/technology services).',
-      note:'Save the confirmation PDF — you\'ll need it to open a bank account.' },
-    { id:'llc3', text:'Get your EIN (free, instant) from IRS.gov', device:'💻 Computer',
-      how:'Go to irs.gov → search "EIN online application" → Apply Online Now → LLC → 1 member → Software/Tech. Takes 5 min. Copy the EIN immediately — you can\'t retrieve it again without calling.',
-      note:'Do NOT use third-party EIN services — IRS.gov is free.' },
-    { id:'llc4', text:'Draft Operating Agreement (single-member)', device:'💻 Computer',
-      how:'Search "single member LLC operating agreement template [your state]" — free templates at Nolo or LegalZoom. Fill in: your name, LLC name, state, EIN, business purpose. Sign and date. No notary needed.',
+  { id:'llc', title:'Form LLC â€” Greenskeeper Studios', badge:'human', steps:[
+    { id:'llc1', text:'Choose your state for filing', device:'ðŸ’» Computer',
+      how:'Google "[your state] LLC filing" â†’ go to Secretary of State website. File in your home state (WI = wdfi.org). Delaware only makes sense if raising VC â€” $300/yr franchise tax otherwise.',
+      note:'WI fee ~$130. Takes 1â€“2 business days online.' },
+    { id:'llc2', text:'File Articles of Organization online', device:'ðŸ’» Computer',
+      how:'WI: wdfi.org â†’ Business â†’ File a New Business â†’ LLC â†’ Articles of Organization. Fill in: name "Greenskeeper Studios LLC", registered agent (yourself), purpose (software/technology services).',
+      note:'Save the confirmation PDF â€” you\'ll need it to open a bank account.' },
+    { id:'llc3', text:'Get your EIN (free, instant) from IRS.gov', device:'ðŸ’» Computer',
+      how:'Go to irs.gov â†’ search "EIN online application" â†’ Apply Online Now â†’ LLC â†’ 1 member â†’ Software/Tech. Takes 5 min. Copy the EIN immediately â€” you can\'t retrieve it again without calling.',
+      note:'Do NOT use third-party EIN services â€” IRS.gov is free.' },
+    { id:'llc4', text:'Draft Operating Agreement (single-member)', device:'ðŸ’» Computer',
+      how:'Search "single member LLC operating agreement template [your state]" â€” free templates at Nolo or LegalZoom. Fill in: your name, LLC name, state, EIN, business purpose. Sign and date. No notary needed.',
       note:'Not legally required in most states but proves liability separation if you\'re ever sued.' },
-    { id:'llc5', text:'Open a business bank account', device:'💻 Computer',
-      how:'Recommended: Mercury (mercury.com) — free, online, no minimums. Sign up with: LLC Articles of Organization + EIN + personal ID. Alternatively, walk into your local bank with the same docs.',
-      note:'Never mix personal and business money — it pierces the liability shield.' },
-    { id:'llc6', text:'Register Greenskeeper Studios LLC on Stripe', device:'💻 Computer',
-      how:'Go to dashboard.stripe.com → Activate account → Business type: Company → LLC → Enter LLC name, EIN, business address. Connect your Mercury business bank account for payouts.',
-      note:'Stripe will do a micro-deposit verification (1–2 days).' },
-    { id:'llc7', text:'Update CLAUDE.md with LLC details', device:'💻 Computer',
-      how:'Open C:\\Users\\Rob\\.claude\\CLAUDE.md → add section: "## Business Entity\\nGreenskeeper Studios LLC\\nState: [WI]\\nEIN: ***-**XXXX\\nStripe: acct_XXXXX"' },
+    { id:'llc5', text:'Open a business bank account', device:'ðŸ’» Computer',
+      how:'Recommended: Mercury (mercury.com) â€” free, online, no minimums. Sign up with: LLC Articles of Organization + EIN + personal ID. Alternatively, walk into your local bank with the same docs.',
+      note:'Never mix personal and business money â€” it pierces the liability shield.' },
+    { id:'llc6', text:'Register Greenskeeper Studios LLC on Stripe', device:'ðŸ’» Computer',
+      how:'Go to dashboard.stripe.com â†’ Activate account â†’ Business type: Company â†’ LLC â†’ Enter LLC name, EIN, business address. Connect your Mercury business bank account for payouts.',
+      note:'Stripe will do a micro-deposit verification (1â€“2 days).' },
+    { id:'llc7', text:'Update CLAUDE.md with LLC details', device:'ðŸ’» Computer',
+      how:'Open C:\\Users\\Rob\\.claude\\CLAUDE.md â†’ add section: "## Business Entity\\nGreenskeeper Studios LLC\\nState: [WI]\\nEIN: ***-**XXXX\\nStripe: acct_XXXXX"' },
   ]},
   { id:'human', title:'Other Human-Required Items', badge:'human', steps:[
-    { id:'h1', text:'Confirm Bova tournament formats with Chris Bova', device:'📱 Phone / Text',
-      how:'Text or call Chris: "Hey, for the Bova Invitational — Day 1 is stroke play, Day 2 is scramble, Day 3 is best ball — does that sound right?" Get written confirmation.',
+    { id:'h1', text:'Confirm Bova tournament formats with Chris Bova', device:'ðŸ“± Phone / Text',
+      how:'Text or call Chris: "Hey, for the Bova Invitational â€” Day 1 is stroke play, Day 2 is scramble, Day 3 is best ball â€” does that sound right?" Get written confirmation.',
       note:'Day 3 was listed as "shambles" in old notes which is an unmapped format. Confirm before tournament runs.' },
-    { id:'h2', text:"Add Chris Bova's email as tournament co-admin", device:'💻 Computer',
-      how:'Go to tourney.greenskeeper.studio/t/bova/admin → Access tab → type Chris\'s email → Add Admin. Confirm he can log in and see the admin panel.',
+    { id:'h2', text:"Add Chris Bova's email as tournament co-admin", device:'ðŸ’» Computer',
+      how:'Go to tourney.greenskeeper.studio/t/bova/admin â†’ Access tab â†’ type Chris\'s email â†’ Add Admin. Confirm he can log in and see the admin panel.',
       note:'Required before Chris can manage his own tournament independently.' },
-    { id:'h3', text:'Test PWA install on your iPhone', device:'📱 Phone',
-      how:'Open tourney.greenskeeper.studio in Safari on your iPhone → tap the Share button (box with arrow) → tap "Add to Home Screen" → confirm icon appears and app opens full-screen. Test offline: turn off WiFi, open the app.',
-      note:'Must test on real iPhone — iOS simulator doesn\'t simulate service workers accurately.' },
-    { id:'h4', text:'Buy full US golf course database', device:'💻 Computer',
-      how:'Go to Golf-Course-Database.com → purchase their US flat-file database (CSV/JSON). Upload to Supabase: import into a new "golf_courses" table or replace the existing one.',
+    { id:'h3', text:'Test PWA install on your iPhone', device:'ðŸ“± Phone',
+      how:'Open tourney.greenskeeper.studio in Safari on your iPhone â†’ tap the Share button (box with arrow) â†’ tap "Add to Home Screen" â†’ confirm icon appears and app opens full-screen. Test offline: turn off WiFi, open the app.',
+      note:'Must test on real iPhone â€” iOS simulator doesn\'t simulate service workers accurately.' },
+    { id:'h4', text:'Buy full US golf course database', device:'ðŸ’» Computer',
+      how:'Go to Golf-Course-Database.com â†’ purchase their US flat-file database (CSV/JSON). Upload to Supabase: import into a new "golf_courses" table or replace the existing one.',
       note:'Currently only ~27 SC/Myrtle Beach courses are seeded. Full US coverage needed for product launch.' },
-    { id:'h5', text:'Enable leaked password protection in Supabase', device:'💻 Computer',
-      how:'Go to supabase.com/dashboard → project jllugkiojeoopitdvzsa → Authentication → Sign In Methods → scroll to "Leaked Password Protection" → toggle ON. Also set minimum password length to 8 (currently 6).',
-      note:'Free feature — no reason not to have this on.' },
+    { id:'h5', text:'Enable leaked password protection in Supabase', device:'ðŸ’» Computer',
+      how:'Go to supabase.com/dashboard â†’ project jllugkiojeoopitdvzsa â†’ Authentication â†’ Sign In Methods â†’ scroll to "Leaked Password Protection" â†’ toggle ON. Also set minimum password length to 8 (currently 6).',
+      note:'Free feature â€” no reason not to have this on.' },
   ]},
   { id:'security', title:'Security Pentesting', badge:'human', steps:[
-    { id:'sec1', text:'Verify security headers are live', device:'💻 Computer',
+    { id:'sec1', text:'Verify security headers are live', device:'ðŸ’» Computer',
       how:'Open Terminal/PowerShell and run: curl -sI https://tourney.greenskeeper.studio | findstr /I "Strict Transport Frame Content-Type"\nExpect: Strict-Transport-Security, X-Frame-Options: DENY, X-Content-Type-Options: nosniff' },
-    { id:'sec2', text:'Pentest: player cannot elevate own billing_status', device:'💻 Computer',
-      how:'Log in to tourney.greenskeeper.studio as a test player account (not rob@) → open DevTools (F12) → Console → paste:\nawait window.tourney.db.from("player_accounts").update({billing_status:"comped"}).eq("email","[your test email]")\nExpect: error with code "42501" (RLS policy violation). If it succeeds = CRITICAL BUG.' },
-    { id:'sec3', text:'Pentest: unauthenticated push function returns 401', device:'💻 Computer',
+    { id:'sec2', text:'Pentest: player cannot elevate own billing_status', device:'ðŸ’» Computer',
+      how:'Log in to tourney.greenskeeper.studio as a test player account (not rob@) â†’ open DevTools (F12) â†’ Console â†’ paste:\nawait window.tourney.db.from("player_accounts").update({billing_status:"comped"}).eq("email","[your test email]")\nExpect: error with code "42501" (RLS policy violation). If it succeeds = CRITICAL BUG.' },
+    { id:'sec3', text:'Pentest: unauthenticated push function returns 401', device:'ðŸ’» Computer',
       how:'In PowerShell run:\ncurl -X POST https://jllugkiojeoopitdvzsa.supabase.co/functions/v1/send-push -H "Content-Type: application/json" -d "{}"\nExpect: HTTP 401. If 200 = anyone can send push notifications to all players.',
-      note:'Fixed session 14 — send-push v7 deployed with JWT auth.' },
-    { id:'sec4', text:'Enable Supabase email confirmation', device:'💻 Computer',
-      how:'supabase.com/dashboard → project jllugkiojeoopitdvzsa → Authentication → Email → toggle "Confirm email" ON. This prevents fake-email registrations from grabbing tournament spots.' },
-    { id:'sec5', text:'Pentest: unauthenticated install-email function returns 401', device:'💻 Computer',
+      note:'Fixed session 14 â€” send-push v7 deployed with JWT auth.' },
+    { id:'sec4', text:'Enable Supabase email confirmation', device:'ðŸ’» Computer',
+      how:'supabase.com/dashboard â†’ project jllugkiojeoopitdvzsa â†’ Authentication â†’ Email â†’ toggle "Confirm email" ON. This prevents fake-email registrations from grabbing tournament spots.' },
+    { id:'sec5', text:'Pentest: unauthenticated install-email function returns 401', device:'ðŸ’» Computer',
       how:'In PowerShell run:\ncurl -X POST https://jllugkiojeoopitdvzsa.supabase.co/functions/v1/send-install-email -H "Content-Type: application/json" -d "{}"\nExpect: HTTP 401. If 200 = anyone can spam install emails via Resend.',
-      note:'Fixed session 14 (997b043) — requires SEND_INSTALL_EMAIL_SECRET to be set in Supabase dashboard first or all calls will 401 including legit ones.' },
+      note:'Fixed session 14 (997b043) â€” requires SEND_INSTALL_EMAIL_SECRET to be set in Supabase dashboard first or all calls will 401 including legit ones.' },
   ]},
 ];
 
@@ -1736,7 +1736,7 @@ async function logQaRun(){
     sections[sec.id]={passed:sp,total:sec.steps.length};
   });
   const { error } = await sb.from('qa_runs').insert({
-    slug: clSlug||'—', passed, total, notes: JSON.stringify(sections)
+    slug: clSlug||'â€”', passed, total, notes: JSON.stringify(sections)
   });
   if(error){console.error('logQaRun failed',error);}
   renderQaRuns();
@@ -1757,7 +1757,7 @@ async function renderQaRuns(){
         <div class="qa-run-bar"><div class="qa-run-fill" style="width:${pct}%;background:${pctColor(pct)};"></div></div>
         <span class="qa-run-pct" style="color:${pctColor(pct)}">${pct}%</span>
         <span style="font-size:.62rem;color:var(--muted);">${r.passed}/${r.total}</span>
-        <button class="qa-run-del" onclick="deleteQaRun('${esc(r.id)}')" title="Delete">✕</button>
+        <button class="qa-run-del" onclick="deleteQaRun('${esc(r.id)}')" title="Delete">âœ•</button>
       </div>`;
     }).join('');
 }
@@ -1775,7 +1775,7 @@ function toggleSection(id) { clCollapsed[id]=!clCollapsed[id]; clSave(); renderC
 function resetAll() { if(!confirm('Reset all checks?'))return; clChecked={}; clSave(); renderChecklist(); }
 function secStatus(s) {
   const done=s.steps.filter(x=>clChecked[x.id]).length;
-  if(!done) return {label:'—',cls:'st-pend'};
+  if(!done) return {label:'â€”',cls:'st-pend'};
   if(done===s.steps.length) return {label:'PASS',cls:'st-pass'};
   return {label:`${done}/${s.steps.length}`,cls:'st-pend'};
 }
@@ -1788,15 +1788,15 @@ function renderChecklist() {
     const {label,cls}=secStatus(sec);
     const isCol=!!clCollapsed[sec.id];
     const humanBanner=sec.badge==='human'
-      ?`<div class="human-banner">⚠ Human Required — cannot be automated</div>`:'';
+      ?`<div class="human-banner">âš  Human Required â€” cannot be automated</div>`:'';
     const steps=sec.steps.map(step=>{
       const isDone=!!clChecked[step.id];
-      const linkHtml=step.link&&clSlug?`<a class="step-link" href="${clUrl(step.link)}" target="_blank" onclick="event.stopPropagation()">Open ↗</a>`:'';
-      const deviceHtml=step.device?`<span class="step-device">${step.device} →</span>`:'';
+      const linkHtml=step.link&&clSlug?`<a class="step-link" href="${clUrl(step.link)}" target="_blank" onclick="event.stopPropagation()">Open â†—</a>`:'';
+      const deviceHtml=step.device?`<span class="step-device">${step.device} â†’</span>`:'';
       const howHtml=step.how?`<div class="step-how">${step.how.replace(/\n/g,'<br>')}</div>`:'';
       const noteHtml=step.note?`<div class="step-note">${step.note}</div>`:'';
       return `<li class="cl-step${isDone?' done':''}" onclick="toggleCheck('${step.id}')">
-        <div class="cb"><span class="cb-chk">✓</span></div>
+        <div class="cb"><span class="cb-chk">âœ“</span></div>
         <div class="step-body">
           <div class="step-text">${deviceHtml}${step.text}</div>
           ${linkHtml}${howHtml}${noteHtml}
@@ -1808,7 +1808,7 @@ function renderChecklist() {
         <span class="cl-sec-title">${sec.title}</span>
         <span class="cl-badge badge-${sec.badge}">${badgeLabel(sec.badge)}</span>
         <span class="cl-sec-status ${cls}">${label}</span>
-        <span class="cl-chevron">▼</span>
+        <span class="cl-chevron">â–¼</span>
       </div>
       ${humanBanner}
       <ul class="cl-steps">${steps}</ul>
@@ -1819,7 +1819,7 @@ document.getElementById('slugInput').addEventListener('input', e => {
   clSlug=e.target.value.trim(); clSave(); renderChecklist();
 });
 
-/* ══════════════════════ REFERENCE ══════════════════════ */
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• REFERENCE â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 async function renderReference() {
   const el = document.getElementById('refLivePages');
   if (!el || el.dataset.loaded) return;
@@ -1867,7 +1867,7 @@ async function renderReference() {
 
   function group(title, badge, pages, urlFn) {
     const links = pages.map(p => `<a href="${urlFn(p)}" target="_blank" style="${linkStyle}">${p.label}<span style="${eyeStyle}">${p.path || '/'}</span></a>`).join('');
-    return `<details style="${grpStyle}"><summary style="${sumStyle}"><span>${title}${badge?`<span style="${eyeStyle}">${badge}</span>`:''}</span><span style="color:var(--muted);font-size:.65rem;">›</span></summary><div style="${bodyStyle}">${links}</div></details>`;
+    return `<details style="${grpStyle}"><summary style="${sumStyle}"><span>${title}${badge?`<span style="${eyeStyle}">${badge}</span>`:''}</span><span style="color:var(--muted);font-size:.65rem;">â€º</span></summary><div style="${bodyStyle}">${links}</div></details>`;
   }
 
   let html = '<div>';
@@ -1875,13 +1875,13 @@ async function renderReference() {
   (tourneys || []).forEach(t => {
     html += group(t.name, t.slug, TENANT_PAGES, p => p.path ? `${BASE}/t/${t.slug}/${p.path}` : `${BASE}/t/${t.slug}/`);
   });
-  html += group('Platform — Internal', `${INTERNAL_PAGES.length} pages`, INTERNAL_PAGES, p => BASE + p.path);
-  html += `<div style="text-align:right;margin-top:.4rem"><a href="/urls" target="_blank" style="font-size:.68rem;color:var(--gold);text-decoration:none;">Full technical map → /urls</a></div>`;
+  html += group('Platform â€” Internal', `${INTERNAL_PAGES.length} pages`, INTERNAL_PAGES, p => BASE + p.path);
+  html += `<div style="text-align:right;margin-top:.4rem"><a href="/urls" target="_blank" style="font-size:.68rem;color:var(--gold);text-decoration:none;">Full technical map â†’ /urls</a></div>`;
   html += '</div>';
   el.innerHTML = html;
 }
 
-/* ══════════════════════ ACTION BOARD ══════════════════════ */
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• ACTION BOARD â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 function gradeToGpa(g){return{'A+':4.3,'A':4.0,'A-':3.7,'B+':3.3,'B':3.0,'B-':2.7,'C+':2.3,'C':2.0,'C-':1.7,'D+':1.3,'D':1.0,'D-':0.7,'F':0.0}[g]??null;}
 function gpaToGrade(n){
   if(n>=4.15)return'A+';if(n>=3.85)return'A';if(n>=3.5)return'A-';
@@ -1891,7 +1891,7 @@ function gpaToGrade(n){
   return'F';
 }
 function gradeColor(g){
-  if(!g||g==='—')return'rgba(240,230,204,0.18)';
+  if(!g||g==='â€”')return'rgba(240,230,204,0.18)';
   if(g[0]==='A')return'#3a9e5f';if(g[0]==='B')return'#c09030';
   if(g[0]==='C')return'#e67e22';if(g[0]==='D')return'#c8503c';return'#e74c3c';
 }
@@ -1918,12 +1918,12 @@ function renderScorecard(){
   const staleAxes=[];
   const allGpas=axes.flatMap(([,ax])=>{const g=avgScores(ax.scores);return g!==null?[g]:[];});
   const overallGpa=allGpas.length?allGpas.reduce((a,b)=>a+b,0)/allGpas.length:null;
-  const og=overallGpa!==null?gpaToGrade(overallGpa):'—';
+  const og=overallGpa!==null?gpaToGrade(overallGpa):'â€”';
   const avgBar=document.getElementById('gradeAvgBar');
   if(avgBar)avgBar.innerHTML='<div class="grade-avg">'
     +'<div class="grade-avg-letter" style="color:'+gradeColor(og)+'">'+esc(og)+'</div>'
     +'<div><div class="grade-avg-label">Overall Platform Grade</div>'
-    +'<div class="grade-avg-note">Avg of '+axes.length+' axes — last 3 reviews each</div></div></div>';
+    +'<div class="grade-avg-note">Avg of '+axes.length+' axes â€” last 3 reviews each</div></div></div>';
   const grid=document.getElementById('gradeGrid');
   if(!grid)return;
   grid.innerHTML=axes.map(([key,ax])=>{
@@ -1937,16 +1937,16 @@ function renderScorecard(){
     const daysStr=isFinite(days)?(days===0?'Today':days+'d ago'):'';
     return'<div class="grade-card" onclick="openGradeModal(\''+esc(key)+'\')">'
       +'<div class="grade-card-top">'
-      +'<span class="grade-letter '+(letter?'':'grade-no-data')+'" style="color:'+color+'">'+(letter?esc(letter):'—')+'</span>'
+      +'<span class="grade-letter '+(letter?'':'grade-no-data')+'" style="color:'+color+'">'+(letter?esc(letter):'â€”')+'</span>'
       +(isStale?'<span class="grade-stale">STALE</span>':'')
       +'</div><div class="grade-axis">'+esc(ax.label)+'</div>'
       +'<div class="grade-date '+(daysStr?'':'grade-no-data')+'">'
-      +(daysStr?esc(daysStr)+' · '+scores.length+' review'+(scores.length!==1?'s':''):'No reviews yet')
+      +(daysStr?esc(daysStr)+' Â· '+scores.length+' review'+(scores.length!==1?'s':''):'No reviews yet')
       +'</div></div>';
   }).join('');
   const banner=document.getElementById('staleBanner'),bannerText=document.getElementById('staleBannerText');
   if(staleAxes.length&&banner&&bannerText){
-    bannerText.textContent=staleAxes.map(a=>a.label).join(', ')+' — no review in 14+ days. Paste in Claude Code: '+staleAxes.map(a=>a.cmd).join('  ·  ');
+    bannerText.textContent=staleAxes.map(a=>a.label).join(', ')+' â€” no review in 14+ days. Paste in Claude Code: '+staleAxes.map(a=>a.cmd).join('  Â·  ');
     banner.style.display='flex';
   }else if(banner)banner.style.display='none';
 }
@@ -1959,7 +1959,7 @@ function openGradeModal(key){
   const scores=(ax.scores||[]).slice(0,6).reverse();
   const list=document.getElementById('modalScores');
   if(!scores.length){
-    list.innerHTML='<div class="grade-no-data" style="padding:1rem;font-family:\'DM Mono\',monospace;font-size:0.58rem;letter-spacing:0.1em;text-transform:uppercase;">No reviews yet — run '+esc(ax.cmd)+' to generate the first.</div>';
+    list.innerHTML='<div class="grade-no-data" style="padding:1rem;font-family:\'DM Mono\',monospace;font-size:0.58rem;letter-spacing:0.1em;text-transform:uppercase;">No reviews yet â€” run '+esc(ax.cmd)+' to generate the first.</div>';
   }else{
     list.innerHTML=scores.map(s=>{
       const inner='<div class="modal-score-top">'
@@ -2023,7 +2023,7 @@ async function toggleCeoTask(id){
   await _saveCeoTasks();
 }
 
-/* ══════════════════════ TODAY QUEUE COLLAPSE ══════════════════════ */
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• TODAY QUEUE COLLAPSE â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 const _TQ_COLLAPSE_KEY='tq_collapsed';
 function _getTqState(){try{return JSON.parse(localStorage.getItem(_TQ_COLLAPSE_KEY)||'{}')}catch{return{};}}
 function toggleTqSection(id){
@@ -2041,12 +2041,12 @@ function _initTqCollapsed(){
   });
 }
 
-/* ── Do Now ack state ── */
+/* â”€â”€ Do Now ack state â”€â”€ */
 let _doNowAcked={};
 function _loadDoNowAcked(){try{_doNowAcked=JSON.parse(localStorage.getItem('donow_acked')||'{}')}catch{}}
 function toggleDoNowItem(key){_doNowAcked[key]=!_doNowAcked[key];localStorage.setItem('donow_acked',JSON.stringify(_doNowAcked));renderTodayQueue();}
 
-/* ══════════════════════ MISSION CONTROL ══════════════════════ */
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• MISSION CONTROL â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 let mcAxisData=null;
 let mcInboxTasks=[];
 let mcShippedTasks=[];
@@ -2075,16 +2075,16 @@ function renderTodayQueue(){
   const ax=mcAxisData?.axes||{};
   const chk=_ceoChecked;
   const NEXT={review:'plan',plan:'runbook',runbook:'executing',executing:'audit',audit:'concluded'};
-  const NEXT_LABEL={plan:'Review →',runbook:'Review →',executing:'/tourney-execute',audit:'/tourney-execute'};
+  const NEXT_LABEL={plan:'Review â†’',runbook:'Review â†’',executing:'/tourney-execute',audit:'/tourney-execute'};
   const NEXT_SKILL={plan:'/tourney-review-',runbook:'/tourney-review-',executing:'/tourney-execute ',audit:'/tourney-execute '};
-  // DO NOW — blocking axis issues only (human tasks live in checklist)
+  // DO NOW â€” blocking axis issues only (human tasks live in checklist)
   const doNow=[];
   Object.entries(ax).forEach(([k,a])=>{
     if(a.blocking&&a.status!=='concluded')
-      doNow.push({key:k,title:k.charAt(0).toUpperCase()+k.slice(1)+' axis — blocked',sub:a.summary,artifact:a.artifact||null});
+      doNow.push({key:k,title:k.charAt(0).toUpperCase()+k.slice(1)+' axis â€” blocked',sub:a.summary,artifact:a.artifact||null});
   });
 
-  // AGENT — from platform_tasks inbox queue; fall back to axis-status derivation if empty
+  // AGENT â€” from platform_tasks inbox queue; fall back to axis-status derivation if empty
   let agentItems=mcInboxTasks.map(t=>({title:t.title,sub:t.body||'',tag:t.tag||'INBOX',tagCls:'tq-tag-gold',cmd:t.cmd||null}));
   if(!agentItems.length){
     const stageOrder=['review','plan','runbook','executing','audit','concluded'];
@@ -2094,11 +2094,11 @@ function renderTodayQueue(){
       .map(([k,a])=>{
         const next=NEXT[a.status];
         const skill=NEXT_SKILL[next];
-        return{title:k+': '+NEXT_LABEL[next],sub:(a.grade||'?')+' · currently '+a.status,tag:a.status.toUpperCase(),tagCls:'tq-tag-gold',cmd:skill?skill+k:null};
+        return{title:k+': '+NEXT_LABEL[next],sub:(a.grade||'?')+' Â· currently '+a.status,tag:a.status.toUpperCase(),tagCls:'tq-tag-gold',cmd:skill?skill+k:null};
       });
   }
 
-  // SHIPPED — from platform_tasks shipped queue; fall back to artifacts
+  // SHIPPED â€” from platform_tasks shipped queue; fall back to artifacts
   let shippedItems=mcShippedTasks.map(t=>({title:t.title,sub:t.body||'',tag:t.tag||'SHIPPED',tagCls:'tq-tag-green',cmd:null}));
   if(!shippedItems.length){
     shippedItems=(allEntries||[])
@@ -2123,7 +2123,7 @@ function renderTodayQueue(){
         +'<div class="ceo-text">'+esc(i.title)+'</div>'
         +(i.sub?'<div class="ceo-why">'+esc(i.sub)+'</div>':'')
         +'<div class="ceo-meta">'
-        +(i.artifact?'<a class="ceo-link" href="'+esc(i.artifact)+'" target="_blank" rel="noopener noreferrer">View Ticket →</a>':'')
+        +(i.artifact?'<a class="ceo-link" href="'+esc(i.artifact)+'" target="_blank" rel="noopener noreferrer">View Ticket â†’</a>':'')
         +'<button class="tq-copy" onclick="event.stopPropagation();navigator.clipboard.writeText(\'/tourney-execute '+i.key+'\').then(()=>{this.textContent=\'Copied!\';setTimeout(()=>this.textContent=\'Copy Skill\',1400)})">Copy Skill</button>'
         +'</div></div></div>';
     }).join(''):'<div class="tq-empty">Nothing blocking.</div>';
@@ -2178,7 +2178,7 @@ window.renderBugLog = function() {
     return '<div class="qb-item" style="background:var(--card);border:1px solid var(--border);border-radius:8px;padding:1rem;display:flex;gap:1rem;align-items:flex-start;">'
       + '<div style="flex:1;"><div style="font-family:\'Barlow Condensed\',sans-serif;font-weight:700;font-size:1.1rem;color:var(--text);margin-bottom:.3rem;">' + esc(b.title) + '</div>'
       + (b.desc ? '<div style="font-size:.85rem;color:var(--muted);line-height:1.5;margin-bottom:.75rem;white-space:pre-wrap;">' + esc(b.desc) + '</div>' : '')
-      + '<div style="font-family:\'DM Mono\',monospace;font-size:.6rem;color:rgba(240,230,204,0.3);">' + d + (b.url ? ' · ' + esc(b.url) : '') + '</div>'
+      + '<div style="font-family:\'DM Mono\',monospace;font-size:.6rem;color:rgba(240,230,204,0.3);">' + d + (b.url ? ' Â· ' + esc(b.url) : '') + '</div>'
       + (b.img ? '<img src="' + b.img + '" style="max-height:120px;border-radius:6px;margin-top:.75rem;cursor:pointer;border:1px solid rgba(255,255,255,0.1);" onclick="window.open(this.src)">' : '')
       + '</div>'
       + '<div style="display:flex;flex-direction:column;gap:.5rem;">'
@@ -2212,7 +2212,7 @@ window.deleteBug = function(id) {
   } catch(e){}
 }
 
-/* ── Axis Drawer ── */
+/* â”€â”€ Axis Drawer â”€â”€ */
 let _axisDrawerData = {};
 function _mcGradeColor(g){
   return ({'A+':'#4aaa4a','A':'#4aaa4a','A-':'#6aba6a','B+':'#c09030','B':'#c09030','B-':'#c07020','C+':'#d06030','C':'#d05020','C-':'#d04020','D':'#d03010'})[g]||'var(--muted)';
@@ -2226,10 +2226,10 @@ function openAxisDrawer(key) {
 
   document.getElementById('drawerAxisName').textContent = key;
   const gEl = document.getElementById('drawerGrade');
-  gEl.textContent = d.grade || '—';
+  gEl.textContent = d.grade || 'â€”';
   gEl.style.color = _mcGradeColor(d.grade||'');
   document.getElementById('drawerStatus').textContent = cur;
-  document.getElementById('drawerMeta').textContent = (d.open_items||0) + ' open items · updated ' + (d.last_updated||'');
+  document.getElementById('drawerMeta').textContent = (d.open_items||0) + ' open items Â· updated ' + (d.last_updated||'');
   document.getElementById('drawerSummary').textContent = d.summary || '';
   document.getElementById('drawerArtifactBtn').href = d.artifact || '#';
 
@@ -2244,12 +2244,12 @@ function openAxisDrawer(key) {
   const cmd = `/tourney-${nextStage}-${key}`;
   document.getElementById('drawerNextCmd').innerHTML = ci < stages.length-1
     ? `<div class="drawer-next-cmd"><span class="drawer-next-text">${esc(cmd)}</span><button class="drawer-copy-btn" onclick="navigator.clipboard.writeText('${esc(cmd)}').then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy',1200)})">Copy</button></div>`
-    : '<div style="font-size:.75rem;color:#4aaa4a;padding:.5rem 0;">✓ Concluded</div>';
+    : '<div style="font-size:.75rem;color:#4aaa4a;padding:.5rem 0;">âœ“ Concluded</div>';
 
   // Grade history from gradesData
   const scores = (gradesData?.axes?.[key]?.scores) || [];
   document.getElementById('drawerGradeHistory').innerHTML = scores.length
-    ? scores.slice(0,6).map(s=>`<div class="drawer-grade-row"><span class="drawer-gval" style="color:${_mcGradeColor(s.score)}">${esc(s.score||'—')}</span><span class="drawer-gdate">${esc((s.date||'').substring(0,10))}</span><span class="drawer-gnotes">${esc(s.notes||'')}</span></div>`).join('')
+    ? scores.slice(0,6).map(s=>`<div class="drawer-grade-row"><span class="drawer-gval" style="color:${_mcGradeColor(s.score)}">${esc(s.score||'â€”')}</span><span class="drawer-gdate">${esc((s.date||'').substring(0,10))}</span><span class="drawer-gnotes">${esc(s.notes||'')}</span></div>`).join('')
     : '<div style="font-size:.75rem;color:var(--muted);">No history yet.</div>';
 
   const el = document.getElementById('axisDrawer');
@@ -2261,7 +2261,7 @@ function closeAxisDrawer() {
   document.body.style.overflow = '';
 }
 
-/* ── Ops Timeline ── */
+/* â”€â”€ Ops Timeline â”€â”€ */
 function renderTimeline() {
   const el = document.getElementById('timelineFeed');
   if (!el) return;
@@ -2285,7 +2285,7 @@ function renderTimeline() {
       (ad.scores||[]).forEach(s=>{
         events.push({
           date: s.date,
-          text: axis.charAt(0).toUpperCase()+axis.slice(1) + ' — ' + (s.score||'?'),
+          text: axis.charAt(0).toUpperCase()+axis.slice(1) + ' â€” ' + (s.score||'?'),
           sub: s.review_title||'',
           dot: s.score&&s.score[0]==='A'?'green': s.score&&s.score[0]==='C'?'red':'gold',
           url: s.url||''
@@ -2318,8 +2318,8 @@ function renderTimeline() {
   }).join('');
 }
 
-/* ══════════════════════ BUGS TAB ══════════════════════ */
-// bugs.html uses the publishable key — same key needed here for shared session context
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• BUGS TAB â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+// bugs.html uses the publishable key â€” same key needed here for shared session context
 const _sbBugs = supabase.createClient(
   'https://jllugkiojeoopitdvzsa.supabase.co',
   'sb_publishable_DnBMNLaSu61ykJ6P_fI2fw_D9DdAScn',
@@ -2332,9 +2332,9 @@ async function loadBugsTab() {
   const elOC   = document.getElementById('openBugLogCount');
   const elCC   = document.getElementById('compBugLogCount');
   if (!elOpen) return;
-  elOpen.innerHTML = '<div style="color:var(--muted);font-size:.8rem;padding:.5rem 0;">Loading…</div>';
+  elOpen.innerHTML = '<div style="color:var(--muted);font-size:.8rem;padding:.5rem 0;">Loadingâ€¦</div>';
   const { data: { session: bugsSess } } = await sb.auth.getSession();
-  if (!bugsSess?.access_token) { elOpen.innerHTML = '<div style="color:var(--red);font-size:.75rem;">No active session — please sign out and back in.</div>'; return; }
+  if (!bugsSess?.access_token) { elOpen.innerHTML = '<div style="color:var(--red);font-size:.75rem;">No active session â€” please sign out and back in.</div>'; return; }
   // raw fetch bypasses Supabase client auth-injection quirks
   const _bugsResp = await fetch(
     'https://jllugkiojeoopitdvzsa.supabase.co/rest/v1/platform_bugs?select=*&order=created_at.desc',
@@ -2357,15 +2357,15 @@ async function loadBugsTab() {
   const rowHtml = (b, isOpen) => {
     const d = new Date(b.created_at).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
     return `<div style="background:var(--card);border:1px solid var(--border);border-left:3px solid ${isOpen?'var(--red)':'var(--green)'};border-radius:0 6px 6px 0;padding:.75rem 1rem;margin-bottom:.45rem;">
-      <div style="font-size:.85rem;color:var(--text);line-height:1.45;margin-bottom:.2rem;">${b.title?`<strong style="color:#fff;">${esc(b.title)}</strong>`:'<em>(no title)</em>'}${b.description?' — '+esc(b.description):''}</div>
-      <div style="font-family:'DM Mono',monospace;font-size:.52rem;color:var(--muted);">${d}${b.url?' · '+esc(b.url):''}</div>
-      ${b.image_data?`<img src="${esc(b.image_data)}" style="max-height:120px;margin-top:.5rem;border-radius:6px;cursor:pointer;border:1px solid rgba(255,255,255,0.1);" onclick="window.open(this.src)">`:''}
+      <div style="font-size:.85rem;color:var(--text);line-height:1.45;margin-bottom:.2rem;">${b.title?`<strong style="color:#fff;">${esc(b.title)}</strong>`:'<em>(no title)</em>'}${b.description?' â€” '+esc(b.description):''}</div>
+      <div style="font-family:'DM Mono',monospace;font-size:.52rem;color:var(--muted);">${d}${b.url?' Â· '+esc(b.url):''}</div>
+      ${b.image_data||b.image_data_2||b.image_data_3?`<div style="display:flex;gap:.4rem;flex-wrap:wrap;margin-top:.5rem;">${[b.image_data,b.image_data_2,b.image_data_3].filter(Boolean).map(img=>`<img src="${esc(img)}" style="max-height:120px;border-radius:6px;cursor:pointer;border:1px solid rgba(255,255,255,0.1);" onclick="window.open(this.src)">`).join('')}</div>`:''}
       <div style="margin-top:.5rem;display:flex;gap:.4rem;flex-wrap:wrap;">
         <button onclick="bugSetStatus('${b.id}','${isOpen?'completed':'open'}')" style="${btnS}border:1px solid ${isOpen?'rgba(58,158,95,0.4)':'rgba(192,144,48,0.3)'};color:${isOpen?'var(--green)':'var(--muted)'};">${isOpen?'Mark Done':'Reopen'}</button>
         <button onclick="bugDel('${b.id}')" style="${btnS}border:1px solid rgba(200,80,60,0.3);color:var(--red);">Delete</button>
       </div></div>`;
   };
-  elOpen.innerHTML = open.length ? open.map(b => rowHtml(b, true)).join('') : '<div style="padding:1rem;color:var(--green);font-family:\'DM Mono\',monospace;font-size:.65rem;text-transform:uppercase;letter-spacing:.1em;">✓ No open bugs</div>';
+  elOpen.innerHTML = open.length ? open.map(b => rowHtml(b, true)).join('') : '<div style="padding:1rem;color:var(--green);font-family:\'DM Mono\',monospace;font-size:.65rem;text-transform:uppercase;letter-spacing:.1em;">âœ“ No open bugs</div>';
   if (elComp) elComp.innerHTML = done.length ? done.map(b => rowHtml(b, false)).join('') : '<div style="padding:.75rem 0;color:var(--muted);font-family:\'DM Mono\',monospace;font-size:.62rem;">No completed bugs yet.</div>';
   if (!_bugsRealtimeWired) {
     _bugsRealtimeWired = true;
@@ -2379,12 +2379,12 @@ function _buildBugDump() {
   return _bugsCache.filter(b=>b.status==='open').map((b,i)=>({idx:i+1,id:b.id,title:b.title||'(no title)',description:b.description||'',url:b.url||'',logged_at:b.created_at}));
 }
 function _flashFloater(msg){const t=document.createElement('div');t.textContent=msg;t.style.cssText='position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);background:var(--gold);color:#111;padding:.5rem 1.1rem;border-radius:6px;font-size:.78rem;font-weight:700;z-index:9999;pointer-events:none;max-width:90vw;text-align:center;';document.body.appendChild(t);setTimeout(()=>t.remove(),2800);}
-window.copyTriagePrompt=()=>{const bugs=_buildBugDump();if(!bugs.length)return _flashFloater('No open bugs');const cmd=`You are a senior product engineer triaging the open bug backlog for TOURney.\n\nOrganize ALL bugs into 3-5 shippable sprints. Per sprint: name, theme, priority (P0/P1/P2), effort (dev-days), dependencies, acceptance criteria, bug IDs.\n\nBias toward grouping by axis, P0 first, 1-3 days each.\n\nFinish with 5-line exec summary: what ships this week, next week, defer.\n\nRepo: C:\\Users\\Rob\\OneDrive\\Desktop\\Greenskeeper Studios\\Bova Invitational\\\n\nLive bug backlog (${bugs.length} open):\n\`\`\`json\n${JSON.stringify(bugs,null,2)}\n\`\`\``;navigator.clipboard.writeText(cmd).then(()=>_flashFloater('✓ Triage prompt copied ('+bugs.length+' bugs)'));};
-window.copyRunSprintPrompt=()=>{const bugs=_buildBugDump();if(!bugs.length)return _flashFloater('No open bugs');const cmd=`Execute the highest-priority cohesive cluster of TOURney bugs.\n\nPer bug: reproduce → root cause (file:line) → minimal fix → verify → commit + push → mark done in Supabase platform_bugs.\n\nPick 3-6 bugs from the same area. Ship as one sprint. Report what closed + what's next.\n\nRepo: C:\\Users\\Rob\\OneDrive\\Desktop\\Greenskeeper Studios\\Bova Invitational\\\n\nBacklog (${bugs.length} open):\n\`\`\`json\n${JSON.stringify(bugs,null,2)}\n\`\`\``;navigator.clipboard.writeText(cmd).then(()=>_flashFloater('✓ Sprint prompt copied'));};
-window.copyTopBugPrompt=()=>{const bugs=_buildBugDump();if(!bugs.length)return _flashFloater('No open bugs');const cmd=`Fix the single most critical open TOURney bug. Pick by impact/integrity/revenue. Reproduce → root cause → fix → verify → commit → mark done.\n\nRepo: C:\\Users\\Rob\\OneDrive\\Desktop\\Greenskeeper Studios\\Bova Invitational\\\n\nBacklog (${bugs.length} open):\n\`\`\`json\n${JSON.stringify(bugs,null,2)}\n\`\`\``;navigator.clipboard.writeText(cmd).then(()=>_flashFloater('✓ Top-P0 prompt copied'));};
-window.copyExportPrompt=()=>{const bugs=_buildBugDump();if(!bugs.length)return _flashFloater('No open bugs');navigator.clipboard.writeText(JSON.stringify(bugs,null,2)).then(()=>_flashFloater('✓ Raw JSON copied ('+bugs.length+' bugs)'));};
+window.copyTriagePrompt=()=>{const bugs=_buildBugDump();if(!bugs.length)return _flashFloater('No open bugs');const cmd=`You are a senior product engineer triaging the open bug backlog for TOURney.\n\nOrganize ALL bugs into 3-5 shippable sprints. Per sprint: name, theme, priority (P0/P1/P2), effort (dev-days), dependencies, acceptance criteria, bug IDs.\n\nBias toward grouping by axis, P0 first, 1-3 days each.\n\nFinish with 5-line exec summary: what ships this week, next week, defer.\n\nRepo: C:\\Users\\Rob\\OneDrive\\Desktop\\Greenskeeper Studios\\Bova Invitational\\\n\nLive bug backlog (${bugs.length} open):\n\`\`\`json\n${JSON.stringify(bugs,null,2)}\n\`\`\``;navigator.clipboard.writeText(cmd).then(()=>_flashFloater('âœ“ Triage prompt copied ('+bugs.length+' bugs)'));};
+window.copyRunSprintPrompt=()=>{const bugs=_buildBugDump();if(!bugs.length)return _flashFloater('No open bugs');const cmd=`Execute the highest-priority cohesive cluster of TOURney bugs.\n\nPer bug: reproduce â†’ root cause (file:line) â†’ minimal fix â†’ verify â†’ commit + push â†’ mark done in Supabase platform_bugs.\n\nPick 3-6 bugs from the same area. Ship as one sprint. Report what closed + what's next.\n\nRepo: C:\\Users\\Rob\\OneDrive\\Desktop\\Greenskeeper Studios\\Bova Invitational\\\n\nBacklog (${bugs.length} open):\n\`\`\`json\n${JSON.stringify(bugs,null,2)}\n\`\`\``;navigator.clipboard.writeText(cmd).then(()=>_flashFloater('âœ“ Sprint prompt copied'));};
+window.copyTopBugPrompt=()=>{const bugs=_buildBugDump();if(!bugs.length)return _flashFloater('No open bugs');const cmd=`Fix the single most critical open TOURney bug. Pick by impact/integrity/revenue. Reproduce â†’ root cause â†’ fix â†’ verify â†’ commit â†’ mark done.\n\nRepo: C:\\Users\\Rob\\OneDrive\\Desktop\\Greenskeeper Studios\\Bova Invitational\\\n\nBacklog (${bugs.length} open):\n\`\`\`json\n${JSON.stringify(bugs,null,2)}\n\`\`\``;navigator.clipboard.writeText(cmd).then(()=>_flashFloater('âœ“ Top-P0 prompt copied'));};
+window.copyExportPrompt=()=>{const bugs=_buildBugDump();if(!bugs.length)return _flashFloater('No open bugs');navigator.clipboard.writeText(JSON.stringify(bugs,null,2)).then(()=>_flashFloater('âœ“ Raw JSON copied ('+bugs.length+' bugs)'));};
 
-/* ══ INIT ══ */
+/* â•â• INIT â•â• */
 clLoad();
 document.getElementById('slugInput').value=clSlug;
 renderChecklist();
@@ -2399,19 +2399,19 @@ renderQaRuns();
   }
 })();
 </script>
-<!-- ── AXIS DRAWER ── -->
+<!-- â”€â”€ AXIS DRAWER â”€â”€ -->
 <div id="axisDrawer" style="display:none;" onclick="if(event.target===this)closeAxisDrawer()">
   <div class="drawer-panel">
     <div class="drawer-hdr">
       <div>
         <div class="drawer-title-row">
-          <span class="drawer-axis-name" id="drawerAxisName">—</span>
-          <span class="drawer-d-grade" id="drawerGrade">—</span>
+          <span class="drawer-axis-name" id="drawerAxisName">â€”</span>
+          <span class="drawer-d-grade" id="drawerGrade">â€”</span>
           <span class="drawer-status-pill" id="drawerStatus">review</span>
         </div>
         <div style="font-size:.68rem;color:var(--muted);margin-top:.3rem;" id="drawerMeta"></div>
       </div>
-      <button class="drawer-close" onclick="closeAxisDrawer()">✕</button>
+      <button class="drawer-close" onclick="closeAxisDrawer()">âœ•</button>
     </div>
     <div class="drawer-lifecycle" id="drawerLifecycle"></div>
     <div class="drawer-body">
@@ -2420,14 +2420,15 @@ renderQaRuns();
       <div class="drawer-sec">Grade History</div>
       <div id="drawerGradeHistory"></div>
       <div style="margin-top:1rem;display:flex;gap:.6rem;align-items:center;flex-wrap:wrap;">
-        <a class="drawer-artifact-btn" id="drawerArtifactBtn" href="#" target="_blank">View Full Artifact →</a>
+        <a class="drawer-artifact-btn" id="drawerArtifactBtn" href="#" target="_blank">View Full Artifact â†’</a>
         <button id="drawerDeleteBtn" style="display:none;background:rgba(192,144,48,.08);border:1px solid rgba(192,144,48,.3);color:var(--gold);font-size:.68rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:.3rem .65rem;cursor:pointer;" onclick="">Mark as Concluded</button>
       </div>
     </div>
   </div>
 </div>
 
-<script src="/bug-fab.js?v=5" defer></script>
+<script src="/bug-fab.js?v=6" defer></script>
 </body>
 </html>
+
 

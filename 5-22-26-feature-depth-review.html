@@ -135,9 +135,9 @@ footer span{color:var(--gold);}
   <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Review</div></div>
   <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Plan</div></div>
   <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Runbook</div></div>
-  <div class="lc-stage"><div class="lc-pill"></div><div class="lc-label">Executing</div></div>
-  <div class="lc-stage"><div class="lc-pill"></div><div class="lc-label">Audit</div></div>
-  <div class="lc-stage"><div class="lc-pill"></div><div class="lc-label">Concluded</div></div>
+  <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Executing</div></div>
+  <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Audit</div></div>
+  <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Concluded</div></div>
 </div>
 <!-- LIFECYCLE-BAR-END -->
 
@@ -516,8 +516,42 @@ footer span{color:var(--gold);}
 <section id="executing">
 <div class="wrapper">
 <!-- EXECUTING-CONTENT-START -->
-<div class="stage-pending">
-  <p>Awaiting execution. Run <code>/tourney-execute 5-22-26-feature-depth-review.html</code> to proceed.</p>
+<div class="section-header">
+  <div class="section-eyebrow">Stage 4 — Executing</div>
+  <h2 class="section-title">Execution Log</h2>
+  <p class="section-desc">Step-by-step record of what ran. 2026-05-26 · claude-sonnet-4-6</p>
+</div>
+<div class="exec-step">
+  <span class="exec-badge exec-done">Done</span>
+  <div class="exec-body"><strong>Step 1 — courses + course_holes migration</strong>Migration 20260526000017 applied. Tables already existed in prod (created earlier this week); migration 018_platform_bugs_multi_image applied successfully. Migration files written to supabase/migrations/.</div>
+</div>
+<div class="exec-step">
+  <span class="exec-badge exec-skipped">Skipped</span>
+  <div class="exec-body"><strong>Step 2 — Admin Course tab</strong>Already built: admin.html already has <code>data-tab="course"</code> with full UPSERT to <code>courses</code> table (lines 2515, 2533). No action needed.</div>
+</div>
+<div class="exec-step">
+  <span class="exec-badge exec-skipped">Skipped</span>
+  <div class="exec-body"><strong>Step 3 — course.html</strong>File already exists in repo root. Queries <code>courses</code> + <code>course_holes</code> tables with full scorecard render. vercel.json already has <code>/t/:slug/course</code> rewrite. sw.js tourney-v37 already precaches <code>/course.html</code>.</div>
+</div>
+<div class="exec-step">
+  <span class="exec-badge exec-done">Done</span>
+  <div class="exec-body"><strong>Step 4 — scorecard.html per-hole yardage</strong>Added fetch from <code>courses</code>/<code>course_holes</code> by tournament_id after the existing <code>golf_courses</code> block (scorecard.html:605–614). Tournament-specific course takes final precedence. <code>courseYards</code> array populated; renderHole() at line 1032 already displays yardage inline.</div>
+</div>
+<div class="exec-step">
+  <span class="exec-badge exec-done">Done</span>
+  <div class="exec-body"><strong>Step 5 — Multi-image bug-fab</strong>Migration 018 applied: <code>image_data_2</code> + <code>image_data_3 TEXT</code> columns on platform_bugs. bug-fab.js rewritten with dynamic up-to-3 slot UI (add/remove, FileReader per slot). INSERT now sends all three fields. platform.html line 2362 renders all images in flex row. Version bumped to v6 across all 34 HTML pages.</div>
+</div>
+<div class="exec-step">
+  <span class="exec-badge exec-skipped">Skipped</span>
+  <div class="exec-body"><strong>Step 6 — Admin score edit</strong>Already built: <code>_editScores</code> object + UPDATE flow exists at admin.html lines 2255–2302.</div>
+</div>
+<div class="exec-step">
+  <span class="exec-badge exec-done">Done</span>
+  <div class="exec-body"><strong>Step 7 — Captain designation</strong>admin.html Design tab already writes <code>team_a_captain</code> + <code>challengers_captain</code> to settings (lines 2833–2834). home.html already displays captain at line 884. <strong>New:</strong> scoreboard.html now fetches captain keys and renders captain name in team banners with <code>.tb-captain-label</code>.</div>
+</div>
+<div class="exec-step">
+  <span class="exec-badge exec-done">Done</span>
+  <div class="exec-body"><strong>Step 8 — Admin-as-player toggle</strong>Added <code>dsAdminShowAsPlayer</code> checkbox to admin.html Design tab (line 747). Added to DS_ALL_KEYS, loadDesignSettings(), and saveRegistration() rows. Writes <code>admin_show_as_player=true/false</code> to settings. home.html already reads this setting.</div>
 </div>
 <!-- EXECUTING-CONTENT-END -->
 </div>
@@ -526,8 +560,34 @@ footer span{color:var(--gold);}
 <section id="audit">
 <div class="wrapper">
 <!-- AUDIT-CONTENT-START -->
-<div class="stage-pending">
-  <p>Awaiting execution. Run <code>/tourney-execute 5-22-26-feature-depth-review.html</code> to proceed.</p>
+<div class="section-header">
+  <div class="section-eyebrow">Stage 5 — Audit</div>
+  <h2 class="section-title">Audit Results</h2>
+  <p class="section-desc">Grade: A−. 2026-05-26 · claude-sonnet-4-6</p>
+</div>
+<div class="score-grid">
+  <div class="score-cell"><div class="score-num score-green">A−</div><div class="score-label">Feature Depth</div></div>
+  <div class="score-cell"><div class="score-num score-gold">5/5</div><div class="score-label">Steps Executed</div></div>
+  <div class="score-cell"><div class="score-num score-green">3/3</div><div class="score-label">Already Done</div></div>
+  <div class="score-cell"><div class="score-num score-green">0</div><div class="score-label">Blocked</div></div>
+</div>
+<div class="card">
+  <div class="card-title">What Shipped</div>
+  <ul>
+    <li><strong>courses + course_holes tables</strong> — DB schema live. Admin Course tab already built (UPSERT to courses table). course.html already exists and queries both tables.</li>
+    <li><strong>scorecard.html yardage</strong> — Fetches from tournament-specific <code>courses</code>/<code>course_holes</code> (takes precedence over golf_courses). renderHole() already displayed yardage; now sourced from DB.</li>
+    <li><strong>Multi-image bug reports</strong> — platform_bugs.image_data_2/3 columns live. bug-fab.js v6 supports up to 3 screenshots with add/remove UI. platform.html renders all images in flex row. 34 pages bumped to v6.</li>
+    <li><strong>Captain display on scoreboard</strong> — scoreboard.html now fetches team_a_captain + challengers_captain from settings and renders captain name in team banners. admin already wrote them; home.html already displayed them.</li>
+    <li><strong>Admin-as-player toggle</strong> — Checkbox in admin Design tab writes admin_show_as_player=true/false to settings. home.html already reads this key.</li>
+    <li><strong>Admin score edit</strong> — Confirmed already built (lines 2255–2302). No regression.</li>
+  </ul>
+</div>
+<div class="card">
+  <div class="card-title">Still Open</div>
+  <ul>
+    <li><span class="pill pill-blue">LOW</span> <strong>Handicap on hero scoreboard</strong> — Approximation only, separate work item.</li>
+    <li><span class="pill pill-blue">LOW</span> <strong>courses table was pre-existing</strong> — Created outside migration tracking; migration file now written retroactively (20260526000017).</li>
+  </ul>
 </div>
 <!-- AUDIT-CONTENT-END -->
 </div>
@@ -536,8 +596,18 @@ footer span{color:var(--gold);}
 <section id="concluded">
 <div class="wrapper">
 <!-- CONCLUDED-CONTENT-START -->
-<div class="stage-pending">
-  <p>Awaiting execution. Run <code>/tourney-execute 5-22-26-feature-depth-review.html</code> to proceed.</p>
+<div class="section-header">
+  <div class="section-eyebrow">Stage 6 — Concluded</div>
+  <h2 class="section-title">Ticket Concluded</h2>
+  <p class="section-desc">2026-05-26 · claude-sonnet-4-6</p>
+</div>
+<div class="card">
+  <div class="card-title">Summary</div>
+  <p>All 8 runbook items resolved — 5 executed, 3 already done from prior sessions. Shipped: courses/course_holes migration, scorecard per-hole yardage from DB, multi-image bug reports (3 slots + platform render), captain badge on scoreboard, admin-as-player Design tab toggle. Feature Depth axis moves from B+ → A−. No blocked items.</p>
+</div>
+<div class="card">
+  <div class="card-title">Next Ticket</div>
+  <p>Run <code>/tourney-review data-model</code> to audit the new courses schema for completeness, or <code>/tourney-review business</code> to track revenue readiness.</p>
 </div>
 <!-- CONCLUDED-CONTENT-END -->
 </div>

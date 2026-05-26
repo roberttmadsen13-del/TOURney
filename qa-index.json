@@ -7,15 +7,16 @@
     {
       "id": "review-feature-depth-2026-05-22",
       "category": "review",
-      "stage": "executing",
+      "stage": "concluded",
       "title": "Feature Depth Review · May 22, 2026",
-      "summary": "Dedicated feature-depth audit. Grade B+ (down from A-). Critical: course.html missing from repo root, no courses/course_holes DB schema. bug-fab single-image only. Captain settings keys exist but no admin write path. 8-step runbook: courses migration, admin Course tab, course.html, scorecard yardage, multi-image bug-fab, admin score edit, captain UI, admin-as-player toggle.",
+      "summary": "Execute grade A−. Shipped: courses/course_holes migration, scorecard yardage from DB, multi-image bug-fab (3 slots, v6, 34 pages), captain on scoreboard, admin-as-player toggle. 3 steps already done from prior work. Feature Depth B+ → A−. Zero blocked.",
       "date": "2026-05-22",
+      "updated": "2026-05-26",
       "author": "claude-sonnet-4-6",
       "url": "/platform/5-22-26-feature-depth-review",
       "file": "5-22-26-feature-depth-review.html",
       "tags": ["review", "feature-depth"],
-      "status": "open"
+      "status": "concluded"
     },
     {
       "id": "consolidation-2026-05-22",
