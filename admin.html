@@ -111,7 +111,7 @@ a{color:inherit;text-decoration:none;}
 .table-wrap{overflow-x:auto;}
 table{width:100%;border-collapse:collapse;}
 thead tr{background:rgba(192,144,48,0.08);border-bottom:1px solid var(--border);}
-th{padding:0.7rem 0.9rem;text-align:left;font-family:'DM Mono',monospace;font-size:0.48rem;letter-spacing:0.25em;text-transform:uppercase;color:var(--muted);font-weight:400;white-space:nowrap;}
+th{padding:0.7rem 0.9rem;text-align:left;font-family:'DM Mono',monospace;font-size:0.65rem;letter-spacing:0.25em;text-transform:uppercase;color:var(--muted);font-weight:400;white-space:nowrap;}
 tbody tr{border-bottom:1px solid rgba(26,16,8,0.08);transition:background 0.15s;}
 tbody tr:hover{background:rgba(192,144,48,0.06);}
 td{padding:0.8rem 0.9rem;font-size:0.8rem;color:var(--ink);vertical-align:top;}
@@ -165,6 +165,15 @@ td.email a:hover{color:var(--gold);}
 .format-select option{background:var(--bg);}
 .save-formats-btn{margin-top:1.2rem;padding:0.75rem 2rem;background:var(--gold);color:var(--ink);border:none;font-family:'Barlow Condensed',sans-serif;font-size:0.72rem;font-weight:700;letter-spacing:0.22em;text-transform:uppercase;cursor:pointer;transition:background 0.2s;}
 .save-formats-btn:hover{background:var(--gold-l);}
+
+/* SETUP TAB — accordion + dirty guard */
+.section .section-header{cursor:pointer;user-select:none;display:flex;align-items:center;justify-content:space-between;}
+.section-toggle{font-family:'DM Mono',monospace;font-size:0.55rem;color:var(--muted);transition:transform 0.2s;display:inline-block;margin-left:0.5rem;}
+.section.ds-collapsed .section-toggle{transform:rotate(-90deg);}
+.section.ds-collapsed > *:not(.section-header){display:none !important;}
+.section-dirty-dot{width:6px;height:6px;border-radius:50%;background:var(--gold);display:none;flex-shrink:0;margin-left:0.5rem;}
+.section.ds-dirty .section-dirty-dot{display:inline-block;}
+.section.ds-dirty .section-title{color:var(--gold);}
 
 /* EDIT MODAL */
 .edit-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:500;display:flex;align-items:center;justify-content:center;}
@@ -288,31 +297,31 @@ td.email a:hover{color:var(--gold);}
     </div>
 
     <!-- TAB BAR -->
-    <div style="display:flex;gap:0;border-bottom:1px solid var(--border);margin-bottom:2rem;">
-      <button class="admin-tab active" data-tab="command" onclick="switchAdminTab('command')">Command Center</button>
-      <button class="admin-tab" data-tab="homepage" onclick="switchAdminTab('homepage')">Design<span class="tab-lock-icon" id="lockDesign" style="display:none">🔒</span></button>
-      <button class="admin-tab" data-tab="access" onclick="switchAdminTab('access')">Access<span class="tab-lock-icon" id="lockAccess" style="display:none">🔒</span></button>
-      <button class="admin-tab" data-tab="course" onclick="switchAdminTab('course')">Course</button>
+    <div role="tablist" aria-label="Admin sections" style="display:flex;gap:0;border-bottom:1px solid var(--border);margin-bottom:2rem;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;">
+      <button id="tab-command" role="tab" aria-selected="true" aria-controls="tabCommand" class="admin-tab active" data-tab="command" onclick="switchAdminTab('command')">Command Center</button>
+      <button id="tab-homepage" role="tab" aria-selected="false" aria-controls="tabHomepage" class="admin-tab" data-tab="homepage" onclick="switchAdminTab('homepage')">Setup<span class="tab-lock-icon" id="lockDesign" style="display:none">🔒</span></button>
+      <button id="tab-access" role="tab" aria-selected="false" aria-controls="tabAccess" class="admin-tab" data-tab="access" onclick="switchAdminTab('access')">Access<span class="tab-lock-icon" id="lockAccess" style="display:none">🔒</span></button>
+      <button id="tab-course" role="tab" aria-selected="false" aria-controls="tabCourse" class="admin-tab" data-tab="course" onclick="switchAdminTab('course')">Course</button>
     </div>
 
     <!-- Upgrade modal -->
     <div class="upgrade-backdrop" id="upgradeModal" onclick="closeUpgradeModal()">
       <div class="upgrade-card" onclick="event.stopPropagation()">
         <h2>Pro Feature 🔒</h2>
-        <p>The <strong id="upgradeFeatureName">Design</strong> tab is available on the <strong>TOURney Pro</strong> plan. Upgrade to unlock custom branding, access controls, and more.</p>
+        <p>The <strong id="upgradeFeatureName">Setup</strong> tab is available on the <strong>TOURney Pro</strong> plan. Upgrade to unlock custom branding, access controls, and more.</p>
         <a href="/player-upgrade" class="upgrade-cta">Upgrade to Pro</a><br>
         <button class="upgrade-dismiss" onclick="closeUpgradeModal()">Maybe later</button>
       </div>
     </div>
 
     <!-- ═══ TAB: COMMAND CENTER ═══ -->
-    <div id="tabCommand">
+    <div id="tabCommand" role="tabpanel" aria-labelledby="tab-command">
 
     <!-- STATS -->
     <div class="stats-row" id="statsRow">
       <div class="stat-card"><div class="stat-val" id="sTotal">—</div><div class="stat-label">Registered</div></div>
       <div class="stat-card"><div class="stat-val" id="sAccounts">—</div><div class="stat-label">Accounts</div></div>
-      <div class="stat-card"><div class="stat-val" id="sHats">—</div><div class="stat-label">Hat Orders</div></div>
+      <div class="stat-card" id="hatStatCard" style="display:none;"><div class="stat-val" id="sHats">—</div><div class="stat-label">Hat Orders</div></div>
       <div class="stat-card"><div class="stat-val" id="sTeamA">—</div><div class="stat-label" id="statLabelA">Team A</div></div>
       <div class="stat-card"><div class="stat-val" id="sTeamB">—</div><div class="stat-label" id="statLabelB">Team B</div></div>
     </div>
@@ -469,7 +478,7 @@ td.email a:hover{color:var(--gold);}
         <div class="section-title">All Scores</div>
         <button class="action-btn" style="padding:0.45rem 1rem;font-size:0.6rem;letter-spacing:0.12em;" onclick="loadScoresTable()">Refresh</button>
       </div>
-      <div id="scoresTableWrap"><div style="color:var(--muted);font-size:0.8rem;padding:0.5rem 0;">Select Refresh to load scores.</div></div>
+      <div id="scoresTableWrap"><div style="color:var(--muted);font-size:0.72rem;font-family:'DM Mono',monospace;letter-spacing:0.08em;padding:0.5rem 0;">Loading scores…</div></div>
     </div>
 
     <!-- SCORE EDITOR -->
@@ -576,7 +585,7 @@ td.email a:hover{color:var(--gold);}
     </div><!-- /tabCommand -->
 
     <!-- ═══ TAB: DESIGN ═══ -->
-    <div id="tabHomepage" style="display:none;">
+    <div id="tabHomepage" role="tabpanel" aria-labelledby="tab-homepage" style="display:none;">
 
     <!-- TOURNAMENT IDENTITY -->
     <div class="section">
@@ -624,6 +633,7 @@ td.email a:hover{color:var(--gold);}
         <div style="font-family:'DM Mono',monospace;font-size:0.46rem;letter-spacing:0.28em;text-transform:uppercase;color:var(--muted);margin-bottom:0.5rem;">Preview</div>
         <div id="colorPreviewStrip" style="border-radius:4px;overflow:hidden;height:40px;display:flex;margin-bottom:1.25rem;border:1px solid var(--border);"></div>
         <button class="save-formats-btn" onclick="saveColors()">Save Colors</button>
+        <div id="contrastReport" style="margin-top:0.75rem;font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.06em;line-height:1.8;"></div>
       </div>
     </div>
 
@@ -729,7 +739,7 @@ td.email a:hover{color:var(--gold);}
             </select>
           </div>
           <div class="fg"><label>Hat Merch</label>
-            <select id="dsShowHat" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;width:100%;-webkit-appearance:none;">
+            <select id="dsShowHat" onchange="const h=document.getElementById('hatStatCard');if(h)h.style.display=this.value==='true'?'':'none';" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;width:100%;-webkit-appearance:none;">
               <option value="true">Show</option><option value="false">Hide</option>
             </select>
           </div>
@@ -745,6 +755,12 @@ td.email a:hover{color:var(--gold);}
           <div class="fg ds-team-extra" style="display:none"><label>Team H Name</label><input type="text" id="dsTeamHName" placeholder="Team Eight" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;"></div>
           <div class="fg"><label>Team A Captain</label><input type="text" id="dsTeamACaptain" placeholder="Captain name" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;"></div>
           <div class="fg"><label>Team B Captain</label><input type="text" id="dsTeamBCaptain" placeholder="Captain name" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;"></div>
+          <div class="fg ds-team-extra" style="display:none"><label>Team C Captain</label><input type="text" id="dsTeamCCaptain" placeholder="Captain name" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;"></div>
+          <div class="fg ds-team-extra" style="display:none"><label>Team D Captain</label><input type="text" id="dsTeamDCaptain" placeholder="Captain name" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;"></div>
+          <div class="fg ds-team-extra" style="display:none"><label>Team E Captain</label><input type="text" id="dsTeamECaptain" placeholder="Captain name" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;"></div>
+          <div class="fg ds-team-extra" style="display:none"><label>Team F Captain</label><input type="text" id="dsTeamFCaptain" placeholder="Captain name" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;"></div>
+          <div class="fg ds-team-extra" style="display:none"><label>Team G Captain</label><input type="text" id="dsTeamGCaptain" placeholder="Captain name" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;"></div>
+          <div class="fg ds-team-extra" style="display:none"><label>Team H Captain</label><input type="text" id="dsTeamHCaptain" placeholder="Captain name" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;"></div>
           <div class="fg" style="margin-top:0.4rem;"><label style="display:flex;align-items:center;gap:0.6rem;cursor:pointer;font-size:0.52rem;letter-spacing:0.22em;text-transform:uppercase;color:rgba(26,16,8,0.55);font-weight:400;"><input type="checkbox" id="dsAdminShowAsPlayer" checked style="width:16px;height:16px;accent-color:var(--gold);flex-shrink:0;">Include me as a player in the registered field</label></div>
         </div>
         <button class="action-btn" style="padding:0.55rem 1.4rem;font-size:0.6rem;letter-spacing:0.15em;background:var(--gold);color:var(--ink);border-color:var(--gold);font-weight:700;margin-top:0.4rem;" onclick="saveRegistration()">Save Registration</button>
@@ -794,7 +810,7 @@ td.email a:hover{color:var(--gold);}
     </div><!-- /tabHomepage -->
 
     <!-- ═══ TAB: ACCESS ═══ -->
-    <div id="tabAccess" style="display:none;">
+    <div id="tabAccess" role="tabpanel" aria-labelledby="tab-access" style="display:none;">
       <div class="design-section">
         <div class="ds-header">
           <div class="ds-title">Tournament Admins</div>
@@ -813,7 +829,7 @@ td.email a:hover{color:var(--gold);}
     </div><!-- /tabAccess -->
 
     <!-- ═══ TAB: COURSE ═══ -->
-    <div id="tabCourse" style="display:none;">
+    <div id="tabCourse" role="tabpanel" aria-labelledby="tab-course" style="display:none;">
       <div class="design-section">
         <div class="ds-header">
           <div class="ds-title">Course Setup</div>
@@ -849,6 +865,19 @@ td.email a:hover{color:var(--gold);}
     </div><!-- /tabCourse -->
 
   </div><!-- /main -->
+
+  <div id="confirmModal" role="dialog" aria-modal="true" aria-labelledby="confirmTitle" style="display:none;position:fixed;inset:0;background:rgba(10,6,2,0.75);z-index:10000;align-items:center;justify-content:center;">
+    <div style="background:var(--surface,#1a1008);border:1px solid var(--border);border-radius:10px;padding:2rem;max-width:360px;width:90%;box-shadow:0 8px 32px rgba(0,0,0,0.5);">
+      <div id="confirmTitle" style="font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:1.1rem;letter-spacing:0.04em;text-transform:uppercase;color:var(--cream);margin-bottom:0.5rem;"></div>
+      <div id="confirmBody" style="font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);line-height:1.5;margin-bottom:1.5rem;"></div>
+      <div style="display:flex;gap:0.75rem;justify-content:flex-end;">
+        <button onclick="_confirmResolve(false)" style="padding:0.5rem 1.1rem;background:transparent;border:1px solid var(--border);border-radius:6px;color:var(--muted);font-family:'DM Mono',monospace;font-size:0.65rem;letter-spacing:0.08em;cursor:pointer;">Cancel</button>
+        <button id="confirmOkBtn" onclick="_confirmResolve(true)" style="padding:0.5rem 1.1rem;background:#c0392b;border:none;border-radius:6px;color:#fff;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:0.82rem;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;">Confirm</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="adminToast" role="status" aria-live="polite" aria-atomic="true" style="position:fixed;bottom:1.5rem;right:1.5rem;background:var(--ink);color:var(--cream);font-family:'DM Mono',monospace;font-size:0.65rem;letter-spacing:0.08em;padding:0.65rem 1.1rem;border-radius:6px;border-left:3px solid var(--gold);box-shadow:0 4px 16px rgba(0,0,0,0.35);opacity:0;transform:translateY(8px);transition:opacity 0.2s,transform 0.2s;pointer-events:none;z-index:9999;max-width:320px;"></div>
 </div><!-- /adminUI -->
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.105.3/dist/umd/supabase.min.js" integrity="sha384-iWpUQPQzWsFiosLgsS8o+e6E8y3Gm+EW2m/vAAo7A2H3fuc4KOKEx+5CAord2H2z" crossorigin="anonymous"></script>
@@ -957,7 +986,7 @@ function applyTierGates(plan) {
   const tc = window.tourneyTier;
   if (!tc) return;
   const tabs = [
-    { id: 'lockDesign', feature: 'design',  label: 'Design' },
+    { id: 'lockDesign', feature: 'design',  label: 'Setup' },
     { id: 'lockAccess', feature: 'access',  label: 'Access' },
   ];
   tabs.forEach(({ id, feature, label }) => {
@@ -1008,6 +1037,7 @@ async function loadAll() {
   buildParEditor();
   renderTeamUI();
   renderFormatSection();
+  loadScoresTable();
 }
 
 async function loadTeamNames() {
@@ -2345,8 +2375,8 @@ async function createNextEvent() {
 // ── DANGER ZONE ──────────────────────────────────────────────────
 async function clearRoundAll(round) {
   const label = round.replace('day','Day ');
-  if (!confirm(`Delete ALL ${label} scores for every player? This cannot be undone.`)) return;
-  if (!confirm(`Really delete ALL ${label} scores?`)) return;
+  const confirmed = await confirmAction(`Clear all ${label} scores?`, `This will permanently delete every player's ${label} scores and cannot be undone.`, 'Clear Scores');
+  if (!confirmed) return;
   const { error } = await sb.from('scores').delete().eq('tournament_id', _tid).eq('round', round);
   if (error) { showToast('Error: ' + error.message); return; }
   // Clear localStorage scorecard data for this round (all players)
@@ -2462,22 +2492,30 @@ async function clearLogo() {
 }
 
 // ── ADMIN TABS ───────────────────────────────────────────────────
-function switchAdminTab(tab) {
+async function switchAdminTab(tab) {
   const targetBtn = document.querySelector(`.admin-tab[data-tab="${tab}"]`);
   if (targetBtn?.classList.contains('locked')) {
     openUpgradeModal(targetBtn.dataset.lockedLabel || tab);
     return;
   }
+  const currentActive = document.querySelector('.admin-tab.active')?.dataset?.tab;
+  if (currentActive === 'homepage' && tab !== 'homepage' && hasDirtySetupSections()) {
+    const go = await confirmAction('Unsaved changes', 'You have unsaved changes in the Setup tab. Leave anyway?', 'Leave');
+    if (!go) return;
+  }
+  if (tab === 'homepage') initSetupSections();
   document.getElementById('tabCommand').style.display = tab === 'command' ? 'block' : 'none';
   document.getElementById('tabHomepage').style.display = tab === 'homepage' ? 'block' : 'none';
   document.getElementById('tabAccess').style.display   = tab === 'access'   ? 'block' : 'none';
   document.getElementById('tabCourse').style.display   = tab === 'course'   ? 'block' : 'none';
   document.querySelectorAll('.admin-tab').forEach(b => {
-    b.classList.toggle('active', b.dataset.tab === tab);
+    const active = b.dataset.tab === tab;
+    b.classList.toggle('active', active);
+    b.setAttribute('aria-selected', active ? 'true' : 'false');
   });
   const title = document.getElementById('adminPageTitle');
   if (title) {
-    const labels = { command: 'Command <em>Center</em>', homepage: '<em>Design</em>', access: '<em>Access</em>', course: '<em>Course</em>' };
+    const labels = { command: 'Command <em>Center</em>', homepage: '<em>Setup</em>', access: '<em>Access</em>', course: '<em>Course</em>' };
     title.innerHTML = labels[tab] || tab;
   }
   if (tab === 'access') loadAdmins();
@@ -2600,6 +2638,12 @@ const DS_FIELD_MAP = {
   team_b_name:       'dsTeamBName',
   team_a_captain:    'dsTeamACaptain',
   challengers_captain: 'dsTeamBCaptain',
+  team_c_captain:    'dsTeamCCaptain',
+  team_d_captain:    'dsTeamDCaptain',
+  team_e_captain:    'dsTeamECaptain',
+  team_f_captain:    'dsTeamFCaptain',
+  team_g_captain:    'dsTeamGCaptain',
+  team_h_captain:    'dsTeamHCaptain',
   team_c_name:       'dsTeamCName',
   team_d_name:       'dsTeamDName',
   team_e_name:       'dsTeamEName',
@@ -2644,6 +2688,8 @@ async function loadDesignSettings() {
   onColorPick();
   const adminShowCb = document.getElementById('dsAdminShowAsPlayer');
   if (adminShowCb) adminShowCb.checked = map.admin_show_as_player !== 'false';
+  const hatCard = document.getElementById('hatStatCard');
+  if (hatCard) hatCard.style.display = map.reg_show_hat === 'true' ? '' : 'none';
 }
 
 function renderPhotoPreview(id, url) {
@@ -2672,6 +2718,37 @@ async function saveIdentity() {
   showToast('Identity saved.');
 }
 
+function _hexToRgb(hex) {
+  const h = hex.replace('#','');
+  return [parseInt(h.slice(0,2),16), parseInt(h.slice(2,4),16), parseInt(h.slice(4,6),16)];
+}
+function _luminance([r,g,b]) {
+  return [r,g,b].map(c => { const s = c/255; return s <= 0.03928 ? s/12.92 : Math.pow((s+0.055)/1.055, 2.4); })
+    .reduce((sum,v,i) => sum + v * [0.2126,0.7152,0.0722][i], 0);
+}
+function _contrast(hex1, hex2) {
+  const [l1,l2] = [hex1,hex2].map(h => _luminance(_hexToRgb(h))).sort((a,b) => b-a);
+  return (l1+0.05)/(l2+0.05);
+}
+function updateContrastReport() {
+  const report = document.getElementById('contrastReport');
+  if (!report) return;
+  const primary = document.getElementById('dsColorGold')?.value || '#c09030';
+  const ink     = document.getElementById('dsColorInk')?.value  || '#1a1008';
+  const bg      = document.getElementById('dsColorBg')?.value   || '#f5ede0';
+  const pairs = [
+    { label: 'Accent on BG',  fg: primary, bg: bg },
+    { label: 'Ink on BG',     fg: ink,     bg: bg },
+    { label: 'Accent on Ink', fg: primary, bg: ink },
+  ];
+  report.innerHTML = pairs.map(p => {
+    const r = _contrast(p.fg, p.bg);
+    const aa = r >= 4.5, aaa = r >= 7;
+    const pill = aaa ? `<span style="color:#2a7a20">AAA ✓</span>` : aa ? `<span style="color:#c09030">AA ✓</span>` : `<span style="color:#c0392b">FAIL ✗ (${r.toFixed(1)}:1)</span>`;
+    return `${p.label}: ${pill}`;
+  }).join(' &nbsp;·&nbsp; ');
+}
+
 function onColorPick() {
   const primary = document.getElementById('dsColorGold')?.value || '#c09030';
   const ink     = document.getElementById('dsColorInk')?.value  || '#1a1008';
@@ -2698,6 +2775,7 @@ function onColorPick() {
       <span style="font-family:'DM Mono',monospace;font-size:0.38rem;letter-spacing:0.08em;text-transform:uppercase;color:rgba(255,255,255,0.7);overflow:hidden;white-space:nowrap;">${s.label}</span>
     </div>`
   ).join('');
+  updateContrastReport();
 }
 
 async function saveColors() {
@@ -2841,6 +2919,10 @@ async function saveRegistration() {
       key: `team_${l}_name`,
       value: document.getElementById(`dsTeam${l.toUpperCase()}Name`)?.value || '',
     })).filter((r, i) => (i + 3) <= _teamCount && r.value !== ''),
+    ...['c','d','e','f','g','h'].map((l, i) => ({
+      key: `team_${l}_captain`,
+      value: document.getElementById(`dsTeam${l.toUpperCase()}Captain`)?.value || '',
+    })).filter((r, i) => (i + 3) <= _teamCount && r.value !== ''),
   ].map(r => ({ ...r, tournament_id: _tid, updated_at: new Date().toISOString() }));
   await sb.from('settings').upsert(rows, { onConflict: 'tournament_id,key' });
   showToast('Registration saved.');
@@ -2865,6 +2947,85 @@ async function clearPhoto(previewId, settingKey) {
   const el = document.getElementById(previewId);
   if (el) el.textContent = 'No photo';
   showToast('Photo cleared.');
+}
+
+// ── SETUP TAB: ACCORDION + DIRTY GUARD ──────────────────────────
+let _setupInitialized = false;
+function initSetupSections() {
+  if (_setupInitialized) return;
+  _setupInitialized = true;
+  const tab = document.getElementById('tabHomepage');
+  if (!tab) return;
+  tab.querySelectorAll('.section').forEach((section, i) => {
+    const header = section.querySelector('.section-header');
+    if (!header) return;
+    const dot = document.createElement('span');
+    dot.className = 'section-dirty-dot';
+    dot.setAttribute('aria-hidden', 'true');
+    const toggle = document.createElement('span');
+    toggle.className = 'section-toggle';
+    toggle.textContent = '▾';
+    const titleWrap = document.createElement('div');
+    titleWrap.style.cssText = 'display:flex;align-items:center;gap:0;flex:1;';
+    const titleEl = header.querySelector('.section-title');
+    if (titleEl) { titleEl.parentNode.insertBefore(titleWrap, titleEl); titleWrap.appendChild(titleEl); titleWrap.appendChild(dot); }
+    header.appendChild(toggle);
+    header.addEventListener('click', (e) => {
+      if (e.target.closest('button, a, input, select')) return;
+      section.classList.toggle('ds-collapsed');
+      toggle.textContent = section.classList.contains('ds-collapsed') ? '▾' : '▴';
+    });
+  });
+  tab.addEventListener('input', (e) => {
+    const section = e.target.closest('.section');
+    if (section) section.classList.add('ds-dirty');
+  }, true);
+  tab.addEventListener('change', (e) => {
+    const section = e.target.closest('.section');
+    if (section) section.classList.add('ds-dirty');
+  }, true);
+  tab.querySelectorAll('button[onclick*="save"], button[onclick*="Save"], button[onclick*="add"]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const section = btn.closest('.section');
+      if (section) section.classList.remove('ds-dirty');
+    }, true);
+  });
+}
+
+function hasDirtySetupSections() {
+  return !!document.querySelector('#tabHomepage .section.ds-dirty');
+}
+
+// ── CONFIRM MODAL ────────────────────────────────────────────────
+let _confirmResolve = () => {};
+function confirmAction(title, body, okLabel = 'Confirm') {
+  return new Promise(resolve => {
+    _confirmResolve = (val) => {
+      document.getElementById('confirmModal').style.display = 'none';
+      resolve(val);
+    };
+    document.getElementById('confirmTitle').textContent = title;
+    document.getElementById('confirmBody').textContent = body;
+    document.getElementById('confirmOkBtn').textContent = okLabel;
+    const modal = document.getElementById('confirmModal');
+    modal.style.display = 'flex';
+    document.getElementById('confirmOkBtn').focus();
+  });
+}
+
+// ── TOAST ────────────────────────────────────────────────────────
+let _toastTimer = null;
+function showToast(msg) {
+  const el = document.getElementById('adminToast');
+  if (!el) return;
+  el.textContent = msg;
+  el.style.opacity = '1';
+  el.style.transform = 'translateY(0)';
+  clearTimeout(_toastTimer);
+  _toastTimer = setTimeout(() => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(8px)';
+  }, 3000);
 }
 
 // ── INIT ──────────────────────────────────────────────────────────

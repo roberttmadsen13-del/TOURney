@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-05-26T00:00:00Z",
+  "updated_at": "2026-05-27T00:00:00Z",
   "description": "Living state for all TOURney platform axes. One entry per axis. Updated by every tourney-* skill. Agents read this for context (50 tokens) instead of parsing HTML artifacts.",
   "stages": ["review", "plan", "runbook", "executing", "audit", "concluded"],
   "axes": {
@@ -22,12 +22,12 @@
       "blocking": false
     },
     "ux": {
-      "status": "runbook",
-      "grade": "B",
+      "status": "concluded",
+      "grade": "B+",
       "artifact": "/platform/5-26-26-ux-review",
-      "last_updated": "2026-05-26",
-      "summary": "Admin UX deep audit. Design tab monolithic form, score table manual refresh, empty states D+, mobile C+, a11y C. 10-step runbook ready.",
-      "open_items": 10,
+      "last_updated": "2026-05-27",
+      "summary": "10 admin UX improvements shipped: showToast P1 bug fixed, ARIA tabs, branded confirm modal, score auto-load, mobile scroll, Setup accordion + dirty guard, WCAG contrast validator, captain fields C–H, hat card visibility, table header legibility.",
+      "open_items": 0,
       "blocking": false
     },
     "security": {

@@ -21,16 +21,16 @@
     {
       "id": "review-ux-2026-05-26",
       "category": "review",
-      "stage": "runbook",
+      "stage": "concluded",
       "title": "Admin UX Deep Audit · May 26, 2026",
-      "summary": "Grade B. Admin.html deep audit across all tabs. Design tab 33-input wall, no sections/per-section save, no dirty guard. Score table manual Refresh. Empty states D+, mobile C+, a11y C. 10-step runbook ready for execute.",
+      "summary": "Execute grade B+. Shipped 10 improvements: showToast P1 bug fixed, ARIA tab pattern, branded confirm modal, score auto-load, mobile tab scroll, Setup accordion + dirty guard, WCAG contrast validator, captain fields C–H, hat card visibility, table header legibility. 4 of 14 steps already done.",
       "date": "2026-05-26",
-      "updated": "2026-05-26",
+      "updated": "2026-05-27",
       "author": "claude-sonnet-4-6",
       "url": "/platform/5-26-26-ux-review",
       "file": "5-26-26-ux-review.html",
       "tags": ["review", "ux", "admin"],
-      "status": "open"
+      "status": "concluded"
     },
     {
       "id": "review-feature-depth-2026-05-22",

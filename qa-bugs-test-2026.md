@@ -336,3 +336,6 @@ GROUP BY t.slug;
 <!-- 5-21-26-business-review execute audit clean — 2026-05-22 -->
 
 <!-- 5-22-26-feature-depth-review execute audit clean — 2026-05-26 -->
+
+### 2026-05-27 — 5-26-26-ux-review execute audit
+- [P1] showToast undefined — 25 silent save failures (admin.html) — added #adminToast + showToast() function. Status: fixed

@@ -164,6 +164,14 @@ footer a:hover{color:var(--gold);}
       <div class="bug-item fixed"><div class="bug-title"><strong>SW cache version not auto-bumped on agent deploys</strong> — every agent push risked stale PWA cache for installed users. Fixed: added <code>bump-sw-cache</code> job to ci.yml that fires on push to main (with bot-push guard to prevent loops). Auto-increments CACHE key using Unix timestamp on every deploy.</div><div class="bug-meta">.github/workflows/ci.yml · commit 14bbdbb · 2026-05-20</div></div>
     </div>
 
+    <div class="session-hdr" onclick="toggleSession('s27a')">
+      <span class="session-title">2026-05-27 — UX execute audit (5-26-26-ux-review) <span class="pill pill-yellow">1 Fixed</span></span>
+      <span class="session-count">1 bug ▾</span>
+    </div>
+    <div class="session-body collapsed" id="s27a">
+      <div class="bug-item fixed"><div class="bug-title"><strong>admin.html: showToast undefined — 25 silent save failures</strong> — <code>showToast()</code> called on every save/action in admin.html but never defined. Every successful DB write showed no feedback; errors also silently swallowed. Fixed: added <code>#adminToast</code> aria-live div + <code>showToast()</code> function with branded slide-up toast.</div><div class="bug-meta">admin.html · 5-26-26-ux-review execute · 2026-05-27</div></div>
+    </div>
+
     <div class="session-hdr" onclick="toggleSession('s22')">
       <span class="session-title">2026-05-22 — Consolidation execute audit <span class="pill pill-green">Clean</span></span>
       <span class="session-count">0 bugs â–¾</span>
