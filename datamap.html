@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TOURney &#x2014; Schema Data Map</title>
+<style>
+:root{
+  --gold:#c09030;--gold-light:#d4a840;--gold-dim:rgba(192,144,48,0.15);
+  --bg:#0d0a05;--surface:#151009;--card:#1c140a;--border:rgba(192,144,48,0.2);
+  --muted:#7a6a54;--text:#e8dcc8;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;overflow:hidden;}
+body{font-family:-apple-system,'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);}
+
+nav{position:fixed;top:0;left:0;right:0;z-index:300;background:rgba(13,10,5,0.97);border-bottom:1px solid var(--border);padding:0 1.2rem;height:38px;display:flex;align-items:center;gap:0.8rem;}
+.nav-brand{color:var(--gold);font-weight:700;font-size:0.88rem;letter-spacing:0.05em;}
+.nav-sep{color:var(--muted);}
+.nav-title{color:var(--text);font-size:0.82rem;}
+.nav-back{margin-left:auto;color:var(--muted);text-decoration:none;font-size:0.74rem;padding:0.22rem 0.6rem;border:1px solid var(--border);border-radius:4px;transition:all 0.15s;}
+.nav-back:hover{color:var(--gold);border-color:var(--gold);}
+
+#controls{position:fixed;top:38px;left:0;right:0;z-index:290;background:rgba(21,16,9,0.97);border-bottom:1px solid var(--border);padding:0 1.2rem;height:38px;display:flex;align-items:center;gap:0.8rem;}
+.stat-pills{display:flex;gap:0.4rem;flex-shrink:0;}
+.stat-pill{font-size:0.67rem;padding:0.14rem 0.5rem;background:var(--gold-dim);border:1px solid var(--border);border-radius:20px;color:var(--gold);white-space:nowrap;}
+.sep{width:1px;height:18px;background:var(--border);flex-shrink:0;}
+.gf-btns{display:flex;gap:0.25rem;}
+.gf-btn{font-size:0.67rem;padding:0.14rem 0.5rem;border:1px solid transparent;border-radius:20px;cursor:pointer;background:transparent;color:var(--muted);transition:all 0.15s;white-space:nowrap;}
+.gf-btn:hover{color:var(--text);}
+.gf-btn.on{color:#fff;}
+.gf-btn[data-g=all].on{background:var(--gold-dim);border-color:var(--border);color:var(--gold);}
+.gf-btn[data-g=core].on{background:rgba(192,144,48,0.12);border-color:rgba(192,144,48,0.4);color:#e8c85a;}
+.gf-btn[data-g=identity].on{background:rgba(26,188,156,0.1);border-color:rgba(26,188,156,0.4);color:#4de8c8;}
+.gf-btn[data-g=players].on{background:rgba(41,128,185,0.12);border-color:rgba(41,128,185,0.4);color:#7ec8f0;}
+.gf-btn[data-g=scoring].on{background:rgba(230,126,34,0.12);border-color:rgba(230,126,34,0.4);color:#f0a050;}
+.gf-btn[data-g=courses].on{background:rgba(39,174,96,0.12);border-color:rgba(39,174,96,0.4);color:#60d880;}
+.gf-btn[data-g=engagement].on{background:rgba(142,68,173,0.12);border-color:rgba(142,68,173,0.4);color:#c088e8;}
+.gf-btn[data-g=platform].on{background:rgba(52,73,94,0.15);border-color:rgba(52,73,94,0.5);color:#8898a8;}
+.view-btns{margin-left:auto;display:flex;gap:0.25rem;}
+.vbtn{font-size:0.67rem;padding:0.14rem 0.5rem;border:1px solid var(--border);border-radius:4px;cursor:pointer;background:transparent;color:var(--muted);transition:all 0.15s;text-decoration:none;display:inline-block;}
+.vbtn:hover{color:var(--gold);border-color:var(--gold);}
+.vbtn.on{background:var(--gold-dim);border-color:var(--gold);color:var(--gold);}
+
+#map-wrap{position:fixed;top:76px;left:0;right:0;bottom:0;overflow:auto;cursor:grab;
+  background:var(--bg);
+  background-image:radial-gradient(rgba(192,144,48,0.05) 1px,transparent 1px);
+  background-size:24px 24px;}
+#map-wrap.grabbing{cursor:grabbing;}
+#map-inner{position:relative;width:1680px;height:1220px;transform-origin:0 0;}
+#map-svg{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;overflow:visible;}
+
+/* ── Cards ── */
+.tc{position:absolute;width:210px;background:var(--card);border-radius:7px;overflow:hidden;transition:box-shadow 0.15s;z-index:1;}
+.tc:hover{z-index:20;box-shadow:0 0 0 1px var(--gold),0 6px 24px rgba(0,0,0,0.6);}
+.tc[data-g=core]      {border:1px solid rgba(192,144,48,0.38);}
+.tc[data-g=identity]  {border:1px solid rgba(26,188,156,0.38);}
+.tc[data-g=players]   {border:1px solid rgba(41,128,185,0.38);}
+.tc[data-g=scoring]   {border:1px solid rgba(230,126,34,0.38);}
+.tc[data-g=courses]   {border:1px solid rgba(39,174,96,0.38);}
+.tc[data-g=engagement]{border:1px solid rgba(142,68,173,0.38);}
+.tc[data-g=platform]  {border:1px solid rgba(52,73,94,0.5);}
+.tc[data-g=external]  {border:1px dashed rgba(140,140,140,0.35);}
+.tc.dim{opacity:0.12;}
+.tc.dim:hover{opacity:1;}
+
+.tc-head{padding:0.38rem 0.55rem;display:flex;align-items:center;gap:0.3rem;border-bottom:1px solid rgba(255,255,255,0.05);}
+.tc[data-g=core]       .tc-head{background:rgba(192,144,48,0.1);}
+.tc[data-g=identity]   .tc-head{background:rgba(26,188,156,0.1);}
+.tc[data-g=players]    .tc-head{background:rgba(41,128,185,0.1);}
+.tc[data-g=scoring]    .tc-head{background:rgba(230,126,34,0.1);}
+.tc[data-g=courses]    .tc-head{background:rgba(39,174,96,0.1);}
+.tc[data-g=engagement] .tc-head{background:rgba(142,68,173,0.1);}
+.tc[data-g=platform]   .tc-head{background:rgba(52,73,94,0.12);}
+.tc[data-g=external]   .tc-head{background:rgba(140,140,140,0.08);}
+
+.tc-name{font-size:0.72rem;font-weight:700;color:#fff;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.tc-rls{font-size:0.56rem;padding:0.08rem 0.28rem;border-radius:3px;font-weight:700;flex-shrink:0;}
+.tc-rls.on{background:rgba(39,174,96,0.2);color:#5dc882;border:1px solid rgba(39,174,96,0.3);}
+.tc-rls.off{background:rgba(192,57,43,0.2);color:#e74c3c;border:1px solid rgba(192,57,43,0.3);}
+.tc-rows{font-size:0.6rem;color:var(--muted);flex-shrink:0;white-space:nowrap;}
+
+.tc-cols{padding:0.18rem 0;}
+.tc-col{display:flex;align-items:baseline;gap:0.25rem;padding:0.13rem 0.55rem;font-size:0.67rem;}
+.tc-col:hover{background:rgba(255,255,255,0.03);}
+.cn{color:var(--text);flex-shrink:0;white-space:nowrap;}
+.cn.pk{color:var(--gold);font-weight:700;}
+.cn.fk{color:#7ec8f0;}
+.ct{color:var(--muted);font-size:0.6rem;flex:1;text-align:right;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.cb{font-size:0.52rem;padding:0.04rem 0.2rem;border-radius:2px;flex-shrink:0;line-height:1.3;}
+.cb.pk{background:rgba(192,144,48,0.18);color:var(--gold);}
+.cb.fk{background:rgba(41,128,185,0.18);color:#7ec8f0;}
+.cb.uq{background:rgba(142,68,173,0.18);color:#c088e8;}
+.cb.ck{background:rgba(230,126,34,0.18);color:#f0a050;}
+.cb.nl{color:rgba(122,106,84,0.4);}
+.cb.cs{background:rgba(192,57,43,0.15);color:#e88;}
+
+.tc-extra{display:none;}
+.tc-extra.show{display:block;}
+.tc-more{padding:0.2rem 0.55rem;font-size:0.62rem;color:var(--muted);cursor:pointer;text-align:center;border-top:1px solid rgba(255,255,255,0.04);user-select:none;}
+.tc-more:hover{color:var(--gold);}
+
+/* ── Legend ── */
+#legend{position:fixed;bottom:0.7rem;right:0.8rem;z-index:300;display:flex;flex-direction:column;gap:0.25rem;align-items:flex-end;pointer-events:none;}
+.lg{display:flex;align-items:center;gap:0.35rem;font-size:0.62rem;color:var(--muted);background:rgba(13,10,5,0.85);padding:0.12rem 0.4rem;border-radius:3px;}
+.lg-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.lg-line{width:18px;height:0;flex-shrink:0;}
+</style>
+</head>
+<body>
+
+<nav>
+  <span class="nav-brand">TOURney</span>
+  <span class="nav-sep">/</span>
+  <span class="nav-title">Schema Data Map</span>
+  <a href="/platform" class="nav-back">&#x2190; Platform</a>
+</nav>
+
+<div id="controls">
+  <div class="stat-pills">
+    <span class="stat-pill">22 tables</span>
+    <span class="stat-pill">21 FK constraints</span>
+    <span class="stat-pill">1,283 rows</span>
+  </div>
+  <div class="sep"></div>
+  <div class="gf-btns" id="gf-btns">
+    <button class="gf-btn on" data-g="all">All</button>
+    <button class="gf-btn" data-g="core">Core</button>
+    <button class="gf-btn" data-g="identity">Identity</button>
+    <button class="gf-btn" data-g="players">Players</button>
+    <button class="gf-btn" data-g="scoring">Scoring</button>
+    <button class="gf-btn" data-g="courses">Courses</button>
+    <button class="gf-btn" data-g="engagement">Engagement</button>
+    <button class="gf-btn" data-g="platform">Platform</button>
+  </div>
+  <div class="view-btns">
+    <button class="vbtn" id="btn-cols">All Cols</button>
+    <button class="vbtn" id="btn-zi">+</button>
+    <button class="vbtn" id="btn-zo">&#x2212;</button>
+    <button class="vbtn" id="btn-zr">Reset</button>
+    <a href="/platform/5-26-26-data-model-review" class="vbtn">Review &#x2197;</a>
+  </div>
+</div>
+
+<div id="map-wrap">
+  <div id="map-inner">
+    <svg id="map-svg">
+      <defs>
+        <marker id="arrow-gold" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto">
+          <path d="M0,0 L0,7 L7,3.5 z" fill="rgba(192,144,48,0.55)"/>
+        </marker>
+        <marker id="arrow-red" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto">
+          <path d="M0,0 L0,7 L7,3.5 z" fill="rgba(192,80,60,0.7)"/>
+        </marker>
+      </defs>
+    </svg>
+  </div>
+</div>
+
+<div id="legend">
+  <div class="lg"><span class="lg-dot" style="background:#c09030"></span>Core</div>
+  <div class="lg"><span class="lg-dot" style="background:#1abcbc"></span>Identity</div>
+  <div class="lg"><span class="lg-dot" style="background:#2980b9"></span>Players</div>
+  <div class="lg"><span class="lg-dot" style="background:#e67e22"></span>Scoring</div>
+  <div class="lg"><span class="lg-dot" style="background:#27ae60"></span>Courses</div>
+  <div class="lg"><span class="lg-dot" style="background:#8e44ad"></span>Engagement</div>
+  <div class="lg"><span class="lg-dot" style="background:#34495e"></span>Platform</div>
+  <div class="lg"><span class="lg-line" style="border-top:1.5px solid rgba(192,144,48,0.55)"></span>FK</div>
+  <div class="lg"><span class="lg-line" style="border-top:1.5px dashed rgba(192,80,60,0.7)"></span>CASCADE</div>
+</div>
+
+<script>
+const TABLES = [
+  // External
+  { id:'auth.users', g:'external', rls:true, rows:null,
+    cols:[{n:'id',t:'uuid',pk:1},{n:'email',t:'text'}]},
+
+  // Identity
+  { id:'mygolf_profiles', g:'identity', rls:true, rows:0,
+    cols:[
+      {n:'id',t:'uuid',pk:1,note:'= auth.users.id'},{n:'first_name',t:'text'},{n:'last_name',t:'text'},
+      {n:'email',t:'text'},{n:'handicap',t:'numeric',nl:1},{n:'phone',t:'text',nl:1},
+      {n:'avatar_url',t:'text',nl:1},{n:'created_at',t:'tstz',nl:1},{n:'updated_at',t:'tstz',nl:1}]},
+  { id:'donations', g:'identity', rls:true, rows:0,
+    cols:[
+      {n:'id',t:'uuid',pk:1},{n:'mygolf_profile_id',t:'uuid',fk:'mygolf_profiles',nl:1},
+      {n:'amount_cents',t:'int4'},{n:'currency',t:'text'},{n:'stripe_payment_intent_id',t:'text',nl:1},
+      {n:'message',t:'text',nl:1},{n:'created_at',t:'tstz',nl:1}]},
+
+  // Core
+  { id:'tournaments', g:'core', rls:true, rows:10,
+    cols:[
+      {n:'id',t:'uuid',pk:1},{n:'slug',t:'text',uq:1},{n:'name',t:'text'},{n:'owner_email',t:'text'},
+      {n:'short_name',t:'text',nl:1},{n:'logo_url',t:'text',nl:1},{n:'play_status',t:'text',ck:1},
+      {n:'created_at',t:'tstz',nl:1}]},
+  { id:'tournament_admins', g:'core', rls:true, rows:14,
+    cols:[
+      {n:'tournament_id',t:'uuid',pk:1,fk:'tournaments'},{n:'email',t:'text',pk:1},
+      {n:'player_id',t:'uuid',fk:'players',nl:1}]},
+  { id:'settings', g:'core', rls:true, rows:432,
+    cols:[
+      {n:'tournament_id',t:'uuid',pk:1,fk:'tournaments'},{n:'key',t:'text',pk:1},
+      {n:'value',t:'text'},{n:'updated_at',t:'tstz',nl:1}]},
+
+  // Players
+  { id:'player_accounts', g:'players', rls:true, rows:8,
+    cols:[
+      {n:'id',t:'uuid',pk:1},{n:'email',t:'text',uq:1},{n:'plan',t:'text'},
+      {n:'billing_status',t:'text'},{n:'billing_expires_at',t:'tstz',nl:1},
+      {n:'billing_ref',t:'text',nl:1},{n:'created_at',t:'tstz',nl:1},{n:'updated_at',t:'tstz',nl:1}]},
+  { id:'players', g:'players', rls:true, rows:43,
+    cols:[
+      {n:'id',t:'uuid',pk:1},{n:'tournament_id',t:'uuid',fk:'tournaments'},
+      {n:'mygolf_profile_id',t:'uuid',fk:'mygolf_profiles',nl:1},
+      {n:'first_name',t:'text'},{n:'last_name',t:'text'},{n:'email',t:'text'},
+      {n:'handicap',t:'text'},{n:'phone_number',t:'text',nl:1},{n:'has_account',t:'bool'},
+      {n:'hat',t:'bool',nl:1},{n:'note',t:'text',nl:1},{n:'why_me',t:'text',nl:1},
+      {n:'trash_talk',t:'text',nl:1},{n:'available_dates',t:'text[]',nl:1},
+      {n:'last_trash_talk_at',t:'tstz',nl:1},{n:'created_at',t:'tstz',nl:1}]},
+  { id:'tournament_players', g:'players', rls:true, rows:40,
+    cols:[
+      {n:'id',t:'uuid',pk:1},{n:'player_id',t:'uuid',fk:'players'},
+      {n:'tournament_id',t:'uuid',fk:'tournaments'},{n:'handicap',t:'text',nl:1},
+      {n:'is_admin',t:'bool'},{n:'hat',t:'bool'},{n:'available_dates',t:'text[]',nl:1},
+      {n:'why_me',t:'text',nl:1},{n:'trash_talk',t:'text',nl:1},{n:'note',t:'text',nl:1},
+      {n:'created_at',t:'tstz',nl:1}]},
+
+  // Scoring
+  { id:'rounds', g:'scoring', rls:true, rows:29,
+    cols:[
+      {n:'id',t:'uuid',pk:1},{n:'tournament_id',t:'uuid',fk:'tournaments'},
+      {n:'course_id',t:'int4',fk:'golf_courses',nl:1},{n:'day_number',t:'int4',ck:1},
+      {n:'status',t:'text',ck:1},{n:'format_front',t:'text',nl:1},{n:'format_back',t:'text',nl:1},
+      {n:'tee_name',t:'text',nl:1},{n:'created_at',t:'tstz'},{n:'updated_at',t:'tstz'}]},
+  { id:'scores', g:'scoring', rls:true, rows:504,
+    cols:[
+      {n:'id',t:'uuid',pk:1},{n:'tournament_id',t:'uuid',fk:'tournaments'},
+      {n:'player_id',t:'uuid',fk:'players',nl:1},{n:'round',t:'text'},
+      {n:'hole',t:'int4',ck:1},{n:'gross_score',t:'int4',ck:1},{n:'created_at',t:'tstz',nl:1}]},
+
+  // Courses
+  { id:'golf_courses', g:'courses', rls:true, rows:91,
+    cols:[
+      {n:'id',t:'int8',pk:1},{n:'name',t:'text'},{n:'city',t:'text',nl:1},
+      {n:'state',t:'text',nl:1},{n:'pars',t:'int4[]',ck:1},{n:'yards',t:'int4[]',nl:1},
+      {n:'tees',t:'jsonb',nl:1},{n:'created_at',t:'tstz',nl:1}]},
+  { id:'courses', g:'courses', rls:true, rows:0,
+    cols:[
+      {n:'id',t:'uuid',pk:1},{n:'tournament_id',t:'uuid',fk:'tournaments'},
+      {n:'name',t:'text'},{n:'tee_box',t:'text'},{n:'created_at',t:'tstz',nl:1}]},
+  { id:'course_holes', g:'courses', rls:true, rows:0,
+    cols:[
+      {n:'id',t:'uuid',pk:1},{n:'course_id',t:'uuid',fk:'courses',cs:1},
+      {n:'hole_number',t:'int4',ck:1},{n:'par',t:'int4',ck:1},{n:'yardage',t:'int4',nl:1,ck:1}]},
+
+  // Engagement
+  { id:'invitations', g:'engagement', rls:true, rows:1,
+    cols:[
+      {n:'id',t:'uuid',pk:1},{n:'tournament_id',t:'uuid',fk:'tournaments',nl:1},
+      {n:'email',t:'text'},{n:'message',t:'text',nl:1},{n:'status',t:'text'},
+      {n:'invited_by',t:'text',nl:1},{n:'created_at',t:'tstz',nl:1}]},
+  { id:'push_subscriptions', g:'engagement', rls:true, rows:12,
+    cols:[
+      {n:'id',t:'uuid',pk:1},{n:'tournament_id',t:'uuid',fk:'tournaments',nl:1},
+      {n:'player_id',t:'uuid',fk:'players',nl:1},{n:'endpoint',t:'text'},
+      {n:'p256dh',t:'text'},{n:'auth',t:'text'},{n:'created_at',t:'tstz'}]},
+  { id:'trash_talk', g:'engagement', rls:true, rows:7,
+    cols:[
+      {n:'id',t:'uuid',pk:1},{n:'tournament_id',t:'uuid',fk:'tournaments',nl:1},
+      {n:'player_id',t:'uuid',fk:'players',nl:1},{n:'parent_id',t:'uuid',fk:'trash_talk',nl:1},
+      {n:'player_name',t:'text'},{n:'team',t:'text',nl:1},{n:'message',t:'text'},
+      {n:'created_at',t:'tstz',nl:1}]},
+
+  // Platform
+  { id:'platform_bugs', g:'platform', rls:true, rows:89,
+    cols:[
+      {n:'id',t:'uuid',pk:1},{n:'email',t:'text'},{n:'title',t:'text',nl:1},
+      {n:'description',t:'text',nl:1},{n:'url',t:'text',nl:1},{n:'image_data',t:'text',nl:1},
+      {n:'image_data_2',t:'text',nl:1},{n:'image_data_3',t:'text',nl:1},
+      {n:'status',t:'text',ck:1},{n:'created_at',t:'tstz'}]},
+  { id:'platform_tasks', g:'platform', rls:true, rows:1,
+    cols:[
+      {n:'id',t:'uuid',pk:1},{n:'source',t:'text'},{n:'queue',t:'text'},
+      {n:'title',t:'text'},{n:'body',t:'text',nl:1},{n:'cmd',t:'text',nl:1},
+      {n:'tag',t:'text',nl:1},{n:'status',t:'text'},{n:'created_at',t:'tstz'},{n:'updated_at',t:'tstz'}]},
+  { id:'platform_prefs', g:'platform', rls:true, rows:0,
+    cols:[{n:'key',t:'text',pk:1},{n:'value',t:'jsonb'},{n:'updated_at',t:'tstz'}]},
+  { id:'qa_runs', g:'platform', rls:true, rows:0,
+    cols:[
+      {n:'id',t:'uuid',pk:1},{n:'slug',t:'text'},{n:'passed',t:'int4'},
+      {n:'total',t:'int4'},{n:'notes',t:'text',nl:1},{n:'created_at',t:'tstz'}]},
+  { id:'create_codes', g:'platform', rls:true, rows:2,
+    cols:[
+      {n:'id',t:'uuid',pk:1},{n:'code',t:'text',uq:1},{n:'label',t:'text',nl:1},
+      {n:'active',t:'bool'},{n:'created_at',t:'tstz',nl:1}]},
+  { id:'rowan_rsvps', g:'platform', rls:true, rows:0,
+    cols:[
+      {n:'id',t:'int8',pk:1},{n:'first_name',t:'text'},{n:'last_name',t:'text'},
+      {n:'email',t:'text'},{n:'attending',t:'text',ck:1},{n:'guests',t:'int4',nl:1},
+      {n:'kids',t:'int4',nl:1},{n:'note',t:'text',nl:1},{n:'phone',t:'text',nl:1},
+      {n:'created_at',t:'tstz',nl:1}]},
+];
+
+// [from, to, cascade]
+const FKS = [
+  ['mygolf_profiles','auth.users',false],
+  ['donations','mygolf_profiles',false],
+  ['players','mygolf_profiles',false],
+  ['players','tournaments',false],
+  ['tournament_admins','tournaments',false],
+  ['tournament_admins','players',false],
+  ['settings','tournaments',false],
+  ['tournament_players','players',false],
+  ['tournament_players','tournaments',false],
+  ['rounds','tournaments',false],
+  ['rounds','golf_courses',false],
+  ['scores','tournaments',false],
+  ['scores','players',false],
+  ['courses','tournaments',false],
+  ['course_holes','courses',true],
+  ['invitations','tournaments',false],
+  ['push_subscriptions','tournaments',false],
+  ['push_subscriptions','players',false],
+  ['trash_talk','tournaments',false],
+  ['trash_talk','players',false],
+  ['trash_talk','trash_talk',false],
+];
+
+// Positions (top-left of each 210px-wide card)
+const POS = {
+  'auth.users':         {x:735, y:40},
+  'mygolf_profiles':    {x:510, y:160},
+  'donations':          {x:760, y:160},
+  'player_accounts':    {x:40,  y:380},
+  'players':            {x:265, y:380},
+  'tournament_players': {x:510, y:380},
+  'tournaments':        {x:755, y:380},
+  'tournament_admins':  {x:1000,y:380},
+  'scores':             {x:40,  y:620},
+  'rounds':             {x:265, y:620},
+  'courses':            {x:510, y:620},
+  'golf_courses':       {x:755, y:620},
+  'settings':           {x:1000,y:620},
+  'invitations':        {x:40,  y:860},
+  'push_subscriptions': {x:265, y:860},
+  'trash_talk':         {x:510, y:860},
+  'course_holes':       {x:755, y:860},
+  'platform_bugs':      {x:40,  y:1080},
+  'platform_tasks':     {x:265, y:1080},
+  'platform_prefs':     {x:510, y:1080},
+  'qa_runs':            {x:755, y:1080},
+  'create_codes':       {x:1000,y:1080},
+  'rowan_rsvps':        {x:1245,y:1080},
+};
+
+// ── Render ───────────────────────────────────────────────────────────────────
+
+const KEY_COL_COUNT = 4; // show this many cols before "X more" toggle
+
+function colBadges(c) {
+  let b = '';
+  if (c.pk) b += '<span class="cb pk">PK</span>';
+  if (c.fk) b += '<span class="cb fk">FK</span>';
+  if (c.uq) b += '<span class="cb uq">UQ</span>';
+  if (c.ck) b += '<span class="cb ck">CHK</span>';
+  if (c.cs) b += '<span class="cb cs">CASCADE</span>';
+  if (c.nl) b += '<span class="cb nl">?</span>';
+  return b;
+}
+
+function renderCards() {
+  const inner = document.getElementById('map-inner');
+  TABLES.forEach(t => {
+    const pos = POS[t.id];
+    if (!pos) return;
+
+    const keyCols = t.cols.filter(c => c.pk || c.fk || c.uq);
+    const extraCols = t.cols.filter(c => !c.pk && !c.fk && !c.uq);
+
+    let colsHtml = '';
+    keyCols.forEach(c => {
+      const cls = c.pk ? 'pk' : c.fk ? 'fk' : '';
+      const fkLabel = c.fk ? ` <span style="color:var(--muted);font-size:0.58rem;">&#x2192;${c.fk}</span>` : '';
+      colsHtml += `<div class="tc-col"><span class="cn ${cls}">${c.n}</span>${fkLabel}<span class="ct">${c.t}</span>${colBadges(c)}</div>`;
+    });
+
+    let extraHtml = '';
+    extraCols.forEach(c => {
+      extraHtml += `<div class="tc-col"><span class="cn">${c.n}</span><span class="ct">${c.t}</span>${colBadges(c)}</div>`;
+    });
+
+    const moreLabel = extraCols.length ? `&#x25B8; ${extraCols.length} more` : '';
+
+    const rowsTxt = t.rows === null ? 'ext' : t.rows.toLocaleString() + 'r';
+    const rlsCls = t.rls ? 'on' : 'off';
+    const rlsTxt = t.rls ? 'RLS' : 'OPEN';
+
+    const card = document.createElement('div');
+    card.className = 'tc';
+    card.id = 'tc-' + t.id.replace(/\./g,'-');
+    card.dataset.g = t.g;
+    card.style.left = pos.x + 'px';
+    card.style.top = pos.y + 'px';
+    card.innerHTML = `
+      <div class="tc-head" data-g="${t.g}">
+        <span class="tc-name">${t.id}</span>
+        <span class="tc-rls ${rlsCls}">${rlsTxt}</span>
+        <span class="tc-rows">${rowsTxt}</span>
+      </div>
+      <div class="tc-cols">${colsHtml}</div>
+      ${extraCols.length ? `<div class="tc-extra">${extraHtml}</div>
+        <div class="tc-more" data-extra="${t.id}">${moreLabel}</div>` : ''}
+    `;
+    inner.appendChild(card);
+  });
+
+  // Expand/collapse individual card extra cols
+  document.querySelectorAll('.tc-more').forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.stopPropagation();
+      const extra = btn.previousElementSibling;
+      const open = extra.classList.toggle('show');
+      btn.textContent = open ? '&#x25BE; less' : btn.getAttribute('data-label') || btn.textContent;
+      if (!btn.getAttribute('data-label')) btn.setAttribute('data-label', btn.textContent);
+      btn.innerHTML = open ? '&#x25BE; less' : `&#x25B8; ${btn.previousElementSibling.querySelectorAll('.tc-col').length} more`;
+    });
+  });
+}
+
+// ── Connection lines ─────────────────────────────────────────────────────────
+
+function getRect(id) {
+  const el = document.getElementById('tc-' + id.replace(/\./g,'-'));
+  if (!el) return null;
+  const x = parseFloat(el.style.left);
+  const y = parseFloat(el.style.top);
+  const w = el.offsetWidth;
+  const h = el.offsetHeight;
+  return { x, y, w, h, cx: x + w/2, cy: y + h/2, r: x+w, b: y+h };
+}
+
+function edgePt(rect, fromCx, fromCy) {
+  const dx = fromCx - rect.cx;
+  const dy = fromCy - rect.cy;
+  if (Math.abs(dx) >= Math.abs(dy)) {
+    return dx < 0
+      ? { x: rect.x,   y: rect.cy }
+      : { x: rect.r,   y: rect.cy };
+  } else {
+    return dy < 0
+      ? { x: rect.cx,  y: rect.y  }
+      : { x: rect.cx,  y: rect.b  };
+  }
+}
+
+function drawConnections() {
+  const svg = document.getElementById('map-svg');
+  // Clear existing paths
+  svg.querySelectorAll('path.fk-line').forEach(p => p.remove());
+
+  FKS.forEach(([from, to, cascade]) => {
+    const fr = getRect(from);
+    const tr = getRect(to);
+    if (!fr || !tr) return;
+
+    const p1 = edgePt(fr, tr.cx, tr.cy);
+    const p2 = edgePt(tr, fr.cx, fr.cy);
+
+    const dx = p2.x - p1.x;
+    const dy = p2.y - p1.y;
+    const isH = Math.abs(dx) >= Math.abs(dy);
+    const cx1 = isH ? p1.x + dx*0.5 : p1.x;
+    const cy1 = isH ? p1.y : p1.y + dy*0.5;
+    const cx2 = isH ? p2.x - dx*0.5 : p2.x;
+    const cy2 = isH ? p2.y : p2.y - dy*0.5;
+
+    const path = document.createElementNS('http://www.w3.org/2000/svg','path');
+    path.setAttribute('class','fk-line');
+    path.setAttribute('d',`M${p1.x},${p1.y} C${cx1},${cy1} ${cx2},${cy2} ${p2.x},${p2.y}`);
+    path.setAttribute('fill','none');
+    path.setAttribute('stroke', cascade ? 'rgba(192,80,60,0.55)' : 'rgba(192,144,48,0.35)');
+    path.setAttribute('stroke-width','1.5');
+    if (cascade) path.setAttribute('stroke-dasharray','5 3');
+    path.setAttribute('marker-end', cascade ? 'url(#arrow-red)' : 'url(#arrow-gold)');
+    svg.appendChild(path);
+  });
+}
+
+// ── Interactions ─────────────────────────────────────────────────────────────
+
+// Group filter
+let activeGroup = 'all';
+document.getElementById('gf-btns').addEventListener('click', e => {
+  const btn = e.target.closest('.gf-btn');
+  if (!btn) return;
+  activeGroup = btn.dataset.g;
+  document.querySelectorAll('.gf-btn').forEach(b => b.classList.toggle('on', b === btn));
+  document.querySelectorAll('.tc').forEach(card => {
+    if (activeGroup === 'all') card.classList.remove('dim');
+    else card.classList.toggle('dim', card.dataset.g !== activeGroup);
+  });
+});
+
+// All cols toggle
+let allColsOpen = false;
+document.getElementById('btn-cols').addEventListener('click', function() {
+  allColsOpen = !allColsOpen;
+  this.classList.toggle('on', allColsOpen);
+  document.querySelectorAll('.tc-extra').forEach(el => el.classList.toggle('show', allColsOpen));
+  document.querySelectorAll('.tc-more').forEach(btn => {
+    const count = btn.previousElementSibling.querySelectorAll('.tc-col').length;
+    btn.innerHTML = allColsOpen ? '&#x25BE; less' : `&#x25B8; ${count} more`;
+  });
+  // Redraw after layout changes
+  requestAnimationFrame(drawConnections);
+});
+
+// Zoom
+let scale = 1;
+const inner = document.getElementById('map-inner');
+function setZoom(s) {
+  scale = Math.max(0.35, Math.min(1.5, s));
+  inner.style.transform = `scale(${scale})`;
+  inner.style.width = (1680 * scale) + 'px';
+  inner.style.height = (1220 * scale) + 'px';
+}
+document.getElementById('btn-zi').addEventListener('click', () => setZoom(scale + 0.1));
+document.getElementById('btn-zo').addEventListener('click', () => setZoom(scale - 0.1));
+document.getElementById('btn-zr').addEventListener('click', () => setZoom(1));
+
+// Scroll-zoom
+document.getElementById('map-wrap').addEventListener('wheel', e => {
+  if (e.ctrlKey || e.metaKey) {
+    e.preventDefault();
+    setZoom(scale - e.deltaY * 0.001);
+  }
+}, { passive: false });
+
+// Pan (mouse drag)
+const wrap = document.getElementById('map-wrap');
+let dragging = false, dragX = 0, dragY = 0, scrollX = 0, scrollY = 0;
+wrap.addEventListener('mousedown', e => {
+  if (e.target.closest('.tc')) return;
+  dragging = true;
+  dragX = e.clientX; dragY = e.clientY;
+  scrollX = wrap.scrollLeft; scrollY = wrap.scrollTop;
+  wrap.classList.add('grabbing');
+});
+document.addEventListener('mousemove', e => {
+  if (!dragging) return;
+  wrap.scrollLeft = scrollX - (e.clientX - dragX);
+  wrap.scrollTop  = scrollY - (e.clientY - dragY);
+});
+document.addEventListener('mouseup', () => { dragging = false; wrap.classList.remove('grabbing'); });
+
+// ── Init ─────────────────────────────────────────────────────────────────────
+renderCards();
+requestAnimationFrame(() => requestAnimationFrame(drawConnections));
+</script>
+</body>
+</html>
