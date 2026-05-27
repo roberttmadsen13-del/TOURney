@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Live Pages — TOURney Platform</title>
+<link rel="icon" href="/icon-192.png" type="image/png">
+<meta name="theme-color" content="#0d0a06">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,400;0,600;0,700;1,400&family=DM+Mono:wght@400;500&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --gold:#c09030;--gold-light:#d4a840;
+  --bg:#0d0a06;--surface:#1a1008;--card:#1e1509;
+  --border:rgba(192,144,48,0.18);--muted:rgba(240,230,204,0.35);--text:#f0e6cc;
+  --red:#c8503c;--green:#3a9e5f;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;min-height:100vh;}
+
+/* Auth wall */
+#loginWrap{max-width:400px;margin:8rem auto;padding:2.5rem;background:var(--surface);border:1px solid var(--border);}
+#loginWrap h2{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:1.2rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold);margin-bottom:1.5rem;}
+.field{margin-bottom:1rem;}
+.field label{display:block;font-family:'DM Mono',monospace;font-size:0.48rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);margin-bottom:0.4rem;}
+.field input{width:100%;background:rgba(255,255,255,0.04);border:1px solid var(--border);color:var(--text);font-family:'DM Mono',monospace;font-size:0.75rem;padding:0.65rem 0.8rem;outline:none;}
+.field input:focus{border-color:rgba(192,144,48,0.5);}
+.btn-login{width:100%;background:var(--gold);color:#000;border:none;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:0.9rem;letter-spacing:0.1em;text-transform:uppercase;padding:0.85rem;cursor:pointer;transition:opacity .15s;}
+.btn-login:hover{opacity:0.88;}
+.err{font-family:'DM Mono',monospace;font-size:0.58rem;color:var(--red);margin-top:0.75rem;display:none;}
+.err.show{display:block;}
+
+/* App shell */
+#appWrap{display:none;min-height:100vh;}
+
+/* Nav bar */
+.lp-nav{display:flex;align-items:center;gap:1rem;padding:0.85rem 1.5rem;border-bottom:1px solid var(--border);background:var(--surface);}
+.lp-back{font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);text-decoration:none;transition:color .12s;}
+.lp-back:hover{color:var(--gold);}
+.lp-title{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:1.1rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text);flex:1;}
+.lp-live{display:flex;align-items:center;gap:0.4rem;font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--green);}
+.lp-dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+
+/* Controls */
+.lp-controls{display:flex;flex-wrap:wrap;gap:0.6rem;padding:1rem 1.5rem;border-bottom:1px solid var(--border);align-items:center;}
+.lp-search{flex:1;min-width:180px;max-width:320px;background:rgba(255,255,255,0.04);border:1px solid var(--border);color:var(--text);font-family:'DM Mono',monospace;font-size:0.7rem;padding:0.5rem 0.75rem;outline:none;border-radius:4px;}
+.lp-search:focus{border-color:rgba(192,144,48,0.45);}
+.lp-search::placeholder{color:var(--muted);}
+.lp-filters{display:flex;flex-wrap:wrap;gap:0.35rem;}
+.lp-pill{font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.08em;text-transform:uppercase;padding:0.28rem 0.65rem;border:1px solid var(--border);border-radius:3px;cursor:pointer;background:transparent;color:var(--muted);transition:all .12s;}
+.lp-pill:hover{border-color:rgba(192,144,48,0.35);color:var(--gold);}
+.lp-pill.active{background:rgba(192,144,48,0.14);border-color:rgba(192,144,48,0.45);color:var(--gold);}
+.lp-count{font-family:'DM Mono',monospace;font-size:0.5rem;color:var(--muted);letter-spacing:0.08em;margin-left:auto;}
+
+/* Content */
+.lp-content{padding:1.25rem 1.5rem 4rem;max-width:1100px;margin:0 auto;}
+.lp-group{margin-bottom:1rem;background:var(--card);border:1px solid var(--border);border-radius:6px;overflow:hidden;}
+.lp-group-hdr{display:flex;align-items:center;gap:0.75rem;padding:0.65rem 1rem;cursor:pointer;user-select:none;}
+.lp-group-hdr:hover{background:rgba(255,255,255,0.02);}
+.lp-group-name{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:0.9rem;letter-spacing:0.06em;text-transform:uppercase;color:var(--text);flex:1;}
+.lp-group-slug{font-family:'DM Mono',monospace;font-size:0.48rem;color:var(--muted);}
+.lp-group-ct{font-family:'DM Mono',monospace;font-size:0.5rem;color:var(--muted);}
+.lp-chevron{font-size:0.6rem;color:var(--muted);transition:transform .15s;}
+.lp-group.collapsed .lp-chevron{transform:rotate(-90deg);}
+.lp-group.collapsed .lp-rows{display:none;}
+.lp-rows{border-top:1px solid var(--border);}
+.lp-row{display:flex;align-items:center;gap:0.75rem;padding:0.45rem 1rem;border-bottom:1px solid rgba(192,144,48,0.05);transition:background .1s;}
+.lp-row:last-child{border-bottom:none;}
+.lp-row:hover{background:rgba(255,255,255,0.02);}
+.lp-row.hidden{display:none;}
+.lp-row-label{font-size:0.78rem;color:var(--text);flex:0 0 160px;}
+.lp-row-url{font-family:'DM Mono',monospace;font-size:0.58rem;color:rgba(240,230,204,0.45);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.lp-open{font-family:'DM Mono',monospace;font-size:0.48rem;letter-spacing:0.08em;text-transform:uppercase;padding:0.22rem 0.55rem;border:1px solid var(--border);color:var(--gold);text-decoration:none;border-radius:3px;flex-shrink:0;transition:all .12s;white-space:nowrap;}
+.lp-open:hover{border-color:var(--gold);background:rgba(192,144,48,0.08);}
+.lp-copy{font-family:'DM Mono',monospace;font-size:0.48rem;letter-spacing:0.08em;text-transform:uppercase;padding:0.22rem 0.55rem;border:1px solid rgba(240,230,204,0.1);color:var(--muted);background:transparent;cursor:pointer;border-radius:3px;flex-shrink:0;transition:all .12s;}
+.lp-copy:hover{border-color:rgba(192,144,48,0.3);color:var(--gold);}
+.lp-empty{padding:2rem;text-align:center;font-family:'DM Mono',monospace;font-size:0.65rem;color:var(--muted);}
+.lp-loading{padding:3rem;text-align:center;font-family:'DM Mono',monospace;font-size:0.65rem;color:var(--muted);}
+</style>
+</head>
+<body>
+
+<!-- Auth wall -->
+<div id="loginWrap">
+  <h2>Platform Access</h2>
+  <div class="field"><label>Email</label><input type="email" id="loginEmail" placeholder="your@email.com" onkeydown="if(event.key==='Enter')doLogin()"></div>
+  <div class="field"><label>Password</label><input type="password" id="loginPass" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()"></div>
+  <button class="btn-login" onclick="doLogin()">Sign In</button>
+  <div class="err" id="loginErr">Access denied.</div>
+</div>
+
+<!-- App -->
+<div id="appWrap">
+  <nav class="lp-nav">
+    <a class="lp-back" href="/platform">← Platform</a>
+    <div class="lp-title">Live Pages</div>
+    <div class="lp-live"><div class="lp-dot"></div>Real-time</div>
+  </nav>
+
+  <div class="lp-controls">
+    <input class="lp-search" type="search" id="lpSearch" placeholder="Search pages…" oninput="applyFilters()">
+    <div class="lp-filters" id="lpFilters"></div>
+    <div class="lp-count" id="lpCount"></div>
+  </div>
+
+  <div class="lp-content">
+    <div id="lpGroups"><div class="lp-loading">Loading…</div></div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.105.3/dist/umd/supabase.min.js" integrity="sha384-iWpUQPQzWsFiosLgsS8o+e6E8y3Gm+EW2m/vAAo7A2H3fuc4KOKEx+5CAord2H2z" crossorigin="anonymous"></script>
+<script src="/lib/util.js"></script>
+<script>
+const PLATFORM_EMAIL = 'robert.t.madsen13@gmail.com';
+const sb = supabase.createClient(
+  'https://jllugkiojeoopitdvzsa.supabase.co',
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpsbHVna2lvamVvb3BpdGR2enNhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYyNjc2MzYsImV4cCI6MjA5MTg0MzYzNn0.gvvK5IhTYdUPxsdmxq8pFiCD4CAINJ-fmnKuwDN0KLs'
+);
+
+const BASE = 'https://tourney.greenskeeper.studio';
+
+const APP_PAGES = [
+  {label:'Marketing Landing', path:'/'},
+  {label:'Create Tournament', path:'/create'},
+  {label:'My Golf', path:'/player'},
+  {label:'Upgrade Account', path:'/player-upgrade'},
+  {label:'Login', path:'/login'},
+  {label:'Terms of Service', path:'/tos'},
+  {label:'Privacy Policy', path:'/privacy'},
+];
+const TENANT_PAGES = [
+  {label:'Home', path:''},
+  {label:'Leaderboard', path:'scoreboard'},
+  {label:'Score Entry', path:'scorecard'},
+  {label:'Directory', path:'directory'},
+  {label:'Feed', path:'feed'},
+  {label:'Profile', path:'profile'},
+  {label:'Admin', path:'admin'},
+  {label:'Champions', path:'champions'},
+  {label:'Course', path:'course'},
+  {label:'Login', path:'login'},
+  {label:'Install', path:'install'},
+];
+const INTERNAL_PAGES = [
+  {label:'Operations Hub', path:'/platform'},
+  {label:'Live Pages', path:'/platform/live-pages'},
+  {label:'Schema Data Map', path:'/platform/datamap'},
+  {label:'Bug Log', path:'/platform/bugs'},
+  {label:'AAA Plan', path:'/platform/aaa-plan'},
+  {label:'URL Map', path:'/urls'},
+  {label:'URL Combos', path:'/combos'},
+];
+
+let allGroups = [];
+let activeFilter = 'all';
+
+/* ── Auth ── */
+async function doLogin() {
+  const email = document.getElementById('loginEmail').value.trim().toLowerCase();
+  const pass  = document.getElementById('loginPass').value;
+  const err   = document.getElementById('loginErr');
+  err.classList.remove('show');
+  if (email !== PLATFORM_EMAIL) { err.classList.add('show'); return; }
+  const { error } = await sb.auth.signInWithPassword({ email, password: pass });
+  if (error) { err.textContent = error.message; err.classList.add('show'); return; }
+  bootApp();
+}
+
+async function bootApp() {
+  document.getElementById('loginWrap').style.display = 'none';
+  document.getElementById('appWrap').style.display = 'block';
+  await loadTourneys();
+  subscribeRealtime();
+}
+
+/* ── Data ── */
+async function loadTourneys() {
+  const { data: tourneys } = await sb.from('tournaments').select('slug,name').order('name');
+  buildGroups(tourneys || []);
+  renderGroups();
+  buildFilterPills(tourneys || []);
+  applyFilters();
+}
+
+function buildGroups(tourneys) {
+  allGroups = [];
+
+  allGroups.push({
+    id: 'app',
+    name: 'App Pages',
+    slug: null,
+    type: 'app',
+    pages: APP_PAGES.map(p => ({ label: p.label, url: BASE + p.path, path: p.path })),
+  });
+
+  tourneys.forEach(t => {
+    allGroups.push({
+      id: 't-' + t.slug,
+      name: t.name,
+      slug: t.slug,
+      type: 'tenant',
+      pages: TENANT_PAGES.map(p => ({
+        label: p.label,
+        url: p.path ? `${BASE}/t/${t.slug}/${p.path}` : `${BASE}/t/${t.slug}/`,
+        path: p.path ? `/t/${t.slug}/${p.path}` : `/t/${t.slug}/`,
+      })),
+    });
+  });
+
+  allGroups.push({
+    id: 'internal',
+    name: 'Platform — Internal',
+    slug: null,
+    type: 'internal',
+    pages: INTERNAL_PAGES.map(p => ({ label: p.label, url: BASE + p.path, path: p.path })),
+  });
+}
+
+/* ── Render ── */
+function renderGroups() {
+  const container = document.getElementById('lpGroups');
+  if (!allGroups.length) { container.innerHTML = '<div class="lp-empty">No tournaments found.</div>'; return; }
+
+  container.innerHTML = allGroups.map(g => {
+    const rows = g.pages.map(p => `
+      <div class="lp-row" data-label="${esc(p.label.toLowerCase())}" data-url="${esc(p.path.toLowerCase())}">
+        <div class="lp-row-label">${esc(p.label)}</div>
+        <div class="lp-row-url">${esc(p.path)}</div>
+        <a class="lp-open" href="${esc(p.url)}" target="_blank" rel="noopener noreferrer">Open</a>
+        <button class="lp-copy" onclick="copyUrl('${esc(p.url)}',this)">Copy</button>
+      </div>`).join('');
+
+    const slugBadge = g.slug ? `<span class="lp-group-slug">${esc(g.slug)}</span>` : '';
+    return `
+      <div class="lp-group" id="grp-${esc(g.id)}" data-type="${esc(g.type)}">
+        <div class="lp-group-hdr" onclick="toggleGroup('grp-${esc(g.id)}')">
+          <div class="lp-group-name">${esc(g.name)}</div>
+          ${slugBadge}
+          <div class="lp-group-ct">${g.pages.length}</div>
+          <div class="lp-chevron">▾</div>
+        </div>
+        <div class="lp-rows">${rows}</div>
+      </div>`;
+  }).join('');
+}
+
+function buildFilterPills(tourneys) {
+  const pills = [
+    { id: 'all', label: 'All' },
+    { id: 'app', label: 'App' },
+    { id: 'tenant', label: `Tenants (${tourneys.length})` },
+    { id: 'internal', label: 'Internal' },
+  ];
+  document.getElementById('lpFilters').innerHTML = pills.map(p =>
+    `<button class="lp-pill${p.id === activeFilter ? ' active' : ''}" onclick="setFilter('${p.id}')">${p.label}</button>`
+  ).join('');
+}
+
+/* ── Filters ── */
+function setFilter(id) {
+  activeFilter = id;
+  document.querySelectorAll('.lp-pill').forEach(el => {
+    el.classList.toggle('active', el.textContent.trim().toLowerCase().startsWith(id === 'all' ? 'all' : id));
+  });
+  applyFilters();
+}
+
+function applyFilters() {
+  const q = (document.getElementById('lpSearch')?.value || '').trim().toLowerCase();
+  let visible = 0;
+
+  document.querySelectorAll('.lp-group').forEach(grpEl => {
+    const type = grpEl.dataset.type;
+    const typeMatch = activeFilter === 'all' || type === activeFilter;
+    if (!typeMatch) { grpEl.style.display = 'none'; return; }
+
+    const rows = grpEl.querySelectorAll('.lp-row');
+    let groupVisible = 0;
+    rows.forEach(row => {
+      const match = !q || row.dataset.label.includes(q) || row.dataset.url.includes(q);
+      row.classList.toggle('hidden', !match);
+      if (match) groupVisible++;
+    });
+
+    grpEl.style.display = (groupVisible > 0 || !q) ? '' : 'none';
+    if (groupVisible > 0 || !q) visible += groupVisible || rows.length;
+  });
+
+  const countEl = document.getElementById('lpCount');
+  if (countEl) countEl.textContent = q || activeFilter !== 'all' ? `${visible} matching` : '';
+}
+
+/* ── Realtime ── */
+function subscribeRealtime() {
+  sb.channel('lp-tournaments')
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'tournaments' }, () => loadTourneys())
+    .subscribe();
+}
+
+/* ── Utils ── */
+function toggleGroup(id) {
+  document.getElementById(id)?.classList.toggle('collapsed');
+}
+
+function copyUrl(url, btn) {
+  navigator.clipboard.writeText(url).then(() => {
+    const orig = btn.textContent;
+    btn.textContent = 'Copied!';
+    setTimeout(() => btn.textContent = orig, 1400);
+  });
+}
+
+/* ── Init ── */
+(async () => {
+  const { data: { session } } = await sb.auth.getSession();
+  if (session?.user?.email === PLATFORM_EMAIL) { bootApp(); }
+})();
+</script>
+</body>
+</html>
