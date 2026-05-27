@@ -5,6 +5,20 @@
   "description": "Canonical registry of all TOURney plans, reviews, audits, and QA artifacts. The /platform Artifacts tab renders from this file. Skills (e.g. tourney-review) append new entries when they generate output.",
   "entries": [
     {
+      "id": "review-feature-depth-2026-05-27",
+      "category": "review",
+      "stage": "executing",
+      "title": "Feature Depth Review · May 27, 2026",
+      "summary": "Grade A-. Full golf format expansion: 13 → 27+ formats. FORMAT_META constant, structure-gated format picker, opponent enforcement gate, Nassau/Skins overlay scoring. 3 P1 bugs identified (pairs format bug create.html:611, Nassau/Skins overlay missing, solo-score anti-cheat gate absent). 10-step runbook ready.",
+      "date": "2026-05-27",
+      "updated": "2026-05-27",
+      "author": "claude-sonnet-4-6",
+      "url": "/platform/5-27-26-feature-depth-review",
+      "file": "5-27-26-feature-depth-review.html",
+      "tags": ["review", "feature-depth", "formats", "scoring"],
+      "status": "open"
+    },
+    {
       "id": "review-data-model-2026-05-26",
       "category": "review",
       "stage": "executing",

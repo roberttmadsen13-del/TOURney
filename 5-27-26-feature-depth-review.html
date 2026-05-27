@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TOURney — Feature Depth Review · May 27, 2026</title>
+<style>
+:root{--gold:#c09030;--gold-light:#d4a840;--gold-dim:rgba(192,144,48,0.18);--bg:#0d0a05;--surface:#151009;--card:#1c140a;--border:rgba(192,144,48,0.22);--muted:#7a6a54;--text:#e8dcc8;--red:#c0392b;--green:#27ae60;--blue:#2980b9;--orange:#e67e22;--purple:#8e44ad;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:-apple-system,'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;font-size:15px;}
+nav{position:sticky;top:0;z-index:100;background:rgba(13,10,5,0.97);border-bottom:1px solid var(--border);backdrop-filter:blur(12px);}
+.nav-inner{padding:0.6rem 1.5rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap;}
+.nav-brand{color:var(--gold);font-weight:700;font-size:1rem;letter-spacing:0.05em;white-space:nowrap;}
+.nav-brand span{color:var(--muted);font-weight:400;font-size:0.8rem;margin-left:0.4rem;}
+.nav-links{display:flex;gap:0.2rem;flex-wrap:wrap;margin-left:auto;}
+.nav-links a{color:var(--muted);text-decoration:none;font-size:0.78rem;padding:0.3rem 0.55rem;border-radius:4px;transition:all 0.15s;white-space:nowrap;}
+.nav-links a:hover{color:var(--gold);background:var(--gold-dim);}
+.lifecycle-bar{display:flex;gap:3px;padding:0.55rem 1.5rem 0.65rem;background:var(--surface);border-bottom:1px solid var(--border);}
+.lc-stage{flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;}
+.lc-pill{height:5px;width:100%;border-radius:3px;background:rgba(192,144,48,0.1);transition:background 0.25s;}
+.lc-label{font-size:0.58rem;font-weight:700;letter-spacing:0.11em;text-transform:uppercase;color:rgba(122,106,84,0.45);transition:color 0.25s;}
+.lc-done .lc-pill{background:var(--gold);}
+.lc-done .lc-label{color:var(--gold);}
+.lc-active .lc-pill{background:var(--gold-light);box-shadow:0 0 8px rgba(192,144,48,0.45);}
+.lc-active .lc-label{color:var(--gold-light);}
+.hero{padding:3rem 1.5rem 2rem;text-align:center;border-bottom:1px solid var(--border);background:linear-gradient(180deg,rgba(192,144,48,0.06) 0%,transparent 100%);}
+.hero-eyebrow{display:inline-block;font-size:0.7rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold);border:1px solid var(--border);border-radius:20px;padding:0.22rem 0.8rem;margin-bottom:0.9rem;}
+.hero h1{font-size:clamp(1.5rem,3.5vw,2.3rem);font-weight:800;color:#fff;margin-bottom:0.35rem;}
+.hero h1 span{color:var(--gold);}
+.hero-sub{color:var(--muted);max-width:520px;margin:0 auto 1rem;font-size:0.9rem;}
+.hero-meta{display:flex;gap:1.1rem;justify-content:center;flex-wrap:wrap;font-size:0.74rem;color:var(--muted);}
+.hero-meta span{display:flex;align-items:center;gap:0.3rem;}
+.wrapper{max-width:1000px;margin:0 auto;padding:0 1.5rem;}
+section{padding:2.5rem 0;border-bottom:1px solid var(--border);}
+section:last-of-type{border-bottom:none;}
+.section-header{margin-bottom:1.6rem;}
+.section-eyebrow{font-size:0.67rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--gold);margin-bottom:0.3rem;}
+.section-title{font-size:1.35rem;font-weight:800;color:#fff;margin-bottom:0.3rem;}
+.section-desc{color:var(--muted);font-size:0.85rem;max-width:560px;}
+.card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:1.15rem 1.3rem;margin-bottom:0.7rem;}
+.card-title{font-size:0.85rem;font-weight:700;color:var(--gold);margin-bottom:0.45rem;}
+.card p,.card li{font-size:0.84rem;color:var(--text);margin-bottom:0.28rem;}
+.card ul,.card ol{padding-left:1.2rem;}
+.card li{margin-bottom:0.32rem;}
+.grid-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:0.7rem;}
+.grid-3{display:grid;grid-template-columns:repeat(auto-fit,minmax(245px,1fr));gap:0.7rem;}
+.stack-item{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:0.85rem 1.05rem;}
+.stack-label{font-size:0.65rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--muted);margin-bottom:0.18rem;}
+.stack-value{font-size:0.88rem;font-weight:600;color:#fff;}
+.stack-note{font-size:0.72rem;color:var(--muted);margin-top:0.18rem;}
+.pill{display:inline-block;font-size:0.66rem;font-weight:700;letter-spacing:0.06em;padding:0.15rem 0.5rem;border-radius:20px;text-transform:uppercase;}
+.pill-gold{background:rgba(192,144,48,0.18);color:var(--gold);border:1px solid rgba(192,144,48,0.3);}
+.pill-green{background:rgba(39,174,96,0.15);color:var(--green);border:1px solid rgba(39,174,96,0.3);}
+.pill-red{background:rgba(192,57,43,0.15);color:var(--red);border:1px solid rgba(192,57,43,0.3);}
+.pill-orange{background:rgba(230,126,34,0.15);color:var(--orange);border:1px solid rgba(230,126,34,0.3);}
+.pill-blue{background:rgba(41,128,185,0.15);color:var(--blue);border:1px solid rgba(41,128,185,0.3);}
+.pill-purple{background:rgba(142,68,173,0.15);color:var(--purple);border:1px solid rgba(142,68,173,0.3);}
+.page-table{width:100%;border-collapse:collapse;font-size:0.8rem;}
+.page-table th{text-align:left;padding:0.52rem 0.72rem;border-bottom:1px solid var(--border);color:var(--muted);font-size:0.67rem;text-transform:uppercase;letter-spacing:0.08em;background:var(--surface);}
+.page-table td{padding:0.58rem 0.72rem;border-bottom:1px solid rgba(192,144,48,0.08);vertical-align:top;}
+.page-table tr:last-child td{border-bottom:none;}
+.page-table tr:hover td{background:var(--gold-dim);}
+.page-table .url{font-family:monospace;font-size:0.75rem;color:var(--gold-light);}
+.page-table .file{font-family:monospace;font-size:0.72rem;color:var(--muted);}
+.table-wrap{background:var(--card);border:1px solid var(--border);border-radius:8px;overflow:hidden;overflow-x:auto;}
+.score-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(125px,1fr));gap:0.52rem;margin-bottom:1.4rem;}
+.score-cell{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:0.85rem;text-align:center;}
+.score-num{font-size:1.85rem;font-weight:900;line-height:1;margin-bottom:0.18rem;}
+.score-label{font-size:0.64rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);}
+.score-green{color:var(--green);}
+.score-gold{color:var(--gold);}
+.score-red{color:var(--red);}
+.score-blue{color:var(--blue);}
+.score-orange{color:var(--orange);}
+.idea-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1.25rem;position:relative;overflow:hidden;}
+.idea-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;}
+.idea-1::before{background:var(--gold);}
+.idea-2::before{background:var(--blue);}
+.idea-3::before{background:var(--green);}
+.idea-4::before{background:var(--orange);}
+.idea-5::before{background:var(--purple);}
+.idea-number{font-size:2rem;font-weight:900;opacity:0.07;position:absolute;top:0.5rem;right:1rem;line-height:1;color:#fff;}
+.idea-tag{margin-bottom:0.42rem;}
+.idea-title{font-size:0.96rem;font-weight:700;color:#fff;margin-bottom:0.42rem;}
+.idea-body{font-size:0.82rem;color:var(--muted);line-height:1.55;margin-bottom:0.65rem;}
+.idea-plan{font-size:0.77rem;color:var(--text);}
+.idea-plan strong{color:var(--gold);}
+.runbook-steps{counter-reset:rb-step;}
+.rb-step{background:var(--card);border:1px solid var(--border);border-left:3px solid rgba(192,144,48,0.3);border-radius:0 8px 8px 0;padding:0.95rem 1.15rem 0.95rem 3.8rem;margin-bottom:0.55rem;position:relative;}
+.rb-step::before{counter-increment:rb-step;content:counter(rb-step);position:absolute;left:0.95rem;top:0.95rem;width:1.75rem;height:1.75rem;background:var(--gold-dim);color:var(--gold);border:1px solid var(--border);border-radius:50%;font-size:0.72rem;font-weight:700;display:grid;place-items:center;}
+.rb-step-title{font-size:0.87rem;font-weight:700;color:#fff;margin-bottom:0.22rem;}
+.rb-step-body{font-size:0.8rem;color:var(--muted);margin-bottom:0.35rem;}
+.rb-step-body ul{padding-left:1.2rem;margin-top:0.3rem;}
+.rb-step-body li{margin-bottom:0.22rem;color:var(--text);}
+.rb-impact{font-size:0.76rem;color:var(--text);background:rgba(41,128,185,0.06);border:1px solid rgba(41,128,185,0.18);border-radius:3px;padding:0.35rem 0.6rem;margin-top:0.3rem;}
+.rb-impact strong{color:#5dade2;font-size:0.68rem;text-transform:uppercase;letter-spacing:0.07em;display:block;margin-bottom:0.1rem;}
+.rb-verify{font-size:0.76rem;color:var(--text);background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:3px;padding:0.35rem 0.6rem;margin-top:0.3rem;}
+.rb-verify strong{color:var(--gold-light);font-size:0.68rem;text-transform:uppercase;letter-spacing:0.07em;display:block;margin-bottom:0.1rem;}
+.sec-item{background:var(--card);border:1px solid var(--border);border-left:3px solid var(--border);border-radius:0 8px 8px 0;padding:0.9rem 1.15rem;margin-bottom:0.65rem;}
+.sec-item.sev-high{border-left-color:var(--red);}
+.sec-item.sev-med{border-left-color:var(--orange);}
+.sec-item.sev-low{border-left-color:var(--green);}
+.sec-item.sev-info{border-left-color:var(--blue);}
+.sec-header{display:flex;align-items:center;gap:0.52rem;margin-bottom:0.42rem;}
+.sec-title{font-size:0.87rem;font-weight:700;color:#fff;}
+.sec-body{font-size:0.8rem;color:var(--muted);margin-bottom:0.42rem;}
+.sec-fix{font-size:0.77rem;color:var(--text);background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:4px;padding:0.42rem 0.62rem;}
+.sec-fix strong{color:var(--gold-light);display:block;margin-bottom:0.12rem;font-size:0.68rem;text-transform:uppercase;letter-spacing:0.08em;}
+.stage-pending{text-align:center;padding:3rem 1.5rem;color:var(--muted);font-size:0.85rem;border:1px dashed rgba(192,144,48,0.2);border-radius:8px;}
+.stage-pending code{color:var(--gold);}
+.roadmap-item{display:flex;gap:1.05rem;align-items:flex-start;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:0.95rem 1.15rem;margin-bottom:0.52rem;}
+.roadmap-icon{width:1.9rem;height:1.9rem;border-radius:50%;background:var(--gold-dim);color:var(--gold);display:grid;place-items:center;font-size:0.85rem;flex-shrink:0;border:1px solid var(--border);}
+.roadmap-content{flex:1;}
+.roadmap-title{font-size:0.88rem;font-weight:700;color:#fff;margin-bottom:0.13rem;}
+.roadmap-desc{font-size:0.79rem;color:var(--muted);margin-bottom:0.32rem;}
+.roadmap-action{font-size:0.75rem;color:var(--text);}
+.roadmap-action strong{color:var(--gold-light);}
+.matrix-table{width:100%;border-collapse:collapse;font-size:0.76rem;}
+.matrix-table th{text-align:left;padding:0.45rem 0.65rem;border-bottom:1px solid var(--border);color:var(--muted);font-size:0.63rem;text-transform:uppercase;letter-spacing:0.08em;background:var(--surface);}
+.matrix-table td{padding:0.42rem 0.65rem;border-bottom:1px solid rgba(192,144,48,0.06);vertical-align:middle;}
+.matrix-table tr:last-child td{border-bottom:none;}
+.matrix-table tr:hover td{background:var(--gold-dim);}
+.m-yes{color:var(--green);font-weight:700;}
+.m-no{color:rgba(122,106,84,0.35);}
+.m-cond{color:var(--orange);}
+.m-new{color:var(--blue);font-weight:700;}
+.badge-new{display:inline-block;font-size:0.55rem;font-weight:700;letter-spacing:0.06em;padding:0.1rem 0.35rem;border-radius:3px;text-transform:uppercase;background:rgba(41,128,185,0.15);color:var(--blue);border:1px solid rgba(41,128,185,0.3);margin-left:0.35rem;vertical-align:middle;}
+.badge-bug{display:inline-block;font-size:0.55rem;font-weight:700;letter-spacing:0.06em;padding:0.1rem 0.35rem;border-radius:3px;text-transform:uppercase;background:rgba(192,57,43,0.15);color:var(--red);border:1px solid rgba(192,57,43,0.3);margin-left:0.35rem;vertical-align:middle;}
+code{font-family:'Consolas','Monaco',monospace;background:rgba(255,255,255,0.07);padding:0.09rem 0.27rem;border-radius:3px;font-size:0.81em;color:var(--gold-light);}
+footer{border-top:1px solid var(--border);padding:1.2rem;text-align:center;color:var(--muted);font-size:0.72rem;}
+footer span{color:var(--gold);}
+@media(max-width:600px){.nav-links{display:none;}.hero{padding:2rem 1rem 1.5rem;}section{padding:2rem 0;}.lc-label{font-size:0.5rem;}}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <div class="nav-brand">TOURney <span>by Greenskeeper Studios</span></div>
+    <div class="nav-links">
+      <a href="#review">Review</a>
+      <a href="#plan">Plan</a>
+      <a href="#runbook">Runbook</a>
+      <a href="#executing">Executing</a>
+      <a href="#audit">Audit</a>
+      <a href="#concluded">Concluded</a>
+    </div>
+  </div>
+</nav>
+
+<div class="lifecycle-bar">
+  <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Review</div></div>
+  <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Plan</div></div>
+  <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Runbook</div></div>
+  <div class="lc-stage"><div class="lc-pill"></div><div class="lc-label">Executing</div></div>
+  <div class="lc-stage"><div class="lc-pill"></div><div class="lc-label">Audit</div></div>
+  <div class="lc-stage"><div class="lc-pill"></div><div class="lc-label">Concluded</div></div>
+</div>
+
+<div class="hero">
+  <div class="hero-eyebrow">Feature Depth</div>
+  <h1><span>TOURney</span> — Feature Depth Review · May 27, 2026</h1>
+  <p class="hero-sub">Full golf format expansion — all world formats, structure-gated picker, and opponent-required anti-cheat enforcement.</p>
+  <div class="hero-meta">
+    <span>📅 May 27, 2026</span>
+    <span>🤖 Claude Sonnet 4.6</span>
+    <span>🏢 Greenskeeper Studios</span>
+    <span>🔒 Internal Only</span>
+  </div>
+</div>
+
+<!-- ══════════════════ REVIEW ══════════════════ -->
+<section id="review">
+<div class="wrapper">
+
+  <div class="section-header">
+    <div class="section-eyebrow">§ Review</div>
+    <div class="section-title">Current Format Coverage Audit</div>
+    <div class="section-desc">What's built, what's broken, what's missing. Evidence cited to file:line.</div>
+  </div>
+
+  <div class="score-grid">
+    <div class="score-cell"><div class="score-num score-gold">A−</div><div class="score-label">Feature Depth</div></div>
+    <div class="score-cell"><div class="score-num score-gold">13</div><div class="score-label">Formats Now</div></div>
+    <div class="score-cell"><div class="score-num score-blue">+14</div><div class="score-label">New Formats</div></div>
+    <div class="score-cell"><div class="score-num score-red">3</div><div class="score-label">Live Bugs</div></div>
+    <div class="score-cell"><div class="score-num score-orange">3</div><div class="score-label">Structures</div></div>
+    <div class="score-cell"><div class="score-num score-green">0</div><div class="score-label">Format Gates</div></div>
+  </div>
+
+  <div class="card" style="margin-bottom:1.4rem;">
+    <div class="card-title">Core Opponent Philosophy (Anti-Cheat)</div>
+    <p>Every TOURney round must have at least one opponent per competing party. Solo score entry without an opponent is architecturally forbidden — unverifiable scores are the foundation of cheating. This constraint must be enforced at the UI level in create.html and admin.html for every format, every structure. Wolf (4-player minimum), match play (requires paired opponents), and all pair/team formats naturally satisfy this. Individual stroke play must enforce minimum 2 registered players before scoring opens.</p>
+  </div>
+
+  <div class="card" style="margin-bottom:1.4rem;">
+    <div class="card-title">Current Format List — create.html:348–359</div>
+    <p>13 formats in the <code>FMT</code> array: <code>stroke</code>, <code>scramble</code>, <code>best_ball</code>, <code>shambles</code>, <code>stableford</code>, <code>match</code>, <code>alt_shot</code>, <code>chapman</code>, <code>skins</code>, <code>greensomes</code>, <code>mod_stableford</code>, <code>nassau</code>, <code>superball</code>. All 13 appear in the picker regardless of selected structure. No gating logic exists.</p>
+    <p style="margin-top:0.5rem;">Scorecard hooks (scorecard.html:977–981): <code>PAIR_TEAM_FMTS = ['scramble','superball','alt_shot','chapman','greensomes']</code> drives shared-ball UI. <code>isBestBallHole</code>, <code>isStablefordHole</code>, <code>isMatchHole</code> handle their modes. Scoreboard uses <code>PAIR_STROKE_FMTS = ['scramble','superball','shambles','alt_shot','chapman','greensomes']</code> (scoreboard.html:613).</p>
+  </div>
+
+  <h3 style="font-size:0.9rem;font-weight:700;color:var(--gold);margin-bottom:0.8rem;text-transform:uppercase;letter-spacing:0.08em;">Structure × Format Compatibility Matrix</h3>
+  <div class="table-wrap" style="margin-bottom:1.4rem;">
+    <table class="matrix-table">
+      <thead><tr><th>Format Value</th><th>Label</th><th>Individual</th><th>Pairs</th><th>Team</th><th>Scorecard Hook</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr><td><code>stroke</code></td><td>Stroke Play</td><td class="m-yes">✅</td><td class="m-yes">✅</td><td class="m-yes">✅</td><td>default</td><td><span class="pill pill-green">Live</span></td></tr>
+        <tr><td><code>scramble</code></td><td>Scramble</td><td class="m-no">—</td><td class="m-yes">✅</td><td class="m-yes">✅</td><td>PAIR_TEAM_FMTS</td><td><span class="pill pill-green">Live</span></td></tr>
+        <tr><td><code>best_ball</code></td><td>Best Ball</td><td class="m-no">—</td><td class="m-yes">✅</td><td class="m-yes">✅</td><td>isBestBallHole</td><td><span class="pill pill-green">Live</span></td></tr>
+        <tr><td><code>shambles</code></td><td>Shambles</td><td class="m-no">—</td><td class="m-yes">✅</td><td class="m-yes">✅</td><td>individual from best drive</td><td><span class="pill pill-green">Live</span></td></tr>
+        <tr><td><code>stableford</code></td><td>Stableford</td><td class="m-yes">✅</td><td class="m-yes">✅</td><td class="m-yes">✅</td><td>isStablefordHole</td><td><span class="pill pill-green">Live</span></td></tr>
+        <tr><td><code>mod_stableford</code></td><td>Modified Stableford</td><td class="m-yes">✅</td><td class="m-yes">✅</td><td class="m-yes">✅</td><td>isStablefordHole</td><td><span class="pill pill-green">Live</span></td></tr>
+        <tr><td><code>match</code></td><td>Match Play</td><td class="m-yes">✅</td><td class="m-yes">✅</td><td class="m-no">—</td><td>isMatchHole</td><td><span class="pill pill-green">Live</span></td></tr>
+        <tr><td><code>alt_shot</code></td><td>Alternate Shot</td><td class="m-no">—</td><td class="m-yes">✅</td><td class="m-no">—</td><td>PAIR_TEAM_FMTS</td><td><span class="pill pill-gold">Live / Ungated</span></td></tr>
+        <tr><td><code>chapman</code></td><td>Chapman/Pinehurst</td><td class="m-no">—</td><td class="m-yes">✅</td><td class="m-no">—</td><td>PAIR_TEAM_FMTS</td><td><span class="pill pill-gold">Live / Ungated</span></td></tr>
+        <tr><td><code>greensomes</code></td><td>Greensomes</td><td class="m-no">—</td><td class="m-yes">✅</td><td class="m-no">—</td><td>PAIR_TEAM_FMTS</td><td><span class="pill pill-gold">Live / Ungated</span></td></tr>
+        <tr><td><code>nassau</code></td><td>Nassau</td><td class="m-yes">✅</td><td class="m-yes">✅</td><td class="m-yes">✅</td><td>⚠️ none — silent stroke</td><td><span class="pill pill-red">Bug</span></td></tr>
+        <tr><td><code>skins</code></td><td>Skins</td><td class="m-yes">✅</td><td class="m-yes">✅</td><td class="m-yes">✅</td><td>⚠️ none — silent stroke</td><td><span class="pill pill-red">Bug</span></td></tr>
+        <tr><td><code>superball</code></td><td>Superball</td><td class="m-no">—</td><td class="m-yes">✅</td><td class="m-yes">✅</td><td>PAIR_TEAM_FMTS</td><td><span class="pill pill-green">Live</span></td></tr>
+        <tr><td><code>texas_scramble</code></td><td>Texas Scramble</td><td class="m-no">—</td><td class="m-yes">✅</td><td class="m-yes">✅</td><td>PAIR_TEAM_FMTS + drive quota</td><td><span class="pill pill-blue">New</span></td></tr>
+        <tr><td><code>florida_scramble</code></td><td>Florida Scramble</td><td class="m-no">—</td><td class="m-yes">✅</td><td class="m-yes">✅</td><td>PAIR_TEAM_FMTS + skip logic</td><td><span class="pill pill-blue">New</span></td></tr>
+        <tr><td><code>ambrose</code></td><td>Ambrose</td><td class="m-no">—</td><td class="m-yes">✅</td><td class="m-yes">✅</td><td>PAIR_TEAM_FMTS + handicap</td><td><span class="pill pill-blue">New</span></td></tr>
+        <tr><td><code>quota</code></td><td>Quota</td><td class="m-yes">✅</td><td class="m-no">—</td><td class="m-no">—</td><td>points vs handicap target</td><td><span class="pill pill-blue">New</span></td></tr>
+        <tr><td><code>bingo_bango_bongo</code></td><td>Bingo Bango Bongo</td><td class="m-yes">✅</td><td class="m-no">—</td><td class="m-no">—</td><td>3-point hole tracker</td><td><span class="pill pill-blue">New</span></td></tr>
+        <tr><td><code>wolf</code></td><td>Wolf</td><td class="m-cond">✅ (4-player only)</td><td class="m-no">—</td><td class="m-no">—</td><td>per-hole team selection UI</td><td><span class="pill pill-blue">New</span></td></tr>
+        <tr><td><code>snake</code></td><td>Snake</td><td class="m-yes">✅</td><td class="m-no">—</td><td class="m-no">—</td><td>penalty carry tracker</td><td><span class="pill pill-blue">New</span></td></tr>
+        <tr><td><code>vegas</code></td><td>Vegas</td><td class="m-no">—</td><td class="m-yes">✅</td><td class="m-yes">✅</td><td>2-digit combined score</td><td><span class="pill pill-blue">New</span></td></tr>
+        <tr><td><code>waltz</code></td><td>Waltz</td><td class="m-no">—</td><td class="m-yes">✅</td><td class="m-yes">✅</td><td>1-2-3 cycling count</td><td><span class="pill pill-blue">New</span></td></tr>
+        <tr><td><code>peoria</code></td><td>Peoria</td><td class="m-yes">✅</td><td class="m-no">—</td><td class="m-no">—</td><td>post-round handicap calc</td><td><span class="pill pill-blue">New</span></td></tr>
+        <tr><td><code>callaway</code></td><td>Callaway</td><td class="m-yes">✅</td><td class="m-no">—</td><td class="m-no">—</td><td>post-round handicap calc</td><td><span class="pill pill-blue">New</span></td></tr>
+        <tr><td><code>bogey_par</code></td><td>Bogey/Par Competition</td><td class="m-yes">✅</td><td class="m-yes">✅</td><td class="m-yes">✅</td><td>win/halve/lose vs par</td><td><span class="pill pill-blue">New</span></td></tr>
+        <tr><td><code>four_ball_match</code></td><td>Four-Ball Match</td><td class="m-no">—</td><td class="m-yes">✅</td><td class="m-no">—</td><td>best ball + isMatchHole</td><td><span class="pill pill-blue">New</span></td></tr>
+        <tr><td><code>eclectic</code></td><td>Eclectic</td><td class="m-yes">✅</td><td class="m-yes">✅</td><td class="m-yes">✅</td><td>best per-hole across rounds</td><td><span class="pill pill-blue">New</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title">Active Bugs Found</div>
+      <div class="sec-item sev-high" style="margin-bottom:0.5rem;">
+        <div class="sec-header"><span class="pill pill-red">High</span><div class="sec-title">Pairs hides format section entirely</div></div>
+        <div class="sec-body"><code>create.html:611–612</code> — when structure is <code>pairs</code>, both <code>fmtLabel</code> and <code>fmtSection</code> are hidden with <code>display:none</code>. Pairs-specific formats (alt_shot, greensomes, chapman) are exactly the formats pairs players need. Pairs tournaments are created with default stroke play with no way to change it.</div>
+        <div class="sec-fix"><strong>Fix:</strong> Remove the hide logic. Instead filter <code>FMT</code> array by <code>structures</code> metadata when pairs is selected.</div>
+      </div>
+      <div class="sec-item sev-high">
+        <div class="sec-header"><span class="pill pill-red">High</span><div class="sec-title">Nassau &amp; Skins have zero scorecard logic</div></div>
+        <div class="sec-body"><code>scorecard.html:977–981</code> — <code>nassau</code> and <code>skins</code> are not in any format hook array. Both silently fall through as stroke play. A player picking "Skins" gets identical scorecard behavior to "Stroke Play" — no side-pot tracking, no skin carryover. The format label displays but the scoring does nothing different.</div>
+        <div class="sec-fix"><strong>Fix:</strong> Implement overlay scoring UI for both. Nassau needs front/back/total match tracking. Skins needs per-hole carryover display. Both can run on top of any base format.</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Structural Gaps</div>
+      <ul>
+        <li><strong>No format-structure gating</strong> — <code>alt_shot</code> (pairs only) is selectable for an 8-team tournament. <code>wolf</code> requires exactly 4 players but nothing enforces this. Every format is equally available for every structure.</li>
+        <li><strong>No opponent enforcement gate</strong> — scoring can be opened for a tournament with 1 registered player. Core anti-cheat principle is not enforced in code.</li>
+        <li><strong>Shambles inconsistency</strong> — scoreboard.html:613 includes <code>shambles</code> in <code>PAIR_STROKE_FMTS</code> for aggregation but scorecard.html:977 does not include it in <code>PAIR_TEAM_FMTS</code>. This is intentional (shambles = individual from best drive) but undocumented and confusing for future development.</li>
+        <li><strong>rounds table unvalidated</strong> — <code>format_front</code> and <code>format_back</code> are free-text columns (migration 007). No DB constraint validates against known format values. A typo in admin.html silently saves an unknown format.</li>
+        <li><strong>14 formats missing entirely</strong> — Texas Scramble, Florida Scramble, Ambrose, Quota, BBB, Wolf, Snake, Vegas, Waltz, Peoria, Callaway, Bogey/Par, Four-Ball Match, Eclectic.</li>
+      </ul>
+    </div>
+  </div>
+
+</div>
+</section>
+
+<!-- ══════════════════ PLAN ══════════════════ -->
+<section id="plan">
+<div class="wrapper">
+
+  <div class="section-header">
+    <div class="section-eyebrow">§ Plan</div>
+    <div class="section-title">Full Format Expansion Roadmap</div>
+    <div class="section-desc">Priorities ordered by impact. P1 fixes broken things. P2–P4 add the new world.</div>
+  </div>
+
+  <div class="card" style="margin-bottom:1.2rem;">
+    <div class="card-title">Priority Stack</div>
+    <ol style="padding-left:1.2rem;">
+      <li style="margin-bottom:0.55rem;"><strong style="color:#fff;">P1 — Fix pairs format bug (create.html:611–612).</strong> <span style="color:var(--muted);">Pairs tournaments are broken today — no format selection possible. Zero code risk, one condition removed. Do this first.</span></li>
+      <li style="margin-bottom:0.55rem;"><strong style="color:#fff;">P1 — Implement Nassau + Skins overlay scoring.</strong> <span style="color:var(--muted);">Both are live in the picker but silently broken. Skins needs per-hole carryover tracker in scorecard UI. Nassau needs front/back/total match tracker. These are the two most-played side-bet formats in the world.</span></li>
+      <li style="margin-bottom:0.55rem;"><strong style="color:#fff;">P1 — Add opponent enforcement gate.</strong> <span style="color:var(--muted);">Admin "Open Scoring" button must validate: ≥2 registered players (individual), ≥2 pairs (pairs), ≥2 teams (team). Wolf requires exactly 4. Gate with a warning, not a silent block.</span></li>
+      <li style="margin-bottom:0.55rem;"><strong style="color:#fff;">P2 — Add FORMAT_META constants + structure gating to format picker.</strong> <span style="color:var(--muted);">Centralize format metadata (value, label, desc, compatible structures, scorecard behavior tag, overlay bool). Filter create.html picker and admin.html round config by selected structure. Prevents alt_shot on a 6-team tournament.</span></li>
+      <li style="margin-bottom:0.55rem;"><strong style="color:#fff;">P2 — Add the 7 easy new formats.</strong> <span style="color:var(--muted);">Texas Scramble, Florida Scramble, Ambrose, Bogey/Par, Four-Ball Match, Waltz, Vegas. These all map to existing scorecard hooks (PAIR_TEAM_FMTS for scramble variants, isMatchHole + isBestBallHole for four_ball_match) with minor additions. Low implementation risk.</span></li>
+      <li style="margin-bottom:0.55rem;"><strong style="color:#fff;">P3 — Add Quota + Bingo Bango Bongo.</strong> <span style="color:var(--muted);">Both require per-hole UI additions to scorecard. Quota needs a handicap target input and running points-vs-target display. BBB needs a 3-point (first on green / closest when all on / first to hole out) tracker per hole.</span></li>
+      <li style="margin-bottom:0.55rem;"><strong style="color:#fff;">P3 — Add Wolf.</strong> <span style="color:var(--muted);">Wolf is the most complex new format — requires per-hole team selection UI (the designated "wolf" chooses their partner or goes solo 1v3 before the second shot). Needs a dedicated scoring path in scorecard.html. Enforce 4-player-only at create time.</span></li>
+      <li style="margin-bottom:0.55rem;"><strong style="color:#fff;">P4 — Add Snake + Eclectic + Peoria + Callaway.</strong> <span style="color:var(--muted);">Snake is a penalty carry (last 3-putt holds the snake). Eclectic is a multi-round best-per-hole aggregate (needs rounds-level data join). Peoria/Callaway are post-round handicap systems — compute on scorecard submission, display on scoreboard.</span></li>
+      <li style="margin-bottom:0.55rem;"><strong style="color:#fff;">P5 — Update platform.html Ref tab Format Values section.</strong> <span style="color:var(--muted);">Add all new formats to the expandable list with player-facing explanations.</span></li>
+    </ol>
+  </div>
+
+  <div class="grid-2" style="margin-bottom:1.2rem;">
+    <div class="idea-card idea-1">
+      <div class="idea-number">1</div>
+      <div class="idea-tag"><span class="pill pill-gold">Architecture</span></div>
+      <div class="idea-title">FORMAT_META — Single Source of Truth</div>
+      <div class="idea-body">Create a shared <code>lib/formats.js</code> (or inline constant) that is the single authoritative list of all formats. Each entry: <code>{ value, label, desc, structures[], behavior, overlay, minParty, requiresExactPlayers }</code>. Every file — create.html, admin.html, scorecard.html, scoreboard.html, platform.html — imports or copies from this spec. Kills the current drift where scorecard and scoreboard have slightly different PAIR_TEAM_FMTS arrays.</div>
+      <div class="idea-plan"><strong>Build:</strong> Add <code>lib/formats.js</code>. Update all consumers. Add Vercel rewrite if needed.</div>
+    </div>
+    <div class="idea-card idea-2">
+      <div class="idea-number">2</div>
+      <div class="idea-tag"><span class="pill pill-blue">Anti-Cheat</span></div>
+      <div class="idea-title">Opponent Gate — Core Constraint</div>
+      <div class="idea-body">Every format requires opponents. Individual stroke: minimum 2 players. Match play: paired brackets required. Wolf: exactly 4. Pairs: minimum 2 pairs (4 players). Teams: minimum 2 teams. The "Open Scoring" button in admin.html reads player count from DB and shows a warning modal if the constraint isn't met. The constraint is never silently ignored — always surfaced to the admin with a clear explanation.</div>
+      <div class="idea-plan"><strong>Build:</strong> Add <code>validateOpponentConstraint(format, structure, playerCount)</code> helper. Wire to admin "Open Scoring" click.</div>
+    </div>
+    <div class="idea-card idea-3">
+      <div class="idea-number">3</div>
+      <div class="idea-tag"><span class="pill pill-green">Overlay Formats</span></div>
+      <div class="idea-title">Nassau + Skins as True Overlays</div>
+      <div class="idea-body">Nassau and Skins are not standalone formats — they're side bets layered on top of a base format. The picker should let admins choose a <em>base format</em> plus optional <em>overlays</em>. Skins overlay: real-time carryover counter per hole in scorecard, skin winners displayed on scoreboard. Nassau overlay: front 9 / back 9 / 18-hole match tracking alongside the main score. Stored as <code>overlay_formats: ["skins"]</code> in settings.</div>
+      <div class="idea-plan"><strong>Build:</strong> Add overlay picker in create.html + admin.html. Add overlay scoring UI to scorecard.html sidebar.</div>
+    </div>
+    <div class="idea-card idea-4">
+      <div class="idea-number">4</div>
+      <div class="idea-tag"><span class="pill pill-orange">Competitive Depth</span></div>
+      <div class="idea-title">Wolf — The Premium Format</div>
+      <div class="idea-body">Wolf is the most sophisticated individual format in the game. Each hole, one player is the "wolf" (rotating). After each tee shot, the wolf can claim that player as their partner. After all 4 tee off, if unclaimed, wolf plays solo 1v3 for double points. Needs: per-hole wolf designation, partner selection UI in scorecard, running point totals per player. This is a premium feature — no other tournament app does Wolf well.</div>
+      <div class="idea-plan"><strong>Build:</strong> Wolf scoring mode in scorecard.html. Enforce 4-player constraint at tournament creation.</div>
+    </div>
+    <div class="idea-card idea-5">
+      <div class="idea-number">5</div>
+      <div class="idea-tag"><span class="pill pill-purple">Differentiation</span></div>
+      <div class="idea-title">Format Library as a Market Position</div>
+      <div class="idea-body">No tournament platform covers all ~27 formats with real scoring logic. GHIN covers stroke. GolfGenius covers some team formats. Tourney covering the full world of formats — with structure gating, real-time scoring, and mobile-first UX — is a genuine competitive moat. Every format added is one more reason a tournament organizer chooses Tourney over building a spreadsheet or paying for enterprise software.</div>
+      <div class="idea-plan"><strong>Build:</strong> Ship all formats. Add "Format Explorer" page. Use as a marketing hook on landing page.</div>
+    </div>
+  </div>
+
+  <div class="roadmap-item">
+    <div class="roadmap-icon">🐛</div>
+    <div class="roadmap-content">
+      <div class="roadmap-title">Week 1 — P1 Fixes</div>
+      <div class="roadmap-desc">Pairs format bug fixed. Nassau/Skins get real scoring. Opponent gate added to admin. These are blocking correctness issues.</div>
+      <div class="roadmap-action"><strong>Files:</strong> create.html, scorecard.html, scoreboard.html, admin.html</div>
+    </div>
+  </div>
+  <div class="roadmap-item">
+    <div class="roadmap-icon">⚙️</div>
+    <div class="roadmap-content">
+      <div class="roadmap-title">Week 2 — FORMAT_META + 7 Easy Formats</div>
+      <div class="roadmap-desc">Centralize format metadata. Add Texas Scramble, Florida Scramble, Ambrose, Bogey/Par, Four-Ball Match, Waltz, Vegas. Gate picker by structure.</div>
+      <div class="roadmap-action"><strong>Files:</strong> lib/formats.js (new), create.html, scorecard.html, scoreboard.html, admin.html, platform.html</div>
+    </div>
+  </div>
+  <div class="roadmap-item">
+    <div class="roadmap-icon">🎯</div>
+    <div class="roadmap-content">
+      <div class="roadmap-title">Week 3 — Quota, BBB, Wolf</div>
+      <div class="roadmap-desc">Complex formats with custom per-hole UI. Wolf requires dedicated scoring path. BBB needs 3-point tracker. Quota needs handicap target.</div>
+      <div class="roadmap-action"><strong>Files:</strong> scorecard.html, scoreboard.html, admin.html</div>
+    </div>
+  </div>
+  <div class="roadmap-item">
+    <div class="roadmap-icon">📊</div>
+    <div class="roadmap-content">
+      <div class="roadmap-title">Week 4 — Snake, Eclectic, Peoria, Callaway + Ref update</div>
+      <div class="roadmap-desc">Remaining formats. Eclectic requires multi-round join. Peoria/Callaway are post-round computations. Update platform.html Ref tab with all 27 formats.</div>
+      <div class="roadmap-action"><strong>Files:</strong> scorecard.html, scoreboard.html, platform.html</div>
+    </div>
+  </div>
+
+</div>
+</section>
+
+<!-- ══════════════════ RUNBOOK ══════════════════ -->
+<section id="runbook">
+<div class="wrapper">
+
+  <div class="section-header">
+    <div class="section-eyebrow">§ Runbook</div>
+    <div class="section-title">Execution Steps</div>
+    <div class="section-desc">Ordered. Concrete. Each step is independently runnable by tourney-execute.</div>
+  </div>
+
+  <div class="runbook-steps">
+
+    <div class="rb-step">
+      <div class="rb-step-title">Fix pairs format section bug — create.html:611–612</div>
+      <div class="rb-step-body">
+        Remove the two lines that hide format picker for pairs structure:
+        <ul>
+          <li>Delete: <code>if (fmtLabel) fmtLabel.style.display = S.structure === 'pairs' ? 'none' : '';</code></li>
+          <li>Delete: <code>if (fmtSection) fmtSection.style.display = S.structure === 'pairs' ? 'none' : '';</code></li>
+          <li>The format section will now show for all structures. Gating by structure happens in Step 4 (FORMAT_META filter).</li>
+        </ul>
+      </div>
+      <div class="rb-impact"><strong>Upstream:</strong> S.structure value from structure picker buttons</div>
+      <div class="rb-impact"><strong>Downstream:</strong> rounds table format_front/format_back — pairs rounds now get actual format values instead of default stroke</div>
+      <div class="rb-verify"><strong>Verify:</strong> Select Pairs structure in create.html. Confirm format select dropdowns appear. Select alt_shot. Confirm tournament creation saves format_front = 'alt_shot' to rounds table.</div>
+    </div>
+
+    <div class="rb-step">
+      <div class="rb-step-title">Implement Skins overlay scoring in scorecard.html</div>
+      <div class="rb-step-body">
+        Skins: each hole is worth 1 skin. If tied, skin carries to next hole (pot grows). Add:
+        <ul>
+          <li>Add <code>skins</code> detection: <code>function isSkinsHole(hole) { return getHoleFormat(hole) === 'skins'; }</code> — scorecard.html after line 981</li>
+          <li>Add a skins sidebar panel showing current skin value and who leads. Rendered when <code>isSkinsHole</code> is true.</li>
+          <li>In score submission logic, compute skin winner per hole (lowest score wins; tie = carry). Store running skin totals in local state and push to <code>scores</code> table as a <code>skins_total</code> metadata field.</li>
+          <li>In scoreboard.html stableford-style aggregation, add a <code>SKINS_FMTS = ['skins']</code> branch that renders skin counts instead of stroke totals.</li>
+        </ul>
+      </div>
+      <div class="rb-impact"><strong>Upstream:</strong> rounds.format_front/back → getHoleFormat(hole)</div>
+      <div class="rb-impact"><strong>Downstream:</strong> scoreboard.html skins column, scorecard.html sidebar display</div>
+      <div class="rb-verify"><strong>Verify:</strong> Set round format to skins. Enter scores for 2 players. Tie hole 1 — confirm skin carries to hole 2. Win hole 2 — confirm player wins 2 skins. Scoreboard shows skin counts correctly.</div>
+    </div>
+
+    <div class="rb-step">
+      <div class="rb-step-title">Implement Nassau overlay scoring in scorecard.html + scoreboard.html</div>
+      <div class="rb-step-body">
+        Nassau: 3 independent match-play bets — front 9, back 9, 18 holes. After all holes played, determine winner of each segment by lowest stroke total (or match score if base format is match play).
+        <ul>
+          <li>Add Nassau sidebar to scorecard.html: 3 running trackers (F9, B9, Total) showing current leader and margin per segment. Show when <code>getHoleFormat(hole) === 'nassau'</code>.</li>
+          <li>In scoreboard.html, add Nassau column group showing F9/B9/Total win/loss/halve per player pair.</li>
+          <li>Nassau is naturally an overlay — it runs on top of whatever stroke totals are recorded.</li>
+        </ul>
+      </div>
+      <div class="rb-impact"><strong>Upstream:</strong> hole scores (scores table) → compute per-9 and 18-hole totals</div>
+      <div class="rb-impact"><strong>Downstream:</strong> scoreboard Nassau display, potential payout UI</div>
+      <div class="rb-verify"><strong>Verify:</strong> Set format to nassau. Enter 18 holes for 2 players. Confirm F9 winner, B9 winner, Total winner are correctly computed and displayed on scoreboard.</div>
+    </div>
+
+    <div class="rb-step">
+      <div class="rb-step-title">Add opponent enforcement gate to admin.html "Open Scoring"</div>
+      <div class="rb-step-body">
+        Core anti-cheat. Before <code>openScoring()</code> proceeds, validate:
+        <ul>
+          <li>Individual + any format: <code>playerCount >= 2</code>. Show warning: "At least 2 registered players required. Unverifiable solo scores are not permitted."</li>
+          <li>Pairs: <code>pairCount >= 2</code> (minimum 4 players). Show: "At least 2 pairs required."</li>
+          <li>Team: <code>teamCount >= 2</code> with players on each team. Show: "At least 2 teams with assigned players required."</li>
+          <li>Wolf format specifically: <code>playerCount === 4</code>. Hard block — Wolf is undefined with any other player count.</li>
+          <li>Show the validation as a warning modal (reuse the existing confirm modal from the UX review), not a silent block. Admin can acknowledge and override for edge cases except Wolf (hard block).</li>
+        </ul>
+      </div>
+      <div class="rb-impact"><strong>Upstream:</strong> players table count, _structure, _pairCount, _teamCount in admin.html state</div>
+      <div class="rb-impact"><strong>Downstream:</strong> rounds.status = 'open' — all scoring pages read this to decide if scoring is allowed</div>
+      <div class="rb-verify"><strong>Verify:</strong> Create tournament with 1 player. Click Open Scoring. Confirm warning modal appears. Confirm scoring does NOT open without acknowledgment. Test with 2 players — confirm proceeds normally.</div>
+    </div>
+
+    <div class="rb-step">
+      <div class="rb-step-title">Create lib/formats.js — centralized FORMAT_META constant</div>
+      <div class="rb-step-body">
+        New file: <code>lib/formats.js</code>. Defines <code>window.FORMAT_META</code> as an array of all 27 formats:
+        <ul>
+          <li>Each entry: <code>{ value, label, desc, structures: ['individual'|'pairs'|'team'], behavior: 'scramble'|'best_ball'|'stableford'|'match'|'skins'|'nassau'|'overlay'|'default', overlay: bool, minParty: number, requiresExact: number|null }</code></li>
+          <li>Add Vercel rewrite: <code>{ "source": "/lib/formats.js", "destination": "/lib/formats.js" }</code> (static files are served automatically — only add if needed)</li>
+          <li>Add <code>&lt;script src="/lib/formats.js"&gt;</code> to create.html, admin.html, scorecard.html, scoreboard.html heads</li>
+          <li>Replace inline <code>FMT</code> array in create.html with <code>FORMAT_META</code>. Replace <code>PAIR_TEAM_FMTS</code> arrays in scorecard.html + scoreboard.html with computed arrays from FORMAT_META.</li>
+        </ul>
+      </div>
+      <div class="rb-impact"><strong>Upstream:</strong> Nothing — this is the new source of truth</div>
+      <div class="rb-impact"><strong>Downstream:</strong> create.html format picker, admin.html round config, scorecard.html behavior hooks, scoreboard.html scoring, platform.html ref tab</div>
+      <div class="rb-verify"><strong>Verify:</strong> After adding script tag to all 4 pages, confirm <code>window.FORMAT_META</code> is accessible in browser console on each page. Confirm existing format picker still renders all 13 current formats correctly.</div>
+    </div>
+
+    <div class="rb-step">
+      <div class="rb-step-title">Gate format picker by structure — create.html + admin.html</div>
+      <div class="rb-step-body">
+        Using <code>FORMAT_META</code>, filter the format select options when structure changes:
+        <ul>
+          <li>create.html: In <code>render()</code> / the function that calls <code>makeOpts()</code>, filter <code>FORMAT_META</code> by <code>f.structures.includes(S.structure)</code>. Re-render the format selects on every structure change.</li>
+          <li>If current selected format is incompatible with new structure, reset to <code>stroke</code>.</li>
+          <li>admin.html: Same filter applied to round format selects in the Rounds tab.</li>
+          <li>Add structure badge next to each format in the picker (e.g. "Pairs only" tag on alt_shot, greensomes).</li>
+        </ul>
+      </div>
+      <div class="rb-impact"><strong>Upstream:</strong> S.structure (create.html state), _structure (admin.html state)</div>
+      <div class="rb-impact"><strong>Downstream:</strong> rounds.format_front/back — only valid format-structure combos saved to DB</div>
+      <div class="rb-verify"><strong>Verify:</strong> Set structure to Individual. Confirm alt_shot, scramble, best_ball are NOT in format picker. Set to Pairs. Confirm alt_shot IS present. Set to Team. Confirm alt_shot is NOT present but scramble IS. Switch from Pairs with alt_shot selected to Individual — confirm resets to stroke.</div>
+    </div>
+
+    <div class="rb-step">
+      <div class="rb-step-title">Add 7 easy new formats to FORMAT_META + scorecard/scoreboard hooks</div>
+      <div class="rb-step-body">
+        Add to FORMAT_META and wire scoring hooks:
+        <ul>
+          <li><strong>texas_scramble</strong> — scramble variant. Add to <code>PAIR_TEAM_FMTS</code> equivalent. Add admin config: minimum drive contributions per player (default: 3 per 18 holes). Track usage count in scorecard state.</li>
+          <li><strong>florida_scramble</strong> — scramble variant. Add to PAIR_TEAM_FMTS. Add scorecard logic: player whose shot was selected cannot hit the next shot (mark them "sitting out" in UI).</li>
+          <li><strong>ambrose</strong> — scramble + team handicap. Add to PAIR_TEAM_FMTS. Post-round: subtract team handicap (combined player handicaps ÷ players) from gross score. Add handicap input to admin setup.</li>
+          <li><strong>bogey_par</strong> — win/halve/lose vs par per hole. Add hook: <code>isBogeyParHole</code>. Scorecard shows +1/-1/0 vs par per hole. Running net score vs par displayed.</li>
+          <li><strong>four_ball_match</strong> — best ball + match play. Add combined hook: best score per pair per hole, then compare pairs match-play style. Uses existing <code>isBestBallHole</code> + <code>isMatchHole</code> logic together.</li>
+          <li><strong>waltz</strong> — cycling 1-2-3 count: hole 1 counts best 1 score, hole 2 counts best 2, hole 3 counts best 3, hole 4 counts best 1 again. Team format. Add hook: <code>waltzCount(holeNum) = ((holeNum-1)%3)+1</code>.</li>
+          <li><strong>vegas</strong> — team combines individual scores as 2-digit number (best score = tens digit, worst = units digit: e.g. 4+5 = 45, vs opponent 3+6 = 36). Add hook: <code>isVegasHole</code>. Scorecard shows combined number per pair per hole.</li>
+        </ul>
+      </div>
+      <div class="rb-impact"><strong>Upstream:</strong> FORMAT_META, rounds.format_front/back</div>
+      <div class="rb-impact"><strong>Downstream:</strong> scorecard.html shared-ball UI, scoreboard.html aggregation, platform.html ref tab</div>
+      <div class="rb-verify"><strong>Verify:</strong> Each new format appears in create.html picker (filtered by correct structure). Select texas_scramble for a team tournament — scorecard shows shared-ball UI. Select bogey_par — scorecard shows vs-par display. Select four_ball_match for pairs — scorecard shows individual balls + match tracker.</div>
+    </div>
+
+    <div class="rb-step">
+      <div class="rb-step-title">Add Quota + Bingo Bango Bongo (custom per-hole UI)</div>
+      <div class="rb-step-body">
+        Both require new scorecard UI elements:
+        <ul>
+          <li><strong>quota</strong> — Player has a handicap-based point target (e.g. 36 − handicap). Stableford-style points earned per hole. Running total vs target shown throughout round. Add: handicap input in admin player setup, quota target computed and displayed in scorecard header. Scorecard shows points above/below quota running total.</li>
+          <li><strong>bingo_bango_bongo</strong> — 3 points awarded per hole: Bingo = first ball on the green, Bango = closest to pin once all balls are on the green, Bongo = first to hole out. Add: 3-button row in scorecard per hole: "First On", "Closest", "First Out". Player taps to claim each point. Points totaled across 18. Running BBB leaderboard in scoreboard.</li>
+        </ul>
+      </div>
+      <div class="rb-impact"><strong>Upstream:</strong> Player handicap (admin settings), hole-by-hole score entry</div>
+      <div class="rb-impact"><strong>Downstream:</strong> scoreboard quota points display, BBB point totals display</div>
+      <div class="rb-verify"><strong>Verify:</strong> Quota — enter handicap 18, confirm target = 18 points, enter scores, confirm running points-vs-target displayed. BBB — confirm 3 claim buttons per hole, confirm running totals accumulate correctly on scoreboard.</div>
+    </div>
+
+    <div class="rb-step">
+      <div class="rb-step-title">Add Wolf format with dedicated per-hole scoring UI</div>
+      <div class="rb-step-body">
+        Wolf requires a fully custom scoring path — the most complex format in the list:
+        <ul>
+          <li>At tournament creation: Wolf only available for Individual structure. Enforce <code>playerCount === 4</code> — show warning at create time and hard-block scoring if violated.</li>
+          <li>Wolf rotation: player order is fixed (typically by tee time / draw). On each hole, the wolf is the last to tee off in rotation (hole 1: player 4 is wolf, hole 2: player 3, etc.). Display wolf designation on scorecard.</li>
+          <li>After each tee shot (holes 1–3), wolf can tap "Choose Partner" next to any of the first 3 players. If they choose before the 4th tees off, it's a 2v2. If they wait until all 4 have hit, they can pick any partner. If they go it alone (no partner), they play 1v3 for 2× points.</li>
+          <li>Hole scoring: if wolf team wins the hole, wolf+partner each earn 1 point (or 2 if solo). If non-wolf team wins, they each earn 1 point (or 2 if wolf was solo). Tie = carry.</li>
+          <li>After 18: final points totaled. Scoreboard shows Wolf points per player.</li>
+          <li>Add <code>wolf_state</code> to scorecard local state: <code>{ rotation: [p1,p2,p3,p4], holeWolf: {}, holePartner: {}, holePoints: {} }</code>. Persist to <code>scores</code> table as metadata.</li>
+        </ul>
+      </div>
+      <div class="rb-impact"><strong>Upstream:</strong> player roster (4 players exactly), rounds.format_front/back = 'wolf'</div>
+      <div class="rb-impact"><strong>Downstream:</strong> scoreboard.html Wolf leaderboard (points per player across 18 holes)</div>
+      <div class="rb-verify"><strong>Verify:</strong> Create 4-player individual tournament with wolf format. Open scorecard. Hole 1: confirm player 4 is wolf. Tap "Choose Partner" for player 2. Enter scores. Confirm wolf team wins point correctly. Hole 2: confirm player 3 is wolf. Play solo. Confirm 2× points if wolf wins. Confirm scoreboard shows final wolf points per player.</div>
+    </div>
+
+    <div class="rb-step">
+      <div class="rb-step-title">Add Snake, Eclectic, Peoria, Callaway</div>
+      <div class="rb-step-body">
+        <ul>
+          <li><strong>snake</strong> — The player who makes the last 3-putt "holds the snake." They carry a penalty until another player 3-putts. Scorecard: tap "3-putt" button per hole. Snake holder indicator shown in scorecard header. Final penalty applied to score.</li>
+          <li><strong>eclectic</strong> — Lowest score on each hole across all rounds in the tournament. Requires multi-round join on scorecard.html. After round N, load all prior round scores per player per hole and show the running "eclectic score" (best of each hole combined). Display on scoreboard as separate eclectic column.</li>
+          <li><strong>peoria</strong> — Post-round handicap. After submitting scores, system secretly selects 6 holes (2 par-3, 2 par-4, 2 par-5) and computes handicap: (sum of those 6 holes − pars) × 3 − 2. Applied to gross to give net. Scoreboard shows net scores. Admin configures the 6 holes or uses auto-random.</li>
+          <li><strong>callaway</strong> — Post-round handicap. Player deducts their worst hole scores based on gross score against a Callaway table. Standard table: if gross 73–75 deduct ½ worst hole, 76–80 deduct 1 worst, etc. Scoreboard shows net scores.</li>
+        </ul>
+      </div>
+      <div class="rb-impact"><strong>Upstream:</strong> scores table (all rounds for eclectic), hole scores per round (peoria/callaway)</div>
+      <div class="rb-impact"><strong>Downstream:</strong> scoreboard net score columns, eclectic running total</div>
+      <div class="rb-verify"><strong>Verify:</strong> Snake — 3-putt on hole 3, confirm snake indicator appears. Eclectic — after round 2, confirm eclectic score uses best of each hole from rounds 1+2. Peoria — submit round, confirm handicap computed and net score displayed. Callaway — gross 80, confirm 1 worst hole deducted per table.</div>
+    </div>
+
+    <div class="rb-step">
+      <div class="rb-step-title">Update platform.html Ref tab — Format Values section</div>
+      <div class="rb-step-body">
+        Add all 14 new formats to the Format Values expandable list in the Ref tab. Each gets a <code>&lt;details class="fmt-item"&gt;</code> with:
+        <ul>
+          <li>The <code>fmt-code</code> value, <code>fmt-label</code>, <code>fmt-tag</code> (structure compatibility), <code>fmt-chevron</code></li>
+          <li>A player-facing explanation in <code>fmt-explain</code> matching the style of existing entries</li>
+        </ul>
+        Add in logical grouping: scramble variants together, individual formats together, overlay formats at the end.
+      </div>
+      <div class="rb-impact"><strong>Upstream:</strong> None — platform.html is documentation only</div>
+      <div class="rb-impact"><strong>Downstream:</strong> Internal dev reference</div>
+      <div class="rb-verify"><strong>Verify:</strong> Open /platform → Ref tab → Format Values section. Confirm all 27 formats present. Confirm each expands with player explanation. Confirm structure tags are accurate.</div>
+    </div>
+
+  </div>
+
+</div>
+</section>
+
+<!-- ══════════════════ EXECUTING ══════════════════ -->
+<section id="executing">
+<div class="wrapper">
+<!-- EXECUTING-CONTENT-START -->
+<div class="section-header">
+  <div class="section-eyebrow">§ Executing</div>
+  <div class="section-title">Execution Log</div>
+</div>
+<div class="stage-pending">
+  <p>Awaiting execution. Run <code>/tourney-execute 5-27-26-feature-depth-review.html</code> to proceed.</p>
+</div>
+<!-- EXECUTING-CONTENT-END -->
+</div>
+</section>
+
+<!-- ══════════════════ AUDIT ══════════════════ -->
+<section id="audit">
+<div class="wrapper">
+<!-- AUDIT-CONTENT-START -->
+<div class="section-header">
+  <div class="section-eyebrow">§ Audit</div>
+  <div class="section-title">Post-Execution Audit</div>
+</div>
+<div class="stage-pending">
+  <p>Awaiting execution. Run <code>/tourney-execute 5-27-26-feature-depth-review.html</code> to proceed.</p>
+</div>
+<!-- AUDIT-CONTENT-END -->
+</div>
+</section>
+
+<!-- ══════════════════ CONCLUDED ══════════════════ -->
+<section id="concluded">
+<div class="wrapper">
+<!-- CONCLUDED-CONTENT-START -->
+<div class="section-header">
+  <div class="section-eyebrow">§ Concluded</div>
+  <div class="section-title">Conclusion</div>
+</div>
+<div class="stage-pending">
+  <p>Awaiting execution. Run <code>/tourney-execute 5-27-26-feature-depth-review.html</code> to proceed.</p>
+</div>
+<!-- CONCLUDED-CONTENT-END -->
+</div>
+</section>
+
+<footer>
+  Generated by <span>Claude Sonnet 4.6</span> · Greenskeeper Studios Internal · May 27, 2026
+  <br style="margin-top:0.3rem">
+  <a href="/platform" style="color:var(--muted);font-size:0.7rem;text-decoration:none">← Back to Platform Hub</a>
+</footer>
+
+</body>
+</html>

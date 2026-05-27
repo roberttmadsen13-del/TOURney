@@ -76,6 +76,13 @@
       "cmd": "/tourney-review-feature-depth",
       "scores": [
         {
+          "date": "2026-05-27",
+          "score": "A-",
+          "url": "/platform/5-27-26-feature-depth-review",
+          "review_title": "Feature Depth Review · May 27, 2026",
+          "notes": "Full golf format expansion review. 13 formats currently live → 27+ planned. FORMAT_META constant needed, structure-gated format picker absent, opponent enforcement gate missing (anti-cheat P0). 3 bugs: pairs format bug (create.html:611), Nassau/Skins overlay scoring absent, solo-score gate not enforced. 10-step runbook: P1 bugs → FORMAT_META → structure gating → 7 new easy formats → Quota/BBB → Wolf → 4 exotic formats → platform ref update."
+        },
+        {
           "date": "2026-05-26",
           "score": "A-",
           "url": "/platform/5-22-26-feature-depth-review",

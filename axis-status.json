@@ -13,12 +13,12 @@
       "blocking": false
     },
     "feature-depth": {
-      "status": "concluded",
+      "status": "executing",
       "grade": "A-",
-      "artifact": "/platform/5-22-26-feature-depth-review",
-      "last_updated": "2026-05-26",
-      "summary": "All 8 runbook items resolved. courses/course_holes live, scorecard yardage from DB, multi-image bug-fab (v6), captain on scoreboard, admin-as-player toggle. Grade B+ → A−.",
-      "open_items": 0,
+      "artifact": "/platform/5-27-26-feature-depth-review",
+      "last_updated": "2026-05-27",
+      "summary": "Full format expansion: 13 → 27+ formats. FORMAT_META, structure-gated picker, opponent enforcement gate, Nassau/Skins overlay. 10-step runbook ready. 3 P1 bugs identified.",
+      "open_items": 10,
       "blocking": false
     },
     "ux": {
