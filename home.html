@@ -619,18 +619,6 @@ html { scroll-behavior: smooth; }
             <div class="chips"><div class="chip" data-date="oct2">Oct 2&ndash;5</div><div class="chip" data-date="oct9">Oct 9&ndash;12</div></div>
             <div class="err" id="errDates">Select at least one date window</div>
           </div>
-          <div class="form-row one">
-            <div class="fg">
-              <label>Why Pick Me</label>
-              <input type="text" id="rsvpWhyMe" placeholder="Make your case for the draft...">
-            </div>
-          </div>
-          <div class="form-row one">
-            <div class="fg">
-              <label>Trash Talk</label>
-              <input type="text" id="rsvpTrash" placeholder="Say something you'll have to back up on the course...">
-            </div>
-          </div>
 
           <div class="hat-section" id="hatSection" style="display:none">
             <div class="hat-header">
@@ -869,7 +857,7 @@ window.addEventListener('scroll', () => { document.getElementById('mainNav').cla
   const teamCount = parseInt(map.team_count || '2');
   const teamsSection = document.getElementById('teams');
   if (teamsSection) {
-    if (teamCount <= 1) {
+    if (teamCount <= 1 || str === 'pairs') {
       teamsSection.style.display = 'none';
       const teamsNavLi = document.querySelector('.nav-links a[href="#teams"]')?.closest('li');
       if (teamsNavLi) teamsNavLi.style.display = 'none';
@@ -899,8 +887,6 @@ window.addEventListener('scroll', () => { document.getElementById('mainNav').cla
   const hatSec = document.getElementById('hatSection');
   if (hatSec) hatSec.style.display = map.reg_show_hat === 'true' ? '' : 'none';
 
-  // Brand color override
-  if (map.color_primary) document.documentElement.style.setProperty('--gold', map.color_primary);
 
   // Tournament name in hero title
   if (map.tourney_name) { const _ht = document.querySelector('.hero-title'); if (_ht) _ht.textContent = map.tourney_name; }
@@ -1008,8 +994,6 @@ window.submitRsvp = async function submitRsvp() {
     phone_number: phone || null,
     handicap:   hcap,
     available_dates: (_dpGroup && _dpGroup.style.display !== 'none') ? [...selectedDates] : [],
-    why_me:     document.getElementById('rsvpWhyMe').value.trim(),
-    trash_talk: document.getElementById('rsvpTrash').value.trim(),
     hat:              wantsHat,
     tournament_id:    tournament.id,
     mygolf_profile_id: session.user.id,

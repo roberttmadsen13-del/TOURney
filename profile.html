@@ -301,7 +301,7 @@ async function claimPlayerRow(email) {
 async function loadProfileByEmail(email) {
   const { tournament } = await window.tourney.ready;
   _tournamentCtx = tournament;
-  const { data: p } = await sb.from('players').select('*').eq('tournament_id', tournament.id).eq('email', email.toLowerCase()).single();
+  const { data: p } = await sb.from('players').select('*').eq('tournament_id', tournament.id).eq('email', email.toLowerCase()).maybeSingle();
   if (!p) {
     // No email match — check for unclaimed rows (null email) to offer self-serve linking
     const { data: unclaimed } = await sb.from('players')

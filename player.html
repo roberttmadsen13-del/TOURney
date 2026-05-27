@@ -234,10 +234,10 @@ a{color:inherit;text-decoration:none;}
     <div class="section-label">Support The Platform</div>
     <p style="font-size:0.82rem;color:var(--muted);margin-bottom:1rem;">Buy the organizer a round. Donations go directly to keeping TOURney running.</p>
     <div style="display:flex;gap:0.6rem;flex-wrap:wrap;margin-bottom:0.75rem;">
-      <button class="logout-btn" style="padding:0.4rem 0.9rem;font-size:0.75rem;" onclick="startDonation(5)">$5</button>
-      <button class="logout-btn" style="padding:0.4rem 0.9rem;font-size:0.75rem;" onclick="startDonation(10)">$10</button>
-      <button class="logout-btn" style="padding:0.4rem 0.9rem;font-size:0.75rem;" onclick="startDonation(25)">$25</button>
-      <button class="logout-btn" style="padding:0.4rem 0.9rem;font-size:0.75rem;" onclick="startDonation(50)">$50</button>
+      <button class="logout-btn" style="padding:0.4rem 0.9rem;font-size:0.75rem;" onclick="document.getElementById('donateCustom').value=5;startDonation(5)">$5</button>
+      <button class="logout-btn" style="padding:0.4rem 0.9rem;font-size:0.75rem;" onclick="document.getElementById('donateCustom').value=10;startDonation(10)">$10</button>
+      <button class="logout-btn" style="padding:0.4rem 0.9rem;font-size:0.75rem;" onclick="document.getElementById('donateCustom').value=25;startDonation(25)">$25</button>
+      <button class="logout-btn" style="padding:0.4rem 0.9rem;font-size:0.75rem;" onclick="document.getElementById('donateCustom').value=50;startDonation(50)">$50</button>
     </div>
     <div style="display:flex;gap:0.5rem;align-items:center;margin-bottom:0.75rem;flex-wrap:wrap;">
       <span style="font-size:0.8rem;color:var(--muted);">Custom amount:</span>

@@ -76,14 +76,6 @@
     .slug-status{font-size:.8rem;flex-shrink:0}
 
     /* â”€â”€â”€ Color pickers â”€â”€â”€ */
-    .color-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.75rem;margin-bottom:1rem}
-    @media(max-width:420px){.color-grid{grid-template-columns:1fr 1fr}}
-    .cp-wrap{display:flex;align-items:center;gap:.5rem;background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:.45rem .75rem}
-    input[type=color]{width:1.4rem;height:1.4rem;border:none;background:none;cursor:pointer;padding:0;border-radius:3px;flex-shrink:0}
-    .cp-hex{font-family:'DM Mono',monospace;font-size:.62rem;color:var(--cream)}
-    .color-preview{height:2.75rem;border-radius:6px;display:flex;align-items:center;padding:0 1rem;gap:.75rem;margin-bottom:1.5rem;transition:background .15s}
-    .cp-dot{width:.6rem;height:.6rem;border-radius:50%;flex-shrink:0}
-    .cp-label{font-size:.75rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase}
 
     /* â”€â”€â”€ Upload zone â”€â”€â”€ */
     .upload-zone{border:1px dashed var(--border);border-radius:6px;padding:1.5rem;text-align:center;cursor:pointer;transition:border-color .15s}
@@ -300,25 +292,6 @@
     <div class="panel" id="s4">
       <div class="step-title">Brand & Design</div>
       <div class="step-sub">Colors and logo — applied automatically on every page</div>
-      <div class="fl" style="margin-bottom:.75rem">Site Colors</div>
-      <div class="color-grid">
-        <div>
-          <div class="fl">Accent</div>
-          <div class="cp-wrap"><input type="color" id="cPrimary" value="#c09030" oninput="onColor()"><span class="cp-hex" id="hPrimary">#c09030</span></div>
-        </div>
-        <div>
-          <div class="fl">Text</div>
-          <div class="cp-wrap"><input type="color" id="cInk" value="#1a1008" oninput="onColor()"><span class="cp-hex" id="hInk">#1a1008</span></div>
-        </div>
-        <div>
-          <div class="fl">Background</div>
-          <div class="cp-wrap"><input type="color" id="cBg" value="#f5ede0" oninput="onColor()"><span class="cp-hex" id="hBg">#f5ede0</span></div>
-        </div>
-      </div>
-      <div class="color-preview" id="colorPrev" style="background:#f5ede0">
-        <div class="cp-dot" id="prevDot" style="background:#c09030"></div>
-        <span class="cp-label" id="prevName" style="color:#1a1008">Tournament Name</span>
-      </div>
       <div class="field">
         <label>Logo <span style="font-weight:400;opacity:.6">(optional)</span></label>
         <div class="upload-zone" id="logoZone" onclick="document.getElementById('logoFile').click()">
@@ -441,10 +414,6 @@
         if (p.year) document.getElementById('tYear').value = String(p.year);
         if (p.name) { const el = document.getElementById('tName'); if (el) { el.value = p.name; onName(p.name); } }
         if (p.loc)  { const el = document.getElementById('tLoc');  if (el) el.value = p.loc; }
-        if (p.primary) { const el = document.getElementById('cPrimary'); if (el) el.value = p.primary; }
-        if (p.ink)     { const el = document.getElementById('cInk');     if (el) el.value = p.ink; }
-        if (p.bg)      { const el = document.getElementById('cBg');      if (el) el.value = p.bg; }
-        onColor();
         const banner = document.getElementById('prefillBanner');
         if (banner && p.from) { banner.textContent = `Cloning from "${p.from}" — review all steps before creating.`; banner.style.display = 'block'; }
       } catch(e) {}
@@ -743,18 +712,6 @@
   }
 
   // â”€â”€â”€ Step 4: Brand â”€â”€â”€
-  function onColor() {
-    const p = document.getElementById('cPrimary').value;
-    const i = document.getElementById('cInk').value;
-    const b = document.getElementById('cBg').value;
-    document.getElementById('hPrimary').textContent = p;
-    document.getElementById('hInk').textContent = i;
-    document.getElementById('hBg').textContent = b;
-    document.getElementById('colorPrev').style.background = b;
-    document.getElementById('prevDot').style.background = p;
-    document.getElementById('prevName').style.color = i;
-  }
-
   async function uploadLogo(inp) {
     const file = inp.files[0];
     if (!file) return;
@@ -777,10 +734,6 @@
     const year   = document.getElementById('tYear').value.trim() || String(new Date().getFullYear());
     const loc    = document.getElementById('tLoc').value.trim();
     const sub    = document.getElementById('tSub').value.trim();
-    const accent = document.getElementById('cPrimary').value;
-    const ink    = document.getElementById('cInk').value;
-    const bg     = document.getElementById('cBg').value;
-
     btn.innerHTML = '<span class="spin"></span>Creating…';
     btn.disabled = true;
     alrt.style.display = 'none';
@@ -837,9 +790,6 @@
         { key:'homepage_details',  value: `${S.days} Day${S.days>1?'s':''} · ${S.structure==='individual'?'Individual':S.structure==='pairs'?S.pairCount+' Pairs':S.teamCount+' Teams'} · ${S.days*18} Holes · ${year}` },
         { key:'homepage_about',    value: `${name} is a ${S.days}-day golf tournament${loc?' in '+loc:''}. ${S.structure==='individual'?'Individual scoring — every stroke counts.':S.structure==='pairs'?S.pairCount+' pairs compete — combined best-ball score per pair.':'Two teams compete across all rounds — every stroke feeds the team score.'} Set up your tournament details from the admin page.` },
         { key:'hero_cta_primary',  value: 'Request Your Spot' },
-        { key:'color_primary',     value: accent },
-        { key:'color_ink',         value: ink },
-        { key:'color_bg',          value: bg },
         { key:'about_stat_days',   value: String(S.days) },
         { key:'about_stat_teams',  value: S.structure === 'individual' ? 'Solo' : S.structure === 'pairs' ? String(S.pairCount) : String(S.teamCount) },
         { key:'about_stat_holes',  value: String(S.days * 18) },
