@@ -343,6 +343,18 @@ td{padding:0.7rem 0.75rem;font-size:0.88rem;vertical-align:middle;}
 .ref-table td{padding:0.55rem 0.75rem;border-bottom:1px solid rgba(192,144,48,0.06);font-size:0.78rem;vertical-align:top;}
 .ref-table tr:last-child td{border-bottom:none;}
 .ref-table code{font-family:'DM Mono',monospace;font-size:0.7rem;background:rgba(192,144,48,0.1);color:var(--gold-light);padding:0.05rem 0.28rem;border-radius:2px;}
+.fmt-list{display:flex;flex-direction:column;gap:0.3rem;}
+.fmt-item{background:var(--card);border:1px solid var(--border);border-radius:5px;overflow:hidden;}
+.fmt-summary{display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0.9rem;cursor:pointer;list-style:none;user-select:none;transition:background .1s;}
+.fmt-summary::-webkit-details-marker{display:none;}
+.fmt-summary:hover{background:rgba(255,255,255,0.025);}
+.fmt-item[open]>.fmt-summary{border-bottom:1px solid var(--border);background:rgba(192,144,48,0.04);}
+.fmt-code{font-family:'DM Mono',monospace;font-size:0.68rem;background:rgba(192,144,48,0.1);color:var(--gold-light);padding:0.05rem 0.3rem;border-radius:2px;flex-shrink:0;}
+.fmt-label{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:0.88rem;letter-spacing:0.05em;color:var(--text);flex:1;}
+.fmt-tag{font-family:'DM Mono',monospace;font-size:0.44rem;color:var(--muted);letter-spacing:0.07em;white-space:nowrap;}
+.fmt-chevron{font-size:0.52rem;color:var(--muted);transition:transform .15s;margin-left:0.25rem;flex-shrink:0;}
+.fmt-item[open] .fmt-chevron{transform:rotate(90deg);}
+.fmt-explain{padding:0.7rem 0.9rem;font-size:0.77rem;color:rgba(240,230,204,0.68);line-height:1.6;}
 
 /* â”€â”€ Action Board â”€â”€ */
 .action-wrap{max-width:1100px;margin:0 auto;padding:1.75rem 1.75rem 4rem;}
@@ -655,24 +667,55 @@ td{padding:0.7rem 0.75rem;font-size:0.88rem;vertical-align:middle;}
         <div class="ref-sec-hdr">
           <div class="ref-sec-meta"><div class="ref-sec-title">Format Values — Ground Truth</div><div class="ref-sec-desc">Canonical scoring format values · source: create.html</div></div>
         </div>
-        <div class="tbl-wrap">
-          <table class="ref-table">
-            <thead><tr><th>Value</th><th>Label</th><th>Scorecard behavior</th></tr></thead>
-            <tbody>
-              <tr><td><code>stroke</code></td><td>Stroke Play</td><td>default</td></tr>
-              <tr><td><code>scramble</code></td><td>Scramble</td><td>PAIR_TEAM_FMTS (shared ball)</td></tr>
-              <tr><td><code>best_ball</code></td><td>Best Ball</td><td>isBestBallHole</td></tr>
-              <tr><td><code>shambles</code></td><td>Shambles</td><td>individual (NOT PAIR_TEAM_FMTS)</td></tr>
-              <tr><td><code>stableford</code></td><td>Stableford</td><td>isStablefordHole</td></tr>
-              <tr><td><code>mod_stableford</code></td><td>Modified Stableford</td><td>isStablefordHole</td></tr>
-              <tr><td><code>match</code></td><td>Match Play</td><td>isMatchHole</td></tr>
-              <tr><td><code>alt_shot</code></td><td>Alternate Shot</td><td>PAIR_TEAM_FMTS</td></tr>
-              <tr><td><code>chapman</code></td><td>Chapman / Pinehurst</td><td>PAIR_TEAM_FMTS</td></tr>
-              <tr><td><code>greensomes</code></td><td>Greensomes</td><td>PAIR_TEAM_FMTS</td></tr>
-              <tr><td><code>nassau</code></td><td>Nassau</td><td>stroke play (side bets only)</td></tr>
-              <tr><td><code>skins</code></td><td>Skins</td><td>stroke play (side bets only)</td></tr>
-            </tbody>
-          </table>
+        <div class="fmt-list">
+          <details class="fmt-item">
+            <summary class="fmt-summary"><code class="fmt-code">stroke</code><span class="fmt-label">Stroke Play</span><span class="fmt-tag">default</span><span class="fmt-chevron">›</span></summary>
+            <div class="fmt-explain">Every player counts every stroke on every hole. Add them all up. Lowest total score for the round wins. The standard format most golfers know.</div>
+          </details>
+          <details class="fmt-item">
+            <summary class="fmt-summary"><code class="fmt-code">scramble</code><span class="fmt-label">Scramble</span><span class="fmt-tag">team · shared ball</span><span class="fmt-chevron">›</span></summary>
+            <div class="fmt-explain">All teammates tee off, then the team picks the best shot. Everyone picks up and plays their next shot from that spot. Repeat until holed. One shared team score per hole. Great for mixed-skill groups — the best player carries the team on each shot.</div>
+          </details>
+          <details class="fmt-item">
+            <summary class="fmt-summary"><code class="fmt-code">best_ball</code><span class="fmt-label">Best Ball</span><span class="fmt-tag">team · own ball</span><span class="fmt-chevron">›</span></summary>
+            <div class="fmt-explain">Each player plays their own ball the entire hole, start to finish. The team's score for that hole is simply the lowest (best) individual score among all teammates. Everyone keeps playing — only the best score counts.</div>
+          </details>
+          <details class="fmt-item">
+            <summary class="fmt-summary"><code class="fmt-code">shambles</code><span class="fmt-label">Shambles</span><span class="fmt-tag">hybrid · own ball from best drive</span><span class="fmt-chevron">›</span></summary>
+            <div class="fmt-explain">All teammates tee off, then the team picks the best drive. From that spot, everyone plays their own ball independently into the hole. The team's score is the best individual score from there. A hybrid of scramble (on the tee) and best ball (into the green).</div>
+          </details>
+          <details class="fmt-item">
+            <summary class="fmt-summary"><code class="fmt-code">stableford</code><span class="fmt-label">Stableford</span><span class="fmt-tag">points vs par</span><span class="fmt-chevron">›</span></summary>
+            <div class="fmt-explain">Points-based format scored against par. Standard scale: Double bogey or worse = 0 pts · Bogey = 1 pt · Par = 2 pts · Birdie = 3 pts · Eagle = 4 pts · Albatross = 5 pts. Highest total points wins. Bad holes hurt less than in stroke play — a blowup hole costs you at most 2 pts.</div>
+          </details>
+          <details class="fmt-item">
+            <summary class="fmt-summary"><code class="fmt-code">mod_stableford</code><span class="fmt-label">Modified Stableford</span><span class="fmt-tag">aggressive points scale</span><span class="fmt-chevron">›</span></summary>
+            <div class="fmt-explain">Same concept as Stableford but with a more aggressive points scale that rewards birdies and eagles heavily while penalizing bogeys. Common scale: Double bogey = −3 · Bogey = −1 · Par = 0 · Birdie = +2 · Eagle = +5 · Albatross = +8. Check event rules for the exact scale being used.</div>
+          </details>
+          <details class="fmt-item">
+            <summary class="fmt-summary"><code class="fmt-code">match</code><span class="fmt-label">Match Play</span><span class="fmt-tag">hole by hole</span><span class="fmt-chevron">›</span></summary>
+            <div class="fmt-explain">You compete hole-by-hole against an opponent, not on total score. Win a hole = go 1 up. Tie a hole = halved, no change. The match ends when one player leads by more holes than remain. Final result is expressed as "3&amp;2" (3 holes up with 2 left to play). Total strokes don't matter — only who wins each hole.</div>
+          </details>
+          <details class="fmt-item">
+            <summary class="fmt-summary"><code class="fmt-code">alt_shot</code><span class="fmt-label">Alternate Shot</span><span class="fmt-tag">team · partners alternate</span><span class="fmt-chevron">›</span></summary>
+            <div class="fmt-explain">Two-player teams share one ball, taking turns hitting it. One partner tees off on odd-numbered holes, the other on even. After the tee shot, partners alternate hitting until the ball is holed. If Partner A putts out on hole 3, Partner B tees off on hole 4. Requires tight communication and trust.</div>
+          </details>
+          <details class="fmt-item">
+            <summary class="fmt-summary"><code class="fmt-code">chapman</code><span class="fmt-label">Chapman / Pinehurst</span><span class="fmt-tag">team · swap then alternate</span><span class="fmt-chevron">›</span></summary>
+            <div class="fmt-explain">Both partners tee off, then swap — you play your partner's drive and they play yours. After those second shots, the team picks the better ball and finishes the hole in alternate shot from there. Combines individual accountability on the second shot with teamwork to close it out.</div>
+          </details>
+          <details class="fmt-item">
+            <summary class="fmt-summary"><code class="fmt-code">greensomes</code><span class="fmt-label">Greensomes</span><span class="fmt-tag">team · best drive then alternate</span><span class="fmt-chevron">›</span></summary>
+            <div class="fmt-explain">Both partners tee off, then pick the best drive. From there, the team plays alternate shot all the way in — the player whose drive was not chosen hits the second shot. Similar to Chapman but without swapping tee shots first.</div>
+          </details>
+          <details class="fmt-item">
+            <summary class="fmt-summary"><code class="fmt-code">nassau</code><span class="fmt-label">Nassau</span><span class="fmt-tag">side bet overlay</span><span class="fmt-chevron">›</span></summary>
+            <div class="fmt-explain">A wager format that splits the round into three separate match play competitions: front 9, back 9, and full 18 holes. Each segment is worth its own bet. You can win 0, 1, 2, or all 3. Often layered on top of stroke play — the main scoring format still runs, Nassau is the side action.</div>
+          </details>
+          <details class="fmt-item">
+            <summary class="fmt-summary"><code class="fmt-code">skins</code><span class="fmt-label">Skins</span><span class="fmt-tag">side bet overlay</span><span class="fmt-chevron">›</span></summary>
+            <div class="fmt-explain">Each hole is worth a "skin" (a point or dollar amount). The player with the lowest score on a hole wins that skin outright. If two or more players tie, the skin carries over and adds to the next hole's pot. Ties keep rolling until someone wins clean. Can be played alongside any main format.</div>
+          </details>
         </div>
       </div>
 
