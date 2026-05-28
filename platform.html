@@ -716,6 +716,66 @@ td{padding:0.7rem 0.75rem;font-size:0.88rem;vertical-align:middle;}
             <summary class="fmt-summary"><code class="fmt-code">skins</code><span class="fmt-label">Skins</span><span class="fmt-tag">side bet overlay</span><span class="fmt-chevron">›</span></summary>
             <div class="fmt-explain">Each hole is worth a "skin" (a point or dollar amount). The player with the lowest score on a hole wins that skin outright. If two or more players tie, the skin carries over and adds to the next hole's pot. Ties keep rolling until someone wins clean. Can be played alongside any main format.</div>
           </details>
+          <details class="fmt-item">
+            <summary class="fmt-summary"><code class="fmt-code">superball</code><span class="fmt-label">Superball</span><span class="fmt-tag">team · scramble variant</span><span class="fmt-chevron">›</span></summary>
+            <div class="fmt-explain">Scramble with a designated "super ball" player per team. On pre-set holes, the super ball player's tee shot must be used — no matter where it lands. Adds pressure and fun for stronger players who get the super ball designation.</div>
+          </details>
+          <details class="fmt-item">
+            <summary class="fmt-summary"><code class="fmt-code">texas_scramble</code><span class="fmt-label">Texas Scramble</span><span class="fmt-tag">team · scramble variant</span><span class="fmt-chevron">›</span></summary>
+            <div class="fmt-explain">Standard scramble with one twist: each player's tee shot must be used a minimum number of times during the round (typically 3 of 18). Prevents one great player from dominating every tee shot and forces teams to use everyone.</div>
+          </details>
+          <details class="fmt-item">
+            <summary class="fmt-summary"><code class="fmt-code">florida_scramble</code><span class="fmt-label">Florida Scramble</span><span class="fmt-tag">team · scramble variant</span><span class="fmt-chevron">›</span></summary>
+            <div class="fmt-explain">Scramble where the player whose shot was selected sits out the next shot. If your tee shot is chosen, you don't hit the second shot — your partner(s) play it. Encourages every player to contribute and adds strategy to shot selection.</div>
+          </details>
+          <details class="fmt-item">
+            <summary class="fmt-summary"><code class="fmt-code">ambrose</code><span class="fmt-label">Ambrose</span><span class="fmt-tag">team · scramble + handicap</span><span class="fmt-chevron">›</span></summary>
+            <div class="fmt-explain">Team scramble with handicap applied. After the round, deduct the team's combined handicap allowance (sum of individual handicap indexes divided by player count) from the gross scramble score. Net score is what counts on the leaderboard.</div>
+          </details>
+          <details class="fmt-item">
+            <summary class="fmt-summary"><code class="fmt-code">bogey_par</code><span class="fmt-label">Bogey/Par Competition</span><span class="fmt-tag">any structure · vs par</span><span class="fmt-chevron">›</span></summary>
+            <div class="fmt-explain">You play against par, not opponents directly. Win a hole = net score better than par. Halve = net par. Lose = bogey or worse. Running total of holes won minus holes lost. Often played with handicap strokes to level the field.</div>
+          </details>
+          <details class="fmt-item">
+            <summary class="fmt-summary"><code class="fmt-code">four_ball_match</code><span class="fmt-label">Four-Ball Match Play</span><span class="fmt-tag">pairs · match play</span><span class="fmt-chevron">›</span></summary>
+            <div class="fmt-explain">Each player plays their own ball throughout the hole. The lower of the two partner scores is the pair's score for that hole. The two pairs compete match-play style — best ball of pair A vs best ball of pair B, hole by hole. Classic Ryder Cup format.</div>
+          </details>
+          <details class="fmt-item">
+            <summary class="fmt-summary"><code class="fmt-code">waltz</code><span class="fmt-label">Waltz</span><span class="fmt-tag">team · cycling count</span><span class="fmt-chevron">›</span></summary>
+            <div class="fmt-explain">A cycling team format. Hole 1: only the best 1 score counts. Hole 2: best 2 scores count. Hole 3: best 3 count. Hole 4: back to best 1. Pattern repeats across 18 holes. At some point every player's score matters — nobody can coast.</div>
+          </details>
+          <details class="fmt-item">
+            <summary class="fmt-summary"><code class="fmt-code">vegas</code><span class="fmt-label">Vegas</span><span class="fmt-tag">team · combined score</span><span class="fmt-chevron">›</span></summary>
+            <div class="fmt-explain">Two-player teams combine their scores as a 2-digit number. Lower score = tens digit, higher = units. Example: scores of 4 and 5 combine to 45. Your team's 45 competes against the other team's number per hole — lower combined number wins the hole.</div>
+          </details>
+          <details class="fmt-item">
+            <summary class="fmt-summary"><code class="fmt-code">quota</code><span class="fmt-label">Quota</span><span class="fmt-tag">individual · handicap target</span><span class="fmt-chevron">›</span></summary>
+            <div class="fmt-explain">Each player has a personal point target based on handicap (typically 36 − handicap index). You earn Stableford points each hole. The winner is whoever finishes furthest above their own target — this levels the field across all handicap levels in a single competition.</div>
+          </details>
+          <details class="fmt-item">
+            <summary class="fmt-summary"><code class="fmt-code">bingo_bango_bongo</code><span class="fmt-label">Bingo Bango Bongo</span><span class="fmt-tag">individual · 3 pts per hole</span><span class="fmt-chevron">›</span></summary>
+            <div class="fmt-explain">Three points are up for grabs on every hole. Bingo = first player to get their ball on the green. Bango = player closest to the pin once all balls are on the green. Bongo = first player to hole out. Slow play is penalized — you must play in order. High handicappers can compete.</div>
+          </details>
+          <details class="fmt-item">
+            <summary class="fmt-summary"><code class="fmt-code">wolf</code><span class="fmt-label">Wolf</span><span class="fmt-tag">individual · 4 players only</span><span class="fmt-chevron">›</span></summary>
+            <div class="fmt-explain">Exactly 4 players. A "wolf" is designated each hole in rotation (last to tee off). After each tee shot, the wolf can claim that player as their partner (2v2). After all 4 have teed, if unclaimed the wolf can pick anyone — or go solo (1v3) for double points. Wolf team wins the hole = 1 pt each. Solo wolf wins = 2 pts. Solo wolf loses = opponents each get 1 pt.</div>
+          </details>
+          <details class="fmt-item">
+            <summary class="fmt-summary"><code class="fmt-code">snake</code><span class="fmt-label">Snake</span><span class="fmt-tag">individual · penalty carry</span><span class="fmt-chevron">›</span></summary>
+            <div class="fmt-explain">The player who makes the most recent 3-putt "holds the snake." They carry a penalty until someone else 3-putts and takes the snake from them. Whoever holds the snake at the end of the round takes the final penalty. Adds side pressure on every putt.</div>
+          </details>
+          <details class="fmt-item">
+            <summary class="fmt-summary"><code class="fmt-code">eclectic</code><span class="fmt-label">Eclectic</span><span class="fmt-tag">any structure · multi-round</span><span class="fmt-chevron">›</span></summary>
+            <div class="fmt-explain">Your score is built from your best individual score on each hole across all rounds of the tournament. Shot a 3 on hole 7 in round 1 and a 4 in round 2? Your eclectic score on hole 7 is 3. A running best-of compilation that rewards consistency across the whole event.</div>
+          </details>
+          <details class="fmt-item">
+            <summary class="fmt-summary"><code class="fmt-code">peoria</code><span class="fmt-label">Peoria</span><span class="fmt-tag">individual · post-round handicap</span><span class="fmt-chevron">›</span></summary>
+            <div class="fmt-explain">A post-round handicap system for non-handicapped players. After all scores are submitted, 6 holes are secretly pre-selected (2 par-3s, 2 par-4s, 2 par-5s). Your handicap is computed from your scores on those 6 holes and applied to your gross. Net scores determine the winner.</div>
+          </details>
+          <details class="fmt-item">
+            <summary class="fmt-summary"><code class="fmt-code">callaway</code><span class="fmt-label">Callaway</span><span class="fmt-tag">individual · post-round handicap</span><span class="fmt-chevron">›</span></summary>
+            <div class="fmt-explain">Post-round handicap system using the Callaway table. Based on your gross score, a certain number of your worst hole scores are deducted — higher gross means more holes deducted. Designed for one-time events and non-handicapped players. Net score determines the winner.</div>
+          </details>
         </div>
       </div>
 

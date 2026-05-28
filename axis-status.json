@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-05-27T00:00:00Z",
+  "updated_at": "2026-05-27T12:00:00Z",
   "description": "Living state for all TOURney platform axes. One entry per axis. Updated by every tourney-* skill. Agents read this for context (50 tokens) instead of parsing HTML artifacts.",
   "stages": ["review", "plan", "runbook", "executing", "audit", "concluded"],
   "axes": {
@@ -13,12 +13,12 @@
       "blocking": false
     },
     "feature-depth": {
-      "status": "executing",
-      "grade": "A-",
+      "status": "audit",
+      "grade": "B",
       "artifact": "/platform/5-27-26-feature-depth-review",
       "last_updated": "2026-05-27",
-      "summary": "Full format expansion: 13 → 27+ formats. FORMAT_META, structure-gated picker, opponent enforcement gate, Nassau/Skins overlay. 10-step runbook ready. 3 P1 bugs identified.",
-      "open_items": 10,
+      "summary": "27 formats live. Pairs bug fixed. Structure-gated pickers. Opponent enforcement gate. 5 scorecard per-hole UI items blocked (Skins/Nassau overlay, Quota/BBB, Wolf, Snake/Eclectic/Peoria/Callaway).",
+      "open_items": 5,
       "blocking": false
     },
     "ux": {
@@ -67,12 +67,12 @@
       "blocking": false
     },
     "data-model": {
-      "status": "executing",
-      "grade": "B+",
+      "status": "concluded",
+      "grade": "A",
       "artifact": "/platform/5-26-26-data-model-review",
-      "last_updated": "2026-05-26",
-      "summary": "19 migrations, 16 tables. courses + course_holes live (5-26). 2 bugs: courses write RLS missing, delete_tournament() RPC gap. 3 FK index gaps. 5-step runbook: migrations 018-020 (RLS, delete fix, indexes).",
-      "open_items": 5,
+      "last_updated": "2026-05-27",
+      "summary": "22 migrations, 16 tables, all covered. Courses write RLS fixed, delete_tournament() cascade fixed, 6 FK indexes added, mygolf_profiles + donations documented. Zero open items.",
+      "open_items": 0,
       "blocking": false
     },
     "marketing": {

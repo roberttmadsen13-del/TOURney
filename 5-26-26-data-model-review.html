@@ -138,9 +138,9 @@ footer span{color:var(--gold);}
   <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Review</div></div>
   <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Plan</div></div>
   <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Runbook</div></div>
-  <div class="lc-stage"><div class="lc-pill"></div><div class="lc-label">Executing</div></div>
-  <div class="lc-stage"><div class="lc-pill"></div><div class="lc-label">Audit</div></div>
-  <div class="lc-stage"><div class="lc-pill"></div><div class="lc-label">Concluded</div></div>
+  <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Executing</div></div>
+  <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Audit</div></div>
+  <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Concluded</div></div>
 </div>
 <!-- LIFECYCLE-BAR-END -->
 
@@ -687,8 +687,30 @@ CREATE INDEX IF NOT EXISTS idx_course_holes_course_id
 <section id="executing">
 <div class="wrapper">
 <!-- EXECUTING-CONTENT-START -->
-<div class="stage-pending">
-  <p>Awaiting execution. Run <code>/tourney-execute 5-26-26-data-model-review.html</code> to proceed.</p>
+<div class="section-header">
+  <div class="section-eyebrow">Stage 4 — Executing</div>
+  <h2 class="section-title">Execution Log</h2>
+  <p class="section-desc">All 5 runbook steps executed. 2026-05-27 · claude-sonnet-4-6</p>
+</div>
+<div class="card">
+  <span style="display:inline-block;padding:0.18rem 0.55rem;border-radius:4px;font-size:0.7rem;font-weight:700;letter-spacing:0.08em;background:rgba(39,174,96,0.18);color:#27ae60;margin-bottom:0.5rem;">DONE</span>
+  <div><strong>Step 1 — Courses write RLS</strong> — Applied migration <code>20260526000018_courses_write_rls.sql</code>. Added 4 RLS policies: owner + admin INSERT/UPDATE/DELETE on <code>courses</code> and <code>course_holes</code>. Fixes 403 on admin Course tab.</div>
+</div>
+<div class="card">
+  <span style="display:inline-block;padding:0.18rem 0.55rem;border-radius:4px;font-size:0.7rem;font-weight:700;letter-spacing:0.08em;background:rgba(39,174,96,0.18);color:#27ae60;margin-bottom:0.5rem;">DONE</span>
+  <div><strong>Step 2 — delete_tournament() cascade fix</strong> — Applied migration <code>20260526000019_delete_tournament_courses.sql</code>. Added <code>DELETE FROM courses WHERE tournament_id = p_id</code> (course_holes cascade via FK). Omitted mygolf_profiles + donations — neither has a <code>tournament_id</code> column.</div>
+</div>
+<div class="card">
+  <span style="display:inline-block;padding:0.18rem 0.55rem;border-radius:4px;font-size:0.7rem;font-weight:700;letter-spacing:0.08em;background:rgba(39,174,96,0.18);color:#27ae60;margin-bottom:0.5rem;">DONE</span>
+  <div><strong>Step 3 — Performance indexes</strong> — Applied migration <code>20260526000020_indexes_performance.sql</code>. Added 6 indexes: <code>idx_tournament_admins_email</code>, <code>idx_tournament_admins_tid</code>, <code>idx_settings_tid_key</code>, <code>idx_tournaments_slug</code>, <code>idx_courses_tournament_id</code>, <code>idx_course_holes_course_id</code>.</div>
+</div>
+<div class="card">
+  <span style="display:inline-block;padding:0.18rem 0.55rem;border-radius:4px;font-size:0.7rem;font-weight:700;letter-spacing:0.08em;background:rgba(39,174,96,0.18);color:#27ae60;margin-bottom:0.5rem;">DONE</span>
+  <div><strong>Step 4 — Document mygolf_profiles</strong> — Applied migration <code>20260521000021_mygolf_profiles.sql</code>. CREATE TABLE IF NOT EXISTS guard. 8 columns documented. RLS: read/insert/update own profile via <code>auth.uid() = id</code>.</div>
+</div>
+<div class="card">
+  <span style="display:inline-block;padding:0.18rem 0.55rem;border-radius:4px;font-size:0.7rem;font-weight:700;letter-spacing:0.08em;background:rgba(39,174,96,0.18);color:#27ae60;margin-bottom:0.5rem;">DONE</span>
+  <div><strong>Step 5 — Document donations</strong> — Applied migration <code>20260521000022_donations.sql</code>. CREATE TABLE IF NOT EXISTS guard. Linked via <code>mygolf_profile_id</code> (not tournament-scoped). RLS: read own donations via <code>auth.uid() = mygolf_profile_id</code>.</div>
 </div>
 <!-- EXECUTING-CONTENT-END -->
 </div>
@@ -697,8 +719,45 @@ CREATE INDEX IF NOT EXISTS idx_course_holes_course_id
 <section id="audit">
 <div class="wrapper">
 <!-- AUDIT-CONTENT-START -->
-<div class="stage-pending">
-  <p>Awaiting execution. Run <code>/tourney-execute 5-26-26-data-model-review.html</code> to proceed.</p>
+<div class="section-header">
+  <div class="section-eyebrow">Stage 5 — Audit</div>
+  <h2 class="section-title">Audit Results</h2>
+  <p class="section-desc">Grade: A. 2026-05-27 · claude-sonnet-4-6</p>
+</div>
+<div class="score-grid">
+  <div class="score-cell">
+    <div style="font-size:2rem;font-weight:800;color:var(--gold);">A</div>
+    <div style="font-size:0.7rem;color:var(--muted);margin-top:0.2rem;">Data Model</div>
+  </div>
+  <div class="score-cell">
+    <div style="font-size:1.1rem;font-weight:700;color:var(--green);">5 / 5</div>
+    <div style="font-size:0.7rem;color:var(--muted);margin-top:0.2rem;">Steps Done</div>
+  </div>
+  <div class="score-cell">
+    <div style="font-size:1.1rem;font-weight:700;color:var(--green);">0</div>
+    <div style="font-size:0.7rem;color:var(--muted);margin-top:0.2rem;">Blocked</div>
+  </div>
+  <div class="score-cell">
+    <div style="font-size:1.1rem;font-weight:700;color:var(--green);">5</div>
+    <div style="font-size:0.7rem;color:var(--muted);margin-top:0.2rem;">Migrations Applied</div>
+  </div>
+</div>
+<div class="card">
+  <div class="card-title">What Shipped</div>
+  <ul>
+    <li>Courses write RLS — admin Course tab no longer 403s for tournament owners/admins</li>
+    <li>delete_tournament() now cascades courses + course_holes on deletion</li>
+    <li>6 performance indexes covering all major FK and lookup paths</li>
+    <li>mygolf_profiles schema version-controlled with correct RLS policies</li>
+    <li>donations schema version-controlled with correct RLS policies</li>
+    <li>Total migrations in repo: 22. All 16 live tables now have migration coverage.</li>
+  </ul>
+</div>
+<div class="card">
+  <div class="card-title">Still Open</div>
+  <ul>
+    <li>None — all 5 runbook steps completed clean.</li>
+  </ul>
 </div>
 <!-- AUDIT-CONTENT-END -->
 </div>
@@ -707,8 +766,18 @@ CREATE INDEX IF NOT EXISTS idx_course_holes_course_id
 <section id="concluded">
 <div class="wrapper">
 <!-- CONCLUDED-CONTENT-START -->
-<div class="stage-pending">
-  <p>Awaiting execution. Run <code>/tourney-execute 5-26-26-data-model-review.html</code> to proceed.</p>
+<div class="section-header">
+  <div class="section-eyebrow">Stage 6 — Concluded</div>
+  <h2 class="section-title">Ticket Concluded</h2>
+  <p class="section-desc">2026-05-27 · claude-sonnet-4-6</p>
+</div>
+<div class="card">
+  <div class="card-title">Summary</div>
+  <p>All 5 data-model runbook steps shipped clean. Critical bugs fixed: courses write RLS (admin 403) and delete_tournament() cascade gap. Schema now fully version-controlled with 22 migrations covering all 16 live tables. Net delta: zero P0/P1 data-model bugs remaining.</p>
+</div>
+<div class="card">
+  <div class="card-title">Next Ticket</div>
+  <p>Run <code>/tourney-execute 5-27-26-feature-depth-review.html</code> to continue feature-depth work, or <code>/tourney-review [axis]</code> for a new axis.</p>
 </div>
 <!-- CONCLUDED-CONTENT-END -->
 </div>

@@ -974,11 +974,15 @@ function getHoleFormat(hole) {
   const nine = hole <= 9 ? 'front' : 'back';
   return (roundFormats[currentRound] || DEFAULT_FORMATS[currentRound] || {})[nine] || 'stroke';
 }
-const PAIR_TEAM_FMTS = ['scramble','superball','alt_shot','chapman','greensomes'];
+const PAIR_TEAM_FMTS = ['scramble','superball','alt_shot','chapman','greensomes','texas_scramble','florida_scramble','ambrose','waltz','vegas'];
 function isScrambleHole(hole)  { return PAIR_TEAM_FMTS.includes(getHoleFormat(hole)); }
 function isBestBallHole(hole)  { return getHoleFormat(hole) === 'best_ball'; }
 function isStablefordHole(hole){ const f = getHoleFormat(hole); return f === 'stableford' || f === 'mod_stableford'; }
 function isMatchHole(hole)     { return getHoleFormat(hole) === 'match'; }
+function isSkinsHole(hole)     { return getHoleFormat(hole) === 'skins'; }
+function isNassauHole(hole)    { return getHoleFormat(hole) === 'nassau'; }
+function isBogeyParHole(hole)  { return getHoleFormat(hole) === 'bogey_par'; }
+function isFourBallMatch(hole) { return getHoleFormat(hole) === 'four_ball_match'; }
 
 const FORMAT_DISPLAY = {
   stroke:         'Stroke Play',
@@ -993,7 +997,21 @@ const FORMAT_DISPLAY = {
   mod_stableford: 'Mod. Stableford',
   nassau:         'Nassau',
   skins:          'Skins',
-  superball:      'Superball',
+  superball:        'Superball',
+  texas_scramble:   'Texas Scramble',
+  florida_scramble: 'Florida Scramble',
+  ambrose:          'Ambrose',
+  bogey_par:        'Bogey/Par',
+  four_ball_match:  'Four-Ball Match',
+  waltz:            'Waltz',
+  vegas:            'Vegas',
+  quota:            'Quota',
+  bingo_bango_bongo:'Bingo Bango Bongo',
+  wolf:             'Wolf',
+  snake:            'Snake',
+  eclectic:         'Eclectic',
+  peoria:           'Peoria',
+  callaway:         'Callaway',
 };
 function formatLabel(hole) { return FORMAT_DISPLAY[getHoleFormat(hole)] || 'Stroke Play'; }
 

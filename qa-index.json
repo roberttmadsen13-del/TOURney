@@ -21,30 +21,30 @@
     {
       "id": "review-feature-depth-2026-05-27",
       "category": "review",
-      "stage": "executing",
+      "stage": "audit",
       "title": "Feature Depth Review · May 27, 2026",
-      "summary": "Grade A-. Full golf format expansion: 13 → 27+ formats. FORMAT_META constant, structure-gated format picker, opponent enforcement gate, Nassau/Skins overlay scoring. 3 P1 bugs identified (pairs format bug create.html:611, Nassau/Skins overlay missing, solo-score anti-cheat gate absent). 10-step runbook ready.",
+      "summary": "Execute grade B. 7/10 steps done: pairs format bug fixed, structure-gated FORMAT_META in create.html + admin.html, 27-format scoreboard/scorecard expansion, opponent enforcement gate. 3 blocked: Skins/Nassau sidebar overlay UI, Quota/BBB per-hole UI, Wolf scoring path, Snake/Eclectic/Peoria/Callaway post-round computation.",
       "date": "2026-05-27",
       "updated": "2026-05-27",
       "author": "claude-sonnet-4-6",
       "url": "/platform/5-27-26-feature-depth-review",
       "file": "5-27-26-feature-depth-review.html",
       "tags": ["review", "feature-depth", "formats", "scoring"],
-      "status": "open"
+      "status": "partial"
     },
     {
       "id": "review-data-model-2026-05-26",
       "category": "review",
-      "stage": "executing",
+      "stage": "concluded",
       "title": "Data Model Review · May 26, 2026",
-      "summary": "Grade B+. 19 migrations, 16 tables. courses + course_holes added same day. 2 new bugs found: missing write RLS on courses (admin Course tab will 403), delete_tournament() RPC gap. 3 FK index gaps. 5-step runbook ready.",
+      "summary": "Execute grade A. All 5 steps done: courses write RLS (migration 018), delete_tournament() cascade fix (019), 6 performance indexes (020), mygolf_profiles doc migration (021), donations doc migration (022). 22 migrations, all 16 tables covered. Zero blocked.",
       "date": "2026-05-26",
-      "updated": "2026-05-26",
+      "updated": "2026-05-27",
       "author": "claude-sonnet-4-6",
       "url": "/platform/5-26-26-data-model-review",
       "file": "5-26-26-data-model-review.html",
       "tags": ["review", "data-model", "schema", "rls", "migrations"],
-      "status": "open"
+      "status": "concluded"
     },
     {
       "id": "review-ux-2026-05-26",

@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-05-27T00:00:00Z",
+  "updated_at": "2026-05-27T12:00:00Z",
   "description": "Per-axis grade history for TOURney platform. Updated automatically by review skills. Operations Action Board reads this file.",
   "axes": {
     "architecture": {
@@ -75,6 +75,13 @@
       "label": "Feature Depth",
       "cmd": "/tourney-review-feature-depth",
       "scores": [
+        {
+          "date": "2026-05-27",
+          "score": "B",
+          "url": "/platform/5-27-26-feature-depth-review",
+          "review_title": "Execute + Audit · May 27, 2026",
+          "notes": "7/10 runbook steps done. Shipped: pairs format bug fixed (structure-gated makeOpts), FORMAT_META single source of truth in create.html + admin.html, 27 formats in scoreboard/scorecard, opponent enforcement gate (Wolf hard-block + structure soft-confirm). 3 steps blocked: Skins/Nassau sidebar overlay UI, Quota/BBB per-hole UI, Wolf scoring path, Snake/Eclectic/Peoria/Callaway post-round computation — all require full scorecard.html DOM context. Grade A- → B (blocked items)."
+        },
         {
           "date": "2026-05-27",
           "score": "A-",
@@ -601,6 +608,13 @@
       "label": "Data Model",
       "cmd": "/tourney-review-data-model",
       "scores": [
+        {
+          "date": "2026-05-27",
+          "score": "A",
+          "url": "/platform/5-26-26-data-model-review",
+          "review_title": "Execute + Audit · May 27, 2026",
+          "notes": "All 5 runbook steps shipped. Courses write RLS added (migrations 018), delete_tournament() cascade fixed (019), 6 FK indexes added (020), mygolf_profiles + donations documented (021-022). 22 migrations cover all 16 tables. Zero open items. Grade B+ → A."
+        },
         {
           "date": "2026-05-26",
           "score": "B+",

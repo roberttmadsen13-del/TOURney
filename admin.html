@@ -250,6 +250,7 @@ td.email a:hover{color:var(--gold);}
 </style>
 <link rel="stylesheet" href="/nav-mobile.css">
 <script defer src="/nav-mobile.js"></script>
+<script src="/lib/formats.js"></script>
 </head>
 <body>
 
@@ -911,7 +912,7 @@ const DEFAULT_FORMATS = {
   day2: { front: 'scramble',  back: 'shambles'  },
   day3: { front: 'best_ball', back: 'stroke'    },
 };
-const FORMAT_OPTIONS = [
+const FORMAT_OPTIONS = (window.FORMAT_META || [
   { value: 'stroke',         label: 'Stroke Play'         },
   { value: 'scramble',       label: 'Scramble'            },
   { value: 'shambles',       label: 'Shambles'            },
@@ -925,7 +926,7 @@ const FORMAT_OPTIONS = [
   { value: 'nassau',         label: 'Nassau'              },
   { value: 'skins',          label: 'Skins'               },
   { value: 'superball',      label: 'Superball'           },
-];
+]);
 
 let players = [];
 let roundStates = {day1:'pending',day2:'pending',day3:'pending'};
@@ -1074,7 +1075,7 @@ async function loadFormats() {
   renderRounds();
 }
 
-const FORMAT_DESCS = {stroke:'Every stroke counts. Lowest total score wins.',scramble:'All players hit, best shot chosen, repeat. Great for mixed-skill groups.',shambles:'Scramble off the tee, then everyone plays their own ball from the best drive.',best_ball:'Each player plays their own ball; lowest score on each hole counts for the team.',stableford:'Points per hole vs par. Bogey = 1, par = 2, birdie = 3, eagle = 4. Most points wins.',mod_stableford:'Points scale with score vs par — double bogey loses a point, eagle earns 5.',match:'Hole-by-hole competition. Win the hole, earn a point. Most holes won wins.',alt_shot:'Partners share one ball and alternate shots every stroke. Pure teamwork.',chapman:'Both players hit drives, swap balls, then choose the best to finish alternate shot.',greensomes:'Both partners drive, best drive chosen, then alternate shots into the hole.',nassau:'Three bets in one: front 9, back 9, and overall. Classic side-bet format.',skins:'Each hole is worth a skin. Ties carry the skin forward. Winner takes the pot.',superball:'Scramble with a twist — one player is the designated "super ball" and their tee shot must be used on pre-set holes, regardless of where it lands.'};
+const FORMAT_DESCS = Object.fromEntries((window.FORMAT_META || []).map(f => [f.value, f.desc]));
 function _setFmtDesc(key, side) {
   const val = document.getElementById(`fmt-${key}-${side}`)?.value;
   const el  = document.getElementById(`fmtd-${key}-${side}`);
@@ -1250,7 +1251,16 @@ function renderStats() {
 }
 
 // ── ROUNDS ────────────────────────────────────────────────────────
-const FMT_LABELS = { stroke:'Stroke Play', scramble:'Scramble', bestball:'Best Ball', stableford:'Stableford', match:'Match Play' };
+const FMT_LABELS = {
+  stroke:'Stroke Play', scramble:'Scramble', best_ball:'Best Ball', shambles:'Shambles',
+  stableford:'Stableford', mod_stableford:'Mod. Stableford', match:'Match Play',
+  alt_shot:'Alternate Shot', chapman:'Chapman/Pinehurst', greensomes:'Greensomes',
+  nassau:'Nassau', skins:'Skins', superball:'Superball',
+  texas_scramble:'Texas Scramble', florida_scramble:'Florida Scramble', ambrose:'Ambrose',
+  bogey_par:'Bogey/Par', four_ball_match:'Four-Ball Match', waltz:'Waltz', vegas:'Vegas',
+  quota:'Quota', bingo_bango_bongo:'BBB', wolf:'Wolf', snake:'Snake',
+  eclectic:'Eclectic', peoria:'Peoria', callaway:'Callaway',
+};
 const DAY_WORDS  = ['One','Two','Three','Four','Five','Six','Seven'];
 
 function renderRounds() {
@@ -1297,6 +1307,20 @@ async function toggleRound(day) {
 
   const dayNum = parseInt(day.replace('day', ''));
   if (next === 'open') {
+    // Opponent gate — anti-cheat: minimum opponent check before opening scoring
+    const fmt = roundFormats?.[day];
+    const isWolf = fmt && (fmt.front === 'wolf' || fmt.back === 'wolf');
+    if (isWolf && players.length !== 4) {
+      alert('Wolf format requires exactly 4 players. Cannot open scoring.');
+      return;
+    }
+    if (_structure === 'individual' && players.length < 2) {
+      if (!confirm(`Warning: Only ${players.length} player registered. At least 2 required — solo score entry is not permitted (anti-cheat).\n\nOpen scoring anyway?`)) return;
+    } else if (_structure === 'pairs' && _pairCount < 2) {
+      if (!confirm(`Warning: Only ${_pairCount} pair assigned. At least 2 pairs required.\n\nOpen scoring anyway?`)) return;
+    } else if (_structure === 'team' && _teamCount < 2) {
+      if (!confirm(`Warning: Only ${_teamCount} team configured. At least 2 teams required.\n\nOpen scoring anyway?`)) return;
+    }
     // Auto-close any other open round
     const otherOpenDays = Object.entries(roundStates).filter(([d, v]) => d !== day && v === 'open').map(([d]) => parseInt(d.replace('day','')));
     const updates = [sb.from('rounds').update({ status: 'open', updated_at: new Date().toISOString() }).eq('tournament_id', _tid).eq('day_number', dayNum)];

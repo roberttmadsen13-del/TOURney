@@ -1,4 +1,19 @@
-# QA Bug Log — TOURney Platform (updated: 2026-05-20)
+# QA Bug Log — TOURney Platform (updated: 2026-05-27)
+
+### 2026-05-27 — 5-26-26-data-model-review execute audit
+- [DONE] courses write RLS missing (supabase/migrations/20260526000018_courses_write_rls.sql) — 4 RLS policies added for courses + course_holes. Status: fixed
+- [DONE] delete_tournament() did not cascade courses (supabase/migrations/20260526000019_delete_tournament_courses.sql) — orphaned rows on deletion. Status: fixed
+- [INFO] 6 performance indexes added (migration 020), mygolf_profiles + donations documented (021-022). Grade: A. Zero open items.
+
+### 2026-05-27 — 5-27-26-feature-depth-review execute audit
+- [DONE] Pairs format picker not structure-gated (create.html makeOpts()) — dead code removed, FORMAT_META.structures[] filter added. Status: fixed
+- [DONE] Opponent enforcement gate missing (admin.html toggleRound()) — Wolf hard-block + structure soft-confirm dialogs added. Status: fixed
+- [DEFERRED] Skins/Nassau overlay sidebar UI (scorecard.html) — detection hooks added, panel UI deferred. Status: open
+- [DEFERRED] Quota/BBB per-hole UI (scorecard.html) — deferred. Status: open
+- [DEFERRED] Wolf scoring path per-hole (scorecard.html) — deferred. Status: open
+- [DEFERRED] Snake/Eclectic/Peoria/Callaway post-round computation (scorecard.html) — deferred. Status: open
+
+---
 
 ### 2026-05-20 — 5-20-26-deployment-review execute audit
 <!-- 5-20-26-deployment-review execute audit clean for shipped steps -->

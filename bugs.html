@@ -172,9 +172,27 @@ footer a:hover{color:var(--gold);}
       <div class="bug-item fixed"><div class="bug-title"><strong>admin.html: showToast undefined — 25 silent save failures</strong> — <code>showToast()</code> called on every save/action in admin.html but never defined. Every successful DB write showed no feedback; errors also silently swallowed. Fixed: added <code>#adminToast</code> aria-live div + <code>showToast()</code> function with branded slide-up toast.</div><div class="bug-meta">admin.html · 5-26-26-ux-review execute · 2026-05-27</div></div>
     </div>
 
+    <div class="session-hdr" onclick="toggleSession('s27b')">
+      <span class="session-title">2026-05-27 — Data Model execute audit (5-26-26-data-model-review) <span class="pill pill-yellow">2 Fixed</span> <span class="pill pill-gold">A</span></span>
+      <span class="session-count">2 bugs ▾</span>
+    </div>
+    <div class="session-body collapsed" id="s27b">
+      <div class="bug-item fixed"><div class="bug-title"><strong>courses write RLS missing — admin Course tab 403</strong> — <code>courses</code> and <code>course_holes</code> tables had no INSERT/UPDATE/DELETE policies. Any tournament owner or admin write would silently 403. Fixed: migration <code>20260526000018_courses_write_rls.sql</code> — 4 policies (owner + admin INSERT/UPDATE/DELETE).</div><div class="bug-meta">supabase/migrations/20260526000018_courses_write_rls.sql · 5-26-26-data-model-review execute · 2026-05-27</div></div>
+      <div class="bug-item fixed"><div class="bug-title"><strong>delete_tournament() did not cascade courses</strong> — RPC function deleted players/scores/rounds/settings/invitations but skipped <code>courses</code> and <code>course_holes</code>. Orphaned rows on tournament deletion. Fixed: migration <code>20260526000019_delete_tournament_courses.sql</code> — adds <code>DELETE FROM courses WHERE tournament_id = p_id</code> (course_holes FK cascade).</div><div class="bug-meta">supabase/migrations/20260526000019_delete_tournament_courses.sql · 5-26-26-data-model-review execute · 2026-05-27</div></div>
+    </div>
+
+    <div class="session-hdr" onclick="toggleSession('s27c')">
+      <span class="session-title">2026-05-27 — Feature Depth execute audit (5-27-26-feature-depth-review) <span class="pill pill-yellow">2 Fixed</span> <span class="pill pill-gold">B</span></span>
+      <span class="session-count">2 fixes, 5 deferred ▾</span>
+    </div>
+    <div class="session-body collapsed" id="s27c">
+      <div class="bug-item fixed"><div class="bug-title"><strong>Pairs format picker not structure-gated</strong> — create.html showed all 13 formats regardless of structure. Dead comment + unused <code>fmtSection</code>/<code>fmtLabel</code> variables suggested <code>display:none</code> was applied (it wasn't). Fixed: removed dead code, updated <code>makeOpts()</code> to filter by <code>FORMAT_META.structures[]</code> — pairs/team see team formats only.</div><div class="bug-meta">create.html · 5-27-26-feature-depth-review execute · 2026-05-27</div></div>
+      <div class="bug-item fixed"><div class="bug-title"><strong>Opponent enforcement gate missing — solo score entry not blocked</strong> — admin <code>toggleRound()</code> opened scoring with no player count validation. Anti-cheat P0. Fixed: Wolf requires exactly 4 players (hard block); individual requires ≥2 players, pairs requires ≥2 pairs, team requires ≥2 teams (soft confirm dialogs).</div><div class="bug-meta">admin.html toggleRound() · 5-27-26-feature-depth-review execute · 2026-05-27</div></div>
+    </div>
+
     <div class="session-hdr" onclick="toggleSession('s22')">
       <span class="session-title">2026-05-22 — Consolidation execute audit <span class="pill pill-green">Clean</span></span>
-      <span class="session-count">0 bugs â–¾</span>
+      <span class="session-count">0 bugs ▾</span>
     </div>
     <div class="session-body collapsed" id="s22">
       <!-- 5-22-26-consolidation-review execute audit clean — 2026-05-22 -->
