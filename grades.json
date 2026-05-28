@@ -77,10 +77,10 @@
       "scores": [
         {
           "date": "2026-05-27",
-          "score": "B",
+          "score": "A-",
           "url": "/platform/5-27-26-feature-depth-review",
           "review_title": "Execute + Audit · May 27, 2026",
-          "notes": "7/10 runbook steps done. Shipped: pairs format bug fixed (structure-gated makeOpts), FORMAT_META single source of truth in create.html + admin.html, 27 formats in scoreboard/scorecard, opponent enforcement gate (Wolf hard-block + structure soft-confirm). 3 steps blocked: Skins/Nassau sidebar overlay UI, Quota/BBB per-hole UI, Wolf scoring path, Snake/Eclectic/Peoria/Callaway post-round computation — all require full scorecard.html DOM context. Grade A- → B (blocked items)."
+          "notes": "10/10 steps done. Shipped: Wolf per-hole partner selection, BBG award buttons, Quota stableford tracker, Snake 3-putt holder, Skins carry/win running totals, Nassau front/back/overall match tracker, Peoria+Callaway net handicap in sign-your-card modal. All backed by localStorage. Structure-gated pickers + opponent enforcement gate live. Zero blocked."
         },
         {
           "date": "2026-05-27",

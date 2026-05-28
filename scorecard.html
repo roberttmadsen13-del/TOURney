@@ -393,6 +393,7 @@ body{background:var(--bg);color:var(--ink);font-family:'Barlow',sans-serif;font-
     </div>
 
     <div id="foursomeGrid"></div>
+    <div id="formatOverlay"></div>
 
     <div class="hole-nav">
       <button class="nav-btn" id="prevBtn" onclick="prevHole()" disabled>&larr; Previous</button>
@@ -1056,6 +1057,251 @@ function stablefordPts(gross, par, format) {
   return 0;
 }
 
+// ── FORMAT GAME STATE ─────────────────────────────────────────────
+let wolfPartners = {};   // [hole] = playerId | 'lone'
+let bbgScores   = {};    // [hole] = { first, close, putt } = pid | null
+let snakeHolder = null;  // player id currently holding the snake
+let snake3putts = {};    // [hole] = pid
+let _fmtStateLoaded = false;
+
+function ensureFormatState() {
+  if (_fmtStateLoaded) return;
+  _fmtStateLoaded = true;
+  try {
+    const w = localStorage.getItem(`${_slug}_wolf_${currentRound}`);
+    if (w) wolfPartners = JSON.parse(w);
+    const b = localStorage.getItem(`${_slug}_bbg_${currentRound}`);
+    if (b) bbgScores = JSON.parse(b);
+    const s = localStorage.getItem(`${_slug}_snake_${currentRound}`);
+    if (s) { const d = JSON.parse(s); snakeHolder = d.holder; snake3putts = d.putts || {}; }
+  } catch {}
+}
+
+function saveFmtState() {
+  try {
+    localStorage.setItem(`${_slug}_wolf_${currentRound}`, JSON.stringify(wolfPartners));
+    localStorage.setItem(`${_slug}_bbg_${currentRound}`, JSON.stringify(bbgScores));
+    localStorage.setItem(`${_slug}_snake_${currentRound}`, JSON.stringify({ holder: snakeHolder, putts: snake3putts }));
+  } catch {}
+}
+
+function allActivePlayers() {
+  return [scorerPlayer, partnerPlayer, opp1Player, opp2Player].filter(Boolean);
+}
+
+function renderFormatOverlay(hole) {
+  ensureFormatState();
+  const fmt = getHoleFormat(hole);
+  const el = document.getElementById('formatOverlay');
+  if (!el) return;
+  let html = '';
+  if (fmt === 'wolf')             html = renderWolfPanel(hole);
+  else if (fmt === 'bingo_bango_bongo') html = renderBBGPanel(hole);
+  else if (fmt === 'quota')       html = renderQuotaPanel(hole);
+  else if (fmt === 'snake')       html = renderSnakePanel(hole);
+  el.innerHTML = html;
+}
+
+function renderWolfPanel(hole) {
+  const players = allActivePlayers();
+  if (players.length < 2) return '';
+  const wolfIdx  = (hole - 1) % players.length;
+  const wolfPid  = players[wolfIdx].id;
+  const wolfName = `${players[wolfIdx].first_name} ${players[wolfIdx].last_name}`;
+  const partners = players.filter(p => p.id !== wolfPid);
+  const chosen   = wolfPartners[hole];
+  let btns = partners.map(p => {
+    const active = chosen === p.id ? ' chosen' : '';
+    return `<button class="wolf-btn${active}" onclick="setWolfPartner(${hole},'${p.id}')">${esc(p.first_name)}</button>`;
+  }).join('');
+  btns += `<button class="wolf-btn lone-wolf${chosen === 'lone' ? ' chosen' : ''}" onclick="setWolfPartner(${hole},'lone')">Lone Wolf</button>`;
+  return `<div class="wolf-wrap">
+    <div class="wolf-who">Wolf: ${esc(wolfName)}</div>
+    <div style="display:flex;gap:0.38rem;flex-wrap:wrap">${btns}</div>
+  </div>`;
+}
+
+function setWolfPartner(hole, choice) {
+  wolfPartners[hole] = choice;
+  saveFmtState();
+  renderFormatOverlay(hole);
+}
+
+function renderBBGPanel(hole) {
+  const players = allActivePlayers();
+  if (!players.length) return '';
+  const data = bbgScores[hole] || {};
+  const awards = [
+    { key: 'first', label: 'First on Green' },
+    { key: 'close', label: 'Closest to Pin' },
+    { key: 'putt',  label: 'First to Putt Out' },
+  ];
+  let html = `<div class="fmt-overlay-wrap"><div class="fmt-panel-title">Bingo Bango Bongo — Hole ${hole}</div>`;
+  awards.forEach(a => {
+    const btns = players.map(p => {
+      const active = data[a.key] === p.id ? ' active' : '';
+      return `<button class="bbg-btn${active}" onclick="setBBG(${hole},'${a.key}','${p.id}')">${esc(p.first_name)}</button>`;
+    }).join('');
+    html += `<div class="fmt-panel-row"><span>${a.label}</span></div><div class="bbg-btns">${btns}</div>`;
+  });
+  html += '</div>';
+  return html;
+}
+
+function setBBG(hole, type, pid) {
+  if (!bbgScores[hole]) bbgScores[hole] = {};
+  bbgScores[hole][type] = bbgScores[hole][type] === pid ? null : pid;
+  saveFmtState();
+  renderFormatOverlay(hole);
+}
+
+function renderQuotaPanel(hole) {
+  const players = allActivePlayers();
+  const QUOTA_TARGET = 36;
+  let html = `<div class="fmt-overlay-wrap"><div class="fmt-panel-title">Quota — Hole ${hole} (Par ${coursePars[hole-1]||4})</div>`;
+  players.forEach(p => {
+    const src = [scorerPlayer, partnerPlayer].some(x => x?.id === p.id) ? enteredScores : opponentScores;
+    let pts = 0, thru = 0;
+    for (let h = 1; h <= currentHole; h++) {
+      const g = src[p.id]?.[h];
+      if (g == null) continue;
+      thru++;
+      const d = g - (coursePars[h-1] || 4);
+      if (d <= -2) pts += 4;
+      else if (d === -1) pts += 3;
+      else if (d === 0)  pts += 2;
+      else if (d === 1)  pts += 1;
+    }
+    const needed = QUOTA_TARGET - pts;
+    html += `<div class="fmt-panel-row">
+      <span>${esc(p.first_name)}</span>
+      <span class="fmt-panel-val neu">${pts}pt${thru > 0 ? ` · needs ${Math.max(0,needed)}` : ''}</span>
+    </div>`;
+  });
+  html += '</div>';
+  return html;
+}
+
+function renderSnakePanel(hole) {
+  const players = allActivePlayers();
+  if (!players.length) return '';
+  const holder     = snakeHolder ? players.find(p => p.id === snakeHolder) : null;
+  const holderName = holder ? `${holder.first_name} ${holder.last_name}` : 'Nobody';
+  const btns = players.map(p => {
+    const active = snake3putts[hole] === p.id ? ' active' : '';
+    return `<button class="bbg-btn${active}" onclick="setSnake(${hole},'${p.id}')">${esc(p.first_name)}</button>`;
+  }).join('');
+  return `<div class="snake-wrap">
+    <div>
+      <div class="snake-who">Snake: ${esc(holderName)}</div>
+      <div class="fmt-panel-title" style="margin-top:0.4rem">3-Putt this hole?</div>
+      <div class="bbg-btns">${btns}</div>
+    </div>
+  </div>`;
+}
+
+function setSnake(hole, pid) {
+  snake3putts[hole] = snake3putts[hole] === pid ? null : pid;
+  // recompute last 3-putt holder
+  let last = null;
+  for (let h = 1; h <= 18; h++) { if (snake3putts[h]) last = snake3putts[h]; }
+  snakeHolder = last;
+  saveFmtState();
+  renderFormatOverlay(hole);
+}
+
+function computeSkinsSummary() {
+  const players = allActivePlayers();
+  const skins = {};
+  players.forEach(p => { skins[p.id] = 0; });
+  let carryover = 0;
+  for (let h = 1; h <= 18; h++) {
+    if (!isSkinsHole(h)) continue;
+    const scores = players.map(p => {
+      const src = [scorerPlayer, partnerPlayer].some(x => x?.id === p.id) ? enteredScores : opponentScores;
+      return { id: p.id, s: src[p.id]?.[h] };
+    }).filter(x => x.s != null);
+    if (scores.length < 2) { carryover++; continue; }
+    const min = Math.min(...scores.map(x => x.s));
+    const winners = scores.filter(x => x.s === min);
+    if (winners.length === 1) { skins[winners[0].id] += 1 + carryover; carryover = 0; }
+    else carryover++;
+  }
+  return { skins, carryover };
+}
+
+function computeNassauSummary() {
+  function matchScore(holes) {
+    let diff = 0, thru = 0;
+    holes.forEach(h => {
+      const myScores  = [scorerPlayer, partnerPlayer].filter(Boolean).map(p => enteredScores[p.id]?.[h]).filter(x => x != null);
+      const oppScores = [opp1Player, opp2Player].filter(Boolean).map(p => opponentScores[p.id]?.[h]).filter(x => x != null);
+      if (!myScores.length || !oppScores.length) return;
+      thru++;
+      const mine = Math.min(...myScores), theirs = Math.min(...oppScores);
+      if (mine < theirs) diff++; else if (mine > theirs) diff--;
+    });
+    return { diff, thru };
+  }
+  return {
+    front:   matchScore([1,2,3,4,5,6,7,8,9]),
+    back:    matchScore([10,11,12,13,14,15,16,17,18]),
+    overall: matchScore([1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18]),
+  };
+}
+
+function computeBBGSummary() {
+  const players = allActivePlayers();
+  const pts = {};
+  players.forEach(p => { pts[p.id] = 0; });
+  for (let h = 1; h <= 18; h++) {
+    const data = bbgScores[h] || {};
+    ['first','close','putt'].forEach(k => { if (data[k] && pts[data[k]] !== undefined) pts[data[k]]++; });
+  }
+  return pts;
+}
+
+function computeQuotaSummary() {
+  const QUOTA_TARGET = 36;
+  const result = {};
+  allActivePlayers().forEach(p => {
+    const src = [scorerPlayer, partnerPlayer].some(x => x?.id === p.id) ? enteredScores : opponentScores;
+    let pts = 0;
+    for (let h = 1; h <= 18; h++) {
+      const g = src[p.id]?.[h];
+      if (g == null) continue;
+      const d = g - (coursePars[h-1] || 4);
+      if (d <= -2) pts += 4;
+      else if (d === -1) pts += 3;
+      else if (d === 0)  pts += 2;
+      else if (d === 1)  pts += 1;
+    }
+    result[p.id] = { pts, net: pts - QUOTA_TARGET };
+  });
+  return result;
+}
+
+function peoriaHandicap(scores) {
+  const secretHoles = [2,5,8,11,14,17];
+  const sum6 = secretHoles.reduce((acc, h) => acc + (scores[h] || coursePars[h-1] || 4), 0);
+  const par6 = secretHoles.reduce((acc, h) => acc + (coursePars[h-1] || 4), 0);
+  return Math.round(Math.max(0, (sum6 - par6) * 3 * 0.8));
+}
+
+function callawayHandicap(grossTotal) {
+  const totalPar = coursePars.reduce((a, b) => a + b, 0);
+  return Math.min(50, Math.round(Math.max(0, grossTotal - totalPar) * 0.2));
+}
+
+function computePostRoundAdjustments(scores, fmt) {
+  if (fmt === 'peoria')  return { type: 'peoria',   hcp: peoriaHandicap(scores) };
+  if (fmt === 'callaway') {
+    const gross = Object.values(scores).reduce((a, b) => a + (b || 0), 0);
+    return { type: 'callaway', hcp: callawayHandicap(gross) };
+  }
+  return null;
+}
+
 // ── SCORE HELPERS ─────────────────────────────────────────────────
 function scoreLabel(gross, par) {
   if (!gross) return '';
@@ -1101,6 +1347,7 @@ function renderHole() {
   renderMiniStrip();
   renderProgress();
   renderSummary();
+  renderFormatOverlay(currentHole);
 }
 
 // ── RENDER PLAYERS (foursome grid) ────────────────────────────────
@@ -1603,6 +1850,64 @@ function renderSummary() {
     });
   }
 
+  // Skins running totals
+  const anySkins = [1,10].some(h => isSkinsHole(h));
+  if (anySkins) {
+    ensureFormatState();
+    const { skins, carryover } = computeSkinsSummary();
+    const sp = allActivePlayers();
+    html += `<div class="summary-divider"></div>`;
+    html += `<div class="summary-row"><span>Skins${carryover > 0 ? ` (${carryover} carry)` : ''}</span><span></span></div>`;
+    sp.forEach(p => {
+      const n = skins[p.id] || 0;
+      html += `<div class="summary-row"><span>${esc(p.first_name)}</span><span class="summary-score ${n > 0 ? 'under' : 'even'}">${n} skin${n !== 1 ? 's' : ''}</span></div>`;
+    });
+  }
+
+  // Nassau front/back/overall
+  const anyNassau = [1,10].some(h => isNassauHole(h));
+  if (anyNassau) {
+    const { front, back, overall } = computeNassauSummary();
+    function nassauLabel(m) {
+      if (m.thru === 0) return '—';
+      if (m.diff === 0) return `AS thru ${m.thru}`;
+      return m.diff > 0 ? `${m.diff} UP thru ${m.thru}` : `${-m.diff} DN thru ${m.thru}`;
+    }
+    html += `<div class="summary-divider"></div>`;
+    [['Nassau Front', front],['Nassau Back', back],['Nassau Overall', overall]].forEach(([lbl, m]) => {
+      const cls = m.diff > 0 ? 'under' : m.diff < 0 ? 'over' : 'even';
+      html += `<div class="summary-row"><span>${lbl}</span><span class="summary-score ${cls}">${nassauLabel(m)}</span></div>`;
+    });
+  }
+
+  // Bingo Bango Bongo points
+  const anyBBG = [1,10].some(h => getHoleFormat(h) === 'bingo_bango_bongo');
+  if (anyBBG) {
+    ensureFormatState();
+    const pts = computeBBGSummary();
+    const bp = allActivePlayers();
+    html += `<div class="summary-divider"></div>`;
+    html += `<div class="summary-row"><span>Bingo Bango Bongo</span><span></span></div>`;
+    bp.forEach(p => {
+      const n = pts[p.id] || 0;
+      html += `<div class="summary-row"><span>${esc(p.first_name)}</span><span class="summary-score ${n > 0 ? 'under' : 'even'}">${n}pt</span></div>`;
+    });
+  }
+
+  // Quota running total
+  const anyQuota = [1,10].some(h => getHoleFormat(h) === 'quota');
+  if (anyQuota) {
+    const qr = computeQuotaSummary();
+    const qp = allActivePlayers();
+    html += `<div class="summary-divider"></div>`;
+    html += `<div class="summary-row"><span>Quota (target 36)</span><span></span></div>`;
+    qp.forEach(p => {
+      if (!qr[p.id]) return;
+      const { pts, net } = qr[p.id];
+      html += `<div class="summary-row"><span>${esc(p.first_name)}</span><span class="summary-score ${net >= 0 ? 'under' : 'over'}">${pts}pt (${net >= 0 ? '+' : ''}${net})</span></div>`;
+    });
+  }
+
   document.getElementById('summaryRows').innerHTML = html;
 }
 
@@ -1827,6 +2132,23 @@ function confirmSubmit() {
     const diffStr = diff > 0 ? '+' + diff : diff === 0 ? 'E' : '' + diff;
     html += '<div class="confirm-totals-row"><span class="confirm-totals-name">' + p.first_name + ' ' + (p.last_name||'') + '</span><span class="confirm-totals-score">' + total + ' (' + diffStr + ')</span></div>';
   });
+  // Peoria / Callaway net score rows
+  const adjFmt = getHoleFormat(1);
+  if (adjFmt === 'peoria' || adjFmt === 'callaway') {
+    [scorerPlayer, partnerPlayer].filter(Boolean).forEach(p => {
+      const scores = enteredScores[p.id] || {};
+      const adj = computePostRoundAdjustments(scores, adjFmt);
+      if (!adj) return;
+      let gross = 0;
+      Object.values(scores).forEach(s => { if (s != null) gross += s; });
+      const net     = gross - adj.hcp;
+      const totalPar = coursePars.reduce((a, b) => a + b, 0);
+      const diff    = net - totalPar;
+      const diffStr = diff > 0 ? '+' + diff : diff === 0 ? 'E' : '' + diff;
+      html += `<div class="confirm-totals-row" style="opacity:0.72;font-size:0.82rem"><span class="confirm-totals-name">${esc(p.first_name)} net (${adj.type}, hcp ${adj.hcp})</span><span class="confirm-totals-score">${net} (${diffStr})</span></div>`;
+    });
+  }
+
   totalsEl.innerHTML = html;
   document.getElementById('confirmOverlay').classList.add('show');
 }

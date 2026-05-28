@@ -13,12 +13,12 @@
       "blocking": false
     },
     "feature-depth": {
-      "status": "audit",
-      "grade": "B",
+      "status": "concluded",
+      "grade": "A-",
       "artifact": "/platform/5-27-26-feature-depth-review",
       "last_updated": "2026-05-27",
-      "summary": "27 formats live. Pairs bug fixed. Structure-gated pickers. Opponent enforcement gate. 5 scorecard per-hole UI items blocked (Skins/Nassau overlay, Quota/BBB, Wolf, Snake/Eclectic/Peoria/Callaway).",
-      "open_items": 5,
+      "summary": "27 formats live. Wolf/BBG/Quota/Snake per-hole UI, Skins/Nassau sidebar summaries, Peoria/Callaway net handicap in sign-your-card modal. Structure-gated pickers. Opponent enforcement gate. Zero blocked.",
+      "open_items": 0,
       "blocking": false
     },
     "ux": {

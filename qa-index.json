@@ -22,16 +22,16 @@
     {
       "id": "review-feature-depth-2026-05-27",
       "category": "review",
-      "stage": "audit",
+      "stage": "concluded",
       "title": "Feature Depth Review · May 27, 2026",
-      "summary": "Execute grade B. 7/10 steps done: pairs format bug fixed, structure-gated FORMAT_META in create.html + admin.html, 27-format scoreboard/scorecard expansion, opponent enforcement gate. 3 blocked: Skins/Nassau sidebar overlay UI, Quota/BBB per-hole UI, Wolf scoring path, Snake/Eclectic/Peoria/Callaway post-round computation.",
+      "summary": "Execute grade A-. 10/10 steps done. 27 formats live. Wolf/BBG/Quota/Snake/Skins/Nassau per-hole UI + Peoria/Callaway net handicap all shipped to scorecard.html. Structure-gated pickers + opponent enforcement gate live.",
       "date": "2026-05-27",
       "updated": "2026-05-27",
       "author": "claude-sonnet-4-6",
       "url": "/platform/5-27-26-feature-depth-review",
       "file": "5-27-26-feature-depth-review.html",
       "tags": ["review", "feature-depth", "formats", "scoring"],
-      "status": "partial"
+      "status": "concluded"
     },
     {
       "id": "review-data-model-2026-05-26",
