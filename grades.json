@@ -174,6 +174,13 @@
       "scores": [
         {
           "date": "2026-05-27",
+          "score": "B",
+          "url": "/platform/5-27-26-bug-triage-review",
+          "review_title": "Execute + Audit · Bug Triage · May 27, 2026",
+          "notes": "Trash-talk field removed from player cards (home.html:1056). 7 prior-session UX fixes confirmed shipped (registration prefill, pairs admin, structure order, donations, feed colors, tickets auto-load). Icon rendering bug + testpairs loading still blocked on live QA. Grade driver: significant UX noise removed, 2 P0 UX bugs still open."
+        },
+        {
+          "date": "2026-05-27",
           "score": "B+",
           "url": "/platform/5-26-26-ux-review",
           "review_title": "Execute + Audit · May 27, 2026",
@@ -297,6 +304,13 @@
       "label": "Security",
       "cmd": "/tourney-review-security",
       "scores": [
+        {
+          "date": "2026-05-27",
+          "score": "A-",
+          "url": "/platform/5-27-26-bug-triage-review",
+          "review_title": "Execute + Audit · Bug Triage · May 27, 2026",
+          "notes": "push_subscriptions 403 auth guard shipped in pwa.js — unauthenticated callers now return early before upsert. 5 auto-logged 403 errors eliminated. Grade holds A− (send-push auth and CSP unsafe-inline remain open from prior reviews)."
+        },
         {
           "date": "2026-05-22",
           "score": "A-",

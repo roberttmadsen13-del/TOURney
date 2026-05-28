@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-05-27T12:00:00Z",
+  "updated_at": "2026-05-27T20:00:00Z",
   "description": "Living state for all TOURney platform axes. One entry per axis. Updated by every tourney-* skill. Agents read this for context (50 tokens) instead of parsing HTML artifacts.",
   "stages": ["review", "plan", "runbook", "executing", "audit", "concluded"],
   "axes": {
@@ -22,20 +22,20 @@
       "blocking": false
     },
     "ux": {
-      "status": "concluded",
-      "grade": "B+",
-      "artifact": "/platform/5-26-26-ux-review",
+      "status": "audit",
+      "grade": "B",
+      "artifact": "/platform/5-27-26-bug-triage-review",
       "last_updated": "2026-05-27",
-      "summary": "10 admin UX improvements shipped: showToast P1 bug fixed, ARIA tabs, branded confirm modal, score auto-load, mobile scroll, Setup accordion + dirty guard, WCAG contrast validator, captain fields C–H, hat card visibility, table header legibility.",
-      "open_items": 0,
+      "summary": "Trash-talk removed, 7 prior UX fixes confirmed. Icon rendering bug + testpairs loading blocked on live QA (2 P0s open).",
+      "open_items": 2,
       "blocking": false
     },
     "security": {
       "status": "concluded",
       "grade": "A-",
-      "artifact": "/platform/5-22-26-consolidation-review",
-      "last_updated": "2026-05-22",
-      "summary": "feed.html XSS fixed. Engineering done. Rob manual items (send-push deploy, SEND_INSTALL_EMAIL_SECRET, CSP) logged to Checklist.",
+      "artifact": "/platform/5-27-26-bug-triage-review",
+      "last_updated": "2026-05-27",
+      "summary": "push_subscriptions 403 auth guard shipped. 5 auto-logged errors eliminated. send-push auth deploy + CSP unsafe-inline remain open (Rob manual).",
       "open_items": 3,
       "blocking": false
     },
