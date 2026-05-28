@@ -1053,7 +1053,7 @@ async function refreshField() {
     g.innerHTML = players.map((p, i) => {
       const t = TIER_MAP[p.handicap] || TIER_MAP.hacker;
       const dates = (p.available_dates || []).map(d => DATE_LABELS[d] || d).join(', ');
-      return `<div class="player-card ${t.cls}"><div class="pc-num">${i+1}</div><div class="pc-name">${esc(p.first_name)} ${esc(p.last_name)}</div><span class="pc-tier">${t.label}</span><div class="pc-dates">${esc(dates)}</div>${p.trash_talk ? `<div class="pc-trash">&ldquo;${esc(p.trash_talk)}&rdquo;</div>` : ''}${p.hat ? `<div class="pc-hat">Hat &mdash; $55</div>` : ''}</div>`;
+      return `<div class="player-card ${t.cls}"><div class="pc-num">${i+1}</div><div class="pc-name">${esc(p.first_name)} ${esc(p.last_name)}</div><span class="pc-tier">${t.label}</span><div class="pc-dates">${esc(dates)}</div>${p.hat ? `<div class="pc-hat">Hat &mdash; $55</div>` : ''}</div>`;
     }).join('');
   } catch (e) {}
 }

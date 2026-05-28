@@ -20,6 +20,8 @@
       const j = sub.toJSON();
       const sb = window.tourney?.db;
       if (!sb) return;
+      const { data: { session } } = await sb.auth.getSession();
+      if (!session) return;
       await sb.from('push_subscriptions').upsert({
         tournament_id: tournamentId,
         endpoint: j.endpoint,

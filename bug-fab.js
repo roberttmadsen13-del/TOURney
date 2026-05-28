@@ -1,9 +1,9 @@
 // Owner-only floating bug-log button. Included on every page across all
 // tourney.greenskeeper.studio properties. Self-contained: loads supabase
 // only if absent. Auth-gated to ALLOWED list. Captures location.href.
-// v6 — modal content opacity +10% (rgba 0.55→0.65); modal overlay 0.28→0.38.
+// v7 — unlimited attachments via JSONB array; image_data_1/2/3 kept for compat.
 (function () {
-  console.log('[bug-fab] v6 loaded');
+  console.log('[bug-fab] v7 loaded');
   const ALLOWED = ['robert.t.madsen13@gmail.com', 'jmalber2021@gmail.com'];
   const SUPABASE_URL = 'https://jllugkiojeoopitdvzsa.supabase.co';
   const SUPABASE_KEY = 'sb_publishable_DnBMNLaSu61ykJ6P_fI2fw_D9DdAScn';
@@ -71,11 +71,10 @@
     const imgArea = document.getElementById('gbImgArea');
     const addImgBtn = document.getElementById('gbAddImg');
     function addImgSlot() {
-      if (imgSlots.length >= 3) { addImgBtn.style.display = 'none'; return; }
       const slot = document.createElement('div');
       slot.style.cssText = 'display:flex;align-items:center;gap:.5rem;margin-bottom:.3rem;';
       const inp = document.createElement('input');
-      inp.type = 'file'; inp.accept = 'image/*';
+      inp.type = 'file'; inp.accept = 'image/*,video/*';
       inp.style.cssText = 'font-family:\'DM Mono\',monospace;font-size:.52rem;color:rgba(255,255,255,0.6);flex:1;background:none;border:none;';
       const thumb = document.createElement('img');
       thumb.style.cssText = 'max-height:40px;border-radius:4px;display:none;border:1px solid rgba(255,255,255,0.1);';
@@ -87,17 +86,15 @@
       inp.onchange = () => {
         const f = inp.files[0]; if (!f) return;
         const r = new FileReader();
-        r.onload = (ev) => { slotData.data = ev.target.result; thumb.src = slotData.data; thumb.style.display = 'block'; };
+        r.onload = (ev) => { slotData.data = ev.target.result; if (f.type.startsWith('image/')) { thumb.src = slotData.data; thumb.style.display = 'block'; } };
         r.readAsDataURL(f);
       };
       rm.onclick = () => {
         imgSlots.splice(imgSlots.indexOf(slotData), 1);
         slot.remove();
-        if (imgSlots.length < 3) addImgBtn.style.display = '';
       };
       slot.appendChild(inp); slot.appendChild(thumb); slot.appendChild(rm);
       imgArea.appendChild(slot);
-      if (imgSlots.length >= 3) addImgBtn.style.display = 'none';
     }
     addImgBtn.onclick = addImgSlot;
 
@@ -109,14 +106,16 @@
       const origLabel = submitBtn.textContent;
       submitBtn.textContent = 'Saving…';
       submitBtn.disabled = true;
+      const allData = imgSlots.map(s => s.data).filter(Boolean);
       const { error } = await db.from('platform_bugs').insert({
         email: email,
         title: t || null,
         description: d || null,
         url: location.href,
-        image_data: imgSlots[0]?.data || null,
-        image_data_2: imgSlots[1]?.data || null,
-        image_data_3: imgSlots[2]?.data || null,
+        image_data:   allData[0] || null,
+        image_data_2: allData[1] || null,
+        image_data_3: allData[2] || null,
+        attachments:  allData.length ? allData : null,
         status: 'open'
       });
       submitBtn.disabled = false;
