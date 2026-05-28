@@ -1,9 +1,23 @@
 {
   "$schema": "https://tourney.greenskeeper.studio/qa-index-schema.json",
   "version": 1,
-  "updated_at": "2026-05-22T18:00:00Z",
+  "updated_at": "2026-05-27T14:00:00Z",
   "description": "Canonical registry of all TOURney plans, reviews, audits, and QA artifacts. The /platform Artifacts tab renders from this file. Skills (e.g. tourney-review) append new entries when they generate output.",
   "entries": [
+    {
+      "id": "review-bug-triage-2026-05-27",
+      "category": "review",
+      "stage": "executing",
+      "title": "Bug Triage Review · May 27, 2026",
+      "summary": "Full triage of 25 open bugs into 5 sprints. Sprint 1 (P0, ~2d): icons broken app-wide, push_subscriptions 403 × 5, players 406, testpairs loading. Sprint 2 (P1, ~2d): registration cleanup, pairs homepage/admin/create. Sprint 3 (P1, ~1.5d): donations, tickets auto-load, custom colors, bug logger multi-attach. Sprint 4 (P2, ~2d): scorecard hole image/yardage. Sprint 5 deferred: admin upgrade/billing.",
+      "date": "2026-05-27",
+      "updated": "2026-05-27",
+      "author": "claude-sonnet-4-6",
+      "url": "/platform/5-27-26-bug-triage-review",
+      "file": "5-27-26-bug-triage-review.html",
+      "tags": ["review", "bug-triage", "sprint-plan"],
+      "status": "open"
+    },
     {
       "id": "review-feature-depth-2026-05-27",
       "category": "review",

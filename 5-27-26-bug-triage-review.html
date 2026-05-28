@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TOURney — Bug Triage Review · May 27, 2026</title>
+<style>
+:root{--gold:#c09030;--gold-light:#d4a840;--gold-dim:rgba(192,144,48,0.18);--bg:#0d0a05;--surface:#151009;--card:#1c140a;--border:rgba(192,144,48,0.22);--muted:#7a6a54;--text:#e8dcc8;--red:#c0392b;--green:#27ae60;--blue:#2980b9;--orange:#e67e22;--purple:#8e44ad;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:-apple-system,'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;font-size:15px;}
+nav{position:sticky;top:0;z-index:100;background:rgba(13,10,5,0.97);border-bottom:1px solid var(--border);backdrop-filter:blur(12px);}
+.nav-inner{padding:0.6rem 1.5rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap;}
+.nav-brand{color:var(--gold);font-weight:700;font-size:1rem;letter-spacing:0.05em;white-space:nowrap;}
+.nav-brand span{color:var(--muted);font-weight:400;font-size:0.8rem;margin-left:0.4rem;}
+.nav-links{display:flex;gap:0.2rem;flex-wrap:wrap;margin-left:auto;}
+.nav-links a{color:var(--muted);text-decoration:none;font-size:0.78rem;padding:0.3rem 0.55rem;border-radius:4px;transition:all 0.15s;white-space:nowrap;}
+.nav-links a:hover{color:var(--gold);background:var(--gold-dim);}
+.lifecycle-bar{display:flex;gap:3px;padding:0.55rem 1.5rem 0.65rem;background:var(--surface);border-bottom:1px solid var(--border);}
+.lc-stage{flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;}
+.lc-pill{height:5px;width:100%;border-radius:3px;background:rgba(192,144,48,0.1);transition:background 0.25s;}
+.lc-label{font-size:0.58rem;font-weight:700;letter-spacing:0.11em;text-transform:uppercase;color:rgba(122,106,84,0.45);transition:color 0.25s;}
+.lc-done .lc-pill{background:var(--gold);}
+.lc-done .lc-label{color:var(--gold);}
+.lc-active .lc-pill{background:var(--gold-light);box-shadow:0 0 8px rgba(192,144,48,0.45);}
+.lc-active .lc-label{color:var(--gold-light);}
+.hero{padding:3rem 1.5rem 2rem;text-align:center;border-bottom:1px solid var(--border);background:linear-gradient(180deg,rgba(192,144,48,0.06) 0%,transparent 100%);}
+.hero-eyebrow{display:inline-block;font-size:0.7rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold);border:1px solid var(--border);border-radius:20px;padding:0.22rem 0.8rem;margin-bottom:0.9rem;}
+.hero h1{font-size:clamp(1.5rem,3.5vw,2.3rem);font-weight:800;color:#fff;margin-bottom:0.35rem;}
+.hero h1 span{color:var(--gold);}
+.hero-sub{color:var(--muted);max-width:520px;margin:0 auto 1rem;font-size:0.9rem;}
+.hero-meta{display:flex;gap:1.1rem;justify-content:center;flex-wrap:wrap;font-size:0.74rem;color:var(--muted);}
+.hero-meta span{display:flex;align-items:center;gap:0.3rem;}
+.wrapper{max-width:1000px;margin:0 auto;padding:0 1.5rem;}
+section{padding:2.5rem 0;border-bottom:1px solid var(--border);}
+section:last-of-type{border-bottom:none;}
+.section-header{margin-bottom:1.6rem;}
+.section-eyebrow{font-size:0.67rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--gold);margin-bottom:0.3rem;}
+.section-title{font-size:1.35rem;font-weight:800;color:#fff;margin-bottom:0.3rem;}
+.section-desc{color:var(--muted);font-size:0.85rem;max-width:560px;}
+.card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:1.15rem 1.3rem;margin-bottom:0.7rem;}
+.card-title{font-size:0.85rem;font-weight:700;color:var(--gold);margin-bottom:0.45rem;}
+.card p,.card li{font-size:0.84rem;color:var(--text);margin-bottom:0.28rem;}
+.card ul,.card ol{padding-left:1.2rem;}
+.card li{margin-bottom:0.32rem;}
+.grid-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:0.7rem;}
+.grid-3{display:grid;grid-template-columns:repeat(auto-fit,minmax(245px,1fr));gap:0.7rem;}
+.grid-5{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:0.55rem;margin-bottom:1.4rem;}
+.stat-cell{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:0.9rem;text-align:center;}
+.stat-num{font-size:2rem;font-weight:900;line-height:1;margin-bottom:0.18rem;}
+.stat-label{font-size:0.64rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);}
+.stat-red{color:var(--red);}
+.stat-orange{color:var(--orange);}
+.stat-gold{color:var(--gold);}
+.stat-blue{color:var(--blue);}
+.stat-green{color:var(--green);}
+.pill{display:inline-block;font-size:0.66rem;font-weight:700;letter-spacing:0.06em;padding:0.15rem 0.5rem;border-radius:20px;text-transform:uppercase;}
+.pill-red{background:rgba(192,57,43,0.15);color:var(--red);border:1px solid rgba(192,57,43,0.3);}
+.pill-orange{background:rgba(230,126,34,0.15);color:var(--orange);border:1px solid rgba(230,126,34,0.3);}
+.pill-gold{background:rgba(192,144,48,0.18);color:var(--gold);border:1px solid rgba(192,144,48,0.3);}
+.pill-blue{background:rgba(41,128,185,0.15);color:var(--blue);border:1px solid rgba(41,128,185,0.3);}
+.pill-green{background:rgba(39,174,96,0.15);color:var(--green);border:1px solid rgba(39,174,96,0.3);}
+.pill-purple{background:rgba(142,68,173,0.15);color:var(--purple);border:1px solid rgba(142,68,173,0.3);}
+.page-table{width:100%;border-collapse:collapse;font-size:0.8rem;}
+.page-table th{text-align:left;padding:0.52rem 0.72rem;border-bottom:1px solid var(--border);color:var(--muted);font-size:0.67rem;text-transform:uppercase;letter-spacing:0.08em;background:var(--surface);}
+.page-table td{padding:0.58rem 0.72rem;border-bottom:1px solid rgba(192,144,48,0.08);vertical-align:top;}
+.page-table tr:last-child td{border-bottom:none;}
+.page-table tr:hover td{background:var(--gold-dim);}
+.page-table .url{font-family:monospace;font-size:0.75rem;color:var(--gold-light);}
+.table-wrap{background:var(--card);border:1px solid var(--border);border-radius:8px;overflow:hidden;overflow-x:auto;margin-bottom:1rem;}
+.sprint-card{background:var(--card);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:1rem;}
+.sprint-header{padding:1rem 1.25rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:0.75rem;flex-wrap:wrap;}
+.sprint-name{font-size:1rem;font-weight:800;color:#fff;flex:1;}
+.sprint-body{padding:1.1rem 1.25rem;}
+.sprint-meta{display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:0.75rem;}
+.sprint-bugs{font-size:0.82rem;color:var(--muted);margin-bottom:0.6rem;}
+.sprint-bugs strong{color:var(--text);}
+.sprint-ac{font-size:0.8rem;color:var(--text);}
+.sprint-ac strong{color:var(--gold-light);display:block;font-size:0.67rem;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.25rem;}
+.sprint-ac ul{padding-left:1.1rem;margin-top:0.2rem;}
+.sprint-ac li{margin-bottom:0.22rem;}
+.sprint-1-bar{background:linear-gradient(90deg,rgba(192,57,43,0.25),transparent);}
+.sprint-2-bar{background:linear-gradient(90deg,rgba(230,126,34,0.18),transparent);}
+.sprint-3-bar{background:linear-gradient(90deg,rgba(192,144,48,0.15),transparent);}
+.sprint-4-bar{background:linear-gradient(90deg,rgba(41,128,185,0.15),transparent);}
+.sprint-5-bar{background:linear-gradient(90deg,rgba(142,68,173,0.12),transparent);}
+.runbook-steps{counter-reset:rb-step;}
+.rb-step{background:var(--card);border:1px solid var(--border);border-left:3px solid rgba(192,144,48,0.3);border-radius:0 8px 8px 0;padding:0.95rem 1.15rem 0.95rem 3.8rem;margin-bottom:0.55rem;position:relative;}
+.rb-step::before{counter-increment:rb-step;content:counter(rb-step);position:absolute;left:0.95rem;top:0.95rem;width:1.75rem;height:1.75rem;background:var(--gold-dim);color:var(--gold);border:1px solid var(--border);border-radius:50%;font-size:0.72rem;font-weight:700;display:grid;place-items:center;}
+.rb-step-title{font-size:0.87rem;font-weight:700;color:#fff;margin-bottom:0.22rem;}
+.rb-step-body{font-size:0.8rem;color:var(--muted);margin-bottom:0.35rem;}
+.rb-verify{font-size:0.76rem;color:var(--text);background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:3px;padding:0.35rem 0.6rem;margin-top:0.3rem;}
+.rb-verify strong{color:var(--gold-light);font-size:0.68rem;text-transform:uppercase;letter-spacing:0.07em;display:block;margin-bottom:0.1rem;}
+.rb-impact{font-size:0.74rem;color:var(--muted);background:rgba(192,144,48,0.04);border:1px solid rgba(192,144,48,0.1);border-radius:3px;padding:0.3rem 0.55rem;margin-top:0.28rem;}
+.rb-impact strong{color:var(--gold);font-size:0.66rem;text-transform:uppercase;letter-spacing:0.07em;display:block;margin-bottom:0.08rem;}
+.idea-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1.25rem;position:relative;overflow:hidden;}
+.idea-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;}
+.idea-1::before{background:var(--gold);}
+.idea-2::before{background:var(--blue);}
+.idea-3::before{background:var(--green);}
+.idea-4::before{background:var(--orange);}
+.idea-5::before{background:var(--purple);}
+.idea-number{font-size:2rem;font-weight:900;opacity:0.07;position:absolute;top:0.5rem;right:1rem;line-height:1;color:#fff;}
+.idea-tag{margin-bottom:0.42rem;}
+.idea-title{font-size:0.96rem;font-weight:700;color:#fff;margin-bottom:0.42rem;}
+.idea-body{font-size:0.82rem;color:var(--muted);line-height:1.55;margin-bottom:0.65rem;}
+.idea-plan{font-size:0.77rem;color:var(--text);}
+.idea-plan strong{color:var(--gold);}
+.roadmap-item{display:flex;gap:1.05rem;align-items:flex-start;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:0.95rem 1.15rem;margin-bottom:0.52rem;}
+.roadmap-icon{width:1.9rem;height:1.9rem;border-radius:50%;background:var(--gold-dim);color:var(--gold);display:grid;place-items:center;font-size:0.85rem;flex-shrink:0;border:1px solid var(--border);}
+.roadmap-content{flex:1;}
+.roadmap-title{font-size:0.88rem;font-weight:700;color:#fff;margin-bottom:0.13rem;}
+.roadmap-desc{font-size:0.79rem;color:var(--muted);margin-bottom:0.32rem;}
+.roadmap-action{font-size:0.75rem;color:var(--text);}
+.roadmap-action strong{color:var(--gold-light);}
+.stage-pending{text-align:center;padding:3rem 1.5rem;color:var(--muted);font-size:0.85rem;border:1px dashed rgba(192,144,48,0.2);border-radius:8px;}
+.stage-pending code{color:var(--gold);}
+code{font-family:'Consolas','Monaco',monospace;background:rgba(255,255,255,0.07);padding:0.09rem 0.27rem;border-radius:3px;font-size:0.81em;color:var(--gold-light);}
+footer{border-top:1px solid var(--border);padding:1.2rem;text-align:center;color:var(--muted);font-size:0.72rem;}
+footer span{color:var(--gold);}
+@media(max-width:600px){.nav-links{display:none;}.hero{padding:2rem 1rem 1.5rem;}section{padding:2rem 0;}.lc-label{font-size:0.5rem;}}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <div class="nav-brand">TOURney <span>by Greenskeeper Studios</span></div>
+    <div class="nav-links">
+      <a href="#review">Review</a>
+      <a href="#plan">Plan</a>
+      <a href="#runbook">Runbook</a>
+      <a href="#executing">Executing</a>
+      <a href="#audit">Audit</a>
+      <a href="#concluded">Concluded</a>
+    </div>
+  </div>
+</nav>
+
+<!-- LIFECYCLE-BAR-START -->
+<div class="lifecycle-bar">
+  <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Review</div></div>
+  <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Plan</div></div>
+  <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Runbook</div></div>
+  <div class="lc-stage"><div class="lc-pill"></div><div class="lc-label">Executing</div></div>
+  <div class="lc-stage"><div class="lc-pill"></div><div class="lc-label">Audit</div></div>
+  <div class="lc-stage"><div class="lc-pill"></div><div class="lc-label">Concluded</div></div>
+</div>
+<!-- LIFECYCLE-BAR-END -->
+
+<div class="hero">
+  <div class="hero-eyebrow">Bug Triage</div>
+  <h1><span>TOURney</span> — Bug Triage Review · May 27, 2026</h1>
+  <p class="hero-sub">Full backlog triage of all 25 open bugs — grouped into 5 shippable sprints, P0→P2, with acceptance criteria and runbook steps for every issue.</p>
+  <div class="hero-meta">
+    <span>📅 May 27, 2026</span>
+    <span>🤖 Claude Sonnet 4.6</span>
+    <span>🏢 Greenskeeper Studios</span>
+    <span>🔒 Internal Only</span>
+  </div>
+</div>
+
+<section id="review">
+<div class="wrapper">
+
+  <div class="section-header">
+    <div class="section-eyebrow">§ Review</div>
+    <div class="section-title">Backlog State</div>
+    <p class="section-desc">Evidence-based audit of all 25 open bugs as of May 27, 2026. Findings cite file:line or migration name.</p>
+  </div>
+
+  <!-- Bug count grid -->
+  <div class="grid-5" style="margin-bottom:1.5rem;">
+    <div class="stat-cell"><div class="stat-num stat-red">8</div><div class="stat-label">P0 — Fire</div></div>
+    <div class="stat-cell"><div class="stat-num stat-orange">9</div><div class="stat-label">P1 — High</div></div>
+    <div class="stat-cell"><div class="stat-num stat-gold">6</div><div class="stat-label">P2 — Medium</div></div>
+    <div class="stat-cell"><div class="stat-num stat-blue">2</div><div class="stat-label">P2 — Deferred</div></div>
+    <div class="stat-cell"><div class="stat-num stat-green">25</div><div class="stat-label">Total Open</div></div>
+  </div>
+
+  <!-- Individual bug findings -->
+  <div class="card">
+    <div class="card-title">P0 — Bug #1: Icons Rendering as Unicode Text (App-Wide)</div>
+    <p><span class="pill pill-red">P0</span> <strong>Evidence:</strong> Bug description contains raw unicode sequences <code>🗓 ▶ ⚡ 📋</code> instead of rendered icons. Affects every page. Root cause: an icon font (likely Lucide, Material Icons, or similar CDN-loaded font) is either not loading or has charset encoding issues in the HTML head.</p>
+    <p><strong>Upstream:</strong> Every page's <code>&lt;head&gt;</code> icon font CDN link. <strong>Downstream:</strong> All icon-bearing UI elements app-wide — nav, buttons, status indicators, admin controls.</p>
+    <p><strong>Fix target:</strong> Grep icon font CDN link across all HTML files. If using a font icon pack, ensure it's either self-hosted or the CDN link is correct and the charset meta tag is present before it.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">P0 — Bugs #15–20: push_subscriptions 403 + players 406 (API Errors)</div>
+    <p><span class="pill pill-red">P0</span> <strong>Evidence:</strong> Six auto-logged fetch errors: five are 403 on <code>push_subscriptions</code> upsert across scoreboard, profile, directory, scorecard, and admin pages. One is 406 on <code>players</code> fetch on profile page.</p>
+    <p><strong>403 root cause:</strong> Migration 017 was written to fix this (drop old <code>"player insert own subscription"</code> policy, update UPDATE policy). These bugs are dated 2026-05-23 — Migration 017 may not have been applied to production. Verify via Supabase dashboard.</p>
+    <p><strong>406 root cause:</strong> <code>players</code> query at <code>profile.html</code> uses <code>.single()</code> on a query that returns zero rows (no player record exists for that email+tournament combo). PostgREST returns 406 for <code>.single()</code> with no rows. Fix: change to <code>.maybeSingle()</code>.</p>
+    <p><strong>Upstream:</strong> Supabase RLS policies on <code>push_subscriptions</code> and <code>players</code> tables. Migration 017. <strong>Downstream:</strong> Every authenticated page that upserts push subscriptions. Profile page player lookup.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">P0 — Bug #3: Registered Players Not Loading (testpairs-2026)</div>
+    <p><span class="pill pill-red">P0</span> <strong>Evidence:</strong> <code>refreshField()</code> in <code>home.html</code> fetches from <code>players</code> table filtered by <code>tournament_id</code>. If the testpairs-2026 tournament has no players registered OR there's an RLS policy gap, the field renders empty. Also possible: <code>tournament.id</code> is null if <code>tourney-init.js</code> slug lookup failed for that slug.</p>
+    <p><strong>Upstream:</strong> <code>tourney-init.js</code> slug → tournament lookup → <code>window.tourney.ready</code>. <strong>Downstream:</strong> <code>statRegistered</code>, <code>spotsLeft</code> counters, player field grid.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">P0 — Bug #7: Formats Never Loads (testpairs-2026)</div>
+    <p><span class="pill pill-red">P0</span> <strong>Evidence:</strong> <code>home.html</code> formats section renders <code>formatItems</code> div from rounds table data. <code>&lt;div class="fi" style="color:rgba(240,230,204,0.3);font-style:italic;"&gt;...Formats Loading…&lt;/div&gt;</code> is the placeholder. If testpairs-2026 has no rounds configured in admin, this stays as "Loading". Likely a test data gap — but could also be a pairs-specific code path that never resolves the promise.</p>
+    <p><strong>Upstream:</strong> rounds table, admin format configuration. <strong>Downstream:</strong> Format section on homepage.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">P0 — Bug #8: Current Standings Never Loads (testpairs-2026)</div>
+    <p><span class="pill pill-red">P0</span> <strong>Evidence:</strong> <code>heroLeaderboard</code> div in <code>home.html</code> standings section. Same root as Bug #7 — no rounds/scores data for testpairs-2026 means the leaderboard has nothing to render. The spinner stays. Could also be a pairs-specific scoreboard query not handling the <code>structure=pairs</code> case.</p>
+    <p><strong>Upstream:</strong> rounds table, scores table, team/pair assignments. <strong>Downstream:</strong> <code>heroLeaderboard</code>, <code>heroTeamBanners</code>.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">P1 — Bugs #4 & #5: Registration Form — Remove Trash Talk / Why Pick Me, Add myGolf Pre-fill</div>
+    <p><span class="pill pill-orange">P1</span> <strong>Evidence (Bug #5):</strong> <code>home.html:624–631</code> — "Why Pick Me" and "Trash Talk" fields exist in registration form. Submit handler at <code>home.html:1011–1012</code> sends <code>why_me</code> and <code>trash_talk</code> to DB. Player card render at <code>home.html:1071</code> displays <code>trash_talk</code>. All three touch points need cleanup.</p>
+    <p><strong>Evidence (Bug #4):</strong> Registration collects first name, last name, handicap manually. <code>mygolf_profiles</code> table exists with these fields. After auth, fetch profile and pre-fill the form — player shouldn't re-enter data they already provided at account creation.</p>
+    <p><strong>Upstream:</strong> <code>mygolf_profiles</code> table, auth session. <strong>Downstream:</strong> players table columns <code>why_me</code>, <code>trash_talk</code> (become dead columns — leave in DB, stop collecting). Player card display.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">P1 — Bug #6: Pairs Tournament Homepage Is Wrong</div>
+    <p><span class="pill pill-orange">P1</span> <strong>Evidence:</strong> testpairs-2026 homepage shows wrong/broken layout. <code>home.html</code> has <code>_structure</code> variable (<code>'individual' | 'team' | 'pairs'</code>). The page reads structure from settings and should render pairs-aware UI. The page has team banner slots keyed to team letters (A/B) — for pairs these should show pair groupings, not team banners. The stat labels (<code>statLabelA</code>/<code>statLabelB</code>) swap to "Pairs"/count when structure=pairs per <code>admin.html:1065–1066</code>, but home.html may not be doing the same conditional rendering.</p>
+    <p><strong>Upstream:</strong> settings table (<code>structure</code> key), admin config. <strong>Downstream:</strong> home.html stat bar, team banners, format section, registration section copy.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">P1 — Bug #10: Pair Assignment Not Functioning (Admin)</div>
+    <p><span class="pill pill-orange">P1</span> <strong>Evidence:</strong> Code exists in <code>admin.html</code> — <code>savePairAssignments()</code>, <code>setPairAssignment(playerId, pairNum)</code>, <code>savePairName(n, name)</code>, pair dropdown rendering with <code>pairOpts</code>. The section with id <code>pairsModeControls</code> is set to <code>display:none</code> at <code>admin.html:465</code>. It's likely not being shown when <code>structure=pairs</code> — the visibility toggle for this div may be missing or broken.</p>
+    <p><strong>Upstream:</strong> settings table (<code>structure</code> key), players table. <strong>Downstream:</strong> pair assignments saved to settings table, used by scoreboard/scorecard for pairs scoring.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">P1 — Bugs #11 & #12: Create Flow — Remove Pair Count Input, Reorder Structure Options</div>
+    <p><span class="pill pill-orange">P1</span> <strong>Evidence (Bug #11):</strong> <code>create.html:617</code> already auto-calculates <code>S.pairCount = Math.floor(S.maxPlayers / 2)</code>. There should be no manual input for pair count — it's derived. The input field needs to be removed or hidden.</p>
+    <p><strong>Evidence (Bug #12):</strong> Team structure picker order — "Individuals" and "Pairs" should be first two options. Current order unknown without reading create.html directly, but the fix is a simple DOM reorder.</p>
+    <p><strong>Upstream:</strong> create.html structure picker, maxPlayers input. <strong>Downstream:</strong> tournament creation — settings table <code>structure</code>, <code>pair_count</code>, <code>team_count</code> keys.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">P1 — Bug #2: Platform Tickets Should Auto-Load (No AI Intervention)</div>
+    <p><span class="pill pill-orange">P1</span> <strong>Evidence:</strong> <code>platform.html:1351</code> already fetches <code>/qa-index.json</code> with <code>cache:'no-store'</code> via <code>loadArtifacts()</code>. The issue is the sidebar "Tickets" line item count (<code>atTicketSub</code> at <code>platform.html:748</code>) and the ticket list don't refresh automatically when a new ticket is generated — they only update when the tab is clicked. The ticket count displayed should always match what's in qa-index.json without any AI manually inserting entries.</p>
+    <p><strong>Upstream:</strong> qa-index.json file on disk, deployed to Vercel. <strong>Downstream:</strong> platform.html Artifacts tab display, action board counts.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">P1 — Bug #13: Donations — Preset Button Should Fill Custom Amount Input</div>
+    <p><span class="pill pill-orange">P1</span> <strong>Evidence:</strong> <code>player.html:237–240</code> preset buttons call <code>startDonation(5)</code>, <code>startDonation(10)</code>, etc. but do NOT set <code>donateCustom.value</code>. The fix is one-liner: add <code>document.getElementById('donateCustom').value=5;</code> before each <code>startDonation()</code> call. When a custom amount is typed, the input should show dollar formatting (e.g. "$25") — currently shows raw number.</p>
+    <p><strong>Upstream:</strong> player.html donation UI. <strong>Downstream:</strong> <code>startDonation()</code> → Supabase edge function <code>create-donation-checkout</code>.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">P1 — Bug #14: Remove Custom Colors from Feed</div>
+    <p><span class="pill pill-orange">P1</span> <strong>Evidence:</strong> Custom color picker exists on <code>feed.html</code>. Rob's call: remove it now, add back later. The custom team colors feature on feed is premature complexity. Default theme is sufficient.</p>
+    <p><strong>Upstream:</strong> feed.html brand/color section. <strong>Downstream:</strong> feed page visual styling only — no DB writes from this component.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">P2 — Bug #9 + #21 + #24: Scorecard — Hole Image, Course View, Yardages by Tee Box</div>
+    <p><span class="pill pill-gold">P2</span> <strong>Evidence (Bug #9/#21):</strong> Scorecard not showing hole image. Course Hole View should be embedded in scorecard. Memory palace notes: GPS + SVG hole view free via OSM + browser geo — no satellite imagery. <code>course_holes</code> table exists with <code>hole_number</code>, <code>par</code>, <code>yardage</code> cols. A hole image/SVG view component needs to be built and embedded in <code>scorecard.html</code>.</p>
+    <p><strong>Evidence (Bug #24):</strong> <code>scorecard.html:609,612</code> fetches <code>course_holes</code> with <code>yardage</code> and stores in <code>courseYards[]</code>. But tee box selection is stored per-tournament in settings (<code>tee_box</code> key in <code>courses</code> table per admin.html). The yardage displayed should reflect the active tee box. Currently shows a single yardage value — need tee-box-specific values.</p>
+    <p><strong>Upstream:</strong> <code>course_holes</code> table, <code>courses.tee_box</code>, admin course config. <strong>Downstream:</strong> scorecard hole card display, potentially scoreboard (no downstream scoring impact — yardage is display-only).</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">P2 — Bug #22: Bug Logger — Multiple Attachments</div>
+    <p><span class="pill pill-gold">P2</span> <strong>Evidence:</strong> Bug fab currently supports limited attachment slots (3 from 5-22 feature-depth execute). Rob wants unlimited screenshots/recordings per bug. This requires updating the bug fab component to support a dynamic attachment list with add/remove controls, and potentially increasing the storage backend if attachments are stored in Supabase Storage.</p>
+    <p><strong>Upstream:</strong> Bug fab component (injected via sw.js/tourney-init.js), Supabase Storage bucket for attachments. <strong>Downstream:</strong> bugs.html platform tab display of attachments.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">P2 — Bug #25: UX System Should Follow Bug Logger Popup Design</div>
+    <p><span class="pill pill-gold">P2</span> <strong>Evidence:</strong> Rob identified the bug logger popup as the gold standard for UI component design. Apply its card layout, input styling, button patterns, and modal overlay approach to other platform modals and forms.</p>
+    <p><strong>Upstream:</strong> Bug fab CSS/HTML component. <strong>Downstream:</strong> Every modal, form, and overlay across tournament pages and platform.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">P2 (Deferred) — Bug #23: Admin Upgrade Features</div>
+    <p><span class="pill pill-blue">Deferred</span> <strong>Evidence:</strong> Upgrade-gated admin features: add total players/rounds via upgrade tier, unlimited teams, team captain assignment (partially exists — admin.html has captain fields C–H from 5-26 UX execute), team name/colors/image per team. This requires Stripe billing integration for tier upgrades and is not a quick fix.</p>
+    <p><strong>Dependencies:</strong> Stripe subscription tiers, billing UI, feature gating logic. Estimate: 3–5 dev-days standalone.</p>
+  </div>
+
+</div>
+</section>
+
+<section id="plan">
+<div class="wrapper">
+
+  <div class="section-header">
+    <div class="section-eyebrow">§ Plan</div>
+    <div class="section-title">Sprint Plan — 5 Shippable Sprints</div>
+    <p class="section-desc">25 bugs organized by axis and priority. P0 first, each sprint 1–3 dev-days, dependencies explicit.</p>
+  </div>
+
+  <!-- Sprint 1 -->
+  <div class="sprint-card">
+    <div class="sprint-header sprint-1-bar">
+      <div class="sprint-name">Sprint 1 — Critical Fires</div>
+      <span class="pill pill-red">P0</span>
+      <span class="pill pill-gold">~2 dev-days</span>
+    </div>
+    <div class="sprint-body">
+      <div class="sprint-meta">
+        <span class="pill pill-blue">Security / API</span>
+        <span class="pill pill-purple">App-Wide</span>
+      </div>
+      <div class="sprint-bugs">
+        <strong>Bugs:</strong> #1 (icons broken), #15/#17/#18/#19/#20 (push_subscriptions 403), #16 (players 406), #3 (registered players not loading), #7 (formats never loads), #8 (standings never loads)
+      </div>
+      <div class="sprint-bugs"><strong>Dependencies:</strong> Supabase dashboard access to verify migration 017 applied. No other blockers.</div>
+      <div class="sprint-ac">
+        <strong>Acceptance Criteria</strong>
+        <ul>
+          <li>All icons render correctly on every page (platform, tournament pages, admin)</li>
+          <li>Zero 403 errors on push_subscriptions across all pages</li>
+          <li>Zero 406 errors on players query on profile page</li>
+          <li>Registered players list loads on testpairs-2026 (or shows correct empty state)</li>
+          <li>Formats section on testpairs-2026 shows configured formats or "not yet configured" state</li>
+          <li>Standings section on testpairs-2026 shows leaderboard or "no scores yet" state — no infinite spinner</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sprint 2 -->
+  <div class="sprint-card">
+    <div class="sprint-header sprint-2-bar">
+      <div class="sprint-name">Sprint 2 — Registration &amp; Create Flow</div>
+      <span class="pill pill-orange">P1</span>
+      <span class="pill pill-gold">~2 dev-days</span>
+    </div>
+    <div class="sprint-body">
+      <div class="sprint-meta">
+        <span class="pill pill-blue">UX / Onboarding</span>
+        <span class="pill pill-purple">Pairs Support</span>
+      </div>
+      <div class="sprint-bugs">
+        <strong>Bugs:</strong> #5 (trash talk / why pick me), #4 (register from myGolf), #6 (pairs homepage wrong), #10 (pair assignment not functioning), #11 (remove pair count input), #12 (team structure order)
+      </div>
+      <div class="sprint-bugs"><strong>Dependencies:</strong> Sprint 1 must ship first (403 fix required for registration to work end-to-end). <code>mygolf_profiles</code> table must be populated for pre-fill to function.</div>
+      <div class="sprint-ac">
+        <strong>Acceptance Criteria</strong>
+        <ul>
+          <li>Registration form has no "Trash Talk" or "Why Pick Me" fields</li>
+          <li>Signed-in user's name + handicap pre-filled from myGolf profile on register form</li>
+          <li>testpairs-2026 homepage shows correct pairs-format layout (no team banners, correct pair count stat)</li>
+          <li>Admin pair assignment section visible and functional for pairs tournaments — dropdowns work, save persists</li>
+          <li>Create flow has no manual "Number of Pairs" input — auto-derived from max players</li>
+          <li>Create flow team structure picker shows Individual first, Pairs second</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sprint 3 -->
+  <div class="sprint-card">
+    <div class="sprint-header sprint-3-bar">
+      <div class="sprint-name">Sprint 3 — Platform Polish</div>
+      <span class="pill pill-orange">P1</span>
+      <span class="pill pill-gold">~1.5 dev-days</span>
+    </div>
+    <div class="sprint-body">
+      <div class="sprint-meta">
+        <span class="pill pill-blue">Platform / Tooling</span>
+        <span class="pill pill-purple">UX Polish</span>
+      </div>
+      <div class="sprint-bugs">
+        <strong>Bugs:</strong> #2 (tickets auto-load), #13 (donations fill amount), #14 (remove custom colors), #22 (bug logger multiple attachments), #25 (UX system = bug logger popup)
+      </div>
+      <div class="sprint-bugs"><strong>Dependencies:</strong> None. Independent of Sprints 1 and 2.</div>
+      <div class="sprint-ac">
+        <strong>Acceptance Criteria</strong>
+        <ul>
+          <li>Platform Tickets tab always reflects qa-index.json contents on load — no AI intervention needed</li>
+          <li>Donation preset buttons fill the custom amount input field AND trigger checkout</li>
+          <li>Custom color pickers removed from feed page</li>
+          <li>Bug logger supports unlimited attachment slots (add/remove dynamically)</li>
+          <li>At least 3 platform modals/forms updated to match bug logger popup visual system</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sprint 4 -->
+  <div class="sprint-card">
+    <div class="sprint-header sprint-4-bar">
+      <div class="sprint-name">Sprint 4 — Scorecard Experience</div>
+      <span class="pill pill-gold">P2</span>
+      <span class="pill pill-gold">~2 dev-days</span>
+    </div>
+    <div class="sprint-body">
+      <div class="sprint-meta">
+        <span class="pill pill-blue">Feature / Scorecard</span>
+      </div>
+      <div class="sprint-bugs">
+        <strong>Bugs:</strong> #9 (scorecard hole image), #21 (course hole view in scorecard), #24 (yardages by tee box)
+      </div>
+      <div class="sprint-bugs"><strong>Dependencies:</strong> Admin course configuration (tee_box data) must be populated. Requires OSM hole SVG rendering logic (GPS + browser geo, no satellite imagery per platform philosophy).</div>
+      <div class="sprint-ac">
+        <strong>Acceptance Criteria</strong>
+        <ul>
+          <li>Scorecard shows hole image / SVG course view for current hole</li>
+          <li>Yardage displayed on scorecard matches the tee box selected in admin</li>
+          <li>Hole view updates as player navigates between holes</li>
+          <li>No console errors on scorecard page</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sprint 5 -->
+  <div class="sprint-card">
+    <div class="sprint-header sprint-5-bar">
+      <div class="sprint-name">Sprint 5 — Admin Upgrade Features</div>
+      <span class="pill pill-blue">P2 Deferred</span>
+      <span class="pill pill-gold">~3 dev-days</span>
+    </div>
+    <div class="sprint-body">
+      <div class="sprint-meta">
+        <span class="pill pill-blue">Business / Billing</span>
+        <span class="pill pill-purple">Admin Power</span>
+      </div>
+      <div class="sprint-bugs">
+        <strong>Bugs:</strong> #23 (admin upgrade: players/rounds/teams, team captain, team name/colors/image)
+      </div>
+      <div class="sprint-bugs"><strong>Dependencies:</strong> Stripe subscription tiers defined. Billing UX designed. Feature gate logic agreed. Do NOT start until Sprint 1–3 are clean.</div>
+      <div class="sprint-ac">
+        <strong>Acceptance Criteria</strong>
+        <ul>
+          <li>Upgrade CTA appears in admin when player/round/team limits are hit</li>
+          <li>Stripe checkout triggers from upgrade CTA</li>
+          <li>After upgrade: limits increase, team captain assignment UI visible</li>
+          <li>Team captains can edit team name, colors, and upload team image</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Forward-looking ideas -->
+  <div class="section-header" style="margin-top:2rem;">
+    <div class="section-eyebrow">Forward</div>
+    <div class="section-title">Beyond the Bug Fixes</div>
+  </div>
+
+  <div class="grid-2">
+    <div class="idea-card idea-1">
+      <div class="idea-number">1</div>
+      <div class="idea-tag"><span class="pill pill-gold">UX System</span></div>
+      <div class="idea-title">Bug Logger Popup as Design System Anchor</div>
+      <div class="idea-body">The bug logger popup is the cleanest UI on the platform. Use it as the reference component for a lightweight design system — card layout, input style, button hierarchy, overlay pattern. Document it, then migrate modals and forms to match.</div>
+      <div class="idea-plan"><strong>Build plan:</strong> Extract CSS classes from bug fab. Create a shared component guide. Apply to 5 highest-traffic modals in Sprint 3.</div>
+    </div>
+    <div class="idea-card idea-2">
+      <div class="idea-number">2</div>
+      <div class="idea-tag"><span class="pill pill-blue">myGolf Integration</span></div>
+      <div class="idea-title">myGolf as the Single Source of Truth for Players</div>
+      <div class="idea-body">Bug #4 is a symptom of a bigger opportunity: myGolf profiles should drive all player identity across TOURney. Registration becomes a one-tap confirm, not a form fill. Profile pages auto-populate from myGolf data.</div>
+      <div class="idea-plan"><strong>Build plan:</strong> Sprint 2 pre-fill is step 1. Next: replace registration form entirely with myGolf auth flow. Remove all player data collection from tournament-level forms.</div>
+    </div>
+    <div class="idea-card idea-3">
+      <div class="idea-number">3</div>
+      <div class="idea-tag"><span class="pill pill-green">Pairs Native</span></div>
+      <div class="idea-title">Pairs Format as First-Class Tournament Type</div>
+      <div class="idea-body">Bugs #6, #10, #11 reveal pairs mode was bolted on. Treat it as a native format: pairs-specific homepage layout, pair assignment as required setup step before tournament goes live, pair scoreboard with combined scoring.</div>
+      <div class="idea-plan"><strong>Build plan:</strong> Sprint 2 fixes the mechanics. Post-sprint: add pairs setup wizard step in admin (assign pairs before first round opens).</div>
+    </div>
+    <div class="idea-card idea-4">
+      <div class="idea-number">4</div>
+      <div class="idea-tag"><span class="pill pill-orange">Scorecard 2.0</span></div>
+      <div class="idea-title">Scorecard as the On-Course Companion</div>
+      <div class="idea-body">Hole image + course view + yardages by tee box (Sprint 4) is just the foundation. The scorecard should feel like a GPS-aware caddie: show distance to pin, current hole layout, par, and yardage — all from OSM + browser geo, zero satellite costs.</div>
+      <div class="idea-plan"><strong>Build plan:</strong> Sprint 4 ships static data. Post-sprint: add GPS distance-to-pin using browser <code>navigator.geolocation</code> + OSM hole polygons.</div>
+    </div>
+    <div class="idea-card idea-5">
+      <div class="idea-number">5</div>
+      <div class="idea-tag"><span class="pill pill-purple">Bug System 2.0</span></div>
+      <div class="idea-title">Bug Logger as a Real QA Tool</div>
+      <div class="idea-body">With unlimited attachments (Sprint 3), the bug logger becomes a serious QA instrument — not just a feedback widget. Add severity tagging, assignee field, and auto-link to platform Bugs tab. Run your own bug triage inside the product.</div>
+      <div class="idea-plan"><strong>Build plan:</strong> Sprint 3 ships unlimited attachments. Post-sprint: add severity/priority dropdowns to bug fab, wire to platform Bugs tab filters.</div>
+    </div>
+  </div>
+
+  <!-- Business milestones -->
+  <div class="section-header" style="margin-top:2rem;">
+    <div class="section-eyebrow">Milestones</div>
+    <div class="section-title">Shipping Gates</div>
+  </div>
+
+  <div class="roadmap-item">
+    <div class="roadmap-icon">S1</div>
+    <div class="roadmap-content">
+      <div class="roadmap-title">Sprint 1 Complete → Platform is Demo-Ready</div>
+      <div class="roadmap-desc">Zero server errors (403/406), icons render, all data loads. Safe to demo to any investor or tournament organizer.</div>
+      <div class="roadmap-action"><strong>Gate:</strong> Run full QA playthrough on testpairs-2026 and four-team-test. Zero console errors.</div>
+    </div>
+  </div>
+  <div class="roadmap-item">
+    <div class="roadmap-icon">S2</div>
+    <div class="roadmap-content">
+      <div class="roadmap-title">Sprint 2 Complete → Pairs Tournament End-to-End Works</div>
+      <div class="roadmap-desc">A pairs tournament can be created, players can register via myGolf, admin can assign pairs, homepage looks correct. Fully functional v1 pairs experience.</div>
+      <div class="roadmap-action"><strong>Gate:</strong> Create testpairs-2026b from scratch, register 2 players, assign to a pair, play one hole on scorecard. No bugs.</div>
+    </div>
+  </div>
+  <div class="roadmap-item">
+    <div class="roadmap-icon">S3</div>
+    <div class="roadmap-content">
+      <div class="roadmap-title">Sprint 3 Complete → Platform is Self-Service</div>
+      <div class="roadmap-desc">Tickets auto-load, donations work, feed is clean. Platform manages itself without AI intervention for routine maintenance.</div>
+      <div class="roadmap-action"><strong>Gate:</strong> Run /tourney-review, verify new ticket appears on platform without any manual edit.</div>
+    </div>
+  </div>
+  <div class="roadmap-item">
+    <div class="roadmap-icon">S4</div>
+    <div class="roadmap-content">
+      <div class="roadmap-title">Sprint 4 Complete → Scorecard Feels Premium</div>
+      <div class="roadmap-desc">Hole image, course view, and tee-box yardages on scorecard. On-course UX is now a competitive differentiator.</div>
+      <div class="roadmap-action"><strong>Gate:</strong> Load scorecard for a real course with holes configured. All 18 holes show image and correct yardage.</div>
+    </div>
+  </div>
+
+  <!-- Exec summary -->
+  <div class="card" style="border-left:3px solid var(--gold);margin-top:1.5rem;">
+    <div class="card-title">Executive Summary — 5 Lines</div>
+    <p><strong>This week (Sprint 1):</strong> Kill P0 fires — fix icon rendering, apply migration 017 for 403s, fix .single()→.maybeSingle() for 406, resolve testpairs-2026 loading issues. Platform goes from broken to demo-ready.</p>
+    <p><strong>Next week (Sprint 2 + 3):</strong> Registration cleanup (remove trash talk, add myGolf pre-fill), fix pairs homepage/admin/create flow, plus donations fill, remove custom colors, tickets auto-load, multi-attachment bug logger.</p>
+    <p><strong>Week 3 (Sprint 4):</strong> Scorecard enhancements — hole images, course view, tee-box yardages. Transforms scorecard from functional to premium.</p>
+    <p><strong>Deferred (Sprint 5):</strong> Admin upgrade/billing features (#23) — requires Stripe tier design. Don't start until Sprints 1–3 are clean.</p>
+    <p><strong>Net:</strong> 22 of 25 bugs cleared in 3 weeks at ~7.5 dev-days total. 3 bugs deferred (billing-dependent). Platform goes from "a mess" to production-grade.</p>
+  </div>
+
+</div>
+</section>
+
+<section id="runbook">
+<div class="wrapper">
+
+  <div class="section-header">
+    <div class="section-eyebrow">§ Runbook</div>
+    <div class="section-title">Execution Steps</div>
+    <p class="section-desc">Ordered steps for <code>/tourney-execute</code>. Each step cites exact file and action. Run in order within each sprint.</p>
+  </div>
+
+  <div class="runbook-steps">
+
+    <!-- Sprint 1 Steps -->
+    <div class="rb-step">
+      <div class="rb-step-title">S1-1: Diagnose Icon Rendering — Find the broken font/icon library</div>
+      <div class="rb-step-body">Grep every HTML file for icon font CDN links (<code>font-face</code>, <code>material-icons</code>, <code>lucide</code>, <code>feather</code>, <code>heroicons</code>). Identify which library is referenced. Check the link in a browser — confirm 200 or 404. Also confirm <code>&lt;meta charset="UTF-8"&gt;</code> appears before any external font links in all HTML heads.</div>
+      <div class="rb-impact"><strong>Upstream</strong> Every HTML file head section. <strong>Downstream</strong> All icon-bearing UI on every page app-wide.</div>
+      <div class="rb-verify"><strong>Verify</strong> Run <code>grep -rn 'font-face\|material.*icon\|lucide\|feather\|heroicon' *.html</code>. Identify the library. Confirm CDN URL responds 200.</div>
+    </div>
+
+    <div class="rb-step">
+      <div class="rb-step-title">S1-2: Fix Icon Rendering — Repair or self-host the icon library</div>
+      <div class="rb-step-body">If CDN link is broken: update URL to current version, or self-host the icon font by downloading and placing in <code>/fonts/</code>. If the icons are SVG-based and rendered via HTML entities (not a font): verify the SVG sprite is included or inline SVGs are correct. Update every HTML file that references the broken source. If using a custom unicode font that isn't loading, switch to SVG icons inline or reference a reliable CDN (e.g. unpkg, jsdelivr).</div>
+      <div class="rb-impact"><strong>Upstream</strong> CDN availability or local font file. <strong>Downstream</strong> All icon rendering app-wide — nav, buttons, status indicators.</div>
+      <div class="rb-verify"><strong>Verify</strong> Open each major page (home, admin, scorecard, platform) in browser. Confirm icons render as intended symbols, not unicode sequences.</div>
+    </div>
+
+    <div class="rb-step">
+      <div class="rb-step-title">S1-3: Verify Migration 017 Applied — Check push_subscriptions RLS</div>
+      <div class="rb-step-body">Via Supabase dashboard or MCP: run <code>SELECT policyname, cmd FROM pg_policies WHERE tablename = 'push_subscriptions'</code>. Confirm "player insert own subscription" does NOT exist (Migration 017 should have dropped it). Confirm "player upsert push_subscriptions" and "player update own subscription" DO exist with email-based checks. If Migration 017 is not applied, apply it now: <code>supabase db push</code> or run the SQL directly.</div>
+      <div class="rb-impact"><strong>Upstream</strong> Supabase migrations table. <strong>Downstream</strong> push_subscriptions upsert on scoreboard, profile, directory, scorecard, admin pages.</div>
+      <div class="rb-verify"><strong>Verify</strong> Open /t/four-team-test/scoreboard in browser while authenticated. Check Network tab — push_subscriptions request must return 200 or 201, not 403.</div>
+    </div>
+
+    <div class="rb-step">
+      <div class="rb-step-title">S1-4: Fix players 406 — Change .single() to .maybeSingle() on profile page</div>
+      <div class="rb-step-body">In <code>profile.html</code>, find the players table query that uses <code>tournament_id=eq.{id}&amp;email=eq.{email}</code>. Change <code>.single()</code> to <code>.maybeSingle()</code>. Handle the null case: if no player record, show "You are not registered in this tournament" state instead of throwing a 406 error.</div>
+      <div class="rb-impact"><strong>Upstream</strong> players table, auth session email. <strong>Downstream</strong> profile page player data display.</div>
+      <div class="rb-verify"><strong>Verify</strong> Open /t/four-team-test/profile while authenticated. Check Network tab — players query returns 200 (even if data is null). No 406 in console.</div>
+    </div>
+
+    <div class="rb-step">
+      <div class="rb-step-title">S1-5: Fix testpairs-2026 Loading — Diagnose and resolve data gaps</div>
+      <div class="rb-step-body">Query Supabase: <code>SELECT id, name, slug FROM tournaments WHERE slug = 'testpairs-2026'</code>. Confirm the tournament exists. If it does, check <code>SELECT * FROM settings WHERE tournament_id = '{id}'</code> to see if structure=pairs, round data, etc. are configured. If the tournament is missing: re-create it via /create. If it exists but has no rounds: document as "configure test data" and add empty-state handling in <code>home.html</code> so standings/formats show "Not yet configured" instead of an infinite spinner.</div>
+      <div class="rb-impact"><strong>Upstream</strong> tournaments table, settings table, rounds table. <strong>Downstream</strong> home.html standings, formats, registered players sections.</div>
+      <div class="rb-verify"><strong>Verify</strong> Load /t/testpairs-2026. All three sections (registered players, formats, standings) render a defined state — either real data or a clean empty state. No infinite spinner anywhere.</div>
+    </div>
+
+    <!-- Sprint 2 Steps -->
+    <div class="rb-step">
+      <div class="rb-step-title">S2-1: Remove Trash Talk and Why Pick Me from Registration</div>
+      <div class="rb-step-body">In <code>home.html</code>: (1) Delete the "Why Pick Me" form row at lines 624–626. (2) Delete the "Trash Talk" form row at lines 630–632. (3) Remove <code>why_me</code> and <code>trash_talk</code> from the submit payload at lines 1011–1012. (4) Remove <code>trash_talk</code> render from player card template at line 1071. Leave DB columns in place — they become dead columns, no migration needed.</div>
+      <div class="rb-impact"><strong>Upstream</strong> home.html registration form. <strong>Downstream</strong> players table inserts (two fields no longer written), player card display.</div>
+      <div class="rb-verify"><strong>Verify</strong> Load any tournament's /register or home page. Registration form shows only essential fields. No trash talk or why-pick-me. Existing player cards don't crash if they have old trash_talk data.</div>
+    </div>
+
+    <div class="rb-step">
+      <div class="rb-step-title">S2-2: Pre-fill Registration from myGolf Profile</div>
+      <div class="rb-step-body">In <code>home.html</code>, after auth state resolves: query <code>mygolf_profiles</code> table for the signed-in user's email. If a profile exists, pre-fill <code>rsvpFirst</code>, <code>rsvpLast</code>, and handicap fields. If no profile: show inline prompt "Create your myGolf account at mygolf.greenskeeper.studio to pre-fill this form." Do not block registration — allow manual entry as fallback.</div>
+      <div class="rb-impact"><strong>Upstream</strong> mygolf_profiles table, auth session. <strong>Downstream</strong> Registration form UX only — no downstream data model change.</div>
+      <div class="rb-verify"><strong>Verify</strong> Sign in as a user with a myGolf profile. Open registration form. First name, last name, handicap pre-filled. Sign in as user without profile — form is blank, fallback message shown.</div>
+    </div>
+
+    <div class="rb-step">
+      <div class="rb-step-title">S2-3: Fix Pairs Tournament Homepage Layout</div>
+      <div class="rb-step-body">In <code>home.html</code>, find where structure is loaded from settings and applied to the page. Add pairs-specific conditional rendering: (1) Hide team banners (<code>heroTeamBanners</code>) for structure=pairs, show pair groupings instead. (2) Update stat labels to show "Pairs" count. (3) Fix any section heading copy that references "teams" — swap to "pairs" when structure=pairs. Check that <code>window.tourney.ready</code> resolves correctly for the testpairs-2026 slug.</div>
+      <div class="rb-impact"><strong>Upstream</strong> settings table (structure key), tourney-init.js slug resolution. <strong>Downstream</strong> home.html all sections that branch on structure type.</div>
+      <div class="rb-verify"><strong>Verify</strong> Load /t/testpairs-2026. Page shows pairs-appropriate layout. No team A/B banners. Correct pair count in stat bar. Copy says "pairs" not "teams".</div>
+    </div>
+
+    <div class="rb-step">
+      <div class="rb-step-title">S2-4: Show and Fix Pair Assignment Section in Admin</div>
+      <div class="rb-step-body">In <code>admin.html</code>, find <code>id="pairsModeControls"</code> at line 465 — currently <code>display:none</code>. Add logic: after loading settings, if <code>_structure === 'pairs'</code>, set <code>pairsModeControls.style.display = ''</code>. Verify <code>setPairAssignment()</code> and <code>savePairAssignments()</code> are wired to visible UI controls. Test the full flow: select pair for a player → save → reload admin → assignments persist.</div>
+      <div class="rb-impact"><strong>Upstream</strong> settings table (structure, team_assignments keys), players table. <strong>Downstream</strong> scoreboard pair groupings, scorecard pair scoring.</div>
+      <div class="rb-verify"><strong>Verify</strong> Load admin for testpairs-2026. Pair assignment section is visible. Assign two players to Pair 1, save. Reload admin — assignments persist. Scoreboard shows pair groupings.</div>
+    </div>
+
+    <div class="rb-step">
+      <div class="rb-step-title">S2-5: Remove Pair Count Input from Create Flow</div>
+      <div class="rb-step-body">In <code>create.html</code>, find and remove or hide the manual pair count input field. The auto-calculation at line 617 (<code>S.pairCount = Math.floor(S.maxPlayers / 2)</code>) already handles this. Add a read-only display showing the auto-calculated pair count when structure=pairs: e.g. "Pairs: 12 (auto-calculated from 24 max players)". Remove any onchange/oninput handlers that let the user override pairCount.</div>
+      <div class="rb-impact"><strong>Upstream</strong> create.html maxPlayers input, structure selector. <strong>Downstream</strong> tournament creation — pair_count setting written to DB.</div>
+      <div class="rb-verify"><strong>Verify</strong> Load /create. Select structure=Pairs, set max players to 20. Pair count shows "10 (auto)" with no editable input. Create a tournament — verify pair_count=10 in settings table.</div>
+    </div>
+
+    <div class="rb-step">
+      <div class="rb-step-title">S2-6: Reorder Team Structure Options in Create Flow</div>
+      <div class="rb-step-body">In <code>create.html</code>, find the team structure picker/selector options. Reorder so: (1) Individual, (2) Pairs, (3) Teams (2-team), (4) Multi-team. This is a DOM order change only — no logic changes needed.</div>
+      <div class="rb-impact"><strong>Upstream</strong> create.html structure selector DOM. <strong>Downstream</strong> None — display-only change.</div>
+      <div class="rb-verify"><strong>Verify</strong> Load /create. Structure picker shows Individual first, Pairs second.</div>
+    </div>
+
+    <!-- Sprint 3 Steps -->
+    <div class="rb-step">
+      <div class="rb-step-title">S3-1: Donations — Preset Buttons Fill Custom Amount Input</div>
+      <div class="rb-step-body">In <code>player.html</code>, update each preset donation button at lines 237–240. Change each <code>onclick</code> from <code>startDonation(N)</code> to <code>document.getElementById('donateCustom').value=N; startDonation(N)</code>. Also add dollar-sign prefix formatting: on the custom amount input's <code>oninput</code>, update a sibling display element to show "$" + value. Keep the input as <code>type="number"</code> for validation.</div>
+      <div class="rb-impact"><strong>Upstream</strong> player.html donation UI. <strong>Downstream</strong> startDonation() → create-donation-checkout edge function. No change to checkout logic.</div>
+      <div class="rb-verify"><strong>Verify</strong> Load /player. Click "$25" button — custom amount input shows "25". Type "40" in custom input — display shows "$40". Both paths trigger Stripe checkout with correct amount.</div>
+    </div>
+
+    <div class="rb-step">
+      <div class="rb-step-title">S3-2: Remove Custom Colors from Feed Page</div>
+      <div class="rb-step-body">In <code>feed.html</code>, locate the custom color picker section. Remove the entire color picker UI block, including any associated JS handlers (<code>onColorPick()</code> or similar), settings reads/writes for <code>color_primary</code>/<code>color_ink</code>/<code>color_bg</code>, and CSS variables that are only set by that picker. Leave the default theme intact. The feed should use the tournament's default brand colors.</div>
+      <div class="rb-impact"><strong>Upstream</strong> feed.html color picker UI. <strong>Downstream</strong> feed page visual styling only. Check that removing color CSS vars doesn't break any other page that imports the same values.</div>
+      <div class="rb-verify"><strong>Verify</strong> Load /t/any/feed. No color pickers visible. Page renders correctly with default theme. No JS errors about missing color functions.</div>
+    </div>
+
+    <div class="rb-step">
+      <div class="rb-step-title">S3-3: Platform Tickets Tab — Verify Auto-Load Works Without AI</div>
+      <div class="rb-step-body">In <code>platform.html</code>, trace the <code>loadArtifacts()</code> call path. Confirm it's triggered on tab switch to 'action' (line 885). The count displayed in <code>atTicketSub</code> (line 748) should update immediately when the tab is opened. If the sidebar "Tickets" line item count is cached from a previous load, add a <code>renderArtifactTickets()</code> call to the sidebar render function. Also verify qa-index.json is being fetched fresh (<code>cache:'no-store'</code> is already set at line 1351 — confirm this is working).</div>
+      <div class="rb-impact"><strong>Upstream</strong> qa-index.json on Vercel CDN. <strong>Downstream</strong> platform.html Artifacts tab, sidebar ticket count.</div>
+      <div class="rb-verify"><strong>Verify</strong> Add a dummy entry to qa-index.json, push to Vercel. Open platform, switch to Artifacts tab — new entry appears without any AI action.</div>
+    </div>
+
+    <div class="rb-step">
+      <div class="rb-step-title">S3-4: Bug Logger — Unlimited Attachments</div>
+      <div class="rb-step-body">In the bug fab component (injected via <code>tourney-init.js</code> or a standalone script), replace the fixed 3-slot attachment array with a dynamic list. Add an "Add attachment" button that appends a new file input slot. Add a remove (×) button per slot. Cap display at 10 visible slots but allow more (lazy render). Update the bug submission payload to send all attachment URLs. Update <code>bugs.html</code> platform tab to render an attachment gallery for bugs with more than 3 images.</div>
+      <div class="rb-impact"><strong>Upstream</strong> Bug fab component, Supabase Storage attachments bucket. <strong>Downstream</strong> bugs.html attachment display, bug entries in DB.</div>
+      <div class="rb-verify"><strong>Verify</strong> Open bug fab. Add 5 screenshots — all 5 accept. Submit bug. On platform bugs tab, all 5 images visible in gallery.</div>
+    </div>
+
+    <!-- Sprint 4 Steps -->
+    <div class="rb-step">
+      <div class="rb-step-title">S4-1: Scorecard — Add Tee Box Yardage Display</div>
+      <div class="rb-step-body">In <code>scorecard.html</code>, the <code>courseYards[]</code> array is populated from <code>course_holes.yardage</code> at line 612. If the course has multiple tee boxes (front/back/championship), add per-tee-box yardage columns to <code>course_holes</code> or store as JSON. Read the tournament's active tee box from <code>courses.tee_box</code>. Display the correct yardage per hole based on active tee. Update the scorecard hole card to show yardage prominently below par.</div>
+      <div class="rb-impact"><strong>Upstream</strong> course_holes table, courses.tee_box setting. <strong>Downstream</strong> Scorecard hole display only — no scoring logic impact.</div>
+      <div class="rb-verify"><strong>Verify</strong> Configure a course with two tee boxes in admin. Set active tee box to "Back". Load scorecard — each hole shows correct yardage for Back tees. Change to "Front" in admin — scorecard yardages update.</div>
+    </div>
+
+    <div class="rb-step">
+      <div class="rb-step-title">S4-2: Scorecard — Add Hole Image / Course View</div>
+      <div class="rb-step-body">In <code>scorecard.html</code>, add a hole view panel above or beside the score entry grid. Use OSM tile layer + hole polygon data from <code>course_holes</code> (if hole geometry stored) or fallback to a placeholder "Hole layout coming soon" card. Do NOT use satellite/Google Maps imagery — OSM vector tiles only. If hole geometry isn't in the DB yet, add a <code>geometry</code> JSONB column to <code>course_holes</code> via migration. The view should show the current hole number, par, yardage, and a simple SVG schematic if geometry exists.</div>
+      <div class="rb-impact"><strong>Upstream</strong> course_holes table (geometry column), browser geolocation API, OSM tile layer. <strong>Downstream</strong> Scorecard hole view panel. No scoring logic impact.</div>
+      <div class="rb-verify"><strong>Verify</strong> Load scorecard for a hole-configured course. Hole view panel visible with hole number, par, yardage. If geometry present: SVG layout shown. No console errors. Panel updates when navigating between holes.</div>
+    </div>
+
+  </div>
+
+</div>
+</section>
+
+<section id="executing">
+<div class="wrapper">
+<!-- EXECUTING-CONTENT-START -->
+<div class="stage-pending">
+  <p>Awaiting execution. Run <code>/tourney-execute 5-27-26-bug-triage-review.html</code> to proceed.</p>
+</div>
+<!-- EXECUTING-CONTENT-END -->
+</div>
+</section>
+
+<section id="audit">
+<div class="wrapper">
+<!-- AUDIT-CONTENT-START -->
+<div class="stage-pending">
+  <p>Awaiting execution. Run <code>/tourney-execute 5-27-26-bug-triage-review.html</code> to proceed.</p>
+</div>
+<!-- AUDIT-CONTENT-END -->
+</div>
+</section>
+
+<section id="concluded">
+<div class="wrapper">
+<!-- CONCLUDED-CONTENT-START -->
+<div class="stage-pending">
+  <p>Awaiting execution. Run <code>/tourney-execute 5-27-26-bug-triage-review.html</code> to proceed.</p>
+</div>
+<!-- CONCLUDED-CONTENT-END -->
+</div>
+</section>
+
+<footer>
+  Generated by <span>Claude Sonnet 4.6</span> · Greenskeeper Studios Internal · May 27, 2026
+  <br style="margin-top:0.3rem">
+  <a href="/platform" style="color:var(--muted);font-size:0.7rem;text-decoration:none">← Back to Platform Hub</a>
+</footer>
+
+</body>
+</html>
