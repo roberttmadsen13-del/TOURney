@@ -368,6 +368,71 @@ footer span{color:var(--gold);}
 </div>
 </section>
 
+<section id="second-opinion" style="border-top:2px solid var(--blue);">
+<div class="wrapper">
+
+<div class="section-header">
+  <div class="section-eyebrow" style="color:var(--blue);">§ Second Opinion</div>
+  <div class="section-title">Independent Code Audit — Claude Sonnet 4.6 · May 29, 2026</div>
+  <div class="section-desc">Fresh read of tokens.css + tournament pages. Several findings contradict or sharpen the §Review above. Plan P1 needs rewriting before execution.</div>
+</div>
+
+<div class="card" style="border-left:3px solid var(--red);">
+  <div class="card-title" style="color:var(--red);">CORRECTION — tokens.css is NOT missing dark tokens</div>
+  <p>The §Review table lists <code style="font-family:monospace;color:var(--gold-light);">--surface</code>, <code style="font-family:monospace;color:var(--gold-light);">--text</code>, <code style="font-family:monospace;color:var(--gold-light);">--gold-dim</code>, <code style="font-family:monospace;color:var(--gold-light);">--gold-light</code> as <strong>MISSING</strong> from tournament pages. This is misleading — all four tokens exist in tokens.css with correct dark values right now:</p>
+  <ul style="margin-top:0.5rem;">
+    <li><code style="font-family:monospace;color:var(--gold-light);">--bg: #0d0a05</code> ✓</li>
+    <li><code style="font-family:monospace;color:var(--gold-light);">--surface: #151009</code> ✓</li>
+    <li><code style="font-family:monospace;color:var(--gold-light);">--card: #1c140a</code> ✓</li>
+    <li><code style="font-family:monospace;color:var(--gold-light);">--text: #e8dcc8</code> ✓</li>
+    <li><code style="font-family:monospace;color:var(--gold-light);">--muted: #7a6a54</code> ✓</li>
+    <li><code style="font-family:monospace;color:var(--gold-light);">--gold-dim, --gold-light, --card2</code> ✓</li>
+  </ul>
+  <p style="margin-top:0.6rem;">The problem is that tournament pages <strong>override</strong> those tokens with light values in inline <code style="font-family:monospace;color:var(--gold-light);">:root</code> blocks. Plan P1 as written ("expand tokens.css") does not fix this — tokens.css already has what it needs. <strong>P1 should be: remove per-page light :root overrides and let tokens.css cascade.</strong></p>
+</div>
+
+<div class="card" style="border-left:3px solid var(--red);margin-top:0.7rem;">
+  <div class="card-title" style="color:var(--red);">NEW FINDING — <code style="font-family:monospace;">--font-mono</code> does NOT map to DM Mono</div>
+  <p>tokens.css defines:</p>
+  <pre style="font-family:monospace;font-size:0.78rem;background:var(--surface);padding:0.6rem 0.8rem;border-radius:4px;margin:0.4rem 0;overflow-x:auto;color:var(--text);">--font-mono: 'Consolas', 'Monaco', monospace;</pre>
+  <p>DM Mono is imported in the Google Fonts URL at the top of tokens.css but never assigned to <code style="font-family:monospace;color:var(--gold-light);">--font-mono</code>. Any selector using <code style="font-family:monospace;color:var(--gold-light);">font-family: var(--font-mono)</code> renders Consolas, not DM Mono. The Plan step that says "add DM Mono to data selectors via <code style="font-family:monospace;color:var(--gold-light);">var(--font-mono)</code>" will silently produce the wrong font unless this token is fixed first. Fix: update tokens.css <code style="font-family:monospace;color:var(--gold-light);">--font-mono</code> to <code style="font-family:monospace;color:var(--gold-light);">'DM Mono', 'Consolas', monospace</code>.</p>
+</div>
+
+<div class="card" style="border-left:3px solid var(--orange);margin-top:0.7rem;">
+  <div class="card-title" style="color:var(--orange);">CORRECTION — Plan P1 execution must change</div>
+  <p>The §Plan P1 says: <em>"Edit tokens.css. Override :root. Verify each page renders dark background."</em> This is the wrong file to edit. tokens.css :root already has dark values. Editing it again has no effect.</p>
+  <p style="margin-top:0.4rem;">Correct P1 execution: <strong>grep all tournament HTML files for inline <code style="font-family:monospace;color:var(--gold-light);">:root { --bg</code> blocks and delete them.</strong> The dark theme is already defined and waiting. The light override is the only blocker. One grep + delete per file, no tokens.css touch needed.</p>
+  <p style="margin-top:0.4rem;">Also: tokens.css comment explicitly says <em>"Tournament-specific brand colors override by setting CSS custom properties on :root via tourney-init.js."</em> If a tournament legitimately wants a light theme, tourney-init.js is the right override mechanism — not inline :root. The plan should wire this, not work around it.</p>
+</div>
+
+<div class="card" style="border-left:3px solid var(--orange);margin-top:0.7rem;">
+  <div class="card-title" style="color:var(--orange);">NEW FINDING — <code style="font-family:monospace;">--green</code> divergence is worse than stated</div>
+  <p>The §Review flags <code style="font-family:monospace;color:var(--gold-light);">--green:#2a7a20</code> vs <code style="font-family:monospace;color:var(--gold-light);">#1a4010</code> as a minor token drift. The actual situation: tokens.css defines <code style="font-family:monospace;color:var(--gold-light);">--green: #27ae60</code> (standard emerald). The values in admin/scorecard are <strong>hardcoded hex — not token references</strong>. Those pages are ignoring <code style="font-family:monospace;color:var(--gold-light);">var(--green)</code> entirely and hardcoding different values inline. This is a token bypass, not a token drift. Any future token update won't propagate to those elements.</p>
+</div>
+
+<div class="card" style="border-left:3px solid var(--gold);margin-top:0.7rem;">
+  <div class="card-title">NEW FINDING — <code style="font-family:monospace;">--cream</code> orphan token</div>
+  <p>tokens.css defines <code style="font-family:monospace;color:var(--gold-light);">--cream: #f0e6cc</code> — not documented anywhere in the §Review, not referenced in the plan. This is likely the intended light-surface value. If a light mode is ever needed per-tournament (e.g. printed scorecards, accessibility), this token already exists and should be named/documented. Currently orphaned — no page uses it.</p>
+</div>
+
+<div class="card" style="border-left:3px solid var(--gold);margin-top:0.7rem;">
+  <div class="card-title">SHARPENED PRIORITY ORDER</div>
+  <p>Revised P1→P2 based on actual code state:</p>
+  <ol style="padding-left:1.2rem;margin-top:0.4rem;">
+    <li style="margin-bottom:0.4rem;"><strong>P1 (real):</strong> Fix <code style="font-family:monospace;color:var(--gold-light);">--font-mono</code> in tokens.css → DM Mono first. Everything downstream depends on correct token value.</li>
+    <li style="margin-bottom:0.4rem;"><strong>P2 (real):</strong> Remove per-page inline <code style="font-family:monospace;color:var(--gold-light);">:root</code> light overrides from home, scorecard, scoreboard, admin, login, create. Dark theme cascades instantly.</li>
+    <li style="margin-bottom:0.4rem;"><strong>P3:</strong> Replace hardcoded green hex values in admin/scorecard with <code style="font-family:monospace;color:var(--gold-light);">var(--green)</code>.</li>
+    <li><strong>P4+:</strong> Shared .ds-card, pill system, typography tightening — all as originally planned.</li>
+  </ol>
+</div>
+
+<div style="margin-top:1rem;padding:0.6rem 0.9rem;background:var(--surface);border-radius:6px;font-size:0.78rem;color:var(--muted);">
+  <strong style="color:var(--blue);">Grade adjustment:</strong> Token Coverage should move from B+ → <strong style="color:var(--green);">A−</strong> (tokens.css is more complete than the §Review assessed). Design Parity stays D+ — the gap is real, just caused by override pattern not missing tokens.
+</div>
+
+</div>
+</section>
+
 <section id="plan">
 <div class="wrapper">
 
