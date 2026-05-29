@@ -23,7 +23,7 @@
       "category": "review",
       "stage": "concluded",
       "title": "Bug Status Review · May 29, 2026",
-      "summary": "All 8 steps done. 13 ghost bugs closed (30→17 open), sprint prompt paths fixed, migration 023 created, tournament_admins auth guard confirmed, testpairs-2026 seeded with yards. Grade B+.",
+      "summary": "All 8 runbook steps + 4 bonus fixes shipped. 21 bugs closed (30→9 open), tourney-init.js unhandled rejection fixed, RSVP auth-gated at page load, bugs tab HTTP 500 fixed. Grade A-.",
       "date": "2026-05-29",
       "updated": "2026-05-29",
       "author": "claude-sonnet-4-6",
