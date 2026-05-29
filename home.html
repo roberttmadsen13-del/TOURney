@@ -739,11 +739,11 @@ window.addEventListener('scroll', () => { document.getElementById('mainNav').cla
   if (heroCta && map.hero_cta_primary) heroCta.textContent = map.hero_cta_primary;
 
   // About sub tagline — derive from structure/team/pair/day counts
+  const str = map.structure || (parseInt(map.team_count || '2') <= 1 ? 'individual' : 'team');
   const aboutSubEl = document.getElementById('aboutSub');
   if (aboutSubEl) {
     const tc   = parseInt(map.team_count || '2');
     const dy   = parseInt(map.about_stat_days || '3');
-    const str  = map.structure || (tc <= 1 ? 'individual' : 'team');
     const pc   = parseInt(map.pair_count || tc);
     const dayWord = dy === 1 ? 'One day' : `${['','One','Two','Three','Four','Five','Six','Seven'][dy] || dy} days`;
     let groupWord;
