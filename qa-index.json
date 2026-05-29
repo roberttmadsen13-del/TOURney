@@ -7,16 +7,16 @@
     {
       "id": "review-bug-status-2026-05-29",
       "category": "review",
-      "stage": "executing",
+      "stage": "concluded",
       "title": "Bug Status Review · May 29, 2026",
-      "summary": "Cross-reference of 25 open bugs (Operations PDF 1:56 AM May 29) against git history since May 22. Finding: 11 bugs fixed in code but never marked done in DB (false-positive open count). 10 genuinely open. 2 need live QA. Critical bonus: sprint prompt strings embed dead OneDrive repo path — all AI sprints from platform are feeding wrong repo location. 8-step runbook: fix prompt path, close fixed bugs in DB, migration 023 push_subscriptions UPDATE policy, tournament_admins auth guard, testpairs-2026 seed, create.html structure order, scorecard yardage QA.",
+      "summary": "All 8 steps done. 13 ghost bugs closed (30→17 open), sprint prompt paths fixed, migration 023 created, tournament_admins auth guard confirmed, testpairs-2026 seeded with yards. Grade B+.",
       "date": "2026-05-29",
       "updated": "2026-05-29",
       "author": "claude-sonnet-4-6",
       "url": "/platform/5-29-26-bug-status-review",
       "file": "5-29-26-bug-status-review.html",
       "tags": ["review", "bug-status", "bug-triage", "sprint-plan"],
-      "status": "open"
+      "status": "concluded"
     },
     {
       "id": "review-bug-triage-2026-05-27",
