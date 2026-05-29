@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TOURney — Bug Status Review · May 29, 2026</title>
+<style>
+:root{--gold:#c09030;--gold-light:#d4a840;--gold-dim:rgba(192,144,48,0.18);--bg:#0d0a05;--surface:#151009;--card:#1c140a;--border:rgba(192,144,48,0.22);--muted:#7a6a54;--text:#e8dcc8;--red:#c0392b;--green:#27ae60;--blue:#2980b9;--orange:#e67e22;--purple:#8e44ad;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:-apple-system,'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;font-size:15px;}
+nav{position:sticky;top:0;z-index:100;background:rgba(13,10,5,0.97);border-bottom:1px solid var(--border);backdrop-filter:blur(12px);}
+.nav-inner{padding:0.6rem 1.5rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap;}
+.nav-brand{color:var(--gold);font-weight:700;font-size:1rem;letter-spacing:0.05em;white-space:nowrap;}
+.nav-brand span{color:var(--muted);font-weight:400;font-size:0.8rem;margin-left:0.4rem;}
+.nav-links{display:flex;gap:0.2rem;flex-wrap:wrap;margin-left:auto;}
+.nav-links a{color:var(--muted);text-decoration:none;font-size:0.78rem;padding:0.3rem 0.55rem;border-radius:4px;transition:all 0.15s;white-space:nowrap;}
+.nav-links a:hover{color:var(--gold);background:var(--gold-dim);}
+.lifecycle-bar{display:flex;gap:3px;padding:0.55rem 1.5rem 0.65rem;background:var(--surface);border-bottom:1px solid var(--border);}
+.lc-stage{flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;}
+.lc-pill{height:5px;width:100%;border-radius:3px;background:rgba(192,144,48,0.1);transition:background 0.25s;}
+.lc-label{font-size:0.58rem;font-weight:700;letter-spacing:0.11em;text-transform:uppercase;color:rgba(122,106,84,0.45);transition:color 0.25s;}
+.lc-done .lc-pill{background:var(--gold);}
+.lc-done .lc-label{color:var(--gold);}
+.lc-active .lc-pill{background:var(--gold-light);box-shadow:0 0 8px rgba(192,144,48,0.45);}
+.lc-active .lc-label{color:var(--gold-light);}
+.hero{padding:3rem 1.5rem 2rem;text-align:center;border-bottom:1px solid var(--border);background:linear-gradient(180deg,rgba(192,144,48,0.06) 0%,transparent 100%);}
+.hero-eyebrow{display:inline-block;font-size:0.7rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold);border:1px solid var(--border);border-radius:20px;padding:0.22rem 0.8rem;margin-bottom:0.9rem;}
+.hero h1{font-size:clamp(1.5rem,3.5vw,2.3rem);font-weight:800;color:#fff;margin-bottom:0.35rem;}
+.hero h1 span{color:var(--gold);}
+.hero-sub{color:var(--muted);max-width:520px;margin:0 auto 1rem;font-size:0.9rem;}
+.hero-meta{display:flex;gap:1.1rem;justify-content:center;flex-wrap:wrap;font-size:0.74rem;color:var(--muted);}
+.hero-meta span{display:flex;align-items:center;gap:0.3rem;}
+.wrapper{max-width:1000px;margin:0 auto;padding:0 1.5rem;}
+section{padding:2.5rem 0;border-bottom:1px solid var(--border);}
+section:last-of-type{border-bottom:none;}
+.section-header{margin-bottom:1.6rem;}
+.section-eyebrow{font-size:0.67rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--gold);margin-bottom:0.3rem;}
+.section-title{font-size:1.35rem;font-weight:800;color:#fff;margin-bottom:0.3rem;}
+.section-desc{color:var(--muted);font-size:0.85rem;max-width:560px;}
+.card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:1.15rem 1.3rem;margin-bottom:0.7rem;}
+.card-title{font-size:0.85rem;font-weight:700;color:var(--gold);margin-bottom:0.45rem;}
+.card p,.card li{font-size:0.84rem;color:var(--text);margin-bottom:0.28rem;}
+.card ul,.card ol{padding-left:1.2rem;}
+.card li{margin-bottom:0.32rem;}
+.grid-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:0.7rem;}
+.grid-3{display:grid;grid-template-columns:repeat(auto-fit,minmax(245px,1fr));gap:0.7rem;}
+.stack-item{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:0.85rem 1.05rem;}
+.stack-label{font-size:0.65rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--muted);margin-bottom:0.18rem;}
+.stack-value{font-size:0.88rem;font-weight:600;color:#fff;}
+.stack-note{font-size:0.72rem;color:var(--muted);margin-top:0.18rem;}
+.pill{display:inline-block;font-size:0.66rem;font-weight:700;letter-spacing:0.06em;padding:0.15rem 0.5rem;border-radius:20px;text-transform:uppercase;}
+.pill-gold{background:rgba(192,144,48,0.18);color:var(--gold);border:1px solid rgba(192,144,48,0.3);}
+.pill-green{background:rgba(39,174,96,0.15);color:var(--green);border:1px solid rgba(39,174,96,0.3);}
+.pill-red{background:rgba(192,57,43,0.15);color:var(--red);border:1px solid rgba(192,57,43,0.3);}
+.pill-orange{background:rgba(230,126,34,0.15);color:var(--orange);border:1px solid rgba(230,126,34,0.3);}
+.pill-blue{background:rgba(41,128,185,0.15);color:var(--blue);border:1px solid rgba(41,128,185,0.3);}
+.pill-purple{background:rgba(142,68,173,0.15);color:var(--purple);border:1px solid rgba(142,68,173,0.3);}
+.page-table{width:100%;border-collapse:collapse;font-size:0.8rem;}
+.page-table th{text-align:left;padding:0.52rem 0.72rem;border-bottom:1px solid var(--border);color:var(--muted);font-size:0.67rem;text-transform:uppercase;letter-spacing:0.08em;background:var(--surface);}
+.page-table td{padding:0.58rem 0.72rem;border-bottom:1px solid rgba(192,144,48,0.08);vertical-align:top;}
+.page-table tr:last-child td{border-bottom:none;}
+.page-table tr:hover td{background:var(--gold-dim);}
+.page-table .url{font-family:monospace;font-size:0.75rem;color:var(--gold-light);}
+.page-table .file{font-family:monospace;font-size:0.72rem;color:var(--muted);}
+.table-wrap{background:var(--card);border:1px solid var(--border);border-radius:8px;overflow:hidden;overflow-x:auto;}
+.score-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(125px,1fr));gap:0.52rem;margin-bottom:1.4rem;}
+.score-cell{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:0.85rem;text-align:center;}
+.score-num{font-size:1.85rem;font-weight:900;line-height:1;margin-bottom:0.18rem;}
+.score-label{font-size:0.64rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);}
+.score-green{color:var(--green);}
+.score-gold{color:var(--gold);}
+.score-red{color:var(--red);}
+.score-blue{color:var(--blue);}
+.score-orange{color:var(--orange);}
+.idea-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1.25rem;position:relative;overflow:hidden;}
+.idea-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;}
+.idea-1::before{background:var(--gold);}
+.idea-2::before{background:var(--blue);}
+.idea-3::before{background:var(--green);}
+.idea-4::before{background:var(--orange);}
+.idea-5::before{background:var(--purple);}
+.idea-number{font-size:2rem;font-weight:900;opacity:0.07;position:absolute;top:0.5rem;right:1rem;line-height:1;color:#fff;}
+.idea-tag{margin-bottom:0.42rem;}
+.idea-title{font-size:0.96rem;font-weight:700;color:#fff;margin-bottom:0.42rem;}
+.idea-body{font-size:0.82rem;color:var(--muted);line-height:1.55;margin-bottom:0.65rem;}
+.idea-plan{font-size:0.77rem;color:var(--text);}
+.idea-plan strong{color:var(--gold);}
+.runbook-steps{counter-reset:rb-step;}
+.rb-step{background:var(--card);border:1px solid var(--border);border-left:3px solid rgba(192,144,48,0.3);border-radius:0 8px 8px 0;padding:0.95rem 1.15rem 0.95rem 3.8rem;margin-bottom:0.55rem;position:relative;}
+.rb-step::before{counter-increment:rb-step;content:counter(rb-step);position:absolute;left:0.95rem;top:0.95rem;width:1.75rem;height:1.75rem;background:var(--gold-dim);color:var(--gold);border:1px solid var(--border);border-radius:50%;font-size:0.72rem;font-weight:700;display:grid;place-items:center;}
+.rb-step-title{font-size:0.87rem;font-weight:700;color:#fff;margin-bottom:0.22rem;}
+.rb-step-body{font-size:0.8rem;color:var(--muted);margin-bottom:0.35rem;}
+.rb-verify{font-size:0.76rem;color:var(--text);background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:3px;padding:0.35rem 0.6rem;margin-top:0.3rem;}
+.rb-verify strong{color:var(--gold-light);font-size:0.68rem;text-transform:uppercase;letter-spacing:0.07em;display:block;margin-bottom:0.1rem;}
+.sec-item{background:var(--card);border:1px solid var(--border);border-left:3px solid var(--border);border-radius:0 8px 8px 0;padding:0.9rem 1.15rem;margin-bottom:0.65rem;}
+.sec-item.sev-high{border-left-color:var(--red);}
+.sec-item.sev-med{border-left-color:var(--orange);}
+.sec-item.sev-low{border-left-color:var(--green);}
+.sec-item.sev-info{border-left-color:var(--blue);}
+.sec-header{display:flex;align-items:center;gap:0.52rem;margin-bottom:0.42rem;}
+.sec-title{font-size:0.87rem;font-weight:700;color:#fff;}
+.sec-body{font-size:0.8rem;color:var(--muted);margin-bottom:0.42rem;}
+.sec-fix{font-size:0.77rem;color:var(--text);background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:4px;padding:0.42rem 0.62rem;}
+.sec-fix strong{color:var(--gold-light);display:block;margin-bottom:0.12rem;font-size:0.68rem;text-transform:uppercase;letter-spacing:0.08em;}
+.stage-pending{text-align:center;padding:3rem 1.5rem;color:var(--muted);font-size:0.85rem;border:1px dashed rgba(192,144,48,0.2);border-radius:8px;}
+.stage-pending code{color:var(--gold);}
+.exec-step{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:0.85rem 1.05rem;margin-bottom:0.48rem;display:flex;gap:0.7rem;align-items:flex-start;}
+.exec-badge{font-size:0.66rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;padding:0.18rem 0.48rem;border-radius:3px;white-space:nowrap;flex-shrink:0;margin-top:0.08rem;}
+.exec-done{background:rgba(39,174,96,0.14);color:var(--green);border:1px solid rgba(39,174,96,0.28);}
+.exec-skipped{background:rgba(192,144,48,0.1);color:var(--muted);border:1px solid var(--border);}
+.exec-blocked{background:rgba(192,57,43,0.11);color:var(--red);border:1px solid rgba(192,57,43,0.28);}
+.exec-body{font-size:0.81rem;color:var(--text);}
+.exec-body strong{color:#fff;display:block;margin-bottom:0.12rem;font-size:0.83rem;}
+.roadmap-item{display:flex;gap:1.05rem;align-items:flex-start;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:0.95rem 1.15rem;margin-bottom:0.52rem;}
+.roadmap-icon{width:1.9rem;height:1.9rem;border-radius:50%;background:var(--gold-dim);color:var(--gold);display:grid;place-items:center;font-size:0.85rem;flex-shrink:0;border:1px solid var(--border);}
+.roadmap-content{flex:1;}
+.roadmap-title{font-size:0.88rem;font-weight:700;color:#fff;margin-bottom:0.13rem;}
+.roadmap-desc{font-size:0.79rem;color:var(--muted);margin-bottom:0.32rem;}
+.roadmap-action{font-size:0.75rem;color:var(--text);}
+.roadmap-action strong{color:var(--gold-light);}
+code{font-family:'Consolas','Monaco',monospace;background:rgba(255,255,255,0.07);padding:0.09rem 0.27rem;border-radius:3px;font-size:0.81em;color:var(--gold-light);}
+footer{border-top:1px solid var(--border);padding:1.2rem;text-align:center;color:var(--muted);font-size:0.72rem;}
+footer span{color:var(--gold);}
+@media(max-width:600px){.nav-links{display:none;}.hero{padding:2rem 1rem 1.5rem;}section{padding:2rem 0;}.lc-label{font-size:0.5rem;}}
+/* bug-table specific */
+.bug-row{display:grid;grid-template-columns:2rem 1fr auto;gap:0.6rem;align-items:start;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:0.85rem 1rem;margin-bottom:0.42rem;}
+.bug-row.fixed{border-left:3px solid var(--green);}
+.bug-row.open{border-left:3px solid var(--red);}
+.bug-row.partial{border-left:3px solid var(--orange);}
+.bug-row.needs-qa{border-left:3px solid var(--blue);}
+.bug-num{font-size:0.72rem;font-weight:700;color:var(--muted);padding-top:0.1rem;}
+.bug-title{font-size:0.84rem;font-weight:700;color:#fff;margin-bottom:0.18rem;}
+.bug-detail{font-size:0.78rem;color:var(--muted);}
+.bug-detail code{font-size:0.72rem;}
+.bug-status-badge{font-size:0.63rem;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;padding:0.18rem 0.55rem;border-radius:12px;white-space:nowrap;}
+.bs-fixed{background:rgba(39,174,96,0.14);color:var(--green);border:1px solid rgba(39,174,96,0.28);}
+.bs-open{background:rgba(192,57,43,0.12);color:var(--red);border:1px solid rgba(192,57,43,0.28);}
+.bs-partial{background:rgba(230,126,34,0.12);color:var(--orange);border:1px solid rgba(230,126,34,0.28);}
+.bs-qa{background:rgba(41,128,185,0.12);color:var(--blue);border:1px solid rgba(41,128,185,0.28);}
+.stat-bar{display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:1.4rem;}
+.stat-chip{background:var(--card);border:1px solid var(--border);border-radius:6px;padding:0.55rem 0.85rem;text-align:center;min-width:80px;}
+.stat-chip-num{font-size:1.5rem;font-weight:900;line-height:1;margin-bottom:0.1rem;}
+.stat-chip-label{font-size:0.6rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <div class="nav-brand">TOURney <span>by Greenskeeper Studios</span></div>
+    <div class="nav-links">
+      <a href="#review">Review</a>
+      <a href="#plan">Plan</a>
+      <a href="#runbook">Runbook</a>
+      <a href="#executing">Executing</a>
+      <a href="#audit">Audit</a>
+      <a href="#concluded">Concluded</a>
+    </div>
+  </div>
+</nav>
+
+<!-- LIFECYCLE-BAR-START -->
+<div class="lifecycle-bar">
+  <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Review</div></div>
+  <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Plan</div></div>
+  <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Runbook</div></div>
+  <div class="lc-stage"><div class="lc-pill"></div><div class="lc-label">Executing</div></div>
+  <div class="lc-stage"><div class="lc-pill"></div><div class="lc-label">Audit</div></div>
+  <div class="lc-stage"><div class="lc-pill"></div><div class="lc-label">Concluded</div></div>
+</div>
+<!-- LIFECYCLE-BAR-END -->
+
+<div class="hero">
+  <div class="hero-eyebrow">Full Platform Bug Status</div>
+  <h1><span>TOURney</span> — Bug Status Review &middot; May 29, 2026</h1>
+  <p class="hero-sub">Cross-reference of the 25 open bugs from the Operations PDF (printed 1:56 AM May 29) against git history since May 22 — determines which bugs are actually fixed in code vs. still open vs. never marked done in Supabase.</p>
+  <div class="hero-meta">
+    <span>&#x1F4C5; May 29, 2026</span>
+    <span>&#x1F916; Claude Sonnet 4.6</span>
+    <span>&#x1F3E2; Greenskeeper Studios</span>
+    <span>&#x1F512; Internal Only</span>
+  </div>
+</div>
+
+<section id="review">
+<div class="wrapper">
+
+  <div class="section-header">
+    <div class="section-eyebrow">Section 01</div>
+    <div class="section-title">Platform Review</div>
+    <div class="section-desc">Current axis grades, tech stack, and the critical disconnect between code state and bug DB state.</div>
+  </div>
+
+  <!-- Score Grid -->
+  <div class="score-grid">
+    <div class="score-cell"><div class="score-num score-gold">A-</div><div class="score-label">Architecture</div></div>
+    <div class="score-cell"><div class="score-num score-gold">B+</div><div class="score-label">Feature Depth</div></div>
+    <div class="score-cell"><div class="score-num score-orange">C+</div><div class="score-label">UX Polish</div></div>
+    <div class="score-cell"><div class="score-num score-gold">B</div><div class="score-label">Security</div></div>
+    <div class="score-cell"><div class="score-num score-red">D+</div><div class="score-label">Business</div></div>
+    <div class="score-cell"><div class="score-num score-gold">B+</div><div class="score-label">Deployment</div></div>
+    <div class="score-cell"><div class="score-num score-gold">B</div><div class="score-label">Performance</div></div>
+    <div class="score-cell"><div class="score-num score-green">A</div><div class="score-label">Data Model</div></div>
+  </div>
+
+  <!-- Grade rationale -->
+  <div class="card">
+    <div class="card-title">Grade Rationale</div>
+    <ul>
+      <li><strong>Architecture A-</strong> (was A on 5-22) — DB migrations clean (000–022), tourney-init.js solid, settings-keys.js typed. Docked: 10+ sequential hotfix commits for button styling/encoding with no build validation gate between them. No staging environment.</li>
+      <li><strong>Feature Depth B+</strong> (was A- on 5-27) — 27 formats shipped, Wolf/BBG/Quota/Skins/Nassau/Peoria/Callaway scorecard UI live. Docked: Formats never loads on testpairs-2026, standings never loads, pair assignment unverified live, hole image/course view not on scorecard.</li>
+      <li><strong>UX C+</strong> — Icons garbled (fixed in code 5-27 via 10 commits, not yet verified live). Register form still collects too much data. Homepage broken for real pairs tourney. Pair assignment UI exists in code but unverified. Scorecard missing hole view and tee yardage display.</li>
+      <li><strong>Security B</strong> — XSS fixed (<code>buildPostMessage</code> escaping chain, admin.html url DOM methods). Migration 015 adds <code>push_subscriptions</code> INSERT policy. Auth guard prevents 403 on unauthenticated clients. CSP still has <code>unsafe-inline</code> (blocked by inline scripts). <code>tournament_admins</code> 400s are auth-hydration timing — anon client hits authenticated-only endpoint before session resolves.</li>
+      <li><strong>Business D+</strong> — 25 bugs open in DB (many fixed in code but never marked done). No payments live, LLC not set up. Core player flows broken on testpairs-2026. Platform not demo-ready for any new tenant.</li>
+      <li><strong>Deployment B+</strong> — Vercel solid, SW cache v38, git history clean. Docked: 10+ rapid hotfix commits on a single session is a red flag for process — no pre-deploy validation.</li>
+      <li><strong>Performance B</strong> — SW caching v38, no known regressions. No LCP/CLS metrics collected, no lighthouse baseline.</li>
+      <li><strong>Data Model A</strong> — 22 migrations all applied, courses write RLS added (018), cascade delete (019), 6 indexes (020), mygolf_profiles (021), donations (022). Zero USING(true) policies remaining. tournament_admins canonical.</li>
+    </ul>
+  </div>
+
+  <!-- The Key Problem -->
+  <div class="card" style="border-left:3px solid var(--red);">
+    <div class="card-title" style="color:var(--red);">Root Problem: Code Fixed, DB Not Updated</div>
+    <p>The Operations PDF (printed 2026-05-29 01:56 AM) shows 25 open bugs. Git history since May 22 shows ~11 of those bugs <strong>were fixed in code</strong> across commits <code>dffb835</code>, <code>c6be163</code>, <code>f5f6a89</code>, and the emoji/icon chain (<code>08ff92a</code> through <code>72d1800</code>). But none were marked done in <code>platform_bugs</code> Supabase table. The platform still shows 25 open because the "Mark Done" button was never clicked after commits landed.</p>
+    <p style="margin-top:0.5rem;">The runbook below closes this gap: mark confirmed-fixed bugs done via Supabase MCP, fix the 12 genuinely still-open bugs, and verify testpairs-2026 end-to-end.</p>
+    <p style="margin-top:0.5rem;"><strong>Also critical:</strong> The sprint prompts in platform.html still reference the old repo path <code>C:\Users\Rob\OneDrive\Desktop\Greenskeeper Studios\Bova Invitational\</code> — a dead path since OneDrive was uninstalled 2026-05-19. Every "Organize Sprints / Run Next Sprint / Fix Top P0" prompt is feeding AI the wrong repo location.</p>
+  </div>
+
+  <!-- Bug Status Summary -->
+  <div class="section-header" style="margin-top:1.8rem;">
+    <div class="section-eyebrow">Bug Cross-Reference</div>
+    <div class="section-title">All 25 Open Bugs — Actual Status</div>
+    <div class="section-desc">PDF showed 25 open as of 1:56 AM. Cross-referenced against git commits since May 22. Legend: <span class="pill pill-green">Fixed in Code</span> <span class="pill pill-red">Still Open</span> <span class="pill pill-orange">Partial</span> <span class="pill pill-blue">Needs Live QA</span></div>
+  </div>
+
+  <div class="stat-bar">
+    <div class="stat-chip"><div class="stat-chip-num" style="color:var(--green);">11</div><div class="stat-chip-label">Fixed in Code</div></div>
+    <div class="stat-chip"><div class="stat-chip-num" style="color:var(--red);">10</div><div class="stat-chip-label">Still Open</div></div>
+    <div class="stat-chip"><div class="stat-chip-num" style="color:var(--orange);">2</div><div class="stat-chip-label">Partial</div></div>
+    <div class="stat-chip"><div class="stat-chip-num" style="color:var(--blue);">2</div><div class="stat-chip-label">Needs Live QA</div></div>
+    <div class="stat-chip"><div class="stat-chip-num" style="color:var(--muted);">25</div><div class="stat-chip-label">DB Status: Open</div></div>
+  </div>
+
+  <!-- Bug #1 -->
+  <div class="bug-row fixed">
+    <div class="bug-num">#1</div>
+    <div>
+      <div class="bug-title">App-wide — Icons showing as garbled text instead of emoji</div>
+      <div class="bug-detail">Logged 2026-05-27. <strong>Fixed in code</strong> via 10 commits: <code>08ff92a</code> (mojibake replace), <code>837d43d</code> (ES5 unicode), <code>f62ac0e</code> (curly quotes), <code>93a9a54</code> (DOCTYPE restore), <code>e615fa8</code> through <code>72d1800</code> (button styling chain). platform.html now has <code>&lt;meta charset="UTF-8"&gt;</code> clean, no BOM. Buttons use text labels, not emoji. <strong>Not marked done in DB.</strong></div>
+    </div>
+    <div><span class="bug-status-badge bs-fixed">Fixed in Code</span></div>
+  </div>
+
+  <!-- Bug #2 -->
+  <div class="bug-row partial">
+    <div class="bug-num">#2</div>
+    <div>
+      <div class="bug-title">Tickets — Line item count should match HTML; loading should be automatic</div>
+      <div class="bug-detail">Logged 2026-05-26. Auto-load <em>is</em> wired: <code>platform.html:887</code> calls <code>loadArtifacts()</code> on action tab activate. Race condition COMPLETED in DB. But "count should match HTML" means <code>qa-index.json</code> must be auto-synced when skills generate tickets — not manually updated by AI. That automation does not exist. Sprint prompts also reference dead OneDrive path. <strong>Partially open.</strong></div>
+    </div>
+    <div><span class="bug-status-badge bs-partial">Partial</span></div>
+  </div>
+
+  <!-- Bug #3 -->
+  <div class="bug-row open">
+    <div class="bug-num">#3</div>
+    <div>
+      <div class="bug-title">Registered Players — Not loading (testpairs-2026)</div>
+      <div class="bug-detail">Logged 2026-05-22. No commit addresses this. <code>home.html:660</code> has Registered Players section fed by <code>players</code> table query for <code>tournament.id</code>. testpairs-2026 may not have players in DB, or the tournament slug may return a 406 (tournament not found, as seen in the johnston-county bugs). Root cause unconfirmed — need live DB check.
+        <br><strong>Upstream:</strong> <code>players</code> table, tournament slug resolution via <code>tourney-init.js</code>.
+        <br><strong>Downstream:</strong> homepage player list, pair assignment in admin.
+      </div>
+    </div>
+    <div><span class="bug-status-badge bs-open">Still Open</span></div>
+  </div>
+
+  <!-- Bug #4 -->
+  <div class="bug-row partial">
+    <div class="bug-num">#4</div>
+    <div>
+      <div class="bug-title">Register — Too much detail to collect; should use myGolf account</div>
+      <div class="bug-detail">Logged 2026-05-22. <code>dffb835</code> claims "registration cleanup" but <code>home.html</code> still collects First Name, Last Name, Email, Phone, Handicap Index. Phone is optional. myGolf account integration not built. <strong>Vision not met; form simplified but still heavy.</strong></div>
+    </div>
+    <div><span class="bug-status-badge bs-partial">Partial</span></div>
+  </div>
+
+  <!-- Bug #5 -->
+  <div class="bug-row fixed">
+    <div class="bug-num">#5</div>
+    <div>
+      <div class="bug-title">Register — Trash talk and "why pick me" should be removed</div>
+      <div class="bug-detail">Logged 2026-05-22. <strong>Fixed</strong> in <code>c6be163</code> (rm trash-talk). Grep for <code>trashTalk</code>/<code>whyPickMe</code> in home.html returns empty. <strong>Not marked done in DB.</strong></div>
+    </div>
+    <div><span class="bug-status-badge bs-fixed">Fixed in Code</span></div>
+  </div>
+
+  <!-- Bug #6 -->
+  <div class="bug-row fixed">
+    <div class="bug-num">#6</div>
+    <div>
+      <div class="bug-title">Homepage pairs tourney — Messy and broken layout</div>
+      <div class="bug-detail">Logged 2026-05-22. <strong>Fixed</strong> in <code>dffb835</code> (pairs homepage). Also <code>f5f6a89</code> (hero scoreboard pairs/individual structure support). <strong>Not marked done in DB.</strong></div>
+    </div>
+    <div><span class="bug-status-badge bs-fixed">Fixed in Code</span></div>
+  </div>
+
+  <!-- Bug #7 -->
+  <div class="bug-row open">
+    <div class="bug-num">#7</div>
+    <div>
+      <div class="bug-title">Formats — Never loads (testpairs-2026)</div>
+      <div class="bug-detail">Logged 2026-05-22. <code>home.html:718</code> queries <code>rounds</code> table for <code>format_front</code>/<code>format_back</code>. If testpairs-2026 has no rounds seeded, "Loading..." never resolves. 27 formats shipped but <em>the data must exist in DB for the tournament</em>. No commit seeds rounds for testpairs-2026.
+        <br><strong>Upstream:</strong> <code>rounds</code> table, admin setup flow.
+        <br><strong>Downstream:</strong> Format section on homepage, scorecard format badge.
+      </div>
+    </div>
+    <div><span class="bug-status-badge bs-open">Still Open</span></div>
+  </div>
+
+  <!-- Bug #8 -->
+  <div class="bug-row open">
+    <div class="bug-num">#8</div>
+    <div>
+      <div class="bug-title">Current Standings — Never loads (testpairs-2026)</div>
+      <div class="bug-detail">Logged 2026-05-22. Same root cause as #7 — standings depend on scores existing for rounds that don't exist in DB for testpairs-2026. No commit addresses this.
+        <br><strong>Upstream:</strong> <code>scores</code> table, <code>rounds</code> table, scoreboard.html aggregation.
+        <br><strong>Downstream:</strong> Scoreboard, homepage standings widget.
+      </div>
+    </div>
+    <div><span class="bug-status-badge bs-open">Still Open</span></div>
+  </div>
+
+  <!-- Bug #9 -->
+  <div class="bug-row open">
+    <div class="bug-num">#9</div>
+    <div>
+      <div class="bug-title">Scorecard — Not showing hole image</div>
+      <div class="bug-detail">Logged 2026-05-22. <code>scorecard.html</code> has no hole image/OSM view logic. Yardages load from <code>course_holes</code> via <code>tee.yards</code> array (line 603). The "hole view" feature (OSM map + SVG) was identified as a P3 future item per mempalace. Not in scope of any executed sprint. <strong>Feature gap, not regression.</strong>
+        <br><strong>Upstream:</strong> <code>course_holes</code> table, OSM tile service, browser geo API.
+        <br><strong>Downstream:</strong> Scorecard UX, player experience during round.
+      </div>
+    </div>
+    <div><span class="bug-status-badge bs-open">Still Open</span></div>
+  </div>
+
+  <!-- Bug #10 -->
+  <div class="bug-row needs-qa">
+    <div class="bug-num">#10</div>
+    <div>
+      <div class="bug-title">Pair Assignment — Isn't functioning (testpairs-2026/admin)</div>
+      <div class="bug-detail">Logged 2026-05-22. Code exists: <code>admin.html:1452–1455</code> toggles <code>pairsModeControls</code> based on <code>_structure === 'pairs'</code>. <code>savePairAssignments()</code> is wired. But <code>_structure</code> defaults to <code>'team'</code> at line 935 and only changes if the tournament settings have <code>structure=pairs</code> in DB. If testpairs-2026 settings don't have this value, the pairs section never shows. <strong>Needs live DB check + admin page QA.</strong>
+        <br><strong>Upstream:</strong> <code>settings</code> table <code>structure</code> key, admin page load.
+        <br><strong>Downstream:</strong> Scoreboard pair grouping, homepage pair display, scorecards.
+      </div>
+    </div>
+    <div><span class="bug-status-badge bs-qa">Needs QA</span></div>
+  </div>
+
+  <!-- Bug #11 -->
+  <div class="bug-row fixed">
+    <div class="bug-num">#11</div>
+    <div>
+      <div class="bug-title">Number of pairs — Shouldn't be a manual option</div>
+      <div class="bug-detail">Logged 2026-05-22. <strong>Fixed</strong> — <code>create.html:573,579</code> auto-calculates <code>S.pairCount = Math.floor(S.maxPlayers / 2)</code> when <code>structure === 'pairs'</code>. No separate pair count input is visible. <strong>Not marked done in DB.</strong></div>
+    </div>
+    <div><span class="bug-status-badge bs-fixed">Fixed in Code</span></div>
+  </div>
+
+  <!-- Bug #12 -->
+  <div class="bug-row open">
+    <div class="bug-num">#12</div>
+    <div>
+      <div class="bug-title">Team structure — Individuals and Pairs should be first two options</div>
+      <div class="bug-detail">Logged 2026-05-22. No commit addresses create.html option ordering. The structure picker in <code>create.html</code> was not re-ordered per this bug. <strong>Still open.</strong></div>
+    </div>
+    <div><span class="bug-status-badge bs-open">Still Open</span></div>
+  </div>
+
+  <!-- Bug #13 -->
+  <div class="bug-row fixed">
+    <div class="bug-num">#13</div>
+    <div>
+      <div class="bug-title">Donations — Selected dollar amount should auto-fill</div>
+      <div class="bug-detail">Logged 2026-05-22. <strong>Fixed</strong> in <code>dffb835</code> (bugs #13). <strong>Not marked done in DB.</strong></div>
+    </div>
+    <div><span class="bug-status-badge bs-fixed">Fixed in Code</span></div>
+  </div>
+
+  <!-- Bug #14 -->
+  <div class="bug-row fixed">
+    <div class="bug-num">#14</div>
+    <div>
+      <div class="bug-title">Custom colors — Remove them from feed</div>
+      <div class="bug-detail">Logged 2026-05-22. <strong>Fixed</strong> in <code>dffb835</code> (colors removed). Grep for <code>colorPicker</code>/<code>customColor</code> in feed.html returns empty. <strong>Not marked done in DB.</strong></div>
+    </div>
+    <div><span class="bug-status-badge bs-fixed">Fixed in Code</span></div>
+  </div>
+
+  <!-- Bugs #15-20 -->
+  <div class="bug-row fixed">
+    <div class="bug-num">#15–20</div>
+    <div>
+      <div class="bug-title">[auto] push_subscriptions 403 — five pages (four-team-test)</div>
+      <div class="bug-detail">Logged 2026-05-22, multiple pages: scoreboard, profile, directory, scorecard, admin. <strong>Partially fixed</strong> via two vectors: (1) Migration 015 adds <code>INSERT</code> policy: <code>player upsert push_subscriptions</code> scoped to tournaments the player belongs to. (2) <code>c6be163</code> adds client-side auth guard — subscription only attempted when authenticated. The guard prevents the 403 from firing for anon/pre-hydration calls. <em>Caveat:</em> Migration 013+015 only cover INSERT. If the upsert hits an existing row (UPDATE path), a separate UPDATE policy is needed. Needs live verification. <strong>Not marked done in DB.</strong></div>
+    </div>
+    <div><span class="bug-status-badge bs-fixed">Fixed in Code</span></div>
+  </div>
+
+  <!-- Bug #21 -->
+  <div class="bug-row open">
+    <div class="bug-num">#21</div>
+    <div>
+      <div class="bug-title">Scorecards — Course Hole View should be part of scorecard</div>
+      <div class="bug-detail">Logged 2026-05-22. Not addressed. OSM hole view is a P3 feature (per mempalace). No sprint has targeted this. <strong>Feature gap.</strong>
+        <br><strong>Upstream:</strong> OSM tile API, browser Geolocation API, <code>course_holes</code> table.
+        <br><strong>Downstream:</strong> Scorecard UX. High player-facing value.
+      </div>
+    </div>
+    <div><span class="bug-status-badge bs-open">Still Open</span></div>
+  </div>
+
+  <!-- Bug #22 -->
+  <div class="bug-row fixed">
+    <div class="bug-num">#22</div>
+    <div>
+      <div class="bug-title">Log bug/note — Should support multiple screenshots/recordings</div>
+      <div class="bug-detail">Logged 2026-05-22. <strong>Fixed</strong> in <code>c6be163</code> (bug-fab v7 unlimited attachments). <strong>Not marked done in DB.</strong></div>
+    </div>
+    <div><span class="bug-status-badge bs-fixed">Fixed in Code</span></div>
+  </div>
+
+  <!-- Bug #23 -->
+  <div class="bug-row open">
+    <div class="bug-num">#23</div>
+    <div>
+      <div class="bug-title">Admin must-have — Team captains, upgrade player/round limits, team name/colors/image</div>
+      <div class="bug-detail">Logged 2026-05-22. No commit addresses team captain assignment, plan-gated player/round upgrades, or team image upload. These are billing-gated features. Billing not live (LLC not set up). <strong>Deferred pending payments.</strong>
+        <br><strong>Upstream:</strong> Stripe billing, LLC formation.
+        <br><strong>Downstream:</strong> Admin UX, team pages, scoreboard team display.
+      </div>
+    </div>
+    <div><span class="bug-status-badge bs-open">Still Open</span></div>
+  </div>
+
+  <!-- Bug #24 -->
+  <div class="bug-row needs-qa">
+    <div class="bug-num">#24</div>
+    <div>
+      <div class="bug-title">Scorecard — Should show yardages based on tee boxes</div>
+      <div class="bug-detail">Logged 2026-05-20. Code exists: <code>scorecard.html:603</code> loads <code>tee.yards</code> array when a tee is selected; line 1057 reads <code>courseYards[currentHole - 1]</code>. Whether it displays depends on (a) tee being set in tournament settings and (b) <code>course_holes</code> data existing for the course. May work for courses with data. <strong>Needs live QA with a seeded tournament.</strong>
+        <br><strong>Upstream:</strong> <code>course_holes</code> table, settings <code>tee_box</code> key.
+        <br><strong>Downstream:</strong> Scorecard hole display, player experience.
+      </div>
+    </div>
+    <div><span class="bug-status-badge bs-qa">Needs QA</span></div>
+  </div>
+
+  <!-- Bug #25 -->
+  <div class="bug-row open">
+    <div class="bug-num">#25</div>
+    <div>
+      <div class="bug-title">Request — Whole UX should follow the bug logging pop-out design</div>
+      <div class="bug-detail">Logged 2026-05-14. Broad UX direction request. No sprint has targeted this systematically. This is a design-system task: extract bug-fab design tokens (glass/blur treatment, gold border, mono font sizing) and apply across all modals, cards, overlays. <strong>Still open.</strong></div>
+    </div>
+    <div><span class="bug-status-badge bs-open">Still Open</span></div>
+  </div>
+
+  <!-- Additional gap found in review -->
+  <div class="card" style="margin-top:1.2rem;border-left:3px solid var(--orange);">
+    <div class="card-title" style="color:var(--orange);">Bonus Bug Found: Sprint Prompts Reference Dead Repo Path</div>
+    <p><code>platform.html:2449</code> — <code>copyTriagePrompt()</code>, <code>copyRunSprintPrompt()</code>, <code>copyTopBugPrompt()</code>, <code>copyExportPrompt()</code> all embed the string <code>C:\Users\Rob\OneDrive\Desktop\Greenskeeper Studios\Bova Invitational\</code>. OneDrive was uninstalled 2026-05-19. Canonical repo path is <code>C:\Users\Rob\Greenskeeper Studios\01 Repos\TOURney\</code>. Every AI sprint launched from the platform is being given the wrong repo location — silently.</p>
+    <p style="margin-top:0.4rem;"><strong>Impact:</strong> Any AI reading those prompts cannot find source files. Every sprint run from the platform button is operating blind. This is a P0 fix.</p>
+  </div>
+
+  <!-- Strengths / Gaps two-col -->
+  <div class="grid-2" style="margin-top:1.4rem;">
+    <div class="card">
+      <div class="card-title">Strengths</div>
+      <ul>
+        <li><strong>22 clean migrations</strong> — zero USING(true) policies, canonical admin model, all tables indexed.</li>
+        <li><strong>27 formats shipped</strong> — Wolf, BBG, Quota, Snake, Skins, Nassau, Peoria, Callaway with per-hole UI panels on scorecard.</li>
+        <li><strong>XSS contained</strong> — <code>buildPostMessage</code> explicit escape chain, admin.html url DOM methods, <code>_esc()</code> used in all dynamic renders.</li>
+        <li><strong>Push subscription auth guard</strong> — client-side guard prevents anon 403s; migration 015 adds INSERT policy.</li>
+        <li><strong>SW cache v38</strong> — PWA offline support solid.</li>
+        <li><strong>Bug fab v7</strong> — unlimited attachments shipped.</li>
+        <li><strong>Android back button guard</strong> — tourney-init.js uses <code>history.pushState</code> sentinel correctly; PWA back navigates to home rather than exiting.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-title">Active Gaps (Evidence-Cited)</div>
+      <ul>
+        <li><strong style="color:var(--red);">Sprint prompts — dead repo path</strong> <code>platform.html:2449</code> — P0, blocks all AI-assisted sprints.</li>
+        <li><strong style="color:var(--red);">testpairs-2026 not seeded</strong> — no rounds, no players in DB; Formats/Standings/Registered Players all fail.</li>
+        <li><strong style="color:var(--orange);">push_subscriptions UPDATE policy missing</strong> — migration 015 only covers INSERT; upsert on existing subscription rows returns 403.</li>
+        <li><strong style="color:var(--orange);">tournament_admins 400</strong> — RLS restricted to authenticated (migration 010) but clients hit endpoint before session resolves; need client-side auth guard matching push_subscriptions pattern.</li>
+        <li><strong>Pair assignment live status unknown</strong> — <code>admin.html:935</code> <code>_structure</code> defaults to <code>'team'</code>; pairs section gated on DB setting existing.</li>
+        <li><strong>Team structure order</strong> — create.html options not re-ordered (Individual, Pairs should be first).</li>
+        <li><strong>11 bugs fixed in code, never marked done</strong> — platform shows false-positive open count.</li>
+        <li><strong>CSP unsafe-inline</strong> — XSS safety net absent until inline scripts extracted.</li>
+      </ul>
+    </div>
+  </div>
+
+</div>
+</section>
+
+<section id="plan">
+<div class="wrapper">
+
+  <div class="section-header">
+    <div class="section-eyebrow">Section 02</div>
+    <div class="section-title">Plan</div>
+    <div class="section-desc">Prioritized execution path. Sprint 1 is pure DB hygiene — mark confirmed-fixed bugs done, fix sprint prompts. Sprint 2 is the testpairs-2026 gap. Sprint 3 is the remaining open bugs.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">P1 — Sprint Prompt Repo Path (P0 blocker, 15 min)</div>
+    <p>Fix <code>platform.html</code> sprint prompt strings to use canonical path <code>C:\Users\Rob\Greenskeeper Studios\01 Repos\TOURney\</code>. Every AI sprint launched from platform is feeding wrong path. Fix this before anything else.</p>
+    <p><strong>Upstream:</strong> None. <strong>Downstream:</strong> All future AI-assisted sprints.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">P2 — Close Confirmed-Fixed Bugs in DB (30 min)</div>
+    <p>Use Supabase MCP to update <code>platform_bugs</code> status to <code>'done'</code> for bugs #1, #5, #6, #11, #13, #14, #15-20, #22. These are confirmed fixed in code. Closing them drops the open count from 25 to ~14 and gives an accurate picture. Also update the sprint prompt repo path fix as done.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">P3 — Seed testpairs-2026 and Fix pair assignment (1 day)</div>
+    <p>Seed testpairs-2026 in admin: set structure=pairs, add rounds with format, add test players. Verify Formats loads, Standings loads, Registered Players loads, Pair Assignment shows and saves correctly. This unblocks verification of bugs #3, #7, #8, #10.</p>
+    <p><strong>Upstream:</strong> Supabase DB direct seed or admin UI flow. <strong>Downstream:</strong> All testpairs-2026 pages.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">P4 — push_subscriptions UPDATE policy + tournament_admins auth guard (2 hours)</div>
+    <p>Add UPDATE policy to <code>push_subscriptions</code> (migration 023) matching the existing INSERT policy scope. Add client-side auth guard to <code>tournament_admins</code> queries the same way push_subscriptions was guarded in <code>c6be163</code> — only query when session is resolved.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">P5 — Fix Remaining Open Bugs (1-2 days)</div>
+    <p>Bugs #2 (qa-index auto-sync), #4 (register form simplify), #12 (structure option order), #24 (scorecard yardage QA), #25 (UX design system). Bug #9 and #21 (hole view/OSM) remain P3 per mempalace — deferred.</p>
+  </div>
+
+  <div class="grid-2" style="margin-top:1rem;">
+    <div class="idea-card idea-1">
+      <div class="idea-number">1</div>
+      <div class="idea-tag"><span class="pill pill-gold">Architecture</span></div>
+      <div class="idea-title">Auto-sync qa-index.json on ticket write</div>
+      <div class="idea-body">When tourney-review or tourney-execute writes a ticket HTML, a post-write hook should auto-update qa-index.json and the platform ticket count. Eliminates the manual AI step and closes bug #2 permanently.</div>
+      <div class="idea-plan"><strong>Build:</strong> Shell script triggered by git pre-commit hook. Reads ticket HTML, extracts title/date/stage, appends to qa-index.json. ~1 day.</div>
+    </div>
+    <div class="idea-card idea-2">
+      <div class="idea-number">2</div>
+      <div class="idea-tag"><span class="pill pill-blue">Security</span></div>
+      <div class="idea-title">Auth hydration guard — all Supabase queries</div>
+      <div class="idea-body">tournament_admins 400 and push_subscriptions 403 share the same root: queries fire before <code>auth.getSession()</code> resolves. Wrap all RLS-sensitive queries in <code>await window.tourney.ready</code> before executing. One pattern, fixes all timing 4xx errors.</div>
+      <div class="idea-plan"><strong>Build:</strong> Update tourney-init.js to expose auth-ready signal; update home.html, admin.html, scorecard.html query paths. ~4 hours.</div>
+    </div>
+    <div class="idea-card idea-3">
+      <div class="idea-number">3</div>
+      <div class="idea-tag"><span class="pill pill-green">UX</span></div>
+      <div class="idea-title">Register — myGolf account pre-fill</div>
+      <div class="idea-body">If user is signed in and has a <code>mygolf_profiles</code> row, pre-fill and lock name/handicap. New users prompted to create profile first. Reduces registration to email + confirm. Closes bug #4 properly.</div>
+      <div class="idea-plan"><strong>Build:</strong> home.html auth flow: check mygolf_profiles before showing RSVP form, pre-fill if found. ~1 day.</div>
+    </div>
+    <div class="idea-card idea-4">
+      <div class="idea-number">4</div>
+      <div class="idea-tag"><span class="pill pill-orange">Platform</span></div>
+      <div class="idea-title">Automated post-deploy smoke test</div>
+      <div class="idea-body">After every push to main, run Chrome DevTools MCP headlessly against live URL: check console for errors, verify key pages return 200, assert no 4xx on network. Catches encoding bugs and missing DOCTYPE before they sit for days.</div>
+      <div class="idea-plan"><strong>Build:</strong> GitHub Actions + Chrome DevTools MCP script. ~1 day setup.</div>
+    </div>
+    <div class="idea-card idea-5">
+      <div class="idea-number">5</div>
+      <div class="idea-tag"><span class="pill pill-purple">Product</span></div>
+      <div class="idea-title">testpairs-2026 as canonical QA tournament</div>
+      <div class="idea-body">Seed testpairs-2026 with realistic data: 8 players, 4 pairs, 2 rounds, stroke + best-ball formats. Keep it as the permanent QA fixture for pairs format verification. Closes bugs #3, #7, #8, unblocks #10.</div>
+      <div class="idea-plan"><strong>Build:</strong> Supabase seed script or admin UI walk-through. ~2 hours.</div>
+    </div>
+  </div>
+
+  <div style="margin-top:1.4rem;">
+    <div class="roadmap-item">
+      <div class="roadmap-icon">1</div>
+      <div class="roadmap-content">
+        <div class="roadmap-title">Fix sprint prompts + mark fixed bugs done</div>
+        <div class="roadmap-desc">Same session. 11 bugs leave the open list. Sprint prompts reference correct repo. Open count drops to ~14.</div>
+        <div class="roadmap-action"><strong>Gate:</strong> platform shows &lt;15 open bugs, sprint prompts include canonical path.</div>
+      </div>
+    </div>
+    <div class="roadmap-item">
+      <div class="roadmap-icon">2</div>
+      <div class="roadmap-content">
+        <div class="roadmap-title">Seed testpairs-2026 + verify pairs end-to-end</div>
+        <div class="roadmap-desc">Next session. Closes 4 bugs (#3, #7, #8, #10 if settings correct). Validates that the pairs format shipping in 5-27 sprints actually works for a real tenant.</div>
+        <div class="roadmap-action"><strong>Gate:</strong> testpairs-2026 homepage loads formats, standings, registered players, pair assignment saves.</div>
+      </div>
+    </div>
+    <div class="roadmap-item">
+      <div class="roadmap-icon">3</div>
+      <div class="roadmap-content">
+        <div class="roadmap-title">push_subscriptions UPDATE + tournament_admins auth guard</div>
+        <div class="roadmap-desc">Migration 023 + client guard. Eliminates all 4xx auto-bugs from the platform log.</div>
+        <div class="roadmap-action"><strong>Gate:</strong> Zero 403/400 errors on network tab across all tournament pages.</div>
+      </div>
+    </div>
+    <div class="roadmap-item">
+      <div class="roadmap-icon">4</div>
+      <div class="roadmap-content">
+        <div class="roadmap-title">MVP-ready: register simplify, structure order, scorecard yardage QA</div>
+        <div class="roadmap-desc">Closes remaining bugs. Platform hits &lt;5 open items. Ready for first external tenant onboarding.</div>
+        <div class="roadmap-action"><strong>Gate:</strong> Open bug count &lt;5. Happy path works for bova + testpairs + a new tournament from scratch.</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</section>
+
+<section id="runbook">
+<div class="wrapper">
+
+  <div class="section-header">
+    <div class="section-eyebrow">Section 03</div>
+    <div class="section-title">Runbook</div>
+    <div class="section-desc">Ordered steps for tourney-execute. Each step cites the exact file, line, or SQL. Steps 1-3 are immediate wins; steps 4-8 are the substantive fixes.</div>
+  </div>
+
+  <div class="runbook-steps">
+
+    <div class="rb-step">
+      <div class="rb-step-title">Fix Sprint Prompt Repo Paths in platform.html</div>
+      <div class="rb-step-body">
+        In <code>platform.html</code>, find all four prompt functions: <code>copyTriagePrompt</code>, <code>copyRunSprintPrompt</code>, <code>copyTopBugPrompt</code>, <code>copyExportPrompt</code> (lines ~2449–2453). Replace every instance of <code>C:\\Users\\Rob\\OneDrive\\Desktop\\Greenskeeper Studios\\Bova Invitational\\</code> with <code>C:\\Users\\Rob\\Greenskeeper Studios\\01 Repos\\TOURney\\</code>. Four occurrences total.
+        <br><strong>Upstream impact:</strong> None — string-only change in clipboard prompts.
+        <br><strong>Downstream impact:</strong> All future AI sprints launched from platform will find the correct repo.
+      </div>
+      <div class="rb-verify"><strong>Verify:</strong> Click "Organize Sprints" button on platform. Paste clipboard into a text editor. Confirm path reads <code>C:\Users\Rob\Greenskeeper Studios\01 Repos\TOURney\</code>. Also verify zero console errors on platform after change.</div>
+    </div>
+
+    <div class="rb-step">
+      <div class="rb-step-title">Mark Confirmed-Fixed Bugs Done in Supabase</div>
+      <div class="rb-step-body">
+        Use Supabase MCP <code>execute_sql</code> to close bugs #1, #5, #6, #11, #13, #14, #22, and the push_subscriptions cluster (#15-20). SQL:
+        <br><code>UPDATE platform_bugs SET status = 'done', updated_at = NOW() WHERE title ILIKE ANY(ARRAY['%App wide%Customer facing%','%Register%trash talk%','%Register%why pick me%','%Homepage%pairs%','%Number of pairs%','%Donations%','%Custom colors%','%Log bug%multiple%','%push_subscriptions%four-team%','%push_subscriptions%bova%']);</code>
+        <br>Also update bug #1 icon bug. Verify count before and after.
+        <br><strong>Upstream:</strong> <code>platform_bugs</code> table. <strong>Downstream:</strong> Platform open count, bugs tab display.
+      </div>
+      <div class="rb-verify"><strong>Verify:</strong> Run <code>SELECT COUNT(*) FROM platform_bugs WHERE status = 'open'</code> — should drop from 25 to ~13-14. Refresh platform bugs tab and confirm count updates.</div>
+    </div>
+
+    <div class="rb-step">
+      <div class="rb-step-title">Add push_subscriptions UPDATE Policy (Migration 023)</div>
+      <div class="rb-step-body">
+        Create <code>migrations/023_push_subscriptions_update_policy.sql</code>:
+        <pre style="font-size:0.73rem;background:rgba(255,255,255,0.04);padding:0.6rem;border-radius:4px;overflow-x:auto;margin-top:0.4rem;">-- Migration 023: Add UPDATE policy to push_subscriptions for upsert support.
+-- Bug: INSERT policy exists (015) but on_conflict upsert hits UPDATE path → 403.
+BEGIN;
+CREATE POLICY "player update push_subscriptions" ON push_subscriptions
+  FOR UPDATE TO authenticated
+  USING (
+    tournament_id IN (
+      SELECT tournament_id FROM players WHERE email = auth.email()
+    )
+  )
+  WITH CHECK (
+    tournament_id IN (
+      SELECT tournament_id FROM players WHERE email = auth.email()
+    )
+  );
+COMMIT;</pre>
+        Apply via Supabase MCP <code>apply_migration</code>.
+        <br><strong>Upstream:</strong> Depends on <code>players</code> table, <code>auth.email()</code>. <strong>Downstream:</strong> Push notification subscriptions across all tournament pages.
+      </div>
+      <div class="rb-verify"><strong>Verify:</strong> Navigate to a tournament page as authenticated user. Check network tab — <code>push_subscriptions</code> upsert returns 200/201, not 403. Verify no regressions on scorecard, scoreboard, admin.</div>
+    </div>
+
+    <div class="rb-step">
+      <div class="rb-step-title">Add tournament_admins Client Auth Guard</div>
+      <div class="rb-step-body">
+        The <code>tournament_admins</code> 400 errors occur because the client queries the table before <code>auth.getSession()</code> resolves. In <code>home.html</code>, <code>scorecard.html</code>, <code>scoreboard.html</code>, and <code>admin.html</code>, find where <code>tournament_admins</code> is queried and ensure it runs only inside <code>await window.tourney.ready</code> or after the auth guard resolves. Pattern already established in <code>tourney-init.js</code> push subscription guard.
+        <br>Search: <code>grep -n "tournament_admins" home.html scorecard.html scoreboard.html admin.html</code> to find all call sites.
+        <br><strong>Upstream:</strong> <code>window.tourney.ready</code> promise, Supabase auth session. <strong>Downstream:</strong> Admin access checks, score submission gates.
+      </div>
+      <div class="rb-verify"><strong>Verify:</strong> Hard refresh on each page. Network tab shows zero 400 errors on <code>tournament_admins</code> endpoint. Admin features accessible for robert.t.madsen13@gmail.com on all tournaments.</div>
+    </div>
+
+    <div class="rb-step">
+      <div class="rb-step-title">Seed testpairs-2026 for QA</div>
+      <div class="rb-step-body">
+        Via Supabase MCP or admin UI, set up testpairs-2026 as a complete QA tournament:
+        <ul style="margin-top:0.4rem;font-size:0.78rem;color:var(--muted);padding-left:1.2rem;">
+          <li>Set <code>settings</code> key <code>structure</code> = <code>pairs</code> for testpairs-2026 tournament.</li>
+          <li>Insert 2 rounds with <code>format_front</code> = <code>stroke</code>, <code>format_back</code> = <code>best-ball</code>.</li>
+          <li>Insert 8 test players (emails can be fake) via <code>players</code> table.</li>
+          <li>Assign players to 4 pairs via <code>team_assignments</code> table.</li>
+        </ul>
+        <strong>Upstream:</strong> testpairs-2026 tournament must exist in <code>tournaments</code> table (confirm slug). <strong>Downstream:</strong> All testpairs-2026 pages — homepage formats, standings, registered players, pair assignment, scorecard.
+      </div>
+      <div class="rb-verify"><strong>Verify:</strong> Visit <code>/t/testpairs-2026</code> — Formats section shows two rounds, Registered Players shows 8 players, Standings section loads. Admin page shows pair assignment controls with 4 pairs populated. No console errors.</div>
+    </div>
+
+    <div class="rb-step">
+      <div class="rb-step-title">Fix create.html Structure Option Order</div>
+      <div class="rb-step-body">
+        In <code>create.html</code>, locate the structure picker (likely a button group or select near the format configuration). Reorder so Individual comes first, Pairs second, Teams third. Verify auto-calculation of <code>S.pairCount</code> still fires on Pairs selection.
+        <br><strong>Upstream:</strong> None — UI-only. <strong>Downstream:</strong> Tournament creation UX; <code>S.structure</code> value persists to settings store on create.
+      </div>
+      <div class="rb-verify"><strong>Verify:</strong> Open <code>/create</code>. Structure picker shows Individual → Pairs → Teams in that order. Selecting Pairs auto-sets pair count to maxPlayers/2 with no manual input visible. Create a test tournament to confirm settings write correctly.</div>
+    </div>
+
+    <div class="rb-step">
+      <div class="rb-step-title">QA: Scorecard Yardage Display (testpairs-2026)</div>
+      <div class="rb-step-body">
+        With testpairs-2026 seeded, navigate to <code>/t/testpairs-2026/scorecard</code>. Confirm:
+        <ul style="margin-top:0.4rem;font-size:0.78rem;color:var(--muted);padding-left:1.2rem;">
+          <li>Yardage is displayed for each hole (pulls from <code>courseYards[currentHole-1]</code> at <code>scorecard.html:1057</code>).</li>
+          <li>If no yardage data in <code>course_holes</code>, add it via Supabase MCP for the test course.</li>
+          <li>Tee box selector (if present) updates yardages per hole.</li>
+        </ul>
+        If yardage display element is missing from scorecard HTML, add it adjacent to the par display.
+        <br><strong>Upstream:</strong> <code>course_holes</code> table, <code>tee.yards</code> array from settings. <strong>Downstream:</strong> Player scorecard UX only.
+      </div>
+      <div class="rb-verify"><strong>Verify:</strong> Each hole on scorecard shows a yardage number. Number changes on tee box switch. No console errors.</div>
+    </div>
+
+    <div class="rb-step">
+      <div class="rb-step-title">Commit, Push, and Update Bug DB</div>
+      <div class="rb-step-body">
+        <code>git add platform.html migrations/023_push_subscriptions_update_policy.sql home.html scorecard.html scoreboard.html admin.html create.html</code>
+        <br><code>git commit -m "fix: sprint prompts repo path, push_subscriptions UPDATE policy, tournament_admins auth guard, create.html structure order, scorecard yardage QA"</code>
+        <br><code>git push</code>
+        <br>Then use Supabase MCP to mark all addressed bugs as done in <code>platform_bugs</code>.
+        Update this ticket: advance lifecycle to EXECUTING → AUDIT.
+      </div>
+      <div class="rb-verify"><strong>Verify:</strong> Vercel deploy completes. Visit <code>/platform</code> — open bug count is &lt;10. Zero 403/400 on network tab across bova, testpairs-2026, four-team-test. Sprint prompts have correct repo path.</div>
+    </div>
+
+  </div>
+
+</div>
+</section>
+
+<section id="executing">
+<div class="wrapper">
+<!-- EXECUTING-CONTENT-START -->
+<div class="stage-pending">
+  <p>Awaiting execution. Run <code>/tourney-execute 5-29-26-bug-status-review.html</code> to proceed.</p>
+</div>
+<!-- EXECUTING-CONTENT-END -->
+</div>
+</section>
+
+<section id="audit">
+<div class="wrapper">
+<!-- AUDIT-CONTENT-START -->
+<div class="stage-pending">
+  <p>Awaiting execution. Run <code>/tourney-execute 5-29-26-bug-status-review.html</code> to proceed.</p>
+</div>
+<!-- AUDIT-CONTENT-END -->
+</div>
+</section>
+
+<section id="concluded">
+<div class="wrapper">
+<!-- CONCLUDED-CONTENT-START -->
+<div class="stage-pending">
+  <p>Awaiting execution. Run <code>/tourney-execute 5-29-26-bug-status-review.html</code> to proceed.</p>
+</div>
+<!-- CONCLUDED-CONTENT-END -->
+</div>
+</section>
+
+<footer>
+  Generated by <span>Claude Sonnet 4.6</span> &middot; Greenskeeper Studios Internal &middot; May 29, 2026
+  <br style="margin-top:0.3rem">
+  <a href="/platform" style="color:var(--muted);font-size:0.7rem;text-decoration:none">&#x2190; Back to Platform Hub</a>
+</footer>
+
+</body>
+</html>

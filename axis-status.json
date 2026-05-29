@@ -1,15 +1,15 @@
 {
-  "updated_at": "2026-05-27T20:00:00Z",
+  "updated_at": "2026-05-29T06:00:00Z",
   "description": "Living state for all TOURney platform axes. One entry per axis. Updated by every tourney-* skill. Agents read this for context (50 tokens) instead of parsing HTML artifacts.",
   "stages": ["review", "plan", "runbook", "executing", "audit", "concluded"],
   "axes": {
     "architecture": {
-      "status": "concluded",
-      "grade": "A",
-      "artifact": "/platform/5-22-26-consolidation-review",
-      "last_updated": "2026-05-22",
-      "summary": "16 migrations clean. tournament_admins canonical. /lib/settings-keys.js const enum shipped (33 keys) — settings store now typed. Zero open items.",
-      "open_items": 0,
+      "status": "executing",
+      "grade": "A-",
+      "artifact": "/platform/5-29-26-bug-status-review",
+      "last_updated": "2026-05-29",
+      "summary": "22 migrations clean, settings-keys.js typed. Docked from A: 10+ sequential hotfix commits for button styling/encoding with no build validation gate. Sprint prompts embed dead repo path (P0). No staging env.",
+      "open_items": 2,
       "blocking": false
     },
     "feature-depth": {
@@ -22,31 +22,31 @@
       "blocking": false
     },
     "ux": {
-      "status": "audit",
-      "grade": "B",
-      "artifact": "/platform/5-27-26-bug-triage-review",
-      "last_updated": "2026-05-27",
-      "summary": "Trash-talk removed, 7 prior UX fixes confirmed. Icon rendering bug + testpairs loading blocked on live QA (2 P0s open).",
-      "open_items": 2,
+      "status": "executing",
+      "grade": "C+",
+      "artifact": "/platform/5-29-26-bug-status-review",
+      "last_updated": "2026-05-29",
+      "summary": "Icons fixed in code (10 commits) not yet verified live. Register form still heavy (myGolf not built). testpairs-2026 broken for formats/standings/players. Pair assignment unverified. Structure order wrong on create.",
+      "open_items": 6,
       "blocking": false
     },
     "security": {
-      "status": "concluded",
-      "grade": "A-",
-      "artifact": "/platform/5-27-26-bug-triage-review",
-      "last_updated": "2026-05-27",
-      "summary": "push_subscriptions 403 auth guard shipped. 5 auto-logged errors eliminated. send-push auth deploy + CSP unsafe-inline remain open (Rob manual).",
+      "status": "executing",
+      "grade": "B",
+      "artifact": "/platform/5-29-26-bug-status-review",
+      "last_updated": "2026-05-29",
+      "summary": "XSS clean (buildPostMessage escape chain, admin.html DOM methods). push_subscriptions INSERT policy + auth guard live. UPDATE policy missing (migration 023 needed). tournament_admins 400s — auth hydration timing, needs client guard. CSP unsafe-inline open.",
       "open_items": 3,
       "blocking": false
     },
     "business": {
-      "status": "concluded",
-      "grade": "B-",
-      "artifact": "/platform/5-21-26-business-review",
-      "last_updated": "2026-05-22",
-      "summary": "mygolf_profiles live, donations wired, RSVP auto-fill, $14–$99 pricing. Engineering done. LLC, EIN, bank, Stripe live keys logged to Checklist (Rob manual).",
-      "open_items": 4,
-      "blocking": false
+      "status": "executing",
+      "grade": "D+",
+      "artifact": "/platform/5-29-26-bug-status-review",
+      "last_updated": "2026-05-29",
+      "summary": "25 bugs shown open in DB (11 fixed in code, never marked done). Core player flows broken on testpairs-2026. No payments live, LLC not set up. Not demo-ready for new tenants.",
+      "open_items": 8,
+      "blocking": true
     },
     "deployment": {
       "status": "audit",

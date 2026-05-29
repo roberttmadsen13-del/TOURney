@@ -1,9 +1,23 @@
 {
   "$schema": "https://tourney.greenskeeper.studio/qa-index-schema.json",
   "version": 1,
-  "updated_at": "2026-05-27T20:00:00Z",
+  "updated_at": "2026-05-29T06:00:00Z",
   "description": "Canonical registry of all TOURney plans, reviews, audits, and QA artifacts. The /platform Artifacts tab renders from this file. Skills (e.g. tourney-review) append new entries when they generate output.",
   "entries": [
+    {
+      "id": "review-bug-status-2026-05-29",
+      "category": "review",
+      "stage": "executing",
+      "title": "Bug Status Review · May 29, 2026",
+      "summary": "Cross-reference of 25 open bugs (Operations PDF 1:56 AM May 29) against git history since May 22. Finding: 11 bugs fixed in code but never marked done in DB (false-positive open count). 10 genuinely open. 2 need live QA. Critical bonus: sprint prompt strings embed dead OneDrive repo path — all AI sprints from platform are feeding wrong repo location. 8-step runbook: fix prompt path, close fixed bugs in DB, migration 023 push_subscriptions UPDATE policy, tournament_admins auth guard, testpairs-2026 seed, create.html structure order, scorecard yardage QA.",
+      "date": "2026-05-29",
+      "updated": "2026-05-29",
+      "author": "claude-sonnet-4-6",
+      "url": "/platform/5-29-26-bug-status-review",
+      "file": "5-29-26-bug-status-review.html",
+      "tags": ["review", "bug-status", "bug-triage", "sprint-plan"],
+      "status": "open"
+    },
     {
       "id": "review-bug-triage-2026-05-27",
       "category": "review",

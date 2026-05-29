@@ -1,11 +1,18 @@
 {
-  "updated_at": "2026-05-27T12:00:00Z",
+  "updated_at": "2026-05-29T06:00:00Z",
   "description": "Per-axis grade history for TOURney platform. Updated automatically by review skills. Operations Action Board reads this file.",
   "axes": {
     "architecture": {
       "label": "Architecture",
       "cmd": "/tourney-review-architecture",
       "scores": [
+        {
+          "date": "2026-05-29",
+          "score": "A-",
+          "url": "/platform/5-29-26-bug-status-review",
+          "review_title": "Bug Status Review · May 29, 2026",
+          "notes": "Down from A. 22 migrations clean, settings-keys.js typed, tournament_admins canonical. Docked: 10+ sequential hotfix commits for button encoding/styling with no build validation gate. Sprint prompts embed dead OneDrive repo path (P0). No staging environment or pre-deploy smoke test."
+        },
         {
           "date": "2026-05-22",
           "score": "A",
@@ -75,6 +82,13 @@
       "label": "Feature Depth",
       "cmd": "/tourney-review-feature-depth",
       "scores": [
+        {
+          "date": "2026-05-29",
+          "score": "B+",
+          "url": "/platform/5-29-26-bug-status-review",
+          "review_title": "Bug Status Review · May 29, 2026",
+          "notes": "Down from A-. 27 formats shipped and Wolf/BBG/Quota/Skins/Nassau/Peoria/Callaway live. Docked: Formats Never Loads on testpairs-2026 (rounds not seeded), standings never loads, pair assignment unverified live, hole view absent from scorecard, yardage display unverified."
+        },
         {
           "date": "2026-05-27",
           "score": "A-",
@@ -172,6 +186,13 @@
       "label": "UX Polish",
       "cmd": "/tourney-review-ux",
       "scores": [
+        {
+          "date": "2026-05-29",
+          "score": "C+",
+          "url": "/platform/5-29-26-bug-status-review",
+          "review_title": "Bug Status Review · May 29, 2026",
+          "notes": "Down from B. Icons fixed in code via 10 commits but not live-verified. Register form still heavy (no myGolf pre-fill). testpairs-2026 broken for formats/standings/registered players. Pair assignment code exists but unverified. Structure order wrong on create page. 6 open UX bugs total."
+        },
         {
           "date": "2026-05-27",
           "score": "B",
@@ -305,6 +326,13 @@
       "cmd": "/tourney-review-security",
       "scores": [
         {
+          "date": "2026-05-29",
+          "score": "B",
+          "url": "/platform/5-29-26-bug-status-review",
+          "review_title": "Bug Status Review · May 29, 2026",
+          "notes": "Down from A-. XSS clean (buildPostMessage escape chain, admin.html DOM methods). push_subscriptions INSERT policy (015) + client auth guard live. Gap: UPDATE policy missing — upsert on existing row returns 403 (migration 023 needed). tournament_admins 400s: auth hydration timing, needs client guard. CSP unsafe-inline persists."
+        },
+        {
           "date": "2026-05-27",
           "score": "A-",
           "url": "/platform/5-27-26-bug-triage-review",
@@ -402,6 +430,13 @@
       "cmd": "/tourney-review-business",
       "scores": [
         {
+          "date": "2026-05-29",
+          "score": "D+",
+          "url": "/platform/5-29-26-bug-status-review",
+          "review_title": "Bug Status Review · May 29, 2026",
+          "notes": "Down from B-. 25 bugs show open in DB (11 fixed in code, never marked done). Core player flows broken on testpairs-2026. Platform sprint prompts reference dead repo path — AI assistance impaired. No payments live, LLC not formed, not demo-ready for new tenants. Engineering stable but product quality signals are poor."
+        },
+        {
           "date": "2026-05-22",
           "score": "B-",
           "url": "/platform/5-22-26-claude-review",
@@ -477,6 +512,13 @@
       "label": "Deployment",
       "cmd": "/tourney-review-deployment",
       "scores": [
+        {
+          "date": "2026-05-29",
+          "score": "B+",
+          "url": "/platform/5-29-26-bug-status-review",
+          "review_title": "Bug Status Review · May 29, 2026",
+          "notes": "No change from B+. Vercel solid, SW cache v38, GH Actions CI live. Red flag: 10+ sequential hotfix commits in one session for button styling/encoding — indicates no pre-deploy validation gate. No staging environment. Grade holds B+ but trend is concerning."
+        },
         {
           "date": "2026-05-22",
           "score": "B+",
@@ -554,6 +596,13 @@
       "cmd": "/tourney-review-performance",
       "scores": [
         {
+          "date": "2026-05-29",
+          "score": "B",
+          "url": "/platform/5-29-26-bug-status-review",
+          "review_title": "Bug Status Review · May 29, 2026",
+          "notes": "Slight dip from B+. SW cache v38, skeletons live, og:image dynamic. No Lighthouse CI baseline, no LCP/CLS metrics collected. tournament_admins 400 and push_subscriptions 403 create noise on every page load — wasted network round trips. Grade holds B until perf metrics established."
+        },
+        {
           "date": "2026-05-22",
           "score": "B+",
           "url": "/platform/5-22-26-consolidation-review",
@@ -622,6 +671,13 @@
       "label": "Data Model",
       "cmd": "/tourney-review-data-model",
       "scores": [
+        {
+          "date": "2026-05-29",
+          "score": "A",
+          "url": "/platform/5-29-26-bug-status-review",
+          "review_title": "Bug Status Review · May 29, 2026",
+          "notes": "No change. 22 migrations clean, all 16 tables covered, zero USING(true) policies. Courses write RLS (018), cascade delete (019), 6 indexes (020), mygolf_profiles + donations (021-022). Grade holds A."
+        },
         {
           "date": "2026-05-27",
           "score": "A",
