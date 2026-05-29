@@ -191,16 +191,16 @@
     {
       "id": "review-2026-05-20",
       "category": "review",
-      "stage": "audit",
+      "stage": "concluded",
       "title": "Full Platform Review · May 20, 2026",
-      "summary": "Grade B+. All 5 engineering steps shipped: OG tags (18 pages), score admin-edit, profile skeleton, RLS 013, Lighthouse CI. 4 Rob manual items blocked: SEND_INSTALL_EMAIL_SECRET, LLC, Stripe, S3.",
+      "summary": "Concluded B+. All 5 engineering steps shipped: OG tags (18 pages), score admin-edit, profile skeleton, RLS 013, Lighthouse CI. 4 Rob manual items in checklist: SEND_INSTALL_EMAIL_SECRET, LLC, Stripe, S3.",
       "date": "2026-05-20",
-      "updated": "2026-05-21",
+      "updated": "2026-05-29",
       "author": "claude-sonnet-4-6",
       "url": "/platform/5-20-26-claude-review",
       "file": "5-20-26-claude-review.html",
       "tags": ["review", "full-platform"],
-      "status": "open"
+      "status": "concluded"
     },
     {
       "id": "master-plan-2026-05-19",
