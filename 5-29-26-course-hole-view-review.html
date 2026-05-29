@@ -406,7 +406,7 @@ out tags;</pre>
 <div class="card">
   <div class="card-title">Strategic Priorities</div>
   <ol>
-    <li style="margin-bottom:0.5rem;"><strong style="color:var(--gold);">P1 — Migration:</strong> Add <code>image_url text</code> (nullable) to <code>course_holes</code>. Additive, zero-risk, unblocks everything else. Also add <code>image_url text</code> to <code>golf_courses</code> for platform-level course library support.</li>
+    <li style="margin-bottom:0.5rem;"><strong style="color:var(--gold);">P1 — Migration:</strong> Add <code>image_url text</code>, <code>lat double precision</code>, <code>lng double precision</code> (all nullable) to <code>course_holes</code> in one migration. Also add <code>hole_data jsonb</code> to <code>golf_courses</code> for shared library-level hole coordinates + images (reused across tenants). <em>See §Second Opinion — lat/lng required now to unblock satellite and OSM options.</em></li>
     <li style="margin-bottom:0.5rem;"><strong style="color:var(--gold);">P2 — Scorecard frontend:</strong> Add <code>#holeView</code> element to <code>scorecard.html</code> hole-card. Update <code>renderHole()</code> to show <code>&lt;img src=image_url&gt;</code> when available, SVG placeholder when not. Update <code>course_holes</code> select to include <code>image_url</code>. Store in <code>courseImages[]</code> array parallel to <code>coursePars[]</code> and <code>courseYards[]</code>.</li>
     <li style="margin-bottom:0.5rem;"><strong style="color:var(--gold);">P3 — Admin upload UI:</strong> Add per-hole image URL field in admin course config. Use Supabase Storage public bucket <code>hole-images</code> for uploads, or accept any external HTTPS URL. Simple text input + preview thumbnail is sufficient for v1.</li>
     <li style="margin-bottom:0.5rem;"><strong style="color:var(--gold);">P4 — Close bug 97c45b3d:</strong> Mark <code>completed</code> in <code>platform_bugs</code> table after deploy + QA pass.</li>
@@ -437,10 +437,10 @@ out tags;</pre>
   </div>
   <div class="idea-card idea-4">
     <div class="idea-number">4</div>
-    <div class="idea-tag"><span class="pill pill-orange">Future</span></div>
-    <div class="idea-title">OSM Satellite Tile as Fallback</div>
-    <div class="idea-body">Per platform memory, GPS + SVG hole view are free via OSM + browser geo. If a course has lat/lng coordinates stored, the hole view could render an OSM tile centered on the hole. Viable as a v2 enhancement — requires coordinate data on course_holes.</div>
-    <div class="idea-plan"><strong>Build (future):</strong> Add lat/lng columns to course_holes. Use OSM static tile URL pattern. No API key needed.</div>
+    <div class="idea-tag"><span class="pill pill-orange">M1.5</span></div>
+    <div class="idea-title">Hybrid Fallback Chain — 3-tier rendering</div>
+    <div class="idea-body">renderHole() picks best available source: (1) admin-uploaded image_url → (2) Mapbox Static Satellite auto-generated from lat/lng → (3) OSM GeoJSON schematic diagram → (4) SVG par/yards placeholder. No hole ever blank. Satellite uses <code>satellite-v9</code> style (Standard Satellite incompatible with Static Images API). Free tier: 50k req/mo. Cached in service worker — one fetch per hole per session.</div>
+    <div class="idea-plan"><strong>Build:</strong> lat/lng in migration (P1). Mapbox token in env var. ~20 lines JS in renderHole(). OSM fetch-at-create-time → stored in golf_courses.hole_data. See §Second Opinion for full code.</div>
   </div>
   <div class="idea-card idea-5">
     <div class="idea-number">5</div>
@@ -462,9 +462,17 @@ out tags;</pre>
 <div class="roadmap-item">
   <div class="roadmap-icon">M</div>
   <div class="roadmap-content">
-    <div class="roadmap-title">Milestone 2 — Admin Upload + Real Images (P3)</div>
-    <div class="roadmap-desc">Supabase Storage bucket + admin.html upload UI. Bova Invitational holes get real images first as test. Verify images show on live scorecard.</div>
-    <div class="roadmap-action"><strong>Ship:</strong> 1 session. Closes feature fully.</div>
+    <div class="roadmap-title">Milestone 1.5 — Satellite Auto + Hybrid Chain</div>
+    <div class="roadmap-desc">Add lat/lng to course_holes rows for known courses. Wire Mapbox satellite fallback in renderHole() (~20 lines). Holes with coordinates show real satellite imagery immediately — zero admin upload needed. OSM fetch-at-create-wizard added to populate golf_courses.hole_data for new courses.</div>
+    <div class="roadmap-action"><strong>Ship:</strong> Same session as M1 or immediately after. Requires MAPBOX_TOKEN env var in Vercel.</div>
+  </div>
+</div>
+<div class="roadmap-item">
+  <div class="roadmap-icon">M</div>
+  <div class="roadmap-content">
+    <div class="roadmap-title">Milestone 2 — Admin Upload + Branded Images (P3)</div>
+    <div class="roadmap-desc">Supabase Storage bucket + admin.html upload UI. Admin-uploaded images take highest priority in the fallback chain — overrides satellite and OSM. For tenants that want branded or custom hole photos. Not required for functional feature — M1+M1.5 already provides real imagery.</div>
+    <div class="roadmap-action"><strong>Ship:</strong> 1 session. Closes feature fully for premium use case.</div>
   </div>
 </div>
 <div class="roadmap-item">
@@ -496,8 +504,10 @@ out tags;</pre>
       Run via <code>mcp__claude_ai_Supabase__apply_migration</code> on project <code>jllugkiojeoopitdvzsa</code>.<br><br>
       SQL:<br>
       <code>ALTER TABLE course_holes ADD COLUMN IF NOT EXISTS image_url text;</code><br>
-      <code>ALTER TABLE golf_courses ADD COLUMN IF NOT EXISTS image_url text;</code><br><br>
-      Both columns are nullable text — zero impact on existing rows or queries. No RLS change needed (inherits existing course_holes policy).
+      <code>ALTER TABLE course_holes ADD COLUMN IF NOT EXISTS lat double precision;</code><br>
+      <code>ALTER TABLE course_holes ADD COLUMN IF NOT EXISTS lng double precision;</code><br>
+      <code>ALTER TABLE golf_courses ADD COLUMN IF NOT EXISTS hole_data jsonb;</code><br><br>
+      All columns nullable — zero impact on existing rows. <code>hole_data</code> on <code>golf_courses</code> stores shared library-level hole coords + images as <code>[{hole:1, lat:X, lng:Y, image_url:""}, ...]</code>, reused across all tenants using the same course. No RLS change needed.
       <br><br>
       <strong>Upstream:</strong> No upstream dependencies — purely additive.<br>
       <strong>Downstream:</strong> scorecard.html Step 2 depends on this column existing. admin.html Step 3 writes to it.
@@ -513,18 +523,19 @@ out tags;</pre>
     <div class="rb-step-body">
       File: <code>scorecard.html</code> line 632.<br><br>
       Current: <code>sb.from('course_holes').select('hole_number,par,yardage')</code><br>
-      Change to: <code>sb.from('course_holes').select('hole_number,par,yardage,image_url')</code><br><br>
-      Add a new array variable alongside <code>coursePars</code> and <code>courseYards</code>:<br>
+      Change to: <code>sb.from('course_holes').select('hole_number,par,yardage,image_url,lat,lng')</code><br><br>
+      Add new array variables alongside <code>coursePars</code> and <code>courseYards</code>:<br>
       Near line 549 where <code>let coursePars</code> and <code>let courseYards</code> are declared, add:<br>
-      <code>let courseImages = [];</code><br><br>
+      <code>let courseImages = []; let courseCoords = [];</code><br><br>
       In the course_holes data handler (line 633–635), add:<br>
-      <code>courseImages = cHoles.map(h =&gt; h.image_url || null);</code><br><br>
+      <code>courseImages = cHoles.map(h =&gt; h.image_url || null);</code><br>
+      <code>courseCoords = cHoles.map(h =&gt; (h.lat && h.lng) ? {lat:h.lat,lng:h.lng} : null);</code><br><br>
       <strong>Upstream:</strong> Reads from course_holes (Step 1 migration required).<br>
       <strong>Downstream:</strong> courseImages[] feeds renderHole() in Step 3. No other function reads it.
     </div>
     <div class="rb-verify">
       <strong>Verify</strong>
-      Console log <code>courseImages</code> after init — should be array of 18 items (null for courses with no images yet). No 400/406 errors in Network tab for the course_holes request.
+      Console log <code>courseImages</code> and <code>courseCoords</code> after init — both arrays of 18 items. courseCoords items are <code>{lat,lng}</code> or <code>null</code>. No 400/406 errors in Network tab for the course_holes request.
     </div>
   </div>
 
@@ -552,11 +563,21 @@ out tags;</pre>
     <div class="rb-step-title">scorecard.html — Update renderHole() to render hole view</div>
     <div class="rb-step-body">
       File: <code>scorecard.html</code> function <code>renderHole()</code> starting line 1322.<br><br>
-      Add after line 1329 (after holePar innerHTML is set):<br>
-      <pre style="font-size:0.75rem;background:rgba(255,255,255,0.04);padding:0.6rem;border-radius:4px;overflow-x:auto;color:var(--text);">const imgUrl = courseImages[currentHole - 1];
+      Add after line 1329 (after holePar innerHTML is set). Uses hybrid fallback chain — see §Second Opinion:<br>
+      <pre style="font-size:0.75rem;background:rgba(255,255,255,0.04);padding:0.6rem;border-radius:4px;overflow-x:auto;color:var(--text);">const imgUrl   = courseImages[currentHole - 1];
+const coords   = courseCoords[currentHole - 1];
 const holeView = document.getElementById('holeView');
 if (imgUrl) {
-  holeView.innerHTML = `&lt;img src="${imgUrl}" alt="Hole ${currentHole} diagram" loading="lazy"&gt;`;
+  holeView.innerHTML = `&lt;img src="${imgUrl}" alt="Hole ${currentHole}" loading="lazy"&gt;`;
+} else if (coords) {
+  // Mapbox Static Satellite — satellite-v9 required (Standard Satellite incompatible with Static Images API)
+  const token = window.MAPBOX_TOKEN || '';
+  if (token) {
+    const url = `https://api.mapbox.com/styles/v1/mapbox/satellite-v9/static/${coords.lng},${coords.lat},17/600x380@2x?access_token=${token}`;
+    holeView.innerHTML = `&lt;img src="${url}" alt="Hole ${currentHole} satellite" loading="lazy"&gt;`;
+  } else {
+    holeView.innerHTML = holePlaceholderSVG(par, courseYards[currentHole - 1]);
+  }
 } else {
   holeView.innerHTML = holePlaceholderSVG(par, courseYards[currentHole - 1]);
 }</pre><br>
@@ -577,7 +598,7 @@ if (imgUrl) {
     </div>
     <div class="rb-verify">
       <strong>Verify</strong>
-      Navigate scorecard: hole view area shows SVG placeholder for every hole (when no images loaded). Par color coding correct (par 3 = blue, par 4 = gold, par 5 = green). Yardage text shows when courseYards has data. Score steppers still function. prev/next navigation works. No console errors.
+      Navigate scorecard: hole view shows SVG placeholder when no image_url or coords. If lat/lng populated AND MAPBOX_TOKEN set — satellite image loads. If image_url set — image takes precedence. Par color coding correct (par 3 = blue, par 4 = gold, par 5 = green). Score steppers still work. prev/next navigation works. No console errors.
     </div>
   </div>
 
