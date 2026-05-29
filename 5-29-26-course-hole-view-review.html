@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TOURney — Course Hole View · May 29, 2026</title>
+<style>
+:root{--gold:#c09030;--gold-light:#d4a840;--gold-dim:rgba(192,144,48,0.18);--bg:#0d0a05;--surface:#151009;--card:#1c140a;--border:rgba(192,144,48,0.22);--muted:#7a6a54;--text:#e8dcc8;--red:#c0392b;--green:#27ae60;--blue:#2980b9;--orange:#e67e22;--purple:#8e44ad;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:-apple-system,'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;font-size:15px;}
+nav{position:sticky;top:0;z-index:100;background:rgba(13,10,5,0.97);border-bottom:1px solid var(--border);backdrop-filter:blur(12px);}
+.nav-inner{padding:0.6rem 1.5rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap;}
+.nav-brand{color:var(--gold);font-weight:700;font-size:1rem;letter-spacing:0.05em;white-space:nowrap;}
+.nav-brand span{color:var(--muted);font-weight:400;font-size:0.8rem;margin-left:0.4rem;}
+.nav-links{display:flex;gap:0.2rem;flex-wrap:wrap;margin-left:auto;}
+.nav-links a{color:var(--muted);text-decoration:none;font-size:0.78rem;padding:0.3rem 0.55rem;border-radius:4px;transition:all 0.15s;white-space:nowrap;}
+.nav-links a:hover{color:var(--gold);background:var(--gold-dim);}
+.lifecycle-bar{display:flex;gap:3px;padding:0.55rem 1.5rem 0.65rem;background:var(--surface);border-bottom:1px solid var(--border);}
+.lc-stage{flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;}
+.lc-pill{height:5px;width:100%;border-radius:3px;background:rgba(192,144,48,0.1);transition:background 0.25s;}
+.lc-label{font-size:0.58rem;font-weight:700;letter-spacing:0.11em;text-transform:uppercase;color:rgba(122,106,84,0.45);transition:color 0.25s;}
+.lc-done .lc-pill{background:var(--gold);}
+.lc-done .lc-label{color:var(--gold);}
+.lc-active .lc-pill{background:var(--gold-light);box-shadow:0 0 8px rgba(192,144,48,0.45);}
+.lc-active .lc-label{color:var(--gold-light);}
+.hero{padding:3rem 1.5rem 2rem;text-align:center;border-bottom:1px solid var(--border);background:linear-gradient(180deg,rgba(192,144,48,0.06) 0%,transparent 100%);}
+.hero-eyebrow{display:inline-block;font-size:0.7rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold);border:1px solid var(--border);border-radius:20px;padding:0.22rem 0.8rem;margin-bottom:0.9rem;}
+.hero h1{font-size:clamp(1.5rem,3.5vw,2.3rem);font-weight:800;color:#fff;margin-bottom:0.35rem;}
+.hero h1 span{color:var(--gold);}
+.hero-sub{color:var(--muted);max-width:520px;margin:0 auto 1rem;font-size:0.9rem;}
+.hero-meta{display:flex;gap:1.1rem;justify-content:center;flex-wrap:wrap;font-size:0.74rem;color:var(--muted);}
+.hero-meta span{display:flex;align-items:center;gap:0.3rem;}
+.wrapper{max-width:1000px;margin:0 auto;padding:0 1.5rem;}
+section{padding:2.5rem 0;border-bottom:1px solid var(--border);}
+section:last-of-type{border-bottom:none;}
+.section-header{margin-bottom:1.6rem;}
+.section-eyebrow{font-size:0.67rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--gold);margin-bottom:0.3rem;}
+.section-title{font-size:1.35rem;font-weight:800;color:#fff;margin-bottom:0.3rem;}
+.section-desc{color:var(--muted);font-size:0.85rem;max-width:560px;}
+.card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:1.15rem 1.3rem;margin-bottom:0.7rem;}
+.card-title{font-size:0.85rem;font-weight:700;color:var(--gold);margin-bottom:0.45rem;}
+.card p,.card li{font-size:0.84rem;color:var(--text);margin-bottom:0.28rem;}
+.card ul,.card ol{padding-left:1.2rem;}
+.card li{margin-bottom:0.32rem;}
+.grid-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:0.7rem;}
+.grid-3{display:grid;grid-template-columns:repeat(auto-fit,minmax(245px,1fr));gap:0.7rem;}
+.stack-item{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:0.85rem 1.05rem;}
+.stack-label{font-size:0.65rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--muted);margin-bottom:0.18rem;}
+.stack-value{font-size:0.88rem;font-weight:600;color:#fff;}
+.stack-note{font-size:0.72rem;color:var(--muted);margin-top:0.18rem;}
+.pill{display:inline-block;font-size:0.66rem;font-weight:700;letter-spacing:0.06em;padding:0.15rem 0.5rem;border-radius:20px;text-transform:uppercase;}
+.pill-gold{background:rgba(192,144,48,0.18);color:var(--gold);border:1px solid rgba(192,144,48,0.3);}
+.pill-green{background:rgba(39,174,96,0.15);color:var(--green);border:1px solid rgba(39,174,96,0.3);}
+.pill-red{background:rgba(192,57,43,0.15);color:var(--red);border:1px solid rgba(192,57,43,0.3);}
+.pill-orange{background:rgba(230,126,34,0.15);color:var(--orange);border:1px solid rgba(230,126,34,0.3);}
+.pill-blue{background:rgba(41,128,185,0.15);color:var(--blue);border:1px solid rgba(41,128,185,0.3);}
+.pill-purple{background:rgba(142,68,173,0.15);color:var(--purple);border:1px solid rgba(142,68,173,0.3);}
+.page-table{width:100%;border-collapse:collapse;font-size:0.8rem;}
+.page-table th{text-align:left;padding:0.52rem 0.72rem;border-bottom:1px solid var(--border);color:var(--muted);font-size:0.67rem;text-transform:uppercase;letter-spacing:0.08em;background:var(--surface);}
+.page-table td{padding:0.58rem 0.72rem;border-bottom:1px solid rgba(192,144,48,0.08);vertical-align:top;}
+.page-table tr:last-child td{border-bottom:none;}
+.page-table tr:hover td{background:var(--gold-dim);}
+.page-table .url{font-family:monospace;font-size:0.75rem;color:var(--gold-light);}
+.page-table .file{font-family:monospace;font-size:0.72rem;color:var(--muted);}
+.table-wrap{background:var(--card);border:1px solid var(--border);border-radius:8px;overflow:hidden;overflow-x:auto;}
+.score-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(125px,1fr));gap:0.52rem;margin-bottom:1.4rem;}
+.score-cell{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:0.85rem;text-align:center;}
+.score-num{font-size:1.85rem;font-weight:900;line-height:1;margin-bottom:0.18rem;}
+.score-label{font-size:0.64rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);}
+.score-green{color:var(--green);}
+.score-gold{color:var(--gold);}
+.score-red{color:var(--red);}
+.score-blue{color:var(--blue);}
+.idea-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1.25rem;position:relative;overflow:hidden;}
+.idea-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;}
+.idea-1::before{background:var(--gold);}
+.idea-2::before{background:var(--blue);}
+.idea-3::before{background:var(--green);}
+.idea-4::before{background:var(--orange);}
+.idea-5::before{background:var(--purple);}
+.idea-number{font-size:2rem;font-weight:900;opacity:0.07;position:absolute;top:0.5rem;right:1rem;line-height:1;color:#fff;}
+.idea-tag{margin-bottom:0.42rem;}
+.idea-title{font-size:0.96rem;font-weight:700;color:#fff;margin-bottom:0.42rem;}
+.idea-body{font-size:0.82rem;color:var(--muted);line-height:1.55;margin-bottom:0.65rem;}
+.idea-plan{font-size:0.77rem;color:var(--text);}
+.idea-plan strong{color:var(--gold);}
+.runbook-steps{counter-reset:rb-step;}
+.rb-step{background:var(--card);border:1px solid var(--border);border-left:3px solid rgba(192,144,48,0.3);border-radius:0 8px 8px 0;padding:0.95rem 1.15rem 0.95rem 3.8rem;margin-bottom:0.55rem;position:relative;}
+.rb-step::before{counter-increment:rb-step;content:counter(rb-step);position:absolute;left:0.95rem;top:0.95rem;width:1.75rem;height:1.75rem;background:var(--gold-dim);color:var(--gold);border:1px solid var(--border);border-radius:50%;font-size:0.72rem;font-weight:700;display:grid;place-items:center;}
+.rb-step-title{font-size:0.87rem;font-weight:700;color:#fff;margin-bottom:0.22rem;}
+.rb-step-body{font-size:0.8rem;color:var(--muted);margin-bottom:0.35rem;}
+.rb-verify{font-size:0.76rem;color:var(--text);background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:3px;padding:0.35rem 0.6rem;margin-top:0.3rem;}
+.rb-verify strong{color:var(--gold-light);font-size:0.68rem;text-transform:uppercase;letter-spacing:0.07em;display:block;margin-bottom:0.1rem;}
+.sec-item{background:var(--card);border:1px solid var(--border);border-left:3px solid var(--border);border-radius:0 8px 8px 0;padding:0.9rem 1.15rem;margin-bottom:0.65rem;}
+.sec-item.sev-high{border-left-color:var(--red);}
+.sec-item.sev-med{border-left-color:var(--orange);}
+.sec-item.sev-low{border-left-color:var(--green);}
+.sec-item.sev-info{border-left-color:var(--blue);}
+.sec-header{display:flex;align-items:center;gap:0.52rem;margin-bottom:0.42rem;}
+.sec-title{font-size:0.87rem;font-weight:700;color:#fff;}
+.sec-body{font-size:0.8rem;color:var(--muted);margin-bottom:0.42rem;}
+.sec-fix{font-size:0.77rem;color:var(--text);background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:4px;padding:0.42rem 0.62rem;}
+.sec-fix strong{color:var(--gold-light);display:block;margin-bottom:0.12rem;font-size:0.68rem;text-transform:uppercase;letter-spacing:0.08em;}
+.stage-pending{text-align:center;padding:3rem 1.5rem;color:var(--muted);font-size:0.85rem;border:1px dashed rgba(192,144,48,0.2);border-radius:8px;}
+.stage-pending code{color:var(--gold);}
+.exec-step{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:0.85rem 1.05rem;margin-bottom:0.48rem;display:flex;gap:0.7rem;align-items:flex-start;}
+.exec-badge{font-size:0.66rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;padding:0.18rem 0.48rem;border-radius:3px;white-space:nowrap;flex-shrink:0;margin-top:0.08rem;}
+.exec-done{background:rgba(39,174,96,0.14);color:var(--green);border:1px solid rgba(39,174,96,0.28);}
+.exec-skipped{background:rgba(192,144,48,0.1);color:var(--muted);border:1px solid var(--border);}
+.exec-blocked{background:rgba(192,57,43,0.11);color:var(--red);border:1px solid rgba(192,57,43,0.28);}
+.exec-body{font-size:0.81rem;color:var(--text);}
+.exec-body strong{color:#fff;display:block;margin-bottom:0.12rem;font-size:0.83rem;}
+.roadmap-item{display:flex;gap:1.05rem;align-items:flex-start;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:0.95rem 1.15rem;margin-bottom:0.52rem;}
+.roadmap-icon{width:1.9rem;height:1.9rem;border-radius:50%;background:var(--gold-dim);color:var(--gold);display:grid;place-items:center;font-size:0.85rem;flex-shrink:0;border:1px solid var(--border);}
+.roadmap-content{flex:1;}
+.roadmap-title{font-size:0.88rem;font-weight:700;color:#fff;margin-bottom:0.13rem;}
+.roadmap-desc{font-size:0.79rem;color:var(--muted);margin-bottom:0.32rem;}
+.roadmap-action{font-size:0.75rem;color:var(--text);}
+.roadmap-action strong{color:var(--gold-light);}
+code{font-family:'Consolas','Monaco',monospace;background:rgba(255,255,255,0.07);padding:0.09rem 0.27rem;border-radius:3px;font-size:0.81em;color:var(--gold-light);}
+footer{border-top:1px solid var(--border);padding:1.2rem;text-align:center;color:var(--muted);font-size:0.72rem;}
+footer span{color:var(--gold);}
+@media(max-width:600px){.nav-links{display:none;}.hero{padding:2rem 1rem 1.5rem;}section{padding:2rem 0;}.lc-label{font-size:0.5rem;}}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <div class="nav-brand">TOURney <span>by Greenskeeper Studios</span></div>
+    <div class="nav-links">
+      <a href="#review">Review</a>
+      <a href="#plan">Plan</a>
+      <a href="#runbook">Runbook</a>
+      <a href="#executing">Executing</a>
+      <a href="#audit">Audit</a>
+      <a href="#concluded">Concluded</a>
+    </div>
+  </div>
+</nav>
+
+<!-- LIFECYCLE-BAR-START -->
+<div class="lifecycle-bar">
+  <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Review</div></div>
+  <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Plan</div></div>
+  <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Runbook</div></div>
+  <div class="lc-stage"><div class="lc-pill"></div><div class="lc-label">Executing</div></div>
+  <div class="lc-stage"><div class="lc-pill"></div><div class="lc-label">Audit</div></div>
+  <div class="lc-stage"><div class="lc-pill"></div><div class="lc-label">Concluded</div></div>
+</div>
+<!-- LIFECYCLE-BAR-END -->
+
+<div class="hero">
+  <div class="hero-eyebrow">Course Hole View</div>
+  <h1><span>TOURney</span> — Course Hole View · May 29, 2026</h1>
+  <p class="hero-sub">Full review of the scorecard hole view feature — current gap analysis, schema state, and complete implementation plan for rendering per-hole visual diagrams during active scoring.</p>
+  <div class="hero-meta">
+    <span>&#128197; May 29, 2026</span>
+    <span>&#129302; Claude Sonnet 4.6</span>
+    <span>&#127962; Greenskeeper Studios</span>
+    <span>&#128274; Internal Only</span>
+  </div>
+</div>
+
+<section id="review">
+<div class="wrapper">
+
+<div class="section-header">
+  <div class="section-eyebrow">Section 01</div>
+  <div class="section-title">Review — Current State</div>
+  <div class="section-desc">What exists today, what data is available, and the exact gap between current scorecard and the requested hole view feature.</div>
+</div>
+
+<!-- DB Bug Cross-Reference -->
+<div class="card" style="border-left:3px solid var(--red);">
+  <div class="card-title">DB Bug Cross-Reference</div>
+  <div class="table-wrap" style="margin-top:0.5rem;">
+    <table class="page-table">
+      <thead><tr><th>Bug ID</th><th>Title</th><th>DB Status</th><th>Code State</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="url">97c45b3d</td>
+          <td>Scorecard — Not showing hole image</td>
+          <td><span class="pill pill-red">open</span></td>
+          <td><span class="pill pill-red">Not implemented</span> — <code>renderHole()</code> has zero image/diagram element. No <code>image_url</code> column on <code>course_holes</code>. Feature is entirely absent.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <p style="margin-top:0.6rem;font-size:0.8rem;color:var(--muted);">1 open bug directly targeting this feature. DB status matches code state — not a tracking error.</p>
+</div>
+
+<!-- Current Scorecard Hole Display -->
+<div class="card">
+  <div class="card-title">Current Scorecard Hole Display — What Exists</div>
+  <p>The scorecard (<code>scorecard.html</code>) renders hole data inside a <code>.hole-card</code> div (line 385). The <code>renderHole()</code> function (line 1322) populates exactly three data points per hole:</p>
+  <ul style="margin-top:0.5rem;">
+    <li><strong>Hole number</strong> — <code>document.getElementById('holeNum').textContent = currentHole</code> (line 1326)</li>
+    <li><strong>Par</strong> — from <code>coursePars[currentHole - 1]</code>, rendered into <code>#holePar</code> (line 1327)</li>
+    <li><strong>Yardage</strong> — from <code>courseYards[currentHole - 1]</code>, appended inline as <code>· {yd} yd</code> when present (line 1327–1329)</li>
+  </ul>
+  <p style="margin-top:0.6rem;">There is no image element, no SVG container, no placeholder, and no CSS class for a hole diagram anywhere in <code>scorecard.html</code>. The <code>.hole-header</code> CSS (line 74) is a flex row containing only hole number and par text.</p>
+</div>
+
+<!-- Schema State -->
+<div class="card">
+  <div class="card-title">Schema State — All Three Course Tables (Supabase live, project jllugkiojeoopitdvzsa)</div>
+  <div class="table-wrap" style="margin-top:0.5rem;">
+    <table class="page-table">
+      <thead><tr><th>Table</th><th>Columns</th><th>Image/Diagram Field</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><code>course_holes</code></td>
+          <td>id (uuid), course_id (uuid), hole_number (int), par (int, default 4), yardage (int, nullable)</td>
+          <td><span class="pill pill-red">None</span></td>
+        </tr>
+        <tr>
+          <td><code>courses</code></td>
+          <td>id (uuid), tournament_id (uuid), name (text), tee_box (text), created_at</td>
+          <td><span class="pill pill-red">None</span></td>
+        </tr>
+        <tr>
+          <td><code>golf_courses</code></td>
+          <td>id (bigint), name, city, state, pars[] (array), tees (jsonb), yards[] (array), created_at</td>
+          <td><span class="pill pill-red">None</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <p style="margin-top:0.6rem;color:var(--muted);font-size:0.82rem;">No <code>image_url</code>, <code>svg_path</code>, <code>diagram_url</code>, or any visual field exists on any course-related table. This feature requires a schema migration before any frontend work.</p>
+</div>
+
+<!-- Data Loading Chain -->
+<div class="card">
+  <div class="card-title">Data Loading Priority Chain (scorecard.html lines 619–635)</div>
+  <p>Par and yardage are loaded through a three-tier override chain, highest priority last:</p>
+  <ol style="margin-top:0.5rem;">
+    <li><strong>settings table</strong> — <code>pars_day*</code> and <code>yards_day*</code> keys for tournament-specific overrides</li>
+    <li><strong>golf_courses table</strong> — <code>gc.pars[]</code> and <code>gc.tees[].yards[]</code> when round has a <code>course_id</code> (line 622–626)</li>
+    <li><strong>course_holes table</strong> — <code>hole_number, par, yardage</code> from tournament's linked <code>courses</code> row (lines 630–635) — <em>final precedence</em></li>
+  </ol>
+  <p style="margin-top:0.6rem;">Hole image would naturally slot into this same chain. The <code>course_holes</code> table is the authoritative per-hole data source and is the right place to add <code>image_url</code>.</p>
+</div>
+
+<!-- Gaps -->
+<div class="grid-2">
+  <div class="card">
+    <div class="card-title" style="color:var(--green);">Strengths</div>
+    <ul>
+      <li><strong>Data pipeline is clean.</strong> <code>course_holes</code> is already fetched per-round at scorecard init (line 630). Adding <code>image_url</code> to the select is a one-line change.</li>
+      <li><strong>Hole identity is unambiguous.</strong> <code>currentHole</code> (int 1–18) maps directly to array index — no lookup complexity.</li>
+      <li><strong>renderHole() is the single render path.</strong> One function owns hole display. Image injection goes in exactly one place.</li>
+      <li><strong>CSS framework in place.</strong> <code>.hole-card</code> and <code>.hole-header</code> are already scoped containers.</li>
+      <li><strong>OSM + browser geo are free.</strong> Per platform memory: GPS + SVG hole view are available free via OpenStreetMap and browser geolocation — no satellite imagery cost.</li>
+    </ul>
+  </div>
+  <div class="card">
+    <div class="card-title" style="color:var(--red);">Gaps / Bugs</div>
+
+    <div class="sec-item sev-high">
+      <div class="sec-header"><span class="pill pill-red">High</span><span class="sec-title">No image_url column on course_holes</span></div>
+      <div class="sec-body">Live Supabase schema confirmed: <code>course_holes</code> has 5 columns (id, course_id, hole_number, par, yardage). Zero image storage. No migration exists.</div>
+      <div class="sec-fix"><strong>Fix</strong> Migration: <code>ALTER TABLE course_holes ADD COLUMN image_url text;</code></div>
+      <p style="font-size:0.78rem;color:var(--muted);margin-top:0.5rem;"><strong>Upstream:</strong> Admin course config page must be updated to allow image upload per hole.<br>
+      <strong>Downstream:</strong> scorecard.html <code>renderHole()</code> reads this column; no other page currently consumes it.<br>
+      <strong>Risk if wrong:</strong> Migration is additive/nullable — zero regression risk to existing scorecard functionality.</p>
+    </div>
+
+    <div class="sec-item sev-high">
+      <div class="sec-header"><span class="pill pill-red">High</span><span class="sec-title">No image element in scorecard.html hole-card</span></div>
+      <div class="sec-body"><code>scorecard.html</code> line 385–398: <code>.hole-card</code> contains only <code>.hole-header</code> (hole number + par text) and <code>.hole-nav</code> (prev/next buttons). No <code>&lt;img&gt;</code>, <code>&lt;svg&gt;</code>, or placeholder div exists. The bug "Not showing hole image" (DB id 97c45b3d) is correct — it is not shown because it has never been built.</div>
+      <div class="sec-fix"><strong>Fix</strong> Add <code>#holeView</code> div between <code>.hole-header</code> and <code>.hole-nav</code>. Populate via <code>renderHole()</code>.</div>
+      <p style="font-size:0.78rem;color:var(--muted);margin-top:0.5rem;"><strong>Upstream:</strong> Depends on <code>image_url</code> column migration + data populated via admin.<br>
+      <strong>Downstream:</strong> Visual-only; no downstream scoring logic affected.<br>
+      <strong>Risk if wrong:</strong> Must not block score stepper interaction on mobile — hole view must be above the stepper, not overlapping it.</p>
+    </div>
+
+    <div class="sec-item sev-med">
+      <div class="sec-header"><span class="pill pill-orange">Med</span><span class="sec-title">No hole image upload in admin course config</span></div>
+      <div class="sec-body">Admin.html has no UI to set per-hole image URLs. Without an upload path, even after migration the column stays null for all tournaments.</div>
+      <div class="sec-fix"><strong>Fix</strong> Add image URL input (or Supabase Storage upload button) per hole in admin course config section.</div>
+      <p style="font-size:0.78rem;color:var(--muted);margin-top:0.5rem;"><strong>Upstream:</strong> Requires Supabase Storage bucket or external URL hosting decision.<br>
+      <strong>Downstream:</strong> scorecard.html reads the value set here.<br>
+      <strong>Risk if wrong:</strong> If storage bucket is private, scorecard must use signed URLs — adds auth complexity. Recommend public bucket for hole images.</p>
+    </div>
+
+    <div class="sec-item sev-low">
+      <div class="sec-header"><span class="pill pill-green">Low</span><span class="sec-title">No fallback placeholder when image_url is null</span></div>
+      <div class="sec-body">Most existing tournaments have no hole images. The scorecard must gracefully degrade — either show nothing (current behavior, acceptable) or show an SVG placeholder with par/yardage schematic (preferred — improves UX even before images are uploaded).</div>
+      <div class="sec-fix"><strong>Fix</strong> Inline SVG fallback: rectangle with fairway shape, par badge, yardage text. Pure CSS/SVG — no external asset.</div>
+    </div>
+  </div>
+</div>
+
+</div>
+</section>
+
+<section id="plan">
+<div class="wrapper">
+
+<div class="section-header">
+  <div class="section-eyebrow">Section 02</div>
+  <div class="section-title">Plan — What to Build</div>
+  <div class="section-desc">Strategic priorities and implementation approach for Course Hole View on the scorecard.</div>
+</div>
+
+<div class="card">
+  <div class="card-title">Strategic Priorities</div>
+  <ol>
+    <li style="margin-bottom:0.5rem;"><strong style="color:var(--gold);">P1 — Migration:</strong> Add <code>image_url text</code> (nullable) to <code>course_holes</code>. Additive, zero-risk, unblocks everything else. Also add <code>image_url text</code> to <code>golf_courses</code> for platform-level course library support.</li>
+    <li style="margin-bottom:0.5rem;"><strong style="color:var(--gold);">P2 — Scorecard frontend:</strong> Add <code>#holeView</code> element to <code>scorecard.html</code> hole-card. Update <code>renderHole()</code> to show <code>&lt;img src=image_url&gt;</code> when available, SVG placeholder when not. Update <code>course_holes</code> select to include <code>image_url</code>. Store in <code>courseImages[]</code> array parallel to <code>coursePars[]</code> and <code>courseYards[]</code>.</li>
+    <li style="margin-bottom:0.5rem;"><strong style="color:var(--gold);">P3 — Admin upload UI:</strong> Add per-hole image URL field in admin course config. Use Supabase Storage public bucket <code>hole-images</code> for uploads, or accept any external HTTPS URL. Simple text input + preview thumbnail is sufficient for v1.</li>
+    <li style="margin-bottom:0.5rem;"><strong style="color:var(--gold);">P4 — Close bug 97c45b3d:</strong> Mark <code>completed</code> in <code>platform_bugs</code> table after deploy + QA pass.</li>
+  </ol>
+</div>
+
+<div class="grid-2" style="margin-bottom:0.7rem;">
+  <div class="idea-card idea-1">
+    <div class="idea-number">1</div>
+    <div class="idea-tag"><span class="pill pill-gold">Core</span></div>
+    <div class="idea-title">SVG Placeholder — Always Useful</div>
+    <div class="idea-body">Even with no image uploaded, render an SVG schematic: a stylized fairway shape (curved rectangle) with par number centered and yardage at bottom. Pure inline SVG — no network request, works offline in PWA. Gives every hole a visual presence immediately.</div>
+    <div class="idea-plan"><strong>Build:</strong> Single JS function <code>holePlaceholderSVG(par, yards)</code> → returns SVG string. Color-coded by par (par 3 = blue, par 4 = gold, par 5 = green). ~30 lines JS.</div>
+  </div>
+  <div class="idea-card idea-2">
+    <div class="idea-number">2</div>
+    <div class="idea-tag"><span class="pill pill-blue">Storage</span></div>
+    <div class="idea-title">Supabase Storage — Public Bucket</div>
+    <div class="idea-body">Create <code>hole-images</code> bucket (public). Admin uploads image → gets public URL → stored in <code>course_holes.image_url</code>. Scorecard loads URL directly — no auth token needed, no signed URL complexity. Works in PWA cache as a standard img src.</div>
+    <div class="idea-plan"><strong>Build:</strong> Supabase dashboard: create bucket. Admin.html: file input + <code>supabase.storage.from('hole-images').upload()</code> → store returned public URL. ~40 lines admin JS.</div>
+  </div>
+  <div class="idea-card idea-3">
+    <div class="idea-number">3</div>
+    <div class="idea-tag"><span class="pill pill-green">UX</span></div>
+    <div class="idea-title">Collapsible / Tap-to-Expand</div>
+    <div class="idea-body">On mobile the scorecard is already tight. Hole view should default to a compact 80px strip that expands to full diagram on tap. Saves screen space while keeping the feature accessible. Collapsed state still shows par color coding.</div>
+    <div class="idea-plan"><strong>Build:</strong> CSS transition on max-height. Toggle class on tap. Persist expanded state in sessionStorage per hole. ~15 lines JS + 8 lines CSS.</div>
+  </div>
+  <div class="idea-card idea-4">
+    <div class="idea-number">4</div>
+    <div class="idea-tag"><span class="pill pill-orange">Future</span></div>
+    <div class="idea-title">OSM Satellite Tile as Fallback</div>
+    <div class="idea-body">Per platform memory, GPS + SVG hole view are free via OSM + browser geo. If a course has lat/lng coordinates stored, the hole view could render an OSM tile centered on the hole. Viable as a v2 enhancement — requires coordinate data on course_holes.</div>
+    <div class="idea-plan"><strong>Build (future):</strong> Add lat/lng columns to course_holes. Use OSM static tile URL pattern. No API key needed.</div>
+  </div>
+  <div class="idea-card idea-5">
+    <div class="idea-number">5</div>
+    <div class="idea-tag"><span class="pill pill-purple">PWA</span></div>
+    <div class="idea-title">Cache Hole Images in Service Worker</div>
+    <div class="idea-body">Hole images should be cached by the service worker at scorecard load time so they display offline (round in a dead-zone). Cache-busting: include image URL hash. Clear on new round. This is already the PWA's core value prop — extend it to hole images.</div>
+    <div class="idea-plan"><strong>Build (after storage):</strong> In scorecard init, after loading courseImages[], call cache.addAll(courseImages.filter(Boolean)) in sw.js runtime cache. ~10 lines.</div>
+  </div>
+</div>
+
+<div class="roadmap-item">
+  <div class="roadmap-icon">M</div>
+  <div class="roadmap-content">
+    <div class="roadmap-title">Milestone 1 — Schema + Scorecard Display (P1 + P2)</div>
+    <div class="roadmap-desc">Migration + frontend render. Closes DB bug 97c45b3d with SVG placeholder visible for all holes. No admin upload needed — placeholder works immediately.</div>
+    <div class="roadmap-action"><strong>Ship:</strong> 1 session. Vercel auto-deploy. Verify on live scorecard.</div>
+  </div>
+</div>
+<div class="roadmap-item">
+  <div class="roadmap-icon">M</div>
+  <div class="roadmap-content">
+    <div class="roadmap-title">Milestone 2 — Admin Upload + Real Images (P3)</div>
+    <div class="roadmap-desc">Supabase Storage bucket + admin.html upload UI. Bova Invitational holes get real images first as test. Verify images show on live scorecard.</div>
+    <div class="roadmap-action"><strong>Ship:</strong> 1 session. Closes feature fully.</div>
+  </div>
+</div>
+<div class="roadmap-item">
+  <div class="roadmap-icon">M</div>
+  <div class="roadmap-content">
+    <div class="roadmap-title">Milestone 3 — PWA Cache + Collapse UX (P4–P5)</div>
+    <div class="roadmap-desc">Service worker caches hole images at round start. Tap-to-expand on mobile. Polish pass.</div>
+    <div class="roadmap-action"><strong>Ship:</strong> Follow-up session.</div>
+  </div>
+</div>
+
+</div>
+</section>
+
+<section id="runbook">
+<div class="wrapper">
+
+<div class="section-header">
+  <div class="section-eyebrow">Section 03</div>
+  <div class="section-title">Runbook — Execution Steps</div>
+  <div class="section-desc">Ordered steps for <code>/tourney-execute</code> to follow. Each step is self-contained with exact file/SQL targets and verification checks.</div>
+</div>
+
+<div class="runbook-steps">
+
+  <div class="rb-step">
+    <div class="rb-step-title">Migration — Add image_url to course_holes and golf_courses</div>
+    <div class="rb-step-body">
+      Run via <code>mcp__claude_ai_Supabase__apply_migration</code> on project <code>jllugkiojeoopitdvzsa</code>.<br><br>
+      SQL:<br>
+      <code>ALTER TABLE course_holes ADD COLUMN IF NOT EXISTS image_url text;</code><br>
+      <code>ALTER TABLE golf_courses ADD COLUMN IF NOT EXISTS image_url text;</code><br><br>
+      Both columns are nullable text — zero impact on existing rows or queries. No RLS change needed (inherits existing course_holes policy).
+      <br><br>
+      <strong>Upstream:</strong> No upstream dependencies — purely additive.<br>
+      <strong>Downstream:</strong> scorecard.html Step 2 depends on this column existing. admin.html Step 3 writes to it.
+    </div>
+    <div class="rb-verify">
+      <strong>Verify</strong>
+      Query: <code>SELECT column_name FROM information_schema.columns WHERE table_name='course_holes' AND column_name='image_url';</code> — must return 1 row.
+    </div>
+  </div>
+
+  <div class="rb-step">
+    <div class="rb-step-title">scorecard.html — Extend course_holes fetch to include image_url</div>
+    <div class="rb-step-body">
+      File: <code>scorecard.html</code> line 632.<br><br>
+      Current: <code>sb.from('course_holes').select('hole_number,par,yardage')</code><br>
+      Change to: <code>sb.from('course_holes').select('hole_number,par,yardage,image_url')</code><br><br>
+      Add a new array variable alongside <code>coursePars</code> and <code>courseYards</code>:<br>
+      Near line 549 where <code>let coursePars</code> and <code>let courseYards</code> are declared, add:<br>
+      <code>let courseImages = [];</code><br><br>
+      In the course_holes data handler (line 633–635), add:<br>
+      <code>courseImages = cHoles.map(h =&gt; h.image_url || null);</code><br><br>
+      <strong>Upstream:</strong> Reads from course_holes (Step 1 migration required).<br>
+      <strong>Downstream:</strong> courseImages[] feeds renderHole() in Step 3. No other function reads it.
+    </div>
+    <div class="rb-verify">
+      <strong>Verify</strong>
+      Console log <code>courseImages</code> after init — should be array of 18 items (null for courses with no images yet). No 400/406 errors in Network tab for the course_holes request.
+    </div>
+  </div>
+
+  <div class="rb-step">
+    <div class="rb-step-title">scorecard.html — Add #holeView element to .hole-card HTML</div>
+    <div class="rb-step-body">
+      File: <code>scorecard.html</code> line 385 area — the <code>.hole-card</code> div.<br><br>
+      Insert between <code>.hole-header</code> and <code>.hole-nav</code>:<br>
+      <code>&lt;div id="holeView" class="hole-view"&gt;&lt;/div&gt;</code><br><br>
+      Add CSS (in the &lt;style&gt; block near other .hole-* rules):<br>
+      <code>.hole-view{width:100%;border-radius:8px;overflow:hidden;margin-bottom:0.9rem;min-height:0;transition:min-height 0.2s;}</code><br>
+      <code>.hole-view img{width:100%;height:auto;display:block;border-radius:8px;}</code><br>
+      <code>.hole-view svg{width:100%;height:auto;display:block;}</code><br>
+      <code>.hole-view-placeholder{background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:8px;display:flex;align-items:center;justify-content:center;padding:1.2rem;}</code><br><br>
+      <strong>Upstream:</strong> Static HTML — no dependencies.<br>
+      <strong>Downstream:</strong> renderHole() (Step 4) writes into this element. Score steppers below it are unaffected.
+    </div>
+    <div class="rb-verify">
+      <strong>Verify</strong>
+      Element exists in DOM: <code>document.getElementById('holeView')</code> not null. No layout shift on score stepper or prev/next buttons.
+    </div>
+  </div>
+
+  <div class="rb-step">
+    <div class="rb-step-title">scorecard.html — Update renderHole() to render hole view</div>
+    <div class="rb-step-body">
+      File: <code>scorecard.html</code> function <code>renderHole()</code> starting line 1322.<br><br>
+      Add after line 1329 (after holePar innerHTML is set):<br>
+      <pre style="font-size:0.75rem;background:rgba(255,255,255,0.04);padding:0.6rem;border-radius:4px;overflow-x:auto;color:var(--text);">const imgUrl = courseImages[currentHole - 1];
+const holeView = document.getElementById('holeView');
+if (imgUrl) {
+  holeView.innerHTML = `&lt;img src="${imgUrl}" alt="Hole ${currentHole} diagram" loading="lazy"&gt;`;
+} else {
+  holeView.innerHTML = holePlaceholderSVG(par, courseYards[currentHole - 1]);
+}</pre><br>
+      Add helper function <code>holePlaceholderSVG(par, yards)</code> near other utility functions:<br>
+      <pre style="font-size:0.75rem;background:rgba(255,255,255,0.04);padding:0.6rem;border-radius:4px;overflow-x:auto;color:var(--text);">function holePlaceholderSVG(par, yards) {
+  const parColor = par === 3 ? '#2980b9' : par === 5 ? '#27ae60' : '#c09030';
+  const ydText = yards ? `${yards} yd` : '';
+  return `&lt;div class="hole-view-placeholder"&gt;
+    &lt;svg viewBox="0 0 200 90" xmlns="http://www.w3.org/2000/svg" style="max-height:90px"&gt;
+      &lt;rect x="10" y="10" width="180" height="70" rx="12" fill="rgba(255,255,255,0.04)" stroke="${parColor}" stroke-width="1.5" stroke-opacity="0.4"/&gt;
+      &lt;text x="100" y="48" text-anchor="middle" font-family="monospace" font-size="22" font-weight="900" fill="${parColor}" opacity="0.7"&gt;Par ${par}&lt;/text&gt;
+      &lt;text x="100" y="66" text-anchor="middle" font-family="monospace" font-size="10" fill="rgba(232,220,200,0.4)"&gt;${ydText}&lt;/text&gt;
+    &lt;/svg&gt;
+  &lt;/div&gt;`;
+}</pre><br>
+      <strong>Upstream:</strong> Reads <code>courseImages[]</code> (Step 2), <code>coursePars[]</code> and <code>courseYards[]</code> (existing). Writes to <code>#holeView</code> (Step 3).<br>
+      <strong>Downstream:</strong> Visual only. No scoring logic, no persistence, no downstream reads.
+    </div>
+    <div class="rb-verify">
+      <strong>Verify</strong>
+      Navigate scorecard: hole view area shows SVG placeholder for every hole (when no images loaded). Par color coding correct (par 3 = blue, par 4 = gold, par 5 = green). Yardage text shows when courseYards has data. Score steppers still function. prev/next navigation works. No console errors.
+    </div>
+  </div>
+
+  <div class="rb-step">
+    <div class="rb-step-title">Supabase Storage — Create hole-images public bucket</div>
+    <div class="rb-step-body">
+      Via Supabase dashboard or MCP <code>mcp__claude_ai_Supabase__execute_sql</code>:<br><br>
+      In Supabase dashboard: Storage → New bucket → Name: <code>hole-images</code> → Public: ON → Save.<br><br>
+      Add storage policy to allow authenticated users (admins) to upload:<br>
+      <code>INSERT INTO storage.policies (name, bucket_id, operation, definition) VALUES ('admin-upload', 'hole-images', 'INSERT', 'auth.role() = ''authenticated''');</code><br><br>
+      Public read requires no policy — public bucket allows anonymous GET by default.<br><br>
+      <strong>Upstream:</strong> No code dependencies — bucket creation is independent.<br>
+      <strong>Downstream:</strong> admin.html Step 6 uploads to this bucket. scorecard.html reads the returned public URL via course_holes.image_url.
+    </div>
+    <div class="rb-verify">
+      <strong>Verify</strong>
+      Bucket visible in Supabase Storage dashboard. Upload a test file via dashboard, confirm public URL is accessible in browser without auth header.
+    </div>
+  </div>
+
+  <div class="rb-step">
+    <div class="rb-step-title">admin.html — Add hole image upload UI in course config section</div>
+    <div class="rb-step-body">
+      File: <code>admin.html</code> — locate course holes configuration section (where par/yardage inputs per hole are rendered).<br><br>
+      For each hole row, add:<br>
+      <code>&lt;input type="url" placeholder="Hole image URL (or upload below)" id="holeImg-{n}" value="{existing image_url}"&gt;</code><br>
+      <code>&lt;input type="file" accept="image/*" onchange="uploadHoleImage({n}, this)"&gt;</code><br><br>
+      Add JS function <code>uploadHoleImage(holeNum, fileInput)</code>:<br>
+      <pre style="font-size:0.75rem;background:rgba(255,255,255,0.04);padding:0.6rem;border-radius:4px;overflow-x:auto;color:var(--text);">async function uploadHoleImage(holeNum, fileInput) {
+  const file = fileInput.files[0];
+  if (!file) return;
+  const path = `${tournament.slug}/hole-${holeNum}-${Date.now()}.${file.name.split('.').pop()}`;
+  const { data, error } = await sb.storage.from('hole-images').upload(path, file, { upsert: true });
+  if (error) { console.error(error); return; }
+  const { data: { publicUrl } } = sb.storage.from('hole-images').getPublicUrl(path);
+  document.getElementById(`holeImg-${holeNum}`).value = publicUrl;
+  // Save to course_holes
+  await sb.from('course_holes').update({ image_url: publicUrl })
+    .eq('course_id', currentCourseId).eq('hole_number', holeNum);
+}</pre><br>
+      <strong>Upstream:</strong> Requires hole-images bucket (Step 5). Requires existing course_holes rows for the tournament's course.<br>
+      <strong>Downstream:</strong> scorecard.html reads image_url on next scorecard load.
+    </div>
+    <div class="rb-verify">
+      <strong>Verify</strong>
+      Upload image for hole 1 in admin. Confirm public URL stored in course_holes row (query: <code>SELECT hole_number, image_url FROM course_holes WHERE course_id = '...' ORDER BY hole_number</code>). Open scorecard — hole 1 shows uploaded image instead of SVG placeholder.
+    </div>
+  </div>
+
+  <div class="rb-step">
+    <div class="rb-step-title">Close DB bug 97c45b3d in platform_bugs</div>
+    <div class="rb-step-body">
+      After Steps 1–4 are deployed and QA passes (hole view renders on live scorecard):<br><br>
+      <code>UPDATE platform_bugs SET status = 'completed' WHERE id = '97c45b3d-5f9d-4348-a715-c9747fc0e7c1';</code><br><br>
+      Run via <code>mcp__claude_ai_Supabase__execute_sql</code> on project <code>jllugkiojeoopitdvzsa</code>.<br><br>
+      <strong>Note:</strong> Steps 5–6 (admin upload) are not required to close this bug. The SVG placeholder constitutes "showing hole view" — the feature is present and functional even without uploaded images.
+    </div>
+    <div class="rb-verify">
+      <strong>Verify</strong>
+      Query: <code>SELECT status FROM platform_bugs WHERE id = '97c45b3d-5f9d-4348-a715-c9747fc0e7c1';</code> returns <code>completed</code>.
+    </div>
+  </div>
+
+  <div class="rb-step">
+    <div class="rb-step-title">QA — Full scorecard playtest</div>
+    <div class="rb-step-body">
+      After deploy to Vercel, run full QA on live URL <code>https://tourney.greenskeeper.studio</code>:<br><br>
+      1. <strong>Console</strong> — zero errors, zero unhandled rejections on scorecard load.<br>
+      2. <strong>Network</strong> — course_holes request returns 200, payload includes <code>image_url</code> field.<br>
+      3. <strong>Happy path</strong> — navigate all 18 holes, confirm hole view updates on each navigation (SVG par color correct per hole).<br>
+      4. <strong>Edge cases</strong> — tournament with no course_holes rows: hole view shows placeholder, no JS error. Tournament with some holes having images and some null: mixed rendering works.<br>
+      5. <strong>Mobile viewport</strong> — hole view does not overlap score steppers. Layout intact on 375px width.<br>
+      6. <strong>Regression</strong> — score entry, prev/next, End Round, submit flow all work unchanged.
+    </div>
+    <div class="rb-verify">
+      <strong>Verify</strong>
+      Screenshot each of: hole 1 (par 4 gold), a par 3 (blue), a par 5 (green). All pass. Score entry functional on all holes tested.
+    </div>
+  </div>
+
+</div>
+
+</div>
+</section>
+
+<section id="executing">
+<div class="wrapper">
+<!-- EXECUTING-CONTENT-START -->
+<div class="stage-pending">
+  <p>Awaiting execution. Run <code>/tourney-execute 5-29-26-course-hole-view-review.html</code> to proceed.</p>
+</div>
+<!-- EXECUTING-CONTENT-END -->
+</div>
+</section>
+
+<section id="audit">
+<div class="wrapper">
+<!-- AUDIT-CONTENT-START -->
+<div class="stage-pending">
+  <p>Awaiting execution. Run <code>/tourney-execute 5-29-26-course-hole-view-review.html</code> to proceed.</p>
+</div>
+<!-- AUDIT-CONTENT-END -->
+</div>
+</section>
+
+<section id="concluded">
+<div class="wrapper">
+<!-- CONCLUDED-CONTENT-START -->
+<div class="stage-pending">
+  <p>Awaiting execution. Run <code>/tourney-execute 5-29-26-course-hole-view-review.html</code> to proceed.</p>
+</div>
+<!-- CONCLUDED-CONTENT-END -->
+</div>
+</section>
+
+<footer>
+  Generated by <span>Claude Sonnet 4.6</span> · Greenskeeper Studios Internal · May 29, 2026
+  <br style="margin-top:0.3rem">
+  <a href="/platform" style="color:var(--muted);font-size:0.7rem;text-decoration:none">← Back to Platform Hub</a>
+</footer>
+
+</body>
+</html>

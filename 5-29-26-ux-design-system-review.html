@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TOURney — UX Design System · May 29, 2026</title>
+<style>
+:root{--gold:#c09030;--gold-light:#d4a840;--gold-dim:rgba(192,144,48,0.18);--bg:#0d0a05;--surface:#151009;--card:#1c140a;--border:rgba(192,144,48,0.22);--muted:#7a6a54;--text:#e8dcc8;--red:#c0392b;--green:#27ae60;--blue:#2980b9;--orange:#e67e22;--purple:#8e44ad;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:-apple-system,'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;font-size:15px;}
+nav{position:sticky;top:0;z-index:100;background:rgba(13,10,5,0.97);border-bottom:1px solid var(--border);backdrop-filter:blur(12px);}
+.nav-inner{padding:0.6rem 1.5rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap;}
+.nav-brand{color:var(--gold);font-weight:700;font-size:1rem;letter-spacing:0.05em;white-space:nowrap;}
+.nav-brand span{color:var(--muted);font-weight:400;font-size:0.8rem;margin-left:0.4rem;}
+.nav-links{display:flex;gap:0.2rem;flex-wrap:wrap;margin-left:auto;}
+.nav-links a{color:var(--muted);text-decoration:none;font-size:0.78rem;padding:0.3rem 0.55rem;border-radius:4px;transition:all 0.15s;white-space:nowrap;}
+.nav-links a:hover{color:var(--gold);background:var(--gold-dim);}
+.lifecycle-bar{display:flex;gap:3px;padding:0.55rem 1.5rem 0.65rem;background:var(--surface);border-bottom:1px solid var(--border);}
+.lc-stage{flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;}
+.lc-pill{height:5px;width:100%;border-radius:3px;background:rgba(192,144,48,0.1);transition:background 0.25s;}
+.lc-label{font-size:0.58rem;font-weight:700;letter-spacing:0.11em;text-transform:uppercase;color:rgba(122,106,84,0.45);transition:color 0.25s;}
+.lc-done .lc-pill{background:var(--gold);}
+.lc-done .lc-label{color:var(--gold);}
+.lc-active .lc-pill{background:var(--gold-light);box-shadow:0 0 8px rgba(192,144,48,0.45);}
+.lc-active .lc-label{color:var(--gold-light);}
+.hero{padding:3rem 1.5rem 2rem;text-align:center;border-bottom:1px solid var(--border);background:linear-gradient(180deg,rgba(192,144,48,0.06) 0%,transparent 100%);}
+.hero-eyebrow{display:inline-block;font-size:0.7rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold);border:1px solid var(--border);border-radius:20px;padding:0.22rem 0.8rem;margin-bottom:0.9rem;}
+.hero h1{font-size:clamp(1.5rem,3.5vw,2.3rem);font-weight:800;color:#fff;margin-bottom:0.35rem;}
+.hero h1 span{color:var(--gold);}
+.hero-sub{color:var(--muted);max-width:520px;margin:0 auto 1rem;font-size:0.9rem;}
+.hero-meta{display:flex;gap:1.1rem;justify-content:center;flex-wrap:wrap;font-size:0.74rem;color:var(--muted);}
+.hero-meta span{display:flex;align-items:center;gap:0.3rem;}
+.wrapper{max-width:1000px;margin:0 auto;padding:0 1.5rem;}
+section{padding:2.5rem 0;border-bottom:1px solid var(--border);}
+section:last-of-type{border-bottom:none;}
+.section-header{margin-bottom:1.6rem;}
+.section-eyebrow{font-size:0.67rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--gold);margin-bottom:0.3rem;}
+.section-title{font-size:1.35rem;font-weight:800;color:#fff;margin-bottom:0.3rem;}
+.section-desc{color:var(--muted);font-size:0.85rem;max-width:560px;}
+.card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:1.15rem 1.3rem;margin-bottom:0.7rem;}
+.card-title{font-size:0.85rem;font-weight:700;color:var(--gold);margin-bottom:0.45rem;}
+.card p,.card li{font-size:0.84rem;color:var(--text);margin-bottom:0.28rem;}
+.card ul,.card ol{padding-left:1.2rem;}
+.card li{margin-bottom:0.32rem;}
+.grid-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:0.7rem;}
+.grid-3{display:grid;grid-template-columns:repeat(auto-fit,minmax(245px,1fr));gap:0.7rem;}
+.stack-item{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:0.85rem 1.05rem;}
+.stack-label{font-size:0.65rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--muted);margin-bottom:0.18rem;}
+.stack-value{font-size:0.88rem;font-weight:600;color:#fff;}
+.stack-note{font-size:0.72rem;color:var(--muted);margin-top:0.18rem;}
+.pill{display:inline-block;font-size:0.66rem;font-weight:700;letter-spacing:0.06em;padding:0.15rem 0.5rem;border-radius:20px;text-transform:uppercase;}
+.pill-gold{background:rgba(192,144,48,0.18);color:var(--gold);border:1px solid rgba(192,144,48,0.3);}
+.pill-green{background:rgba(39,174,96,0.15);color:var(--green);border:1px solid rgba(39,174,96,0.3);}
+.pill-red{background:rgba(192,57,43,0.15);color:var(--red);border:1px solid rgba(192,57,43,0.3);}
+.pill-orange{background:rgba(230,126,34,0.15);color:var(--orange);border:1px solid rgba(230,126,34,0.3);}
+.pill-blue{background:rgba(41,128,185,0.15);color:var(--blue);border:1px solid rgba(41,128,185,0.3);}
+.pill-purple{background:rgba(142,68,173,0.15);color:var(--purple);border:1px solid rgba(142,68,173,0.3);}
+.page-table{width:100%;border-collapse:collapse;font-size:0.8rem;}
+.page-table th{text-align:left;padding:0.52rem 0.72rem;border-bottom:1px solid var(--border);color:var(--muted);font-size:0.67rem;text-transform:uppercase;letter-spacing:0.08em;background:var(--surface);}
+.page-table td{padding:0.58rem 0.72rem;border-bottom:1px solid rgba(192,144,48,0.08);vertical-align:top;}
+.page-table tr:last-child td{border-bottom:none;}
+.page-table tr:hover td{background:var(--gold-dim);}
+.page-table .url{font-family:monospace;font-size:0.75rem;color:var(--gold-light);}
+.page-table .file{font-family:monospace;font-size:0.72rem;color:var(--muted);}
+.table-wrap{background:var(--card);border:1px solid var(--border);border-radius:8px;overflow:hidden;overflow-x:auto;}
+.score-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(125px,1fr));gap:0.52rem;margin-bottom:1.4rem;}
+.score-cell{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:0.85rem;text-align:center;}
+.score-num{font-size:1.85rem;font-weight:900;line-height:1;margin-bottom:0.18rem;}
+.score-label{font-size:0.64rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);}
+.score-green{color:var(--green);}
+.score-gold{color:var(--gold);}
+.score-red{color:var(--red);}
+.score-blue{color:var(--blue);}
+.idea-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1.25rem;position:relative;overflow:hidden;}
+.idea-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;}
+.idea-1::before{background:var(--gold);}
+.idea-2::before{background:var(--blue);}
+.idea-3::before{background:var(--green);}
+.idea-4::before{background:var(--orange);}
+.idea-5::before{background:var(--purple);}
+.idea-number{font-size:2rem;font-weight:900;opacity:0.07;position:absolute;top:0.5rem;right:1rem;line-height:1;color:#fff;}
+.idea-tag{margin-bottom:0.42rem;}
+.idea-title{font-size:0.96rem;font-weight:700;color:#fff;margin-bottom:0.42rem;}
+.idea-body{font-size:0.82rem;color:var(--muted);line-height:1.55;margin-bottom:0.65rem;}
+.idea-plan{font-size:0.77rem;color:var(--text);}
+.idea-plan strong{color:var(--gold);}
+.runbook-steps{counter-reset:rb-step;}
+.rb-step{background:var(--card);border:1px solid var(--border);border-left:3px solid rgba(192,144,48,0.3);border-radius:0 8px 8px 0;padding:0.95rem 1.15rem 0.95rem 3.8rem;margin-bottom:0.55rem;position:relative;}
+.rb-step::before{counter-increment:rb-step;content:counter(rb-step);position:absolute;left:0.95rem;top:0.95rem;width:1.75rem;height:1.75rem;background:var(--gold-dim);color:var(--gold);border:1px solid var(--border);border-radius:50%;font-size:0.72rem;font-weight:700;display:grid;place-items:center;}
+.rb-step-title{font-size:0.87rem;font-weight:700;color:#fff;margin-bottom:0.22rem;}
+.rb-step-body{font-size:0.8rem;color:var(--muted);margin-bottom:0.35rem;}
+.rb-verify{font-size:0.76rem;color:var(--text);background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:3px;padding:0.35rem 0.6rem;margin-top:0.3rem;}
+.rb-verify strong{color:var(--gold-light);font-size:0.68rem;text-transform:uppercase;letter-spacing:0.07em;display:block;margin-bottom:0.1rem;}
+.stage-pending{text-align:center;padding:3rem 1.5rem;color:var(--muted);font-size:0.85rem;border:1px dashed rgba(192,144,48,0.2);border-radius:8px;}
+.stage-pending code{color:var(--gold);}
+.roadmap-item{display:flex;gap:1.05rem;align-items:flex-start;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:0.95rem 1.15rem;margin-bottom:0.52rem;}
+.roadmap-icon{width:1.9rem;height:1.9rem;border-radius:50%;background:var(--gold-dim);color:var(--gold);display:grid;place-items:center;font-size:0.85rem;flex-shrink:0;border:1px solid var(--border);}
+.roadmap-content{flex:1;}
+.roadmap-title{font-size:0.88rem;font-weight:700;color:#fff;margin-bottom:0.13rem;}
+.roadmap-desc{font-size:0.79rem;color:var(--muted);margin-bottom:0.32rem;}
+.roadmap-action{font-size:0.75rem;color:var(--text);}
+.roadmap-action strong{color:var(--gold-light);}
+code{font-family:'Consolas','Monaco',monospace;background:rgba(255,255,255,0.07);padding:0.09rem 0.27rem;border-radius:3px;font-size:0.81em;color:var(--gold-light);}
+.token-table{width:100%;border-collapse:collapse;font-size:0.78rem;margin-top:0.5rem;}
+.token-table th{text-align:left;padding:0.4rem 0.65rem;border-bottom:1px solid var(--border);color:var(--muted);font-size:0.65rem;text-transform:uppercase;letter-spacing:0.08em;background:var(--surface);}
+.token-table td{padding:0.45rem 0.65rem;border-bottom:1px solid rgba(192,144,48,0.07);vertical-align:top;}
+.token-table tr:last-child td{border-bottom:none;}
+.token-table .tok{font-family:monospace;color:var(--gold-light);}
+.token-table .val-dark{font-family:monospace;color:var(--green);}
+.token-table .val-light{font-family:monospace;color:var(--orange);}
+.conflict-row td{background:rgba(192,57,43,0.06);}
+footer{border-top:1px solid var(--border);padding:1.2rem;text-align:center;color:var(--muted);font-size:0.72rem;}
+footer span{color:var(--gold);}
+@media(max-width:600px){.nav-links{display:none;}.hero{padding:2rem 1rem 1.5rem;}section{padding:2rem 0;}.lc-label{font-size:0.5rem;}}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <div class="nav-brand">TOURney <span>by Greenskeeper Studios</span></div>
+    <div class="nav-links">
+      <a href="#review">Review</a>
+      <a href="#plan">Plan</a>
+      <a href="#runbook">Runbook</a>
+      <a href="#executing">Executing</a>
+      <a href="#audit">Audit</a>
+      <a href="#concluded">Concluded</a>
+    </div>
+  </div>
+</nav>
+
+<!-- LIFECYCLE-BAR-START -->
+<div class="lifecycle-bar">
+  <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Review</div></div>
+  <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Plan</div></div>
+  <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Runbook</div></div>
+  <div class="lc-stage"><div class="lc-pill"></div><div class="lc-label">Executing</div></div>
+  <div class="lc-stage"><div class="lc-pill"></div><div class="lc-label">Audit</div></div>
+  <div class="lc-stage"><div class="lc-pill"></div><div class="lc-label">Concluded</div></div>
+</div>
+<!-- LIFECYCLE-BAR-END -->
+
+<div class="hero">
+  <div class="hero-eyebrow">UX Design System</div>
+  <h1><span>TOURney</span> — UX Design System · May 29, 2026</h1>
+  <p class="hero-sub">Audit of current UX inconsistency across tournament pages vs. the bug-log popup reference design. Plan and runbook to apply the dark-card / gold-accent / DM Mono design system platform-wide.</p>
+  <div class="hero-meta">
+    <span>📅 May 29, 2026</span>
+    <span>🤖 Claude Sonnet 4.6</span>
+    <span>🏢 Greenskeeper Studios</span>
+    <span>🔒 Internal Only</span>
+  </div>
+</div>
+
+<section id="review">
+<div class="wrapper">
+
+<div class="section-header">
+  <div class="section-eyebrow">§ Review</div>
+  <div class="section-title">Current UX State — Two Worlds in One Product</div>
+  <div class="section-desc">TOURney currently operates with a split personality: the platform shell (platform.html) has evolved a polished dark-card design system; the tournament-facing pages (home, scorecard, scoreboard, admin) run a warm-cream light theme that diverges significantly from it.</div>
+</div>
+
+<!-- Score Grid -->
+<div class="score-grid">
+  <div class="score-cell">
+    <div class="score-num score-gold">C+</div>
+    <div class="score-label">UX Consistency</div>
+  </div>
+  <div class="score-cell">
+    <div class="score-num score-green">B+</div>
+    <div class="score-label">Token Coverage</div>
+  </div>
+  <div class="score-cell">
+    <div class="score-num score-red">D+</div>
+    <div class="score-label">Design Parity</div>
+  </div>
+  <div class="score-cell">
+    <div class="score-num score-gold">B</div>
+    <div class="score-label">Typography</div>
+  </div>
+  <div class="score-cell">
+    <div class="score-num score-red">D</div>
+    <div class="score-label">Component Reuse</div>
+  </div>
+  <div class="score-cell">
+    <div class="score-num score-gold">B-</div>
+    <div class="score-label">Brand Coherence</div>
+  </div>
+</div>
+
+<!-- Reference Design Card -->
+<div class="card">
+  <div class="card-title">Reference Design — Bug Log Popup (platform.html ~L2380)</div>
+  <p>The bug log popup is the canonical specimen Rob identified. Its design language:</p>
+  <ul>
+    <li><strong>Container:</strong> <code>background:var(--card)</code> (<code>#1c140a</code> dark brown-black), <code>border:1px solid var(--border)</code> (gold at 22% opacity), <code>border-left:3px solid var(--red)|var(--green)</code> — status-coded accent stripe</li>
+    <li><strong>Typography:</strong> <code>font-family:'DM Mono',monospace</code> for metadata (date, URL, counts). <code>font-family:'Barlow Condensed',sans-serif</code> for action buttons. Body copy in <code>var(--text)</code> (<code>#e8dcc8</code>).</li>
+    <li><strong>Spacing:</strong> Compact — <code>padding:.75rem 1rem</code> per row. <code>margin-bottom:.45rem</code> between rows. Dense information, no wasted space.</li>
+    <li><strong>Pills/badges:</strong> Inline status text via gold-accent spans and <code>var(--red)</code>/<code>var(--green)</code> color coding.</li>
+    <li><strong>Palette:</strong> Dark background (<code>#0d0a05</code> body, <code>#1c140a</code> cards), gold accents (<code>#c09030</code>), muted text (<code>#7a6a54</code>), white headlines.</li>
+    <li><strong>Buttons:</strong> <code>background:none; border:1px solid rgba(200,80,60,0.3); color:var(--red)</code> — ghost style, color-semantic.</li>
+  </ul>
+</div>
+
+<!-- Tournament Pages State -->
+<div class="card">
+  <div class="card-title">Tournament-Facing Pages — Current State</div>
+  <p>All four tournament pages share the same <code>:root</code> token set but run a <strong>light cream theme</strong>:</p>
+  <div style="margin-top:0.7rem;">
+    <div class="table-wrap">
+      <table class="token-table">
+        <thead>
+          <tr><th>Token</th><th>Tournament Pages (Light)</th><th>Platform / Reference (Dark)</th><th>Conflict</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="tok">--bg</td><td class="val-light">#f5ede0 (warm cream)</td><td class="val-dark">#0d0a05 (near-black)</td><td><span class="pill pill-red">YES</span></td></tr>
+          <tr><td class="tok">--card</td><td class="val-light">#fdf8f0 (off-white)</td><td class="val-dark">#1c140a (dark brown)</td><td><span class="pill pill-red">YES</span></td></tr>
+          <tr><td class="tok">--border</td><td class="val-light">rgba(192,144,48,0.28)</td><td class="val-dark">rgba(192,144,48,0.22)</td><td><span class="pill pill-orange">MINOR</span></td></tr>
+          <tr><td class="tok">--gold</td><td class="val-light">#c09030</td><td class="val-dark">#c09030</td><td><span class="pill pill-green">MATCH</span></td></tr>
+          <tr><td class="tok">--muted</td><td class="val-light">rgba(26,16,8,0.4) (dark-on-light)</td><td class="val-dark">#7a6a54 (warm gray)</td><td><span class="pill pill-red">YES</span></td></tr>
+          <tr><td class="tok">--surface</td><td class="val-light">NOT DEFINED</td><td class="val-dark">#151009</td><td><span class="pill pill-red">MISSING</span></td></tr>
+          <tr><td class="tok">--text</td><td class="val-light">NOT DEFINED (uses --ink)</td><td class="val-dark">#e8dcc8</td><td><span class="pill pill-red">MISSING</span></td></tr>
+          <tr><td class="tok">--ink</td><td class="val-light">#1a1008 (dark body text)</td><td class="val-dark">NOT PRESENT</td><td><span class="pill pill-orange">DIVERGE</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Per-Page Component Inventory -->
+<div class="card">
+  <div class="card-title">Per-Page Component Inventory</div>
+  <div class="table-wrap" style="margin-top:0.5rem;">
+    <table class="page-table">
+      <thead>
+        <tr>
+          <th>Page</th>
+          <th>File</th>
+          <th>Theme</th>
+          <th>Typography</th>
+          <th>Card Components</th>
+          <th>Pill/Badge</th>
+          <th>Key Gap</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Marketing</strong></td>
+          <td class="file">home.html</td>
+          <td><span class="pill pill-orange">Light cream</span></td>
+          <td>Barlow body, Barlow Condensed nav/CTA, DM Mono eyebrows, Playfair Display stats</td>
+          <td>Day-blocks, team-blocks, feature items — all custom, no shared card class</td>
+          <td>None</td>
+          <td>Uses <code>--bg:#f5ede0</code> — inverse of target dark theme</td>
+        </tr>
+        <tr>
+          <td><strong>Scorecard</strong></td>
+          <td class="file">scorecard.html</td>
+          <td><span class="pill pill-orange">Light cream</span></td>
+          <td>Barlow body, Barlow Condensed buttons, DM Mono labels/setup, Playfair Display headings</td>
+          <td>Setup form card (<code>--card:#fdf8f0</code>), score grid cells</td>
+          <td>None found</td>
+          <td>Form inputs use square corners (<code>border-radius:0</code>); no left-accent stripe pattern</td>
+        </tr>
+        <tr>
+          <td><strong>Scoreboard</strong></td>
+          <td class="file">scoreboard.html</td>
+          <td><span class="pill pill-orange">Light cream</span></td>
+          <td>DM Mono on <code>.score-cell</code> (L100); Barlow elsewhere</td>
+          <td>Score table cells with <code>.score-cell</code> — DM Mono present but light background</td>
+          <td>None</td>
+          <td><code>.score-cell</code> already uses DM Mono — closest to reference pattern but wrong bg</td>
+        </tr>
+        <tr>
+          <td><strong>Admin</strong></td>
+          <td class="file">admin.html</td>
+          <td><span class="pill pill-orange">Light cream</span></td>
+          <td>Barlow Condensed, DM Mono labels</td>
+          <td>Form cards matching scorecard pattern</td>
+          <td>None</td>
+          <td>Same token set as scorecard — <code>--green:#2a7a20</code> (slightly different shade)</td>
+        </tr>
+        <tr>
+          <td><strong>Platform</strong></td>
+          <td class="file">platform.html</td>
+          <td><span class="pill pill-green">Dark (reference)</span></td>
+          <td>Barlow Condensed buttons, DM Mono metadata</td>
+          <td>Bug rows: dark card + left accent stripe — the target pattern</td>
+          <td>Status color coding (red/green)</td>
+          <td>None — this IS the reference</td>
+        </tr>
+        <tr>
+          <td><strong>Login</strong></td>
+          <td class="file">login.html</td>
+          <td><span class="pill pill-orange">Light cream</span></td>
+          <td>Shared token set</td>
+          <td>Form card</td>
+          <td>None</td>
+          <td>Entry point — first impression of design system</td>
+        </tr>
+        <tr>
+          <td><strong>Create</strong></td>
+          <td class="file">create.html</td>
+          <td><span class="pill pill-orange">Light cream</span></td>
+          <td>Shared token set</td>
+          <td>Setup wizard cards</td>
+          <td>None</td>
+          <td>Admin creation flow — same theme gap</td>
+        </tr>
+        <tr>
+          <td><strong>404</strong></td>
+          <td class="file">404.html</td>
+          <td><span class="pill pill-green">Dark (inline)</span></td>
+          <td>Barlow Condensed body, DM Mono eyebrow/sub, Playfair Display headline</td>
+          <td>None</td>
+          <td>None</td>
+          <td>Already dark — accidentally ahead of the rest</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Typography State -->
+<div class="card">
+  <div class="card-title">Typography System — Current State</div>
+  <p>TOURney has a well-defined three-font stack, consistently loaded via Google Fonts on all tournament pages (<code>scorecard.html L21</code>):</p>
+  <ul>
+    <li><strong>Playfair Display</strong> (serif) — Headings, hero titles, large display numbers. Italic variant for emphasis. Present on scorecard, home, 404.</li>
+    <li><strong>Barlow Condensed</strong> — Navigation links, CTAs, buttons, eyebrow labels. Weight range 300–800. Universally applied across all pages.</li>
+    <li><strong>DM Mono</strong> (monospace) — Data labels, dates, small eyebrows, score metadata. Present on scorecard setup labels, scoreboard <code>.score-cell</code>, platform bug rows. <strong>This is the key reference font.</strong></li>
+    <li><strong>Barlow</strong> (regular) — Body copy. 300–500 weight range.</li>
+  </ul>
+  <p style="margin-top:0.5rem;">Typography consistency grades: <span class="pill pill-green">Strong</span> — font stack is coherent. The gap is not which fonts are used but where they are applied. DM Mono needs broader adoption across data-heavy components (score tables, stat blocks, metadata rows) to match the reference aesthetic.</p>
+  <p style="margin-top:0.4rem;"><strong>Prior review note</strong> (5-19-26 bugs review, L229): "Barlow Condensed + DM Mono + Playfair Display is the intentional TOURney brand system. Not a defect." — confirms this is the right stack, just under-applied.</p>
+</div>
+
+<!-- Strengths / Gaps -->
+<div class="grid-2">
+  <div class="card">
+    <div class="card-title">✓ Strengths</div>
+    <ul>
+      <li><strong>Gold token unified.</strong> <code>--gold:#c09030</code> identical across all pages — no drift. One change propagates everywhere.</li>
+      <li><strong>Font stack consistent.</strong> All tournament pages load same 4-font Google Fonts bundle (<code>scorecard.html L21</code>). DM Mono, Barlow Condensed, Playfair all available.</li>
+      <li><strong>tokens.css exists.</strong> <code>scorecard.html L22</code> references <code>/tokens.css</code> — a shared token file is already wired in. Ideal vehicle for dark-theme tokens.</li>
+      <li><strong>scoreboard already uses DM Mono on score cells.</strong> <code>scoreboard.html L100</code>: <code>.score-cell{font-family:'DM Mono',monospace}</code> — the reference pattern is partially present.</li>
+      <li><strong>404.html already dark.</strong> Shows the dark palette works at page level, not just in overlays.</li>
+      <li><strong>Component naming is clean.</strong> <code>.score-cell</code>, <code>.nav</code>, <code>.fg</code> (form group) — no legacy junk class names to untangle.</li>
+    </ul>
+  </div>
+  <div class="card">
+    <div class="card-title">✗ Gaps / Design Debt</div>
+    <ul>
+      <li><strong>Light vs dark split.</strong> Tournament pages (<code>--bg:#f5ede0</code>) vs platform (<code>--bg:#0d0a05</code>) — visitor sees two completely different products. <em>Upstream:</em> all page CSS. <em>Downstream:</em> every visual element on 6 pages.</li>
+      <li><strong>No shared card component.</strong> Each page defines its own card-like containers with inline or local styles. Zero reuse. <em>Risk:</em> fixing one page doesn't fix others.</li>
+      <li><strong>No pill/badge component on tournament pages.</strong> Status indicators, format labels, score differentials — all handled with ad-hoc color coding. No semantic pill system.</li>
+      <li><strong>tokens.css content unknown.</strong> File is referenced but not audited here — may be empty or stale. If it's the source of light-theme vars, overriding it is the lever.</li>
+      <li><strong>Inline styles in bug popup.</strong> The reference design itself uses heavy inline <code>style=""</code> attributes instead of classes (platform.html ~L2385–2410). Extracting it to classes is prerequisite to reuse.</li>
+      <li><strong>admin.html green drift.</strong> <code>--green:#2a7a20</code> vs scorecard's <code>#1a4010</code> — same token, different value. Minor but signals copy-paste maintenance pattern.</li>
+      <li><strong>No dark-mode media query.</strong> No <code>prefers-color-scheme:dark</code> anywhere. Dark theme must be explicit, not system-driven.</li>
+    </ul>
+  </div>
+</div>
+
+</div>
+</section>
+
+<section id="plan">
+<div class="wrapper">
+
+<div class="section-header">
+  <div class="section-eyebrow">§ Plan</div>
+  <div class="section-title">Design Token Extraction + Component Rollout</div>
+  <div class="section-desc">Apply the bug-log popup aesthetic system platform-wide in four ordered phases: tokens → cards → pills/badges → typography tightening.</div>
+</div>
+
+<div class="card">
+  <div class="card-title">Strategic Priorities (P1 → P4)</div>
+  <ol>
+    <li style="margin-bottom:0.5rem;"><strong>P1 — Expand tokens.css to include dark-theme token set.</strong> All 8 pages reference <code>/tokens.css</code> or inline <code>:root</code>. A single canonical token file that defines both the warm-cream values (for backward compat) AND the dark-surface values as a <code>[data-theme="dark"]</code> or direct override is the force multiplier. Zero page-level changes needed to shift color mode.</li>
+    <li style="margin-bottom:0.5rem;"><strong>P2 — Create shared card component CSS.</strong> Extract the bug-log popup card pattern (dark bg + gold border + left accent stripe) into reusable classes in tokens.css or a new <code>tourney-components.css</code>. Apply to scorecard setup card, admin form cards, scoreboard player rows.</li>
+    <li style="margin-bottom:0.5rem;"><strong>P3 — Add pill/badge component system.</strong> The platform ticket template already has a mature pill system (<code>.pill-gold</code>, <code>.pill-green</code>, <code>.pill-red</code>, etc.). Port this to tournament pages for format labels (Stroke Play, Best Ball), score differentials (E, +2, -3), player status (DNS, WD).</li>
+    <li><strong>P4 — Typography tightening.</strong> Audit every data-display element across tournament pages. Expand DM Mono usage to: all score tables, all stat numbers, all date/time displays, all metadata rows. Match the compact density of the reference popup.</li>
+  </ol>
+</div>
+
+<div class="grid-2">
+  <div class="idea-card idea-1">
+    <div class="idea-number">1</div>
+    <div class="idea-tag"><span class="pill pill-gold">Tokens</span></div>
+    <div class="idea-title">Dark Token Override in tokens.css</div>
+    <div class="idea-body">tokens.css already loaded by all pages. Add <code>:root</code> dark-surface values: <code>--bg:#0d0a05</code>, <code>--surface:#151009</code>, <code>--card:#1c140a</code>, <code>--text:#e8dcc8</code>, <code>--muted:#7a6a54</code>. Add missing tokens: <code>--gold-dim</code>, <code>--gold-light</code>. One file change shifts the color foundation across all tournament pages instantly.</div>
+    <div class="idea-plan"><strong>Build:</strong> Edit tokens.css. Override :root. Verify each page renders dark background before touching component CSS.</div>
+  </div>
+  <div class="idea-card idea-2">
+    <div class="idea-number">2</div>
+    <div class="idea-tag"><span class="pill pill-blue">Components</span></div>
+    <div class="idea-title">Shared .ds-card Component Class</div>
+    <div class="idea-body">Extract the bug-popup card pattern to a <code>.ds-card</code> class: <code>background:var(--card); border:1px solid var(--border); border-radius:8px; padding:0.95rem 1.15rem</code>. Variant <code>.ds-card-accent</code> adds <code>border-left:3px solid var(--gold)</code>. Replace all ad-hoc card containers on scorecard, admin, scoreboard with these classes.</div>
+    <div class="idea-plan"><strong>Build:</strong> Add to tokens.css or new tourney-components.css. Swap classes in each HTML page. 15-20 substitutions total.</div>
+  </div>
+  <div class="idea-card idea-3">
+    <div class="idea-number">3</div>
+    <div class="idea-tag"><span class="pill pill-green">Pills</span></div>
+    <div class="idea-title">Pill Badge System on Tournament Pages</div>
+    <div class="idea-body">Port the platform ticket's pill system (<code>.pill</code>, <code>.pill-gold</code>, <code>.pill-green</code>, <code>.pill-red</code>, <code>.pill-orange</code>) to tournament pages. Apply to: round format labels, score differential display, player status, hole type indicators. Small components, huge visual coherence gain.</div>
+    <div class="idea-plan"><strong>Build:</strong> Add pill CSS to shared file. Update scorecard.html score display, scoreboard.html leaderboard rows, admin.html round type labels.</div>
+  </div>
+  <div class="idea-card idea-4">
+    <div class="idea-number">4</div>
+    <div class="idea-tag"><span class="pill pill-orange">Typography</span></div>
+    <div class="idea-title">DM Mono Expansion to All Data Surfaces</div>
+    <div class="idea-body">scoreboard.html already applies DM Mono to <code>.score-cell</code> (L100). Extend this pattern: all score numbers, hole numbers, par values, handicap displays, timestamps, round dates. The reference popup's compact mono density is the target. Body text stays Barlow; data becomes mono.</div>
+    <div class="idea-plan"><strong>Build:</strong> Audit all numeric/data elements per page. Add <code>font-family:'DM Mono',monospace</code> to relevant selectors. No structural changes needed.</div>
+  </div>
+  <div class="idea-card idea-5">
+    <div class="idea-number">5</div>
+    <div class="idea-tag"><span class="pill pill-purple">Refactor</span></div>
+    <div class="idea-title">Extract Inline Styles from Bug Popup</div>
+    <div class="idea-body">The reference design itself (platform.html bug popup, ~L2385–2420) is implemented with heavy inline <code>style=""</code> strings. Before it can serve as a true reference component, extract its patterns to named CSS classes. This is prerequisite for the design system to be reusable, not just visually admired.</div>
+    <div class="idea-plan"><strong>Build:</strong> In platform.html, replace inline style strings on bug row rendering with <code>.bug-row</code>, <code>.bug-row-open</code>, <code>.bug-row-done</code>, <code>.bug-meta</code> classes. Add CSS to platform's style block.</div>
+  </div>
+</div>
+
+<div style="margin-top:1rem;">
+  <div class="card-title" style="color:var(--gold);font-size:0.85rem;font-weight:700;margin-bottom:0.6rem;">Business Milestones</div>
+  <div class="roadmap-item">
+    <div class="roadmap-icon">🎨</div>
+    <div class="roadmap-content">
+      <div class="roadmap-title">v1 Design System — Token File Done</div>
+      <div class="roadmap-desc">All pages render dark theme from shared tokens.css. No per-page color overrides.</div>
+      <div class="roadmap-action"><strong>Target:</strong> End of next execute session. 1 file change.</div>
+    </div>
+  </div>
+  <div class="roadmap-item">
+    <div class="roadmap-icon">🧩</div>
+    <div class="roadmap-content">
+      <div class="roadmap-title">v2 Component Library — Cards + Pills Live</div>
+      <div class="roadmap-desc">All tournament page cards use shared .ds-card class. Pills present on scorecard and scoreboard.</div>
+      <div class="roadmap-action"><strong>Target:</strong> 1–2 execute sessions after v1.</div>
+    </div>
+  </div>
+  <div class="roadmap-item">
+    <div class="roadmap-icon">✅</div>
+    <div class="roadmap-content">
+      <div class="roadmap-title">v3 Full Parity — Rob's Vision Realized</div>
+      <div class="roadmap-desc">Every tournament-facing page matches the bug-log popup aesthetic. DM Mono on all data. Pill badges everywhere. Dark card style consistent across all surfaces.</div>
+      <div class="roadmap-action"><strong>Target:</strong> After v2 QA passes clean.</div>
+    </div>
+  </div>
+</div>
+
+</div>
+</section>
+
+<section id="runbook">
+<div class="wrapper">
+
+<div class="section-header">
+  <div class="section-eyebrow">§ Runbook</div>
+  <div class="section-title">Execution Steps — Dark Design System Rollout</div>
+  <div class="section-desc">Ordered steps. Execute in sequence. Each step is independently verifiable. Start with tokens — everything downstream depends on it.</div>
+</div>
+
+<div class="runbook-steps">
+
+  <div class="rb-step">
+    <div class="rb-step-title">Read and audit tokens.css</div>
+    <div class="rb-step-body">
+      Read <code>C:\Users\Rob\Greenskeeper Studios\01 Repos\TOURney\tokens.css</code>. Catalog every current token. Identify what's present, what's missing, and whether it's the source of the light-theme values.<br><br>
+      <strong>Upstream:</strong> tokens.css is loaded by scorecard.html (L22) and likely other pages via <code>&lt;link rel="stylesheet" href="/tokens.css"&gt;</code>.<br>
+      <strong>Downstream:</strong> Every :root token in every tournament page. Changing this file changes all pages simultaneously.
+    </div>
+    <div class="rb-verify">
+      <strong>Verify</strong>
+      Confirm tokens.css exists and is non-empty. Note whether it defines <code>--bg</code>, <code>--card</code>, <code>--surface</code>, <code>--text</code>. If it's empty or only contains font imports, the inline :root blocks in each page are the source of truth and Step 2 approach changes.
+    </div>
+  </div>
+
+  <div class="rb-step">
+    <div class="rb-step-title">Add dark-theme tokens to tokens.css (or create tourney-theme.css)</div>
+    <div class="rb-step-body">
+      Add the following to tokens.css (append, don't replace existing tokens to avoid breaking anything):<br><br>
+      <code>:root { --bg:#0d0a05; --surface:#151009; --card:#1c140a; --border:rgba(192,144,48,0.22); --text:#e8dcc8; --muted:#7a6a54; --gold-dim:rgba(192,144,48,0.18); --gold-light:#d4a840; }</code><br><br>
+      If tokens.css already defines conflicting values for <code>--bg</code> and <code>--card</code>, the inline <code>:root</code> in each page will win (inline <code>&lt;style&gt;</code> beats external sheet if specificity is equal). In that case: remove the <code>--bg</code> and <code>--card</code> overrides from each page's inline <code>:root</code> block and let tokens.css be the single source.<br><br>
+      <strong>Upstream:</strong> Inline :root blocks in scorecard.html (L24), admin.html (L23), scoreboard.html (L25), home.html (L24).<br>
+      <strong>Downstream:</strong> Background color, card surface, all border colors on all tournament pages immediately.
+    </div>
+    <div class="rb-verify">
+      <strong>Verify</strong>
+      Open scorecard.html in browser. Body background should be near-black (<code>#0d0a05</code>). Card areas should be dark brown (<code>#1c140a</code>). Gold borders visible. If light cream still showing, the inline :root is winning — remove conflicting tokens from each page's inline block.
+    </div>
+  </div>
+
+  <div class="rb-step">
+    <div class="rb-step-title">Add shared .ds-card component classes to tokens.css</div>
+    <div class="rb-step-body">
+      Append to tokens.css (after token definitions):<br><br>
+      <code>.ds-card { background:var(--card); border:1px solid var(--border); border-radius:8px; padding:0.95rem 1.15rem; margin-bottom:0.55rem; }</code><br>
+      <code>.ds-card-accent { border-left:3px solid var(--gold); border-radius:0 8px 8px 0; }</code><br>
+      <code>.ds-card-title { font-size:0.85rem; font-weight:700; color:var(--gold); margin-bottom:0.4rem; }</code><br><br>
+      Port the full pill system from the template (`.pill`, `.pill-gold`, `.pill-green`, `.pill-red`, `.pill-orange`, `.pill-blue`, `.pill-purple`) into tokens.css.<br><br>
+      <strong>Upstream:</strong> None — adding new classes, not changing existing ones.<br>
+      <strong>Downstream:</strong> Available to all pages once they reference the class names.
+    </div>
+    <div class="rb-verify">
+      <strong>Verify</strong>
+      Add a test element <code>&lt;div class="ds-card"&gt;test&lt;/div&gt;</code> to scorecard.html temporarily. Renders with dark background, gold border. Remove test element after confirming.
+    </div>
+  </div>
+
+  <div class="rb-step">
+    <div class="rb-step-title">Update scorecard.html — apply dark card classes</div>
+    <div class="rb-step-body">
+      In scorecard.html: find the setup form container and score entry cards. Replace their local background/border styles with <code>class="ds-card"</code>. Update form input styles: <code>background:var(--card); border:1px solid var(--border); color:var(--text)</code>.<br><br>
+      Add DM Mono to all label elements: <code>.fg label { font-family:'DM Mono',monospace; }</code> (already partially there at L43, confirm consistency).<br><br>
+      Update <code>body</code> bg: ensure <code>background:var(--bg)</code> picks up new dark token.<br><br>
+      <strong>Upstream:</strong> tokens.css (Steps 1–3 must be done first).<br>
+      <strong>Downstream:</strong> Only scorecard.html. No cross-page risk.
+    </div>
+    <div class="rb-verify">
+      <strong>Verify</strong>
+      Load scorecard in browser. Setup screen: dark bg, gold-bordered form inputs, DM Mono labels. Start a round — score entry screen renders correctly. Console zero errors.
+    </div>
+  </div>
+
+  <div class="rb-step">
+    <div class="rb-step-title">Update scoreboard.html — dark cards + pill badges on score cells</div>
+    <div class="rb-step-body">
+      scoreboard.html already has DM Mono on <code>.score-cell</code> (L100) — build from that foundation.<br><br>
+      Update <code>--bg</code> and <code>--card</code> to use new tokens (should happen automatically after Step 2 if tokens.css wins). Then apply <code>.ds-card</code> to player row containers. Add pill badges for score differentials: E (gold), under par (green), over par (red). These replace the current color-class-only approach.<br><br>
+      <strong>Upstream:</strong> Supabase leaderboard query → score data → scoreboard render.<br>
+      <strong>Downstream:</strong> Scorecard.html reads from same data but renders separately — no impact. Realtime channel for live updates still functions as long as JS is untouched.
+    </div>
+    <div class="rb-verify">
+      <strong>Verify</strong>
+      Scoreboard renders with dark bg. Player rows in .ds-card containers. Score differential cells show E/+N/-N in correct pill color. Realtime updates still fire. Mobile viewport — table doesn't overflow.
+    </div>
+  </div>
+
+  <div class="rb-step">
+    <div class="rb-step-title">Update admin.html — dark cards on all form sections</div>
+    <div class="rb-step-body">
+      admin.html uses same token set as scorecard. After Step 2 dark token override, most backgrounds will shift automatically. Audit: replace any hardcoded <code>background:#fdf8f0</code> or <code>background:var(--card)</code> values that aren't picking up the new token. Apply <code>.ds-card</code> to section containers. Apply <code>.ds-card-accent</code> to active/selected states.<br><br>
+      Fix token drift: admin.html has <code>--green:#2a7a20</code> while scorecard has <code>#1a4010</code>. Align to <code>#27ae60</code> (platform standard) in tokens.css.<br><br>
+      <strong>Upstream:</strong> Admin writes to rounds/tournament tables. No UX change touches data.<br>
+      <strong>Downstream:</strong> Admin-only page. Zero impact on player-facing pages.
+    </div>
+    <div class="rb-verify">
+      <strong>Verify</strong>
+      Admin loads dark. Form sections in .ds-card. Green accent consistent with platform. Console zero errors. Round creation flow — all steps functional.
+    </div>
+  </div>
+
+  <div class="rb-step">
+    <div class="rb-step-title">Extract inline styles from platform.html bug popup to CSS classes</div>
+    <div class="rb-step-body">
+      In platform.html, the <code>rowHtml()</code> function (~L2385) renders bug rows with inline <code>style=""</code> strings. Extract to named classes in platform.html's <code>&lt;style&gt;</code> block:<br><br>
+      <code>.bug-row { background:var(--card); border:1px solid var(--border); border-left:3px solid; border-radius:0 6px 6px 0; padding:.75rem 1rem; margin-bottom:.45rem; }</code><br>
+      <code>.bug-row-open { border-left-color:var(--red); }</code><br>
+      <code>.bug-row-done { border-left-color:var(--green); }</code><br>
+      <code>.bug-meta { font-family:'DM Mono',monospace; font-size:.52rem; color:var(--muted); }</code><br><br>
+      Update JS to use class names instead of inline style strings.<br><br>
+      <strong>Upstream:</strong> platform_bugs Supabase table → loadBugsTab() → rowHtml().<br>
+      <strong>Downstream:</strong> Only platform.html bugs tab visual rendering. Functional behavior unchanged.
+    </div>
+    <div class="rb-verify">
+      <strong>Verify</strong>
+      Platform bugs tab renders identically to before. Open bugs: red left border. Completed: green. DM Mono metadata line. Console zero errors. Realtime bug updates still render correctly.
+    </div>
+  </div>
+
+  <div class="rb-step">
+    <div class="rb-step-title">QA all pages — visual consistency pass</div>
+    <div class="rb-step-body">
+      Walk every tournament-facing page in browser. Checklist per page:<br><br>
+      1. Body background is dark (<code>#0d0a05</code>)<br>
+      2. Cards render with dark brown background + gold border<br>
+      3. DM Mono on all data/label elements<br>
+      4. Gold accents consistent — no warm-cream residue<br>
+      5. Buttons: ghost style with semantic color borders (gold primary, red destructive)<br>
+      6. Mobile viewport — no layout breaks<br>
+      7. Console zero errors on each page<br><br>
+      Take screenshot of each page. Compare to reference: platform.html bugs tab.
+    </div>
+    <div class="rb-verify">
+      <strong>Verify</strong>
+      Six pages screenshotted: scorecard, scoreboard, admin, login, create, home. All dark. All gold-accented. No light-cream bleed. Console clean across all. Full happy-path test: login → create round → enter scores → view scoreboard → admin round management.
+    </div>
+  </div>
+
+</div>
+</div>
+</section>
+
+<section id="executing">
+<div class="wrapper">
+<!-- EXECUTING-CONTENT-START -->
+<div class="section-header">
+  <div class="section-eyebrow">§ Executing</div>
+  <div class="section-title">Awaiting Execution</div>
+</div>
+<div class="stage-pending">
+  <p>Awaiting execution. Run <code>/tourney-execute 5-29-26-ux-design-system-review.html</code> to proceed.</p>
+</div>
+<!-- EXECUTING-CONTENT-END -->
+</div>
+</section>
+
+<section id="audit">
+<div class="wrapper">
+<!-- AUDIT-CONTENT-START -->
+<div class="section-header">
+  <div class="section-eyebrow">§ Audit</div>
+  <div class="section-title">Awaiting Audit</div>
+</div>
+<div class="stage-pending">
+  <p>Awaiting execution. Run <code>/tourney-execute 5-29-26-ux-design-system-review.html</code> to proceed.</p>
+</div>
+<!-- AUDIT-CONTENT-END -->
+</div>
+</section>
+
+<section id="concluded">
+<div class="wrapper">
+<!-- CONCLUDED-CONTENT-START -->
+<div class="section-header">
+  <div class="section-eyebrow">§ Concluded</div>
+  <div class="section-title">Awaiting Conclusion</div>
+</div>
+<div class="stage-pending">
+  <p>Awaiting execution. Run <code>/tourney-execute 5-29-26-ux-design-system-review.html</code> to proceed.</p>
+</div>
+<!-- CONCLUDED-CONTENT-END -->
+</div>
+</section>
+
+<footer>
+  Generated by <span>Claude Sonnet 4.6</span> · Greenskeeper Studios Internal · May 29, 2026
+  <br style="margin-top:0.3rem">
+  <a href="/platform" style="color:var(--muted);font-size:0.7rem;text-decoration:none">← Back to Platform Hub</a>
+</footer>
+
+</body>
+</html>

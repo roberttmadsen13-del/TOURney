@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TOURney — Admin Upgrade Tiers · May 29, 2026</title>
+<style>
+:root{--gold:#c09030;--gold-light:#d4a840;--gold-dim:rgba(192,144,48,0.18);--bg:#0d0a05;--surface:#151009;--card:#1c140a;--border:rgba(192,144,48,0.22);--muted:#7a6a54;--text:#e8dcc8;--red:#c0392b;--green:#27ae60;--blue:#2980b9;--orange:#e67e22;--purple:#8e44ad;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:-apple-system,'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;font-size:15px;}
+nav{position:sticky;top:0;z-index:100;background:rgba(13,10,5,0.97);border-bottom:1px solid var(--border);backdrop-filter:blur(12px);}
+.nav-inner{padding:0.6rem 1.5rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap;}
+.nav-brand{color:var(--gold);font-weight:700;font-size:1rem;letter-spacing:0.05em;white-space:nowrap;}
+.nav-brand span{color:var(--muted);font-weight:400;font-size:0.8rem;margin-left:0.4rem;}
+.nav-links{display:flex;gap:0.2rem;flex-wrap:wrap;margin-left:auto;}
+.nav-links a{color:var(--muted);text-decoration:none;font-size:0.78rem;padding:0.3rem 0.55rem;border-radius:4px;transition:all 0.15s;white-space:nowrap;}
+.nav-links a:hover{color:var(--gold);background:var(--gold-dim);}
+.lifecycle-bar{display:flex;gap:3px;padding:0.55rem 1.5rem 0.65rem;background:var(--surface);border-bottom:1px solid var(--border);}
+.lc-stage{flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;}
+.lc-pill{height:5px;width:100%;border-radius:3px;background:rgba(192,144,48,0.1);transition:background 0.25s;}
+.lc-label{font-size:0.58rem;font-weight:700;letter-spacing:0.11em;text-transform:uppercase;color:rgba(122,106,84,0.45);transition:color 0.25s;}
+.lc-done .lc-pill{background:var(--gold);}
+.lc-done .lc-label{color:var(--gold);}
+.lc-active .lc-pill{background:var(--gold-light);box-shadow:0 0 8px rgba(192,144,48,0.45);}
+.lc-active .lc-label{color:var(--gold-light);}
+.hero{padding:3rem 1.5rem 2rem;text-align:center;border-bottom:1px solid var(--border);background:linear-gradient(180deg,rgba(192,144,48,0.06) 0%,transparent 100%);}
+.hero-eyebrow{display:inline-block;font-size:0.7rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold);border:1px solid var(--border);border-radius:20px;padding:0.22rem 0.8rem;margin-bottom:0.9rem;}
+.hero h1{font-size:clamp(1.5rem,3.5vw,2.3rem);font-weight:800;color:#fff;margin-bottom:0.35rem;}
+.hero h1 span{color:var(--gold);}
+.hero-sub{color:var(--muted);max-width:520px;margin:0 auto 1rem;font-size:0.9rem;}
+.hero-meta{display:flex;gap:1.1rem;justify-content:center;flex-wrap:wrap;font-size:0.74rem;color:var(--muted);}
+.hero-meta span{display:flex;align-items:center;gap:0.3rem;}
+.wrapper{max-width:1000px;margin:0 auto;padding:0 1.5rem;}
+section{padding:2.5rem 0;border-bottom:1px solid var(--border);}
+section:last-of-type{border-bottom:none;}
+.section-header{margin-bottom:1.6rem;}
+.section-eyebrow{font-size:0.67rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--gold);margin-bottom:0.3rem;}
+.section-title{font-size:1.35rem;font-weight:800;color:#fff;margin-bottom:0.3rem;}
+.section-desc{color:var(--muted);font-size:0.85rem;max-width:560px;}
+.card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:1.15rem 1.3rem;margin-bottom:0.7rem;}
+.card-title{font-size:0.85rem;font-weight:700;color:var(--gold);margin-bottom:0.45rem;}
+.card p,.card li{font-size:0.84rem;color:var(--text);margin-bottom:0.28rem;}
+.card ul,.card ol{padding-left:1.2rem;}
+.card li{margin-bottom:0.32rem;}
+.grid-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:0.7rem;}
+.grid-3{display:grid;grid-template-columns:repeat(auto-fit,minmax(245px,1fr));gap:0.7rem;}
+.stack-item{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:0.85rem 1.05rem;}
+.stack-label{font-size:0.65rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--muted);margin-bottom:0.18rem;}
+.stack-value{font-size:0.88rem;font-weight:600;color:#fff;}
+.stack-note{font-size:0.72rem;color:var(--muted);margin-top:0.18rem;}
+.pill{display:inline-block;font-size:0.66rem;font-weight:700;letter-spacing:0.06em;padding:0.15rem 0.5rem;border-radius:20px;text-transform:uppercase;}
+.pill-gold{background:rgba(192,144,48,0.18);color:var(--gold);border:1px solid rgba(192,144,48,0.3);}
+.pill-green{background:rgba(39,174,96,0.15);color:var(--green);border:1px solid rgba(39,174,96,0.3);}
+.pill-red{background:rgba(192,57,43,0.15);color:var(--red);border:1px solid rgba(192,57,43,0.3);}
+.pill-orange{background:rgba(230,126,34,0.15);color:var(--orange);border:1px solid rgba(230,126,34,0.3);}
+.pill-blue{background:rgba(41,128,185,0.15);color:var(--blue);border:1px solid rgba(41,128,185,0.3);}
+.pill-purple{background:rgba(142,68,173,0.15);color:var(--purple);border:1px solid rgba(142,68,173,0.3);}
+.page-table{width:100%;border-collapse:collapse;font-size:0.8rem;}
+.page-table th{text-align:left;padding:0.52rem 0.72rem;border-bottom:1px solid var(--border);color:var(--muted);font-size:0.67rem;text-transform:uppercase;letter-spacing:0.08em;background:var(--surface);}
+.page-table td{padding:0.58rem 0.72rem;border-bottom:1px solid rgba(192,144,48,0.08);vertical-align:top;}
+.page-table tr:last-child td{border-bottom:none;}
+.page-table tr:hover td{background:var(--gold-dim);}
+.page-table .url{font-family:monospace;font-size:0.75rem;color:var(--gold-light);}
+.page-table .file{font-family:monospace;font-size:0.72rem;color:var(--muted);}
+.table-wrap{background:var(--card);border:1px solid var(--border);border-radius:8px;overflow:hidden;overflow-x:auto;}
+.score-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(125px,1fr));gap:0.52rem;margin-bottom:1.4rem;}
+.score-cell{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:0.85rem;text-align:center;}
+.score-num{font-size:1.85rem;font-weight:900;line-height:1;margin-bottom:0.18rem;}
+.score-label{font-size:0.64rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);}
+.score-green{color:var(--green);}
+.score-gold{color:var(--gold);}
+.score-red{color:var(--red);}
+.score-blue{color:var(--blue);}
+.idea-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1.25rem;position:relative;overflow:hidden;}
+.idea-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;}
+.idea-1::before{background:var(--gold);}
+.idea-2::before{background:var(--blue);}
+.idea-3::before{background:var(--green);}
+.idea-4::before{background:var(--orange);}
+.idea-5::before{background:var(--purple);}
+.idea-number{font-size:2rem;font-weight:900;opacity:0.07;position:absolute;top:0.5rem;right:1rem;line-height:1;color:#fff;}
+.idea-tag{margin-bottom:0.42rem;}
+.idea-title{font-size:0.96rem;font-weight:700;color:#fff;margin-bottom:0.42rem;}
+.idea-body{font-size:0.82rem;color:var(--muted);line-height:1.55;margin-bottom:0.65rem;}
+.idea-plan{font-size:0.77rem;color:var(--text);}
+.idea-plan strong{color:var(--gold);}
+.runbook-steps{counter-reset:rb-step;}
+.rb-step{background:var(--card);border:1px solid var(--border);border-left:3px solid rgba(192,144,48,0.3);border-radius:0 8px 8px 0;padding:0.95rem 1.15rem 0.95rem 3.8rem;margin-bottom:0.55rem;position:relative;}
+.rb-step::before{counter-increment:rb-step;content:counter(rb-step);position:absolute;left:0.95rem;top:0.95rem;width:1.75rem;height:1.75rem;background:var(--gold-dim);color:var(--gold);border:1px solid var(--border);border-radius:50%;font-size:0.72rem;font-weight:700;display:grid;place-items:center;}
+.rb-step-title{font-size:0.87rem;font-weight:700;color:#fff;margin-bottom:0.22rem;}
+.rb-step-body{font-size:0.8rem;color:var(--muted);margin-bottom:0.35rem;}
+.rb-verify{font-size:0.76rem;color:var(--text);background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:3px;padding:0.35rem 0.6rem;margin-top:0.3rem;}
+.rb-verify strong{color:var(--gold-light);font-size:0.68rem;text-transform:uppercase;letter-spacing:0.07em;display:block;margin-bottom:0.1rem;}
+.rb-upstream{font-size:0.75rem;color:var(--blue);background:rgba(41,128,185,0.06);border:1px solid rgba(41,128,185,0.18);border-radius:3px;padding:0.3rem 0.55rem;margin-top:0.25rem;}
+.rb-upstream strong{color:var(--blue);font-size:0.68rem;text-transform:uppercase;letter-spacing:0.07em;display:block;margin-bottom:0.08rem;}
+.rb-downstream{font-size:0.75rem;color:var(--orange);background:rgba(230,126,34,0.06);border:1px solid rgba(230,126,34,0.18);border-radius:3px;padding:0.3rem 0.55rem;margin-top:0.25rem;}
+.rb-downstream strong{color:var(--orange);font-size:0.68rem;text-transform:uppercase;letter-spacing:0.07em;display:block;margin-bottom:0.08rem;}
+.sec-item{background:var(--card);border:1px solid var(--border);border-left:3px solid var(--border);border-radius:0 8px 8px 0;padding:0.9rem 1.15rem;margin-bottom:0.65rem;}
+.sec-item.sev-high{border-left-color:var(--red);}
+.sec-item.sev-med{border-left-color:var(--orange);}
+.sec-item.sev-low{border-left-color:var(--green);}
+.sec-item.sev-info{border-left-color:var(--blue);}
+.sec-header{display:flex;align-items:center;gap:0.52rem;margin-bottom:0.42rem;}
+.sec-title{font-size:0.87rem;font-weight:700;color:#fff;}
+.sec-body{font-size:0.8rem;color:var(--muted);margin-bottom:0.42rem;}
+.sec-fix{font-size:0.77rem;color:var(--text);background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:4px;padding:0.42rem 0.62rem;}
+.sec-fix strong{color:var(--gold-light);display:block;margin-bottom:0.12rem;font-size:0.68rem;text-transform:uppercase;letter-spacing:0.08em;}
+.stage-pending{text-align:center;padding:3rem 1.5rem;color:var(--muted);font-size:0.85rem;border:1px dashed rgba(192,144,48,0.2);border-radius:8px;}
+.stage-pending code{color:var(--gold);}
+.roadmap-item{display:flex;gap:1.05rem;align-items:flex-start;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:0.95rem 1.15rem;margin-bottom:0.52rem;}
+.roadmap-icon{width:1.9rem;height:1.9rem;border-radius:50%;background:var(--gold-dim);color:var(--gold);display:grid;place-items:center;font-size:0.85rem;flex-shrink:0;border:1px solid var(--border);}
+.roadmap-content{flex:1;}
+.roadmap-title{font-size:0.88rem;font-weight:700;color:#fff;margin-bottom:0.13rem;}
+.roadmap-desc{font-size:0.79rem;color:var(--muted);margin-bottom:0.32rem;}
+.roadmap-action{font-size:0.75rem;color:var(--text);}
+.roadmap-action strong{color:var(--gold-light);}
+code{font-family:'Consolas','Monaco',monospace;background:rgba(255,255,255,0.07);padding:0.09rem 0.27rem;border-radius:3px;font-size:0.81em;color:var(--gold-light);}
+footer{border-top:1px solid var(--border);padding:1.2rem;text-align:center;color:var(--muted);font-size:0.72rem;}
+footer span{color:var(--gold);}
+@media(max-width:600px){.nav-links{display:none;}.hero{padding:2rem 1rem 1.5rem;}section{padding:2rem 0;}.lc-label{font-size:0.5rem;}}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <div class="nav-brand">TOURney <span>by Greenskeeper Studios</span></div>
+    <div class="nav-links">
+      <a href="#review">Review</a>
+      <a href="#plan">Plan</a>
+      <a href="#runbook">Runbook</a>
+      <a href="#executing">Executing</a>
+      <a href="#audit">Audit</a>
+      <a href="#concluded">Concluded</a>
+    </div>
+  </div>
+</nav>
+
+<!-- LIFECYCLE-BAR-START -->
+<div class="lifecycle-bar">
+  <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Review</div></div>
+  <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Plan</div></div>
+  <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Runbook</div></div>
+  <div class="lc-stage"><div class="lc-pill"></div><div class="lc-label">Executing</div></div>
+  <div class="lc-stage"><div class="lc-pill"></div><div class="lc-label">Audit</div></div>
+  <div class="lc-stage"><div class="lc-pill"></div><div class="lc-label">Concluded</div></div>
+</div>
+<!-- LIFECYCLE-BAR-END -->
+
+<div class="hero">
+  <div class="hero-eyebrow">Admin Upgrade Tiers</div>
+  <h1><span>TOURney</span> — Admin Upgrade Tiers · May 29, 2026</h1>
+  <p class="hero-sub">Stripe-gated tier system for admin.html: player/round limits, unlimited teams, captain assignment, and team customization (name, color, image) behind a Pro upgrade.</p>
+  <div class="hero-meta">
+    <span>📅 May 29, 2026</span>
+    <span>🤖 Claude Sonnet 4.6</span>
+    <span>🏢 Greenskeeper Studios</span>
+    <span>🔒 Internal Only</span>
+  </div>
+</div>
+
+<section id="review">
+<div class="wrapper">
+
+<div class="section-header">
+  <div class="section-eyebrow">§ Review</div>
+  <div class="section-title">Current State Audit</div>
+  <div class="section-desc">What tier infrastructure exists today, what's gated, what's missing, and what the DB already supports.</div>
+</div>
+
+<!-- CURRENT TIER INFRASTRUCTURE -->
+<div class="card">
+  <div class="card-title">Existing Tier Gate Infrastructure</div>
+  <p>A tier gate system exists but is minimal. Key files and line citations:</p>
+  <ul>
+    <li><code>lib/tier-config.js</code> — defines <code>TOURNEY_PLANS</code> with 4 plans: <code>free | pro | scratch | comped</code>. Features gated: <code>design</code> and <code>access</code> only. Free plan has both set to <code>false</code>.</li>
+    <li><code>admin.html:986</code> — <code>applyTierGates(plan)</code> iterates 2 tabs: <code>lockDesign</code> (Setup tab) and <code>lockAccess</code> (Access tab). Locks UI elements and adds <code>.locked</code> class to tab buttons when <code>canAccess(plan, feature)</code> returns false.</li>
+    <li><code>admin.html:890</code> — <code>PLATFORM_OWNER = 'robert.t.madsen13@gmail.com'</code>. Platform owner always gets <code>'scratch'</code> plan (all features unlocked).</li>
+    <li><code>admin.html:964</code> — On login, reads <code>player_accounts.plan</code> for the authenticated email. Falls back to <code>'free'</code> if no row. Passes plan into <code>applyTierGates()</code>.</li>
+    <li><code>admin.html:981</code> — <code>checkSession()</code> path also calls <code>applyTierGates()</code> on session restore.</li>
+    <li><code>admin.html:309–314</code> — Upgrade modal exists: <code>#upgradeModal</code> with link to <code>/player-upgrade</code>. Text: "available on TOURney Pro plan." Already wired.</li>
+  </ul>
+  <p style="margin-top:0.5rem;color:var(--orange);font-size:0.82rem;"><strong>Gap:</strong> No player count, round count, or team count is currently gated. <code>applyTierGates()</code> only locks 2 UI tabs. Adding players, rounds, or teams is unrestricted on the free plan.</p>
+</div>
+
+<!-- PLAYER_ACCOUNTS TABLE -->
+<div class="card">
+  <div class="card-title">player_accounts Table State</div>
+  <ul>
+    <li><strong>Migration 005</strong> (<code>005_invitations_and_accounts.sql</code>) — created <code>player_accounts</code> with columns: <code>email TEXT PK</code>, <code>plan TEXT DEFAULT 'free'</code> (free / player / pro), <code>billing_status TEXT DEFAULT 'inactive'</code> (active / inactive / cancelled / trial), <code>stripe_customer_id TEXT</code>, <code>created_at</code>, <code>updated_at</code>.</li>
+    <li><strong>Migration 008</strong> (<code>008_security_rls_hardening.sql:67</code>) — replaced the original <code>USING(true)</code> blanket policies. Now: owner reads own row only (<code>auth.email() = email</code>). Service role used for webhook writes.</li>
+    <li><strong>Migration 012</strong> (<code>012_restrict_player_accounts_anon_read.sql</code>) — dropped the anon-read <code>USING(true)</code> policy that was exposing plan and billing_status to all anonymous visitors. Fixed.</li>
+    <li><strong>Migration 002</strong> (<code>002_add_billing.sql</code>) — added <code>stripe_subscription_id</code> to <code>tournaments</code> table (not player_accounts). Tournament-level billing exists but is separate from account-level plan.</li>
+  </ul>
+  <p style="margin-top:0.5rem;font-size:0.82rem;">The table supports plan gating today. <code>plan</code> column is the source of truth for <code>applyTierGates()</code>. The <code>stripe-webhook</code> edge function handles <code>customer.subscription.created/updated</code> and writes <code>plan + billing_status</code> back to this table.</p>
+</div>
+
+<!-- STRIPE EDGE FUNCTIONS -->
+<div class="card">
+  <div class="card-title">Stripe Edge Function Inventory</div>
+  <ul>
+    <li><code>supabase/functions/create-checkout/index.ts</code> — creates a Stripe Checkout session. Already accepts <code>tier</code> in request body and stores it in subscription metadata. Validates <code>tier in PRICE_IDS</code> server-side.</li>
+    <li><code>supabase/functions/stripe-webhook/index.ts</code> — handles <code>checkout.session.completed</code>, <code>customer.subscription.updated</code>, <code>customer.subscription.deleted</code>, <code>invoice.payment_failed</code>. Extracts <code>metadata.tier</code> and upserts <code>player_accounts.plan = tier, billing_status = 'active'</code>.</li>
+    <li><code>supabase/functions/create-player-checkout/index.ts</code> — separate player-level checkout (distinct from admin/tournament checkout).</li>
+    <li><code>supabase/functions/create-donation-checkout/index.ts</code> — donation flow, not relevant to tier gating.</li>
+  </ul>
+  <p style="margin-top:0.5rem;font-size:0.82rem;color:var(--orange);">The Stripe infrastructure is substantially built per the 5-11-26 runbook (Phase 8). The missing piece is enforcement: <code>applyTierGates()</code> does not yet check player count, round count, or team count against plan limits.</p>
+</div>
+
+<!-- CURRENT HARD LIMITS -->
+<div class="card">
+  <div class="card-title">Current Hard Limits on Players / Rounds / Teams</div>
+  <ul>
+    <li><strong>Players:</strong> <code>admin.html:2392</code> — <code>maxPlayers = parseInt(dsMaxPlayers.value) || 24</code>. Default is 24 but admin can set any value. No plan-based enforcement. <code>create.html:372</code> also defaults to <code>maxPlayers: 24</code> with UI buttons for selection.</li>
+    <li><strong>Rounds:</strong> <code>migrations/007_round_model.sql</code> — rounds table supports 1–6 rounds (loop iterates <code>i IN 1..6</code>). No plan-based cap on rounds. Admin can add rounds freely.</li>
+    <li><strong>Teams:</strong> <code>admin.html:938</code> — <code>TEAM_LETTERS = ['A','B','C','D','E','F','G','H']</code> (8-team max hardcoded). <code>_teamCount</code> starts at 2. Team names stored in <code>settings</code> table as <code>team_a_name</code>, <code>team_b_name</code>, etc. No plan gate on team count.</li>
+    <li><strong>Team colors/images:</strong> No <code>team_*_color</code> or <code>team_*_image</code> columns/settings keys exist anywhere in migrations or admin.html. This feature is entirely absent from the current data model.</li>
+    <li><strong>Captain assignment:</strong> Legacy worktree (<code>.claude/worktrees/admiring-kirch-5445a8</code>) has <code>challengers_captain</code> in settings and <code>team_assignments</code> JSON. Current main-branch admin.html uses <code>teamAssignments</code> keyed by player ID to team letter — no captain concept. Captains are not currently assignable in production.</li>
+  </ul>
+</div>
+
+<!-- GAPS -->
+<div class="grid-2">
+  <div class="sec-item sev-high">
+    <div class="sec-header"><span class="pill pill-red">HIGH</span><span class="sec-title">No plan limits enforced on player/round/team counts</span></div>
+    <div class="sec-body">Free accounts can add unlimited players, unlimited rounds, and up to 8 teams. <code>applyTierGates()</code> only locks 2 UI tabs (Setup, Access). Revenue gate is not enforced at the count level.</div>
+    <div class="sec-fix"><strong>Fix in runbook</strong> Extend <code>tier-config.js</code> with numeric limits. Enforce in <code>addPlayer</code>, <code>addRound</code>, and <code>setTeamCount()</code> with upgrade modal trigger.</div>
+    <div style="margin-top:0.5rem;font-size:0.77rem;color:var(--blue)"><strong>Upstream:</strong> player_accounts.plan → tier-config.js → applyTierGates() → admin.html UI actions</div>
+    <div style="margin-top:0.25rem;font-size:0.77rem;color:var(--orange)"><strong>Downstream:</strong> scoreboard.html (reads players/rounds), scorecard.html (reads rounds), home.html (reads player count), directory.html (reads teams)</div>
+  </div>
+  <div class="sec-item sev-high">
+    <div class="sec-header"><span class="pill pill-red">HIGH</span><span class="sec-title">Team color, image, and captain fields don't exist</span></div>
+    <div class="sec-body">No <code>team_*_color</code>, <code>team_*_image</code>, or captain assignment field exists in settings table, migrations, or admin.html. The entire team customization feature is absent from the data model.</div>
+    <div class="sec-fix"><strong>Fix in runbook</strong> Add <code>team_a_color</code>…<code>team_h_color</code>, <code>team_a_image</code>…<code>team_h_image</code>, and <code>team_a_captain_id</code>…<code>team_h_captain_id</code> to settings pattern. Wire UI in admin.html team panel.</div>
+    <div style="margin-top:0.5rem;font-size:0.77rem;color:var(--blue)"><strong>Upstream:</strong> settings table (per tournament_id)</div>
+    <div style="margin-top:0.25rem;font-size:0.77rem;color:var(--orange)"><strong>Downstream:</strong> home.html team blocks, directory.html team cards, scoreboard.html team headers</div>
+  </div>
+  <div class="sec-item sev-med">
+    <div class="sec-header"><span class="pill pill-orange">MED</span><span class="sec-title">Stripe checkout → plan write not yet tested end-to-end</span></div>
+    <div class="sec-body">Per 5-11-26-aaa-runbook.html Phase 8 (lines 499–549): Stripe checkout and webhook are built but the end-to-end flow (checkout → subscription → webhook → player_accounts.plan update → applyTierGates refresh) has not been verified in prod. Plan enforcement adding new limits makes this critical path.</div>
+    <div class="sec-fix"><strong>Fix in runbook</strong> Verify full loop with Stripe test mode before enforcing new limits. A failing webhook means a paying user gets locked out.</div>
+  </div>
+  <div class="sec-item sev-med">
+    <div class="sec-header"><span class="pill pill-orange">MED</span><span class="sec-title">8-team hard cap conflicts with "unlimited teams" Pro promise</span></div>
+    <div class="sec-body"><code>admin.html:938</code> — <code>TEAM_LETTERS = ['A','B','C','D','E','F','G','H']</code>. Expanding Pro to unlimited teams requires either a longer TEAM_LETTERS array or a dynamic letter/number system. The settings-key pattern (<code>team_a_name</code>) also breaks beyond H without a schema change.</div>
+    <div class="sec-fix"><strong>Fix in runbook</strong> Phase 1: extend TEAM_LETTERS to 16 or convert to numeric IDs for Pro. Phase 2: store team metadata in a dedicated <code>teams</code> table for true unlimited scale.</div>
+  </div>
+</div>
+
+</div>
+</section>
+
+<section id="plan">
+<div class="wrapper">
+
+<div class="section-header">
+  <div class="section-eyebrow">§ Plan</div>
+  <div class="section-title">Strategic Plan</div>
+  <div class="section-desc">Tier design, Stripe integration, captain model, and team customization storage — ordered by dependency and revenue impact.</div>
+</div>
+
+<!-- STRATEGIC PRIORITIES -->
+<div class="card">
+  <div class="card-title">Strategic Priorities (P1 → P5)</div>
+  <ol>
+    <li style="margin-bottom:0.6rem"><strong style="color:#fff">P1 — Define Free vs. Pro limits in tier-config.js.</strong> Add <code>maxPlayers</code>, <code>maxRounds</code>, <code>maxTeams</code> to each plan. Free: 24 players, 3 rounds, 4 teams. Pro: 120 players, 10 rounds, 16 teams (effectively unlimited for most events). This is the single source of truth for all gate enforcement — do this first, everything else depends on it.</li>
+    <li style="margin-bottom:0.6rem"><strong style="color:#fff">P2 — Enforce limits in admin.html applyTierGates().</strong> Check counts before adding a player, before adding a round, and before increasing team count. Trigger <code>openUpgradeModal()</code> when limit hit. This is the revenue gate — it directly converts free users.</li>
+    <li style="margin-bottom:0.6rem"><strong style="color:#fff">P3 — Wire Stripe Checkout for Pro upgrade in admin.html.</strong> The <code>/player-upgrade</code> link in the existing upgrade modal should call <code>create-checkout</code> edge function with <code>tier: 'pro'</code>. Verify full loop: checkout → webhook → player_accounts.plan → page reload refreshes gates. Use Stripe test mode first.</li>
+    <li style="margin-bottom:0.6rem"><strong style="color:#fff">P4 — Add captain assignment UI in admin.html team panel.</strong> Each team column needs a "Set Captain" control that writes <code>team_a_captain_id</code> (player UUID) to settings. The settings pattern is already used for <code>team_a_name</code> — extend it. Downstream: home.html and directory.html read captain for display.</li>
+    <li style="margin-bottom:0.6rem"><strong style="color:#fff">P5 — Add team color and image to settings + admin UI.</strong> Write <code>team_a_color</code> (hex string) and <code>team_a_image</code> (Storage URL) to settings. Admin UI: color picker + file upload per team. Pro-only gate. Downstream: team header components across home, directory, scoreboard.</li>
+  </ol>
+</div>
+
+<!-- TIER DESIGN SPEC -->
+<div class="card">
+  <div class="card-title">Tier Design Spec</div>
+  <div class="table-wrap" style="margin-top:0.5rem">
+    <table class="page-table">
+      <thead><tr><th>Feature</th><th>Free</th><th>Pro</th><th>Scratch (Platform Owner)</th></tr></thead>
+      <tbody>
+        <tr><td>Max players</td><td>24</td><td>120</td><td>Unlimited</td></tr>
+        <tr><td>Max rounds</td><td>3</td><td>10</td><td>Unlimited</td></tr>
+        <tr><td>Max teams</td><td>4</td><td>16</td><td>Unlimited</td></tr>
+        <tr><td>Setup tab (branding)</td><td class="url">Locked</td><td class="url">Unlocked</td><td class="url">Unlocked</td></tr>
+        <tr><td>Access tab (admins)</td><td class="url">Locked</td><td class="url">Unlocked</td><td class="url">Unlocked</td></tr>
+        <tr><td>Captain assignment</td><td class="url">Locked</td><td class="url">Unlocked</td><td class="url">Unlocked</td></tr>
+        <tr><td>Team color + image</td><td class="url">Locked</td><td class="url">Unlocked</td><td class="url">Unlocked</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- IDEA CARDS -->
+<div class="grid-2" style="margin-top:0.7rem">
+  <div class="idea-card idea-1">
+    <div class="idea-number">1</div>
+    <div class="idea-tag"><span class="pill pill-gold">Revenue</span></div>
+    <div class="idea-title">Enforce limits at the action layer, not just tab-lock</div>
+    <div class="idea-body">Current gates only hide/lock admin tabs. A free user who discovers the API can bypass. Enforce limits inside the JS functions that write to DB — <code>addPlayer()</code>, <code>addRound()</code>, <code>setTeamCount()</code> — before the Supabase write. Limits enforced client-side with modal friction is sufficient for this SaaS stage.</div>
+    <div class="idea-plan"><strong>Build:</strong> Read current count before write. Compare to <code>tc.getLimit(plan, 'maxPlayers')</code>. If at limit, call <code>openUpgradeModal('Players')</code> and return early. No DB writes needed for the check.</div>
+  </div>
+  <div class="idea-card idea-2">
+    <div class="idea-number">2</div>
+    <div class="idea-tag"><span class="pill pill-blue">Data Model</span></div>
+    <div class="idea-title">Team metadata in settings table (short-term) → teams table (v2)</div>
+    <div class="idea-body">Storing <code>team_a_color</code>, <code>team_a_image</code>, <code>team_a_captain_id</code> as settings keys is consistent with the existing <code>team_a_name</code> pattern. It's the fastest path to ship. Long-term, a dedicated <code>teams</code> table with a FK to tournaments enables true unlimited teams, easier queries, and proper RLS per team.</div>
+    <div class="idea-plan"><strong>Build:</strong> Ship v1 using settings keys (mirrors existing team_a_name pattern). Add <code>024_teams_table.sql</code> migration in a later sprint for unlimited-team Pro architecture.</div>
+  </div>
+  <div class="idea-card idea-3">
+    <div class="idea-number">3</div>
+    <div class="idea-tag"><span class="pill pill-green">UX</span></div>
+    <div class="idea-title">Upgrade modal should show current usage vs. limit</div>
+    <div class="idea-body">When a free user hits the player limit, the modal should say "You have 24/24 players (Free plan limit). Upgrade to Pro for up to 120." This is much more compelling than the current generic "Setup tab is available on Pro." Contextual upgrade nudges convert at higher rates.</div>
+    <div class="idea-plan"><strong>Build:</strong> Pass <code>{ feature, current, limit }</code> to <code>openUpgradeModal()</code>. Render dynamic copy in the modal card.</div>
+  </div>
+  <div class="idea-card idea-4">
+    <div class="idea-number">4</div>
+    <div class="idea-tag"><span class="pill pill-orange">Captain</span></div>
+    <div class="idea-title">Captain = player UUID in settings, displayed everywhere</div>
+    <div class="idea-body">Store <code>team_a_captain_id</code> as the player's UUID (from <code>players.id</code>). On load, join against the players array to get the name. This avoids denormalization drift where a player name change would break the displayed captain. The captain label surfaces on home.html team blocks and directory.html team cards.</div>
+    <div class="idea-plan"><strong>Build:</strong> Admin dropdown in team column header: "Set Captain" → select from assigned players. Writes UUID. Home/directory resolve UUID to name at render time.</div>
+  </div>
+  <div class="idea-card idea-5">
+    <div class="idea-number">5</div>
+    <div class="idea-tag"><span class="pill pill-purple">Storage</span></div>
+    <div class="idea-title">Team images via Supabase Storage, not inline base64</div>
+    <div class="idea-body">Team logos/images should be uploaded to a Supabase Storage bucket (<code>team-images</code>) and the public URL stored in <code>team_a_image</code> settings key. Base64 inline would bloat the settings table and slow all settings reads. Storage URLs also work with CDN caching and PWA asset caching.</div>
+    <div class="idea-plan"><strong>Build:</strong> Create <code>team-images</code> bucket (public, read-all). Upload from admin.html via Supabase JS client. Store URL in settings. Pro-gated — only Pro plans can upload.</div>
+  </div>
+</div>
+
+<!-- BUSINESS MILESTONES -->
+<div style="margin-top:1.2rem">
+  <div class="card-title" style="color:var(--gold);font-size:0.85rem;font-weight:700;margin-bottom:0.7rem">Business Milestones</div>
+  <div class="roadmap-item">
+    <div class="roadmap-icon">1</div>
+    <div class="roadmap-content">
+      <div class="roadmap-title">Tier limits enforced — Free plan conversion pressure active</div>
+      <div class="roadmap-desc">Once player/round/team limits are gated in the UI, every free user running a tournament with more than 24 players hits the upgrade wall. This is the primary revenue trigger.</div>
+      <div class="roadmap-action"><strong>Unlocks:</strong> Stripe checkout conversion tracking. First Pro upgrades.</div>
+    </div>
+  </div>
+  <div class="roadmap-item">
+    <div class="roadmap-icon">2</div>
+    <div class="roadmap-content">
+      <div class="roadmap-title">Captain + team branding — Pro differentiator visible to all players</div>
+      <div class="roadmap-desc">When a Pro tenant sets team logos and captain names, every player who opens home.html or directory.html sees the richer experience. This creates social proof and upsell pressure on other free tenants who attend as guests.</div>
+      <div class="roadmap-action"><strong>Unlocks:</strong> Premium tournament identity. Word-of-mouth for Pro.</div>
+    </div>
+  </div>
+  <div class="roadmap-item">
+    <div class="roadmap-icon">3</div>
+    <div class="roadmap-content">
+      <div class="roadmap-title">Stripe loop verified end-to-end — billing is reliable</div>
+      <div class="roadmap-desc">Full checkout → webhook → plan update → gate refresh working in prod means billing is trustworthy. This is table stakes before marketing Pro publicly or onboarding new tenants who will pay.</div>
+      <div class="roadmap-action"><strong>Unlocks:</strong> Public Pro plan announcement. Tenant onboarding at scale.</div>
+    </div>
+  </div>
+</div>
+
+</div>
+</section>
+
+<section id="runbook">
+<div class="wrapper">
+
+<div class="section-header">
+  <div class="section-eyebrow">§ Runbook</div>
+  <div class="section-title">Execution Runbook</div>
+  <div class="section-desc">Ordered steps for tourney-execute. Each step is self-contained with upstream/downstream impact and a concrete verification check.</div>
+</div>
+
+<div class="runbook-steps">
+
+  <div class="rb-step">
+    <div class="rb-step-title">Step 1 — Extend tier-config.js with numeric limits</div>
+    <div class="rb-step-body">
+      Edit <code>C:\Users\Rob\Greenskeeper Studios\01 Repos\TOURney\lib\tier-config.js</code>.<br><br>
+      Add <code>maxPlayers</code>, <code>maxRounds</code>, <code>maxTeams</code> to each plan object. Add a <code>getLimit(plan, limitKey)</code> export. Final shape:<br><br>
+      <code>
+        const TOURNEY_PLANS = {<br>
+        &nbsp;&nbsp;free:    { design:false, access:false, captain:false, teamBranding:false, maxPlayers:24, maxRounds:3, maxTeams:4 },<br>
+        &nbsp;&nbsp;pro:     { design:true,  access:true,  captain:true,  teamBranding:true,  maxPlayers:120, maxRounds:10, maxTeams:16 },<br>
+        &nbsp;&nbsp;scratch: { design:true,  access:true,  captain:true,  teamBranding:true,  maxPlayers:9999, maxRounds:99, maxTeams:99 },<br>
+        &nbsp;&nbsp;comped:  { design:true,  access:true,  captain:true,  teamBranding:true,  maxPlayers:120, maxRounds:10, maxTeams:16 },<br>
+        };<br>
+        function getLimit(plan, key) { return TOURNEY_PLANS[plan]?.[key] ?? TOURNEY_PLANS.free[key]; }
+      </code><br><br>
+      Export <code>getLimit</code> alongside <code>canAccess</code>.
+    </div>
+    <div class="rb-upstream"><strong>Upstream</strong> No dependencies — this is the source of truth. No DB reads needed.</div>
+    <div class="rb-downstream"><strong>Downstream</strong> admin.html reads <code>window.tourneyTier.getLimit(plan, key)</code> in Steps 2–4. Any future page that needs plan limits reads this file.</div>
+    <div class="rb-verify"><strong>Verify</strong> Open browser console on admin.html after deploy. Run <code>window.tourneyTier.getLimit('free','maxPlayers')</code> → expect 24. Run <code>window.tourneyTier.getLimit('pro','maxTeams')</code> → expect 16. Run <code>window.tourneyTier.canAccess('free','captain')</code> → expect false.</div>
+  </div>
+
+  <div class="rb-step">
+    <div class="rb-step-title">Step 2 — Enforce player limit in admin.html addPlayer flow</div>
+    <div class="rb-step-body">
+      Edit <code>admin.html</code>. Find the function that handles adding a new player (look for the Supabase insert into <code>players</code> table, around line 2085 area where player updates occur, and the realtime INSERT handler around line 2096).<br><br>
+      At the top of the add-player action (before any DB write), add:<br>
+      <code>const tc = window.tourneyTier; const lim = tc.getLimit(_currentPlan, 'maxPlayers'); if (players.length >= lim) { openUpgradeModal('Players (' + players.length + '/' + lim + ')'); return; }</code><br><br>
+      Store the current plan in a module-level variable <code>let _currentPlan = 'free';</code> and set it in <code>applyTierGates(plan)</code>: <code>_currentPlan = plan;</code><br><br>
+      Also update the upgrade modal copy in the HTML (line 312) to support dynamic text: change the static string to use <code>id="upgradeModalBody"</code> so JS can inject contextual copy.
+    </div>
+    <div class="rb-upstream"><strong>Upstream</strong> Reads <code>players.length</code> (already loaded array), <code>_currentPlan</code> (set at auth time from player_accounts.plan), <code>window.tourneyTier.getLimit()</code> from Step 1.</div>
+    <div class="rb-downstream"><strong>Downstream</strong> Limits players table row count per tournament. Downstream: scoreboard.html, scorecard.html, directory.html — all read from players table. No breaking changes — they only read, don't enforce limits.</div>
+    <div class="rb-verify"><strong>Verify</strong> Log in as a free account. Add players until count reaches 24. Attempt to add 25th player → upgrade modal should appear with "Players (24/24)" in the feature name. Confirm no DB write was made (check Supabase players table count stays at 24). Verify Pro plan bypasses modal and allows adding player 25+.</div>
+  </div>
+
+  <div class="rb-step">
+    <div class="rb-step-title">Step 3 — Enforce round limit in admin.html addRound flow</div>
+    <div class="rb-step-body">
+      Edit <code>admin.html</code>. Find the function that adds a new round (writes to <code>rounds</code> table — around the <code>sb.from('rounds').update()</code> area, line 2023 area; also find the "Add Round" button handler).<br><br>
+      Before the rounds insert, add:<br>
+      <code>const roundCount = Object.keys(roundStates).length; const roundLim = tc.getLimit(_currentPlan, 'maxRounds'); if (roundCount >= roundLim) { openUpgradeModal('Rounds (' + roundCount + '/' + roundLim + ')'); return; }</code><br><br>
+      Note: <code>roundStates</code> is the existing module-level object tracking day1/day2/day3 etc. Use its key count as current round count.
+    </div>
+    <div class="rb-upstream"><strong>Upstream</strong> Reads <code>roundStates</code> (loaded from rounds table at init), <code>_currentPlan</code>, <code>window.tourneyTier.getLimit()</code>.</div>
+    <div class="rb-downstream"><strong>Downstream</strong> rounds table row count per tournament. Downstream: scoreboard.html reads rounds for scoring context, scorecard.html reads rounds for format badges, recap page reads rounds for summary. All read-only — no breaking changes from adding a count check.</div>
+    <div class="rb-verify"><strong>Verify</strong> Free plan: add rounds until 3 exist. Attempt to add a 4th → upgrade modal fires with "Rounds (3/3)". Confirm rounds table still has 3 rows. Pro plan: can add up to 10 rounds without modal.</div>
+  </div>
+
+  <div class="rb-step">
+    <div class="rb-step-title">Step 4 — Enforce team count limit in setTeamCount()</div>
+    <div class="rb-step-body">
+      Edit <code>admin.html</code>. Find <code>setTeamCount(n)</code> (line 1583 area — it writes <code>_teamCount = n</code> and upserts to settings).<br><br>
+      At the top of the function, add:<br>
+      <code>const teamLim = window.tourneyTier.getLimit(_currentPlan, 'maxTeams'); if (n > teamLim) { openUpgradeModal('Teams (limit: ' + teamLim + ')'); return; }</code><br><br>
+      Also extend <code>applyTierGates(plan)</code> to update the team count button display: disable increment buttons beyond the plan limit, add a lock icon or upgrade badge on the locked buttons. The <code>teamCountBtns</code> div at line 452 renders these buttons — add a visual indicator when a button value exceeds the plan limit.
+    </div>
+    <div class="rb-upstream"><strong>Upstream</strong> Reads <code>_currentPlan</code>, <code>window.tourneyTier.getLimit()</code>, <code>n</code> (requested team count from button click).</div>
+    <div class="rb-downstream"><strong>Downstream</strong> settings table (team_count key). Downstream: home.html reads team_count for team block rendering, scoreboard.html reads for team column logic, directory.html reads for team sections. All read-only consumers — gate is safe.</div>
+    <div class="rb-verify"><strong>Verify</strong> Free plan: clicking team count buttons 1–4 should work. Button for 5+ should trigger upgrade modal. Pro plan: buttons 1–16 work, 17+ is blocked. Confirm _teamCount and settings.team_count are not written when modal fires.</div>
+  </div>
+
+  <div class="rb-step">
+    <div class="rb-step-title">Step 5 — Add captain assignment to admin.html team panel</div>
+    <div class="rb-step-body">
+      Edit <code>admin.html</code>. In the team column render function (around line 1511 where <code>team-col-title</code> is rendered), add a captain selector below the team name.<br><br>
+      For each team letter <code>l</code>, render:<br>
+      <code>&lt;select id="ep-captain-${l}" onchange="saveCaptain('${l}',this.value)"&gt;...players assigned to this team...&lt;/select&gt;</code><br><br>
+      Add function <code>async function saveCaptain(letter, playerId)</code> that:<br>
+      1. Checks <code>canAccess(_currentPlan, 'captain')</code> — if false, call <code>openUpgradeModal('Captain Assignment')</code> and reset select, return.<br>
+      2. Upserts to settings: <code>{ key: 'team_' + letter.toLowerCase() + '_captain_id', tournament_id: _tid, value: playerId }</code><br><br>
+      On <code>loadSettings()</code>, read captain keys and populate selects. Join against players array to display name.
+    </div>
+    <div class="rb-upstream"><strong>Upstream</strong> Reads teamAssignments (which players are in which team), players array, settings table for existing captain_id values, _currentPlan.</div>
+    <div class="rb-downstream"><strong>Downstream</strong> settings table (team_a_captain_id…team_h_captain_id keys). home.html and directory.html read these keys to display captain name. Those pages need to be updated to join captain_id → players for display (separate from this step — note as follow-up).</div>
+    <div class="rb-verify"><strong>Verify</strong> Free plan: captain dropdown renders but selecting triggers upgrade modal. Pro plan: select a player as captain for Team A → confirm settings row written with key=team_a_captain_id and value=player UUID. Reload admin — captain persists. Check home.html renders captain name (or logs missing join as a follow-up).</div>
+  </div>
+
+  <div class="rb-step">
+    <div class="rb-step-title">Step 6 — Add team color picker to admin.html team panel (Pro-gated)</div>
+    <div class="rb-step-body">
+      Edit <code>admin.html</code>. In each team column header area, add a color input:<br>
+      <code>&lt;input type="color" id="ep-color-${l}" onchange="saveTeamColor('${l}',this.value)"&gt;</code><br><br>
+      Add function <code>async function saveTeamColor(letter, hex)</code>:<br>
+      1. Check <code>canAccess(_currentPlan, 'teamBranding')</code> — if false, <code>openUpgradeModal('Team Colors')</code>, reset input, return.<br>
+      2. Upsert: <code>{ key: 'team_' + letter.toLowerCase() + '_color', tournament_id: _tid, value: hex }</code><br><br>
+      On <code>loadSettings()</code>, read color keys and set <code>input.value</code>. Also apply color as CSS custom property on the team column for live preview.
+    </div>
+    <div class="rb-upstream"><strong>Upstream</strong> settings table (read existing team_a_color etc.), _currentPlan, TEAM_LETTERS array.</div>
+    <div class="rb-downstream"><strong>Downstream</strong> settings table (team_a_color…team_h_color). home.html, directory.html, scoreboard.html team headers can read these to apply brand colors. Add settings reads in those pages as a follow-up sprint.</div>
+    <div class="rb-verify"><strong>Verify</strong> Free plan: color picker renders but change triggers upgrade modal, no settings write. Pro plan: change Team A color to #FF0000 → settings row written. Reload admin — color persists in picker. Apply color in team column header as live preview.</div>
+  </div>
+
+  <div class="rb-step">
+    <div class="rb-step-title">Step 7 — Add team image upload to admin.html (Pro-gated, Supabase Storage)</div>
+    <div class="rb-step-body">
+      Create Supabase Storage bucket <code>team-images</code> (public, read-all, write authenticated only) via Supabase MCP: <code>execute_sql</code> to create the bucket or use the Supabase dashboard.<br><br>
+      In admin.html team panel, add per-team:<br>
+      <code>&lt;input type="file" accept="image/*" onchange="uploadTeamImage('${l}',this)"&gt;</code><br><br>
+      Add function <code>async function uploadTeamImage(letter, input)</code>:<br>
+      1. Check <code>canAccess(_currentPlan, 'teamBranding')</code> — gate with modal if false.<br>
+      2. Upload file to Storage: <code>sb.storage.from('team-images').upload(_tid + '/' + letter + '_' + Date.now() + ext, file, { upsert: true })</code><br>
+      3. Get public URL: <code>sb.storage.from('team-images').getPublicUrl(path)</code><br>
+      4. Upsert to settings: <code>{ key: 'team_' + letter.toLowerCase() + '_image', value: publicUrl }</code><br><br>
+      On loadSettings, read image keys and render <code>&lt;img&gt;</code> previews.
+    </div>
+    <div class="rb-upstream"><strong>Upstream</strong> Supabase Storage (new bucket), settings table, _currentPlan, _tid for namespacing uploads per tournament.</div>
+    <div class="rb-downstream"><strong>Downstream</strong> settings table (team_a_image…team_h_image). Storage CDN serves the images. home.html, directory.html, scoreboard.html team headers read the URL for logo display. Those pages need settings read update — note as follow-up.</div>
+    <div class="rb-verify"><strong>Verify</strong> Free plan: file input triggers upgrade modal, no upload. Pro plan: upload a PNG for Team A → Storage bucket receives file at <code>{tid}/A_{ts}.png</code> → settings row written with public URL → img preview shows in admin. Verify URL is publicly accessible in browser.</div>
+  </div>
+
+  <div class="rb-step">
+    <div class="rb-step-title">Step 8 — Verify Stripe checkout → plan → gate refresh end-to-end</div>
+    <div class="rb-step-body">
+      Using Stripe test mode (keys in Supabase edge function env vars), run a full upgrade flow:<br>
+      1. Log in as a free test account on admin.html.<br>
+      2. Hit the player limit (24) to trigger the upgrade modal.<br>
+      3. Click "Upgrade to Pro" → should route to <code>/player-upgrade</code> → calls <code>create-checkout</code> edge function with <code>tier: 'pro'</code>.<br>
+      4. Complete Stripe test checkout (use test card 4242 4242 4242 4242).<br>
+      5. Stripe webhook fires → <code>stripe-webhook</code> edge function upserts <code>player_accounts.plan = 'pro', billing_status = 'active'</code>.<br>
+      6. Return to admin.html, reload → <code>checkSession()</code> reads new plan → <code>applyTierGates('pro')</code> called → all limits raised, Setup/Access tabs unlocked.<br><br>
+      If the webhook is not firing in test mode, check Supabase edge function logs and Stripe webhook endpoint configuration.
+    </div>
+    <div class="rb-upstream"><strong>Upstream</strong> create-checkout edge function (tier metadata), stripe-webhook edge function (plan write), player_accounts table, Stripe test mode keys in Supabase secrets.</div>
+    <div class="rb-downstream"><strong>Downstream</strong> applyTierGates() on page reload reads the updated plan. All new limit gates (Steps 2–4) and feature gates (Steps 5–7) respect the upgraded plan immediately.</div>
+    <div class="rb-verify"><strong>Verify</strong> After completing Stripe test checkout: player_accounts row shows plan='pro', billing_status='active'. Admin page reload shows no upgrade modals. Player count limit is now 120. Team count allows 5+ teams. Captain and branding features unlock. All previously locked tabs (Setup, Access) are accessible.</div>
+  </div>
+
+</div>
+
+</div>
+</section>
+
+<section id="executing">
+<div class="wrapper">
+<!-- EXECUTING-CONTENT-START -->
+<div class="stage-pending">
+  <p>Awaiting execution. Run <code>/tourney-execute 5-29-26-admin-upgrade-review.html</code> to proceed.</p>
+</div>
+<!-- EXECUTING-CONTENT-END -->
+</div>
+</section>
+
+<section id="audit">
+<div class="wrapper">
+<!-- AUDIT-CONTENT-START -->
+<div class="stage-pending">
+  <p>Awaiting execution. Run <code>/tourney-execute 5-29-26-admin-upgrade-review.html</code> to proceed.</p>
+</div>
+<!-- AUDIT-CONTENT-END -->
+</div>
+</section>
+
+<section id="concluded">
+<div class="wrapper">
+<!-- CONCLUDED-CONTENT-START -->
+<div class="stage-pending">
+  <p>Awaiting execution. Run <code>/tourney-execute 5-29-26-admin-upgrade-review.html</code> to proceed.</p>
+</div>
+<!-- CONCLUDED-CONTENT-END -->
+</div>
+</section>
+
+<footer>
+  Generated by <span>Claude Sonnet 4.6</span> · Greenskeeper Studios Internal · May 29, 2026
+  <br style="margin-top:0.3rem">
+  <a href="/platform" style="color:var(--muted);font-size:0.7rem;text-decoration:none">← Back to Platform Hub</a>
+</footer>
+
+</body>
+</html>

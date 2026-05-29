@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TOURney — Tickets Auto-Sync · May 29, 2026</title>
+<style>
+:root{--gold:#c09030;--gold-light:#d4a840;--gold-dim:rgba(192,144,48,0.18);--bg:#0d0a05;--surface:#151009;--card:#1c140a;--border:rgba(192,144,48,0.22);--muted:#7a6a54;--text:#e8dcc8;--red:#c0392b;--green:#27ae60;--blue:#2980b9;--orange:#e67e22;--purple:#8e44ad;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:-apple-system,'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;font-size:15px;}
+nav{position:sticky;top:0;z-index:100;background:rgba(13,10,5,0.97);border-bottom:1px solid var(--border);backdrop-filter:blur(12px);}
+.nav-inner{padding:0.6rem 1.5rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap;}
+.nav-brand{color:var(--gold);font-weight:700;font-size:1rem;letter-spacing:0.05em;white-space:nowrap;}
+.nav-brand span{color:var(--muted);font-weight:400;font-size:0.8rem;margin-left:0.4rem;}
+.nav-links{display:flex;gap:0.2rem;flex-wrap:wrap;margin-left:auto;}
+.nav-links a{color:var(--muted);text-decoration:none;font-size:0.78rem;padding:0.3rem 0.55rem;border-radius:4px;transition:all 0.15s;white-space:nowrap;}
+.nav-links a:hover{color:var(--gold);background:var(--gold-dim);}
+.lifecycle-bar{display:flex;gap:3px;padding:0.55rem 1.5rem 0.65rem;background:var(--surface);border-bottom:1px solid var(--border);}
+.lc-stage{flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;}
+.lc-pill{height:5px;width:100%;border-radius:3px;background:rgba(192,144,48,0.1);transition:background 0.25s;}
+.lc-label{font-size:0.58rem;font-weight:700;letter-spacing:0.11em;text-transform:uppercase;color:rgba(122,106,84,0.45);transition:color 0.25s;}
+.lc-done .lc-pill{background:var(--gold);}
+.lc-done .lc-label{color:var(--gold);}
+.lc-active .lc-pill{background:var(--gold-light);box-shadow:0 0 8px rgba(192,144,48,0.45);}
+.lc-active .lc-label{color:var(--gold-light);}
+.hero{padding:3rem 1.5rem 2rem;text-align:center;border-bottom:1px solid var(--border);background:linear-gradient(180deg,rgba(192,144,48,0.06) 0%,transparent 100%);}
+.hero-eyebrow{display:inline-block;font-size:0.7rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold);border:1px solid var(--border);border-radius:20px;padding:0.22rem 0.8rem;margin-bottom:0.9rem;}
+.hero h1{font-size:clamp(1.5rem,3.5vw,2.3rem);font-weight:800;color:#fff;margin-bottom:0.35rem;}
+.hero h1 span{color:var(--gold);}
+.hero-sub{color:var(--muted);max-width:520px;margin:0 auto 1rem;font-size:0.9rem;}
+.hero-meta{display:flex;gap:1.1rem;justify-content:center;flex-wrap:wrap;font-size:0.74rem;color:var(--muted);}
+.hero-meta span{display:flex;align-items:center;gap:0.3rem;}
+.wrapper{max-width:1000px;margin:0 auto;padding:0 1.5rem;}
+section{padding:2.5rem 0;border-bottom:1px solid var(--border);}
+section:last-of-type{border-bottom:none;}
+.section-header{margin-bottom:1.6rem;}
+.section-eyebrow{font-size:0.67rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--gold);margin-bottom:0.3rem;}
+.section-title{font-size:1.35rem;font-weight:800;color:#fff;margin-bottom:0.3rem;}
+.section-desc{color:var(--muted);font-size:0.85rem;max-width:560px;}
+.card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:1.15rem 1.3rem;margin-bottom:0.7rem;}
+.card-title{font-size:0.85rem;font-weight:700;color:var(--gold);margin-bottom:0.45rem;}
+.card p,.card li{font-size:0.84rem;color:var(--text);margin-bottom:0.28rem;}
+.card ul,.card ol{padding-left:1.2rem;}
+.card li{margin-bottom:0.32rem;}
+.grid-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:0.7rem;}
+.grid-3{display:grid;grid-template-columns:repeat(auto-fit,minmax(245px,1fr));gap:0.7rem;}
+.stack-item{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:0.85rem 1.05rem;}
+.stack-label{font-size:0.65rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--muted);margin-bottom:0.18rem;}
+.stack-value{font-size:0.88rem;font-weight:600;color:#fff;}
+.stack-note{font-size:0.72rem;color:var(--muted);margin-top:0.18rem;}
+.pill{display:inline-block;font-size:0.66rem;font-weight:700;letter-spacing:0.06em;padding:0.15rem 0.5rem;border-radius:20px;text-transform:uppercase;}
+.pill-gold{background:rgba(192,144,48,0.18);color:var(--gold);border:1px solid rgba(192,144,48,0.3);}
+.pill-green{background:rgba(39,174,96,0.15);color:var(--green);border:1px solid rgba(39,174,96,0.3);}
+.pill-red{background:rgba(192,57,43,0.15);color:var(--red);border:1px solid rgba(192,57,43,0.3);}
+.pill-orange{background:rgba(230,126,34,0.15);color:var(--orange);border:1px solid rgba(230,126,34,0.3);}
+.pill-blue{background:rgba(41,128,185,0.15);color:var(--blue);border:1px solid rgba(41,128,185,0.3);}
+.pill-purple{background:rgba(142,68,173,0.15);color:var(--purple);border:1px solid rgba(142,68,173,0.3);}
+.page-table{width:100%;border-collapse:collapse;font-size:0.8rem;}
+.page-table th{text-align:left;padding:0.52rem 0.72rem;border-bottom:1px solid var(--border);color:var(--muted);font-size:0.67rem;text-transform:uppercase;letter-spacing:0.08em;background:var(--surface);}
+.page-table td{padding:0.58rem 0.72rem;border-bottom:1px solid rgba(192,144,48,0.08);vertical-align:top;}
+.page-table tr:last-child td{border-bottom:none;}
+.page-table tr:hover td{background:var(--gold-dim);}
+.page-table .url{font-family:monospace;font-size:0.75rem;color:var(--gold-light);}
+.page-table .file{font-family:monospace;font-size:0.72rem;color:var(--muted);}
+.table-wrap{background:var(--card);border:1px solid var(--border);border-radius:8px;overflow:hidden;overflow-x:auto;}
+.score-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(125px,1fr));gap:0.52rem;margin-bottom:1.4rem;}
+.score-cell{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:0.85rem;text-align:center;}
+.score-num{font-size:1.85rem;font-weight:900;line-height:1;margin-bottom:0.18rem;}
+.score-label{font-size:0.64rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);}
+.score-green{color:var(--green);}
+.score-gold{color:var(--gold);}
+.score-red{color:var(--red);}
+.score-blue{color:var(--blue);}
+.idea-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1.25rem;position:relative;overflow:hidden;}
+.idea-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;}
+.idea-1::before{background:var(--gold);}
+.idea-2::before{background:var(--blue);}
+.idea-3::before{background:var(--green);}
+.idea-4::before{background:var(--orange);}
+.idea-5::before{background:var(--purple);}
+.idea-number{font-size:2rem;font-weight:900;opacity:0.07;position:absolute;top:0.5rem;right:1rem;line-height:1;color:#fff;}
+.idea-tag{margin-bottom:0.42rem;}
+.idea-title{font-size:0.96rem;font-weight:700;color:#fff;margin-bottom:0.42rem;}
+.idea-body{font-size:0.82rem;color:var(--muted);line-height:1.55;margin-bottom:0.65rem;}
+.idea-plan{font-size:0.77rem;color:var(--text);}
+.idea-plan strong{color:var(--gold);}
+.runbook-steps{counter-reset:rb-step;}
+.rb-step{background:var(--card);border:1px solid var(--border);border-left:3px solid rgba(192,144,48,0.3);border-radius:0 8px 8px 0;padding:0.95rem 1.15rem 0.95rem 3.8rem;margin-bottom:0.55rem;position:relative;}
+.rb-step::before{counter-increment:rb-step;content:counter(rb-step);position:absolute;left:0.95rem;top:0.95rem;width:1.75rem;height:1.75rem;background:var(--gold-dim);color:var(--gold);border:1px solid var(--border);border-radius:50%;font-size:0.72rem;font-weight:700;display:grid;place-items:center;}
+.rb-step-title{font-size:0.87rem;font-weight:700;color:#fff;margin-bottom:0.22rem;}
+.rb-step-body{font-size:0.8rem;color:var(--muted);margin-bottom:0.35rem;}
+.rb-verify{font-size:0.76rem;color:var(--text);background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:3px;padding:0.35rem 0.6rem;margin-top:0.3rem;}
+.rb-verify strong{color:var(--gold-light);font-size:0.68rem;text-transform:uppercase;letter-spacing:0.07em;display:block;margin-bottom:0.1rem;}
+.sec-item{background:var(--card);border:1px solid var(--border);border-left:3px solid var(--border);border-radius:0 8px 8px 0;padding:0.9rem 1.15rem;margin-bottom:0.65rem;}
+.sec-item.sev-high{border-left-color:var(--red);}
+.sec-item.sev-med{border-left-color:var(--orange);}
+.sec-item.sev-low{border-left-color:var(--green);}
+.sec-item.sev-info{border-left-color:var(--blue);}
+.sec-header{display:flex;align-items:center;gap:0.52rem;margin-bottom:0.42rem;}
+.sec-title{font-size:0.87rem;font-weight:700;color:#fff;}
+.sec-body{font-size:0.8rem;color:var(--muted);margin-bottom:0.42rem;}
+.sec-fix{font-size:0.77rem;color:var(--text);background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:4px;padding:0.42rem 0.62rem;}
+.sec-fix strong{color:var(--gold-light);display:block;margin-bottom:0.12rem;font-size:0.68rem;text-transform:uppercase;letter-spacing:0.08em;}
+.stage-pending{text-align:center;padding:3rem 1.5rem;color:var(--muted);font-size:0.85rem;border:1px dashed rgba(192,144,48,0.2);border-radius:8px;}
+.stage-pending code{color:var(--gold);}
+.exec-step{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:0.85rem 1.05rem;margin-bottom:0.48rem;display:flex;gap:0.7rem;align-items:flex-start;}
+.exec-badge{font-size:0.66rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;padding:0.18rem 0.48rem;border-radius:3px;white-space:nowrap;flex-shrink:0;margin-top:0.08rem;}
+.exec-done{background:rgba(39,174,96,0.14);color:var(--green);border:1px solid rgba(39,174,96,0.28);}
+.exec-skipped{background:rgba(192,144,48,0.1);color:var(--muted);border:1px solid var(--border);}
+.exec-blocked{background:rgba(192,57,43,0.11);color:var(--red);border:1px solid rgba(192,57,43,0.28);}
+.exec-body{font-size:0.81rem;color:var(--text);}
+.exec-body strong{color:#fff;display:block;margin-bottom:0.12rem;font-size:0.83rem;}
+.roadmap-item{display:flex;gap:1.05rem;align-items:flex-start;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:0.95rem 1.15rem;margin-bottom:0.52rem;}
+.roadmap-icon{width:1.9rem;height:1.9rem;border-radius:50%;background:var(--gold-dim);color:var(--gold);display:grid;place-items:center;font-size:0.85rem;flex-shrink:0;border:1px solid var(--border);}
+.roadmap-content{flex:1;}
+.roadmap-title{font-size:0.88rem;font-weight:700;color:#fff;margin-bottom:0.13rem;}
+.roadmap-desc{font-size:0.79rem;color:var(--muted);margin-bottom:0.32rem;}
+.roadmap-action{font-size:0.75rem;color:var(--text);}
+.roadmap-action strong{color:var(--gold-light);}
+code{font-family:'Consolas','Monaco',monospace;background:rgba(255,255,255,0.07);padding:0.09rem 0.27rem;border-radius:3px;font-size:0.81em;color:var(--gold-light);}
+footer{border-top:1px solid var(--border);padding:1.2rem;text-align:center;color:var(--muted);font-size:0.72rem;}
+footer span{color:var(--gold);}
+@media(max-width:600px){.nav-links{display:none;}.hero{padding:2rem 1rem 1.5rem;}section{padding:2rem 0;}.lc-label{font-size:0.5rem;}}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <div class="nav-brand">TOURney <span>by Greenskeeper Studios</span></div>
+    <div class="nav-links">
+      <a href="#review">Review</a>
+      <a href="#plan">Plan</a>
+      <a href="#runbook">Runbook</a>
+      <a href="#executing">Executing</a>
+      <a href="#audit">Audit</a>
+      <a href="#concluded">Concluded</a>
+    </div>
+  </div>
+</nav>
+
+<!-- LIFECYCLE-BAR-START -->
+<div class="lifecycle-bar">
+  <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Review</div></div>
+  <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Plan</div></div>
+  <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Runbook</div></div>
+  <div class="lc-stage"><div class="lc-pill"></div><div class="lc-label">Executing</div></div>
+  <div class="lc-stage"><div class="lc-pill"></div><div class="lc-label">Audit</div></div>
+  <div class="lc-stage"><div class="lc-pill"></div><div class="lc-label">Concluded</div></div>
+</div>
+<!-- LIFECYCLE-BAR-END -->
+
+<div class="hero">
+  <div class="hero-eyebrow">Tickets Auto-Sync</div>
+  <h1><span>TOURney</span> — Tickets Auto-Sync · May 29, 2026</h1>
+  <p class="hero-sub">Eliminate manual qa-index.json maintenance — ticket HTML files should auto-discover and appear in the platform Artifacts tab without AI or human intervention.</p>
+  <div class="hero-meta">
+    <span>&#128197; May 29, 2026</span>
+    <span>&#129302; Claude Sonnet 4.6</span>
+    <span>&#127962; Greenskeeper Studios</span>
+    <span>&#128274; Internal Only</span>
+  </div>
+</div>
+
+<section id="review">
+<div class="wrapper">
+
+<div class="section-header">
+  <div class="section-eyebrow">Section 01</div>
+  <div class="section-title">Review — Current State</div>
+  <div class="section-desc">Evidence-based audit of the artifact sync gap: how tickets get created vs. how the platform discovers them.</div>
+</div>
+
+<!-- Current State Summary -->
+<div class="card" style="border-left:3px solid var(--orange);">
+  <div class="card-title">The Problem (Platform Bug Report)</div>
+  <p>Rob's request: <em>"The tickets line item should always match the HTML. And the loading of the tickets should be automatic via the site. Not by AI making the update."</em></p>
+  <p style="margin-top:0.5rem;">Root cause: <code>platform.html</code> Artifacts tab fetches <strong>only</strong> <code>/qa-index.json</code> at runtime (platform.html:1413). That file is hand-maintained by AI skills. Any ticket HTML file created in the repo root is invisible to the platform until a separate manual step inserts an entry into <code>qa-index.json</code>.</p>
+</div>
+
+<!-- Evidence: File Count Gap -->
+<div class="card">
+  <div class="card-title">Evidence — HTML Files vs. qa-index Entries</div>
+  <ul>
+    <li><strong>22 ticket HTML files</strong> exist in repo root matching <code>*-review.html</code> pattern (confirmed via <code>ls *.html | wc -l</code>)</li>
+    <li><strong>47 entries</strong> in <code>qa-index.json</code> — the gap exists because some entries are non-HTML artifacts (plans, audits, runbooks) and some HTML files have multiple index entries (e.g. stage promotions)</li>
+    <li>However the count mismatch is not the core problem — the <em>process dependency</em> is: every new ticket HTML requires a matching AI-written <code>qa-index.json</code> edit to appear in the UI</li>
+    <li>If an agent creates a ticket HTML but fails, times out, or skips the index step, the file is silently orphaned</li>
+  </ul>
+</div>
+
+<!-- How loadArtifacts works -->
+<div class="card">
+  <div class="card-title">Evidence — How platform.html Loads Artifacts (platform.html:1410–1482)</div>
+  <ul>
+    <li><code>loadArtifacts()</code> at line 1410: does a single <code>fetch('/qa-index.json', {cache:'no-store'})</code></li>
+    <li>Parses <code>d.entries</code> array → sets <code>allEntries</code> → calls <code>renderArtifactTickets()</code></li>
+    <li>Zero filesystem discovery. No glob, no directory listing, no GitHub API call. 100% dependent on <code>qa-index.json</code> being correct</li>
+    <li>Re-fetches on tab visibility change (platform.html:884) — so it's "live" in that sense, but still bound to the JSON registry</li>
+    <li>Empty-state hint reads: <em>"Run /tourney-review or append to qa-index.json"</em> (platform.html:1408) — explicitly instructs manual update</li>
+  </ul>
+</div>
+
+<!-- vercel.json routing -->
+<div class="card">
+  <div class="card-title">Evidence — vercel.json Routing for Ticket Files</div>
+  <ul>
+    <li>Ticket HTML files are served directly from repo root — Vercel serves static files without explicit rewrites for most tickets</li>
+    <li>Some older tickets have explicit <code>permanent: true</code> redirects in <code>vercel.json</code> (e.g. <code>/5-6-26-claude-review</code> → <code>/platform/5-6-26-claude-review</code>) — these were added manually too</li>
+    <li>Newer tickets rely on Vercel's default static file serving: <code>/5-29-26-ux-review.html</code> is accessible at that path without any rewrite entry</li>
+    <li>No API route, no Edge Function, no serverless function exists that could enumerate files at runtime</li>
+    <li>JSON files served with <code>Cache-Control: no-store, must-revalidate</code> — so qa-index.json is always fresh on fetch, which is correct</li>
+  </ul>
+</div>
+
+<!-- No scripts dir -->
+<div class="card">
+  <div class="card-title">Evidence — No Build Scripts Exist</div>
+  <ul>
+    <li><code>scripts/</code> directory does not exist in repo root</li>
+    <li><code>package.json</code> has scripts: <code>typecheck</code>, <code>test</code>, <code>test:e2e</code> — no build step, no pre-commit hook runner, no index generator</li>
+    <li><code>.git/hooks/</code> contains only sample files (disabled by <code>.sample</code> suffix) — no active pre-commit hook</li>
+    <li>No CI/CD config file found (<code>.github/workflows/</code> not present in root listing)</li>
+  </ul>
+</div>
+
+<!-- Gaps and Bugs -->
+<div class="grid-2">
+  <div class="card" style="border-left:3px solid var(--green);">
+    <div class="card-title">Strengths</div>
+    <ul>
+      <li>qa-index.json has <code>Cache-Control: no-store</code> — platform always gets latest version without stale cache issues</li>
+      <li>loadArtifacts() re-fires on tab visibility change — live refresh works correctly once index is updated</li>
+      <li>qa-index.json schema is well-structured with rich metadata (category, stage, tags, summary, url, file) — good foundation for auto-generation</li>
+      <li>Ticket HTML files follow a consistent naming convention: <code>{M-D-YY}-{axis}-review.html</code> — parseable by a script</li>
+      <li>HTML files already embed <code>&lt;title&gt;</code> tags with the ticket title — auto-extraction is straightforward</li>
+    </ul>
+  </div>
+
+  <div class="sec-item sev-high">
+    <div class="sec-header">
+      <span class="pill pill-red">P0 Gap</span>
+      <span class="sec-title">Artifact Visibility Depends on AI Execution</span>
+    </div>
+    <div class="sec-body">
+      Every new ticket HTML created by any agent is invisible in platform.html until <code>qa-index.json</code> is manually updated. If an agent session ends early, is compacted, or skips Step 8 of SKILL.md, the ticket exists on disk and is deployed to Vercel — but the platform shows nothing.
+      <br><br>
+      <strong>Upstream:</strong> tourney-review/execute skills write ticket HTML → separately write qa-index.json<br>
+      <strong>Downstream:</strong> platform.html Artifacts tab, axis-status.json, grades.json, CEO dashboard all read from qa-index.json<br>
+      <strong>Risk:</strong> Orphaned ticket files are deployed but unreachable from the platform UI
+    </div>
+    <div class="sec-fix">
+      <strong>Fix</strong>
+      Build-time script <code>scripts/gen-qa-index.js</code> that scans <code>*.html</code> files, extracts metadata from <code>&lt;title&gt;</code> and HTML comment markers, and regenerates qa-index.json. Run via git pre-commit hook so index is always current before any push.
+    </div>
+  </div>
+</div>
+
+<div class="sec-item sev-med">
+  <div class="sec-header">
+    <span class="pill pill-orange">P1 Gap</span>
+    <span class="sec-title">vercel.json Rewrites Not Auto-Generated for New Tickets</span>
+  </div>
+  <div class="sec-body">
+    Clean URL routing (e.g. <code>/platform/5-29-26-ux-review</code> → <code>/5-29-26-ux-review.html</code>) requires a <code>vercel.json</code> rewrite entry. Currently added manually per ticket. New tickets without a rewrite entry are only accessible at their raw <code>.html</code> path.
+    <br><br>
+    <strong>Upstream:</strong> ticket HTML files in repo root<br>
+    <strong>Downstream:</strong> qa-index.json <code>url</code> field points to clean paths; clicking artifact in platform.html navigates to that URL<br>
+    <strong>Risk:</strong> 404s on artifact links if rewrite is missing
+  </div>
+  <div class="sec-fix">
+    <strong>Fix</strong>
+    The same <code>gen-qa-index.js</code> script can also patch <code>vercel.json</code> rewrites for any new ticket files it discovers — keeping both in sync automatically.
+  </div>
+</div>
+
+<div class="sec-item sev-info">
+  <div class="sec-header">
+    <span class="pill pill-blue">Info</span>
+    <span class="sec-title">No Last-Sync Timestamp in Platform UI</span>
+  </div>
+  <div class="sec-body">
+    The Artifacts tab shows no indication of when qa-index.json was last regenerated. Users (Rob) have no way to know if the index is stale or up-to-date without checking the file directly.
+    <br><br>
+    <strong>Upstream:</strong> qa-index.json <code>updated_at</code> field exists but is not surfaced in platform.html<br>
+    <strong>Downstream:</strong> platform.html Artifacts tab UI
+  </div>
+  <div class="sec-fix">
+    <strong>Fix</strong>
+    Display <code>updated_at</code> from qa-index.json in the Artifacts tab header. Low effort, high trust signal.
+  </div>
+</div>
+
+</div>
+</section>
+
+<section id="plan">
+<div class="wrapper">
+
+<div class="section-header">
+  <div class="section-eyebrow">Section 02</div>
+  <div class="section-title">Plan — Options &amp; Recommendation</div>
+  <div class="section-desc">Three viable approaches evaluated. One recommended based on zero runtime cost and no new infrastructure.</div>
+</div>
+
+<div class="card">
+  <div class="card-title">Strategic Priorities</div>
+  <ol>
+    <li><strong>P1 — Build-time script (Recommended):</strong> Node.js script scans <code>*.html</code>, extracts metadata from <code>&lt;title&gt;</code> tags and HTML comment markers, regenerates <code>qa-index.json</code> and patches <code>vercel.json</code> rewrites. Runs as git pre-commit hook. Zero runtime cost, no new infrastructure, works offline.</li>
+    <li><strong>P2 — Surface last-sync timestamp:</strong> Display <code>qa-index.json updated_at</code> in platform.html Artifacts tab. One-liner change, immediate trust signal.</li>
+    <li><strong>P3 — Update SKILL.md:</strong> After the script exists, update tourney-review SKILL.md Steps 8–11 to just say "run <code>node scripts/gen-qa-index.js</code>" instead of manual JSON edits. AI agents become consumers of the script, not manual editors of JSON.</li>
+  </ol>
+</div>
+
+<div class="grid-2" style="margin-top:1rem;">
+
+  <div class="idea-card idea-1">
+    <div class="idea-number">A</div>
+    <div class="idea-tag"><span class="pill pill-red">Not Recommended</span></div>
+    <div class="idea-title">Option A — GitHub API at Runtime</div>
+    <div class="idea-body">platform.html calls GitHub Contents API to list <code>*.html</code> files in the repo, then fetches and parses each to build the artifact list dynamically. No qa-index.json needed.</div>
+    <div class="idea-plan"><strong>Why rejected:</strong> Requires a GitHub personal access token — either exposed in client-side JS (security risk) or proxied via Edge Function (adds infrastructure). GitHub API rate limits (60 req/hr unauthenticated) would break for rapid dev sessions. Also adds ~500ms latency per Artifacts tab load. Overkill for a single-operator platform.</div>
+  </div>
+
+  <div class="idea-card idea-2">
+    <div class="idea-number">B</div>
+    <div class="idea-tag"><span class="pill pill-orange">Viable But Heavier</span></div>
+    <div class="idea-title">Option B — Vercel Edge Function / Build Hook</div>
+    <div class="idea-body">A Vercel build step or Edge Function scans the repo on each deploy and writes a fresh <code>qa-index.json</code> to the deployment output. Platform fetches it as normal.</div>
+    <div class="idea-plan"><strong>Why deferred:</strong> Requires adding a build command to <code>vercel.json</code>, installing Node in the build env, and handling Edge Function cold starts. Adds complexity to a currently zero-build deployment. The pre-commit hook achieves the same result with less surface area. Could be revisited if the repo moves to a build pipeline.</div>
+  </div>
+
+  <div class="idea-card idea-3">
+    <div class="idea-number">C</div>
+    <div class="idea-tag"><span class="pill pill-green">Recommended</span></div>
+    <div class="idea-title">Option C — Build-time Script + Pre-commit Hook</div>
+    <div class="idea-body">Node.js script <code>scripts/gen-qa-index.js</code> scans all <code>*.html</code> files in repo root, reads <code>&lt;title&gt;</code>, hero eyebrow (axis), hero-sub (desc), hero-meta date, and lifecycle bar state from each file. Generates complete qa-index.json and patches vercel.json rewrites. Registered as a git pre-commit hook so it runs automatically before every push.</div>
+    <div class="idea-plan"><strong>Why recommended:</strong> Zero runtime cost. No new infrastructure. Works fully offline. Git hook is universal — fires regardless of which agent or human makes the commit. qa-index.json becomes a derived artifact, not a source of truth maintained by hand. Can be run manually anytime with <code>node scripts/gen-qa-index.js</code>.</div>
+  </div>
+
+  <div class="idea-card idea-4">
+    <div class="idea-number">D</div>
+    <div class="idea-tag"><span class="pill pill-blue">Bonus</span></div>
+    <div class="idea-title">Option D — Show Sync Timestamp in Platform UI</div>
+    <div class="idea-body">Read <code>updated_at</code> from the fetched qa-index.json payload and render it in the Artifacts tab header. One line of JS, no backend changes.</div>
+    <div class="idea-plan"><strong>Why include:</strong> Closes the feedback loop — Rob can see at a glance whether the index is fresh or stale. Pairs well with Option C since the script will stamp <code>updated_at</code> on every run.</div>
+  </div>
+
+</div>
+
+<div style="margin-top:1.2rem;">
+  <div class="roadmap-item">
+    <div class="roadmap-icon">1</div>
+    <div class="roadmap-content">
+      <div class="roadmap-title">Ship gen-qa-index.js + pre-commit hook</div>
+      <div class="roadmap-desc">Core fix. Eliminates manual qa-index.json maintenance permanently. One script, one hook, done.</div>
+      <div class="roadmap-action"><strong>Milestone:</strong> Next agent session (tourney-execute this ticket)</div>
+    </div>
+  </div>
+  <div class="roadmap-item">
+    <div class="roadmap-icon">2</div>
+    <div class="roadmap-content">
+      <div class="roadmap-title">Add sync timestamp to Artifacts tab</div>
+      <div class="roadmap-desc">1-line JS change in platform.html. Surfaces qa-index.json <code>updated_at</code> field in the UI header.</div>
+      <div class="roadmap-action"><strong>Milestone:</strong> Same session as above (Step 4 of runbook)</div>
+    </div>
+  </div>
+  <div class="roadmap-item">
+    <div class="roadmap-icon">3</div>
+    <div class="roadmap-content">
+      <div class="roadmap-title">Update SKILL.md to use script instead of manual JSON edits</div>
+      <div class="roadmap-desc">Steps 8–10 of tourney-review SKILL.md currently instruct agents to manually edit qa-index.json, grades.json, axis-status.json. After the script ships, agents run <code>node scripts/gen-qa-index.js</code> instead.</div>
+      <div class="roadmap-action"><strong>Milestone:</strong> After script verified working</div>
+    </div>
+  </div>
+  <div class="roadmap-item">
+    <div class="roadmap-icon">4</div>
+    <div class="roadmap-content">
+      <div class="roadmap-title">Verify all 22 existing ticket HTMLs appear correctly</div>
+      <div class="roadmap-desc">Run script against current repo. Confirm all 22 HTML files parse cleanly and produce valid qa-index entries. Fix any files with missing/malformed metadata.</div>
+      <div class="roadmap-action"><strong>Milestone:</strong> QA step after script ships</div>
+    </div>
+  </div>
+</div>
+
+</div>
+</section>
+
+<section id="runbook">
+<div class="wrapper">
+
+<div class="section-header">
+  <div class="section-eyebrow">Section 03</div>
+  <div class="section-title">Runbook — Execution Steps</div>
+  <div class="section-desc">Ordered steps for tourney-execute. Each step is self-contained with verification checks.</div>
+</div>
+
+<div class="runbook-steps">
+
+  <div class="rb-step">
+    <div class="rb-step-title">Create scripts/gen-qa-index.js — metadata extraction + qa-index generation</div>
+    <div class="rb-step-body">
+      Create <code>C:\Users\Rob\Greenskeeper Studios\01 Repos\TOURney\scripts\gen-qa-index.js</code>.<br><br>
+      Script logic:<br>
+      1. <code>glob('*.html', { cwd: repoRoot })</code> — find all HTML files in repo root<br>
+      2. For each file, parse with regex (no DOM needed):<br>
+      &nbsp;&nbsp;• <code>&lt;title&gt;</code> tag → extract text after "TOURney — " prefix → ticket title<br>
+      &nbsp;&nbsp;• <code>.hero-eyebrow</code> inner text → axis label<br>
+      &nbsp;&nbsp;• <code>.hero-sub</code> inner text → summary/desc<br>
+      &nbsp;&nbsp;• <code>hero-meta</code> date span → date string<br>
+      &nbsp;&nbsp;• <code>.lc-done</code> count → determine lifecycle stage (3 done = review complete, 4 done = executing, 6 done = concluded)<br>
+      &nbsp;&nbsp;• <code>MODEL_ID</code> from hero-meta span → author<br>
+      3. Build entry object: <code>{ id, category, stage, title, summary, date, updated, author, url, file, tags, status }</code><br>
+      4. Read existing <code>qa-index.json</code> — merge new entries (preserve existing entries that have no matching HTML file, e.g. non-HTML artifacts). Entries with matching HTML files get their metadata refreshed.<br>
+      5. Sort entries by date descending<br>
+      6. Write <code>qa-index.json</code> with updated <code>updated_at</code> timestamp<br><br>
+      <strong>Upstream:</strong> Reads all <code>*.html</code> in repo root + existing <code>qa-index.json</code><br>
+      <strong>Downstream:</strong> Writes <code>qa-index.json</code> → platform.html Artifacts tab reads this
+    </div>
+    <div class="rb-verify">
+      <strong>Verify</strong>
+      Run <code>node scripts/gen-qa-index.js</code>. Confirm output: "Scanned N files, updated M entries." Check that <code>qa-index.json</code> updated_at timestamp changed. Confirm all 22+ existing ticket HTML files appear as entries.
+    </div>
+  </div>
+
+  <div class="rb-step">
+    <div class="rb-step-title">Add vercel.json rewrite patching to gen-qa-index.js</div>
+    <div class="rb-step-body">
+      Extend the script to also patch <code>vercel.json</code> rewrites:<br><br>
+      1. After building the entry list, collect all ticket file names (e.g. <code>5-29-26-tickets-autosync-review.html</code>)<br>
+      2. For each file, derive the clean URL path: <code>/platform/{slug}</code> where slug = filename without <code>.html</code><br>
+      3. Read <code>vercel.json</code>. For each ticket file that does NOT already have a matching rewrite entry in <code>rewrites</code>, append: <code>{ "source": "/platform/{slug}", "destination": "/{file}" }</code><br>
+      4. Write patched <code>vercel.json</code><br><br>
+      <strong>Upstream:</strong> Reads repo root HTML files + existing vercel.json<br>
+      <strong>Downstream:</strong> Vercel deployment — clean URLs in qa-index entries become live. platform.html artifact links work correctly.
+    </div>
+    <div class="rb-verify">
+      <strong>Verify</strong>
+      After running the script, check that <code>vercel.json</code> has rewrite entries for all current ticket files. Confirm no duplicate entries were created. Confirm JSON is valid (parse with <code>node -e "require('./vercel.json')"</code>).
+    </div>
+  </div>
+
+  <div class="rb-step">
+    <div class="rb-step-title">Install pre-commit git hook</div>
+    <div class="rb-step-body">
+      Create <code>C:\Users\Rob\Greenskeeper Studios\01 Repos\TOURney\.git\hooks\pre-commit</code> (no extension, must be executable):<br><br>
+      <code>#!/bin/sh</code><br>
+      <code>node "$(git rev-parse --show-toplevel)/scripts/gen-qa-index.js"</code><br>
+      <code>git add qa-index.json vercel.json</code><br><br>
+      On Windows, git hooks run via Git Bash / sh. The script must be executable: <code>chmod +x .git/hooks/pre-commit</code> (or set via git config).<br><br>
+      <strong>Upstream:</strong> Triggered by any <code>git commit</code> in the repo<br>
+      <strong>Downstream:</strong> qa-index.json and vercel.json are always current before any push reaches Vercel
+    </div>
+    <div class="rb-verify">
+      <strong>Verify</strong>
+      Create a test commit. Confirm pre-commit hook fires (output visible in terminal). Confirm <code>qa-index.json</code> and <code>vercel.json</code> are included in the commit automatically.
+    </div>
+  </div>
+
+  <div class="rb-step">
+    <div class="rb-step-title">Display last-sync timestamp in platform.html Artifacts tab</div>
+    <div class="rb-step-body">
+      In <code>platform.html</code>, find the <code>loadArtifacts()</code> function (line 1410). After <code>allEntries</code> is set (line 1416), extract <code>d.updated_at</code> and display it in the Artifacts tab header.<br><br>
+      Find the artifacts tab header HTML (near line 824, the <code>artifactTickets</code> div's parent). Add a small subtitle: <code>&lt;span id="atSyncTime" style="font-size:0.72rem;color:var(--muted);"&gt;&lt;/span&gt;</code>.<br><br>
+      In loadArtifacts(), after parsing: <code>const el = document.getElementById('atSyncTime'); if(el &amp;&amp; d.updated_at) el.textContent = 'Index updated: ' + new Date(d.updated_at).toLocaleString();</code><br><br>
+      <strong>Upstream:</strong> qa-index.json <code>updated_at</code> field (written by gen-qa-index.js)<br>
+      <strong>Downstream:</strong> platform.html Artifacts tab UI only — no functional impact
+    </div>
+    <div class="rb-verify">
+      <strong>Verify</strong>
+      Open platform.html Artifacts tab. Confirm "Index updated: [timestamp]" appears below the tab header. Confirm timestamp matches the <code>updated_at</code> in qa-index.json.
+    </div>
+  </div>
+
+  <div class="rb-step">
+    <div class="rb-step-title">Run gen-qa-index.js against current repo and validate all 22 tickets</div>
+    <div class="rb-step-body">
+      Run <code>node scripts/gen-qa-index.js</code> manually. Review output for any parse errors or missing metadata.<br><br>
+      For any ticket HTML that fails to parse a title, axis, or date — manually inspect that file and add/fix the relevant tag.<br><br>
+      After clean run: <code>git add -A &amp;&amp; git commit -m "chore: add gen-qa-index.js + pre-commit hook, regenerate qa-index" &amp;&amp; git push</code><br><br>
+      <strong>Upstream:</strong> All 22 existing ticket HTML files in repo root<br>
+      <strong>Downstream:</strong> platform.html Artifacts tab — all tickets should now appear without any manual JSON editing
+    </div>
+    <div class="rb-verify">
+      <strong>Verify</strong>
+      After push and Vercel deploy: open https://tourney.greenskeeper.studio/platform → Artifacts tab. Confirm all 22+ ticket HTML files appear as cards. Click each card — confirm navigation to correct ticket URL works (no 404s). Check console: zero errors. Check network: qa-index.json returns 200 with correct entry count.
+    </div>
+  </div>
+
+  <div class="rb-step">
+    <div class="rb-step-title">Update tourney-review SKILL.md Steps 8–10 to use the script</div>
+    <div class="rb-step-body">
+      Edit <code>C:\Users\Rob\.claude\skills\tourney-review\SKILL.md</code>.<br><br>
+      Steps 8 (Update qa-index.json), 9 (Update grades.json), and 10 (Update axis-status.json) currently instruct agents to manually edit JSON files. Replace Step 8 with: "Run <code>node scripts/gen-qa-index.js</code> from the TOURney repo root. This regenerates qa-index.json and patches vercel.json automatically." Steps 9 and 10 (grades.json, axis-status.json) remain manual — the script handles qa-index only.<br><br>
+      Add a note: "The pre-commit hook will run this automatically on commit, so manual invocation is optional."<br><br>
+      <strong>Upstream:</strong> SKILL.md instructs agents; this change reduces agent error surface<br>
+      <strong>Downstream:</strong> All future tourney-review and tourney-execute runs — agents no longer risk orphaning tickets by skipping the manual JSON step
+    </div>
+    <div class="rb-verify">
+      <strong>Verify</strong>
+      Read updated SKILL.md Step 8. Confirm it references the script. Create a test ticket (can be empty/test) and commit — confirm qa-index.json updates automatically without any manual JSON editing.
+    </div>
+  </div>
+
+</div>
+
+</div>
+</section>
+
+<section id="executing">
+<div class="wrapper">
+<!-- EXECUTING-CONTENT-START -->
+<div class="section-header">
+  <div class="section-eyebrow">Section 04</div>
+  <div class="section-title">Executing</div>
+</div>
+<div class="stage-pending">
+  <p>Awaiting execution. Run <code>/tourney-execute 5-29-26-tickets-autosync-review.html</code> to proceed.</p>
+</div>
+<!-- EXECUTING-CONTENT-END -->
+</div>
+</section>
+
+<section id="audit">
+<div class="wrapper">
+<!-- AUDIT-CONTENT-START -->
+<div class="section-header">
+  <div class="section-eyebrow">Section 05</div>
+  <div class="section-title">Audit</div>
+</div>
+<div class="stage-pending">
+  <p>Awaiting execution. Run <code>/tourney-execute 5-29-26-tickets-autosync-review.html</code> to proceed.</p>
+</div>
+<!-- AUDIT-CONTENT-END -->
+</div>
+</section>
+
+<section id="concluded">
+<div class="wrapper">
+<!-- CONCLUDED-CONTENT-START -->
+<div class="section-header">
+  <div class="section-eyebrow">Section 06</div>
+  <div class="section-title">Concluded</div>
+</div>
+<div class="stage-pending">
+  <p>Awaiting execution. Run <code>/tourney-execute 5-29-26-tickets-autosync-review.html</code> to proceed.</p>
+</div>
+<!-- CONCLUDED-CONTENT-END -->
+</div>
+</section>
+
+<footer>
+  Generated by <span>Claude Sonnet 4.6</span> · Greenskeeper Studios Internal · May 29, 2026
+  <br style="margin-top:0.3rem">
+  <a href="/platform" style="color:var(--muted);font-size:0.7rem;text-decoration:none">&#8592; Back to Platform Hub</a>
+</footer>
+
+</body>
+</html>
