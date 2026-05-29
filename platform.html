@@ -88,6 +88,8 @@ td{padding:0.7rem 0.75rem;font-size:0.88rem;vertical-align:middle;}
 .btn-action{font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:0.62rem;letter-spacing:0.12em;text-transform:uppercase;padding:0.3rem 0.65rem;border:1px solid;background:none;cursor:pointer;transition:all 0.2s;text-decoration:none;display:inline-block;}
 .btn-admin{color:var(--gold);border-color:rgba(192,144,48,0.35);}
 .btn-admin:hover{background:var(--gold-dim);}
+.btn-prompt{background:#0d0a06 !important;color:var(--gold);border-color:rgba(192,144,48,0.45);}
+.btn-prompt:hover{background:#1a1008 !important;}
 .btn-delete{color:rgba(200,80,60,0.7);border-color:rgba(200,80,60,0.2);}
 .btn-delete:hover{background:rgba(200,80,60,0.08);color:var(--red);border-color:rgba(200,80,60,0.5);}
 .badge{display:inline-block;font-family:'DM Mono',monospace;font-size:0.42rem;letter-spacing:0.14em;text-transform:uppercase;padding:0.22rem 0.55rem;border:1px solid;}
@@ -577,10 +579,10 @@ td{padding:0.7rem 0.75rem;font-size:0.88rem;vertical-align:middle;}
   <div id="panel-bugs" style="display:none;">
     <div class="action-wrap">
       <div style="display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:1.25rem;">
-        <button class=”btn-action btn-admin” onclick=”copyTriagePrompt()” style=”background:#0d0a06;”>Organize Sprints</button>
-        <button class=”btn-action btn-admin” onclick=”copyRunSprintPrompt()” style=”background:#0d0a06;”>Run Next Sprint</button>
-        <button class=”btn-action btn-admin” onclick=”copyTopBugPrompt()” style=”background:#0d0a06;”>Fix Top P0</button>
-        <button class=”btn-action btn-admin” onclick=”copyExportPrompt()” style=”background:#0d0a06;”>Export All</button>
+        <button class=”btn-action btn-prompt” onclick=”copyTriagePrompt()”>Organize Sprints</button>
+        <button class=”btn-action btn-prompt” onclick=”copyRunSprintPrompt()”>Run Next Sprint</button>
+        <button class=”btn-action btn-prompt” onclick=”copyTopBugPrompt()”>Fix Top P0</button>
+        <button class=”btn-action btn-prompt” onclick=”copyExportPrompt()”>Export All</button>
       </div>
       <div class="action-section">
         <div class="action-hd">
