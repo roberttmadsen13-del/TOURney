@@ -77,7 +77,7 @@
     const onTenantUrl = !!location.pathname.match(/\/t\/([^/?#]+)/);
     if (!slug) {
       document.body.innerHTML = '<div style="padding:2rem;font-family:sans-serif;color:#fff;background:#1a1a1a;min-height:100vh"><h2>No tournament</h2><p>Visit a tournament URL to continue.</p><p><a href="/" style="color:#c09030">← TOURney Home</a></p></div>';
-      throw new Error('No tournament slug in URL');
+      return;
     }
 
     const { data, error } = await db
