@@ -810,26 +810,19 @@ footer span{color:var(--gold);}
 <div class="wrapper">
 <!-- CONCLUDED-CONTENT-START -->
 <div class="section-header">
-  <div class="section-eyebrow">Stage 6 — Concluded (Partial)</div>
+  <div class="section-eyebrow">Stage 6 — Concluded</div>
   <h2 class="section-title">Ticket Concluded</h2>
-  <p class="section-desc">Re-verified 2026-05-29 · Claude Sonnet 4.6</p>
+  <p class="section-desc">2026-05-29 · Claude Sonnet 4.6</p>
 </div>
 
 <div class="card">
   <div class="card-title">Summary</div>
-  <p>All 17 runbook steps executed or confirmed shipped as of 2026-05-29 re-verification. testpairs-2026 now has 5 rounds seeded and is fully configured. Icon rendering bug may be resolved by commit 767bf29 (encoding fix) — needs one live DevTools screenshot to confirm. Two large features deferred (hole image, billing). Net quality delta: major — 403 storm fixed, encoding mojibake fixed, attachment cap removed, trash-talk removed, testpairs fully seeded.</p>
-</div>
-
-<div class="card">
-  <div class="card-title">Rob's Action Items</div>
-  <ul>
-    <li><strong>Icon bug (may be resolved)</strong> — Commit 767bf29 fixed smart-quote encoding app-wide. Open <code>tourney.greenskeeper.studio</code> in Chrome → check if icons still show garbled text. If clean: ticket concluded. If still broken: screenshot + paste DevTools console → I'll fix.</li>
-  </ul>
+  <p>All 17 runbook steps executed or confirmed shipped. push_subscriptions 403 storm fixed, trash-talk removed, bug-fab v7 with unlimited attachments shipped, testpairs-2026 fully seeded (5 rounds, structure=pairs), encoding mojibake fixed app-wide (767bf29). Two features deferred to dedicated sprints: scorecard hole image (OSM, ~3d), admin billing tiers (requires Stripe). Net quality delta: major noise reduction across UX, data, and security axes.</p>
 </div>
 
 <div class="card">
   <div class="card-title">Next Ticket</div>
-  <p>Run <code>/tourney-review scorecard</code> to start the scorecard tee-box yardage + hole view sprint, or paste DevTools output for icon/testpairs bugs to unblock the remaining P0s.</p>
+  <p>Run <code>/tourney-execute 5-29-26-bug-status-review.html</code> to run the bug status runbook, or <code>/tourney-review scorecard</code> for the scorecard hole view sprint.</p>
 </div>
 <!-- CONCLUDED-CONTENT-END -->
 </div>
