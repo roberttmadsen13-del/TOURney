@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -577,10 +577,10 @@ td{padding:0.7rem 0.75rem;font-size:0.88rem;vertical-align:middle;}
   <div id="panel-bugs" style="display:none;">
     <div class="action-wrap">
       <div style="display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:1.25rem;">
-        <button onclick="copyTriagePrompt()" style="background:rgba(192,144,48,0.12);border:1px solid rgba(192,144,48,0.35);color:var(--gold);padding:.45rem .9rem;border-radius:6px;cursor:pointer;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;">ðŸ—‚ Organize into Sprints</button>
-        <button onclick="copyRunSprintPrompt()" style="background:rgba(39,174,96,0.12);border:1px solid rgba(39,174,96,0.4);color:var(--green);padding:.45rem .9rem;border-radius:6px;cursor:pointer;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;">â–¶ Run Next Sprint</button>
-        <button onclick="copyTopBugPrompt()" style="background:rgba(192,57,43,0.12);border:1px solid rgba(192,57,43,0.4);color:var(--red);padding:.45rem .9rem;border-radius:6px;cursor:pointer;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;">âš¡ Fix Top P0 Now</button>
-        <button onclick="copyExportPrompt()" style="background:rgba(41,128,185,0.12);border:1px solid rgba(41,128,185,0.4);color:var(--blue);padding:.45rem .9rem;border-radius:6px;cursor:pointer;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;">ðŸ“‹ Export All Open</button>
+        <button onclick=”copyTriagePrompt()” style=”background:rgba(192,144,48,0.12);border:1px solid rgba(192,144,48,0.35);color:var(--gold);padding:.45rem .9rem;border-radius:6px;cursor:pointer;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;”>&#x1F5C2; Organize into Sprints</button>
+        <button onclick=”copyRunSprintPrompt()” style=”background:rgba(39,174,96,0.12);border:1px solid rgba(39,174,96,0.4);color:var(--green);padding:.45rem .9rem;border-radius:6px;cursor:pointer;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;”>&#x25B6; Run Next Sprint</button>
+        <button onclick=”copyTopBugPrompt()” style=”background:rgba(192,57,43,0.12);border:1px solid rgba(192,57,43,0.4);color:var(--red);padding:.45rem .9rem;border-radius:6px;cursor:pointer;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;”>&#x26A1; Fix Top P0 Now</button>
+        <button onclick=”copyExportPrompt()” style=”background:rgba(41,128,185,0.12);border:1px solid rgba(41,128,185,0.4);color:var(--blue);padding:.45rem .9rem;border-radius:6px;cursor:pointer;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;”>&#x1F4CB; Export All Open</button>
       </div>
       <div class="action-section">
         <div class="action-hd">
@@ -1196,7 +1196,7 @@ Procedure:
    a. Run each step exactly as written (copy-paste the command block, do not improvise).
    b. After each step, confirm the "Expected" block matches reality. If it does not, run that step's rollback and stop.
    c. After completing all steps in a phase, run every "Verify" check in that phase.
-   d. At each "ðŸš¦ Gate" between phases: report results to me and WAIT for explicit go-ahead before continuing to the next phase.
+   d. At each "\u{1F6A6} Gate" between phases: report results to me and WAIT for explicit go-ahead before continuing to the next phase.
 4. After the final gate, run the Verification Checklist (Section 4). Report any failed items.
 5. If anything regresses at any point: stop, run the matching Rollback Procedure (Section 5), log a bug via the Bug FAB, then report.
 
@@ -1395,7 +1395,7 @@ function renderHub() {
           ${e.author?`<span>${esc(e.author)}</span>`:''}
           <div class="card-tags">${tags}</div>
           <select class="status-sel" onclick="event.preventDefault();event.stopPropagation();" onchange="event.preventDefault();event.stopPropagation();setStatusOverride('${esc(e.id)}',this.value)">${statusOpts}</select>
-          ${e.category==='runbook'?`<button class="nxt-btn" onclick="event.preventDefault();event.stopPropagation();copyExecuteRunbook('${esc(e.url||'')}')" title="Copy AI execution prompt for this runbook" style="background:rgba(39,174,96,0.12);border-color:rgba(39,174,96,0.35);color:var(--green);">â–¶ Execute</button>`:''}
+          ${e.category==='runbook'?`<button class="nxt-btn" onclick="event.preventDefault();event.stopPropagation();copyExecuteRunbook('${esc(e.url||'')}')" title="Copy AI execution prompt for this runbook" style="background:rgba(39,174,96,0.12);border-color:rgba(39,174,96,0.35);color:var(--green);">▶ Execute</button>`:''}
           ${nextCat?`<button class="nxt-btn" onclick="event.preventDefault();event.stopPropagation();copyNextStep('${esc(e.category==='axis'?e.stage:e.category)}','${esc(e.url||'')}')" title="Copy next step command">→ ${esc(NEXT_LABEL[nextCat])}</button>`:''}
           <button class="fav-btn${isFav?' fav-active':''}" onclick="event.preventDefault();event.stopPropagation();toggleFavorite('${esc(e.id)}',${!isFav})" title="${isFav?'Remove from favorites':'Add to favorites'}">${isFav?'★':'☆'}</button>
           <button class="archive-btn" onclick="event.preventDefault();event.stopPropagation();archiveEntry('${esc(e.id)}',${!isAr})">${isAr?'Unarchive':'Archive'}</button>
@@ -1723,55 +1723,55 @@ const CL_SECTIONS = [
     { id:'c3', text:'DevTools Network → no 4xx/5xx on any page', note:'Filter "status:4" and "status:5"' },
   ]},
   { id:'llc', title:'Form LLC — Greenskeeper Studios', badge:'human', steps:[
-    { id:'llc1', text:'Choose your state for filing', device:'ðŸ’» Computer',
+    { id:'llc1', text:'Choose your state for filing', device:’\u{1F4BB} Computer’,
       how:'Google "[your state] LLC filing" → go to Secretary of State website. File in your home state (WI = wdfi.org). Delaware only makes sense if raising VC — $300/yr franchise tax otherwise.',
       note:'WI fee ~$130. Takes 1–2 business days online.' },
-    { id:'llc2', text:'File Articles of Organization online', device:'ðŸ’» Computer',
+    { id:'llc2', text:'File Articles of Organization online', device:’\u{1F4BB} Computer’,
       how:'WI: wdfi.org → Business → File a New Business → LLC → Articles of Organization. Fill in: name "Greenskeeper Studios LLC", registered agent (yourself), purpose (software/technology services).',
       note:'Save the confirmation PDF — you\'ll need it to open a bank account.' },
-    { id:'llc3', text:'Get your EIN (free, instant) from IRS.gov', device:'ðŸ’» Computer',
+    { id:'llc3', text:'Get your EIN (free, instant) from IRS.gov', device:’\u{1F4BB} Computer’,
       how:'Go to irs.gov → search "EIN online application" → Apply Online Now → LLC → 1 member → Software/Tech. Takes 5 min. Copy the EIN immediately — you can\'t retrieve it again without calling.',
       note:'Do NOT use third-party EIN services — IRS.gov is free.' },
-    { id:'llc4', text:'Draft Operating Agreement (single-member)', device:'ðŸ’» Computer',
+    { id:'llc4', text:'Draft Operating Agreement (single-member)', device:’\u{1F4BB} Computer’,
       how:'Search "single member LLC operating agreement template [your state]" — free templates at Nolo or LegalZoom. Fill in: your name, LLC name, state, EIN, business purpose. Sign and date. No notary needed.',
       note:'Not legally required in most states but proves liability separation if you\'re ever sued.' },
-    { id:'llc5', text:'Open a business bank account', device:'ðŸ’» Computer',
+    { id:'llc5', text:'Open a business bank account', device:’\u{1F4BB} Computer’,
       how:'Recommended: Mercury (mercury.com) — free, online, no minimums. Sign up with: LLC Articles of Organization + EIN + personal ID. Alternatively, walk into your local bank with the same docs.',
       note:'Never mix personal and business money — it pierces the liability shield.' },
-    { id:'llc6', text:'Register Greenskeeper Studios LLC on Stripe', device:'ðŸ’» Computer',
+    { id:'llc6', text:'Register Greenskeeper Studios LLC on Stripe', device:’\u{1F4BB} Computer’,
       how:'Go to dashboard.stripe.com → Activate account → Business type: Company → LLC → Enter LLC name, EIN, business address. Connect your Mercury business bank account for payouts.',
       note:'Stripe will do a micro-deposit verification (1–2 days).' },
-    { id:'llc7', text:'Update CLAUDE.md with LLC details', device:'ðŸ’» Computer',
+    { id:'llc7', text:'Update CLAUDE.md with LLC details', device:’\u{1F4BB} Computer’,
       how:'Open C:\\Users\\Rob\\.claude\\CLAUDE.md → add section: "## Business Entity\\nGreenskeeper Studios LLC\\nState: [WI]\\nEIN: ***-**XXXX\\nStripe: acct_XXXXX"' },
   ]},
   { id:'human', title:'Other Human-Required Items', badge:'human', steps:[
-    { id:'h1', text:'Confirm Bova tournament formats with Chris Bova', device:'ðŸ“± Phone / Text',
+    { id:'h1', text:'Confirm Bova tournament formats with Chris Bova', device:'\u{1F4F1} Phone / Text',
       how:'Text or call Chris: "Hey, for the Bova Invitational — Day 1 is stroke play, Day 2 is scramble, Day 3 is best ball — does that sound right?" Get written confirmation.',
       note:'Day 3 was listed as "shambles" in old notes which is an unmapped format. Confirm before tournament runs.' },
-    { id:'h2', text:"Add Chris Bova's email as tournament co-admin", device:'ðŸ’» Computer',
+    { id:'h2', text:"Add Chris Bova's email as tournament co-admin", device:’\u{1F4BB} Computer’,
       how:'Go to tourney.greenskeeper.studio/t/bova/admin → Access tab → type Chris\'s email → Add Admin. Confirm he can log in and see the admin panel.',
       note:'Required before Chris can manage his own tournament independently.' },
-    { id:'h3', text:'Test PWA install on your iPhone', device:'ðŸ“± Phone',
+    { id:'h3', text:'Test PWA install on your iPhone', device:'\u{1F4F1} Phone',
       how:'Open tourney.greenskeeper.studio in Safari on your iPhone → tap the Share button (box with arrow) → tap "Add to Home Screen" → confirm icon appears and app opens full-screen. Test offline: turn off WiFi, open the app.',
       note:'Must test on real iPhone — iOS simulator doesn\'t simulate service workers accurately.' },
-    { id:'h4', text:'Buy full US golf course database', device:'ðŸ’» Computer',
+    { id:'h4', text:'Buy full US golf course database', device:’\u{1F4BB} Computer’,
       how:'Go to Golf-Course-Database.com → purchase their US flat-file database (CSV/JSON). Upload to Supabase: import into a new "golf_courses" table or replace the existing one.',
       note:'Currently only ~27 SC/Myrtle Beach courses are seeded. Full US coverage needed for product launch.' },
-    { id:'h5', text:'Enable leaked password protection in Supabase', device:'ðŸ’» Computer',
+    { id:'h5', text:'Enable leaked password protection in Supabase', device:’\u{1F4BB} Computer’,
       how:'Go to supabase.com/dashboard → project jllugkiojeoopitdvzsa → Authentication → Sign In Methods → scroll to "Leaked Password Protection" → toggle ON. Also set minimum password length to 8 (currently 6).',
       note:'Free feature — no reason not to have this on.' },
   ]},
   { id:'security', title:'Security Pentesting', badge:'human', steps:[
-    { id:'sec1', text:'Verify security headers are live', device:'ðŸ’» Computer',
+    { id:'sec1', text:'Verify security headers are live', device:’\u{1F4BB} Computer’,
       how:'Open Terminal/PowerShell and run: curl -sI https://tourney.greenskeeper.studio | findstr /I "Strict Transport Frame Content-Type"\nExpect: Strict-Transport-Security, X-Frame-Options: DENY, X-Content-Type-Options: nosniff' },
-    { id:'sec2', text:'Pentest: player cannot elevate own billing_status', device:'ðŸ’» Computer',
+    { id:'sec2', text:'Pentest: player cannot elevate own billing_status', device:’\u{1F4BB} Computer’,
       how:'Log in to tourney.greenskeeper.studio as a test player account (not rob@) → open DevTools (F12) → Console → paste:\nawait window.tourney.db.from("player_accounts").update({billing_status:"comped"}).eq("email","[your test email]")\nExpect: error with code "42501" (RLS policy violation). If it succeeds = CRITICAL BUG.' },
-    { id:'sec3', text:'Pentest: unauthenticated push function returns 401', device:'ðŸ’» Computer',
+    { id:'sec3', text:'Pentest: unauthenticated push function returns 401', device:’\u{1F4BB} Computer’,
       how:'In PowerShell run:\ncurl -X POST https://jllugkiojeoopitdvzsa.supabase.co/functions/v1/send-push -H "Content-Type: application/json" -d "{}"\nExpect: HTTP 401. If 200 = anyone can send push notifications to all players.',
       note:'Fixed session 14 — send-push v7 deployed with JWT auth.' },
-    { id:'sec4', text:'Enable Supabase email confirmation', device:'ðŸ’» Computer',
+    { id:'sec4', text:'Enable Supabase email confirmation', device:’\u{1F4BB} Computer’,
       how:'supabase.com/dashboard → project jllugkiojeoopitdvzsa → Authentication → Email → toggle "Confirm email" ON. This prevents fake-email registrations from grabbing tournament spots.' },
-    { id:'sec5', text:'Pentest: unauthenticated install-email function returns 401', device:'ðŸ’» Computer',
+    { id:'sec5', text:'Pentest: unauthenticated install-email function returns 401', device:’\u{1F4BB} Computer’,
       how:'In PowerShell run:\ncurl -X POST https://jllugkiojeoopitdvzsa.supabase.co/functions/v1/send-install-email -H "Content-Type: application/json" -d "{}"\nExpect: HTTP 401. If 200 = anyone can spam install emails via Resend.',
       note:'Fixed session 14 (997b043) — requires SEND_INSTALL_EMAIL_SECRET to be set in Supabase dashboard first or all calls will 401 including legit ones.' },
   ]},
@@ -1853,7 +1853,7 @@ function renderChecklist() {
     const {label,cls}=secStatus(sec);
     const isCol=!!clCollapsed[sec.id];
     const humanBanner=sec.badge==='human'
-      ?`<div class="human-banner">âš  Human Required — cannot be automated</div>`:'';
+      ?`<div class="human-banner">&#x26A0; &#x26A0; Human Required — cannot be automated</div>`:'';
     const steps=sec.steps.map(step=>{
       const isDone=!!clChecked[step.id];
       const linkHtml=step.link&&clSlug?`<a class="step-link" href="${clUrl(step.link)}" target="_blank" onclick="event.stopPropagation()">Open ↗</a>`:'';
