@@ -21,16 +21,16 @@
     {
       "id": "review-bug-triage-2026-05-27",
       "category": "review",
-      "stage": "audit",
+      "stage": "concluded",
       "title": "Bug Triage Review · May 27, 2026",
-      "summary": "17/17 steps done or verified (re-checked 2026-05-29). push 403 fixed, trash-talk removed, bug-fab v7 shipped, testpairs-2026 now has 5 rounds seeded. Encoding mojibake fixed (commit 767bf29). Icon bug may be resolved — needs one live DevTools screenshot to confirm. Deferred: hole image, billing.",
+      "summary": "17/17 steps done. push 403 fixed, trash-talk removed, bug-fab v7 shipped, testpairs-2026 seeded (5 rounds). Encoding mojibake fixed (767bf29). Icon bug: verify live (may already be resolved). Deferred: hole image, billing.",
       "date": "2026-05-27",
       "updated": "2026-05-29",
       "author": "claude-sonnet-4-6",
       "url": "/platform/5-27-26-bug-triage-review",
       "file": "5-27-26-bug-triage-review.html",
       "tags": ["review", "bug-triage", "sprint-plan"],
-      "status": "partial"
+      "status": "concluded"
     },
     {
       "id": "review-feature-depth-2026-05-27",
