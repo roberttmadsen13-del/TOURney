@@ -397,7 +397,7 @@ footer span{color:var(--gold);}
   <div class="rb-step">
     <div class="rb-step-title">Step 2 — Enforce player limit in admin.html addPlayer flow</div>
     <div class="rb-step-body">
-      Edit <code>admin.html</code>. Find the function that handles adding a new player (look for the Supabase insert into <code>players</code> table, around line 2085 area where player updates occur, and the realtime INSERT handler around line 2096).<br><br>
+      Edit <code>admin.html</code>. Find the player invite/add flow — the Supabase insert into the <code>players</code> table is in the invitation submit handler around line 2089 (where <code>loadPlayers()</code> is called after the upsert) and the realtime INSERT push at line 2098 (<code>players.push(p)</code>). The module-level <code>players</code> array (declared at line 931) is the authoritative count.<br><br>
       At the top of the add-player action (before any DB write), add:<br>
       <code>const tc = window.tourneyTier; const lim = tc.getLimit(_currentPlan, 'maxPlayers'); if (players.length >= lim) { openUpgradeModal('Players (' + players.length + '/' + lim + ')'); return; }</code><br><br>
       Store the current plan in a module-level variable <code>let _currentPlan = 'free';</code> and set it in <code>applyTierGates(plan)</code>: <code>_currentPlan = plan;</code><br><br>
@@ -424,10 +424,10 @@ footer span{color:var(--gold);}
   <div class="rb-step">
     <div class="rb-step-title">Step 4 — Enforce team count limit in setTeamCount()</div>
     <div class="rb-step-body">
-      Edit <code>admin.html</code>. Find <code>setTeamCount(n)</code> (line 1583 area — it writes <code>_teamCount = n</code> and upserts to settings).<br><br>
+      Edit <code>admin.html</code>. Find <code>saveTeamCount(n)</code> at line 1582 — it sets <code>_teamCount = n</code> and upserts <code>team_count</code> to settings.<br><br>
       At the top of the function, add:<br>
       <code>const teamLim = window.tourneyTier.getLimit(_currentPlan, 'maxTeams'); if (n > teamLim) { openUpgradeModal('Teams (limit: ' + teamLim + ')'); return; }</code><br><br>
-      Also extend <code>applyTierGates(plan)</code> to update the team count button display: disable increment buttons beyond the plan limit, add a lock icon or upgrade badge on the locked buttons. The <code>teamCountBtns</code> div at line 452 renders these buttons — add a visual indicator when a button value exceeds the plan limit.
+      Also extend <code>applyTierGates(plan)</code> to update the team count button display: disable increment buttons beyond the plan limit, add a lock icon or upgrade badge on the locked buttons. The <code>teamCountBtns</code> div at line 1465 renders these buttons — add a visual indicator when a button value exceeds the plan limit.
     </div>
     <div class="rb-upstream"><strong>Upstream</strong> Reads <code>_currentPlan</code>, <code>window.tourneyTier.getLimit()</code>, <code>n</code> (requested team count from button click).</div>
     <div class="rb-downstream"><strong>Downstream</strong> settings table (team_count key). Downstream: home.html reads team_count for team block rendering, scoreboard.html reads for team column logic, directory.html reads for team sections. All read-only consumers — gate is safe.</div>
@@ -437,6 +437,7 @@ footer span{color:var(--gold);}
   <div class="rb-step">
     <div class="rb-step-title">Step 5 — Add captain assignment to admin.html team panel</div>
     <div class="rb-step-body">
+      <strong>Note:</strong> A captain assignment prototype exists in the abandoned bova-app worktree at <code>.claude/worktrees/admiring-kirch-5445a8/bova-app/admin.html:275</code> — it uses <code>challengers_captain</code> settings key. That approach stores a name string, not a UUID. This runbook uses UUID instead (player.id → join at render time) to avoid stale names. Do NOT port the worktree code directly.<br><br>
       Edit <code>admin.html</code>. In the team column render function (around line 1511 where <code>team-col-title</code> is rendered), add a captain selector below the team name.<br><br>
       For each team letter <code>l</code>, render:<br>
       <code>&lt;select id="ep-captain-${l}" onchange="saveCaptain('${l}',this.value)"&gt;...players assigned to this team...&lt;/select&gt;</code><br><br>
