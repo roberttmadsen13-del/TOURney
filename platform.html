@@ -2400,20 +2400,9 @@ async function loadBugsTab() {
   const elCC   = document.getElementById('compBugLogCount');
   if (!elOpen) return;
   elOpen.innerHTML = '<div style="color:var(--muted);font-size:.8rem;padding:.5rem 0;">Loading…</div>';
-  const { data: { session: bugsSess } } = await sb.auth.getSession();
+  const { data: { session: bugsSess } } = await _sbBugs.auth.getSession();
   if (!bugsSess?.access_token) { elOpen.innerHTML = '<div style="color:var(--red);font-size:.75rem;">No active session — please sign out and back in.</div>'; return; }
-  // raw fetch bypasses Supabase client auth-injection quirks
-  const _bugsResp = await fetch(
-    'https://jllugkiojeoopitdvzsa.supabase.co/rest/v1/platform_bugs?select=*&order=created_at.desc',
-    { headers: {
-        'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpsbHVna2lvamVvb3BpdGR2enNhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYyNjc2MzYsImV4cCI6MjA5MTg0MzYzNn0.gvvK5IhTYdUPxsdmxq8pFiCD4CAINJ-fmnKuwDN0KLs',
-        'Authorization': 'Bearer ' + bugsSess.access_token,
-        'Content-Type': 'application/json'
-      }
-    }
-  );
-  const data = _bugsResp.ok ? await _bugsResp.json() : null;
-  const error = _bugsResp.ok ? null : { message: `HTTP ${_bugsResp.status}` };
+  const { data, error } = await _sbBugs.from('platform_bugs').select('*').order('created_at', { ascending: false });
   if (error) { elOpen.innerHTML = `<div style="color:var(--red);font-size:.75rem;">${esc(error.message)}</div>`; return; }
   _bugsCache = data || [];
   const open = _bugsCache.filter(b => b.status === 'open');
