@@ -1147,7 +1147,7 @@ async function loadHeroScoreboard(tournamentId) {
   if (_lbSk) _lbSk.innerHTML = '<div class="skeleton" style="height:2rem;border-radius:4px;margin-bottom:4px;"></div>'.repeat(5);
   const [pRes, sRes, taRes, p1Res, p2Res, p3Res, capRes, roundsRes] = await Promise.all([
     sb.from('players').select('id,first_name,last_name,handicap').eq('tournament_id', tournamentId),
-    sb.from('scores').select('player_id,day_number,hole,gross_score').eq('tournament_id', tournamentId),
+    sb.from('scores').select('player_id,round,hole,gross_score').eq('tournament_id', tournamentId),
     sb.from('settings').select('value').eq('tournament_id', tournamentId).eq('key','team_assignments').maybeSingle(),
     sb.from('settings').select('value').eq('tournament_id', tournamentId).eq('key','pars_day1').maybeSingle(),
     sb.from('settings').select('value').eq('tournament_id', tournamentId).eq('key','pars_day2').maybeSingle(),
@@ -1177,7 +1177,7 @@ async function loadHeroScoreboard(tournamentId) {
   const HANDICAP_STROKES = {scratch:0,eagle:4,birdie:8,bogey:12,pretender:16,hacker:20};
 
   const scoreMap = {};
-  for (const s of scores) scoreMap[`${s.player_id}:${s.day_number}:${s.hole}`] = s.gross_score;
+  for (const s of scores) scoreMap[`${s.player_id}:${s.round}:${s.hole}`] = s.gross_score;
 
   function playerNet(player) {
     let total = 0; let holes = 0;
