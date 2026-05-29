@@ -906,7 +906,7 @@ window.addEventListener('scroll', () => { document.getElementById('mainNav').cla
   const _manifest = { name:tournament.name, short_name:tournament.short_name||tournament.name.split(' ')[0], description:map.homepage_subtitle||tournament.name, start_url:'/', scope:'/', display:'standalone', background_color:'#f5ede0', theme_color:'#1a1008', orientation:'any', icons:[{src:_iconSrc,sizes:'192x192',type:'image/png',purpose:'any'},{src:_iconSrc,sizes:'512x512',type:'image/png',purpose:'any'}] };
   const _mLink = document.querySelector('link[rel="manifest"]');
   if (_mLink) _mLink.href = URL.createObjectURL(new Blob([JSON.stringify(_manifest)],{type:'application/json'}));
-  }
+
   // Logo images — set from logo_url setting; hidden if absent so other tourneys show no logo
   const heroLogoImg = document.getElementById('heroLogoImg');
   const footerLogoImg = document.getElementById('footerLogoImg');
