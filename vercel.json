@@ -58,6 +58,7 @@
     { "source": "/t/:slug/feed",       "destination": "/feed.html" },
     { "source": "/t/:slug/login",      "destination": "/login.html" },
     { "source": "/t/:slug/install",    "destination": "/install.html" },
+    { "source": "/t/:slug/home",       "destination": "/home.html" },
     { "source": "/t/:slug/",           "destination": "/home.html" },
     { "source": "/t/:slug",            "destination": "/home.html" },
     { "source": "/admin",      "destination": "/admin.html" },
