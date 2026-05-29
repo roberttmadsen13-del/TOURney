@@ -762,6 +762,13 @@
       "cmd": "/tourney-review-marketing",
       "scores": [
         {
+          "date": "2026-05-29",
+          "score": "B",
+          "url": "/platform/5-19-26-master-plan",
+          "review_title": "Execute + Audit · May 29, 2026",
+          "notes": "OG tags shipped on all 18 pages. Social proof block live on marketing.html (22 players, 3 days, 2 HIOs, running since 2025). CSP deferred. Grade up from B-."
+        },
+        {
           "date": "2026-05-11",
           "score": "B-",
           "url": "/5-11-26-claude-review-marketing",
@@ -774,6 +781,13 @@
       "label": "Onboarding",
       "cmd": "/tourney-review-onboarding",
       "scores": [
+        {
+          "date": "2026-05-29",
+          "score": "B",
+          "url": "/platform/5-19-26-master-plan",
+          "review_title": "Execute + Audit · May 29, 2026",
+          "notes": "Invite gate request-access mailto shipped. PWA install prompt wired post-RSVP on home.html. Login signup error gate already solid. Grade up from B-."
+        },
         {
           "date": "2026-05-11",
           "score": "B-",

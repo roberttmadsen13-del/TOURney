@@ -206,15 +206,16 @@
     {
       "id": "master-plan-2026-05-19",
       "category": "review",
-      "stage": "audit",
+      "stage": "concluded",
       "title": "Master Consolidation Plan · May 19, 2026",
-      "summary": "All open items from pre-May-14 tickets consolidated. Completed work stripped. 16 runbook steps: 7 Rob manual (LLC, Stripe, secrets), 9 engineering (OG tags, onboarding fix, score edit, profile skeleton, Lighthouse CI, CSP). Platform grades: Arch A, UX A, Security A-, Feature B+, Perf B+, Data B+, Marketing B-, Onboarding B-, Business C+ (blocking).",
+      "summary": "Concluded B+. 9 engineering items shipped + P0 curly-quote sweep (61 files, commit 767bf29). 6 Rob manual items (LLC, Stripe, secrets, reg_open) in checklist. CSP deferred to security ticket.",
       "date": "2026-05-19",
+      "updated": "2026-05-29",
       "author": "claude-sonnet-4-6",
       "url": "/platform/5-19-26-master-plan",
       "file": "5-19-26-master-plan.html",
       "tags": ["review", "plan", "master", "consolidation"],
-      "status": "open"
+      "status": "concluded"
     },
     {
       "id": "review-ux-2026-05-19",

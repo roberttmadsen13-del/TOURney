@@ -76,21 +76,21 @@
       "blocking": false
     },
     "marketing": {
-      "status": "review",
-      "grade": "B-",
-      "artifact": "/platform/marketing",
-      "last_updated": "2026-05-11",
-      "summary": "Premium brand, clear pricing, live demo. No OG tags, no social proof, PWA differentiator buried.",
-      "open_items": 3,
+      "status": "concluded",
+      "grade": "B",
+      "artifact": "/platform/5-19-26-master-plan",
+      "last_updated": "2026-05-29",
+      "summary": "OG tags on all 18 pages + social proof block (22 players, 3 days, 2 HIOs) shipped. CSP deferred. Grade up from B-.",
+      "open_items": 1,
       "blocking": false
     },
     "onboarding": {
-      "status": "review",
-      "grade": "B-",
-      "artifact": "/platform/onboarding",
-      "last_updated": "2026-05-11",
-      "summary": "Invite gate kills cold traffic. Signup requires pre-existing RSVP. PWA install orphaned.",
-      "open_items": 3,
+      "status": "concluded",
+      "grade": "B",
+      "artifact": "/platform/5-19-26-master-plan",
+      "last_updated": "2026-05-29",
+      "summary": "Invite gate (Request Access mailto) + PWA install prompt post-RSVP shipped. Grade up from B-. CSP + deeper flow polish remain.",
+      "open_items": 1,
       "blocking": false
     },
     "finance": {
