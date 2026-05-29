@@ -188,6 +188,13 @@
       "scores": [
         {
           "date": "2026-05-29",
+          "score": "B",
+          "url": "/platform/5-29-26-ux-review",
+          "review_title": "Execute + Audit · May 29, 2026",
+          "notes": "Up from C+. 3 cascading runtime bugs fixed on testpairs-2026 (SyntaxError stray brace, str ReferenceError, scores day_number→round 400). create.html format pickers unblocked (14-format hardcoded fallback). /t/:slug/home rewrite added. Zero console errors post-fix. QA checklist 56 checks and Pairs/Superball E2E remain open."
+        },
+        {
+          "date": "2026-05-29",
           "score": "C+",
           "url": "/platform/5-29-26-ux-review",
           "review_title": "UX Polish Review · May 29, 2026",

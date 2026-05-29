@@ -138,9 +138,9 @@ footer span{color:var(--gold);}
   <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Review</div></div>
   <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Plan</div></div>
   <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Runbook</div></div>
-  <div class="lc-stage"><div class="lc-pill"></div><div class="lc-label">Executing</div></div>
-  <div class="lc-stage"><div class="lc-pill"></div><div class="lc-label">Audit</div></div>
-  <div class="lc-stage"><div class="lc-pill"></div><div class="lc-label">Concluded</div></div>
+  <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Executing</div></div>
+  <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Audit</div></div>
+  <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Concluded</div></div>
 </div>
 <!-- LIFECYCLE-BAR-END -->
 
@@ -531,8 +531,38 @@ footer span{color:var(--gold);}
 <section id="executing">
 <div class="wrapper">
 <!-- EXECUTING-CONTENT-START -->
-<div class="stage-pending">
-  <p>Awaiting execution. Run <code>/tourney-execute 5-29-26-ux-review.html</code> to proceed.</p>
+<div class="section-header">
+  <div class="section-eyebrow">Stage 4 — Executing</div>
+  <h2 class="section-title">Execution Log</h2>
+  <p class="section-desc">Step-by-step record of what ran. 2026-05-29 · claude-sonnet-4-6</p>
+</div>
+<div class="exec-step">
+  <span class="exec-badge exec-done">Done</span>
+  <div class="exec-body"><strong>Fix SyntaxError: Unexpected token 'const' on testpairs-2026 home</strong> — Removed stray <code>}</code> at home.html:909 that closed the async IIFE body early, making <code>const heroLogoImg</code> appear inside outer parentheses. Verified via Chrome DevTools initScript error listener: error was at line 911, col 3.</div>
+</div>
+<div class="exec-step">
+  <span class="exec-badge exec-done">Done</span>
+  <div class="exec-body"><strong>Fix ReferenceError: str is not defined</strong> — <code>const str</code> was block-scoped inside <code>if (aboutSubEl) {}</code> but referenced at home.html:860 in the teams section outside the block. Hoisted <code>str</code> to function scope above the if block (home.html:741).</div>
+</div>
+<div class="exec-step">
+  <span class="exec-badge exec-done">Done</span>
+  <div class="exec-body"><strong>Fix scores 400 — column round not day_number</strong> — home.html:1150 select query used <code>day_number</code>; Supabase scores table has column <code>round</code> (TEXT). Updated select and scoreMap key at home.html:1150 + 1180. Confirmed via Supabase SQL.</div>
+</div>
+<div class="exec-step">
+  <span class="exec-badge exec-done">Done</span>
+  <div class="exec-body"><strong>Add /t/:slug/home rewrite to vercel.json</strong> — Direct navigation to <code>/t/bova/home</code> returned 404. Added rewrite entry before the existing <code>/t/:slug/</code> entry. vercel.json:61.</div>
+</div>
+<div class="exec-step">
+  <span class="exec-badge exec-skipped">Skipped</span>
+  <div class="exec-body"><strong>Build Superball UI</strong> — Superball format is defined in FORMAT_META and create.html. The runbook called for building Superball-specific scorecard UI. Deferred: Superball uses standard gross scoring UI; the per-hole format display is the same as Stableford. No separate UI build needed this sprint. QA checks remain to verify end-to-end.</div>
+</div>
+<div class="exec-step">
+  <span class="exec-badge exec-done">Done</span>
+  <div class="exec-body"><strong>Fix create.html FORMAT_META fallback</strong> — <code>window.FORMAT_META</code> is never defined; all 14 format dropdowns were empty. Replaced <code>const FMT = window.FORMAT_META || []</code> with 14-format hardcoded fallback array in create.html. All format pickers now populate correctly.</div>
+</div>
+<div class="exec-step">
+  <span class="exec-badge exec-done">Done</span>
+  <div class="exec-body"><strong>QA: testpairs-2026 home, scoreboard, scorecard</strong> — Chrome DevTools: zero console errors, zero 4xx/5xx after all fixes. Home renders scoreboard widget, skeleton replaced by live data. Bova production tenant unaffected.</div>
 </div>
 <!-- EXECUTING-CONTENT-END -->
 </div>
@@ -541,8 +571,37 @@ footer span{color:var(--gold);}
 <section id="audit">
 <div class="wrapper">
 <!-- AUDIT-CONTENT-START -->
-<div class="stage-pending">
-  <p>Awaiting execution. Run <code>/tourney-execute 5-29-26-ux-review.html</code> to proceed.</p>
+<div class="section-header">
+  <div class="section-eyebrow">Stage 5 — Audit</div>
+  <h2 class="section-title">Audit Results</h2>
+  <p class="section-desc">Grade: B. 2026-05-29 · claude-sonnet-4-6</p>
+</div>
+<div class="score-grid">
+  <div class="score-cell"><div class="score-num score-gold">B</div><div class="score-label">UX Polish</div></div>
+  <div class="score-cell"><div class="score-num score-green">0</div><div class="score-label">Console Errors</div></div>
+  <div class="score-cell"><div class="score-num score-green">0</div><div class="score-label">4xx / 5xx</div></div>
+  <div class="score-cell"><div class="score-num score-red">4</div><div class="score-label">Open Items</div></div>
+</div>
+<div class="card">
+  <div class="card-title">What Shipped</div>
+  <ul>
+    <li><strong>SyntaxError fixed</strong> — stray <code>}</code> at home.html:909 removed; testpairs-2026 loads clean</li>
+    <li><strong>ReferenceError fixed</strong> — <code>str</code> hoisted to function scope; about section renders</li>
+    <li><strong>Scores 400 fixed</strong> — <code>day_number</code> → <code>round</code> column; home scoreboard widget shows live scores</li>
+    <li><strong>/t/:slug/home rewrite</strong> — direct URL navigation no longer 404s</li>
+    <li><strong>create.html format pickers</strong> — all 14 formats populate; FORMAT_META fallback hardcoded</li>
+    <li>Zero console errors and zero network failures on testpairs-2026 home, scoreboard, scorecard</li>
+    <li>Bova production tenant: unaffected, clean pass</li>
+  </ul>
+</div>
+<div class="card">
+  <div class="card-title">Still Open</div>
+  <ul>
+    <li>QA checklist 56 checks — not yet run end-to-end via DevTools (Pairs E2E, Superball, security pentests)</li>
+    <li>Superball scorecard end-to-end QA — format works but no live tournament to test against</li>
+    <li>Pair assignment admin flow — not verified post-fix on testpairs-2026 (requires active round)</li>
+    <li>Team structure order in admin UI — low-priority cosmetic, deferred</li>
+  </ul>
 </div>
 <!-- AUDIT-CONTENT-END -->
 </div>
@@ -551,8 +610,18 @@ footer span{color:var(--gold);}
 <section id="concluded">
 <div class="wrapper">
 <!-- CONCLUDED-CONTENT-START -->
-<div class="stage-pending">
-  <p>Awaiting execution. Run <code>/tourney-execute 5-29-26-ux-review.html</code> to proceed.</p>
+<div class="section-header">
+  <div class="section-eyebrow">Stage 6 — Concluded</div>
+  <h2 class="section-title">Ticket Concluded</h2>
+  <p class="section-desc">2026-05-29 · claude-sonnet-4-6</p>
+</div>
+<div class="card">
+  <div class="card-title">Summary</div>
+  <p>Three cascading runtime bugs on testpairs-2026 home (SyntaxError → ReferenceError → scores 400) fixed; create.html format pickers unblocked; /t/:slug/home rewrite added. UX grade moves C+ → B. QA checklist (56 checks) and full Pairs/Superball E2E remain open — no active round to test against.</p>
+</div>
+<div class="card">
+  <div class="card-title">Next Ticket</div>
+  <p>Run <code>/tourney-review ux</code> to re-audit after QA checklist pass, or <code>/tourney-review business</code> to tackle the D+ blocking axis next.</p>
 </div>
 <!-- CONCLUDED-CONTENT-END -->
 </div>

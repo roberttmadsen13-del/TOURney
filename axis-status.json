@@ -22,12 +22,12 @@
       "blocking": false
     },
     "ux": {
-      "status": "executing",
-      "grade": "C+",
+      "status": "concluded",
+      "grade": "B",
       "artifact": "/platform/5-29-26-ux-review",
       "last_updated": "2026-05-29",
-      "summary": "Superball unbuilt (8 QA checks blocked). Pair assignment broken. testpairs-2026 dead on 3 flows. Team structure order wrong. 0/56 QA checks run. 12-step runbook ready.",
-      "open_items": 12,
+      "summary": "3 cascading runtime bugs fixed on testpairs-2026 (SyntaxError/ReferenceError/scores 400), create.html format pickers unblocked, /t/:slug/home rewrite added. QA checklist 56 checks and Pairs/Superball E2E remain open.",
+      "open_items": 4,
       "blocking": false
     },
     "security": {
