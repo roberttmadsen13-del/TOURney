@@ -5,6 +5,20 @@
   "description": "Canonical registry of all TOURney plans, reviews, audits, and QA artifacts. The /platform Artifacts tab renders from this file. Skills (e.g. tourney-review) append new entries when they generate output.",
   "entries": [
     {
+      "id": "review-ux-2026-05-29",
+      "category": "review",
+      "stage": "executing",
+      "title": "UX Polish Review · May 29, 2026",
+      "summary": "Grade C+ holds. Superball format unbuilt (8 QA checks blocked). Pair assignment broken. testpairs-2026 dead on 3 flows. Team structure order wrong. 0/56 QA checks run. 12-step runbook: build Superball, debug testpairs-2026, verify Pairs E2E, run full QA checklist.",
+      "date": "2026-05-29",
+      "updated": "2026-05-29",
+      "author": "claude-sonnet-4-6",
+      "url": "/platform/5-29-26-ux-review",
+      "file": "5-29-26-ux-review.html",
+      "tags": ["review", "ux", "pairs", "superball", "qa-checklist"],
+      "status": "open"
+    },
+    {
       "id": "review-bug-status-2026-05-29",
       "category": "review",
       "stage": "concluded",

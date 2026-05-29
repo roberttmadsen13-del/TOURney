@@ -24,10 +24,10 @@
     "ux": {
       "status": "executing",
       "grade": "C+",
-      "artifact": "/platform/5-29-26-bug-status-review",
+      "artifact": "/platform/5-29-26-ux-review",
       "last_updated": "2026-05-29",
-      "summary": "Icons fixed in code (10 commits) not yet verified live. Register form still heavy (myGolf not built). testpairs-2026 broken for formats/standings/players. Pair assignment unverified. Structure order wrong on create.",
-      "open_items": 6,
+      "summary": "Superball unbuilt (8 QA checks blocked). Pair assignment broken. testpairs-2026 dead on 3 flows. Team structure order wrong. 0/56 QA checks run. 12-step runbook ready.",
+      "open_items": 12,
       "blocking": false
     },
     "security": {

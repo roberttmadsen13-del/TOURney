@@ -189,6 +189,13 @@
         {
           "date": "2026-05-29",
           "score": "C+",
+          "url": "/platform/5-29-26-ux-review",
+          "review_title": "UX Polish Review · May 29, 2026",
+          "notes": "Grade C+ holds. Superball format unbuilt (8 QA checks blocked). Pair assignment broken (bug c8c29ff8). testpairs-2026 dead on 3 flows. Team structure order wrong. 0/56 QA checks run. 12-step runbook to unblock."
+        },
+        {
+          "date": "2026-05-29",
+          "score": "C+",
           "url": "/platform/5-29-26-bug-status-review",
           "review_title": "Bug Status Review · May 29, 2026",
           "notes": "Down from B. Icons fixed in code via 10 commits but not live-verified. Register form still heavy (no myGolf pre-fill). testpairs-2026 broken for formats/standings/registered players. Pair assignment code exists but unverified. Structure order wrong on create page. 6 open UX bugs total."

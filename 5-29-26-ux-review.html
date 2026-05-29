@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TOURney — UX Polish Review · May 29, 2026</title>
+<style>
+:root{--gold:#c09030;--gold-light:#d4a840;--gold-dim:rgba(192,144,48,0.18);--bg:#0d0a05;--surface:#151009;--card:#1c140a;--border:rgba(192,144,48,0.22);--muted:#7a6a54;--text:#e8dcc8;--red:#c0392b;--green:#27ae60;--blue:#2980b9;--orange:#e67e22;--purple:#8e44ad;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:-apple-system,'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;font-size:15px;}
+nav{position:sticky;top:0;z-index:100;background:rgba(13,10,5,0.97);border-bottom:1px solid var(--border);backdrop-filter:blur(12px);}
+.nav-inner{padding:0.6rem 1.5rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap;}
+.nav-brand{color:var(--gold);font-weight:700;font-size:1rem;letter-spacing:0.05em;white-space:nowrap;}
+.nav-brand span{color:var(--muted);font-weight:400;font-size:0.8rem;margin-left:0.4rem;}
+.nav-links{display:flex;gap:0.2rem;flex-wrap:wrap;margin-left:auto;}
+.nav-links a{color:var(--muted);text-decoration:none;font-size:0.78rem;padding:0.3rem 0.55rem;border-radius:4px;transition:all 0.15s;white-space:nowrap;}
+.nav-links a:hover{color:var(--gold);background:var(--gold-dim);}
+.lifecycle-bar{display:flex;gap:3px;padding:0.55rem 1.5rem 0.65rem;background:var(--surface);border-bottom:1px solid var(--border);}
+.lc-stage{flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;}
+.lc-pill{height:5px;width:100%;border-radius:3px;background:rgba(192,144,48,0.1);transition:background 0.25s;}
+.lc-label{font-size:0.58rem;font-weight:700;letter-spacing:0.11em;text-transform:uppercase;color:rgba(122,106,84,0.45);transition:color 0.25s;}
+.lc-done .lc-pill{background:var(--gold);}
+.lc-done .lc-label{color:var(--gold);}
+.lc-active .lc-pill{background:var(--gold-light);box-shadow:0 0 8px rgba(192,144,48,0.45);}
+.lc-active .lc-label{color:var(--gold-light);}
+.hero{padding:3rem 1.5rem 2rem;text-align:center;border-bottom:1px solid var(--border);background:linear-gradient(180deg,rgba(192,144,48,0.06) 0%,transparent 100%);}
+.hero-eyebrow{display:inline-block;font-size:0.7rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold);border:1px solid var(--border);border-radius:20px;padding:0.22rem 0.8rem;margin-bottom:0.9rem;}
+.hero h1{font-size:clamp(1.5rem,3.5vw,2.3rem);font-weight:800;color:#fff;margin-bottom:0.35rem;}
+.hero h1 span{color:var(--gold);}
+.hero-sub{color:var(--muted);max-width:520px;margin:0 auto 1rem;font-size:0.9rem;}
+.hero-meta{display:flex;gap:1.1rem;justify-content:center;flex-wrap:wrap;font-size:0.74rem;color:var(--muted);}
+.hero-meta span{display:flex;align-items:center;gap:0.3rem;}
+.wrapper{max-width:1000px;margin:0 auto;padding:0 1.5rem;}
+section{padding:2.5rem 0;border-bottom:1px solid var(--border);}
+section:last-of-type{border-bottom:none;}
+.section-header{margin-bottom:1.6rem;}
+.section-eyebrow{font-size:0.67rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--gold);margin-bottom:0.3rem;}
+.section-title{font-size:1.35rem;font-weight:800;color:#fff;margin-bottom:0.3rem;}
+.section-desc{color:var(--muted);font-size:0.85rem;max-width:560px;}
+.card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:1.15rem 1.3rem;margin-bottom:0.7rem;}
+.card-title{font-size:0.85rem;font-weight:700;color:var(--gold);margin-bottom:0.45rem;}
+.card p,.card li{font-size:0.84rem;color:var(--text);margin-bottom:0.28rem;}
+.card ul,.card ol{padding-left:1.2rem;}
+.card li{margin-bottom:0.32rem;}
+.grid-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:0.7rem;}
+.grid-3{display:grid;grid-template-columns:repeat(auto-fit,minmax(245px,1fr));gap:0.7rem;}
+.stack-item{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:0.85rem 1.05rem;}
+.stack-label{font-size:0.65rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--muted);margin-bottom:0.18rem;}
+.stack-value{font-size:0.88rem;font-weight:600;color:#fff;}
+.stack-note{font-size:0.72rem;color:var(--muted);margin-top:0.18rem;}
+.pill{display:inline-block;font-size:0.66rem;font-weight:700;letter-spacing:0.06em;padding:0.15rem 0.5rem;border-radius:20px;text-transform:uppercase;}
+.pill-gold{background:rgba(192,144,48,0.18);color:var(--gold);border:1px solid rgba(192,144,48,0.3);}
+.pill-green{background:rgba(39,174,96,0.15);color:var(--green);border:1px solid rgba(39,174,96,0.3);}
+.pill-red{background:rgba(192,57,43,0.15);color:var(--red);border:1px solid rgba(192,57,43,0.3);}
+.pill-orange{background:rgba(230,126,34,0.15);color:var(--orange);border:1px solid rgba(230,126,34,0.3);}
+.pill-blue{background:rgba(41,128,185,0.15);color:var(--blue);border:1px solid rgba(41,128,185,0.3);}
+.page-table{width:100%;border-collapse:collapse;font-size:0.8rem;}
+.page-table th{text-align:left;padding:0.52rem 0.72rem;border-bottom:1px solid var(--border);color:var(--muted);font-size:0.67rem;text-transform:uppercase;letter-spacing:0.08em;background:var(--surface);}
+.page-table td{padding:0.58rem 0.72rem;border-bottom:1px solid rgba(192,144,48,0.08);vertical-align:top;}
+.page-table tr:last-child td{border-bottom:none;}
+.page-table tr:hover td{background:var(--gold-dim);}
+.page-table .url{font-family:monospace;font-size:0.75rem;color:var(--gold-light);}
+.page-table .file{font-family:monospace;font-size:0.72rem;color:var(--muted);}
+.table-wrap{background:var(--card);border:1px solid var(--border);border-radius:8px;overflow:hidden;overflow-x:auto;}
+.score-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(125px,1fr));gap:0.52rem;margin-bottom:1.4rem;}
+.score-cell{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:0.85rem;text-align:center;}
+.score-num{font-size:1.85rem;font-weight:900;line-height:1;margin-bottom:0.18rem;}
+.score-label{font-size:0.64rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);}
+.score-green{color:var(--green);}
+.score-gold{color:var(--gold);}
+.score-red{color:var(--red);}
+.score-blue{color:var(--blue);}
+.idea-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1.25rem;position:relative;overflow:hidden;}
+.idea-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;}
+.idea-1::before{background:var(--gold);}
+.idea-2::before{background:var(--blue);}
+.idea-3::before{background:var(--green);}
+.idea-4::before{background:var(--orange);}
+.idea-5::before{background:var(--purple);}
+.idea-number{font-size:2rem;font-weight:900;opacity:0.07;position:absolute;top:0.5rem;right:1rem;line-height:1;color:#fff;}
+.idea-tag{margin-bottom:0.42rem;}
+.idea-title{font-size:0.96rem;font-weight:700;color:#fff;margin-bottom:0.42rem;}
+.idea-body{font-size:0.82rem;color:var(--muted);line-height:1.55;margin-bottom:0.65rem;}
+.idea-plan{font-size:0.77rem;color:var(--text);}
+.idea-plan strong{color:var(--gold);}
+.runbook-steps{counter-reset:rb-step;}
+.rb-step{background:var(--card);border:1px solid var(--border);border-left:3px solid rgba(192,144,48,0.3);border-radius:0 8px 8px 0;padding:0.95rem 1.15rem 0.95rem 3.8rem;margin-bottom:0.55rem;position:relative;}
+.rb-step::before{counter-increment:rb-step;content:counter(rb-step);position:absolute;left:0.95rem;top:0.95rem;width:1.75rem;height:1.75rem;background:var(--gold-dim);color:var(--gold);border:1px solid var(--border);border-radius:50%;font-size:0.72rem;font-weight:700;display:grid;place-items:center;}
+.rb-step-title{font-size:0.87rem;font-weight:700;color:#fff;margin-bottom:0.22rem;}
+.rb-step-body{font-size:0.8rem;color:var(--muted);margin-bottom:0.35rem;}
+.rb-verify{font-size:0.76rem;color:var(--text);background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:3px;padding:0.35rem 0.6rem;margin-top:0.3rem;}
+.rb-verify strong{color:var(--gold-light);font-size:0.68rem;text-transform:uppercase;letter-spacing:0.07em;display:block;margin-bottom:0.1rem;}
+.stage-pending{text-align:center;padding:3rem 1.5rem;color:var(--muted);font-size:0.85rem;border:1px dashed rgba(192,144,48,0.2);border-radius:8px;}
+.stage-pending code{color:var(--gold);}
+.exec-step{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:0.85rem 1.05rem;margin-bottom:0.48rem;display:flex;gap:0.7rem;align-items:flex-start;}
+.exec-badge{font-size:0.66rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;padding:0.18rem 0.48rem;border-radius:3px;white-space:nowrap;flex-shrink:0;margin-top:0.08rem;}
+.exec-done{background:rgba(39,174,96,0.14);color:var(--green);border:1px solid rgba(39,174,96,0.28);}
+.exec-skipped{background:rgba(192,144,48,0.1);color:var(--muted);border:1px solid var(--border);}
+.exec-blocked{background:rgba(192,57,43,0.11);color:var(--red);border:1px solid rgba(192,57,43,0.28);}
+.exec-body{font-size:0.81rem;color:var(--text);}
+.exec-body strong{color:#fff;display:block;margin-bottom:0.12rem;font-size:0.83rem;}
+.roadmap-item{display:flex;gap:1.05rem;align-items:flex-start;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:0.95rem 1.15rem;margin-bottom:0.52rem;}
+.roadmap-icon{width:1.9rem;height:1.9rem;border-radius:50%;background:var(--gold-dim);color:var(--gold);display:grid;place-items:center;font-size:0.85rem;flex-shrink:0;border:1px solid var(--border);}
+.roadmap-content{flex:1;}
+.roadmap-title{font-size:0.88rem;font-weight:700;color:#fff;margin-bottom:0.13rem;}
+.roadmap-desc{font-size:0.79rem;color:var(--muted);margin-bottom:0.32rem;}
+.roadmap-action{font-size:0.75rem;color:var(--text);}
+.roadmap-action strong{color:var(--gold-light);}
+code{font-family:'Consolas','Monaco',monospace;background:rgba(255,255,255,0.07);padding:0.09rem 0.27rem;border-radius:3px;font-size:0.81em;color:var(--gold-light);}
+footer{border-top:1px solid var(--border);padding:1.2rem;text-align:center;color:var(--muted);font-size:0.72rem;}
+footer span{color:var(--gold);}
+.state-table{width:100%;border-collapse:collapse;font-size:0.8rem;}
+.state-table th{text-align:left;padding:0.45rem 0.7rem;border-bottom:1px solid var(--border);color:var(--muted);font-size:0.66rem;text-transform:uppercase;letter-spacing:0.08em;background:var(--surface);}
+.state-table td{padding:0.5rem 0.7rem;border-bottom:1px solid rgba(192,144,48,0.08);font-size:0.8rem;}
+.state-table tr:last-child td{border-bottom:none;}
+@media(max-width:600px){.nav-links{display:none;}.hero{padding:2rem 1rem 1.5rem;}section{padding:2rem 0;}.lc-label{font-size:0.5rem;}}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <div class="nav-brand">TOURney <span>by Greenskeeper Studios</span></div>
+    <div class="nav-links">
+      <a href="#review">Review</a>
+      <a href="#plan">Plan</a>
+      <a href="#runbook">Runbook</a>
+      <a href="#executing">Executing</a>
+      <a href="#audit">Audit</a>
+      <a href="#concluded">Concluded</a>
+    </div>
+  </div>
+</nav>
+
+<!-- LIFECYCLE-BAR-START -->
+<div class="lifecycle-bar">
+  <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Review</div></div>
+  <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Plan</div></div>
+  <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Runbook</div></div>
+  <div class="lc-stage"><div class="lc-pill"></div><div class="lc-label">Executing</div></div>
+  <div class="lc-stage"><div class="lc-pill"></div><div class="lc-label">Audit</div></div>
+  <div class="lc-stage"><div class="lc-pill"></div><div class="lc-label">Concluded</div></div>
+</div>
+<!-- LIFECYCLE-BAR-END -->
+
+<div class="hero">
+  <div class="hero-eyebrow">UX Polish</div>
+  <h1><span>TOURney</span> — UX Polish Review · May 29, 2026</h1>
+  <p class="hero-sub">Audit of new Pairs and Superball features, testpairs-2026 broken flows, team structure order, admin error handling, and QA checklist baseline (0/56 checks run).</p>
+  <div class="hero-meta">
+    <span>&#128197; May 29, 2026</span>
+    <span>&#129302; Claude Sonnet 4.6</span>
+    <span>&#127962; Greenskeeper Studios</span>
+    <span>&#128274; Internal Only</span>
+  </div>
+</div>
+
+<section id="review">
+<div class="wrapper">
+<div class="section-header">
+  <div class="section-eyebrow">Stage 1 — Review</div>
+  <h2 class="section-title">UX State Audit</h2>
+  <p class="section-desc">Evidence-based assessment of UX health. Grade: C+. Prior: C+ (5-29), B (5-27), B+ (5-27). Holding C+ — Superball unbuilt, pair assignment broken, testpairs-2026 dead on 3 flows, QA 0/56.</p>
+</div>
+
+<div class="score-grid">
+  <div class="score-cell"><div class="score-num score-gold">A-</div><div class="score-label">Architecture</div></div>
+  <div class="score-cell"><div class="score-num score-gold">A-</div><div class="score-label">Feature Depth</div></div>
+  <div class="score-cell"><div class="score-num score-red">C+</div><div class="score-label">UX Polish &#9650;</div></div>
+  <div class="score-cell"><div class="score-num score-blue">B</div><div class="score-label">Security</div></div>
+  <div class="score-cell"><div class="score-num score-red">D+</div><div class="score-label">Business</div></div>
+  <div class="score-cell"><div class="score-num score-gold">B+</div><div class="score-label">Deployment</div></div>
+  <div class="score-cell"><div class="score-num score-gold">B+</div><div class="score-label">Performance</div></div>
+  <div class="score-cell"><div class="score-num score-green">A</div><div class="score-label">Data Model</div></div>
+</div>
+
+<div class="card">
+  <div class="card-title">QA Checklist Baseline — 0 / 56</div>
+  <p>Platform QA tab (Operations PDF, 5-29-26) has 56 checks across 8 sections. All show unchecked as of this review. No check has been verified live via DevTools. This review creates the structured runbook to execute those checks systematically.</p>
+  <ul>
+    <li><strong>PAIRS — NEW FEATURE</strong> (14 checks): create wizard → admin → scorecard → scoreboard</li>
+    <li><strong>INDIVIDUAL — REGRESSION</strong> (4 checks): create → scoreboard → scorecard</li>
+    <li><strong>TEAM (2+ Teams) — REGRESSION</strong> (6 checks): create → admin → scorecard → scoreboard</li>
+    <li><strong>SUPERBALL FORMAT — NEW</strong> (8 checks): create → admin → scorecard → scoreboard → home</li>
+    <li><strong>NAVIGATION &amp; AUTH</strong> (4 checks): hamburger → admin link visibility → 404s</li>
+    <li><strong>CONSOLE &amp; NETWORK</strong> (3 checks): zero errors scoreboard + scorecard + no 4xx/5xx</li>
+    <li><strong>SECURITY PENTESTS</strong> (6 checks): billing_status RLS, push 401, install-email 401, headers, email confirmation</li>
+    <li><strong>HUMAN TASKS</strong> (11 checks): LLC, Stripe, Bova, iPhone PWA, golf DB, Supabase settings</li>
+  </ul>
+</div>
+
+<div class="grid-2">
+  <div class="card">
+    <div class="card-title">Strengths</div>
+    <ul>
+      <li><strong>tokens.css skeleton system live.</strong> <code>.skeleton</code> + <code>@keyframes skeleton-pulse</code> in tokens.css. Profile page uses it fully. Defined once, available platform-wide.</li>
+      <li><strong>Admin pair/team UI implemented.</strong> <code>admin.html:467</code> — <code>#pairNameFields</code> grid, <code>#pairAssignList</code>, <code>savePairAssignments()</code>, <code>renderPairsUI()</code>, <code>_pairNames</code> map. Structure-aware label ("Pair Assignment" vs "Team Assignment") at <code>admin.html:1453</code>.</li>
+      <li><strong>Create wizard has Pairs structure.</strong> <code>create.html</code> handles <code>S.structure==='pairs'</code> throughout — price card, format descriptions, homepage_about text. Structure picker with Pairs option is present.</li>
+      <li><strong>Responsive breakpoints on admin.</strong> <code>@media(max-width:600px)</code> collapses round-grid, team-assign-grid, format-row to single column. Mobile grids work.</li>
+      <li><strong>Format picker architecture sound.</strong> <code>FMT</code> array + <code>FMT_DESC</code> map + <code>updateFmtDesc()</code> in create.html is clean — adding Superball is a one-liner addition to the array.</li>
+      <li><strong>Error alerts in create wizard.</strong> <code>#codeAlert</code> and <code>#authAlert</code> divs with <code>.ae</code> class. Form validation visible, not silent.</li>
+    </ul>
+  </div>
+  <div class="card">
+    <div class="card-title">Gaps / Bugs (cited)</div>
+    <ul>
+      <li><strong>Superball NOT in FMT array.</strong> <code>create.html:348-359</code> — FMT array has stroke, scramble, best_ball, alternate_shot, wolf, stableford, mod_stableford, nassau. No superball entry. QA section "SUPERBALL FORMAT — NEW" has 8 checks against a feature that doesn't exist yet. <span class="pill pill-red">P0</span></li>
+      <li><strong>Pair assignment broken on testpairs-2026.</strong> Supabase bug <code>c8c29ff8</code> — "Pair assignment isn't functioning." 0/14 Pairs QA checks verified. <span class="pill pill-red">P0</span></li>
+      <li><strong>testpairs-2026: Formats never loads.</strong> Bug <code>4c38e2b0</code> — home page Formats section. <strong>Upstream:</strong> <code>settings</code> table key <code>round_formats</code>. Likely auth/RLS gap or missing data on this tenant. <span class="pill pill-red">P0</span></li>
+      <li><strong>testpairs-2026: Standings never loads.</strong> Bug <code>0e2c0846</code>. <strong>Upstream:</strong> <code>scores</code> + <code>rounds</code> tables. <span class="pill pill-red">P0</span></li>
+      <li><strong>testpairs-2026: Registered Players not loading.</strong> Bug <code>cce6e3b5</code>. <strong>Upstream:</strong> <code>player_accounts</code> table + RLS SELECT policy. <span class="pill pill-red">P0</span></li>
+      <li><strong>Team structure order wrong.</strong> Bug <code>0388c980</code> — "Individuals and pairs should be the first 2 options." Current order unknown but incorrect. <span class="pill pill-orange">P1</span></li>
+      <li><strong>admin.html unhandled rejection on direct load.</strong> Bug <code>61ae8385</code> — "No tournament slug in URL" thrown as unhandled rejection when admin.html loaded without slug. No guard/redirect. <span class="pill pill-orange">P1</span></li>
+      <li><strong>Register form too heavy.</strong> Bug <code>cab4f3e9</code> — collecting too much info at registration. myGolf account not built. <span class="pill pill-orange">P1</span></li>
+      <li><strong>Scorecard: no hole image.</strong> Bug <code>97c45b3d</code>. Hole SVG/image not rendering. <span class="pill pill-orange">P1</span></li>
+      <li><strong>192px icon not maskable.</strong> <code>manifest.json</code> — 192 icon has <code>"purpose":"any"</code> only; 512 has <code>"any maskable"</code>. Android adaptive icons need maskable at 192. <span class="pill pill-blue">P2</span></li>
+      <li><strong>Toast notifications not aria-live.</strong> <code>showToast()</code> in admin.html is visual-only. No <code>role="alert"</code> or <code>aria-live</code> region. Screen reader users get zero feedback. <span class="pill pill-blue">P2</span></li>
+      <li><strong>Tab lists missing ARIA roles.</strong> Admin tab buttons have no <code>role="tablist"</code>/<code>role="tab"</code>/<code>aria-selected</code>. Prior finding, not yet fixed. <span class="pill pill-blue">P2</span></li>
+    </ul>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-title">State Coverage Matrix</div>
+  <div class="table-wrap">
+    <table class="state-table">
+      <thead><tr><th>Page</th><th>Empty State</th><th>Loading State</th><th>Error State</th></tr></thead>
+      <tbody>
+        <tr><td>scoreboard.html</td><td>&#9989; "Waiting for scores..."</td><td>&#9989; .loading text row</td><td>&#9888;&#65039; silent catch{}</td></tr>
+        <tr><td>scorecard.html</td><td>&#9888;&#65039; partial (hole data only)</td><td>&#9989; .loading text</td><td>&#9888;&#65039; silent catch{}</td></tr>
+        <tr><td>admin.html</td><td>&#9989; "No players assigned"</td><td>&#9989; "Loading players..."</td><td>&#10060; unhandled rejection (no slug)</td></tr>
+        <tr><td>home/directory</td><td>&#9989; .empty-state class</td><td>&#9989; #loadingState div</td><td>&#9888;&#65039; try/catch silent</td></tr>
+        <tr><td>create.html</td><td>N/A</td><td>&#9989; button disable + alert</td><td>&#9989; #authAlert + #codeAlert</td></tr>
+        <tr><td>login.html</td><td>N/A</td><td>&#9989; button disable</td><td>&#9989; alert div visible</td></tr>
+        <tr><td>profile.html</td><td>&#9989; skeleton + text</td><td>&#9989; full skeleton grid</td><td>&#9888;&#65039; partial</td></tr>
+        <tr><td>install.html</td><td>N/A</td><td>&#9989; skeleton shimmer</td><td>&#9888;&#65039; partial</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-title">Design System Health</div>
+  <ul>
+    <li><strong>tokens.css</strong> linked on: admin, scoreboard, champions, install, login, directory, course, profile, feed, scorecard. Design token coverage good on tournament pages.</li>
+    <li><strong>Skeleton system available everywhere</strong> via tokens.css — but not yet applied to scoreboard, admin, or directory loading states (still using text "Loading..." fallback).</li>
+    <li><strong>Motion tokens defined</strong> (<code>--ease-out</code>, <code>--dur-fast</code>, <code>--dur-base</code>, <code>--dur-slow</code>) in tokens.css. Not consistently used — most transitions are inline <code>0.15s</code> or <code>0.2s</code> hardcodes.</li>
+    <li><strong>Fonts:</strong> Playfair Display missing from tokens.css Google Fonts import (only Barlow + DM Mono). Pages needing Playfair must add their own link or fall back to system serif.</li>
+    <li><strong>PWA manifest:</strong> 2 icons (192 + 512), no per-tenant icons. All tenants share platform icon. Acceptable for now.</li>
+  </ul>
+</div>
+</div>
+</section>
+
+<section id="plan">
+<div class="wrapper">
+<div class="section-header">
+  <div class="section-eyebrow">Stage 2 — Plan</div>
+  <h2 class="section-title">Priorities</h2>
+  <p class="section-desc">Ordered by impact on demo-readiness and QA pass rate. P1s are blocking the QA checklist from running at all.</p>
+</div>
+
+<div class="roadmap-item">
+  <div class="roadmap-icon">P1</div>
+  <div class="roadmap-content">
+    <div class="roadmap-title">Build Superball format — 8 QA checks blocked</div>
+    <div class="roadmap-desc">Add <code>superball</code> to create.html FMT array, admin.html format selects, scorecard.html format badge. Scoring behaves as scramble (one shared team score per hole). No new DB schema needed — reuses format routing.</div>
+    <div class="roadmap-action"><strong>Files:</strong> create.html (FMT array), admin.html (format select opts), scorecard.html (badge render + scoring path), scoreboard.html (format-aware calc), home.html (format description block)</div>
+  </div>
+</div>
+
+<div class="roadmap-item">
+  <div class="roadmap-icon">P1</div>
+  <div class="roadmap-content">
+    <div class="roadmap-title">Debug testpairs-2026 — 3 flows dead (Formats, Standings, Players)</div>
+    <div class="roadmap-desc">Formats never loads, standings never loads, registered players not loading on testpairs-2026. Likely cause: settings key missing for this tenant, RLS SELECT gap on player_accounts, or scores table empty blocking standings render. Must be fixed before any QA run.</div>
+    <div class="roadmap-action"><strong>Approach:</strong> Query Supabase for testpairs-2026 tournament_id, check settings rows for round_formats key, check player_accounts RLS, check scores table. Fix root cause.</div>
+  </div>
+</div>
+
+<div class="roadmap-item">
+  <div class="roadmap-icon">P1</div>
+  <div class="roadmap-content">
+    <div class="roadmap-title">Debug + verify Pairs feature end-to-end</div>
+    <div class="roadmap-desc">Pair assignment "isn't functioning" (bug c8c29ff8). Code exists (renderPairsUI, savePairAssignments, _pairNames) but live behavior broken. Debug via Chrome DevTools on testpairs-2026 admin page — check console errors, network calls, settings table writes.</div>
+    <div class="roadmap-action"><strong>Verify:</strong> All 14 QA Pairs checks pass on testpairs-2026. Mark bug c8c29ff8 completed when done.</div>
+  </div>
+</div>
+
+<div class="roadmap-item">
+  <div class="roadmap-icon">P1</div>
+  <div class="roadmap-content">
+    <div class="roadmap-title">Fix team structure order in create.html</div>
+    <div class="roadmap-desc">Bug 0388c980: "Individuals and pairs should be the first 2 options." Reorder the Team Structure selector so Individual is option 1, Pairs is option 2, then 2-team, 3-team, 4-team. Cosmetic but breaks first-time wizard UX.</div>
+    <div class="roadmap-action"><strong>File:</strong> create.html — find structure/mode picker HTML, reorder options.</div>
+  </div>
+</div>
+
+<div class="roadmap-item">
+  <div class="roadmap-icon">P1</div>
+  <div class="roadmap-content">
+    <div class="roadmap-title">Fix admin.html unhandled rejection on direct load</div>
+    <div class="roadmap-desc">Bug 61ae8385: "No tournament slug in URL" thrown as unhandled Promise rejection when admin.html loaded without a <code>/t/{slug}/</code> prefix. Add a guard at <code>init()</code> — if no slug detected, redirect to <code>/</code> or show a "missing tournament" message instead of crashing.</div>
+    <div class="roadmap-action"><strong>File:</strong> admin.html — find slug detection in init(), add guard before any DB calls.</div>
+  </div>
+</div>
+
+<div class="roadmap-item">
+  <div class="roadmap-icon">P2</div>
+  <div class="roadmap-content">
+    <div class="roadmap-title">Run full QA checklist (56 checks) via Chrome DevTools</div>
+    <div class="roadmap-desc">After P1s resolved, run all 56 checks in the platform QA tab using Chrome DevTools MCP. Check console + network for each flow. Log failures as platform_bugs. Target: 50+ checks green before next demo.</div>
+    <div class="roadmap-action"><strong>Tools:</strong> Chrome DevTools MCP — navigate, click, fill, screenshot, list_console_messages, list_network_requests on each flow.</div>
+  </div>
+</div>
+
+<div class="roadmap-item">
+  <div class="roadmap-icon">P3</div>
+  <div class="roadmap-content">
+    <div class="roadmap-title">Replace text loading states with .skeleton shimmer</div>
+    <div class="roadmap-desc">scoreboard.html, admin.html player table, directory.html use <code>".loading"</code> text class (DM Mono, muted). tokens.css <code>.skeleton</code> shimmer already available. Swap for better perceived performance. Downstream: any page sharing the loading pattern.</div>
+    <div class="roadmap-action"><strong>Files:</strong> scoreboard.html (leaderboard tbody), admin.html (players tbody initial row), directory.html (#loadingState div).</div>
+  </div>
+</div>
+
+<div class="grid-2" style="margin-top:1rem;">
+  <div class="idea-card idea-1">
+    <div class="idea-number">1</div>
+    <div class="idea-tag"><span class="pill pill-gold">Feature</span></div>
+    <div class="idea-title">Superball — full implementation</div>
+    <div class="idea-body">Superball is a scramble variant where one "super ball" player's tee shot is mandatory on pre-set holes (typically odd holes or hole 1, 4, 7, 10, 13, 16). Scoring: one team score per hole identical to scramble. Twist: admin configures which holes are super-ball-required.</div>
+    <div class="idea-plan"><strong>Build plan:</strong> 1) Add format to FMT array. 2) Add "superball_holes" setting key (defaults to holes 1,4,7,10,13,16). 3) Scorecard shows which player is super ball this hole. 4) Scoring = scramble logic.</div>
+  </div>
+  <div class="idea-card idea-2">
+    <div class="idea-number">2</div>
+    <div class="idea-tag"><span class="pill pill-blue">UX</span></div>
+    <div class="idea-title">Register: myGolf gate</div>
+    <div class="idea-body">Bug cab4f3e9: registration collects too much data. The right flow: player taps Register link → signs in with Google/email (create myGolf account) → auto-enrolled. Handicap index from myGolf, not a registration form field.</div>
+    <div class="idea-plan"><strong>Build plan:</strong> Requires myGolf (player.html) to be built first. Gate registration behind myGolf auth. Pull GHIN number and handicap from profile rather than form input.</div>
+  </div>
+  <div class="idea-card idea-3">
+    <div class="idea-number">3</div>
+    <div class="idea-tag"><span class="pill pill-green">Polish</span></div>
+    <div class="idea-title">Skeleton loading everywhere</div>
+    <div class="idea-body">tokens.css .skeleton is defined and polished. Apply it to every data-loading zone: scoreboard leaderboard rows, admin player table, home standings section, directory player list. Zero code duplication — just swap class names.</div>
+    <div class="idea-plan"><strong>Build plan:</strong> 4 files, ~20 line changes total. Each gets 2-3 skeleton divs shown during fetch, hidden on data arrival.</div>
+  </div>
+  <div class="idea-card idea-4">
+    <div class="idea-number">4</div>
+    <div class="idea-tag"><span class="pill pill-orange">A11y</span></div>
+    <div class="idea-title">ARIA quick wins</div>
+    <div class="idea-body">Admin tab list needs role="tablist", role="tab", aria-selected. Toast needs aria-live="polite". These are 5-minute fixes with meaningful screen reader impact. Won't need designer input — just attribute additions.</div>
+    <div class="idea-plan"><strong>Build plan:</strong> admin.html tab buttons + toast div. 10 attribute changes, no visual impact.</div>
+  </div>
+  <div class="idea-card idea-5">
+    <div class="idea-number">5</div>
+    <div class="idea-tag"><span class="pill pill-purple">PWA</span></div>
+    <div class="idea-title">Manifest: add maskable 192</div>
+    <div class="idea-body">Android adaptive icon launcher requires a maskable icon at 192px. Current 192 icon is "purpose":"any" only. Duplicate the 192 entry with "purpose":"maskable" — or create a safe-zone-cropped variant. One-line manifest fix.</div>
+    <div class="idea-plan"><strong>Build plan:</strong> manifest.json — add second 192 entry with "purpose":"maskable". Bump SW cache version.</div>
+  </div>
+</div>
+</div>
+</section>
+
+<section id="runbook">
+<div class="wrapper">
+<div class="section-header">
+  <div class="section-eyebrow">Stage 3 — Runbook</div>
+  <h2 class="section-title">Execution Steps</h2>
+  <p class="section-desc">Ordered steps for tourney-execute. Each step cites upstream dependencies and downstream impact. Steps 1-5 must ship before QA run (step 6).</p>
+</div>
+
+<div class="runbook-steps">
+
+  <div class="rb-step">
+    <div class="rb-step-title">Add Superball to create.html FMT array</div>
+    <div class="rb-step-body">
+      <strong>File:</strong> <code>create.html</code><br>
+      <strong>Upstream:</strong> FMT array feeds format select dropdowns in step 2 wizard. FMT_DESC map feeds description text below each select.<br>
+      <strong>Downstream:</strong> admin.html format selects (independent copy), scorecard.html format badge, scoreboard.html format-aware scoring, home.html format description block.<br>
+      <strong>Action:</strong> Find <code>FMT</code> array (around line 348). After the <code>nassau</code> entry, add:<br>
+      <code>{ value:'superball', label:'Superball', desc:'Scramble with a twist — one player is the designated super ball and their tee shot must be used on pre-set holes.' }</code><br>
+      Also add superball preset to the DEFAULT_FORMATS presets array: <code>{ front:'superball', back:'superball' }</code>
+    </div>
+    <div class="rb-verify"><strong>Verify</strong> Navigate to /create. Step 2 format dropdowns include "Superball" option. Selecting it shows the description text immediately below the select. No console errors.</div>
+  </div>
+
+  <div class="rb-step">
+    <div class="rb-step-title">Add Superball to admin.html format selects</div>
+    <div class="rb-step-body">
+      <strong>File:</strong> <code>admin.html</code><br>
+      <strong>Upstream:</strong> Rounds tab format selects read from inline options HTML. Must match create.html options.<br>
+      <strong>Downstream:</strong> scorecard.html reads <code>rounds.format_front</code> / <code>rounds.format_back</code> from DB — if superball saved via admin, scorecard must render it correctly.<br>
+      <strong>Action:</strong> Find the front/back format <code>&lt;select&gt;</code> elements in the Rounds tab. Add <code>&lt;option value="superball"&gt;Superball&lt;/option&gt;</code> to each. Also update any <code>FORMAT_LABELS</code> or <code>FMT_LABELS</code> map in admin.html to include <code>'superball': 'Superball'</code>.
+    </div>
+    <div class="rb-verify"><strong>Verify</strong> Navigate to /t/testpairs-2026/admin → Rounds tab. Front/back format selects include Superball option. Select it, save. No console errors. Check network — settings save returns 200/204.</div>
+  </div>
+
+  <div class="rb-step">
+    <div class="rb-step-title">Add Superball format badge + scoring to scorecard.html</div>
+    <div class="rb-step-body">
+      <strong>File:</strong> <code>scorecard.html</code><br>
+      <strong>Upstream:</strong> scorecard.html reads <code>round.format_front</code> / <code>round.format_back</code> from <code>rounds</code> table via Supabase.<br>
+      <strong>Downstream:</strong> scoreboard.html reads the same scores — superball scoring must produce one team score per hole (same as scramble).<br>
+      <strong>Action:</strong> Find the format badge render logic (searches for FORMAT_LABELS or format_front display). Add <code>'superball': 'Superball'</code> to any format label map. Find scramble scoring path — add <code>|| format === 'superball'</code> to the scramble condition so superball holes use shared team score entry.
+    </div>
+    <div class="rb-verify"><strong>Verify</strong> Create a test round with Superball format. Load /t/testpairs-2026/scorecard. Format badge reads "Superball". Hole scoring UI matches scramble (shared score input). Submit score — no console errors.</div>
+  </div>
+
+  <div class="rb-step">
+    <div class="rb-step-title">Add Superball to scoreboard.html and home.html format display</div>
+    <div class="rb-step-body">
+      <strong>Files:</strong> <code>scoreboard.html</code>, <code>home.html</code><br>
+      <strong>Upstream:</strong> Both pages read format from <code>settings</code> table (home) and <code>rounds</code> table (scoreboard).<br>
+      <strong>Downstream:</strong> home.html format section is public-facing — affects first impression for players joining.<br>
+      <strong>Action:</strong> In scoreboard.html — find FORMAT_LABELS map, add <code>'superball': 'Superball'</code>. In home.html — find format description block (reads format_front/back from settings), add superball case with description: "Scramble with a twist — designated super ball player's tee shot required on select holes."
+    </div>
+    <div class="rb-verify"><strong>Verify</strong> Navigate to /t/testpairs-2026/home. Format section shows Superball label + description. Navigate to /t/testpairs-2026/scoreboard — format badge correct. No console errors.</div>
+  </div>
+
+  <div class="rb-step">
+    <div class="rb-step-title">Fix team structure order in create.html wizard</div>
+    <div class="rb-step-body">
+      <strong>File:</strong> <code>create.html</code><br>
+      <strong>Upstream:</strong> Team Structure picker feeds <code>S.structure</code> which controls: price card display, pair count picker visibility, format defaults, homepage_about text.<br>
+      <strong>Downstream:</strong> admin.html reads structure from settings table — no downstream render impact from reordering.<br>
+      <strong>Action:</strong> Read create.html. Find the Team Structure row (mode-cards or button group for Individual / Pairs / 2 Teams / 3 Teams / 4 Teams). Reorder so: (1) Individual, (2) Pairs, (3) 2 Teams, (4) 3 Teams, (5) 4 Teams. Ensure default/active is Individual.
+    </div>
+    <div class="rb-verify"><strong>Verify</strong> Navigate to /create. Step 2 Team Structure row shows Individual first, Pairs second. Default selection is Individual. Mark bug 0388c980 completed in platform_bugs.</div>
+  </div>
+
+  <div class="rb-step">
+    <div class="rb-step-title">Fix admin.html unhandled rejection — no slug guard</div>
+    <div class="rb-step-body">
+      <strong>File:</strong> <code>admin.html</code><br>
+      <strong>Upstream:</strong> tourney-init.js provides slug via URL parsing. If URL is /admin.html (no /t/{slug}/ prefix), slug is null/empty.<br>
+      <strong>Downstream:</strong> All subsequent DB queries in admin.html use slug — they all fail if slug is missing.<br>
+      <strong>Action:</strong> Find the <code>init()</code> function in admin.html. After slug is extracted, add a guard:
+      <code>if (!slug) { document.body.innerHTML = '&lt;div style="text-align:center;padding:4rem;color:var(--muted)"&gt;No tournament selected. &lt;a href="/"&gt;Go to platform&lt;/a&gt;&lt;/div&gt;'; return; }</code>
+      This converts the unhandled rejection into a clean user-facing message.
+    </div>
+    <div class="rb-verify"><strong>Verify</strong> Navigate to https://tourney.greenskeeper.studio/admin.html (no slug). Console: zero unhandled rejections. Page shows "No tournament selected" message. Navigate to /t/bova/admin — normal admin loads. Mark bug 61ae8385 completed.</div>
+  </div>
+
+  <div class="rb-step">
+    <div class="rb-step-title">Debug testpairs-2026 — Formats / Standings / Players not loading</div>
+    <div class="rb-step-body">
+      <strong>Upstream:</strong> home.html formats section reads from <code>settings</code> table (key: <code>round_formats</code>). Standings reads from <code>scores</code> + <code>rounds</code>. Players reads from <code>player_accounts</code> with RLS SELECT policy.<br>
+      <strong>Downstream:</strong> Fixing these unblocks 20+ QA checks that require testpairs-2026 to be functional.<br>
+      <strong>Action:</strong><br>
+      1. Query Supabase: <code>SELECT id FROM tournaments WHERE slug = 'testpairs-2026'</code> — get tournament_id.<br>
+      2. Query: <code>SELECT key, value FROM settings WHERE tournament_id = '{id}' AND key IN ('round_formats', 'structure', 'pair_count')</code> — verify settings exist.<br>
+      3. If round_formats missing: INSERT a default <code>{"1":{"front":"stroke","back":"stroke"}}</code>.<br>
+      4. Query <code>player_accounts WHERE tournament_id = '{id}'</code> — check if players exist and SELECT policy allows read.<br>
+      5. Check <code>rounds WHERE tournament_id = '{id}'</code> — verify at least 1 round exists.<br>
+      6. Open /t/testpairs-2026/home in Chrome DevTools — check console + network for specific 4xx/5xx errors.
+    </div>
+    <div class="rb-verify"><strong>Verify</strong> Navigate to /t/testpairs-2026/home. Formats section loads. Standings section loads. Registered Players shows player list. Console: zero errors. Network: no 4xx/5xx. Mark bugs 4c38e2b0, 0e2c0846, cce6e3b5 completed.</div>
+  </div>
+
+  <div class="rb-step">
+    <div class="rb-step-title">Debug + verify Pairs feature on testpairs-2026</div>
+    <div class="rb-step-body">
+      <strong>Upstream:</strong> Pair assignment reads/writes to <code>settings</code> table keys <code>pair_{n}_name</code> and <code>team_assignments</code>. Admin.html <code>renderPairsUI()</code> reads <code>_structure</code> from settings.<br>
+      <strong>Downstream:</strong> scorecard.html reads pair assignment to show "Your Pair" label and hide opponent section. scoreboard.html uses pair names in leaderboard.<br>
+      <strong>Action:</strong><br>
+      1. Open /t/testpairs-2026/admin in Chrome DevTools.<br>
+      2. Check console — identify specific error in pair assignment flow.<br>
+      3. Check network — does settings SELECT return pair_count, structure='pairs'?<br>
+      4. If structure not set to 'pairs' in DB: INSERT/UPDATE setting.<br>
+      5. Walk full 14-step Pairs QA flow (create → admin assign → scorecard → scoreboard) via DevTools click/fill/screenshot.<br>
+      6. Fix any failures found.
+    </div>
+    <div class="rb-verify"><strong>Verify</strong> All 14 Pairs QA checks pass. Screenshot scorecard showing "Your Pair" label. Screenshot scoreboard showing Pairs tab + pair names. Mark bug c8c29ff8 completed.</div>
+  </div>
+
+  <div class="rb-step">
+    <div class="rb-step-title">Run QA checklist — Console &amp; Network infra checks</div>
+    <div class="rb-step-body">
+      <strong>Scope:</strong> 3 QA checks: (c1) zero console errors on scoreboard, (c2) zero console errors on scorecard, (c3) no 4xx/5xx on any page.<br>
+      <strong>Action:</strong><br>
+      1. Chrome DevTools: navigate to /t/testpairs-2026/scoreboard → list_console_messages (types: error) → must be empty.<br>
+      2. Navigate to /t/testpairs-2026/scorecard → list_console_messages → must be empty.<br>
+      3. list_network_requests → filter status 400-599 → must be empty.<br>
+      4. Fix any errors found before proceeding.
+    </div>
+    <div class="rb-verify"><strong>Verify</strong> Both pages: zero console errors. Network: zero 4xx/5xx. Screenshot each clean state.</div>
+  </div>
+
+  <div class="rb-step">
+    <div class="rb-step-title">Run QA checklist — Navigation &amp; Auth infra checks</div>
+    <div class="rb-step-body">
+      <strong>Scope:</strong> 4 QA checks: hamburger mobile nav, admin link when logged in, admin link hidden when logged out, no 404s.<br>
+      <strong>Action:</strong><br>
+      1. Chrome DevTools emulate mobile (375px). Navigate to /t/testpairs-2026/home. Click hamburger — verify all links visible.<br>
+      2. Logged in as rob: verify Admin link in nav. Log out: verify Admin link gone.<br>
+      3. Click all nav links — no 404s.<br>
+      4. Screenshot each state.
+    </div>
+    <div class="rb-verify"><strong>Verify</strong> 4/4 nav checks pass. Screenshot mobile hamburger open. Screenshot nav logged-in vs logged-out. No console errors on any page.</div>
+  </div>
+
+  <div class="rb-step">
+    <div class="rb-step-title">Run QA checklist — Individual and Team regression checks</div>
+    <div class="rb-step-body">
+      <strong>Scope:</strong> Individual (4 checks) + Team/2+ Teams (6 checks). Total 10 checks.<br>
+      <strong>Action:</strong><br>
+      1. Navigate to /create → create Individual tournament → verify no Team tab on scoreboard, no "Your Team" on scorecard, no unassigned gate.<br>
+      2. Create 2-team tournament → admin Team Assignment section → assign players → scorecard shows "Your Team" + opponent section → scoreboard Team tab with A vs B banners.<br>
+      3. Chrome DevTools screenshots for each state. Check console + network at each step.
+    </div>
+    <div class="rb-verify"><strong>Verify</strong> 10/10 checks pass. Screenshot Individual scoreboard (no Team tab), Team scorecard (opponent visible), scoreboard Team tab. Zero console errors per page.</div>
+  </div>
+
+  <div class="rb-step">
+    <div class="rb-step-title">Update platform_bugs — mark resolved bugs completed</div>
+    <div class="rb-step-body">
+      <strong>Action:</strong> After each step above that resolves a bug, run:<br>
+      <code>UPDATE platform_bugs SET status = 'completed' WHERE id IN ('c8c29ff8', '4c38e2b0', '0e2c0846', 'cce6e3b5', '0388c980', '61ae8385') RETURNING id, title, status;</code><br>
+      Then verify: <code>SELECT COUNT(*) FROM platform_bugs WHERE status = 'open'</code> drops accordingly.
+    </div>
+    <div class="rb-verify"><strong>Verify</strong> Supabase returns all updated rows with status='completed'. Platform bugs tab open count drops by 6.</div>
+  </div>
+
+</div>
+</div>
+</section>
+
+<section id="executing">
+<div class="wrapper">
+<!-- EXECUTING-CONTENT-START -->
+<div class="stage-pending">
+  <p>Awaiting execution. Run <code>/tourney-execute 5-29-26-ux-review.html</code> to proceed.</p>
+</div>
+<!-- EXECUTING-CONTENT-END -->
+</div>
+</section>
+
+<section id="audit">
+<div class="wrapper">
+<!-- AUDIT-CONTENT-START -->
+<div class="stage-pending">
+  <p>Awaiting execution. Run <code>/tourney-execute 5-29-26-ux-review.html</code> to proceed.</p>
+</div>
+<!-- AUDIT-CONTENT-END -->
+</div>
+</section>
+
+<section id="concluded">
+<div class="wrapper">
+<!-- CONCLUDED-CONTENT-START -->
+<div class="stage-pending">
+  <p>Awaiting execution. Run <code>/tourney-execute 5-29-26-ux-review.html</code> to proceed.</p>
+</div>
+<!-- CONCLUDED-CONTENT-END -->
+</div>
+</section>
+
+<footer>
+  Generated by <span>Claude Sonnet 4.6</span> · Greenskeeper Studios Internal · May 29, 2026
+  <br style="margin-top:0.3rem">
+  <a href="/platform" style="color:var(--muted);font-size:0.7rem;text-decoration:none">&#8592; Back to Platform Hub</a>
+</footer>
+
+</body>
+</html>
