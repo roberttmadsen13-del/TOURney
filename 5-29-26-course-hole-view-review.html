@@ -296,6 +296,104 @@ footer span{color:var(--gold);}
 </div>
 </section>
 
+<section id="second-opinion" style="border-top:2px solid var(--blue);">
+<div class="wrapper">
+
+<div class="section-header">
+  <div class="section-eyebrow" style="color:var(--blue);">§ Second Opinion</div>
+  <div class="section-title">Independent Research Audit — Claude Sonnet 4.6 · May 29, 2026</div>
+  <div class="section-desc">Code + OSM + Mapbox API research. Three concrete implementation options the plan doesn't offer. Two structural corrections before execution starts.</div>
+</div>
+
+<div class="card" style="border-left:3px solid var(--red);">
+  <div class="card-title" style="color:var(--red);">CORRECTION — Migration missing <code style="font-family:monospace;">lat/lng</code> columns</div>
+  <p>The plan's P1 migration adds only <code style="font-family:monospace;">image_url text</code>. But Options B and C below both require hole coordinates. Without <code style="font-family:monospace;">lat</code> and <code style="font-family:monospace;">lng</code> on <code style="font-family:monospace;">course_holes</code>, satellite auto-generation and OSM lookup are impossible after the migration ships. Adding coordinates later means a second migration. <strong>Add all three columns in one shot:</strong></p>
+  <pre style="font-family:monospace;font-size:0.78rem;background:var(--surface);padding:0.6rem 0.8rem;border-radius:4px;margin:0.5rem 0;overflow-x:auto;color:var(--text);">ALTER TABLE course_holes
+  ADD COLUMN image_url text,
+  ADD COLUMN lat double precision,
+  ADD COLUMN lng double precision;</pre>
+  <p>Nullable, additive, zero risk. lat/lng can be populated by admin manually, by OSM lookup at course-add time, or by GPS tap-to-set in a future admin flow.</p>
+</div>
+
+<div class="card" style="border-left:3px solid var(--red);margin-top:0.7rem;">
+  <div class="card-title" style="color:var(--red);">CORRECTION — Images belong on <code style="font-family:monospace;">golf_courses</code> library, not per-tournament</div>
+  <p>The plan routes hole images through <code style="font-family:monospace;">course_holes</code> (tournament-scoped). That means if Kokomo CC is used by 3 tournaments, Rob uploads 54 images. The <code style="font-family:monospace;">golf_courses</code> table is the platform-level course library — shared across all tenants. Hole images + coordinates should live there. Same fix as the data loading chain already uses: <code style="font-family:monospace;">golf_courses → course_holes</code> precedence. Concrete schema target:</p>
+  <pre style="font-family:monospace;font-size:0.78rem;background:var(--surface);padding:0.6rem 0.8rem;border-radius:4px;margin:0.5rem 0;overflow-x:auto;color:var(--text);">-- library level (golf_courses): add hole_data jsonb
+-- stores [{hole:1, lat:X, lng:Y, image_url:""}, ...] per course
+ALTER TABLE golf_courses ADD COLUMN hole_data jsonb;
+
+-- tournament override level (course_holes): keep image_url + lat/lng
+-- only needed if tournament wants to override library data</pre>
+  <p>scorecard.html already reads <code style="font-family:monospace;">golf_courses</code> at lines 622–626. Adding <code style="font-family:monospace;">hole_data</code> fits the existing precedence chain cleanly.</p>
+</div>
+
+<div class="card" style="border-left:3px solid var(--gold);margin-top:1rem;">
+  <div class="card-title">Option A — Mapbox Static Satellite (auto, no upload needed)</div>
+  <p><strong>How it works:</strong> Given <code style="font-family:monospace;">lat/lng</code> for a hole, generate a static satellite URL on-the-fly. No storage, no upload, no admin work per hole.</p>
+  <pre style="font-family:monospace;font-size:0.78rem;background:var(--surface);padding:0.6rem 0.8rem;border-radius:4px;margin:0.5rem 0;overflow-x:auto;color:var(--text);">// In renderHole() — satellite fallback when no image_url
+function holeMapUrl(lat, lng) {
+  const zoom = 17; // tight enough for one hole
+  return `https://api.mapbox.com/styles/v1/mapbox/satellite-v9/static/`
+       + `${lng},${lat},${zoom}/600x380@2x`
+       + `?access_token=${MAPBOX_TOKEN}`;
+}</pre>
+  <ul style="margin-top:0.5rem;">
+    <li><strong>Style:</strong> Must use <code style="font-family:monospace;">satellite-v9</code> — Mapbox Standard Satellite is explicitly incompatible with Static Images API (confirmed in docs, planned for future release).</li>
+    <li><strong>Free tier:</strong> 50,000 requests/month. 18 holes × N users per round — cache aggressively in the service worker. One fetch per hole per device per session at most.</li>
+    <li><strong>Rate limit:</strong> 1,250 req/min — not a concern for this use case.</li>
+    <li><strong>Token security:</strong> Public Mapbox tokens are visible in source. Mitigate with Mapbox URL restriction (restrict token to <code style="font-family:monospace;">tourney.greenskeeper.studio</code> in Mapbox dashboard). Or proxy through a Supabase Edge Function to keep token server-side.</li>
+    <li><strong>Cache header:</strong> <code style="font-family:monospace;">max-age=43200</code> (12h CDN). After first load, cached — no repeated billing per user.</li>
+    <li><strong>Effort:</strong> ~20 lines JS + env var. Fastest path to real imagery.</li>
+  </ul>
+</div>
+
+<div class="card" style="border-left:3px solid var(--gold);margin-top:0.7rem;">
+  <div class="card-title">Option B — OSM Overpass → Rendered SVG Diagram (free, offline-capable)</div>
+  <p><strong>How it works:</strong> OSM has rich golf course geometry — every major US course is mapped with polygon features tagged by type and hole number. Query Overpass for <code style="font-family:monospace;">golf=fairway</code>, <code style="font-family:monospace;">golf=green</code>, <code style="font-family:monospace;">golf=bunker</code>, <code style="font-family:monospace;">golf=tee</code>, <code style="font-family:monospace;">golf=water_hazard</code> within the course bounds. Each feature is tagged <code style="font-family:monospace;">ref=N</code> (hole number). Render to SVG/Canvas — a clean schematic hole diagram, no satellite imagery needed.</p>
+  <pre style="font-family:monospace;font-size:0.78rem;background:var(--surface);padding:0.6rem 0.8rem;border-radius:4px;margin:0.5rem 0;overflow-x:auto;color:var(--text);">// Overpass query — fetch all golf features for a course bbox
+const query = `[out:json];
+  (way[golf](${south},${west},${north},${east});
+   relation[golf](${south},${west},${north},${east}););
+  out geom;`;
+fetch(`https://overpass-api.de/api/interpreter?data=${encodeURIComponent(query)}`)</pre>
+  <ul style="margin-top:0.5rem;">
+    <li><strong>Data quality:</strong> Excellent for well-known courses. Varies for small municipals. Can be checked before committing — query the course first, count <code style="font-family:monospace;">ref</code>-tagged features. If &lt;10 holes mapped, fall back to Option A or placeholder.</li>
+    <li><strong>Cost:</strong> $0 forever. OSM is open data.</li>
+    <li><strong>Overpass reliability:</strong> Public endpoint is rate-limited and occasionally slow. <strong>Do NOT call Overpass from the client on every scorecard load.</strong> Correct approach: fetch once at course-add time (create wizard), store GeoJSON per hole in <code style="font-family:monospace;">golf_courses.hole_data</code>. Scorecard reads from Supabase — no Overpass at runtime.</li>
+    <li><strong>Offline:</strong> GeoJSON stored in Supabase → service worker caches → works fully offline. Better than satellite (satellite images need network fetch per hole).</li>
+    <li><strong>Effort:</strong> ~150 lines JS (Overpass fetch + GeoJSON→SVG projection). Higher up-front but zero ongoing cost and works offline natively.</li>
+  </ul>
+</div>
+
+<div class="card" style="border-left:3px solid var(--green);margin-top:0.7rem;">
+  <div class="card-title" style="color:var(--green);">Option C — Hybrid Fallback Chain (recommended)</div>
+  <p>Combine all three into one priority chain. <code style="font-family:monospace;">renderHole()</code> picks the best available source:</p>
+  <pre style="font-family:monospace;font-size:0.78rem;background:var(--surface);padding:0.6rem 0.8rem;border-radius:4px;margin:0.5rem 0;overflow-x:auto;color:var(--text);">function renderHoleView(hole) {
+  if (hole.image_url)          return renderImg(hole.image_url);      // 1. admin upload (highest quality)
+  if (hole.lat && hole.lng)    return renderSatellite(hole.lat, hole.lng); // 2. Mapbox auto
+  if (hole.osm_geojson)        return renderOsmDiagram(hole.osm_geojson);  // 3. OSM schematic
+  return renderPlaceholderSvg(hole.par, hole.yards);                         // 4. par/yards schematic
+}</pre>
+  <p>This covers every state gracefully: new tournament with no data → placeholder; course in golf_courses library with lat/lng → satellite auto; OSM data pre-fetched → schematic diagram; admin uploaded custom photo → premium branded image. No state is ever blank.</p>
+  <p style="margin-top:0.5rem;"><strong>Recommended execution order:</strong> Ship M1 with placeholder (as planned). Add lat/lng to migration. Wire Mapbox satellite as M1.5 (10 lines, instant payoff). Add OSM fetch-at-create-time in M2 alongside admin upload.</p>
+</div>
+
+<div class="card" style="margin-top:0.7rem;border-left:3px solid var(--muted);">
+  <div class="card-title" style="color:var(--muted);">OSM Data Quality Check — Run Before Committing to Option B</div>
+  <p>Before building the OSM renderer, verify the target course is mapped. Paste this into <a href="https://overpass-turbo.eu" style="color:var(--gold-light);" target="_blank">overpass-turbo.eu</a> with the course coordinates:</p>
+  <pre style="font-family:monospace;font-size:0.78rem;background:var(--surface);padding:0.6rem 0.8rem;border-radius:4px;margin:0.5rem 0;overflow-x:auto;color:var(--text);">[out:json];
+(way[golf](around:2000,{LAT},{LNG}););
+out tags;</pre>
+  <p>If results include 15–18 features with <code style="font-family:monospace;">ref</code> tags → course is well-mapped, Option B is viable. If &lt;5 results or no <code style="font-family:monospace;">ref</code> tags → skip to Option A (satellite).</p>
+</div>
+
+<div style="margin-top:1rem;padding:0.6rem 0.9rem;background:var(--surface);border-radius:6px;font-size:0.78rem;color:var(--muted);">
+  <strong style="color:var(--blue);">Priority recommendation:</strong> Add <code style="font-family:monospace;">lat/lng</code> to migration now (free). Ship M1 with placeholder as planned. Wire Mapbox satellite as a 20-line add-on (instant real imagery, no admin work). Build OSM fetch-at-create-time in M2 for offline diagram support. Admin upload remains as premium override for branded content.
+</div>
+
+</div>
+</section>
+
 <section id="plan">
 <div class="wrapper">
 
