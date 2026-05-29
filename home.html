@@ -1070,7 +1070,14 @@ refreshField();
 // Pre-fill RSVP from MyGolf profile if logged in
 (async () => {
   const { data: { session } } = await sb.auth.getSession();
-  if (!session?.user) return;
+  if (!session?.user) {
+    // Not logged in — hide form fields, surface the login CTA upfront
+    const formCard = document.getElementById('rsvpFormCard');
+    if (formCard) formCard.querySelectorAll('.form-row, .form-submit, #datePickerGroup, #hatSection').forEach(el => el.style.display = 'none');
+    const banner = document.getElementById('playerAccountBanner');
+    if (banner) banner.style.display = 'block';
+    return;
+  }
   const fEmail = document.getElementById('rsvpEmail');
   if (fEmail) { fEmail.value = session.user.email; fEmail.readOnly = true; fEmail.style.opacity = '0.6'; }
   const { data: profile } = await sb.from('mygolf_profiles')
