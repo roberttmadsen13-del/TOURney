@@ -31,7 +31,7 @@
 
   /* Type */
   --font-sans:    'Barlow', -apple-system, sans-serif;
-  --font-mono:    'Consolas', 'Monaco', monospace;
+  --font-mono:    'DM Mono', 'Consolas', 'Monaco', monospace;
   --font-display: 'Playfair Display', Georgia, serif;
   --font-condensed: 'Barlow Condensed', sans-serif;
 
@@ -109,3 +109,68 @@ body.is-offline .nav-offline-dot {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* ─────────────────────────────────────────────────────────────
+ * DESIGN SYSTEM — surface tiers, Course Mode, components, motion
+ * Added 2026-05-29. Principles in DESIGN.md:
+ *   Glance don't read · The score is the hero · Mono = data not prose ·
+ *   Gold = action & identity · Earn every tap.
+ * All additive — inert until a page opts in via class/attribute.
+ * ───────────────────────────────────────────────────────────── */
+
+/* Surface tiers — one token set, two contexts.
+ * Lean-back (default): dense/dark/indoor. Active: high-contrast/large-tap/outdoor. */
+.surface-active {
+  --text: #ffffff;
+  --muted: #b8a884;
+  font-size: 16px;
+}
+.surface-active button,
+.surface-active .tap,
+.surface-active .stepper { min-height: 48px; min-width: 48px; }
+
+/* Sunlight Course Mode — opt-in high-contrast for direct sun.
+ * Toggle sets [data-mode="course"] on <html>; affects active surfaces only. */
+[data-mode="course"] .surface-active {
+  --bg:      #f7f4ec;
+  --surface: #fffdf7;
+  --card:    #ffffff;
+  --text:    #0d0a05;
+  --muted:   #4a4030;
+  --border:  #c09030;
+}
+
+/* Cards */
+.ds-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: var(--space-4);
+  margin-bottom: var(--space-2);
+}
+.ds-card-accent { border-left: 3px solid var(--gold); border-radius: 0 var(--radius) var(--radius) 0; }
+.ds-card-hero {
+  border: 1px solid var(--gold);
+  box-shadow: 0 0 0 1px rgba(192, 144, 48, 0.15), var(--shadow);
+  padding: var(--space-6);
+}
+.ds-card-title { font-family: var(--font-mono); font-size: 0.85rem; font-weight: 700; color: var(--gold); margin-bottom: var(--space-2); }
+
+/* Pills — status / format / score badges */
+.pill { display: inline-block; font-family: var(--font-mono); font-size: 0.66rem; font-weight: 700; letter-spacing: 0.06em; padding: 0.15rem 0.5rem; border-radius: var(--radius-pill); text-transform: uppercase; }
+.pill-gold   { background: var(--gold-dim);            color: var(--gold);   border: 1px solid rgba(192, 144, 48, 0.30); }
+.pill-green  { background: rgba(39, 174, 96, 0.15);    color: var(--green);  border: 1px solid rgba(39, 174, 96, 0.30); }
+.pill-red    { background: rgba(192, 57, 43, 0.15);    color: var(--red);    border: 1px solid rgba(192, 57, 43, 0.30); }
+.pill-orange { background: rgba(230, 126, 34, 0.15);   color: var(--orange); border: 1px solid rgba(230, 126, 34, 0.30); }
+.pill-blue   { background: rgba(41, 128, 185, 0.15);   color: var(--blue);   border: 1px solid rgba(41, 128, 185, 0.30); }
+.pill-purple { background: rgba(142, 68, 173, 0.15);   color: var(--purple); border: 1px solid rgba(142, 68, 173, 0.30); }
+
+/* Tap targets — earn every tap (gloved-thumb floor) */
+.tap    { min-height: 48px; min-width: 48px; }
+.tap-lg { min-height: 56px; min-width: 56px; }
+
+/* Motion — score-commit feedback + birdie/eagle celebration */
+@keyframes commit-flash { 0% { background: var(--gold-dim); } 100% { background: transparent; } }
+.commit-flash { animation: commit-flash var(--dur-slow) var(--ease-out); }
+.score-birdie { color: var(--gold); font-weight: 800; }
+.score-eagle  { color: var(--blue); font-weight: 800; }
