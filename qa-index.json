@@ -1,22 +1,22 @@
 {
   "$schema": "https://tourney.greenskeeper.studio/qa-index-schema.json",
   "version": 1,
-  "updated_at": "2026-05-29T21:00:00Z",
+  "updated_at": "2026-05-30T02:30:00Z",
   "description": "Canonical registry of all TOURney plans, reviews, audits, and QA artifacts. The /platform Artifacts tab renders from this file. Skills (e.g. tourney-review) append new entries when they generate output.",
   "entries": [
     {
       "id": "review-ux-design-system-2026-05-29",
       "category": "review",
-      "stage": "executing",
+      "stage": "audit",
       "title": "UX Design System · May 29, 2026",
-      "summary": "Two-world split: tournament pages use warm cream tokens, platform shell uses dark tokens. tokens.css is force multiplier — one edit cascades all 6 pages. scoreboard.html closest to target. Runbook: extract token audit, align cream→dark, component parity.",
+      "summary": "Partial (B). Foundation shipped: --font-mono fixed to DM Mono, two-tier scopes + sunlight Course Mode + card/pill/tap/motion components in tokens.css, DESIGN.md principles. All additive, zero regression. BLOCKED: cream→dark page flip needs 174 var(--ink)→var(--text) remaps across 18 auth-gated pages + QA access — held rather than shipped blind.",
       "date": "2026-05-29",
-      "updated": "2026-05-29",
+      "updated": "2026-05-30",
       "author": "claude-sonnet-4-6",
       "url": "/platform/5-29-26-ux-design-system-review",
       "file": "5-29-26-ux-design-system-review.html",
       "tags": ["review", "ux", "design-system", "tokens", "css"],
-      "status": "open"
+      "status": "partial"
     },
     {
       "id": "review-admin-upgrade-2026-05-29",

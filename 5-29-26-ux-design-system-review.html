@@ -137,8 +137,8 @@ footer span{color:var(--gold);}
   <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Review</div></div>
   <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Plan</div></div>
   <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Runbook</div></div>
-  <div class="lc-stage"><div class="lc-pill"></div><div class="lc-label">Executing</div></div>
-  <div class="lc-stage"><div class="lc-pill"></div><div class="lc-label">Audit</div></div>
+  <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Executing</div></div>
+  <div class="lc-stage lc-active"><div class="lc-pill"></div><div class="lc-label">Audit</div></div>
   <div class="lc-stage"><div class="lc-pill"></div><div class="lc-label">Concluded</div></div>
 </div>
 <!-- LIFECYCLE-BAR-END -->
@@ -739,10 +739,25 @@ footer span{color:var(--gold);}
 <!-- EXECUTING-CONTENT-START -->
 <div class="section-header">
   <div class="section-eyebrow">§ Executing</div>
-  <div class="section-title">Awaiting Execution</div>
+  <div class="section-title">Execution Log — Foundation Shipped</div>
+  <div class="section-desc">May 29, 2026 · Claude Opus 4.8. The design-system foundation shipped (additive, zero regression). The cream→dark page flip is blocked on a 174-usage text-color remap + auth-gated QA — see §Audit.</div>
 </div>
-<div class="stage-pending">
-  <p>Awaiting execution. Run <code>/tourney-execute 5-29-26-ux-design-system-review.html</code> to proceed.</p>
+<div class="card">
+  <div class="card-title" style="color:var(--green);">Done — Foundation (commit 4a00bf5)</div>
+  <ul>
+    <li><span class="pill pill-green">Done</span> <strong>P0 · --font-mono fix</strong> — tokens.css:34 → <code>'DM Mono','Consolas','Monaco'</code>. <code>var(--font-mono)</code> now renders DM Mono everywhere. Verified on deployed tokens.css (HTTP 200).</li>
+    <li><span class="pill pill-green">Done</span> <strong>Principles spine</strong> — <code>DESIGN.md</code> created (5 principles + tier model + migration status).</li>
+    <li><span class="pill pill-green">Done</span> <strong>Two-tier scope</strong> — <code>.surface-active</code> (white text, larger type, ≥48px taps) defined in tokens.css.</li>
+    <li><span class="pill pill-green">Done</span> <strong>Sunlight Course Mode</strong> — <code>[data-mode="course"] .surface-active</code> high-contrast block defined.</li>
+    <li><span class="pill pill-green">Done</span> <strong>Component library</strong> — <code>.ds-card</code> / <code>.ds-card-accent</code> / <code>.ds-card-hero</code>, full pill system, <code>.tap</code> / <code>.tap-lg</code> floors.</li>
+    <li><span class="pill pill-green">Done</span> <strong>Motion primitives</strong> — <code>commit-flash</code> keyframe + <code>.score-birdie</code> / <code>.score-eagle</code>.</li>
+  </ul>
+  <p style="font-size:0.78rem;color:var(--muted);margin-top:0.4rem;">All additive — inert until a page opts in. No page's theme changed, so zero regression risk on the apex deploy. Console clean on tested pages.</p>
+</div>
+<div class="card" style="border-left:3px solid var(--red);">
+  <div class="card-title" style="color:var(--red);">Blocked — the cream→dark page flip (runbook steps 2, 5-toggle, 6-apply, 7)</div>
+  <p><span class="pill pill-red">Blocked</span> Removing the per-page light <code>:root</code> overrides and applying the tiers / Course Mode toggle / components to the actual pages.</p>
+  <p style="margin-top:0.5rem;"><strong>Why (evidence):</strong> tournament pages color text with <code>var(--ink)</code> (#1a1008 dark) on an inline light <code>:root</code>; tokens.css <code>--ink</code> is <em>also</em> #1a1008. Removing the light override flips <code>--bg</code> dark while text stays dark → <strong>invisible text</strong>. The correct flip remaps <strong>174 <code>var(--ink)</code> usages across 18 pages</strong> (admin 80, scorecard 22, scoreboard 11) → <code>var(--text)</code>, plus per-page light-assumption cleanup. Those pages are auth-gated — not QA-able via Chrome without credentials. Shipping the flip blind = guaranteed invisible-text regressions, which violates the "never ship known issues" standard. Held for QA access / staged eyes-on pass.</p>
 </div>
 <!-- EXECUTING-CONTENT-END -->
 </div>
@@ -753,10 +768,29 @@ footer span{color:var(--gold);}
 <!-- AUDIT-CONTENT-START -->
 <div class="section-header">
   <div class="section-eyebrow">§ Audit</div>
-  <div class="section-title">Awaiting Audit</div>
+  <div class="section-title">Audit Results — Partial (Foundation)</div>
+  <div class="section-desc">Grade: B. May 29, 2026 · Claude Opus 4.8 · deployed tokens.css verified via Chrome DevTools.</div>
 </div>
-<div class="stage-pending">
-  <p>Awaiting execution. Run <code>/tourney-execute 5-29-26-ux-design-system-review.html</code> to proceed.</p>
+<div class="score-grid">
+  <div class="score-cell"><div class="score-num score-gold">B</div><div class="score-label">Foundation</div></div>
+  <div class="score-cell"><div class="score-num score-green">✓</div><div class="score-label">font-mono bug</div></div>
+  <div class="score-cell"><div class="score-num score-green">0</div><div class="score-label">Regressions</div></div>
+  <div class="score-cell"><div class="score-num score-red">1</div><div class="score-label">Blocked</div></div>
+</div>
+<div class="card">
+  <div class="card-title" style="color:var(--green);">What Shipped</div>
+  <ul>
+    <li>The <code>--font-mono</code> bug is fixed — <code>var(--font-mono)</code> resolves to DM Mono on every tokens.css consumer.</li>
+    <li>The complete design-system foundation is in tokens.css: two surface tiers, sunlight Course Mode, card/pill/tap components, motion primitives — all additive and inert until applied, so nothing regressed.</li>
+    <li><code>DESIGN.md</code> codifies the 5 principles, the tier model, and the migration status — the spine the ticket said was missing.</li>
+    <li>Deployed tokens.css verified (HTTP 200, all rules present); console clean on tested pages.</li>
+  </ul>
+</div>
+<div class="card" style="border-left:3px solid var(--orange);">
+  <div class="card-title" style="color:var(--orange);">Still Open (Blocked)</div>
+  <ul>
+    <li><strong>The cream→dark page flip.</strong> Requires remapping 174 <code>var(--ink)</code> text usages → <code>var(--text)</code> across 18 pages and adding <code>.surface-active</code> + the Course Mode toggle per page. The key pages (admin, scorecard, scoreboard) are auth-gated and cannot be QA'd via Chrome without credentials. Held rather than shipped blind. Foundation is ready, so the flip is mechanical once QA access exists.</li>
+  </ul>
 </div>
 <!-- AUDIT-CONTENT-END -->
 </div>
@@ -766,11 +800,17 @@ footer span{color:var(--gold);}
 <div class="wrapper">
 <!-- CONCLUDED-CONTENT-START -->
 <div class="section-header">
-  <div class="section-eyebrow">§ Concluded</div>
-  <div class="section-title">Awaiting Conclusion</div>
+  <div class="section-eyebrow" style="color:var(--orange);">§ Audit — In Progress</div>
+  <div class="section-title">Rob's Action Items</div>
+  <div class="section-desc">Ticket is partial. The foundation shipped; the dark flip needs a decision + QA access before it can ship safely.</div>
 </div>
-<div class="stage-pending">
-  <p>Awaiting execution. Run <code>/tourney-execute 5-29-26-ux-design-system-review.html</code> to proceed.</p>
+<div class="card" style="border-left:3px solid var(--red);">
+  <div class="card-title">Rob's Action Items — to unblock the flip</div>
+  <ol>
+    <li style="margin-bottom:0.4rem;"><strong>Pick how I flip + verify:</strong> (a) give me a way into an authed scorecard/admin (a test login, or use your already-authed Chrome) so I can flip page-by-page and QA each, or (b) approve a staged dark migration where you eyeball each page after I push it.</li>
+    <li style="margin-bottom:0.4rem;"><strong>Brand call on marketing/home:</strong> flipping the public landing to dark is a brand decision — confirm before I touch it.</li>
+    <li><strong>Then it's mechanical:</strong> per page, remap <code>var(--ink)</code>→<code>var(--text)</code>, add <code>.surface-active</code> to scorecard/scoreboard, wire the Course Mode toggle into the scorecard header. The system is already built and waiting in tokens.css.</li>
+  </ol>
 </div>
 <!-- CONCLUDED-CONTENT-END -->
 </div>
