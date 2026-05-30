@@ -799,7 +799,8 @@ function _prefillOpponentIfPicked(playerId) {
 }
 
 // ── SETUP DROPDOWNS ───────────────────────────────────────────────
-document.getElementById('opp1Select').addEventListener('change', refreshSetupLists);
+// Guarded: scorecard markup isn't mounted in a context-less load (no tenant/round), so the element can be absent.
+document.getElementById('opp1Select')?.addEventListener('change', refreshSetupLists);
 
 function refreshSetupLists() {
   const scorerId = document.getElementById('scorerSelect').value;
