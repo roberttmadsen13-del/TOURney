@@ -78,6 +78,11 @@ body{background:var(--bg);color:var(--ink);font-family:'Barlow',sans-serif;font-
 .hole-par{font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);margin-top:0.2rem;}
 .hole-yd-inline{color:var(--muted);font-size:0.9em;letter-spacing:0.1em;}
 .format-badge{font-family:'DM Mono',monospace;font-size:0.4rem;letter-spacing:0.15em;text-transform:uppercase;padding:0.18rem 0.5rem;border:1px solid rgba(192,144,48,0.3);color:rgba(192,144,48,0.6);white-space:nowrap;align-self:flex-start;}
+/* Hole view — schematic / photo (M1) */
+.hole-view{max-height:212px;overflow:hidden;transition:max-height 0.25s ease;margin-bottom:0.9rem;cursor:pointer;border-radius:8px;}
+.hole-view.collapsed{max-height:34px;}
+.hole-view .hole-svg{width:100%;max-height:200px;display:block;margin:0 auto;}
+.hole-view img{width:100%;height:auto;display:block;border-radius:8px;}
 
 /* ── FOURSOME GRID ── */
 .foursome-cols{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);border:1px solid var(--border);}
@@ -392,6 +397,8 @@ body{background:var(--bg);color:var(--ink);font-family:'Barlow',sans-serif;font-
       <div class="format-badge" id="formatBadge">Stroke Play</div>
     </div>
 
+    <div id="holeView" class="hole-view"></div>
+
     <div id="foursomeGrid"></div>
     <div id="formatOverlay"></div>
 
@@ -546,6 +553,7 @@ let teamAssignments = {};
 let currentRound = null;
 let coursePars = [];
 let courseYards = [];
+let courseImages = [];
 let roundFormats = JSON.parse(JSON.stringify(DEFAULT_FORMATS));
 
 // Foursome state
@@ -629,10 +637,11 @@ async function init() {
   // Tournament-specific courses/course_holes table takes final precedence
   const { data: tCourse } = await sb.from('courses').select('id').eq('tournament_id', tournament.id).maybeSingle();
   if (tCourse) {
-    const { data: cHoles } = await sb.from('course_holes').select('hole_number,par,yardage').eq('course_id', tCourse.id).order('hole_number');
+    const { data: cHoles } = await sb.from('course_holes').select('hole_number,par,yardage,image_url').eq('course_id', tCourse.id).order('hole_number');
     if (cHoles?.length === 18) {
       coursePars = cHoles.map(h => h.par || 4);
       courseYards = cHoles.map(h => h.yardage || null);
+      courseImages = cHoles.map(h => h.image_url || null);
     }
   }
 
@@ -1319,6 +1328,31 @@ function scoreValClass(gross, par) {
   return 'double';
 }
 
+// ── HOLE VIEW (schematic / photo) ──────────────────────────────────
+function holeSchematicSVG(par, yards) {
+  const c = par === 3 ? '#2980b9' : par === 5 ? '#27ae60' : '#c09030';
+  const ydLabel = yards ? `${yards} YD` : '';
+  return `<svg class="hole-svg" viewBox="0 0 100 150" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Hole layout, par ${par}${yards ? ', ' + yards + ' yards' : ''}">`
+    + `<path d="M50 138 C 33 104, 65 62, 50 22" fill="none" stroke="${c}" stroke-width="13" stroke-linecap="round" opacity="0.15"/>`
+    + `<ellipse cx="50" cy="20" rx="15" ry="10" fill="${c}" opacity="0.82"/>`
+    + `<circle cx="50" cy="20" r="2.2" fill="#fdf8f0"/>`
+    + `<rect x="44" y="133" width="12" height="5" rx="2" fill="${c}"/>`
+    + `<text x="50" y="70" text-anchor="middle" font-family="'DM Mono',monospace" font-size="6" letter-spacing="2" fill="rgba(26,16,8,0.4)">PAR</text>`
+    + `<text x="50" y="92" text-anchor="middle" font-family="'DM Mono',monospace" font-size="20" font-weight="900" fill="${c}">${par}</text>`
+    + `<text x="50" y="106" text-anchor="middle" font-family="'DM Mono',monospace" font-size="7" letter-spacing="1.5" fill="rgba(26,16,8,0.4)">${ydLabel}</text>`
+    + `</svg>`;
+}
+let _holeViewWired = false;
+function wireHoleView() {
+  if (_holeViewWired) return;
+  const grid = document.getElementById('foursomeGrid');
+  const hv = document.getElementById('holeView');
+  // collapse the hole view when the player starts entering a score (protect the primary action)
+  if (grid) grid.addEventListener('pointerdown', () => { if (hv) hv.classList.add('collapsed'); });
+  if (hv) hv.addEventListener('click', () => hv.classList.toggle('collapsed'));
+  _holeViewWired = true;
+}
+
 // ── RENDER HOLE ───────────────────────────────────────────────────
 function renderHole() {
   const par = coursePars[currentHole - 1] || 4;
@@ -1327,6 +1361,19 @@ function renderHole() {
   document.getElementById('holePar').innerHTML = yd
     ? `Par ${par}<span class="hole-yd-inline"> · ${yd} yd</span>`
     : `Par ${par}`;
+  const holeView = document.getElementById('holeView');
+  if (holeView) {
+    const imgUrl = courseImages[currentHole - 1];
+    if (imgUrl) {
+      const im = document.createElement('img');
+      im.src = imgUrl; im.alt = `Hole ${currentHole}, par ${par}`; im.loading = 'lazy';
+      holeView.replaceChildren(im);
+    } else {
+      holeView.innerHTML = holeSchematicSVG(par, yd);
+    }
+    holeView.classList.remove('collapsed'); // auto-expand on new hole
+    wireHoleView();
+  }
   document.getElementById('progressHoleLabel').textContent = `Hole ${currentHole} of 18`;
   document.getElementById('progressFill').style.width = `${((currentHole - 1) / 18) * 100}%`;
   document.getElementById('prevBtn').disabled = currentHole === 1;
