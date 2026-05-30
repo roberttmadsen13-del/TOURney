@@ -473,88 +473,81 @@ out tags;</pre>
 
 <div class="section-header">
   <div class="section-eyebrow">Section 02</div>
-  <div class="section-title">Plan — What to Build</div>
-  <div class="section-desc">Strategic priorities and implementation approach for Course Hole View on the scorecard.</div>
+  <div class="section-title">Plan — Schematic-First Hole View</div>
+  <div class="section-desc">Reordered per the §Product Design Lens (Rob-approved, 2026-05-29). The tee→green schematic is the hero — not the fallback. GPS distance-to-green is the differentiator. Admin photo and satellite aerial are optional later layers. Render priority chain: <strong>photo (if admin-set) → schematic + GPS (default) → schematic only (no GPS) → par/yards label (no data)</strong>; aerial is a user-tapped overlay only.</div>
 </div>
 
 <div class="card">
-  <div class="card-title">Strategic Priorities</div>
+  <div class="card-title">Strategic Priorities (P1 → P5)</div>
   <ol>
-    <li style="margin-bottom:0.5rem;"><strong style="color:var(--gold);">P1 — Migration:</strong> Add <code>image_url text</code>, <code>lat double precision</code>, <code>lng double precision</code> (all nullable) to <code>course_holes</code> in one migration. Also add <code>hole_data jsonb</code> to <code>golf_courses</code> for shared library-level hole coordinates + images (reused across tenants). <em>See §Second Opinion — lat/lng required now to unblock satellite and OSM options.</em></li>
-    <li style="margin-bottom:0.5rem;"><strong style="color:var(--gold);">P2 — Scorecard frontend:</strong> Add <code>#holeView</code> element to <code>scorecard.html</code> hole-card. Update <code>renderHole()</code> to show <code>&lt;img src=image_url&gt;</code> when available, SVG placeholder when not. Update <code>course_holes</code> select to include <code>image_url</code>. Store in <code>courseImages[]</code> array parallel to <code>coursePars[]</code> and <code>courseYards[]</code>.</li>
-    <li style="margin-bottom:0.5rem;"><strong style="color:var(--gold);">P3 — Admin upload UI:</strong> Add per-hole image URL field in admin course config. Use Supabase Storage public bucket <code>hole-images</code> for uploads, or accept any external HTTPS URL. Simple text input + preview thumbnail is sufficient for v1.</li>
-    <li style="margin-bottom:0.5rem;"><strong style="color:var(--gold);">P4 — Close bug 97c45b3d:</strong> Mark <code>completed</code> in <code>platform_bugs</code> table after deploy + QA pass.</li>
+    <li style="margin-bottom:0.5rem;"><strong style="color:var(--gold);">P1 — Migration (enabler, trimmed):</strong> Add <code>lat double precision</code>, <code>lng double precision</code> (nullable) to <code>course_holes</code>, and <code>hole_data jsonb</code> to <code>golf_courses</code> (stores per-hole tee + green coords, reused across tenants). Keep <code>image_url</code> for the M3 premium photo override. <strong>No satellite column needed</strong> — satellite is URL-generated and demoted to an optional toggle.</li>
+    <li style="margin-bottom:0.5rem;"><strong style="color:var(--gold);">P2 — Schematic hole view = HERO (M1):</strong> Build <code>holeSchematicSVG(hole)</code> — tee→green oriented, fairway path, green, hazard glyphs, par-color accent, par + yards label. Renders from existing par/yards for <strong>all 90 courses today</strong>, offline, no network. Default render in <code>renderHole()</code>. Add <code>#holeView</code> element. <strong>This alone closes bug 97c45b3d.</strong></li>
+    <li style="margin-bottom:0.5rem;"><strong style="color:var(--gold);">P3 — GPS "you are here" + distance-to-green (M2, differentiator):</strong> <code>navigator.geolocation</code> watch → Haversine to the green coord from <code>hole_data</code> → live yardage badge + position dot on the schematic. Graceful degrade if denied/unavailable. The actual new-course playing aid; aligns with the P1 scoring + GPS roadmap.</li>
+    <li style="margin-bottom:0.5rem;"><strong style="color:var(--gold);">P4 — Optional layers (M3):</strong> Admin photo upload (premium override, highest priority in the chain) + an optional user-tapped <em>aerial</em> toggle (Mapbox <code>satellite-v9</code> behind a button, <strong>never default</strong>, per the stored "no satellite hole cards" decision).</li>
+    <li style="margin-bottom:0.5rem;"><strong style="color:var(--gold);">P5 — Close bug 97c45b3d:</strong> Mark <code>completed</code> in <code>platform_bugs</code> after M1 ships + QA pass. Schematic = "showing hole view."</li>
   </ol>
 </div>
 
 <div class="grid-2" style="margin-bottom:0.7rem;">
   <div class="idea-card idea-1">
     <div class="idea-number">1</div>
-    <div class="idea-tag"><span class="pill pill-gold">Core</span></div>
-    <div class="idea-title">SVG Placeholder — Always Useful</div>
-    <div class="idea-body">Even with no image uploaded, render an SVG schematic: a stylized fairway shape (curved rectangle) with par number centered and yardage at bottom. Pure inline SVG — no network request, works offline in PWA. Gives every hole a visual presence immediately.</div>
-    <div class="idea-plan"><strong>Build:</strong> Single JS function <code>holePlaceholderSVG(par, yards)</code> → returns SVG string. Color-coded by par (par 3 = blue, par 4 = gold, par 5 = green). ~30 lines JS.</div>
+    <div class="idea-tag"><span class="pill pill-gold">M1 · Hero</span></div>
+    <div class="idea-title">Tee→Green Schematic SVG</div>
+    <div class="idea-body">The hero artifact. Tee marker at bottom, green ellipse at top (universal golf orientation — you read up the hole the way you play it), fairway path between, hazard glyphs (water, bunkers) placed schematically, par-color accent, par + yards label. Pure inline SVG — no network, works offline, renders for every one of the 90 existing courses from par/yards alone.</div>
+    <div class="idea-plan"><strong>Build:</strong> <code>holeSchematicSVG(hole)</code> → SVG string. Default branch in <code>renderHole()</code>. ~60 lines JS. Hazard placement from <code>hole_data</code> when present, generic when not.</div>
   </div>
   <div class="idea-card idea-2">
     <div class="idea-number">2</div>
-    <div class="idea-tag"><span class="pill pill-blue">Storage</span></div>
-    <div class="idea-title">Supabase Storage — Public Bucket</div>
-    <div class="idea-body">Create <code>hole-images</code> bucket (public). Admin uploads image → gets public URL → stored in <code>course_holes.image_url</code>. Scorecard loads URL directly — no auth token needed, no signed URL complexity. Works in PWA cache as a standard img src.</div>
-    <div class="idea-plan"><strong>Build:</strong> Supabase dashboard: create bucket. Admin.html: file input + <code>supabase.storage.from('hole-images').upload()</code> → store returned public URL. ~40 lines admin JS.</div>
+    <div class="idea-tag"><span class="pill pill-blue">M2 · Differentiator</span></div>
+    <div class="idea-title">GPS "You Are Here" + Distance-to-Green</div>
+    <div class="idea-body">The thing that makes a stranger comfortable on a new course. <code>navigator.geolocation.watchPosition</code> → Haversine distance from player to the green coord in <code>hole_data</code> → big live yardage badge + a position dot projected onto the schematic. This is the playing aid; the schematic underneath is the canvas.</div>
+    <div class="idea-plan"><strong>Build:</strong> watchPosition + Haversine helper (~15 lines). Project lat/lng → SVG x/y via simple linear map between tee and green coords. Live yardage in DM Mono badge. ~40 lines JS.</div>
   </div>
   <div class="idea-card idea-3">
     <div class="idea-number">3</div>
     <div class="idea-tag"><span class="pill pill-green">UX</span></div>
-    <div class="idea-title">Collapsible / Tap-to-Expand</div>
-    <div class="idea-body">On mobile the scorecard is already tight. Hole view should default to a compact 80px strip that expands to full diagram on tap. Saves screen space while keeping the feature accessible. Collapsed state still shows par color coding.</div>
-    <div class="idea-plan"><strong>Build:</strong> CSS transition on max-height. Toggle class on tap. Persist expanded state in sessionStorage per hole. ~15 lines JS + 8 lines CSS.</div>
+    <div class="idea-title">Auto Expand/Collapse by Intent</div>
+    <div class="idea-body">Auto-expand on hole change (you just walked to a new tee — orient me). Auto-collapse to a slim par-colored strip on score-stepper focus (now I'm recording — get out of the way). Manual tap overrides. Protects the primary action without hiding the view when it's wanted.</div>
+    <div class="idea-plan"><strong>Build:</strong> CSS max-height transition. Expand on <code>renderHole()</code>; collapse on stepper focus/touch. Persist per hole in <code>sessionStorage</code>. ~15 lines JS + 8 CSS.</div>
   </div>
   <div class="idea-card idea-4">
     <div class="idea-number">4</div>
-    <div class="idea-tag"><span class="pill pill-orange">M1.5</span></div>
-    <div class="idea-title">Hybrid Fallback Chain — 3-tier rendering</div>
-    <div class="idea-body">renderHole() picks best available source: (1) admin-uploaded image_url → (2) Mapbox Static Satellite auto-generated from lat/lng → (3) OSM GeoJSON schematic diagram → (4) SVG par/yards placeholder. No hole ever blank. Satellite uses <code>satellite-v9</code> style (Standard Satellite incompatible with Static Images API). Free tier: 50k req/mo. Cached in service worker — one fetch per hole per session.</div>
-    <div class="idea-plan"><strong>Build:</strong> lat/lng in migration (P1). Mapbox token in env var. ~20 lines JS in renderHole(). OSM fetch-at-create-time → stored in golf_courses.hole_data. See §Second Opinion for full code.</div>
+    <div class="idea-tag"><span class="pill pill-orange">M3 · Premium</span></div>
+    <div class="idea-title">Admin Photo Upload (Override)</div>
+    <div class="idea-body">For tenants who want a branded or custom hole photo. Supabase Storage public <code>hole-images</code> bucket; admin uploads → public URL → <code>course_holes.image_url</code>. Highest priority in the render chain — overrides the schematic when present. Not required for a functional feature; M1+M2 already deliver real value.</div>
+    <div class="idea-plan"><strong>Build:</strong> public bucket + admin file input + <code>storage.upload()</code> → store URL. ~40 lines admin JS. Cache uploaded images in SW at round start (PWA offline).</div>
   </div>
   <div class="idea-card idea-5">
     <div class="idea-number">5</div>
-    <div class="idea-tag"><span class="pill pill-purple">PWA</span></div>
-    <div class="idea-title">Cache Hole Images in Service Worker</div>
-    <div class="idea-body">Hole images should be cached by the service worker at scorecard load time so they display offline (round in a dead-zone). Cache-busting: include image URL hash. Clear on new round. This is already the PWA's core value prop — extend it to hole images.</div>
-    <div class="idea-plan"><strong>Build (after storage):</strong> In scorecard init, after loading courseImages[], call cache.addAll(courseImages.filter(Boolean)) in sw.js runtime cache. ~10 lines.</div>
+    <div class="idea-tag"><span class="pill pill-purple">M3 · Optional</span></div>
+    <div class="idea-title">Aerial Toggle (Opt-In, Never Default)</div>
+    <div class="idea-body">For the player who specifically wants the satellite look, a small "aerial" toggle on the hole view fetches a Mapbox <code>satellite-v9</code> static tile from the hole's lat/lng. <strong>User-initiated only.</strong> Demoted from the original M1.5 default per the stored "never use satellite imagery for hole cards" decision and the §Product Design verdict.</div>
+    <div class="idea-plan"><strong>Build:</strong> toggle button → swap schematic for Mapbox static URL on tap. <code>MAPBOX_TOKEN</code> env var, URL-restricted to the domain. Cache tile in SW. ~20 lines. Ship last, only if demand.</div>
   </div>
 </div>
 
 <div class="roadmap-item">
-  <div class="roadmap-icon">M</div>
+  <div class="roadmap-icon">M1</div>
   <div class="roadmap-content">
-    <div class="roadmap-title">Milestone 1 — Schema + Scorecard Display (P1 + P2)</div>
-    <div class="roadmap-desc">Migration + frontend render. Closes DB bug 97c45b3d with SVG placeholder visible for all holes. No admin upload needed — placeholder works immediately.</div>
+    <div class="roadmap-title">Milestone 1 — Schematic Hero + Scorecard Display (P1 + P2)</div>
+    <div class="roadmap-desc">Migration (lat/lng + hole_data) + <code>holeSchematicSVG()</code> as the default render. Closes DB bug 97c45b3d. Works for all 90 existing courses immediately — no coordinates, no upload, no API needed. Sun-legible, offline, on-brand.</div>
     <div class="roadmap-action"><strong>Ship:</strong> 1 session. Vercel auto-deploy. Verify on live scorecard.</div>
   </div>
 </div>
 <div class="roadmap-item">
-  <div class="roadmap-icon">M</div>
+  <div class="roadmap-icon">M2</div>
   <div class="roadmap-content">
-    <div class="roadmap-title">Milestone 1.5 — Satellite Auto + Hybrid Chain</div>
-    <div class="roadmap-desc">Add lat/lng to course_holes rows for known courses. Wire Mapbox satellite fallback in renderHole() (~20 lines). Holes with coordinates show real satellite imagery immediately — zero admin upload needed. OSM fetch-at-create-wizard added to populate golf_courses.hole_data for new courses.</div>
-    <div class="roadmap-action"><strong>Ship:</strong> Same session as M1 or immediately after. Requires MAPBOX_TOKEN env var in Vercel.</div>
+    <div class="roadmap-title">Milestone 2 — GPS Distance + Position Dot (P3)</div>
+    <div class="roadmap-desc">The real differentiator. <code>geolocation.watchPosition</code> + Haversine distance-to-green + live position dot projected onto the schematic. Graceful degrade when location is denied. Populate green coords in <code>hole_data</code> (manual, OSM at create-time, or GPS tap-to-set). Aligns with the P1 scoring + GPS roadmap.</div>
+    <div class="roadmap-action"><strong>Ship:</strong> 1 session after M1. No paid API — browser geo + OSM coords are free.</div>
   </div>
 </div>
 <div class="roadmap-item">
-  <div class="roadmap-icon">M</div>
+  <div class="roadmap-icon">M3</div>
   <div class="roadmap-content">
-    <div class="roadmap-title">Milestone 2 — Admin Upload + Branded Images (P3)</div>
-    <div class="roadmap-desc">Supabase Storage bucket + admin.html upload UI. Admin-uploaded images take highest priority in the fallback chain — overrides satellite and OSM. For tenants that want branded or custom hole photos. Not required for functional feature — M1+M1.5 already provides real imagery.</div>
-    <div class="roadmap-action"><strong>Ship:</strong> 1 session. Closes feature fully for premium use case.</div>
-  </div>
-</div>
-<div class="roadmap-item">
-  <div class="roadmap-icon">M</div>
-  <div class="roadmap-content">
-    <div class="roadmap-title">Milestone 3 — PWA Cache + Collapse UX (P4–P5)</div>
-    <div class="roadmap-desc">Service worker caches hole images at round start. Tap-to-expand on mobile. Polish pass.</div>
-    <div class="roadmap-action"><strong>Ship:</strong> Follow-up session.</div>
+    <div class="roadmap-title">Milestone 3 — Premium Photo + Optional Aerial + PWA Cache (P4)</div>
+    <div class="roadmap-desc">Supabase Storage bucket + admin upload (highest-priority override). Optional user-tapped aerial toggle (Mapbox <code>satellite-v9</code>, never default). Service worker caches schematics/photos at round start for offline. Auto expand/collapse polish.</div>
+    <div class="roadmap-action"><strong>Ship:</strong> Follow-up session. Not required for the functional feature — M1+M2 already deliver.</div>
   </div>
 </div>
 
@@ -566,8 +559,8 @@ out tags;</pre>
 
 <div class="section-header">
   <div class="section-eyebrow">Section 03</div>
-  <div class="section-title">Runbook — Execution Steps</div>
-  <div class="section-desc">Ordered steps for <code>/tourney-execute</code> to follow. Each step is self-contained with exact file/SQL targets and verification checks.</div>
+  <div class="section-title">Runbook — Schematic-First Execution</div>
+  <div class="section-desc">Reordered per the §Product Design Lens (Rob-approved). Schematic is the default render; GPS distance is layered on top; satellite is opt-in only. Each step is self-contained with exact file/SQL targets and verification checks.</div>
 </div>
 
 <div class="runbook-steps">
@@ -600,16 +593,17 @@ out tags;</pre>
       Change to: <code>sb.from('course_holes').select('hole_number,par,yardage,image_url,lat,lng')</code><br><br>
       Add new array variables alongside <code>coursePars</code> and <code>courseYards</code>:<br>
       Near line 549 where <code>let coursePars</code> and <code>let courseYards</code> are declared, add:<br>
-      <code>let courseImages = []; let courseCoords = [];</code><br><br>
+      <code>let courseImages = []; let courseHoleData = [];</code><br><br>
       In the course_holes data handler (line 633–635), add:<br>
-      <code>courseImages = cHoles.map(h =&gt; h.image_url || null);</code><br>
-      <code>courseCoords = cHoles.map(h =&gt; (h.lat && h.lng) ? {lat:h.lat,lng:h.lng} : null);</code><br><br>
+      <code>courseImages = cHoles.map(h =&gt; h.image_url || null);</code><br><br>
+      Build <code>courseHoleData[]</code> — per-hole <code>{tee, green, hazards}</code> for the schematic + GPS. Prefer the shared library data in <code>golf_courses.hole_data</code> (loaded at lines 622–626); fall back to the per-hole tee coord on <code>course_holes</code> when present:<br>
+      <code>courseHoleData = Array.from({length:18}, (_,i) =&gt; { const lib = (gc?.hole_data||[]).find(d =&gt; d.hole === i+1) || {}; const ch = cHoles[i] || {}; return { tee: lib.tee || ((ch.lat&&ch.lng)?{lat:ch.lat,lng:ch.lng}:null), green: lib.green || null, hazards: lib.hazards || [] }; });</code><br><br>
       <strong>Upstream:</strong> Reads from course_holes (Step 1 migration required).<br>
       <strong>Downstream:</strong> courseImages[] feeds renderHole() in Step 3. No other function reads it.
     </div>
     <div class="rb-verify">
       <strong>Verify</strong>
-      Console log <code>courseImages</code> and <code>courseCoords</code> after init — both arrays of 18 items. courseCoords items are <code>{lat,lng}</code> or <code>null</code>. No 400/406 errors in Network tab for the course_holes request.
+      Console log <code>courseImages</code> and <code>courseHoleData</code> after init — both arrays of 18 items. courseHoleData items are <code>{tee, green, hazards}</code> (any field may be null/empty). No 400/406 errors in Network tab for the course_holes request.
     </div>
   </div>
 
@@ -634,45 +628,92 @@ out tags;</pre>
   </div>
 
   <div class="rb-step">
-    <div class="rb-step-title">scorecard.html — Update renderHole() to render hole view</div>
+    <div class="rb-step-title">scorecard.html — Update renderHole() to render the schematic (default) + photo override</div>
     <div class="rb-step-body">
-      File: <code>scorecard.html</code> function <code>renderHole()</code> starting line 1322.<br><br>
-      Add after line 1329 (after holePar innerHTML is set). Uses hybrid fallback chain — see §Second Opinion:<br>
-      <pre style="font-size:0.75rem;background:rgba(255,255,255,0.04);padding:0.6rem;border-radius:4px;overflow-x:auto;color:var(--text);">const imgUrl   = courseImages[currentHole - 1];
-const coords   = courseCoords[currentHole - 1];
+      File: <code>scorecard.html</code> function <code>renderHole()</code> starting line 1322. Add after line 1329 (after holePar set). <strong>No auto-satellite</strong> — render chain is photo (if admin-set) → schematic (default). Satellite is an opt-in toggle handled in M3.<br>
+      <pre style="font-size:0.75rem;background:rgba(255,255,255,0.04);padding:0.6rem;border-radius:4px;overflow-x:auto;color:var(--text);">const imgUrl   = courseImages[currentHole - 1];   // M3 admin photo override (optional)
+const holeData = courseHoleData[currentHole - 1]; // {tee,green,hazards} from hole_data
 const holeView = document.getElementById('holeView');
+const yd = courseYards[currentHole - 1];
 if (imgUrl) {
-  holeView.innerHTML = `&lt;img src="${imgUrl}" alt="Hole ${currentHole}" loading="lazy"&gt;`;
-} else if (coords) {
-  // Mapbox Static Satellite — satellite-v9 required (Standard Satellite incompatible with Static Images API)
-  const token = window.MAPBOX_TOKEN || '';
-  if (token) {
-    const url = `https://api.mapbox.com/styles/v1/mapbox/satellite-v9/static/${coords.lng},${coords.lat},17/600x380@2x?access_token=${token}`;
-    holeView.innerHTML = `&lt;img src="${url}" alt="Hole ${currentHole} satellite" loading="lazy"&gt;`;
-  } else {
-    holeView.innerHTML = holePlaceholderSVG(par, courseYards[currentHole - 1]);
-  }
+  holeView.innerHTML = `&lt;img src="${imgUrl}" alt="Hole ${currentHole}, par ${par}${yd?`, ${yd} yd`:''}" loading="lazy"&gt;`;
 } else {
-  holeView.innerHTML = holePlaceholderSVG(par, courseYards[currentHole - 1]);
+  holeView.innerHTML = holeSchematicSVG({ par, yards: yd, data: holeData });
+}
+holeView.classList.add('expanded'); // auto-expand on new tee (Step 6)
+if (holeData &amp;&amp; holeData.green) startHoleGps(holeData);  // GPS layer (Step 5)</pre><br>
+      Add helper <code>holeSchematicSVG(...)</code> — tee at bottom, green at top (read up the hole the way you play it), fairway path, hazard glyphs, par-color accent, DM Mono label:<br>
+      <pre style="font-size:0.75rem;background:rgba(255,255,255,0.04);padding:0.6rem;border-radius:4px;overflow-x:auto;color:var(--text);">function holeSchematicSVG({ par, yards, data }) {
+  const c = par === 3 ? '#2980b9' : par === 5 ? '#27ae60' : '#c09030';
+  const yd = yards ? `${yards} yd` : '';
+  const hz = ((data &amp;&amp; data.hazards) || []).map(h =&gt; h.type === 'water'
+    ? `&lt;ellipse cx="${h.x}" cy="${h.y}" rx="${h.r||10}" ry="${(h.r||10)*0.7}" fill="#2980b9" opacity="0.5"/&gt;`
+    : `&lt;circle cx="${h.x}" cy="${h.y}" r="${h.r||6}" fill="#d8c08a" opacity="0.6"/&gt;`).join('');
+  return `&lt;svg class="hole-svg" viewBox="0 0 100 180" xmlns="http://www.w3.org/2000/svg"&gt;
+    &lt;path d="M50 165 C 35 120, 65 70, 50 28" stroke="${c}" stroke-width="14" fill="none" stroke-linecap="round" opacity="0.18"/&gt;
+    ${hz}
+    &lt;ellipse cx="50" cy="24" rx="16" ry="11" fill="${c}" opacity="0.85"/&gt;
+    &lt;circle cx="50" cy="24" r="2.4" fill="#0d0a05"/&gt;            &lt;!-- pin --&gt;
+    &lt;rect x="44" y="159" width="12" height="6" rx="2" fill="${c}"/&gt; &lt;!-- tee --&gt;
+    &lt;text x="50" y="100" text-anchor="middle" font-family="'DM Mono',monospace" font-size="20" font-weight="900" fill="${c}" opacity="0.9"&gt;${par}&lt;/text&gt;
+    &lt;text x="50" y="115" text-anchor="middle" font-family="'DM Mono',monospace" font-size="8" fill="#e8dcc8" opacity="0.55"&gt;PAR · ${yd}&lt;/text&gt;
+  &lt;/svg&gt;`;
 }</pre><br>
-      Add helper function <code>holePlaceholderSVG(par, yards)</code> near other utility functions:<br>
-      <pre style="font-size:0.75rem;background:rgba(255,255,255,0.04);padding:0.6rem;border-radius:4px;overflow-x:auto;color:var(--text);">function holePlaceholderSVG(par, yards) {
-  const parColor = par === 3 ? '#2980b9' : par === 5 ? '#27ae60' : '#c09030';
-  const ydText = yards ? `${yards} yd` : '';
-  return `&lt;div class="hole-view-placeholder"&gt;
-    &lt;svg viewBox="0 0 200 90" xmlns="http://www.w3.org/2000/svg" style="max-height:90px"&gt;
-      &lt;rect x="10" y="10" width="180" height="70" rx="12" fill="rgba(255,255,255,0.04)" stroke="${parColor}" stroke-width="1.5" stroke-opacity="0.4"/&gt;
-      &lt;text x="100" y="48" text-anchor="middle" font-family="monospace" font-size="22" font-weight="900" fill="${parColor}" opacity="0.7"&gt;Par ${par}&lt;/text&gt;
-      &lt;text x="100" y="66" text-anchor="middle" font-family="monospace" font-size="10" fill="rgba(232,220,200,0.4)"&gt;${ydText}&lt;/text&gt;
-    &lt;/svg&gt;
-  &lt;/div&gt;`;
-}</pre><br>
-      <strong>Upstream:</strong> Reads <code>courseImages[]</code> (Step 2), <code>coursePars[]</code> and <code>courseYards[]</code> (existing). Writes to <code>#holeView</code> (Step 3).<br>
-      <strong>Downstream:</strong> Visual only. No scoring logic, no persistence, no downstream reads.
+      <strong>Upstream:</strong> Reads <code>courseImages[]</code>, <code>courseHoleData[]</code> (Step 2), <code>coursePars[]</code>/<code>courseYards[]</code> (existing). Writes <code>#holeView</code> (Step 3).<br>
+      <strong>Downstream:</strong> Visual only. No scoring logic, no persistence.
     </div>
     <div class="rb-verify">
       <strong>Verify</strong>
-      Navigate scorecard: hole view shows SVG placeholder when no image_url or coords. If lat/lng populated AND MAPBOX_TOKEN set — satellite image loads. If image_url set — image takes precedence. Par color coding correct (par 3 = blue, par 4 = gold, par 5 = green). Score steppers still work. prev/next navigation works. No console errors.
+      Navigate all holes: schematic renders for every hole from par/yards alone (no coords needed). Par color correct (3=blue, 4=gold, 5=green). If <code>image_url</code> set, photo overrides schematic. No satellite fetch fires on load (Network tab — zero api.mapbox.com requests). Score steppers + prev/next still work. Console clean.
+    </div>
+  </div>
+
+  <div class="rb-step">
+    <div class="rb-step-title">scorecard.html — GPS "you are here" + distance-to-green layer</div>
+    <div class="rb-step-body">
+      Add <code>startHoleGps(holeData)</code>. Watches position, computes Haversine distance to the green coord, renders a live yardage badge + a dot projected onto the schematic. <strong>Graceful degrade</strong>: if permission denied or no green coord, do nothing — the schematic stands alone, no dead "locating…" state.<br>
+      <pre style="font-size:0.75rem;background:rgba(255,255,255,0.04);padding:0.6rem;border-radius:4px;overflow-x:auto;color:var(--text);">let gpsWatch = null;
+function startHoleGps(holeData) {
+  if (gpsWatch != null) navigator.geolocation.clearWatch(gpsWatch);
+  if (!holeData || !holeData.green || !navigator.geolocation) return;
+  gpsWatch = navigator.geolocation.watchPosition(pos =&gt; {
+    const d = haversineYards(pos.coords, holeData.green);
+    const badge = document.getElementById('gpsYards');
+    if (badge) badge.textContent = `${Math.round(d)} yd to green`;
+    // project pos between tee&amp;green coords → SVG y, move #gpsDot
+  }, () =&gt; {/* denied — silent, schematic stands */}, { enableHighAccuracy:true, maximumAge:5000 });
+}
+function haversineYards(a, b) {
+  const R=6371000, toR=x=&gt;x*Math.PI/180;
+  const dLat=toR(b.lat-a.latitude), dLng=toR(b.lng-a.longitude);
+  const s=Math.sin(dLat/2)**2 + Math.cos(toR(a.latitude))*Math.cos(toR(b.lat))*Math.sin(dLng/2)**2;
+  return 2*R*Math.asin(Math.sqrt(s))*1.09361; // m → yd
+}</pre><br>
+      Clear the watch on round exit / page unload. Never render a confident distance on an approximate fix — if <code>pos.coords.accuracy &gt; 30</code> m, show "~${d} yd" or omit (Finding 7: no false precision).<br>
+      <strong>Upstream:</strong> green coord from <code>hole_data</code> (Step 2 loads <code>courseHoleData[]</code>). <strong>Downstream:</strong> visual badge + dot only.
+    </div>
+    <div class="rb-verify">
+      <strong>Verify</strong>
+      With a green coord present + location granted: badge shows live yardage, updates as you move; dot tracks. Deny permission: no error, no dead state, schematic still shows. No green coord: GPS silently skipped. Console clean.
+    </div>
+  </div>
+
+  <div class="rb-step">
+    <div class="rb-step-title">scorecard.html — Expand/collapse by intent</div>
+    <div class="rb-step-body">
+      Hole view auto-expands on hole change (done in Step 4 via <code>.expanded</code>), and auto-collapses to a slim par-colored strip when the score stepper takes focus — protects the primary action. Manual tap toggles; state persists per hole.<br>
+      <pre style="font-size:0.75rem;background:rgba(255,255,255,0.04);padding:0.6rem;border-radius:4px;overflow-x:auto;color:var(--text);">// CSS
+.hole-view{max-height:30px;overflow:hidden;transition:max-height .22s ease;}
+.hole-view.expanded{max-height:240px;}
+// JS — collapse when recording a score
+scoreStepperEl.addEventListener('focusin', () =&gt; collapseHoleView());
+holeView.addEventListener('click', () =&gt; toggleHoleView(currentHole));
+// persist: sessionStorage[`hv-${_slug}-${currentHole}`] = '1'|'0'</pre><br>
+      <strong>Upstream:</strong> <code>#holeView</code> (Step 3), score stepper element (existing). <strong>Downstream:</strong> layout only — must not shift the stepper or prev/next.
+    </div>
+    <div class="rb-verify">
+      <strong>Verify</strong>
+      New hole → view expanded. Tap a score stepper → view collapses to strip, stepper unobstructed. Tap the strip → re-expands. State survives prev/next within the round. Mobile 375px: no overlap with steppers.
     </div>
   </div>
 

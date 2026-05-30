@@ -508,55 +508,57 @@ footer span{color:var(--gold);}
 
 <div class="section-header">
   <div class="section-eyebrow">§ Plan</div>
-  <div class="section-title">Design Token Extraction + Component Rollout</div>
-  <div class="section-desc">Apply the bug-log popup aesthetic system platform-wide in four ordered phases: tokens → cards → pills/badges → typography tightening.</div>
+  <div class="section-title">Two-Tier Design System Rollout</div>
+  <div class="section-desc">Adopt the dark brand — but split it into two surface tiers so it fits both the indoor admin and the outdoor scorecard. Foundation fixes first (per §Second Opinion), then the tier system, sunlight Course Mode, components, and motion. Rob-approved 2026-05-29.</div>
 </div>
 
 <div class="card">
-  <div class="card-title">Strategic Priorities (P1 → P4)</div>
+  <div class="card-title">Strategic Priorities (P0 → P5)</div>
   <ol>
-    <li style="margin-bottom:0.5rem;"><strong>P1 — Expand tokens.css to include dark-theme token set.</strong> All 8 pages reference <code>/tokens.css</code> or inline <code>:root</code>. A single canonical token file that defines both the warm-cream values (for backward compat) AND the dark-surface values as a <code>[data-theme="dark"]</code> or direct override is the force multiplier. Zero page-level changes needed to shift color mode.</li>
-    <li style="margin-bottom:0.5rem;"><strong>P2 — Create shared card component CSS.</strong> Extract the bug-log popup card pattern (dark bg + gold border + left accent stripe) into reusable classes in tokens.css or a new <code>tourney-components.css</code>. Apply to scorecard setup card, admin form cards, scoreboard player rows.</li>
-    <li style="margin-bottom:0.5rem;"><strong>P3 — Add pill/badge component system.</strong> The platform ticket template already has a mature pill system (<code>.pill-gold</code>, <code>.pill-green</code>, <code>.pill-red</code>, etc.). Port this to tournament pages for format labels (Stroke Play, Best Ball), score differentials (E, +2, -3), player status (DNS, WD).</li>
-    <li><strong>P4 — Typography tightening.</strong> Audit every data-display element across tournament pages. Expand DM Mono usage to: all score tables, all stat numbers, all date/time displays, all metadata rows. Match the compact density of the reference popup.</li>
+    <li style="margin-bottom:0.5rem;"><strong>P0 — Foundation (must precede everything; from §Second Opinion).</strong> Fix <code>--font-mono</code> → <code>'DM Mono','Consolas',monospace</code> in tokens.css; remove the per-page inline <code>:root</code> light overrides so the already-dark tokens.css cascades; replace hardcoded green hex with <code>var(--green)</code>. <strong>No new tokens needed</strong> — tokens.css is already dark; the overrides are the only blocker.</li>
+    <li style="margin-bottom:0.5rem;"><strong>P1 — Two-tier surface system + principles.</strong> Codify 5 design principles. Define two scopes sharing one token set: <strong>lean-back</strong> (default — marketing/platform/admin/login: dark, dense) and <code>.surface-active</code> (scorecard/scoreboard: raised contrast, larger type, ≥48px tap targets). The fix for Finding 1's context collapse.</li>
+    <li style="margin-bottom:0.5rem;"><strong>P2 — Sunlight Course Mode.</strong> A <code>[data-mode="course"]</code> high-contrast variant scoped to the scorecard, with a header toggle persisted per device. Resolves the sunlight fork (Finding 2) without abandoning the dark brand elsewhere.</li>
+    <li style="margin-bottom:0.5rem;"><strong>P3 — Component library.</strong> <code>.ds-card</code>, <code>.ds-card-hero</code> (the score-stepper hero treatment), the pill system ported from the template, and tap-target utility classes — all into tokens.css.</li>
+    <li style="margin-bottom:0.5rem;"><strong>P4 — Typography + motion.</strong> DM Mono on data surfaces (unblocked by the P0 font-mono fix), score-commit micro-feedback flash, birdie/eagle color tokens, haptic on submit.</li>
+    <li><strong>P5 — QA.</strong> Two-tier visual pass, Course Mode toggle under simulated sunlight, mobile, full regression.</li>
   </ol>
 </div>
 
 <div class="grid-2">
   <div class="idea-card idea-1">
     <div class="idea-number">1</div>
-    <div class="idea-tag"><span class="pill pill-gold">Tokens</span></div>
-    <div class="idea-title">Dark Token Override in tokens.css</div>
-    <div class="idea-body">tokens.css already loaded by all pages. Add <code>:root</code> dark-surface values: <code>--bg:#0d0a05</code>, <code>--surface:#151009</code>, <code>--card:#1c140a</code>, <code>--text:#e8dcc8</code>, <code>--muted:#7a6a54</code>. Add missing tokens: <code>--gold-dim</code>, <code>--gold-light</code>. One file change shifts the color foundation across all tournament pages instantly.</div>
-    <div class="idea-plan"><strong>Build:</strong> Edit tokens.css. Override :root. Verify each page renders dark background before touching component CSS.</div>
+    <div class="idea-tag"><span class="pill pill-gold">Principles</span></div>
+    <div class="idea-title">Design Principles Spine</div>
+    <div class="idea-body">A token table is not a design system. Codify the 5 rules of use so future screens stop re-litigating: <em>Glance don't read · The score is the hero · Mono = data never prose · Gold = action &amp; identity not decoration · Earn every tap.</em> These become the tie-breaker for every later decision.</div>
+    <div class="idea-plan"><strong>Build:</strong> Header comment block in tokens.css + a short <code>DESIGN.md</code> in repo root. ~30 min, zero code risk, highest leverage.</div>
   </div>
   <div class="idea-card idea-2">
     <div class="idea-number">2</div>
-    <div class="idea-tag"><span class="pill pill-blue">Components</span></div>
-    <div class="idea-title">Shared .ds-card Component Class</div>
-    <div class="idea-body">Extract the bug-popup card pattern to a <code>.ds-card</code> class: <code>background:var(--card); border:1px solid var(--border); border-radius:8px; padding:0.95rem 1.15rem</code>. Variant <code>.ds-card-accent</code> adds <code>border-left:3px solid var(--gold)</code>. Replace all ad-hoc card containers on scorecard, admin, scoreboard with these classes.</div>
-    <div class="idea-plan"><strong>Build:</strong> Add to tokens.css or new tourney-components.css. Swap classes in each HTML page. 15-20 substitutions total.</div>
+    <div class="idea-tag"><span class="pill pill-blue">Tiers</span></div>
+    <div class="idea-title">Two-Tier Surface Scopes</div>
+    <div class="idea-body">One token set, two surface scopes. Lean-back is the default (dark, dense — the bug-popup aesthetic, perfect indoors). <code>.surface-active</code> on the scorecard/scoreboard bumps the contrast and type budget: <code>--text</code> → <code>#fff</code>, larger numerals, ≥48px tap floor. Same gold, same fonts — different density per context.</div>
+    <div class="idea-plan"><strong>Build:</strong> <code>.surface-active</code> scope block in tokens.css. Add the class to scorecard/scoreboard body wrappers. ~25 lines CSS.</div>
   </div>
   <div class="idea-card idea-3">
     <div class="idea-number">3</div>
-    <div class="idea-tag"><span class="pill pill-green">Pills</span></div>
-    <div class="idea-title">Pill Badge System on Tournament Pages</div>
-    <div class="idea-body">Port the platform ticket's pill system (<code>.pill</code>, <code>.pill-gold</code>, <code>.pill-green</code>, <code>.pill-red</code>, <code>.pill-orange</code>) to tournament pages. Apply to: round format labels, score differential display, player status, hole type indicators. Small components, huge visual coherence gain.</div>
-    <div class="idea-plan"><strong>Build:</strong> Add pill CSS to shared file. Update scorecard.html score display, scoreboard.html leaderboard rows, admin.html round type labels.</div>
+    <div class="idea-tag"><span class="pill pill-green">Sunlight</span></div>
+    <div class="idea-title">Course Mode — Sunlight High-Contrast</div>
+    <div class="idea-body">The scorecard is the one screen guaranteed to be used in direct sun, where dark UIs wash out. A <code>[data-mode="course"]</code> variant flips the scoring surface to a near-white field with black numerals — maximum photon output, no reflection wash. One header toggle, persisted per device. Keeps the dark brand everywhere else.</div>
+    <div class="idea-plan"><strong>Build:</strong> <code>[data-mode="course"]</code> override block scoped to scorecard + toggle button + <code>localStorage</code> persist. ~35 lines.</div>
   </div>
   <div class="idea-card idea-4">
     <div class="idea-number">4</div>
-    <div class="idea-tag"><span class="pill pill-orange">Typography</span></div>
-    <div class="idea-title">DM Mono Expansion to All Data Surfaces</div>
-    <div class="idea-body">scoreboard.html already applies DM Mono to <code>.score-cell</code> (L100). Extend this pattern: all score numbers, hole numbers, par values, handicap displays, timestamps, round dates. The reference popup's compact mono density is the target. Body text stays Barlow; data becomes mono.</div>
-    <div class="idea-plan"><strong>Build:</strong> Audit all numeric/data elements per page. Add <code>font-family:'DM Mono',monospace</code> to relevant selectors. No structural changes needed.</div>
+    <div class="idea-tag"><span class="pill pill-orange">Hierarchy</span></div>
+    <div class="idea-title">Score Hero + Tap Floors</div>
+    <div class="idea-body">Don't flatten the scorecard into equal-weight cards — the score stepper must dominate. Ship a <code>.ds-card-hero</code> treatment for the active score input, and enforce tap floors (steppers ≥56px, all controls ≥48px, ≥8px gaps) so gloved thumbs don't mis-tap the core action. Side-game panels (Wolf/Skins/etc.) sit visually below it.</div>
+    <div class="idea-plan"><strong>Build:</strong> <code>.ds-card</code>, <code>.ds-card-hero</code>, tap-target utility classes in tokens.css; apply hero to the scorecard stepper. ~20 lines + class swaps.</div>
   </div>
   <div class="idea-card idea-5">
     <div class="idea-number">5</div>
-    <div class="idea-tag"><span class="pill pill-purple">Refactor</span></div>
-    <div class="idea-title">Extract Inline Styles from Bug Popup</div>
-    <div class="idea-body">The reference design itself (platform.html bug popup, ~L2385–2420) is implemented with heavy inline <code>style=""</code> strings. Before it can serve as a true reference component, extract its patterns to named CSS classes. This is prerequisite for the design system to be reusable, not just visually admired.</div>
-    <div class="idea-plan"><strong>Build:</strong> In platform.html, replace inline style strings on bug row rendering with <code>.bug-row</code>, <code>.bug-row-open</code>, <code>.bug-row-done</code>, <code>.bug-meta</code> classes. Add CSS to platform's style block.</div>
+    <div class="idea-tag"><span class="pill pill-purple">Delight</span></div>
+    <div class="idea-title">Motion &amp; Emotional Feedback</div>
+    <div class="idea-body">TOURney already has a soul (HIO confetti, leaderboard score-flash). Promote feedback to system primitives: a score-commit micro-flash on the cell, a birdie/eagle color celebration (gold/blue, already in the marketing demo), and a haptic tick on submit (<code>navigator.vibrate</code>). Cheap, on-brand, and scoring is an emotional act.</div>
+    <div class="idea-plan"><strong>Build:</strong> reusable <code>@keyframes</code> flash token + birdie/eagle classes in tokens.css; <code>navigator.vibrate(15)</code> on submit. ~25 lines.</div>
   </div>
 </div>
 
@@ -565,24 +567,24 @@ footer span{color:var(--gold);}
   <div class="roadmap-item">
     <div class="roadmap-icon">🎨</div>
     <div class="roadmap-content">
-      <div class="roadmap-title">v1 Design System — Token File Done</div>
-      <div class="roadmap-desc">All pages render dark theme from shared tokens.css. No per-page color overrides.</div>
-      <div class="roadmap-action"><strong>Target:</strong> End of next execute session. 1 file change.</div>
+      <div class="roadmap-title">v1 Foundation + Two-Tier Tokens (P0 + P1)</div>
+      <div class="roadmap-desc">font-mono fixed to DM Mono, per-page light overrides removed, hardcoded green normalized. Two surface scopes live: lean-back default + <code>.surface-active</code> on scorecard/scoreboard. Principles written.</div>
+      <div class="roadmap-action"><strong>Target:</strong> 1 execute session. Mostly tokens.css + override removal.</div>
     </div>
   </div>
   <div class="roadmap-item">
-    <div class="roadmap-icon">🧩</div>
+    <div class="roadmap-icon">☀️</div>
     <div class="roadmap-content">
-      <div class="roadmap-title">v2 Component Library — Cards + Pills Live</div>
-      <div class="roadmap-desc">All tournament page cards use shared .ds-card class. Pills present on scorecard and scoreboard.</div>
-      <div class="roadmap-action"><strong>Target:</strong> 1–2 execute sessions after v1.</div>
+      <div class="roadmap-title">v2 Course Mode + Component Library (P2 + P3)</div>
+      <div class="roadmap-desc">Sunlight Course Mode toggle on the scorecard. <code>.ds-card</code> / <code>.ds-card-hero</code> + pill system live on scorecard, scoreboard, admin. Score stepper gets the hero treatment; tap floors enforced.</div>
+      <div class="roadmap-action"><strong>Target:</strong> 1–2 sessions after v1.</div>
     </div>
   </div>
   <div class="roadmap-item">
     <div class="roadmap-icon">✅</div>
     <div class="roadmap-content">
-      <div class="roadmap-title">v3 Full Parity — Rob's Vision Realized</div>
-      <div class="roadmap-desc">Every tournament-facing page matches the bug-log popup aesthetic. DM Mono on all data. Pill badges everywhere. Dark card style consistent across all surfaces.</div>
+      <div class="roadmap-title">v3 Motion + Full Parity (P4 + P5)</div>
+      <div class="roadmap-desc">DM Mono on all data surfaces. Score-commit flash, birdie/eagle celebration, haptic on submit. Both tiers consistent, sun-legible, and QA-clean across all pages and mobile.</div>
       <div class="roadmap-action"><strong>Target:</strong> After v2 QA passes clean.</div>
     </div>
   </div>
@@ -596,134 +598,135 @@ footer span{color:var(--gold);}
 
 <div class="section-header">
   <div class="section-eyebrow">§ Runbook</div>
-  <div class="section-title">Execution Steps — Dark Design System Rollout</div>
-  <div class="section-desc">Ordered steps. Execute in sequence. Each step is independently verifiable. Start with tokens — everything downstream depends on it.</div>
+  <div class="section-title">Execution Steps — Two-Tier System Rollout</div>
+  <div class="section-desc">Reordered per §Second Opinion + §Product Design Lens (Rob-approved). Foundation fixes first (tokens.css is already dark — the overrides are the blocker), then the two-tier scopes, sunlight Course Mode, components, and motion. Each step independently verifiable.</div>
 </div>
 
 <div class="runbook-steps">
 
   <div class="rb-step">
-    <div class="rb-step-title">Read and audit tokens.css</div>
+    <div class="rb-step-title">Foundation — fix <code>--font-mono</code> in tokens.css</div>
     <div class="rb-step-body">
-      Read <code>C:\Users\Rob\Greenskeeper Studios\01 Repos\TOURney\tokens.css</code>. Catalog every current token. Identify what's present, what's missing, and whether it's the source of the light-theme values.<br><br>
-      <strong>Upstream:</strong> tokens.css is loaded by scorecard.html (L22) and likely other pages via <code>&lt;link rel="stylesheet" href="/tokens.css"&gt;</code>.<br>
-      <strong>Downstream:</strong> Every :root token in every tournament page. Changing this file changes all pages simultaneously.
+      Per §Second Opinion: tokens.css imports DM Mono but <code>--font-mono</code> resolves to <code>'Consolas','Monaco',monospace</code>. Every <code>var(--font-mono)</code> renders the wrong font. Fix first — all later typography depends on it.<br><br>
+      <code>--font-mono: 'DM Mono', 'Consolas', monospace;</code><br><br>
+      <strong>Upstream:</strong> tokens.css <code>:root</code>. <strong>Downstream:</strong> every selector using <code>var(--font-mono)</code> across all pages — they all start rendering DM Mono.
     </div>
     <div class="rb-verify">
       <strong>Verify</strong>
-      Confirm tokens.css exists and is non-empty. Note whether it defines <code>--bg</code>, <code>--card</code>, <code>--surface</code>, <code>--text</code>. If it's empty or only contains font imports, the inline :root blocks in each page are the source of truth and Step 2 approach changes.
+      Any element with <code>font-family:var(--font-mono)</code> renders DM Mono (rounded, distinctive) not Consolas. DevTools computed style confirms <code>DM Mono</code> first.
     </div>
   </div>
 
   <div class="rb-step">
-    <div class="rb-step-title">Add dark-theme tokens to tokens.css (or create tourney-theme.css)</div>
+    <div class="rb-step-title">Foundation — remove per-page light <code>:root</code> overrides + normalize green</div>
     <div class="rb-step-body">
-      Add the following to tokens.css (append, don't replace existing tokens to avoid breaking anything):<br><br>
-      <code>:root { --bg:#0d0a05; --surface:#151009; --card:#1c140a; --border:rgba(192,144,48,0.22); --text:#e8dcc8; --muted:#7a6a54; --gold-dim:rgba(192,144,48,0.18); --gold-light:#d4a840; }</code><br><br>
-      If tokens.css already defines conflicting values for <code>--bg</code> and <code>--card</code>, the inline <code>:root</code> in each page will win (inline <code>&lt;style&gt;</code> beats external sheet if specificity is equal). In that case: remove the <code>--bg</code> and <code>--card</code> overrides from each page's inline <code>:root</code> block and let tokens.css be the single source.<br><br>
-      <strong>Upstream:</strong> Inline :root blocks in scorecard.html (L24), admin.html (L23), scoreboard.html (L25), home.html (L24).<br>
-      <strong>Downstream:</strong> Background color, card surface, all border colors on all tournament pages immediately.
+      tokens.css is <strong>already dark</strong> (§Second Opinion). The blocker is inline <code>:root</code> light overrides on each page. Grep each tournament page for an inline <code>:root { --bg ...</code> block and delete the light values so tokens.css cascades: home.html, scorecard.html, scoreboard.html, admin.html, login.html, create.html.<br><br>
+      Replace hardcoded green hex (<code>#2a7a20</code>, <code>#1a4010</code>) in admin/scorecard with <code>var(--green)</code> — these are token bypasses, not drift.<br><br>
+      <strong>Upstream:</strong> inline <code>:root</code> blocks per page. <strong>Downstream:</strong> bg/card/border on all pages flip dark at once — QA each page after.
     </div>
     <div class="rb-verify">
       <strong>Verify</strong>
-      Open scorecard.html in browser. Body background should be near-black (<code>#0d0a05</code>). Card areas should be dark brown (<code>#1c140a</code>). Gold borders visible. If light cream still showing, the inline :root is winning — remove conflicting tokens from each page's inline block.
+      Each page loads near-black bg from tokens.css, no inline light override remains (grep returns zero <code>--bg:#f5ede0</code>). Greens render <code>#27ae60</code>. No page still shows cream.
     </div>
   </div>
 
   <div class="rb-step">
-    <div class="rb-step-title">Add shared .ds-card component classes to tokens.css</div>
+    <div class="rb-step-title">Write the design principles spine</div>
     <div class="rb-step-body">
-      Append to tokens.css (after token definitions):<br><br>
-      <code>.ds-card { background:var(--card); border:1px solid var(--border); border-radius:8px; padding:0.95rem 1.15rem; margin-bottom:0.55rem; }</code><br>
-      <code>.ds-card-accent { border-left:3px solid var(--gold); border-radius:0 8px 8px 0; }</code><br>
-      <code>.ds-card-title { font-size:0.85rem; font-weight:700; color:var(--gold); margin-bottom:0.4rem; }</code><br><br>
-      Port the full pill system from the template (`.pill`, `.pill-gold`, `.pill-green`, `.pill-red`, `.pill-orange`, `.pill-blue`, `.pill-purple`) into tokens.css.<br><br>
-      <strong>Upstream:</strong> None — adding new classes, not changing existing ones.<br>
-      <strong>Downstream:</strong> Available to all pages once they reference the class names.
+      Add a header comment block to tokens.css and a short <code>DESIGN.md</code> in repo root with the 5 principles: <em>Glance don't read · The score is the hero · Mono = data never prose · Gold = action &amp; identity not decoration · Earn every tap.</em> These are the tie-breaker for every later styling decision.<br><br>
+      <strong>Upstream:</strong> none. <strong>Downstream:</strong> documentation — guides Steps 4–8 and all future screens.
     </div>
     <div class="rb-verify">
       <strong>Verify</strong>
-      Add a test element <code>&lt;div class="ds-card"&gt;test&lt;/div&gt;</code> to scorecard.html temporarily. Renders with dark background, gold border. Remove test element after confirming.
+      <code>DESIGN.md</code> exists with 5 principles; tokens.css header comment present.
     </div>
   </div>
 
   <div class="rb-step">
-    <div class="rb-step-title">Update scorecard.html — apply dark card classes</div>
+    <div class="rb-step-title">Two-tier surface scopes in tokens.css</div>
     <div class="rb-step-body">
-      In scorecard.html: find the setup form container and score entry cards. Replace their local background/border styles with <code>class="ds-card"</code>. Update form input styles: <code>background:var(--card); border:1px solid var(--border); color:var(--text)</code>.<br><br>
-      Add DM Mono to all label elements: <code>.fg label { font-family:'DM Mono',monospace; }</code> (already partially there at L43, confirm consistency).<br><br>
-      Update <code>body</code> bg: ensure <code>background:var(--bg)</code> picks up new dark token.<br><br>
-      <strong>Upstream:</strong> tokens.css (Steps 1–3 must be done first).<br>
-      <strong>Downstream:</strong> Only scorecard.html. No cross-page risk.
+      Lean-back is the default (dark, dense). Add an active-tier scope that raises the contrast/type/tap budget for outdoor scoring surfaces:<br><br>
+      <code>.surface-active{--text:#ffffff;--muted:#b8a884;font-size:16px;}</code><br>
+      <code>.surface-active button,.surface-active .stepper{min-height:48px;min-width:48px;}</code><br><br>
+      Add <code>class="surface-active"</code> to the body/root wrapper of scorecard.html and scoreboard.html only. All other pages stay lean-back by default.<br><br>
+      <strong>Upstream:</strong> tokens.css. <strong>Downstream:</strong> only scorecard + scoreboard inherit the active treatment; admin/marketing/platform/login unchanged.
     </div>
     <div class="rb-verify">
       <strong>Verify</strong>
-      Load scorecard in browser. Setup screen: dark bg, gold-bordered form inputs, DM Mono labels. Start a round — score entry screen renders correctly. Console zero errors.
+      Scorecard text is pure-white and larger; tap targets ≥48px (DevTools box model). Admin/login unchanged (still lean-back). No regression on non-active pages.
     </div>
   </div>
 
   <div class="rb-step">
-    <div class="rb-step-title">Update scoreboard.html — dark cards + pill badges on score cells</div>
+    <div class="rb-step-title">Sunlight Course Mode toggle (scorecard)</div>
     <div class="rb-step-body">
-      scoreboard.html already has DM Mono on <code>.score-cell</code> (L100) — build from that foundation.<br><br>
-      Update <code>--bg</code> and <code>--card</code> to use new tokens (should happen automatically after Step 2 if tokens.css wins). Then apply <code>.ds-card</code> to player row containers. Add pill badges for score differentials: E (gold), under par (green), over par (red). These replace the current color-class-only approach.<br><br>
-      <strong>Upstream:</strong> Supabase leaderboard query → score data → scoreboard render.<br>
-      <strong>Downstream:</strong> Scorecard.html reads from same data but renders separately — no impact. Realtime channel for live updates still functions as long as JS is untouched.
+      Add a high-contrast variant scoped to the scorecard for direct-sun use, plus a header toggle persisted per device:<br><br>
+      <code>[data-mode="course"] .surface-active{--bg:#f7f4ec;--card:#ffffff;--text:#0d0a05;--muted:#4a4030;--border:#c09030;}</code><br><br>
+      Toggle button in the scorecard header: <code>document.documentElement.dataset.mode = next; localStorage.setItem('tourney-mode', next);</code> Read on init. Default stays dark; Course Mode is opt-in.<br><br>
+      <strong>Upstream:</strong> scorecard header + tokens.css. <strong>Downstream:</strong> scorecard only — never affects other pages or the dark brand elsewhere.
     </div>
     <div class="rb-verify">
       <strong>Verify</strong>
-      Scoreboard renders with dark bg. Player rows in .ds-card containers. Score differential cells show E/+N/-N in correct pill color. Realtime updates still fire. Mobile viewport — table doesn't overflow.
+      Toggle flips the scorecard to a near-white high-contrast field; score numerals stay black-on-white and legible. Setting persists across reload. Other pages unaffected. Console clean.
     </div>
   </div>
 
   <div class="rb-step">
-    <div class="rb-step-title">Update admin.html — dark cards on all form sections</div>
+    <div class="rb-step-title">Component library in tokens.css (+ extract bug-popup inline styles)</div>
     <div class="rb-step-body">
-      admin.html uses same token set as scorecard. After Step 2 dark token override, most backgrounds will shift automatically. Audit: replace any hardcoded <code>background:#fdf8f0</code> or <code>background:var(--card)</code> values that aren't picking up the new token. Apply <code>.ds-card</code> to section containers. Apply <code>.ds-card-accent</code> to active/selected states.<br><br>
-      Fix token drift: admin.html has <code>--green:#2a7a20</code> while scorecard has <code>#1a4010</code>. Align to <code>#27ae60</code> (platform standard) in tokens.css.<br><br>
-      <strong>Upstream:</strong> Admin writes to rounds/tournament tables. No UX change touches data.<br>
-      <strong>Downstream:</strong> Admin-only page. Zero impact on player-facing pages.
+      Add the shared components: <code>.ds-card</code> (dark bg + gold border), <code>.ds-card-accent</code> (left stripe), <code>.ds-card-hero</code> (elevated treatment for the primary action — heavier border, larger padding, subtle gold glow), the full pill system (<code>.pill-gold/green/red/orange/blue/purple</code>), and tap-target utilities (<code>.tap{min-height:48px;min-width:48px}</code>, <code>.tap-lg{min-height:56px}</code>).<br><br>
+      Also extract the bug-popup inline <code>style=""</code> strings in platform.html <code>rowHtml()</code> (~L2385) into <code>.bug-row</code> / <code>.bug-row-open</code> / <code>.bug-row-done</code> / <code>.bug-meta</code> classes — so the reference component is reusable, not just admired.<br><br>
+      <strong>Upstream:</strong> none (additive classes). <strong>Downstream:</strong> available to all pages; platform bugs tab swaps inline → classes.
     </div>
     <div class="rb-verify">
       <strong>Verify</strong>
-      Admin loads dark. Form sections in .ds-card. Green accent consistent with platform. Console zero errors. Round creation flow — all steps functional.
+      Test <code>.ds-card</code>/<code>.ds-card-hero</code> render dark + gold; pills colored correctly. Platform bugs tab renders identically (red/green left borders, DM Mono meta). Console clean, realtime bug updates still fire.
     </div>
   </div>
 
   <div class="rb-step">
-    <div class="rb-step-title">Extract inline styles from platform.html bug popup to CSS classes</div>
+    <div class="rb-step-title">Apply the tiers to pages — hero on scorecard, cards on scoreboard/admin</div>
     <div class="rb-step-body">
-      In platform.html, the <code>rowHtml()</code> function (~L2385) renders bug rows with inline <code>style=""</code> strings. Extract to named classes in platform.html's <code>&lt;style&gt;</code> block:<br><br>
-      <code>.bug-row { background:var(--card); border:1px solid var(--border); border-left:3px solid; border-radius:0 6px 6px 0; padding:.75rem 1rem; margin-bottom:.45rem; }</code><br>
-      <code>.bug-row-open { border-left-color:var(--red); }</code><br>
-      <code>.bug-row-done { border-left-color:var(--green); }</code><br>
-      <code>.bug-meta { font-family:'DM Mono',monospace; font-size:.52rem; color:var(--muted); }</code><br><br>
-      Update JS to use class names instead of inline style strings.<br><br>
-      <strong>Upstream:</strong> platform_bugs Supabase table → loadBugsTab() → rowHtml().<br>
-      <strong>Downstream:</strong> Only platform.html bugs tab visual rendering. Functional behavior unchanged.
+      <strong>scorecard.html (active tier):</strong> wrap the active score input in <code>.ds-card-hero</code> so it dominates; steppers get <code>.tap-lg</code> (≥56px); side-game panels (Wolf/Skins/etc.) sit below in plain <code>.ds-card</code>. Wire the Course Mode toggle from Step 5 into the header. Setup form + inputs → <code>.ds-card</code>, DM Mono labels.<br><br>
+      <strong>scoreboard.html (active tier):</strong> player rows → <code>.ds-card</code>; score differentials → pill badges (E gold, under green, over red), replacing ad-hoc color classes. Build on the existing DM Mono <code>.score-cell</code> (L100).<br><br>
+      <strong>admin.html (lean-back):</strong> section containers → <code>.ds-card</code>, active/selected → <code>.ds-card-accent</code>. Dense is fine here — admin is indoor.<br><br>
+      <strong>Upstream:</strong> tokens.css Steps 1–6; Supabase leaderboard query feeds scoreboard. <strong>Downstream:</strong> scorecard/scoreboard/admin visuals only — realtime JS untouched, so live updates and score writes are unaffected.
     </div>
     <div class="rb-verify">
       <strong>Verify</strong>
-      Platform bugs tab renders identically to before. Open bugs: red left border. Completed: green. DM Mono metadata line. Console zero errors. Realtime bug updates still render correctly.
+      Scorecard: the score stepper is visually the hero, ≥56px, Course Mode toggle works. Scoreboard: rows in cards, differentials show E/+N/-N pills, realtime still fires, no mobile overflow. Admin: sections in cards, round-creation flow fully functional. Console clean on all three.
     </div>
   </div>
 
   <div class="rb-step">
-    <div class="rb-step-title">QA all pages — visual consistency pass</div>
+    <div class="rb-step-title">Typography + motion across data surfaces</div>
     <div class="rb-step-body">
-      Walk every tournament-facing page in browser. Checklist per page:<br><br>
-      1. Body background is dark (<code>#0d0a05</code>)<br>
-      2. Cards render with dark brown background + gold border<br>
-      3. DM Mono on all data/label elements<br>
-      4. Gold accents consistent — no warm-cream residue<br>
-      5. Buttons: ghost style with semantic color borders (gold primary, red destructive)<br>
-      6. Mobile viewport — no layout breaks<br>
-      7. Console zero errors on each page<br><br>
-      Take screenshot of each page. Compare to reference: platform.html bugs tab.
+      Now that <code>--font-mono</code> is fixed (Step 1): apply <code>var(--font-mono)</code> to all data elements — score numbers, hole/par/yardage, handicaps, timestamps, leaderboard figures. Body prose stays Barlow.<br><br>
+      Motion primitives (define once in tokens.css, reuse): a <code>@keyframes commit-flash</code> on the score cell when a score is recorded; birdie/eagle celebration classes (gold/blue, matching the marketing demo); <code>navigator.vibrate(15)</code> haptic on submit.<br><br>
+      <strong>Upstream:</strong> tokens.css. <strong>Downstream:</strong> visual/feedback only — no scoring or persistence logic changes.
     </div>
     <div class="rb-verify">
       <strong>Verify</strong>
-      Six pages screenshotted: scorecard, scoreboard, admin, login, create, home. All dark. All gold-accented. No light-cream bleed. Console clean across all. Full happy-path test: login → create round → enter scores → view scoreboard → admin round management.
+      Data elements render DM Mono; prose stays Barlow. Recording a score flashes the cell; a birdie shows the celebration color; submit triggers a haptic tick on a mobile device. No console errors, no layout shift.
+    </div>
+  </div>
+
+  <div class="rb-step">
+    <div class="rb-step-title">QA — two-tier + Course Mode pass</div>
+    <div class="rb-step-body">
+      Walk every page in browser. Checklist:<br><br>
+      1. Lean-back pages (marketing/platform/admin/login) dark from tokens.css — no inline light override left<br>
+      2. Active pages (scorecard/scoreboard) carry <code>.surface-active</code>: pure-white text, larger type, tap targets ≥48px (steppers ≥56px)<br>
+      3. Score stepper is the visual hero (<code>.ds-card-hero</code>); side-games subordinate<br>
+      4. <strong>Course Mode toggle</strong> flips the scorecard to high-contrast sunlight field and persists; other pages unaffected<br>
+      5. DM Mono on all data; prose stays Barlow<br>
+      6. Score-commit flash + birdie color + submit haptic fire<br>
+      7. Mobile 375px — no layout breaks, no mis-tap crowding<br>
+      8. Console zero errors per page
+    </div>
+    <div class="rb-verify">
+      <strong>Verify</strong>
+      Screenshot scorecard (dark) + scorecard (Course Mode) + scoreboard + admin + login + home. Both tiers correct, Course Mode legible, console clean across all. Full happy-path: login → create round → enter scores → view scoreboard → admin round management — all functional.
     </div>
   </div>
 
