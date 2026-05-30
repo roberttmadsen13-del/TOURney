@@ -354,3 +354,7 @@ GROUP BY t.slug;
 
 ### 2026-05-27 — 5-26-26-ux-review execute audit
 - [P1] showToast undefined — 25 silent save failures (admin.html) — added #adminToast + showToast() function. Status: fixed
+
+### 2026-05-29 — 5-29-26-course-hole-view execute audit
+- M1 hole view shipped clean — no new bugs introduced. Schematic SVG verified on deployed code (function + SVG validity + par colors + visual). Bug 97c45b3d closed. Status: clean
+- [OBSERVATION, pre-existing] apex `/scorecard` (no-tournament context) logs `addEventListener` null + unhandled-promise errors at init — NOT introduced by this change (all new listeners guarded). Worth a separate look; the real scorecard is tenant/round-scoped.

@@ -146,9 +146,9 @@ footer span{color:var(--gold);}
   <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Review</div></div>
   <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Plan</div></div>
   <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Runbook</div></div>
-  <div class="lc-stage"><div class="lc-pill"></div><div class="lc-label">Executing</div></div>
-  <div class="lc-stage"><div class="lc-pill"></div><div class="lc-label">Audit</div></div>
-  <div class="lc-stage"><div class="lc-pill"></div><div class="lc-label">Concluded</div></div>
+  <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Executing</div></div>
+  <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Audit</div></div>
+  <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Concluded</div></div>
 </div>
 <!-- LIFECYCLE-BAR-END -->
 
@@ -802,9 +802,21 @@ holeView.addEventListener('click', () =&gt; toggleHoleView(currentHole));
 <section id="executing">
 <div class="wrapper">
 <!-- EXECUTING-CONTENT-START -->
-<div class="stage-pending">
-  <p>Awaiting execution. Run <code>/tourney-execute 5-29-26-course-hole-view-review.html</code> to proceed.</p>
+<div class="section-header">
+  <div class="section-eyebrow">Stage 4 — Executing</div>
+  <div class="section-title">Execution Log</div>
+  <div class="section-desc">M1 schematic hero shipped. May 29, 2026 · Claude Opus 4.8. Scope: M1 (schematic + photo path) + safe migration. M2 (GPS) and M3 (admin photo / aerial) deferred to follow-up per the milestone plan.</div>
 </div>
+<div class="exec-step"><span class="exec-badge exec-done">Done</span><div class="exec-body"><strong>1 · Migration</strong>Applied <code>add_hole_view_columns</code> on jllugkiojeoopitdvzsa: <code>image_url</code>, <code>lat</code>, <code>lng</code> on <code>course_holes</code> + <code>hole_data jsonb</code> on <code>golf_courses</code>. Additive/nullable — zero regression.</div></div>
+<div class="exec-step"><span class="exec-badge exec-done">Done</span><div class="exec-body"><strong>2 · course_holes select + loader</strong>scorecard.html:632 — added <code>image_url</code> to the select; <code>courseImages[]</code> declared (L549) and mapped (L636). Coord/hole_data loading deferred with M2.</div></div>
+<div class="exec-step"><span class="exec-badge exec-done">Done</span><div class="exec-body"><strong>3 · #holeView element + CSS</strong>scorecard.html — <code>&lt;div id="holeView" class="hole-view"&gt;</code> inserted between <code>.hole-header</code> and <code>#foursomeGrid</code> (L395); <code>.hole-view</code> CSS added (collapsible, max-height transition).</div></div>
+<div class="exec-step"><span class="exec-badge exec-done">Done</span><div class="exec-body"><strong>4 · renderHole() — schematic default + photo override</strong>Added <code>holeSchematicSVG(par,yards)</code> (tee→green, par-colored, DM Mono labels) and the render branch: photo via <code>image_url</code> (XSS-safe <code>createElement</code>) else schematic. Renders for every course from existing par/yards — no data needed.</div></div>
+<div class="exec-step"><span class="exec-badge exec-skipped">Deferred · M2</span><div class="exec-body"><strong>5 · GPS "you are here" + distance-to-green</strong>Deferred. No coordinate-entry path exists yet (no admin UI to set green coords), so shipping the GPS layer now would be inert dead code. Scheduled for M2 alongside a coord-entry path.</div></div>
+<div class="exec-step"><span class="exec-badge exec-done">Done</span><div class="exec-body"><strong>6 · Expand/collapse by intent</strong>Auto-expand on hole change (<code>renderHole</code> removes <code>.collapsed</code>); collapse on score entry (<code>pointerdown</code> on <code>#foursomeGrid</code>); tap toggles. Listener wired once via <code>wireHoleView()</code>.</div></div>
+<div class="exec-step"><span class="exec-badge exec-skipped">Deferred · M3</span><div class="exec-body"><strong>7 · Supabase Storage bucket</strong>Deferred (premium photo layer). Not required — schematic is the functional hero and closes the bug.</div></div>
+<div class="exec-step"><span class="exec-badge exec-skipped">Deferred · M3</span><div class="exec-body"><strong>8 · Admin photo upload UI</strong>Deferred (premium override). <code>image_url</code> column + render path are ready; the upload UI ships in M3.</div></div>
+<div class="exec-step"><span class="exec-badge exec-done">Done</span><div class="exec-body"><strong>9 · Close bug 97c45b3d</strong><code>platform_bugs</code> 97c45b3d-…-c9747fc0e7c1 set <code>completed</code> — hole view now renders.</div></div>
+<div class="exec-step"><span class="exec-badge exec-done">Done</span><div class="exec-body"><strong>10 · QA</strong>Chrome DevTools on deployed code: <code>holeSchematicSVG</code> present, SVG well-formed (aria-label set), par colors correct (3 blue / 4 gold / 5 green), graceful with null yards, <code>.hole-view</code> CSS loaded, visual screenshot clean. In-round interactive flow is auth-gated (not reachable via Chrome) — verified by construction (guarded render in <code>renderHole</code>).</div></div>
 <!-- EXECUTING-CONTENT-END -->
 </div>
 </section>
@@ -812,8 +824,35 @@ holeView.addEventListener('click', () =&gt; toggleHoleView(currentHole));
 <section id="audit">
 <div class="wrapper">
 <!-- AUDIT-CONTENT-START -->
-<div class="stage-pending">
-  <p>Awaiting execution. Run <code>/tourney-execute 5-29-26-course-hole-view-review.html</code> to proceed.</p>
+<div class="section-header">
+  <div class="section-eyebrow">Stage 5 — Audit</div>
+  <div class="section-title">Audit Results</div>
+  <div class="section-desc">Grade: A−. May 29, 2026 · Claude Opus 4.8 · verified via Chrome DevTools on deployed code.</div>
+</div>
+<div class="score-grid">
+  <div class="score-cell"><div class="score-num score-green">A−</div><div class="score-label">M1 Hole View</div></div>
+  <div class="score-cell"><div class="score-num score-green">✓</div><div class="score-label">Bug 97c45b3d</div></div>
+  <div class="score-cell"><div class="score-num score-green">0</div><div class="score-label">Regressions</div></div>
+  <div class="score-cell"><div class="score-num score-gold">M2/M3</div><div class="score-label">Deferred</div></div>
+</div>
+<div class="card">
+  <div class="card-title" style="color:var(--green);">What Shipped</div>
+  <ul>
+    <li>Tee→green <strong>schematic SVG</strong> hole view — renders for every course from existing par/yards, zero data required, offline, on light-theme scorecard.</li>
+    <li>Par-color coding verified live (3 blue / 4 gold / 5 green); SVG well-formed with <code>aria-label</code>; graceful with null yardage.</li>
+    <li>Photo-override path (<code>image_url</code>) wired XSS-safe via <code>createElement</code> — ready for M3 uploads.</li>
+    <li>Expand-on-hole-change / collapse-on-score-entry interaction — protects the primary action.</li>
+    <li>Migration <code>add_hole_view_columns</code> applied (additive, nullable) — unblocks M2/M3, zero regression.</li>
+    <li>Bug 97c45b3d marked <code>completed</code> in <code>platform_bugs</code>.</li>
+  </ul>
+</div>
+<div class="card">
+  <div class="card-title" style="color:var(--orange);">Still Open</div>
+  <ul>
+    <li><strong>M2 — GPS distance-to-green</strong> (deferred): needs a coordinate-entry path before the GPS layer is non-inert. Next milestone.</li>
+    <li><strong>M3 — admin photo upload + opt-in aerial toggle</strong> (deferred): premium layer; aerial also needs a <code>MAPBOX_TOKEN</code> env var (Rob). Not required for the functional feature.</li>
+    <li><strong>In-round interactive QA</strong>: the live scorecard is auth-gated and not reachable via Chrome without credentials. M1 verified by unit + construction; worth a 30-second eyeball during a real round.</li>
+  </ul>
 </div>
 <!-- AUDIT-CONTENT-END -->
 </div>
@@ -822,8 +861,18 @@ holeView.addEventListener('click', () =&gt; toggleHoleView(currentHole));
 <section id="concluded">
 <div class="wrapper">
 <!-- CONCLUDED-CONTENT-START -->
-<div class="stage-pending">
-  <p>Awaiting execution. Run <code>/tourney-execute 5-29-26-course-hole-view-review.html</code> to proceed.</p>
+<div class="section-header">
+  <div class="section-eyebrow">Stage 6 — Concluded</div>
+  <div class="section-title">Ticket Concluded</div>
+  <div class="section-desc">May 29, 2026 · Claude Opus 4.8</div>
+</div>
+<div class="card">
+  <div class="card-title">Summary</div>
+  <p>M1 of the product-design verdict shipped: a tee→green schematic hole view is now the default render on the scorecard, working for all 90 courses with no data, no API, and no cost. Bug 97c45b3d is closed. A safe additive migration prepares the GPS (M2) and photo (M3) layers. Satellite stays demoted to an opt-in aerial toggle per the stored product decision — no contradiction introduced.</p>
+</div>
+<div class="card">
+  <div class="card-title">Next</div>
+  <p>M2 (GPS distance-to-green) is the highest-value follow-up and the real new-course differentiator — needs a coordinate-entry path first. M3 (admin photo upload + opt-in aerial) is premium/optional. Run <code>/tourney-execute 5-29-26-ux-design-system-review.html</code> to continue the design work, or <code>/tourney-review</code> a new axis.</p>
 </div>
 <!-- CONCLUDED-CONTENT-END -->
 </div>

@@ -1,7 +1,7 @@
 {
   "$schema": "https://tourney.greenskeeper.studio/qa-index-schema.json",
   "version": 1,
-  "updated_at": "2026-05-29T14:00:00Z",
+  "updated_at": "2026-05-29T21:00:00Z",
   "description": "Canonical registry of all TOURney plans, reviews, audits, and QA artifacts. The /platform Artifacts tab renders from this file. Skills (e.g. tourney-review) append new entries when they generate output.",
   "entries": [
     {
@@ -35,16 +35,16 @@
     {
       "id": "review-course-hole-view-2026-05-29",
       "category": "review",
-      "stage": "executing",
+      "stage": "concluded",
       "title": "Course Hole View · May 29, 2026",
-      "summary": "Feature never built. course_holes has no image column. renderHole() has no img/SVG element. SVG placeholder using existing par+yards closes the bug immediately with zero DB changes. Runbook: add image_url migration, SVG placeholder, optional image upload.",
+      "summary": "Concluded — M1 shipped (grade A−). Tee→green schematic SVG is the default hole view, rendering for all 90 courses from existing par/yards (no data/API/cost). Photo-override path + safe migration in place. Bug 97c45b3d closed. M2 (GPS distance) + M3 (admin photo/aerial) deferred per milestone plan.",
       "date": "2026-05-29",
       "updated": "2026-05-29",
       "author": "claude-sonnet-4-6",
       "url": "/platform/5-29-26-course-hole-view-review",
       "file": "5-29-26-course-hole-view-review.html",
       "tags": ["review", "scorecard", "course", "hole-view", "svg"],
-      "status": "open"
+      "status": "concluded"
     },
     {
       "id": "review-tickets-autosync-2026-05-29",
