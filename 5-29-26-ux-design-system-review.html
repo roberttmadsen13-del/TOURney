@@ -122,6 +122,7 @@ footer span{color:var(--gold);}
     <div class="nav-brand">TOURney <span>by Greenskeeper Studios</span></div>
     <div class="nav-links">
       <a href="#review">Review</a>
+      <a href="#product-design" style="color:var(--purple);">Design</a>
       <a href="#plan">Plan</a>
       <a href="#runbook">Runbook</a>
       <a href="#executing">Executing</a>
@@ -428,6 +429,75 @@ footer span{color:var(--gold);}
 
 <div style="margin-top:1rem;padding:0.6rem 0.9rem;background:var(--surface);border-radius:6px;font-size:0.78rem;color:var(--muted);">
   <strong style="color:var(--blue);">Grade adjustment:</strong> Token Coverage should move from B+ → <strong style="color:var(--green);">A−</strong> (tokens.css is more complete than the §Review assessed). Design Parity stays D+ — the gap is real, just caused by override pattern not missing tokens.
+  <br><br><span style="color:var(--purple);">⚑ Reframed by §Product Design Lens below:</span> this Second Opinion fixes <em>how</em> the dark theme cascades. The Product Design pass questions <em>whether</em> the dark, dense admin aesthetic fits a sunlit, gloved, one-handed scoring surface at all — and proposes a two-tier system plus a sunlight "Course Mode" decision for Rob.
+</div>
+
+</div>
+</section>
+
+<section id="product-design" style="border-top:2px solid var(--purple);">
+<div class="wrapper">
+
+<div class="section-header">
+  <div class="section-eyebrow" style="color:var(--purple);">§ Product Design Lens</div>
+  <div class="section-title">Product Design Critique — Principal Designer Review · Claude Opus 4.8 · May 29, 2026</div>
+  <div class="section-desc">The §Review and §Second Opinion solve the <em>implementation</em> (token cascade, font-mono, override removal). This pass asks the prior question every designer must ask before touching a pixel: is the design itself right for <strong>who</strong> uses it and <strong>where</strong>? Several findings reframe the work rather than sharpen it.</div>
+</div>
+
+<div class="card" style="border-left:3px solid var(--red);">
+  <div class="card-title" style="color:var(--red);">FINDING 1 (High) — Context collapse: an admin-tool aesthetic is being cascaded onto a sunlit, gloved, one-handed consumer surface</div>
+  <p>The reference specimen — the bug-log popup — is an <strong>internal admin widget</strong> viewed indoors, on a desktop, by Rob. The plan cascades its dense, dark, mono language onto <code>scorecard.html</code>, which is used in the opposite context: <strong>outdoors, in direct sun, one-handed, by a golfer wearing a glove</strong>, often mid-round under time and social pressure. A design language should serve the <em>consumer's</em> context, not inherit from the internal tool it happened to be born in.</p>
+  <p style="margin-top:0.5rem;">Stored strategic read confirms the underlying pattern (competitor-intel, 2026-05-21): <em>"TOURney UX = admin-first… players get leaderboard."</em> Propagating the admin aesthetic platform-wide risks hardening that admin-first bias into the design system itself.</p>
+  <div class="sec-fix" style="font-size:0.8rem;color:var(--text);background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:4px;padding:0.5rem 0.7rem;margin-top:0.6rem;"><strong style="color:var(--gold-light);display:block;margin-bottom:0.15rem;font-size:0.68rem;text-transform:uppercase;letter-spacing:0.08em;">Reframe</strong>One token set, <strong>two surface tiers</strong>: <strong>Lean-back surfaces</strong> (marketing, platform, admin, login) — dark, dense, premium; the bug-popup aesthetic fits perfectly. <strong>Active surfaces</strong> (scorecard during a round, scoreboard at the turn) — high-contrast, large-tap, glanceable. Same gold, same fonts, same card grammar — different <em>density &amp; contrast budget</em> per tier.</div>
+</div>
+
+<div class="card" style="border-left:3px solid var(--red);margin-top:0.7rem;">
+  <div class="card-title" style="color:var(--red);">FINDING 2 (High) — Dark theme + outdoor sunlight is the single biggest unaddressed risk — and it needs Rob's decision</div>
+  <p>Dark UIs fail in direct sunlight. A mostly-black screen emits few photons even at max brightness, so screen reflections (sky, the player's own face) dominate and wash out legibility; light UIs push more light and stay readable. This is the most common real-world complaint for outdoor sports apps that adopted dark mode. The scorecard is the <strong>one screen guaranteed to be used in bright sun</strong>.</p>
+  <p style="margin-top:0.5rem;"><strong>This is not "abandon dark."</strong> Dark is the brand and it is right for 6 of 8 surfaces. But the active-scoring surface needs a sunlight-survivable treatment. This is a genuine fork — surfacing it, not silently choosing (per DISAGREEMENTS rule):</p>
+  <ol style="padding-left:1.2rem;margin-top:0.5rem;">
+    <li style="margin-bottom:0.35rem;"><strong>Course Mode toggle (recommended)</strong> — a high-contrast variant of the scoring surface only (near-white field or pure-black numerals on white), one toggle in the scorecard header, persisted per device.</li>
+    <li style="margin-bottom:0.35rem;"><strong>Keep dark, crank contrast + size</strong> — text <code>#fff</code> not <code>#e8dcc8</code>, score numerals ≥ 2.5rem, hit WCAG AA-large minimum. Cheaper, partial fix.</li>
+    <li><strong>Auto-switch</strong> by time-of-day or ambient-light sensor. Magical but fragile — ship after option 1.</li>
+  </ol>
+</div>
+
+<div class="card" style="border-left:3px solid var(--orange);margin-top:0.7rem;">
+  <div class="card-title" style="color:var(--orange);">FINDING 3 (Med) — A token table is not a design system. No principles are stated.</div>
+  <p>The ticket defines <em>what</em> (colors, fonts) but never the <em>rules of use</em>. Without principles, every future screen re-litigates the same decisions and drift returns within a sprint. Codify a short spine in the <code>tokens.css</code> header (or a <code>DESIGN.md</code>):</p>
+  <ol style="padding-left:1.2rem;margin-top:0.5rem;">
+    <li style="margin-bottom:0.3rem;"><strong>Glance, don't read.</strong> A golfer checks the phone between shots — primary info must be legible in under one second.</li>
+    <li style="margin-bottom:0.3rem;"><strong>The score is the hero.</strong> On any scoring surface, the current score input is the largest, highest-contrast element. Nothing competes.</li>
+    <li style="margin-bottom:0.3rem;"><strong>Mono = data, never prose.</strong> DM Mono for numbers/labels; Barlow for sentences. (Already the instinct — make it law.)</li>
+    <li style="margin-bottom:0.3rem;"><strong>Gold is action &amp; identity, not decoration.</strong> Reserve gold for interactive and brand moments so it stays meaningful.</li>
+    <li><strong>Earn every tap.</strong> Assume a gloved thumb in motion.</li>
+  </ol>
+</div>
+
+<div class="card" style="border-left:3px solid var(--orange);margin-top:0.7rem;">
+  <div class="card-title" style="color:var(--orange);">FINDING 4 (Med) — Touch ergonomics are unscoped, and golf is the hardest case</div>
+  <p>The plan ports the desktop admin widget's compact padding (<code>0.75rem 1rem</code> per row) onto a touch surface used one-handed, with a glove, sometimes while holding a club or bag. WCAG 2.5.5 and Apple HIG floor is 44×44pt; for gloved outdoor use the practical floor is <strong>48–56px</strong>. Admin density on the scorecard will produce mis-taps on score entry — the single worst place to mis-tap, because it is the core action and the round is competitive.</p>
+  <div class="sec-fix" style="font-size:0.8rem;color:var(--text);background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:4px;padding:0.5rem 0.7rem;margin-top:0.6rem;"><strong style="color:var(--gold-light);display:block;margin-bottom:0.15rem;font-size:0.68rem;text-transform:uppercase;letter-spacing:0.08em;">Spec</strong>Score steppers ≥ 56px; all tappable controls ≥ 48px; ≥ 8px gap between adjacent targets. Compact density is permitted on the lean-back tier <em>only</em>.</div>
+</div>
+
+<div class="card" style="border-left:3px solid var(--orange);margin-top:0.7rem;">
+  <div class="card-title" style="color:var(--orange);">FINDING 5 (Med) — The system must protect the primary action, not flatten it</div>
+  <p>The risk of applying dense dark cards everywhere: the scorecard becomes a uniform field of equal-weight cards, and the <strong>score stepper</strong> — the one thing the user came to do — loses prominence. The bug-popup reference has no single hero; every row is equal. That is correct for a log and wrong for a task surface. With Wolf / BBG / Quota / Snake / Skins / Nassau side-game panels now living on the scorecard (shipped 2026-05-27), the competition for attention is real and present.</p>
+  <div class="sec-fix" style="font-size:0.8rem;color:var(--text);background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:4px;padding:0.5rem 0.7rem;margin-top:0.6rem;"><strong style="color:var(--gold-light);display:block;margin-bottom:0.15rem;font-size:0.68rem;text-transform:uppercase;letter-spacing:0.08em;">Hierarchy law (scoring surfaces)</strong>Score input (hero) &gt; hole context (par / yards / hole view) &gt; navigation &gt; format side-games. The design system should ship an explicit "hero" treatment — not just a flat <code>.ds-card</code>.</div>
+</div>
+
+<div class="card" style="border-left:3px solid var(--green);margin-top:0.7rem;">
+  <div class="card-title" style="color:var(--green);">FINDING 6 (Low) — Motion, feedback &amp; emotional design are missing from the system</div>
+  <p>TOURney already has a playful soul — HIO confetti, trash talk, the leaderboard score-flash in <code>marketing.html</code>. Scoring is an emotional, social act (birdies, blow-up holes, talking smack). The design-system ticket is purely static. The system should explicitly include feedback primitives:</p>
+  <ul style="margin-top:0.4rem;">
+    <li><strong>Score-commit micro-feedback</strong> — subtle scale/flash on the score cell (the leaderboard flash already exists — reuse the motion token).</li>
+    <li><strong>Birdie / eagle celebration</strong> — gold/blue color treatment already used in the marketing scorecard demo; promote it to a system token.</li>
+    <li><strong>Haptic on submit</strong> — <code>navigator.vibrate</code>. Cheap, high delight, on-brand for a PWA.</li>
+  </ul>
+</div>
+
+<div style="margin-top:1rem;padding:0.7rem 0.95rem;background:var(--surface);border-radius:6px;font-size:0.8rem;color:var(--muted);">
+  <strong style="color:var(--purple);">Grade adjustment (product-design lens):</strong> Add the axis this ticket is missing — <strong style="color:var(--red);">Fitness-for-Context: D</strong>. The system has not been evaluated against where and how it is used. "UX Consistency C+" is honest, but note that consistency <em>to the wrong reference</em> is not the win it appears to be — parity to an admin widget is not the goal; <strong>fitness to each surface's job is</strong>. Recommend re-scoping P1 of the §Plan from "make everything match the popup" to "establish the two-tier system, then make each tier match its job."
 </div>
 
 </div>

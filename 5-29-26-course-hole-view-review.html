@@ -131,6 +131,7 @@ footer span{color:var(--gold);}
     <div class="nav-brand">TOURney <span>by Greenskeeper Studios</span></div>
     <div class="nav-links">
       <a href="#review">Review</a>
+      <a href="#product-design" style="color:var(--purple);">Design</a>
       <a href="#plan">Plan</a>
       <a href="#runbook">Runbook</a>
       <a href="#executing">Executing</a>
@@ -389,6 +390,79 @@ out tags;</pre>
 
 <div style="margin-top:1rem;padding:0.6rem 0.9rem;background:var(--surface);border-radius:6px;font-size:0.78rem;color:var(--muted);">
   <strong style="color:var(--blue);">Priority recommendation:</strong> Add <code style="font-family:monospace;">lat/lng</code> to migration now (free). Ship M1 with placeholder as planned. Wire Mapbox satellite as a 20-line add-on (instant real imagery, no admin work). Build OSM fetch-at-create-time in M2 for offline diagram support. Admin upload remains as premium override for branded content.
+  <br><br><span style="color:var(--purple);">⚑ Contested by §Product Design Lens below:</span> the satellite-first ordering optimizes for demo polish over the golfer's actual job and conflicts with a stored product decision ("never use satellite imagery for hole cards"). Product-design verdict promotes the schematic to hero and demotes satellite to an optional aerial toggle. Rob to resolve — see DISAGREEMENTS.md.
+</div>
+
+</div>
+</section>
+
+<section id="product-design" style="border-top:2px solid var(--purple);">
+<div class="wrapper">
+
+<div class="section-header">
+  <div class="section-eyebrow" style="color:var(--purple);">§ Product Design Lens</div>
+  <div class="section-title">Product Design Critique — What Is the Golfer Actually Trying to Do? · Claude Opus 4.8 · May 29, 2026</div>
+  <div class="section-desc">The §Review and §Second Opinion debate <em>how to source a hole image</em> — upload vs. Mapbox satellite vs. OSM. This pass asks the prior question: during scoring, what does the golfer need to <strong>see</strong> — and is a satellite photo it? The answer flips the priority order and resolves a live conflict with a stored product decision.</div>
+</div>
+
+<div class="card" style="border-left:3px solid var(--red);">
+  <div class="card-title" style="color:var(--red);">FINDING 1 (High) — The job is mis-framed. This isn't "show a hole image" — it's "orient a stranger on a hole they've never played."</div>
+  <p>Stored core demo insight (competitor-intel, 2026-05-21): <em>"TOURney's primary demo use case = groups going to courses they've NEVER played. GPS + hole views are the experience differentiator for new-course trips, not a luxury."</em> That reframes the entire feature. The artifact must answer the golfer's real questions standing on the tee of an unknown hole:</p>
+  <ul style="margin-top:0.45rem;">
+    <li>Which way does the hole go? (dogleg, blind, straight)</li>
+    <li>What do I have to carry? (water, bunker, waste)</li>
+    <li>Where is the trouble, and where is safe?</li>
+    <li>Where is the green, and how far am I?</li>
+  </ul>
+  <p style="margin-top:0.5rem;">"Show a picture of the hole" satisfies none of these reliably. "Orient me on this hole" is the actual job. Everything below follows from that distinction.</p>
+</div>
+
+<div class="card" style="border-left:3px solid var(--red);margin-top:0.7rem;">
+  <div class="card-title" style="color:var(--red);">FINDING 2 (High) — Satellite imagery is the wrong primary — and it contradicts a stored product decision</div>
+  <p><strong>Product problem:</strong> a Mapbox satellite tile is decorative, not directive. Every hole renders as a similar dark-green blob; aerials are frequently years stale and the wrong season; the tile is north-up, so it rarely matches the direction of play and the golfer must mentally rotate it; and on a phone in bright sun it collapses to a muddy rectangle. It demos well and helps the player very little.</p>
+  <p style="margin-top:0.5rem;"><strong>Conflict:</strong> the stored memory decision states plainly — <em>"never use satellite imagery for hole cards"</em> (<code>project_tourney_core_demo_insight</code>) — yet this ticket's §Second Opinion makes Mapbox Static Satellite the <strong>M1.5 centerpiece</strong>. Note the source tension: the same 2026-05-21 competitor-intel drawer says "satellite — REVISED: BUILD FREE." These two stored facts disagree. <strong>Logged to DISAGREEMENTS.md for Rob to resolve</strong> — not silently chosen.</p>
+  <div class="sec-fix" style="font-size:0.8rem;color:var(--text);background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:4px;padding:0.5rem 0.7rem;margin-top:0.6rem;"><strong style="color:var(--gold-light);display:block;margin-bottom:0.15rem;font-size:0.68rem;text-transform:uppercase;letter-spacing:0.08em;">Design verdict</strong>A <strong>schematic SVG, oriented tee → green</strong>, is the right primary: sun-legible, consistent hole-to-hole, branded to TOURney's tokens, offline-native, and it actually communicates the hole. Satellite, if kept at all, is an optional "aerial" toggle — never the default. This aligns the build with the stored decision.</div>
+</div>
+
+<div class="card" style="border-left:3px solid var(--red);margin-top:0.7rem;">
+  <div class="card-title" style="color:var(--red);">FINDING 3 (High) — The most valuable layer is missing from both the plan and the second opinion: "you are here"</div>
+  <p>The competitor gap analysis and the core demo insight both point at <strong>GPS</strong>. A hole diagram without the player's live position is a static picture; a diagram <em>with</em> a GPS dot and a live yardage-to-green number is a genuine playing aid — the exact thing that makes a stranger comfortable on a course they've never played. The lat/lng schema work is the <em>enabler</em>; the product payoff is the dot and the distance, not the basemap underneath it.</p>
+  <div class="sec-fix" style="font-size:0.8rem;color:var(--text);background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:4px;padding:0.5rem 0.7rem;margin-top:0.6rem;"><strong style="color:var(--gold-light);display:block;margin-bottom:0.15rem;font-size:0.68rem;text-transform:uppercase;letter-spacing:0.08em;">Design the view as a layered playing aid, not an image slot</strong>
+  <strong>Layer 0</strong> — par + yardage (always, instant, zero network).<br>
+  <strong>Layer 1</strong> — schematic shape tee → green with hazard glyphs (the hero).<br>
+  <strong>Layer 2</strong> — GPS "you are here" dot + live distance-to-green (the differentiator).<br>
+  <strong>Layer 3</strong> — optional aerial photo toggle for those who want it.<br>
+  This also future-proofs cleanly toward the P1 player-scoring + GPS roadmap already on file.</div>
+</div>
+
+<div class="card" style="border-left:3px solid var(--orange);margin-top:0.7rem;">
+  <div class="card-title" style="color:var(--orange);">FINDING 4 (Med) — Interaction model: when does the view appear, and does it fight the score stepper?</div>
+  <p>The plan inserts <code>#holeView</code> between <code>.hole-header</code> and <code>.hole-nav</code> with a vague "collapsible." But <em>timing</em> is the design question. A golfer wants the hole view <strong>on arrival at the tee</strong> (planning the shot) and wants it <strong>out of the way while entering a score</strong>. Those are opposite states and the UI should switch between them automatically.</p>
+  <div class="sec-fix" style="font-size:0.8rem;color:var(--text);background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:4px;padding:0.5rem 0.7rem;margin-top:0.6rem;"><strong style="color:var(--gold-light);display:block;margin-bottom:0.15rem;font-size:0.68rem;text-transform:uppercase;letter-spacing:0.08em;">State design</strong>On hole change → view auto-expands (you just walked to a new tee — orient me). On score-stepper focus → view auto-collapses to a slim par-colored strip (now I'm recording — get out of the way). Manual tap overrides; state persists per hole in <code>sessionStorage</code> (the plan already gestures at this). Net: the view shows up exactly when wanted and protects the primary action when not.</div>
+</div>
+
+<div class="card" style="border-left:3px solid var(--orange);margin-top:0.7rem;">
+  <div class="card-title" style="color:var(--orange);">FINDING 5 (Med) — The SVG "placeholder" is designed as a consolation prize. It is actually the product.</div>
+  <p>The plan frames the SVG as the fallback "when nothing better exists" — a gray box reading "Par 4." But per Findings 1–3 the schematic is the <em>best</em> artifact for the job, not the worst. It is also the <strong>only</strong> layer that works today for the 90 existing flat <code>golf_courses</code> rows, which have par/yards arrays but no coordinates. Investing in a real schematic ships value to every existing tenant on day one; investing in satellite ships value only after someone populates lat/lng.</p>
+  <div class="sec-fix" style="font-size:0.8rem;color:var(--text);background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:4px;padding:0.5rem 0.7rem;margin-top:0.6rem;"><strong style="color:var(--gold-light);display:block;margin-bottom:0.15rem;font-size:0.68rem;text-transform:uppercase;letter-spacing:0.08em;">Elevate</strong>Rename "placeholder" → "hole schematic." Give it tee and green markers, a fairway path, simple hazard glyphs, orientation to the direction of play, and a par-color accent. Make it the M1 hero; treat photo and aerial as later enhancements.</div>
+</div>
+
+<div class="card" style="border-left:3px solid var(--green);margin-top:0.7rem;">
+  <div class="card-title" style="color:var(--green);">FINDING 6 (Low) — The hole view inherits the unresolved theme question from the sister ticket</div>
+  <p>A satellite photo (bright, full-color, north-up) dropped into a dark-card scorecard reads as a foreign object — and if the scorecard adopts a high-contrast "Course Mode" for sunlight (see the UX Design System ticket, Finding 2), a dark satellite tile becomes nearly invisible. A schematic SVG drawn from TOURney's own tokens adapts to whichever theme wins. One more reason schematic &gt; photo. <strong>These two tickets must be decided together</strong>, not in isolation.</p>
+</div>
+
+<div class="card" style="border-left:3px solid var(--green);margin-top:0.7rem;">
+  <div class="card-title" style="color:var(--green);">FINDING 7 (Low) — Accessibility &amp; data honesty</div>
+  <ul style="margin-top:0.3rem;">
+    <li><strong>Alt text must describe the hole</strong> — "Hole 7, par 4, dogleg right, 410 yd" — not "Hole 7 satellite."</li>
+    <li><strong>Graceful GPS degradation</strong> — if location is denied or unavailable, fall straight back to the schematic. Never leave a dead "locating…" state on screen mid-round.</li>
+    <li><strong>No false precision</strong> — never render a confident pin on an approximate lat/lng. A playing aid that lies about distance erodes trust fast. Mark estimated positions, or omit the distance until the fix is good.</li>
+  </ul>
+</div>
+
+<div style="margin-top:1rem;padding:0.7rem 0.95rem;background:var(--surface);border-radius:6px;font-size:0.8rem;color:var(--muted);">
+  <strong style="color:var(--purple);">Revised recommendation — flip the priority order:</strong> <strong>M1</strong> = schematic SVG hole view as the <em>hero</em> (works for all 90 courses today, sun-legible, offline, on-brand). <strong>M2</strong> = GPS "you are here" + distance-to-green (the real differentiator; aligns with the P1 scoring + GPS roadmap). <strong>M3</strong> = optional admin photo upload (premium override) and an optional aerial toggle. <strong>Demote satellite</strong> from "M1.5 centerpiece" to "optional aerial layer," consistent with the stored product decision. Net effect: less API dependency, lower cost, better job-fit, and no contradiction with memory.
 </div>
 
 </div>
