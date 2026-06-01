@@ -685,7 +685,7 @@
     if (S.structure === 'team' && S.teamCount === 2) {
       modeWrap.style.display = '';
       [
-        { v:'2v2',        label:'2 v 2' },
+        { v:'2v2',        label:'Team Cup' },
         { v:'slayer_3v1', label:'Slayer 3 v 1' },
       ].forEach(m => {
         const b = document.createElement('button');
@@ -732,15 +732,19 @@
         <div class="fmt-day">Day ${DAY_WORDS[i-1]}</div>
         <div>
           <div class="fmt-nine-lbl">Front 9</div>
-          <select class="fmt-select" id="fd-${key}-front" onchange="updateFmtDesc('${key}','front',this.value)">${makeOpts(fmt.front)}</select>
+          <select class="fmt-select" id="fd-${key}-front">${makeOpts(fmt.front)}</select>
           <div class="fmt-desc" id="fd-${key}-front-desc"></div>
         </div>
         <div>
           <div class="fmt-nine-lbl">Back 9</div>
-          <select class="fmt-select" id="fd-${key}-back" onchange="updateFmtDesc('${key}','back',this.value)">${makeOpts(fmt.back)}</select>
+          <select class="fmt-select" id="fd-${key}-back">${makeOpts(fmt.back)}</select>
           <div class="fmt-desc" id="fd-${key}-back-desc"></div>
         </div>`;
       cont.appendChild(div);
+      ['front','back'].forEach(side => {
+        const sel = document.getElementById(`fd-${key}-${side}`);
+        sel.addEventListener('change', () => updateFmtDesc(key, side, sel.value));
+      });
       updateFmtDesc(key, 'front', fmt.front);
       updateFmtDesc(key, 'back', fmt.back);
     }
