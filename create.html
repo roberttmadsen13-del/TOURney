@@ -352,6 +352,7 @@
     { value:'greensomes',     label:'Greensomes',           desc:'Both partners drive, best drive chosen, then alternate shots into the hole.' },
     { value:'nassau',         label:'Nassau',               desc:'Three bets in one: front 9, back 9, and overall. Classic side-bet format.' },
     { value:'wolf',           label:'Wolf',                 desc:'One player each hole is the Wolf — picks a partner after seeing each drive, or goes solo against the group.' },
+    { value:'slayer_3v1',     label:'Slayer 3v1',           desc:'Two teams — solo Slayer vs Trio. Lowest stroke total per side wins. Requires exactly 4 players.', structures:['team'], minParty:4, requiresExact:4 },
   ];
 
   const DAY_DEFAULTS = [
@@ -599,6 +600,7 @@
     const FMT_DESC = Object.fromEntries(FMT.map(o => [o.value, o.desc]));
     const makeOpts = (sel) => FMT
       .filter(o => !o.structures || o.structures.includes(S.structure))
+      .filter(o => !o.requiresExact || o.requiresExact === S.maxPlayers)
       .map(o => `<option value="${o.value}"${o.value===sel?' selected':''}>${o.label}</option>`)
       .join('');
     function updateFmtDesc(key, side, val) {

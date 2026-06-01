@@ -1620,7 +1620,22 @@ function movePlayer(id, team) {
   renderTeamUI();
 }
 
-function autoBalanceTeams() {
+function isSlayer3v1Active() {
+  return Object.values(roundFormats || {}).some(f => f && (f.front === 'slayer_3v1' || f.back === 'slayer_3v1'));
+}
+
+async function autoBalanceTeams() {
+  if (isSlayer3v1Active()) {
+    if (players.length !== 4) { showToast('Slayer 3v1 needs exactly 4 players.'); return; }
+    if (_teamCount !== 2) { await saveTeamCount(2); }
+    const shuffled = [...players].sort(() => Math.random() - 0.5);
+    teamAssignments = {};
+    shuffled.slice(0, 3).forEach(p => teamAssignments[p.id] = 'A');
+    teamAssignments[shuffled[3].id] = 'B';
+    renderTeamUI();
+    showToast('Slayer 3v1: 3 vs 1 split assigned. Hit Save to confirm.');
+    return;
+  }
   const letters = TEAM_LETTERS.slice(0, _teamCount);
   const unassigned = players.filter(p => !teamAssignments[p.id] || !letters.includes(teamAssignments[p.id]));
   if (!unassigned.length) { showToast('All players already assigned.'); return; }
