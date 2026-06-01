@@ -144,8 +144,9 @@
     @keyframes sp{to{transform:rotate(360deg)}}
 
     /* â”€â”€â”€ Tier cards â”€â”€â”€ */
-    .tier-cards{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.65rem;margin-bottom:1.75rem}
-    @media(max-width:520px){.tier-cards{grid-template-columns:1fr}}
+    .tier-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:.5rem;margin-bottom:1rem}
+    @media(max-width:720px){.tier-cards{grid-template-columns:1fr 1fr}}
+    @media(max-width:380px){.tier-cards{grid-template-columns:1fr}}
     .tier-card{border:1.5px solid var(--border);border-radius:6px;padding:1rem .9rem;cursor:pointer;transition:all .18s;background:var(--surface)}
     .tier-card.active{border-color:var(--gold);background:rgba(192,144,48,.07)}
     .tier-card:hover{border-color:rgba(192,144,48,.5)}
@@ -248,15 +249,55 @@
       <div class="fl" style="margin-top:1.75rem;margin-bottom:.65rem">Scoring Format per Nine Holes</div>
       <div id="fmtRows"></div>
 
+      <div class="fl" style="margin-top:1.75rem;margin-bottom:.65rem">Pricing — Per Tournament</div>
+      <div class="tier-cards" id="tierCards">
+        <div class="tier-card" data-tier="Starter">
+          <div class="tc-name">Starter</div>
+          <div class="tc-price">$14<span>flat</span></div>
+          <ul class="tc-features">
+            <li>Up to 12 players</li>
+            <li>1–2 rounds</li>
+            <li>All scoring formats</li>
+          </ul>
+        </div>
+        <div class="tier-card" data-tier="Weekend">
+          <div class="tc-name">Weekend</div>
+          <div class="tc-price">$29<span>flat</span></div>
+          <ul class="tc-features">
+            <li>Up to 24 players</li>
+            <li>Up to 3 rounds</li>
+            <li>All scoring formats</li>
+          </ul>
+        </div>
+        <div class="tier-card" data-tier="Invitational">
+          <div class="tc-name">Invitational</div>
+          <div class="tc-price">$59<span>flat</span></div>
+          <ul class="tc-features">
+            <li>Up to 48 players</li>
+            <li>Up to 4 rounds</li>
+            <li>All scoring formats</li>
+          </ul>
+        </div>
+        <div class="tier-card" data-tier="Club">
+          <div class="tc-name">Club</div>
+          <div class="tc-price">$99<span>flat</span></div>
+          <ul class="tc-features">
+            <li>49–96 players</li>
+            <li>Unlimited rounds</li>
+            <li>All scoring formats</li>
+          </ul>
+        </div>
+      </div>
+
       <div class="price-card" id="priceCard">
         <div style="font-family:'DM Mono',monospace;font-size:.5rem;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);margin-bottom:.6rem;" id="pc-tier">—</div>
         <div class="price-row"><span class="price-lbl">Players</span><span class="price-val" id="pc-players">—</span></div>
         <div class="price-row"><span class="price-lbl">Rounds</span><span class="price-val" id="pc-days">—</span></div>
         <div class="price-total">
-          <span class="price-total-lbl">Est. per tourney</span>
+          <span class="price-total-lbl">Total per tourney</span>
           <span class="price-total-val" id="pc-total">$—</span>
         </div>
-        <div class="price-note">Pricing preview — payment activated when billing goes live.</div>
+        <div class="price-note">Flat price. No per-player fees. Billing activates when Stripe goes live.</div>
       </div>
 
       <div class="nav">
@@ -359,7 +400,6 @@
     { value:'greensomes',     label:'Greensomes',           desc:'Both partners drive, best drive chosen, then alternate shots into the hole.' },
     { value:'nassau',         label:'Nassau',               desc:'Three bets in one: front 9, back 9, and overall. Classic side-bet format.' },
     { value:'wolf',           label:'Wolf',                 desc:'One player each hole is the Wolf — picks a partner after seeing each drive, or goes solo against the group.' },
-    { value:'slayer_3v1',     label:'Slayer 3v1',           desc:'Two teams — solo Slayer vs Trio. Lowest stroke total per side wins. Requires exactly 4 players.', structures:['team'], minParty:4, requiresExact:4 },
   ];
 
   const DAY_DEFAULTS = [
@@ -408,6 +448,9 @@
     document.getElementById('pc-players').textContent = S.maxPlayers + ' players';
     document.getElementById('pc-days').textContent    = S.days + (S.days === 1 ? ' round' : ' rounds');
     document.getElementById('pc-total').textContent   = '$' + t.price;
+    document.querySelectorAll('#tierCards .tier-card').forEach(card => {
+      card.classList.toggle('active', card.dataset.tier === t.name);
+    });
   }
 
   function mkFormats(n) {
@@ -606,16 +649,9 @@
       { s:'team',       n:6,  label:'6 Teams' },
       { s:'team',       n:8,  label:'8 Teams' },
     ];
-    function clearSlayerFormats() {
-      for (let i = 1; i <= S.days; i++) {
-        if (S.formats[`day${i}`]?.front === 'slayer_3v1') S.formats[`day${i}`].front = 'stroke';
-        if (S.formats[`day${i}`]?.back === 'slayer_3v1') S.formats[`day${i}`].back = 'stroke';
-      }
-    }
-    function applySlayerFormats() {
-      S.maxPlayers = 4;
-      for (let i = 1; i <= S.days; i++) S.formats[`day${i}`] = { front:'slayer_3v1', back:'slayer_3v1' };
-    }
+    // Slayer 3v1 = team composition only (3+1 split); any format is allowed
+    function applySlayerComp() { S.maxPlayers = 4; }
+    function clearSlayerComp() {}
 
     structOpts.forEach(o => {
       const b = document.createElement('button');
@@ -632,10 +668,10 @@
         else { S.pairCount = Math.floor(S.maxPlayers / 2); S.teamCount = S.pairCount; }
         if (o.s === 'team' && o.n === 2) {
           S.teamMode = S.teamMode || '2v2';
-          if (S.teamMode === 'slayer_3v1') applySlayerFormats();
+          if (S.teamMode === 'slayer_3v1') applySlayerComp();
         } else {
           S.teamMode = null;
-          clearSlayerFormats();
+          clearSlayerComp();
         }
         renderFormat();
       };
@@ -658,8 +694,8 @@
         b.style.cssText = 'width:auto;padding:0 .9rem;min-width:2.4rem;';
         b.onclick = () => {
           S.teamMode = m.v;
-          if (m.v === 'slayer_3v1') applySlayerFormats();
-          else clearSlayerFormats();
+          if (m.v === 'slayer_3v1') applySlayerComp();
+          else clearSlayerComp();
           renderFormat();
         };
         modeRow.appendChild(b);
@@ -675,7 +711,7 @@
 
     const FMT_DESC = Object.fromEntries(FMT.map(o => [o.value, o.desc]));
     const makeOpts = (sel) => FMT
-      .filter(o => S.teamMode === 'slayer_3v1' ? o.value === 'slayer_3v1' : (!o.structures || o.structures.includes(S.structure)))
+      .filter(o => !o.structures || o.structures.includes(S.structure))
       .filter(o => !o.requiresExact || o.requiresExact === S.maxPlayers)
       .map(o => `<option value="${o.value}"${o.value===sel?' selected':''}>${o.label}</option>`)
       .join('');
@@ -876,6 +912,7 @@
         { key:'homepage_format_note', value: `Every format feeds the ${S.structure==='individual'?'individual':'team'} score. The winning ${S.structure==='individual'?'player':S.structure==='pairs'?'pair':'team'} is determined by cumulative score across all ${S.days*18} holes.` },
         { key:'team_count',        value: String(S.structure === 'pairs' ? S.pairCount : S.teamCount) },
         { key:'structure',         value: S.structure },
+        ...(S.teamMode ? [{ key:'team_mode', value: S.teamMode }] : []),
         ...(S.structure === 'pairs' ? [{ key:'pair_count', value: String(S.pairCount) }] : []),
         ...(S.structure !== 'pairs' ? Array.from({length: Math.max(S.teamCount,2)}, (_,i) => ({
             key: `team_${String.fromCharCode(97+i)}_name`,

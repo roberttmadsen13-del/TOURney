@@ -932,6 +932,7 @@ let players = [];
 let roundStates = {day1:'pending',day2:'pending',day3:'pending'};
 let teamAssignments = {};
 let _teamCount = 2;
+let _teamMode = null; // '2v2' | 'slayer_3v1' | null (only meaningful when teamCount=2)
 let _structure = 'team'; // 'individual' | 'team' | 'pairs'
 let _pairCount = 12;
 let _pairNames = {}; // { 1: 'Smith / Jones', 2: '...', ... }
@@ -1046,12 +1047,13 @@ async function loadTeamNames() {
   // Build pair_name keys up to 24
   const pairNameKeys = Array.from({length:24}, (_,i) => `pair_${i+1}_name`);
   const { data } = await sb.from('settings').select('key,value').eq('tournament_id', _tid)
-    .in('key', ['team_count','structure','pair_count', ...nameKeys, ...pairNameKeys]);
+    .in('key', ['team_count','structure','pair_count','team_mode', ...nameKeys, ...pairNameKeys]);
   if (!data) return;
   data.forEach(r => {
     if (r.key === 'team_count') _teamCount = parseInt(r.value) || 2;
     if (r.key === 'structure')  _structure = r.value || 'team';
     if (r.key === 'pair_count') _pairCount = parseInt(r.value) || 12;
+    if (r.key === 'team_mode')  _teamMode = r.value || null;
     TEAM_LETTERS.forEach((l, i) => {
       if (r.key === `team_${l.toLowerCase()}_name` && r.value) _teamNames[i] = r.value;
     });
@@ -1621,7 +1623,7 @@ function movePlayer(id, team) {
 }
 
 function isSlayer3v1Active() {
-  return Object.values(roundFormats || {}).some(f => f && (f.front === 'slayer_3v1' || f.back === 'slayer_3v1'));
+  return _teamMode === 'slayer_3v1';
 }
 
 async function autoBalanceTeams() {
