@@ -78,12 +78,25 @@ a{color:inherit;text-decoration:none;}
 .portal-email{font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.1em;color:var(--muted);margin-top:0.5rem;}
 .portal-phone{font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.1em;color:var(--muted);margin-top:0.2rem;}
 
-/* STATS STRIP — tile grid like /create cards */
-.stats-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:0.6rem;margin-bottom:2.5rem;}
-.stat-cell{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:1.1rem 1.2rem;}
-.stat-val{font-family:'Playfair Display',serif;font-size:1.75rem;font-weight:900;color:var(--gold);line-height:1;}
-.stat-label{font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);margin-top:0.35rem;}
+/* STATS STRIP — clickable tab tiles */
+.stats-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:0.6rem;margin-bottom:2rem;}
+.stat-cell{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:1.1rem 1.25rem;cursor:pointer;text-align:left;display:flex;flex-direction:column;align-items:flex-start;gap:0.45rem;transition:all 0.15s;font-family:inherit;color:inherit;}
+.stat-cell:hover{border-color:rgba(192,144,48,0.45);background:rgba(192,144,48,0.04);}
+.stat-cell.active{border-color:var(--gold);background:rgba(192,144,48,0.08);}
+.stat-val{font-family:'Playfair Display',serif;font-size:2rem;font-weight:900;color:var(--gold);line-height:1;}
+.stat-label{font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);}
+.stat-cell.active .stat-label{color:var(--gold-p);}
 @media(max-width:620px){.stats-strip{grid-template-columns:repeat(2,1fr);}}
+
+/* TAB PANELS */
+.tab-panel{display:none;}
+.tab-panel.active{display:block;}
+.list-row{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:0.95rem 1.2rem;margin-bottom:0.45rem;display:flex;align-items:center;gap:0.85rem;text-decoration:none;color:var(--cream);transition:border-color 0.15s;}
+.list-row:hover{border-color:rgba(192,144,48,0.4);}
+.list-row-main{flex:1;min-width:0;}
+.list-row-title{font-family:'Playfair Display',serif;font-size:0.95rem;font-weight:700;color:var(--cream);line-height:1.2;}
+.list-row-sub{font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.1em;color:var(--muted);margin-top:0.3rem;}
+.list-row-meta{font-family:'DM Mono',monospace;font-size:0.62rem;letter-spacing:0.08em;color:var(--gold-p);flex-shrink:0;}
 
 /* SECTION */
 .section-label{font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.25em;text-transform:uppercase;color:var(--muted);margin-bottom:1.1rem;display:flex;align-items:center;gap:0.8rem;}
@@ -260,10 +273,10 @@ a{color:inherit;text-decoration:none;}
   </div>
 
   <div class="stats-strip">
-    <div class="stat-cell"><div class="stat-val" id="statTourneys">—</div><div class="stat-label">Tournaments</div></div>
-    <div class="stat-cell"><div class="stat-val" id="statRounds">—</div><div class="stat-label">Rounds</div></div>
-    <div class="stat-cell"><div class="stat-val" id="statCourses">—</div><div class="stat-label">Courses Played</div></div>
-    <div class="stat-cell"><div class="stat-val" id="statHios">—</div><div class="stat-label">Holes in One</div></div>
+    <button type="button" class="stat-cell active" data-tab="tournaments" onclick="setTab('tournaments')"><div class="stat-val" id="statTourneys">—</div><div class="stat-label">Tournaments</div></button>
+    <button type="button" class="stat-cell" data-tab="rounds" onclick="setTab('rounds')"><div class="stat-val" id="statRounds">—</div><div class="stat-label">Rounds</div></button>
+    <button type="button" class="stat-cell" data-tab="courses" onclick="setTab('courses')"><div class="stat-val" id="statCourses">—</div><div class="stat-label">Courses Played</div></button>
+    <button type="button" class="stat-cell" data-tab="hios" onclick="setTab('hios')"><div class="stat-val" id="statHios">—</div><div class="stat-label">Holes in One</div></button>
   </div>
 
   <!-- HANDICAP / GOLF PROFILE -->
@@ -278,9 +291,26 @@ a{color:inherit;text-decoration:none;}
     <div id="inviteCards" style="display:flex;flex-direction:column;gap:0.6rem;"></div>
   </div>
 
-  <div class="section-label">My Tournaments</div>
-  <div id="tourneyGrid" class="tourney-grid"></div>
-  <div id="noTourneys" class="no-tourneys" style="display:none">No tournament history yet. Create or join one above.</div>
+  <!-- TAB PANELS -->
+  <div class="tab-panel active" id="panel-tournaments">
+    <div id="tourneyGrid" class="tourney-grid"></div>
+    <div id="noTourneys" class="no-tourneys" style="display:none">No tournament history yet. Create or join one above.</div>
+  </div>
+
+  <div class="tab-panel" id="panel-rounds">
+    <div id="roundsList"></div>
+    <div id="noRounds" class="no-tourneys" style="display:none">No rounds scored yet. Sign up for a tournament to start.</div>
+  </div>
+
+  <div class="tab-panel" id="panel-courses">
+    <div id="coursesList"></div>
+    <div id="noCourses" class="no-tourneys" style="display:none">No courses played yet.</div>
+  </div>
+
+  <div class="tab-panel" id="panel-hios">
+    <div id="hiosList"></div>
+    <div id="noHios" class="no-tourneys" style="display:none">No holes in one yet. Keep swinging.</div>
+  </div>
 
   <!-- DONATIONS -->
   <div id="donateSection" style="display:none;margin-bottom:2.5rem;">
@@ -437,7 +467,7 @@ async function loadPortal(email, opts = {}) {
 
   const [tourneysRes, scoresRes, invitesRes, roundsRes] = await Promise.all([
     sb.from('tournaments').select('id, name, slug, logo_url, short_name').in('id', tids),
-    pids.length ? sb.from('scores').select('tournament_id, round, gross_score, player_id').in('player_id', pids) : Promise.resolve({ data: [] }),
+    pids.length ? sb.from('scores').select('tournament_id, round, hole, gross_score, player_id').in('player_id', pids) : Promise.resolve({ data: [] }),
     sb.from('invitations').select('id, tournament_id, message, status').eq('email', email).eq('status', 'pending'),
     tids.length ? sb.from('rounds').select('tournament_id, day_number, course_id').in('tournament_id', tids) : Promise.resolve({ data: [] }),
   ]);
@@ -446,6 +476,14 @@ async function loadPortal(email, opts = {}) {
   const scores   = scoresRes.data || [];
   const invites  = invitesRes.data || [];
   const rounds   = roundsRes.data || [];
+
+  // Fetch course names for any course_ids referenced in rounds
+  const courseIds = [...new Set(rounds.map(r => r.course_id).filter(Boolean))];
+  const coursesRes = courseIds.length
+    ? await sb.from('golf_courses').select('id, name, city, state').in('id', courseIds)
+    : { data: [] };
+  const coursesById = {};
+  (coursesRes.data || []).forEach(c => { coursesById[c.id] = c; });
 
   // â”€â”€ Stats â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   const hios = scores.filter(s => s.gross_score === 1).length;
@@ -595,6 +633,76 @@ async function loadPortal(email, opts = {}) {
     });
   }
 
+  // â”€â”€ Rounds list â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  const roundsListEl = document.getElementById('roundsList');
+  const roundAgg = {};
+  scores.forEach(s => {
+    const k = s.tournament_id + '|' + s.round;
+    if (!roundAgg[k]) roundAgg[k] = { tid: s.tournament_id, round: s.round, total: 0, holes: 0 };
+    if (s.gross_score) { roundAgg[k].total += s.gross_score; roundAgg[k].holes += 1; }
+  });
+  const roundsAggArr = Object.values(roundAgg).sort((a,b) => a.tid === b.tid ? a.round - b.round : (tourneysById[a.tid]?.name || '').localeCompare(tourneysById[b.tid]?.name || ''));
+  if (!roundsAggArr.length) { document.getElementById('noRounds').style.display = 'block'; }
+  else {
+    roundsListEl.innerHTML = roundsAggArr.map(r => {
+      const t = tourneysById[r.tid] || {};
+      const courseRow = rounds.find(x => x.tournament_id === r.tid && x.day_number === r.round);
+      const course = courseRow ? coursesById[courseRow.course_id] : null;
+      const baseUrl = t.slug ? `https://tourney.greenskeeper.studio/t/${t.slug}` : '#';
+      return `<a href="${baseUrl}/scorecard" class="list-row">
+        <div class="list-row-main">
+          <div class="list-row-title">${esc(t.name || 'Tournament')} — Round ${r.round}</div>
+          <div class="list-row-sub">${course ? esc(course.name) : '—'} · ${r.holes} hole${r.holes === 1 ? '' : 's'} scored</div>
+        </div>
+        <div class="list-row-meta">${r.total ? r.total : '—'}</div>
+      </a>`;
+    }).join('');
+  }
+
+  // â”€â”€ Courses list â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  const coursesListEl = document.getElementById('coursesList');
+  const playedKeys2 = new Set(scores.map(s => s.tournament_id + '|' + s.round));
+  const courseAgg = {};
+  rounds.forEach(r => {
+    if (!r.course_id || !playedKeys2.has(r.tournament_id + '|' + r.day_number)) return;
+    if (!courseAgg[r.course_id]) courseAgg[r.course_id] = { rounds: 0 };
+    courseAgg[r.course_id].rounds += 1;
+  });
+  const courseAggArr = Object.entries(courseAgg).sort((a,b) => b[1].rounds - a[1].rounds);
+  if (!courseAggArr.length) { document.getElementById('noCourses').style.display = 'block'; }
+  else {
+    coursesListEl.innerHTML = courseAggArr.map(([cid, agg]) => {
+      const c = coursesById[cid] || {};
+      const loc = [c.city, c.state].filter(Boolean).join(', ');
+      return `<div class="list-row">
+        <div class="list-row-main">
+          <div class="list-row-title">${esc(c.name || 'Course')}</div>
+          <div class="list-row-sub">${esc(loc || '—')}</div>
+        </div>
+        <div class="list-row-meta">${agg.rounds} round${agg.rounds === 1 ? '' : 's'}</div>
+      </div>`;
+    }).join('');
+  }
+
+  // â”€â”€ Holes in One list â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  const hiosListEl = document.getElementById('hiosList');
+  const hioRows = scores.filter(s => s.gross_score === 1)
+                        .sort((a,b) => a.tournament_id === b.tournament_id ? a.round - b.round : 0);
+  if (!hioRows.length) { document.getElementById('noHios').style.display = 'block'; }
+  else {
+    hiosListEl.innerHTML = hioRows.map(s => {
+      const t = tourneysById[s.tournament_id] || {};
+      const baseUrl = t.slug ? `https://tourney.greenskeeper.studio/t/${t.slug}` : '#';
+      return `<a href="${baseUrl}/scoreboard" class="list-row">
+        <div class="list-row-main">
+          <div class="list-row-title">${esc(t.name || 'Tournament')}</div>
+          <div class="list-row-sub">Round ${s.round}${s.hole ? ' · Hole ' + s.hole : ''}</div>
+        </div>
+        <div class="list-row-meta">ACE</div>
+      </a>`;
+    }).join('');
+  }
+
   document.getElementById('loginWrap').style.display = 'none';
   document.getElementById('portalWrap').style.display = 'block';
   document.getElementById('donateSection').style.display = '';
@@ -612,6 +720,11 @@ async function loadPortal(email, opts = {}) {
   } else if (banner) {
     banner.remove();
   }
+}
+
+function setTab(name) {
+  document.querySelectorAll('.stat-cell').forEach(b => b.classList.toggle('active', b.dataset.tab === name));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.toggle('active', p.id === 'panel-' + name));
 }
 
 async function respondInvite(inviteId, status, slug) {
