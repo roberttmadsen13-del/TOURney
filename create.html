@@ -234,7 +234,10 @@
 
       <div class="fl" style="margin-top:1.75rem;margin-bottom:.65rem">Team Structure</div>
       <div class="days-row" id="teamCountBtns"></div>
-      <div class="days-row" id="teamModeBtns" style="display:none;margin-top:.85rem;flex-wrap:wrap"></div>
+      <div id="teamModeWrap" style="display:none;margin-top:1.1rem">
+        <div class="fl" style="margin-bottom:.5rem;color:var(--gold)">2-Team Matchup — Pick One</div>
+        <div class="days-row" id="teamModeBtns" style="flex-wrap:wrap"></div>
+      </div>
 
       <div class="fl" style="margin-top:1.75rem;margin-bottom:.75rem">Number of Rounds</div>
       <div class="days-row" id="daysBtns"></div>
@@ -635,14 +638,10 @@
 
     // Sub-row: 2-Team matchup mode (2v2 vs Slayer 3v1) — shows only when 2 Teams active
     const modeRow = document.getElementById('teamModeBtns');
+    const modeWrap = document.getElementById('teamModeWrap');
     modeRow.innerHTML = '';
     if (S.structure === 'team' && S.teamCount === 2) {
-      modeRow.style.display = '';
-      const lbl = document.createElement('div');
-      lbl.className = 'fl';
-      lbl.style.cssText = 'flex-basis:100%;margin:0 0 .35rem 0;color:var(--gold);font-size:.5rem;letter-spacing:.22em';
-      lbl.textContent = '2-Team Matchup';
-      modeRow.appendChild(lbl);
+      modeWrap.style.display = '';
       [
         { v:'2v2',        label:'2 v 2' },
         { v:'slayer_3v1', label:'Slayer 3 v 1' },
@@ -660,7 +659,7 @@
         modeRow.appendChild(b);
       });
     } else {
-      modeRow.style.display = 'none';
+      modeWrap.style.display = 'none';
     }
 
     // Auto-sync pairCount from maxPlayers when structure=pairs
