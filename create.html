@@ -249,46 +249,6 @@
       <div class="fl" style="margin-top:1.75rem;margin-bottom:.65rem">Scoring Format per Nine Holes</div>
       <div id="fmtRows"></div>
 
-      <div class="fl" style="margin-top:1.75rem;margin-bottom:.65rem">Pricing — Per Tournament</div>
-      <div class="tier-cards" id="tierCards">
-        <div class="tier-card" data-tier="Starter">
-          <div class="tc-name">Starter</div>
-          <div class="tc-price">$14<span>flat</span></div>
-          <ul class="tc-features">
-            <li>Up to 12 players</li>
-            <li>1–2 rounds</li>
-            <li>All scoring formats</li>
-          </ul>
-        </div>
-        <div class="tier-card" data-tier="Weekend">
-          <div class="tc-name">Weekend</div>
-          <div class="tc-price">$29<span>flat</span></div>
-          <ul class="tc-features">
-            <li>Up to 24 players</li>
-            <li>Up to 3 rounds</li>
-            <li>All scoring formats</li>
-          </ul>
-        </div>
-        <div class="tier-card" data-tier="Invitational">
-          <div class="tc-name">Invitational</div>
-          <div class="tc-price">$59<span>flat</span></div>
-          <ul class="tc-features">
-            <li>Up to 48 players</li>
-            <li>Up to 4 rounds</li>
-            <li>All scoring formats</li>
-          </ul>
-        </div>
-        <div class="tier-card" data-tier="Club">
-          <div class="tc-name">Club</div>
-          <div class="tc-price">$99<span>flat</span></div>
-          <ul class="tc-features">
-            <li>49–96 players</li>
-            <li>Unlimited rounds</li>
-            <li>All scoring formats</li>
-          </ul>
-        </div>
-      </div>
-
       <div class="price-card" id="priceCard">
         <div style="font-family:'DM Mono',monospace;font-size:.5rem;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);margin-bottom:.6rem;" id="pc-tier">—</div>
         <div class="price-row"><span class="price-lbl">Players</span><span class="price-val" id="pc-players">—</span></div>
@@ -426,31 +386,25 @@
     teamMode: '2v2',    // when structure=team & teamCount=2: '2v2' | 'slayer_3v1'
   };
 
-  // Pricing per 5-21-26 business review — flat per-tournament. Tier = higher of player/round bracket.
-  // 1–12p, ≤2r → $14 · 13–24p, ≤3r → $29 · 25–48p, ≤4r → $59 · 49–96p, unlimited → $99
+  // Pricing: per-round, scaled by player bracket.
+  // ≤12p → $14/round · ≤24p → $29/round · ≤48p → $59/round · ≤96p → $99/round
   function calcTier(players, rounds) {
-    const playerBracket = players <= 12 ? 1 : players <= 24 ? 2 : players <= 48 ? 3 : 4;
-    const roundBracket  = rounds  <= 2  ? 1 : rounds  <= 3  ? 2 : rounds  <= 4  ? 3 : 4;
-    const tier = Math.max(playerBracket, roundBracket);
     const TIERS = [
-      null,
-      { name: 'Starter',      price: 14 },
-      { name: 'Weekend',      price: 29 },
-      { name: 'Invitational', price: 59 },
-      { name: 'Club',         price: 99 },
+      { name: 'Starter',      cap: 12, rate: 14 },
+      { name: 'Weekend',      cap: 24, rate: 29 },
+      { name: 'Invitational', cap: 48, rate: 59 },
+      { name: 'Club',         cap: 96, rate: 99 },
     ];
-    return TIERS[tier];
+    const t = TIERS.find(x => players <= x.cap) || TIERS[3];
+    return { name: t.name, rate: t.rate, rounds, price: t.rate * Math.max(1, rounds) };
   }
 
   function updatePriceCard() {
     const t = calcTier(S.maxPlayers, S.days);
-    document.getElementById('pc-tier').textContent    = t.name;
+    document.getElementById('pc-tier').textContent    = t.name + ' · $' + t.rate + '/round';
     document.getElementById('pc-players').textContent = S.maxPlayers + ' players';
-    document.getElementById('pc-days').textContent    = S.days + (S.days === 1 ? ' round' : ' rounds');
+    document.getElementById('pc-days').textContent    = S.days + (S.days === 1 ? ' round' : ' rounds') + ' × $' + t.rate;
     document.getElementById('pc-total').textContent   = '$' + t.price;
-    document.querySelectorAll('#tierCards .tier-card').forEach(card => {
-      card.classList.toggle('active', card.dataset.tier === t.name);
-    });
   }
 
   function mkFormats(n) {

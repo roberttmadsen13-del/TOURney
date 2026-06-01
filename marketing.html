@@ -540,59 +540,81 @@
   <section style="border-top:1px solid var(--border)">
     <div class="inner">
       <span class="s-eyebrow">Pricing</span>
-      <h2 class="s-title">Pay for what you use.<br><em>No enterprise contracts.</em></h2>
-      <p class="s-sub">A low-cost starter tier to get people in the door, and simple per-tournament pricing for serious events. Everything included.</p>
+      <h2 class="s-title">Pay by the round.<br><em>No contracts. No enterprise BS.</em></h2>
+      <p class="s-sub">Flat rate per round, scaled by tournament size. Every feature included on every tier. Golf Genius charges $1,300/year. We charge $14 for a 1-day 4-some.</p>
 
-      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:2px;margin-top:3rem" class="pricing-grid">
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:2px;margin-top:3rem" class="pricing-grid">
 
         <!-- Starter -->
         <div class="feat-card" style="display:flex;flex-direction:column">
           <div style="font-family:'DM Mono',monospace;font-size:.52rem;letter-spacing:.28em;text-transform:uppercase;color:var(--muted);margin-bottom:.85rem">Starter</div>
-          <div style="font-size:3rem;font-weight:700;line-height:1;color:var(--cream);margin-bottom:.25rem">$3</div>
-          <div style="font-family:'DM Mono',monospace;font-size:.58rem;color:var(--muted);letter-spacing:.06em;margin-bottom:1.75rem;line-height:1.6">per month</div>
+          <div style="font-size:3rem;font-weight:700;line-height:1;color:var(--cream);margin-bottom:.25rem">$14<span style="font-size:1.1rem;color:var(--muted);font-weight:400">/round</span></div>
+          <div style="font-family:'DM Mono',monospace;font-size:.58rem;color:var(--muted);letter-spacing:.06em;margin-bottom:1.75rem;line-height:1.6">Up to 12 players</div>
           <ul style="list-style:none;display:flex;flex-direction:column;gap:.7rem;flex:1;margin-bottom:2rem">
-            <li style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--muted);letter-spacing:.06em;display:flex;gap:.6rem"><span style="color:var(--gold)">✓</span> 1 tournament per month</li>
-            <li style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--muted);letter-spacing:.06em;display:flex;gap:.6rem"><span style="color:var(--gold)">✓</span> Up to 4 players</li>
-            <li style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--muted);letter-spacing:.06em;display:flex;gap:.6rem"><span style="color:var(--gold)">✓</span> 1-day events only</li>
-            <li style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--muted);letter-spacing:.06em;display:flex;gap:.6rem"><span style="color:var(--gold)">✓</span> "Powered by TOURney" branding</li>
-            <li style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--muted);letter-spacing:.06em;display:flex;gap:.6rem"><span style="color:var(--gold)">✓</span> Path-based URL (/t/{slug}/)</li>
+            <li style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--muted);letter-spacing:.06em;display:flex;gap:.6rem"><span style="color:var(--gold)">✓</span> 1–12 players</li>
+            <li style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--muted);letter-spacing:.06em;display:flex;gap:.6rem"><span style="color:var(--gold)">✓</span> Any number of rounds</li>
+            <li style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--muted);letter-spacing:.06em;display:flex;gap:.6rem"><span style="color:var(--gold)">✓</span> All scoring formats</li>
+            <li style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--muted);letter-spacing:.06em;display:flex;gap:.6rem"><span style="color:var(--gold)">✓</span> Live leaderboard + push</li>
+            <li style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--muted);letter-spacing:.06em;display:flex;gap:.6rem"><span style="color:var(--gold)">✓</span> PWA + offline scoring</li>
           </ul>
           <a href="/create" style="display:block;text-align:center;padding:.75rem 1.25rem;border:1px solid var(--border);color:var(--cream);font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;text-decoration:none;border-radius:3px;transition:all .15s" onmouseover="this.style.borderColor='var(--gold)';this.style.color='var(--gold)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--cream)'">Get Started →</a>
         </div>
 
-        <!-- Standard -->
+        <!-- Weekend -->
         <div class="feat-card" style="border-color:var(--gold);position:relative;display:flex;flex-direction:column">
           <div style="position:absolute;top:-1px;right:1.25rem;background:var(--gold);color:var(--ink);font-family:'DM Mono',monospace;font-size:.48rem;letter-spacing:.2em;padding:.2rem .6rem;font-weight:700">MOST POPULAR</div>
-          <div style="font-family:'DM Mono',monospace;font-size:.52rem;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);margin-bottom:.85rem">Standard</div>
-          <div style="font-size:3rem;font-weight:700;line-height:1;color:var(--cream);margin-bottom:.25rem">$49</div>
-          <div style="font-family:'DM Mono',monospace;font-size:.58rem;color:var(--muted);letter-spacing:.06em;margin-bottom:1.75rem;line-height:1.6">per tournament</div>
+          <div style="font-family:'DM Mono',monospace;font-size:.52rem;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);margin-bottom:.85rem">Weekend</div>
+          <div style="font-size:3rem;font-weight:700;line-height:1;color:var(--cream);margin-bottom:.25rem">$29<span style="font-size:1.1rem;color:var(--muted);font-weight:400">/round</span></div>
+          <div style="font-family:'DM Mono',monospace;font-size:.58rem;color:var(--muted);letter-spacing:.06em;margin-bottom:1.75rem;line-height:1.6">Up to 24 players</div>
           <ul style="list-style:none;display:flex;flex-direction:column;gap:.7rem;flex:1;margin-bottom:2rem">
-            <li style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--muted);letter-spacing:.06em;display:flex;gap:.6rem"><span style="color:var(--gold)">✓</span> Up to 48 players</li>
-            <li style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--muted);letter-spacing:.06em;display:flex;gap:.6rem"><span style="color:var(--gold)">✓</span> Up to 3-day events</li>
-            <li style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--muted);letter-spacing:.06em;display:flex;gap:.6rem"><span style="color:var(--gold)">✓</span> Custom subdomain</li>
-            <li style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--muted);letter-spacing:.06em;display:flex;gap:.6rem"><span style="color:var(--gold)">✓</span> Full white-label (no branding)</li>
-            <li style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--muted);letter-spacing:.06em;display:flex;gap:.6rem"><span style="color:var(--gold)">✓</span> Push notifications</li>
+            <li style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--muted);letter-spacing:.06em;display:flex;gap:.6rem"><span style="color:var(--gold)">✓</span> 13–24 players</li>
+            <li style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--muted);letter-spacing:.06em;display:flex;gap:.6rem"><span style="color:var(--gold)">✓</span> Any number of rounds</li>
             <li style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--muted);letter-spacing:.06em;display:flex;gap:.6rem"><span style="color:var(--gold)">✓</span> All scoring formats</li>
+            <li style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--muted);letter-spacing:.06em;display:flex;gap:.6rem"><span style="color:var(--gold)">✓</span> Live leaderboard + push</li>
+            <li style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--muted);letter-spacing:.06em;display:flex;gap:.6rem"><span style="color:var(--gold)">✓</span> PWA + offline scoring</li>
           </ul>
           <a href="/create" style="display:block;text-align:center;padding:.75rem 1.25rem;background:var(--gold);color:var(--ink);font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;text-decoration:none;border-radius:3px;transition:background .15s" onmouseover="this.style.background='#d4a035'" onmouseout="this.style.background='var(--gold)'">Get Started →</a>
         </div>
 
-        <!-- Pro -->
+        <!-- Invitational -->
         <div class="feat-card" style="display:flex;flex-direction:column">
-          <div style="font-family:'DM Mono',monospace;font-size:.52rem;letter-spacing:.28em;text-transform:uppercase;color:var(--muted);margin-bottom:.85rem">Pro</div>
-          <div style="font-size:3rem;font-weight:700;line-height:1;color:var(--cream);margin-bottom:.25rem">$99</div>
-          <div style="font-family:'DM Mono',monospace;font-size:.58rem;color:var(--muted);letter-spacing:.06em;margin-bottom:1.75rem;line-height:1.6">per tournament</div>
+          <div style="font-family:'DM Mono',monospace;font-size:.52rem;letter-spacing:.28em;text-transform:uppercase;color:var(--muted);margin-bottom:.85rem">Invitational</div>
+          <div style="font-size:3rem;font-weight:700;line-height:1;color:var(--cream);margin-bottom:.25rem">$59<span style="font-size:1.1rem;color:var(--muted);font-weight:400">/round</span></div>
+          <div style="font-family:'DM Mono',monospace;font-size:.58rem;color:var(--muted);letter-spacing:.06em;margin-bottom:1.75rem;line-height:1.6">Up to 48 players</div>
           <ul style="list-style:none;display:flex;flex-direction:column;gap:.7rem;flex:1;margin-bottom:2rem">
-            <li style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--muted);letter-spacing:.06em;display:flex;gap:.6rem"><span style="color:var(--gold)">✓</span> Unlimited players</li>
-            <li style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--muted);letter-spacing:.06em;display:flex;gap:.6rem"><span style="color:var(--gold)">✓</span> Up to 7-day events</li>
-            <li style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--muted);letter-spacing:.06em;display:flex;gap:.6rem"><span style="color:var(--gold)">✓</span> Everything in Standard</li>
-            <li style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--muted);letter-spacing:.06em;display:flex;gap:.6rem"><span style="color:var(--gold)">✓</span> Priority support</li>
-            <li style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--muted);letter-spacing:.06em;display:flex;gap:.6rem"><span style="color:var(--gold)">✓</span> Analytics dashboard</li>
-            <li style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--muted);letter-spacing:.06em;display:flex;gap:.6rem"><span style="color:var(--gold)">✓</span> Custom domain support</li>
+            <li style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--muted);letter-spacing:.06em;display:flex;gap:.6rem"><span style="color:var(--gold)">✓</span> 25–48 players</li>
+            <li style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--muted);letter-spacing:.06em;display:flex;gap:.6rem"><span style="color:var(--gold)">✓</span> Any number of rounds</li>
+            <li style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--muted);letter-spacing:.06em;display:flex;gap:.6rem"><span style="color:var(--gold)">✓</span> All scoring formats</li>
+            <li style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--muted);letter-spacing:.06em;display:flex;gap:.6rem"><span style="color:var(--gold)">✓</span> Live leaderboard + push</li>
+            <li style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--muted);letter-spacing:.06em;display:flex;gap:.6rem"><span style="color:var(--gold)">✓</span> PWA + offline scoring</li>
           </ul>
           <a href="/create" style="display:block;text-align:center;padding:.75rem 1.25rem;border:1px solid var(--border);color:var(--cream);font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;text-decoration:none;border-radius:3px;transition:all .15s" onmouseover="this.style.borderColor='var(--gold)';this.style.color='var(--gold)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--cream)'">Get Started →</a>
         </div>
 
+        <!-- Club -->
+        <div class="feat-card" style="display:flex;flex-direction:column">
+          <div style="font-family:'DM Mono',monospace;font-size:.52rem;letter-spacing:.28em;text-transform:uppercase;color:var(--muted);margin-bottom:.85rem">Club</div>
+          <div style="font-size:3rem;font-weight:700;line-height:1;color:var(--cream);margin-bottom:.25rem">$99<span style="font-size:1.1rem;color:var(--muted);font-weight:400">/round</span></div>
+          <div style="font-family:'DM Mono',monospace;font-size:.58rem;color:var(--muted);letter-spacing:.06em;margin-bottom:1.75rem;line-height:1.6">Up to 96 players</div>
+          <ul style="list-style:none;display:flex;flex-direction:column;gap:.7rem;flex:1;margin-bottom:2rem">
+            <li style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--muted);letter-spacing:.06em;display:flex;gap:.6rem"><span style="color:var(--gold)">✓</span> 49–96 players</li>
+            <li style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--muted);letter-spacing:.06em;display:flex;gap:.6rem"><span style="color:var(--gold)">✓</span> Any number of rounds</li>
+            <li style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--muted);letter-spacing:.06em;display:flex;gap:.6rem"><span style="color:var(--gold)">✓</span> All scoring formats</li>
+            <li style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--muted);letter-spacing:.06em;display:flex;gap:.6rem"><span style="color:var(--gold)">✓</span> Live leaderboard + push</li>
+            <li style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--muted);letter-spacing:.06em;display:flex;gap:.6rem"><span style="color:var(--gold)">✓</span> PWA + offline scoring</li>
+          </ul>
+          <a href="/create" style="display:block;text-align:center;padding:.75rem 1.25rem;border:1px solid var(--border);color:var(--cream);font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;text-decoration:none;border-radius:3px;transition:all .15s" onmouseover="this.style.borderColor='var(--gold)';this.style.color='var(--gold)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--cream)'">Get Started →</a>
+        </div>
+
+      </div>
+
+      <div style="margin-top:2.5rem;display:flex;justify-content:center;flex-wrap:wrap;gap:.5rem">
+        <span style="font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.12em;color:var(--muted);text-transform:uppercase">Examples:</span>
+        <span style="font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.06em;color:var(--cream)">4-some, 1 round = <span style="color:var(--gold)">$14</span></span>
+        <span style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--muted)">·</span>
+        <span style="font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.06em;color:var(--cream)">12-player, 3 rounds = <span style="color:var(--gold)">$42</span></span>
+        <span style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--muted)">·</span>
+        <span style="font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.06em;color:var(--cream)">24-player, 2 rounds = <span style="color:var(--gold)">$58</span></span>
       </div>
 
       <div style="margin-top:2rem;font-family:'DM Mono',monospace;font-size:.62rem;color:var(--muted);letter-spacing:.08em;line-height:1.8;text-align:center">
