@@ -1,4 +1,4 @@
-const CACHE = 'tourney-v47';
+const CACHE = 'tourney-v48';
 const PRECACHE = [
   '/',
   '/tokens.css',

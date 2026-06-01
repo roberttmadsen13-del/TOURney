@@ -386,14 +386,20 @@
     teamMode: '2v2',    // when structure=team & teamCount=2: '2v2' | 'slayer_3v1'
   };
 
+  // Pricing per 5-21-26 business review — flat per-tournament. Tier = higher of player/round bracket.
+  // 1–12p, ≤2r → $14 · 13–24p, ≤3r → $29 · 25–48p, ≤4r → $59 · 49–96p, unlimited → $99
   function calcTier(players, rounds) {
-    let base, name;
-    if (players <= 12)      { name = 'Starter';      base = 49;  }
-    else if (players <= 24) { name = 'Weekend';       base = 89;  }
-    else if (players <= 48) { name = 'Invitational';  base = 149; }
-    else                    { name = 'Club';           base = 249; }
-    const mult = rounds <= 2 ? 1.0 : rounds <= 4 ? 1.2 : 1.4;
-    return { name, price: Math.round(base * mult) };
+    const playerBracket = players <= 12 ? 1 : players <= 24 ? 2 : players <= 48 ? 3 : 4;
+    const roundBracket  = rounds  <= 2  ? 1 : rounds  <= 3  ? 2 : rounds  <= 4  ? 3 : 4;
+    const tier = Math.max(playerBracket, roundBracket);
+    const TIERS = [
+      null,
+      { name: 'Starter',      price: 14 },
+      { name: 'Weekend',      price: 29 },
+      { name: 'Invitational', price: 59 },
+      { name: 'Club',         price: 99 },
+    ];
+    return TIERS[tier];
   }
 
   function updatePriceCard() {
