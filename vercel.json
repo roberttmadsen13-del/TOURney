@@ -3,99 +3,392 @@
     {
       "source": "/(.*)",
       "headers": [
-        { "key": "Strict-Transport-Security", "value": "max-age=63072000; includeSubDomains; preload" },
-        { "key": "X-Content-Type-Options", "value": "nosniff" },
-        { "key": "X-Frame-Options", "value": "DENY" },
-        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
-        { "key": "Permissions-Policy", "value": "camera=(), microphone=(), geolocation=(), payment=(self)" }
+        {
+          "key": "Strict-Transport-Security",
+          "value": "max-age=63072000; includeSubDomains; preload"
+        },
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "DENY"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        },
+        {
+          "key": "Permissions-Policy",
+          "value": "camera=(), microphone=(), geolocation=(), payment=(self)"
+        }
       ]
     },
     {
       "source": "/(.*\\.json)",
       "headers": [
-        { "key": "Cache-Control", "value": "no-store, must-revalidate" }
+        {
+          "key": "Cache-Control",
+          "value": "no-store, must-revalidate"
+        }
       ]
     },
     {
       "source": "/(.*\\.html)",
       "headers": [
-        { "key": "Cache-Control", "value": "no-store, must-revalidate" },
-        { "key": "Content-Security-Policy", "value": "default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://*.supabase.co wss://*.supabase.co; frame-ancestors 'none';" }
+        {
+          "key": "Cache-Control",
+          "value": "no-store, must-revalidate"
+        },
+        {
+          "key": "Content-Security-Policy",
+          "value": "default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://*.supabase.co wss://*.supabase.co; frame-ancestors 'none';"
+        }
       ]
     },
     {
       "source": "/sw.js",
       "headers": [
-        { "key": "Cache-Control", "value": "no-store, must-revalidate" }
+        {
+          "key": "Cache-Control",
+          "value": "no-store, must-revalidate"
+        }
       ]
     }
   ],
   "redirects": [
-    { "source": "/favicon.ico", "destination": "/favicon.svg", "permanent": false },
-    { "source": "/qa-checklist", "destination": "/platform", "permanent": true },
-    { "source": "/qa", "destination": "/platform", "permanent": true },
-    { "source": "/bugs", "destination": "/platform/bugs", "permanent": true },
-    { "source": "/aaa-plan", "destination": "/platform/aaa-plan", "permanent": true },
-    { "source": "/5-6-26-claude-review", "destination": "/platform/5-6-26-claude-review", "permanent": true },
-    { "source": "/t/bova-2026/:path*", "destination": "/t/bova/:path*", "permanent": true },
+    {
+      "source": "/favicon.ico",
+      "destination": "/favicon.svg",
+      "permanent": false
+    },
+    {
+      "source": "/qa-checklist",
+      "destination": "/platform",
+      "permanent": true
+    },
+    {
+      "source": "/qa",
+      "destination": "/platform",
+      "permanent": true
+    },
+    {
+      "source": "/bugs",
+      "destination": "/platform/bugs",
+      "permanent": true
+    },
+    {
+      "source": "/aaa-plan",
+      "destination": "/platform/aaa-plan",
+      "permanent": true
+    },
+    {
+      "source": "/5-6-26-claude-review",
+      "destination": "/platform/5-6-26-claude-review",
+      "permanent": true
+    },
+    {
+      "source": "/t/bova-2026/:path*",
+      "destination": "/t/bova/:path*",
+      "permanent": true
+    },
     {
       "source": "/:path*",
-      "has": [{ "type": "host", "value": "bova-app.vercel.app" }],
+      "has": [
+        {
+          "type": "host",
+          "value": "bova-app.vercel.app"
+        }
+      ],
       "destination": "https://bova.greenskeeper.studio/t/bova/",
       "permanent": true
     }
   ],
   "rewrites": [
-    { "source": "/",       "destination": "/marketing.html" },
-    { "source": "/create", "destination": "/create.html" },
-    { "source": "/t/:slug/admin",      "destination": "/admin.html" },
-    { "source": "/t/:slug/scoreboard", "destination": "/scoreboard.html" },
-    { "source": "/t/:slug/scorecard",  "destination": "/scorecard.html" },
-    { "source": "/t/:slug/profile",    "destination": "/profile.html" },
-    { "source": "/t/:slug/directory",  "destination": "/directory.html" },
-    { "source": "/t/:slug/course",     "destination": "/course.html" },
-    { "source": "/t/:slug/champions",  "destination": "/champions.html" },
-    { "source": "/t/:slug/feed",       "destination": "/feed.html" },
-    { "source": "/t/:slug/login",      "destination": "/login.html" },
-    { "source": "/t/:slug/install",    "destination": "/install.html" },
-    { "source": "/t/:slug/home",       "destination": "/home.html" },
-    { "source": "/t/:slug/",           "destination": "/home.html" },
-    { "source": "/t/:slug",            "destination": "/home.html" },
-    { "source": "/admin",      "destination": "/admin.html" },
-    { "source": "/scoreboard", "destination": "/scoreboard.html" },
-    { "source": "/scorecard",  "destination": "/scorecard.html" },
-    { "source": "/profile",    "destination": "/profile.html" },
-    { "source": "/directory",  "destination": "/directory.html" },
-    { "source": "/course",     "destination": "/course.html" },
-    { "source": "/champions",  "destination": "/champions.html" },
-    { "source": "/feed",       "destination": "/feed.html" },
-    { "source": "/login",      "destination": "/login.html" },
-    { "source": "/install",    "destination": "/install.html" },
-    { "source": "/platform",          "destination": "/platform.html" },
-    { "source": "/platform/5-7-26-claude-review-security", "destination": "/platform/5-7-26-claude-review-security.html" },
-    { "source": "/platform/5-7-26-plan-security",          "destination": "/platform/5-7-26-plan-security.html" },
-    { "source": "/platform/5-7-26-runbook-security",       "destination": "/platform/5-7-26-runbook-security.html" },
-    { "source": "/platform/5-21-26-competitor-analysis",  "destination": "/platform/5-21-26-competitor-analysis.html" },
-    { "source": "/platform/:slug",    "destination": "/:slug.html" },
-    { "source": "/platform-manifest.json", "destination": "/platform-manifest.json" },
-    { "source": "/player",            "destination": "/player.html" },
-    { "source": "/player-upgrade",    "destination": "/player-upgrade.html" },
-    { "source": "/urls",              "destination": "/urls.html" },
-    { "source": "/combos",            "destination": "/combos.html" },
-    { "source": "/5-6-26-claude-review", "destination": "/5-6-26-claude-review.html" },
-    { "source": "/5-11-26-aaa-runbook",  "destination": "/5-11-26-aaa-runbook.html" },
-    { "source": "/5-11-26-token-savings-runbook-business", "destination": "/5-11-26-token-savings-runbook-business.html" },
-    { "source": "/platform/5-11-26-token-savings-runbook-business", "destination": "/5-11-26-token-savings-runbook-business.html" },
-    { "source": "/5-11-26-claude-review-onboarding", "destination": "/5-11-26-claude-review-onboarding.html" },
-    { "source": "/5-11-26-claude-review-marketing", "destination": "/5-11-26-claude-review-marketing.html" },
-    { "source": "/5-11-26-claude-review-finance", "destination": "/5-11-26-claude-review-finance.html" },
-    { "source": "/5-12-26-claude-review-ux", "destination": "/5-12-26-claude-review-ux.html" },
-    { "source": "/platform/5-12-26-claude-review-ux", "destination": "/5-12-26-claude-review-ux.html" },
-    { "source": "/platform/ux", "destination": "/ux.html" },
-    { "source": "/5-12-26-plan-ux", "destination": "/5-12-26-plan-ux.html" },
-    { "source": "/platform/5-12-26-plan-ux", "destination": "/5-12-26-plan-ux.html" },
-    { "source": "/tos",     "destination": "/tos.html" },
-    { "source": "/privacy", "destination": "/privacy.html" }
-
+    {
+      "source": "/",
+      "destination": "/marketing.html"
+    },
+    {
+      "source": "/create",
+      "destination": "/create.html"
+    },
+    {
+      "source": "/t/:slug/admin",
+      "destination": "/admin.html"
+    },
+    {
+      "source": "/t/:slug/scoreboard",
+      "destination": "/scoreboard.html"
+    },
+    {
+      "source": "/t/:slug/scorecard",
+      "destination": "/scorecard.html"
+    },
+    {
+      "source": "/t/:slug/profile",
+      "destination": "/profile.html"
+    },
+    {
+      "source": "/t/:slug/directory",
+      "destination": "/directory.html"
+    },
+    {
+      "source": "/t/:slug/course",
+      "destination": "/course.html"
+    },
+    {
+      "source": "/t/:slug/champions",
+      "destination": "/champions.html"
+    },
+    {
+      "source": "/t/:slug/feed",
+      "destination": "/feed.html"
+    },
+    {
+      "source": "/t/:slug/login",
+      "destination": "/login.html"
+    },
+    {
+      "source": "/t/:slug/install",
+      "destination": "/install.html"
+    },
+    {
+      "source": "/t/:slug/home",
+      "destination": "/home.html"
+    },
+    {
+      "source": "/t/:slug/",
+      "destination": "/home.html"
+    },
+    {
+      "source": "/t/:slug",
+      "destination": "/home.html"
+    },
+    {
+      "source": "/admin",
+      "destination": "/admin.html"
+    },
+    {
+      "source": "/scoreboard",
+      "destination": "/scoreboard.html"
+    },
+    {
+      "source": "/scorecard",
+      "destination": "/scorecard.html"
+    },
+    {
+      "source": "/profile",
+      "destination": "/profile.html"
+    },
+    {
+      "source": "/directory",
+      "destination": "/directory.html"
+    },
+    {
+      "source": "/course",
+      "destination": "/course.html"
+    },
+    {
+      "source": "/champions",
+      "destination": "/champions.html"
+    },
+    {
+      "source": "/feed",
+      "destination": "/feed.html"
+    },
+    {
+      "source": "/login",
+      "destination": "/login.html"
+    },
+    {
+      "source": "/install",
+      "destination": "/install.html"
+    },
+    {
+      "source": "/platform",
+      "destination": "/platform.html"
+    },
+    {
+      "source": "/platform/5-7-26-claude-review-security",
+      "destination": "/platform/5-7-26-claude-review-security.html"
+    },
+    {
+      "source": "/platform/5-7-26-plan-security",
+      "destination": "/platform/5-7-26-plan-security.html"
+    },
+    {
+      "source": "/platform/5-7-26-runbook-security",
+      "destination": "/platform/5-7-26-runbook-security.html"
+    },
+    {
+      "source": "/platform/5-21-26-competitor-analysis",
+      "destination": "/platform/5-21-26-competitor-analysis.html"
+    },
+    {
+      "source": "/platform/:slug",
+      "destination": "/:slug.html"
+    },
+    {
+      "source": "/platform-manifest.json",
+      "destination": "/platform-manifest.json"
+    },
+    {
+      "source": "/player",
+      "destination": "/player.html"
+    },
+    {
+      "source": "/player-upgrade",
+      "destination": "/player-upgrade.html"
+    },
+    {
+      "source": "/urls",
+      "destination": "/urls.html"
+    },
+    {
+      "source": "/combos",
+      "destination": "/combos.html"
+    },
+    {
+      "source": "/5-6-26-claude-review",
+      "destination": "/5-6-26-claude-review.html"
+    },
+    {
+      "source": "/5-11-26-aaa-runbook",
+      "destination": "/5-11-26-aaa-runbook.html"
+    },
+    {
+      "source": "/5-11-26-token-savings-runbook-business",
+      "destination": "/5-11-26-token-savings-runbook-business.html"
+    },
+    {
+      "source": "/platform/5-11-26-token-savings-runbook-business",
+      "destination": "/5-11-26-token-savings-runbook-business.html"
+    },
+    {
+      "source": "/5-11-26-claude-review-onboarding",
+      "destination": "/5-11-26-claude-review-onboarding.html"
+    },
+    {
+      "source": "/5-11-26-claude-review-marketing",
+      "destination": "/5-11-26-claude-review-marketing.html"
+    },
+    {
+      "source": "/5-11-26-claude-review-finance",
+      "destination": "/5-11-26-claude-review-finance.html"
+    },
+    {
+      "source": "/5-12-26-claude-review-ux",
+      "destination": "/5-12-26-claude-review-ux.html"
+    },
+    {
+      "source": "/platform/5-12-26-claude-review-ux",
+      "destination": "/5-12-26-claude-review-ux.html"
+    },
+    {
+      "source": "/platform/ux",
+      "destination": "/ux.html"
+    },
+    {
+      "source": "/5-12-26-plan-ux",
+      "destination": "/5-12-26-plan-ux.html"
+    },
+    {
+      "source": "/platform/5-12-26-plan-ux",
+      "destination": "/5-12-26-plan-ux.html"
+    },
+    {
+      "source": "/tos",
+      "destination": "/tos.html"
+    },
+    {
+      "source": "/privacy",
+      "destination": "/privacy.html"
+    },
+    {
+      "source": "/platform/5-14-26-claude-review",
+      "destination": "/5-14-26-claude-review.html"
+    },
+    {
+      "source": "/platform/5-14-26-ux-review",
+      "destination": "/5-14-26-ux-review.html"
+    },
+    {
+      "source": "/platform/5-15-26-claude-review",
+      "destination": "/5-15-26-claude-review.html"
+    },
+    {
+      "source": "/platform/5-19-26-master-plan",
+      "destination": "/5-19-26-master-plan.html"
+    },
+    {
+      "source": "/platform/5-19-26-ux-review",
+      "destination": "/5-19-26-ux-review.html"
+    },
+    {
+      "source": "/platform/5-20-26-claude-review",
+      "destination": "/5-20-26-claude-review.html"
+    },
+    {
+      "source": "/platform/5-20-26-deployment-review",
+      "destination": "/5-20-26-deployment-review.html"
+    },
+    {
+      "source": "/platform/5-21-26-business-review",
+      "destination": "/5-21-26-business-review.html"
+    },
+    {
+      "source": "/platform/5-21-26-feature-depth-review",
+      "destination": "/5-21-26-feature-depth-review.html"
+    },
+    {
+      "source": "/platform/5-22-26-claude-review",
+      "destination": "/5-22-26-claude-review.html"
+    },
+    {
+      "source": "/platform/5-22-26-consolidation-review",
+      "destination": "/5-22-26-consolidation-review.html"
+    },
+    {
+      "source": "/platform/5-22-26-feature-depth-review",
+      "destination": "/5-22-26-feature-depth-review.html"
+    },
+    {
+      "source": "/platform/5-26-26-data-model-review",
+      "destination": "/5-26-26-data-model-review.html"
+    },
+    {
+      "source": "/platform/5-26-26-ux-review",
+      "destination": "/5-26-26-ux-review.html"
+    },
+    {
+      "source": "/platform/5-27-26-bug-triage-review",
+      "destination": "/5-27-26-bug-triage-review.html"
+    },
+    {
+      "source": "/platform/5-29-26-admin-upgrade-review",
+      "destination": "/5-29-26-admin-upgrade-review.html"
+    },
+    {
+      "source": "/platform/5-29-26-bug-status-review",
+      "destination": "/5-29-26-bug-status-review.html"
+    },
+    {
+      "source": "/platform/5-29-26-course-hole-view-review",
+      "destination": "/5-29-26-course-hole-view-review.html"
+    },
+    {
+      "source": "/platform/5-29-26-tickets-autosync-review",
+      "destination": "/5-29-26-tickets-autosync-review.html"
+    },
+    {
+      "source": "/platform/5-29-26-ux-design-system-review",
+      "destination": "/5-29-26-ux-design-system-review.html"
+    },
+    {
+      "source": "/platform/5-29-26-ux-review",
+      "destination": "/5-29-26-ux-review.html"
+    }
   ]
 }

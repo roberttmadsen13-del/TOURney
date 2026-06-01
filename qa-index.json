@@ -1,91 +1,126 @@
 {
   "$schema": "https://tourney.greenskeeper.studio/qa-index-schema.json",
   "version": 1,
-  "updated_at": "2026-05-30T02:30:00Z",
+  "updated_at": "2026-06-01T16:00:39.264Z",
   "description": "Canonical registry of all TOURney plans, reviews, audits, and QA artifacts. The /platform Artifacts tab renders from this file. Skills (e.g. tourney-review) append new entries when they generate output.",
   "entries": [
-    {
-      "id": "review-ux-design-system-2026-05-29",
-      "category": "review",
-      "stage": "audit",
-      "title": "UX Design System · May 29, 2026",
-      "summary": "Partial (B). Foundation shipped: --font-mono fixed to DM Mono, two-tier scopes + sunlight Course Mode + card/pill/tap/motion components in tokens.css, DESIGN.md principles. All additive, zero regression. BLOCKED: cream→dark page flip needs 174 var(--ink)→var(--text) remaps across 18 auth-gated pages + QA access — held rather than shipped blind.",
-      "date": "2026-05-29",
-      "updated": "2026-05-30",
-      "author": "claude-sonnet-4-6",
-      "url": "/platform/5-29-26-ux-design-system-review",
-      "file": "5-29-26-ux-design-system-review.html",
-      "tags": ["review", "ux", "design-system", "tokens", "css"],
-      "status": "partial"
-    },
     {
       "id": "review-admin-upgrade-2026-05-29",
       "category": "review",
       "stage": "executing",
       "title": "Admin Upgrade Tiers · May 29, 2026",
-      "summary": "Tier gates lock 2 tabs only — no count enforcement. Team color/image/captain fields don't exist anywhere. Stripe loop built but unverified. Runbook: tier-config.js limits, count enforcement, captain + color + image (Pro-gated), Stripe E2E verification.",
+      "summary": "Stripe-gated tier system for admin.html: player/round limits, unlimited teams, captain assignment, and team customization (name, color, image) behind a Pro upgrade.",
       "date": "2026-05-29",
-      "updated": "2026-05-29",
-      "author": "claude-sonnet-4-6",
+      "updated": "2026-06-01",
+      "author": "claude-sonnet-4.6",
       "url": "/platform/5-29-26-admin-upgrade-review",
       "file": "5-29-26-admin-upgrade-review.html",
-      "tags": ["review", "business", "stripe", "admin", "upgrade"],
+      "tags": [
+        "review",
+        "business",
+        "stripe",
+        "admin",
+        "upgrade"
+      ],
       "status": "open"
-    },
-    {
-      "id": "review-course-hole-view-2026-05-29",
-      "category": "review",
-      "stage": "concluded",
-      "title": "Course Hole View · May 29, 2026",
-      "summary": "Concluded — M1 shipped (grade A−). Tee→green schematic SVG is the default hole view, rendering for all 90 courses from existing par/yards (no data/API/cost). Photo-override path + safe migration in place. Bug 97c45b3d closed. M2 (GPS distance) + M3 (admin photo/aerial) deferred per milestone plan.",
-      "date": "2026-05-29",
-      "updated": "2026-05-29",
-      "author": "claude-sonnet-4-6",
-      "url": "/platform/5-29-26-course-hole-view-review",
-      "file": "5-29-26-course-hole-view-review.html",
-      "tags": ["review", "scorecard", "course", "hole-view", "svg"],
-      "status": "concluded"
-    },
-    {
-      "id": "review-tickets-autosync-2026-05-29",
-      "category": "review",
-      "stage": "executing",
-      "title": "Tickets Auto-Sync · May 29, 2026",
-      "summary": "22 ticket HTML files exist; all require manual qa-index.json updates to appear on platform. No script, no hooks, no CI. vercel.json rewrites also hand-maintained. Fix: Node.js gen-qa-index.js + pre-commit hook auto-generates index from HTML metadata on every commit.",
-      "date": "2026-05-29",
-      "updated": "2026-05-29",
-      "author": "claude-sonnet-4-6",
-      "url": "/platform/5-29-26-tickets-autosync-review",
-      "file": "5-29-26-tickets-autosync-review.html",
-      "tags": ["review", "platform", "qa-index", "automation", "dx"],
-      "status": "open"
-    },
-    {
-      "id": "review-ux-2026-05-29",
-      "category": "review",
-      "stage": "concluded",
-      "title": "UX Polish Review · May 29, 2026",
-      "summary": "Grade B (up from C+). 3 cascading runtime bugs fixed on testpairs-2026 (SyntaxError/ReferenceError/scores 400), create.html format pickers unblocked, /t/:slug/home rewrite added. QA checklist 56 checks and Pairs/Superball E2E remain open.",
-      "date": "2026-05-29",
-      "updated": "2026-05-29",
-      "author": "claude-sonnet-4-6",
-      "url": "/platform/5-29-26-ux-review",
-      "file": "5-29-26-ux-review.html",
-      "tags": ["review", "ux", "pairs", "superball", "qa-checklist"],
-      "status": "concluded"
     },
     {
       "id": "review-bug-status-2026-05-29",
       "category": "review",
       "stage": "concluded",
       "title": "Bug Status Review · May 29, 2026",
-      "summary": "All 8 runbook steps + 4 bonus fixes shipped. 21 bugs closed (30→9 open), tourney-init.js unhandled rejection fixed, RSVP auth-gated at page load, bugs tab HTTP 500 fixed. Grade A-.",
+      "summary": "Cross-reference of the 25 open bugs from the Operations PDF (printed 1:56 AM May 29) against git history since May 22 — determines which bugs are actually fixed in code vs. still open vs. never marked done in Supabase.",
       "date": "2026-05-29",
-      "updated": "2026-05-29",
-      "author": "claude-sonnet-4-6",
+      "updated": "2026-06-01",
+      "author": "x1f916;-claude-sonnet-4.6",
       "url": "/platform/5-29-26-bug-status-review",
       "file": "5-29-26-bug-status-review.html",
-      "tags": ["review", "bug-status", "bug-triage", "sprint-plan"],
+      "tags": [
+        "review",
+        "bug-status",
+        "bug-triage",
+        "sprint-plan"
+      ],
+      "status": "concluded"
+    },
+    {
+      "id": "review-course-hole-view-2026-05-29",
+      "category": "review",
+      "stage": "concluded",
+      "title": "Course Hole View · May 29, 2026",
+      "summary": "Full review of the scorecard hole view feature — current gap analysis, schema state, and complete implementation plan for rendering per-hole visual diagrams during active scoring.",
+      "date": "2026-05-29",
+      "updated": "2026-06-01",
+      "author": "claude-sonnet-4.6",
+      "url": "/platform/5-29-26-course-hole-view-review",
+      "file": "5-29-26-course-hole-view-review.html",
+      "tags": [
+        "review",
+        "scorecard",
+        "course",
+        "hole-view",
+        "svg"
+      ],
+      "status": "concluded"
+    },
+    {
+      "id": "review-tickets-autosync-2026-05-29",
+      "category": "review",
+      "stage": "concluded",
+      "title": "Tickets Auto-Sync · May 29, 2026",
+      "summary": "Eliminate manual qa-index.json maintenance — ticket HTML files should auto-discover and appear in the platform Artifacts tab without AI or human intervention.",
+      "date": "2026-05-29",
+      "updated": "2026-06-01",
+      "author": "claude-sonnet-4.6",
+      "url": "/platform/5-29-26-tickets-autosync-review",
+      "file": "5-29-26-tickets-autosync-review.html",
+      "tags": [
+        "review",
+        "platform",
+        "qa-index",
+        "automation",
+        "dx"
+      ],
+      "status": "concluded"
+    },
+    {
+      "id": "review-ux-design-system-2026-05-29",
+      "category": "review",
+      "stage": "audit",
+      "title": "UX Design System · May 29, 2026",
+      "summary": "Audit of current UX inconsistency across tournament pages vs. the bug-log popup reference design. Plan and runbook to apply the dark-card / gold-accent / DM Mono design system platform-wide.",
+      "date": "2026-05-29",
+      "updated": "2026-06-01",
+      "author": "claude-sonnet-4.6",
+      "url": "/platform/5-29-26-ux-design-system-review",
+      "file": "5-29-26-ux-design-system-review.html",
+      "tags": [
+        "review",
+        "ux",
+        "design-system",
+        "tokens",
+        "css"
+      ],
+      "status": "partial"
+    },
+    {
+      "id": "review-ux-2026-05-29",
+      "category": "review",
+      "stage": "concluded",
+      "title": "UX Polish Review · May 29, 2026",
+      "summary": "Audit of new Pairs and Superball features, testpairs-2026 broken flows, team structure order, admin error handling, and QA checklist baseline (0/56 checks run).",
+      "date": "2026-05-29",
+      "updated": "2026-06-01",
+      "author": "claude-sonnet-4.6",
+      "url": "/platform/5-29-26-ux-review",
+      "file": "5-29-26-ux-review.html",
+      "tags": [
+        "review",
+        "ux",
+        "pairs",
+        "superball",
+        "qa-checklist"
+      ],
       "status": "concluded"
     },
     {
@@ -93,13 +128,17 @@
       "category": "review",
       "stage": "concluded",
       "title": "Bug Triage Review · May 27, 2026",
-      "summary": "17/17 steps done. push 403 fixed, trash-talk removed, bug-fab v7 shipped, testpairs-2026 seeded (5 rounds). Encoding mojibake fixed (767bf29). Icon bug: verify live (may already be resolved). Deferred: hole image, billing.",
+      "summary": "Full backlog triage of all 25 open bugs — grouped into 5 shippable sprints, P0→P2, with acceptance criteria and runbook steps for every issue.",
       "date": "2026-05-27",
-      "updated": "2026-05-29",
-      "author": "claude-sonnet-4-6",
+      "updated": "2026-06-01",
+      "author": "claude-sonnet-4.6",
       "url": "/platform/5-27-26-bug-triage-review",
       "file": "5-27-26-bug-triage-review.html",
-      "tags": ["review", "bug-triage", "sprint-plan"],
+      "tags": [
+        "review",
+        "bug-triage",
+        "sprint-plan"
+      ],
       "status": "concluded"
     },
     {
@@ -113,7 +152,12 @@
       "author": "claude-sonnet-4-6",
       "url": "/platform/5-27-26-feature-depth-review",
       "file": "5-27-26-feature-depth-review.html",
-      "tags": ["review", "feature-depth", "formats", "scoring"],
+      "tags": [
+        "review",
+        "feature-depth",
+        "formats",
+        "scoring"
+      ],
       "status": "concluded"
     },
     {
@@ -121,97 +165,128 @@
       "category": "review",
       "stage": "concluded",
       "title": "Data Model Review · May 26, 2026",
-      "summary": "Execute grade A. All 5 steps done: courses write RLS (migration 018), delete_tournament() cascade fix (019), 6 performance indexes (020), mygolf_profiles doc migration (021), donations doc migration (022). 22 migrations, all 16 tables covered. Zero blocked.",
+      "summary": "Comprehensive audit of every table, column, RLS policy, migration quality, index coverage, normalization, and schema design decisions.",
       "date": "2026-05-26",
-      "updated": "2026-05-27",
+      "updated": "2026-06-01",
       "author": "claude-sonnet-4-6",
       "url": "/platform/5-26-26-data-model-review",
       "file": "5-26-26-data-model-review.html",
-      "tags": ["review", "data-model", "schema", "rls", "migrations"],
+      "tags": [
+        "review",
+        "data-model",
+        "schema",
+        "rls",
+        "migrations"
+      ],
       "status": "concluded"
     },
     {
       "id": "review-ux-2026-05-26",
       "category": "review",
       "stage": "concluded",
-      "title": "Admin UX Deep Audit · May 26, 2026",
-      "summary": "Execute grade B+. Shipped 10 improvements: showToast P1 bug fixed, ARIA tab pattern, branded confirm modal, score auto-load, mobile tab scroll, Setup accordion + dirty guard, WCAG contrast validator, captain fields C–H, hat card visibility, table header legibility. 4 of 14 steps already done.",
+      "title": "UX Polish Review · May 26, 2026",
+      "summary": "Deep audit of admin.html — all tabs (Command Center, Design, Access, Course, Team Assignment). Focused on UX, information architecture, usability, feature completeness, and polish gaps. Brutally honest.",
       "date": "2026-05-26",
-      "updated": "2026-05-27",
-      "author": "claude-sonnet-4-6",
+      "updated": "2026-06-01",
+      "author": "x1f916;-claude-sonnet-4-6",
       "url": "/platform/5-26-26-ux-review",
       "file": "5-26-26-ux-review.html",
-      "tags": ["review", "ux", "admin"],
+      "tags": [
+        "review",
+        "ux",
+        "admin"
+      ],
       "status": "concluded"
+    },
+    {
+      "id": "review-2026-05-22",
+      "category": "review",
+      "stage": "audit",
+      "title": "Full Platform Review · May 22, 2026",
+      "summary": "Weekly automated full-platform review. Evidence from /platform/bugs live page, grades.json, axis-status.json, 16 migrations, codebase grep, and competitor analysis (5-21-26). Covers all 8 axes.",
+      "date": "2026-05-22",
+      "updated": "2026-06-01",
+      "author": "claude-sonnet-4-6",
+      "url": "/platform/5-22-26-claude-review",
+      "file": "5-22-26-claude-review.html",
+      "tags": [
+        "review",
+        "audit",
+        "weekly"
+      ],
+      "status": "partial"
+    },
+    {
+      "id": "consolidation-2026-05-22",
+      "category": "review",
+      "stage": "audit",
+      "title": "Consolidation Review · May 22, 2026",
+      "summary": "All open engineering items harvested from concluded and executing tickets (5-13 through 5-22), deduplicated, and ordered into one execute session.",
+      "date": "2026-05-22",
+      "updated": "2026-06-01",
+      "author": "claude-sonnet-4-6",
+      "url": "/platform/5-22-26-consolidation-review",
+      "file": "5-22-26-consolidation-review.html",
+      "tags": [
+        "review",
+        "consolidation",
+        "plan"
+      ],
+      "status": "partial"
     },
     {
       "id": "review-feature-depth-2026-05-22",
       "category": "review",
       "stage": "concluded",
       "title": "Feature Depth Review · May 22, 2026",
-      "summary": "Execute grade A−. Shipped: courses/course_holes migration, scorecard yardage from DB, multi-image bug-fab (3 slots, v6, 34 pages), captain on scoreboard, admin-as-player toggle. 3 steps already done from prior work. Feature Depth B+ → A−. Zero blocked.",
+      "summary": "Dedicated audit of feature completeness — course data model, scorecard depth, bug-fab capabilities, admin feature surface, and captain designation.",
       "date": "2026-05-22",
-      "updated": "2026-05-26",
-      "author": "claude-sonnet-4-6",
+      "updated": "2026-06-01",
+      "author": "claude-sonnet-4.6",
       "url": "/platform/5-22-26-feature-depth-review",
       "file": "5-22-26-feature-depth-review.html",
-      "tags": ["review", "feature-depth"],
-      "status": "concluded"
-    },
-    {
-      "id": "consolidation-2026-05-22",
-      "category": "review",
-      "stage": "concluded",
-      "title": "Consolidation Review · May 22, 2026",
-      "summary": "Consolidation sweep concluded. Shipped: og:image injection (tourney-init.js), /lib/settings-keys.js const enum (33 keys). Confirmed already fixed: XSS, score edit UI, profile skeleton. Grade A−. Rob manual items logged to Checklist.",
-      "date": "2026-05-22",
-      "updated": "2026-05-22",
-      "author": "claude-sonnet-4-6",
-      "url": "/platform/5-22-26-consolidation-review",
-      "file": "5-22-26-consolidation-review.html",
-      "tags": ["review", "consolidation", "plan"],
-      "status": "concluded"
-    },
-    {
-      "id": "review-2026-05-22",
-      "category": "review",
-      "stage": "concluded",
-      "title": "Full Platform Review · May 22, 2026",
-      "summary": "Executed via consolidation. Shipped: og:image (tourney-init.js), /lib/settings-keys.js. Confirmed already done: XSS, score edit, profile skeleton. Grade A−. Rob manual items logged to Checklist.",
-      "date": "2026-05-22",
-      "updated": "2026-05-22",
-      "author": "claude-sonnet-4-6",
-      "url": "/platform/5-22-26-claude-review",
-      "file": "5-22-26-claude-review.html",
-      "tags": ["review", "audit", "weekly"],
+      "tags": [
+        "review",
+        "feature-depth"
+      ],
       "status": "concluded"
     },
     {
       "id": "review-2026-05-21-business",
       "category": "review",
-      "stage": "concluded",
+      "stage": "audit",
       "title": "Business Readiness Review · May 21, 2026",
-      "summary": "MyGolf DB layer shipped (3 migrations, login gate removed, RSVP auto-fill, donation checkout, $14–$99 pricing). Grade B−. LLC + Stripe live keys logged to Checklist (Rob manual).",
+      "summary": "Audit of MyGolf account unification, registration flow, pricing model reboot, Stripe wiring, donations, and legal/operational readiness.",
       "date": "2026-05-21",
-      "updated": "2026-05-22",
-      "author": "claude-sonnet-4-6",
+      "updated": "2026-06-01",
+      "author": "claude-sonnet-4.6",
       "url": "/platform/5-21-26-business-review",
       "file": "5-21-26-business-review.html",
-      "tags": ["review", "audit", "business", "mygolf", "pricing"],
-      "status": "concluded"
+      "tags": [
+        "review",
+        "audit",
+        "business",
+        "mygolf",
+        "pricing"
+      ],
+      "status": "partial"
     },
     {
       "id": "review-2026-05-21-feature-depth",
       "category": "review",
       "stage": "concluded",
       "title": "Feature Depth Review · May 21, 2026",
-      "summary": "All critical/high gaps resolved. Yardage now on scoreboard scorecard tab. Bova footer + hero-meta defaults neutralized. color_primary + tourney_name wired from admin to home. Scoring-is-Open banner live. Grade post-execute: A-. 4 medium items remain (handicap approx, ~14 Design tab keys, no score-edit UI, no series).",
+      "summary": "Focused audit of cross-page data consistency: what admin configures (formats, yardages, course details, design keys) vs. what home, scorecard, and scoreboard actually display.",
       "date": "2026-05-21",
-      "updated": "2026-05-21",
+      "updated": "2026-06-01",
       "author": "claude-sonnet-4-6",
       "url": "/platform/5-21-26-feature-depth-review",
       "file": "5-21-26-feature-depth-review.html",
-      "tags": ["review", "feature-depth", "data-consistency"],
+      "tags": [
+        "review",
+        "feature-depth",
+        "data-consistency"
+      ],
       "status": "concluded"
     },
     {
@@ -225,7 +300,12 @@
       "author": "claude-sonnet-4-6",
       "url": "/platform/5-21-26-competitor-analysis",
       "file": "5-21-26-competitor-analysis.html",
-      "tags": ["review", "competitor", "strategy", "product"],
+      "tags": [
+        "review",
+        "competitor",
+        "strategy",
+        "product"
+      ],
       "status": "concluded",
       "axis": "business",
       "auto": true
@@ -241,21 +321,12 @@
       "author": "claude-sonnet-4-6",
       "url": null,
       "file": null,
-      "tags": ["review", "session", "bugs", "migrations"],
-      "status": "concluded"
-    },
-    {
-      "id": "deployment-review-2026-05-20",
-      "category": "review",
-      "stage": "concluded",
-      "title": "Deployment Review · May 20, 2026",
-      "summary": "Grade B+. send-push fix + SW cache auto-bump shipped. SEND_INSTALL_EMAIL_SECRET blocked (Rob manual). Deployment axis B → B+.",
-      "date": "2026-05-20",
-      "updated": "2026-05-21",
-      "author": "claude-sonnet-4-6",
-      "url": "/platform/5-20-26-deployment-review",
-      "file": "5-20-26-deployment-review.html",
-      "tags": ["review", "deployment", "agent-workflow"],
+      "tags": [
+        "review",
+        "session",
+        "bugs",
+        "migrations"
+      ],
       "status": "concluded"
     },
     {
@@ -263,13 +334,34 @@
       "category": "review",
       "stage": "concluded",
       "title": "Full Platform Review · May 20, 2026",
-      "summary": "Concluded B+. All 5 engineering steps shipped: OG tags (18 pages), score admin-edit, profile skeleton, RLS 013, Lighthouse CI. 4 Rob manual items in checklist: SEND_INSTALL_EMAIL_SECRET, LLC, Stripe, S3.",
+      "summary": "Code-based audit of all five platform.html tabs, feature state, security posture, and open items as of May 20, 2026 — one day after the May 19 UX + architecture sprint close.",
       "date": "2026-05-20",
-      "updated": "2026-05-29",
+      "updated": "2026-06-01",
       "author": "claude-sonnet-4-6",
       "url": "/platform/5-20-26-claude-review",
       "file": "5-20-26-claude-review.html",
-      "tags": ["review", "full-platform"],
+      "tags": [
+        "review",
+        "full-platform"
+      ],
+      "status": "concluded"
+    },
+    {
+      "id": "deployment-review-2026-05-20",
+      "category": "review",
+      "stage": "concluded",
+      "title": "Deployment Review · May 20, 2026",
+      "summary": "Audit of how Claude Code agents interact with git, Vercel, Supabase, and third-party services — workflow safety, deploy pipeline, secrets management, service worker cache strategy, and monitoring gaps.",
+      "date": "2026-05-20",
+      "updated": "2026-06-01",
+      "author": "claude-sonnet-4.6",
+      "url": "/platform/5-20-26-deployment-review",
+      "file": "5-20-26-deployment-review.html",
+      "tags": [
+        "review",
+        "deployment",
+        "agent-workflow"
+      ],
       "status": "concluded"
     },
     {
@@ -277,44 +369,111 @@
       "category": "review",
       "stage": "concluded",
       "title": "Master Consolidation Plan · May 19, 2026",
-      "summary": "Concluded B+. 9 engineering items shipped + P0 curly-quote sweep (61 files, commit 767bf29). 6 Rob manual items (LLC, Stripe, secrets, reg_open) in checklist. CSP deferred to security ticket.",
+      "summary": "All open items from pre-May-14 tickets consolidated into one actionable plan. Completed work stripped. Ordered by impact.",
       "date": "2026-05-19",
-      "updated": "2026-05-29",
-      "author": "claude-sonnet-4-6",
+      "updated": "2026-06-01",
+      "author": "claude-sonnet-4.6",
       "url": "/platform/5-19-26-master-plan",
       "file": "5-19-26-master-plan.html",
-      "tags": ["review", "plan", "master", "consolidation"],
+      "tags": [
+        "review",
+        "plan",
+        "master",
+        "consolidation"
+      ],
       "status": "concluded"
     },
     {
       "id": "review-ux-2026-05-19",
       "category": "review",
-      "stage": "executing",
+      "stage": "concluded",
       "title": "UX Polish Review · May 19, 2026",
-      "summary": "Logo SVG audit across all 14 pages. login.html nav SVG has wrong viewBox (200x120 hero vs 240x48 nav — renders 2.5× oversized). 5 pages use img not inline SVG for navLogoSvg. scorecard.html and admin.html have no SVG logo element — tourney-init swap never fires. marketing.html nav is CSS text only. 10-step runbook ready.",
+      "summary": "Full logo SVG audit across all 14 pages — method, viewBox, placement, and brand system compliance. Every page catalogued. Runbook generates exact edits for tourney-execute.",
       "date": "2026-05-19",
+      "updated": "2026-06-01",
       "author": "claude-sonnet-4-6",
       "url": "/platform/5-19-26-ux-review",
       "file": "5-19-26-ux-review.html",
-      "tags": ["review", "ux", "brand", "logo"],
-      "status": "concluded",
+      "tags": [
+        "review",
+        "ux",
+        "brand",
+        "logo"
+      ],
+      "status": "concluded"
+    },
+    {
+      "id": "review-bugs-2026-05-19",
+      "category": "review",
       "stage": "concluded",
+      "title": "Bug Backlog Review · May 19, 2026",
+      "summary": "Grade A-. 6 code fixes shipped: tenant flash guard, FAB z-index 10001, SW v37, four-team-test colors, bug popup opacity (bug-fab.js v5), artifacts tab default hidden. 1 Rob action remains: verify admin title + mark bug cd91dbaf completed.",
+      "date": "2026-05-19",
       "updated": "2026-05-19",
-      "summary": "Grade A. All 10 runbook steps shipped. All 11 nav-bar pages updated to nav wordmark SVG (240×48, 24px). login.html viewBox 200×120→240×48 fixed. navLogoImg added to login. 'The Bova Invitational' hardcoded text removed from 5 pages. tourney-init logo swap fires on all tournament pages. Zero blocked items."
+      "author": "claude-sonnet-4-6",
+      "url": "/platform/5-19-26-bugs-review",
+      "file": "5-19-26-bugs-review.html",
+      "tags": [
+        "bugs",
+        "review",
+        "fix",
+        "ux"
+      ],
+      "status": "concluded"
     },
     {
       "id": "review-2026-05-15",
       "category": "review",
       "stage": "concluded",
       "title": "Full Platform Review · May 15, 2026",
-      "summary": "Execute audit B+. 006b rename shipped, migration 012 applied (player_accounts anon read closed), feed.html skeleton added. 2 blocked: SEND_INSTALL_EMAIL_SECRET + GitHub CI secrets (Rob manual). Arch A, Security A-, Data B+, Perf B+. Business C+ unchanged (LLC blocker).",
+      "summary": "Weekly automated audit covering all 8 axes: architecture, security, UX, business readiness, deployment, performance, data model, and feature depth.",
       "date": "2026-05-15",
-      "author": "claude-sonnet-4-6",
+      "updated": "2026-06-01",
+      "author": "claude-sonnet-4.6",
       "url": "/platform/5-15-26-claude-review",
       "file": "5-15-26-claude-review.html",
-      "tags": ["review", "audit"],
-      "status": "concluded",
-      "updated": "2026-05-19"
+      "tags": [
+        "review",
+        "audit"
+      ],
+      "status": "concluded"
+    },
+    {
+      "id": "review-2026-05-14",
+      "category": "review",
+      "stage": "audit",
+      "title": "Full Platform Review · May 14, 2026",
+      "summary": "Evidence-cited full-platform audit across all 8 axes. Security, architecture, UX, business, deployment, performance, data model, and feature depth.",
+      "date": "2026-05-14",
+      "updated": "2026-06-01",
+      "author": "claude-sonnet-4.6",
+      "url": "/platform/5-14-26-claude-review",
+      "file": "5-14-26-claude-review.html",
+      "tags": [
+        "review",
+        "security",
+        "audit"
+      ],
+      "status": "partial"
+    },
+    {
+      "id": "review-ux-2026-05-14",
+      "category": "review",
+      "stage": "concluded",
+      "title": "UX Polish Review · May 14, 2026",
+      "summary": "Audit of design system consistency, mobile responsiveness, empty/loading/error states, typography, accessibility, and PWA install experience.",
+      "date": "2026-05-14",
+      "updated": "2026-06-01",
+      "author": "claude-sonnet-4.6",
+      "url": "/platform/5-14-26-ux-review",
+      "file": "5-14-26-ux-review.html",
+      "tags": [
+        "review",
+        "ux",
+        "accessibility",
+        "mobile"
+      ],
+      "status": "concluded"
     },
     {
       "id": "logo-audit-2026-05-14",
@@ -327,35 +486,13 @@
       "author": "claude-sonnet-4-6",
       "url": null,
       "file": null,
-      "tags": ["fix", "ux", "marketing", "brand", "logo"],
-      "status": "concluded"
-    },
-    {
-      "id": "review-ux-2026-05-14",
-      "category": "review",
-      "stage": "concluded",
-      "title": "UX Polish Review · May 14, 2026",
-      "summary": "Grade A-. CSS token centralization shipped (9 pages + SW v35), scorecard.html head fix, heroLogoImg WCAG alt, admin token drift resolved. Axis scorecard/skeleton/login spinner confirmed already live. 1 blocked: manifest 180px icon needs PNG from Rob.",
-      "date": "2026-05-14",
-      "updated": "2026-05-14",
-      "author": "claude-sonnet-4-6",
-      "url": "/platform/5-14-26-ux-review",
-      "file": "5-14-26-ux-review.html",
-      "tags": ["review", "ux", "accessibility", "mobile"],
-      "status": "concluded"
-    },
-    {
-      "id": "review-2026-05-14",
-      "category": "review",
-      "stage": "concluded",
-      "title": "Full Platform Review · May 14, 2026",
-      "summary": "Execute grade B+. Shipped: 2 XSS fixes (feed.html:375, admin.html:2185/2340), ToS+Privacy pages live at /tos /privacy, footer links, vercel rewrites, GH Actions CI pipeline. Skipped: player_accounts RLS (already done). Blocked: SEND_INSTALL_EMAIL_SECRET env var (Rob manual), GH deploy-functions secrets.",
-      "date": "2026-05-14",
-      "updated": "2026-05-19",
-      "author": "claude-sonnet-4-6",
-      "url": "/platform/5-14-26-claude-review",
-      "file": "5-14-26-claude-review.html",
-      "tags": ["review", "security", "audit"],
+      "tags": [
+        "fix",
+        "ux",
+        "marketing",
+        "brand",
+        "logo"
+      ],
       "status": "concluded"
     },
     {
@@ -369,7 +506,46 @@
       "author": "claude-sonnet-4-6",
       "url": "/platform/5-13-26-claude-review",
       "file": "5-13-26-claude-review.html",
-      "tags": ["review", "security", "audit"],
+      "tags": [
+        "review",
+        "security",
+        "audit"
+      ],
+      "status": "concluded"
+    },
+    {
+      "id": "review-ux-2026-05-13",
+      "category": "review",
+      "stage": "concluded",
+      "title": "UX Polish Review · May 13, 2026",
+      "summary": "Post-sprint UX audit. Grade B+. All open gaps resolved in 5-19-26-ux-review (Grade A).",
+      "date": "2026-05-13",
+      "updated": "2026-05-19",
+      "author": "claude-sonnet-4-6",
+      "url": "/platform/5-13-26-claude-review-ux",
+      "file": "5-13-26-claude-review-ux.html",
+      "tags": [
+        "review",
+        "ux",
+        "accessibility",
+        "mobile"
+      ],
+      "status": "concluded"
+    },
+    {
+      "id": "meeting-2026-05-13-2",
+      "category": "meeting-note",
+      "stage": "concluded",
+      "title": "Leadership Meeting · May 13, 2026 (Session 2)",
+      "summary": "send-install-email auth gate + per-IP rate limit shipped — security posture B+. Local Ollama CPU fix: num_thread:4 cap added, 7b set as default model. Conference table incident logged.",
+      "date": "2026-05-13",
+      "updated": "2026-05-13",
+      "author": "leadership-team",
+      "url": "",
+      "tags": [
+        "meeting",
+        "leadership"
+      ],
       "status": "concluded"
     },
     {
@@ -384,49 +560,12 @@
       "author": "claude-sonnet-4-6",
       "url": "/platform/ux",
       "file": "ux.html",
-      "tags": ["ux", "review", "accessibility", "mobile"],
-      "status": "concluded"
-    },
-    {
-      "id": "review-ux-2026-05-13",
-      "category": "review",
-      "stage": "concluded",
-      "title": "UX Polish Review · May 13, 2026",
-      "summary": "Post-sprint UX audit. Grade B+. All open gaps resolved in 5-19-26-ux-review (Grade A).",
-      "date": "2026-05-13",
-      "updated": "2026-05-19",
-      "author": "claude-sonnet-4-6",
-      "url": "/platform/5-13-26-claude-review-ux",
-      "file": "5-13-26-claude-review-ux.html",
-      "tags": ["review", "ux", "accessibility", "mobile"],
-      "status": "concluded"
-    },
-    {
-      "id": "plan-ux-2026-05-12",
-      "category": "plan",
-      "stage": "concluded",
-      "title": "UX Polish Plan · May 12, 2026",
-      "summary": "8-item UX plan P1-P4: loading skeletons (P1/2h), login error sanitization (P1/30min), prefers-reduced-motion (P2/20min), install journey (P2/1h), empty states (P2/1h), aria-live (P3/30min), mobile table QA (P3/30min), Lighthouse audit (P4/2h). user-scalable=no already shipped.",
-      "date": "2026-05-12",
-      "updated": "2026-05-12",
-      "author": "claude-sonnet-4-6",
-      "url": "/platform/5-12-26-plan-ux",
-      "file": "5-12-26-plan-ux.html",
-      "tags": ["plan", "ux", "accessibility", "mobile"],
-      "status": "concluded"
-    },
-    {
-      "id": "review-ux-2026-05-12",
-      "category": "review",
-      "stage": "concluded",
-      "title": "UX Polish Review · May 12, 2026",
-      "summary": "Deep-dive UX audit: user-scalable=no WCAG 1.4.4 fail on scorecard; no loading skeletons (blank flash site-wide); raw Supabase error messages in login; no prefers-reduced-motion. Strengths: CSS token consistency, player.html ARIA exemplary, login 3-mode UX solid. 9-item sprint.",
-      "date": "2026-05-12",
-      "updated": "2026-05-12",
-      "author": "claude-sonnet-4-6",
-      "url": "/platform/5-12-26-claude-review-ux",
-      "file": "5-12-26-claude-review-ux.html",
-      "tags": ["review", "ux", "accessibility", "mobile"],
+      "tags": [
+        "ux",
+        "review",
+        "accessibility",
+        "mobile"
+      ],
       "status": "concluded"
     },
     {
@@ -441,22 +580,51 @@
       "author": "claude-sonnet-4-6",
       "url": "/platform/finance",
       "file": "finance.html",
-      "tags": ["finance", "plan", "llc", "stripe", "accounting"],
+      "tags": [
+        "finance",
+        "plan",
+        "llc",
+        "stripe",
+        "accounting"
+      ],
       "status": "concluded"
     },
     {
-      "id": "security",
-      "axis": "security",
-      "category": "axis",
+      "id": "plan-ux-2026-05-12",
+      "category": "plan",
       "stage": "concluded",
-      "title": "Security — RLS Hardening, CSP, Auth Gates",
-      "summary": "send-push v9 + send-install-email v6 deployed. Rounds write RLS 011 applied. migration 012 applied (player_accounts anon read closed). Open items (CSP unsafe-inline, webhook header) consolidated into 5-19-26-master-plan.",
-      "date": "2026-05-07",
-      "updated": "2026-05-19",
+      "title": "UX Polish Plan · May 12, 2026",
+      "summary": "8-item UX plan P1-P4: loading skeletons (P1/2h), login error sanitization (P1/30min), prefers-reduced-motion (P2/20min), install journey (P2/1h), empty states (P2/1h), aria-live (P3/30min), mobile table QA (P3/30min), Lighthouse audit (P4/2h). user-scalable=no already shipped.",
+      "date": "2026-05-12",
+      "updated": "2026-05-12",
       "author": "claude-sonnet-4-6",
-      "url": "/platform/5-7-26-plan-security",
-      "file": "platform/5-7-26-plan-security.html",
-      "tags": ["security", "plan", "rls", "auth"],
+      "url": "/platform/5-12-26-plan-ux",
+      "file": "5-12-26-plan-ux.html",
+      "tags": [
+        "plan",
+        "ux",
+        "accessibility",
+        "mobile"
+      ],
+      "status": "concluded"
+    },
+    {
+      "id": "review-ux-2026-05-12",
+      "category": "review",
+      "stage": "concluded",
+      "title": "UX Polish Review · May 12, 2026",
+      "summary": "Deep-dive UX audit: user-scalable=no WCAG 1.4.4 fail on scorecard; no loading skeletons (blank flash site-wide); raw Supabase error messages in login; no prefers-reduced-motion. Strengths: CSS token consistency, player.html ARIA exemplary, login 3-mode UX solid. 9-item sprint.",
+      "date": "2026-05-12",
+      "updated": "2026-05-12",
+      "author": "claude-sonnet-4-6",
+      "url": "/platform/5-12-26-claude-review-ux",
+      "file": "5-12-26-claude-review-ux.html",
+      "tags": [
+        "review",
+        "ux",
+        "accessibility",
+        "mobile"
+      ],
       "status": "concluded"
     },
     {
@@ -471,7 +639,11 @@
       "author": "claude-sonnet-4-6",
       "url": "/platform/5-11-26-claude-review-marketing",
       "file": "5-11-26-claude-review-marketing.html",
-      "tags": ["marketing", "review", "growth"],
+      "tags": [
+        "marketing",
+        "review",
+        "growth"
+      ],
       "status": "concluded"
     },
     {
@@ -486,8 +658,48 @@
       "author": "claude-sonnet-4-6",
       "url": "/platform/5-11-26-claude-review-onboarding",
       "file": "5-11-26-claude-review-onboarding.html",
-      "tags": ["onboarding", "review", "ux"],
+      "tags": [
+        "onboarding",
+        "review",
+        "ux"
+      ],
       "status": "concluded"
+    },
+    {
+      "id": "runbook-token-savings-business-2026-05-11",
+      "category": "runbook",
+      "title": "Token Savings Business Runbook · May 11, 2026",
+      "summary": "Step-by-step operational execution of the 5-7-26 token savings plan. 6 steps across 3 phases (Day 1 config, Day 2 caching, Week 1 skills+habits). Each step ships exact command/edit, expected output, verification checkpoint, and rollback. Two phase gates: validate Sonnet output quality before caching, confirm cache hits before skill overrides. Target: $55/mo -> $33-41/mo. All changes local + reversible, no production surface touched.",
+      "date": "2026-05-11",
+      "updated": "2026-05-12",
+      "author": "Claude Opus 4.7",
+      "url": "/platform/5-11-26-token-savings-runbook-business",
+      "file": "5-11-26-token-savings-runbook-business.html",
+      "tags": [
+        "runbook",
+        "business",
+        "cost",
+        "claude"
+      ],
+      "status": "archived"
+    },
+    {
+      "id": "runbook-aaa-2026-05-11",
+      "category": "runbook",
+      "title": "AAA Implementation Runbook · May 11, 2026",
+      "summary": "COMPLETE (2026-05-11). All 9 phases executed: A1 shared lib wiring, A3 typecheck CI, A8 backup workflow, A7 migrations 006+007, P5 rounds read-side, A4 Vitest/Playwright scaffold, A5 staging env (mmennowtnfexvqnyyain + staging branch), F7 tier gating (lib/tier-config.js, admin gates, stripe-webhook edge fn deployed). Pending manual: AWS S3 bucket + GitHub secrets (P3), Stripe product setup (F7).",
+      "date": "2026-05-11",
+      "updated": "2026-05-12",
+      "author": "Claude Opus 4.7",
+      "url": "/platform/5-11-26-aaa-runbook",
+      "file": "5-11-26-aaa-runbook.html",
+      "tags": [
+        "runbook",
+        "architecture",
+        "aaa",
+        "deployment"
+      ],
+      "status": "archived"
     },
     {
       "id": "review-finance-2026-05-11",
@@ -500,7 +712,11 @@
       "author": "Claude Sonnet 4.6",
       "url": "/platform/5-11-26-claude-review-finance",
       "file": "5-11-26-claude-review-finance.html",
-      "tags": ["review", "finance", "money"],
+      "tags": [
+        "review",
+        "finance",
+        "money"
+      ],
       "status": "concluded"
     },
     {
@@ -514,7 +730,11 @@
       "author": "Claude Sonnet 4.6",
       "url": "/5-11-26-claude-review-marketing",
       "file": "5-11-26-claude-review-marketing.html",
-      "tags": ["review", "marketing", "growth"],
+      "tags": [
+        "review",
+        "marketing",
+        "growth"
+      ],
       "status": "concluded"
     },
     {
@@ -528,34 +748,12 @@
       "author": "Claude Sonnet 4.6",
       "url": "/5-11-26-claude-review-onboarding",
       "file": "5-11-26-claude-review-onboarding.html",
-      "tags": ["review", "onboarding", "ux"],
+      "tags": [
+        "review",
+        "onboarding",
+        "ux"
+      ],
       "status": "concluded"
-    },
-    {
-      "id": "runbook-token-savings-business-2026-05-11",
-      "category": "runbook",
-      "title": "Token Savings Business Runbook · May 11, 2026",
-      "summary": "Step-by-step operational execution of the 5-7-26 token savings plan. 6 steps across 3 phases (Day 1 config, Day 2 caching, Week 1 skills+habits). Each step ships exact command/edit, expected output, verification checkpoint, and rollback. Two phase gates: validate Sonnet output quality before caching, confirm cache hits before skill overrides. Target: $55/mo -> $33-41/mo. All changes local + reversible, no production surface touched.",
-      "date": "2026-05-11",
-      "updated": "2026-05-12",
-      "author": "Claude Opus 4.7",
-      "url": "/platform/5-11-26-token-savings-runbook-business",
-      "file": "5-11-26-token-savings-runbook-business.html",
-      "tags": ["runbook", "business", "cost", "claude"],
-      "status": "archived"
-    },
-    {
-      "id": "runbook-aaa-2026-05-11",
-      "category": "runbook",
-      "title": "AAA Implementation Runbook · May 11, 2026",
-      "summary": "COMPLETE (2026-05-11). All 9 phases executed: A1 shared lib wiring, A3 typecheck CI, A8 backup workflow, A7 migrations 006+007, P5 rounds read-side, A4 Vitest/Playwright scaffold, A5 staging env (mmennowtnfexvqnyyain + staging branch), F7 tier gating (lib/tier-config.js, admin gates, stripe-webhook edge fn deployed). Pending manual: AWS S3 bucket + GitHub secrets (P3), Stripe product setup (F7).",
-      "date": "2026-05-11",
-      "updated": "2026-05-12",
-      "author": "Claude Opus 4.7",
-      "url": "/platform/5-11-26-aaa-runbook",
-      "file": "5-11-26-aaa-runbook.html",
-      "tags": ["runbook", "architecture", "aaa", "deployment"],
-      "status": "archived"
     },
     {
       "id": "meeting-notes-2026-05-08",
@@ -568,7 +766,11 @@
       "author": "Leadership Team (Marcus, Rory, Cam, Jordan, Sloane)",
       "url": "/platform/leadership-meeting-notes-2026-05-08",
       "file": "platform/leadership-meeting-notes-2026-05-08.md",
-      "tags": ["reference", "leadership", "meeting"],
+      "tags": [
+        "reference",
+        "leadership",
+        "meeting"
+      ],
       "status": "concluded"
     },
     {
@@ -582,8 +784,48 @@
       "author": "Claude Sonnet 4.6",
       "url": "/platform/5-8-26-claude-review",
       "file": "5-8-26-claude-review.html",
-      "tags": ["review", "security", "audit"],
+      "tags": [
+        "review",
+        "security",
+        "audit"
+      ],
       "status": "concluded"
+    },
+    {
+      "id": "security",
+      "axis": "security",
+      "category": "axis",
+      "stage": "concluded",
+      "title": "Security — RLS Hardening, CSP, Auth Gates",
+      "summary": "send-push v9 + send-install-email v6 deployed. Rounds write RLS 011 applied. migration 012 applied (player_accounts anon read closed). Open items (CSP unsafe-inline, webhook header) consolidated into 5-19-26-master-plan.",
+      "date": "2026-05-07",
+      "updated": "2026-05-19",
+      "author": "claude-sonnet-4-6",
+      "url": "/platform/5-7-26-plan-security",
+      "file": "platform/5-7-26-plan-security.html",
+      "tags": [
+        "security",
+        "plan",
+        "rls",
+        "auth"
+      ],
+      "status": "concluded"
+    },
+    {
+      "id": "runbook-security-2026-05-07",
+      "category": "runbook",
+      "title": "Security Runbook · May 7, 2026",
+      "summary": "Step-by-step operational runbook for the 5-7-26 security hardening plan. 9 steps, ~5h. Covers migration 012 (invitations/player_accounts RLS), send-install-email auth gate, accept-invitation edge function, parseMentions XSS fix, safeUrl() admin fix, magic link auth, CSP unsafe-inline removal. Each step includes exact SQL/commands, verification checkpoint, and rollback procedure.",
+      "date": "2026-05-07",
+      "updated": "2026-05-12",
+      "author": "Claude Sonnet 4.6",
+      "url": "/platform/5-7-26-runbook-security",
+      "file": "platform/5-7-26-runbook-security.html",
+      "tags": [
+        "runbook",
+        "security"
+      ],
+      "status": "archived"
     },
     {
       "id": "plan-token-savings-business-2026-05-07",
@@ -596,7 +838,12 @@
       "author": "Claude Opus 4.7 + Claude Code Guide SME",
       "url": "/platform/5-7-26-token-savings-plan-business",
       "file": "5-7-26-token-savings-plan-business.html",
-      "tags": ["plan", "business", "cost", "claude"],
+      "tags": [
+        "plan",
+        "business",
+        "cost",
+        "claude"
+      ],
       "status": "concluded"
     },
     {
@@ -610,49 +857,13 @@
       "author": "Claude Opus 4.7 + Claude Code Guide SME",
       "url": "/platform/5-7-26-claude-token-burn-claude-review",
       "file": "5-7-26-claude-token-burn-claude-review.html",
-      "tags": ["review", "cost", "ops", "claude"],
+      "tags": [
+        "review",
+        "cost",
+        "ops",
+        "claude"
+      ],
       "status": "concluded"
-    },
-    {
-      "id": "review-bugs-2026-05-19",
-      "category": "review",
-      "stage": "concluded",
-      "title": "Bug Backlog Review · May 19, 2026",
-      "summary": "Grade A-. 6 code fixes shipped: tenant flash guard, FAB z-index 10001, SW v37, four-team-test colors, bug popup opacity (bug-fab.js v5), artifacts tab default hidden. 1 Rob action remains: verify admin title + mark bug cd91dbaf completed.",
-      "date": "2026-05-19",
-      "updated": "2026-05-19",
-      "author": "claude-sonnet-4-6",
-      "url": "/platform/5-19-26-bugs-review",
-      "file": "5-19-26-bugs-review.html",
-      "tags": ["bugs", "review", "fix", "ux"],
-      "status": "concluded"
-    },
-    {
-      "id": "bugs-2026",
-      "category": "bugs",
-      "title": "Bug Log — TOURney Platform",
-      "summary": "Living bug tracker: open bugs, fix history by session (14 sessions), pending features, setting keys ground truth, format values ground truth.",
-      "date": "2026-05-02",
-      "updated": "2026-05-12",
-      "author": "Engineering",
-      "url": "/platform/bugs",
-      "file": "bugs.html",
-      "tags": ["bugs", "qa", "reference"],
-      "status": "in-progress"
-    },
-    {
-      "id": "review-2026-05-06",
-      "category": "review",
-      "stage": "concluded",
-      "title": "Full Platform Review · May 6, 2026",
-      "summary": "Code-to-business audit, council of 5 polish ideas, full QA protocol, business roadmap (LLC → PSP), security analysis. Security graded D+ — three CRITICAL/HIGH findings (player_accounts RLS, invitations RLS, admin.html XSS). All other axes A-/B+.",
-      "date": "2026-05-06",
-      "updated": "2026-05-06",
-      "author": "Claude Sonnet 4.6",
-      "url": "/platform/5-6-26-claude-review",
-      "file": "5-6-26-claude-review.html",
-      "tags": ["review", "security", "audit"],
-      "status": "shipped"
     },
     {
       "id": "review-security-2026-05-07",
@@ -665,7 +876,11 @@
       "author": "Claude Sonnet 4.6",
       "url": "/platform/5-7-26-claude-review-security",
       "file": "platform/5-7-26-claude-review-security.html",
-      "tags": ["review", "security", "audit"],
+      "tags": [
+        "review",
+        "security",
+        "audit"
+      ],
       "status": "shipped"
     },
     {
@@ -679,21 +894,11 @@
       "author": "Claude Sonnet 4.6",
       "url": "/platform/5-7-26-plan-security",
       "file": "platform/5-7-26-plan-security.html",
-      "tags": ["plan", "security"],
+      "tags": [
+        "plan",
+        "security"
+      ],
       "status": "shipped"
-    },
-    {
-      "id": "runbook-security-2026-05-07",
-      "category": "runbook",
-      "title": "Security Runbook · May 7, 2026",
-      "summary": "Step-by-step operational runbook for the 5-7-26 security hardening plan. 9 steps, ~5h. Covers migration 012 (invitations/player_accounts RLS), send-install-email auth gate, accept-invitation edge function, parseMentions XSS fix, safeUrl() admin fix, magic link auth, CSP unsafe-inline removal. Each step includes exact SQL/commands, verification checkpoint, and rollback procedure.",
-      "date": "2026-05-07",
-      "updated": "2026-05-12",
-      "author": "Claude Sonnet 4.6",
-      "url": "/platform/5-7-26-runbook-security",
-      "file": "platform/5-7-26-runbook-security.html",
-      "tags": ["runbook", "security"],
-      "status": "archived"
     },
     {
       "id": "aaa-plan",
@@ -706,21 +911,49 @@
       "author": "Claude Sonnet 4.6",
       "url": "/platform/aaa-plan",
       "file": "aaa-plan.html",
-      "tags": ["plan", "architecture", "features", "ux", "active"],
+      "tags": [
+        "plan",
+        "architecture",
+        "features",
+        "ux",
+        "active"
+      ],
       "status": "concluded"
     },
     {
-      "id": "meeting-2026-05-13-2",
-      "category": "meeting-note",
+      "id": "review-2026-05-06",
+      "category": "review",
       "stage": "concluded",
-      "title": "Leadership Meeting · May 13, 2026 (Session 2)",
-      "summary": "send-install-email auth gate + per-IP rate limit shipped — security posture B+. Local Ollama CPU fix: num_thread:4 cap added, 7b set as default model. Conference table incident logged.",
-      "date": "2026-05-13",
-      "updated": "2026-05-13",
-      "author": "leadership-team",
-      "url": "",
-      "tags": ["meeting", "leadership"],
-      "status": "concluded"
+      "title": "Full Platform Review · May 6, 2026",
+      "summary": "Code-to-business audit, council of 5 polish ideas, full QA protocol, business roadmap (LLC → PSP), security analysis. Security graded D+ — three CRITICAL/HIGH findings (player_accounts RLS, invitations RLS, admin.html XSS). All other axes A-/B+.",
+      "date": "2026-05-06",
+      "updated": "2026-05-06",
+      "author": "Claude Sonnet 4.6",
+      "url": "/platform/5-6-26-claude-review",
+      "file": "5-6-26-claude-review.html",
+      "tags": [
+        "review",
+        "security",
+        "audit"
+      ],
+      "status": "shipped"
+    },
+    {
+      "id": "bugs-2026",
+      "category": "bugs",
+      "title": "Bug Log — TOURney Platform",
+      "summary": "Living bug tracker: open bugs, fix history by session (14 sessions), pending features, setting keys ground truth, format values ground truth.",
+      "date": "2026-05-02",
+      "updated": "2026-05-12",
+      "author": "Engineering",
+      "url": "/platform/bugs",
+      "file": "bugs.html",
+      "tags": [
+        "bugs",
+        "qa",
+        "reference"
+      ],
+      "status": "in-progress"
     }
   ]
 }

@@ -808,6 +808,7 @@ td{padding:0.7rem 0.75rem;font-size:0.88rem;vertical-align:middle;}
         <div class="action-hd">
           <span class="action-title">Tickets</span>
           <span class="action-sub" id="atTicketSub">—</span>
+          <span id="atSyncTime" style="margin-left:auto;font-size:0.62rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);"></span>
         </div>
         <div class="at-filters">
           <input type="text" id="atSearch" class="at-search" placeholder="Search…" oninput="filterArtifactTickets()">
@@ -1414,6 +1415,7 @@ async function loadArtifacts() {
     if (!r.ok) throw new Error(`HTTP ${r.status}`);
     const d=await r.json();
     allEntries=Array.isArray(d.entries)?d.entries:[];_artifactsReady=true;
+    {const el=document.getElementById('atSyncTime');if(el&&d.updated_at){el.textContent='Index '+new Date(d.updated_at).toLocaleString();}}
 
     // â"€â"€ Auto-archive concluded artifacts â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€
     {

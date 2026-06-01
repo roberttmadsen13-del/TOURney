@@ -145,9 +145,9 @@ footer span{color:var(--gold);}
   <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Review</div></div>
   <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Plan</div></div>
   <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Runbook</div></div>
-  <div class="lc-stage"><div class="lc-pill"></div><div class="lc-label">Executing</div></div>
-  <div class="lc-stage"><div class="lc-pill"></div><div class="lc-label">Audit</div></div>
-  <div class="lc-stage"><div class="lc-pill"></div><div class="lc-label">Concluded</div></div>
+  <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Executing</div></div>
+  <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Audit</div></div>
+  <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Concluded</div></div>
 </div>
 <!-- LIFECYCLE-BAR-END -->
 
@@ -512,11 +512,33 @@ footer span{color:var(--gold);}
 <div class="wrapper">
 <!-- EXECUTING-CONTENT-START -->
 <div class="section-header">
-  <div class="section-eyebrow">Section 04</div>
-  <div class="section-title">Executing</div>
+  <div class="section-eyebrow">Stage 4 — Executing</div>
+  <h2 class="section-title">Execution Log</h2>
+  <p class="section-desc">Step-by-step record of what ran. 2026-05-29 · claude-opus-4-7</p>
 </div>
-<div class="stage-pending">
-  <p>Awaiting execution. Run <code>/tourney-execute 5-29-26-tickets-autosync-review.html</code> to proceed.</p>
+<div class="exec-step">
+  <span class="exec-badge exec-done">Done</span>
+  <div class="exec-body"><strong>Step 1 — Create scripts/gen-qa-index.js (qa-index generation)</strong>Wrote <code>scripts/gen-qa-index.js</code>: glob <code>*.html</code> in repo root, detect tickets by <code>&lt;!-- LIFECYCLE-BAR-START --&gt;</code> marker, regex-extract title/axis/summary/date/author/stage, merge with existing qa-index entries (file-matched entries refresh; non-HTML entries preserved). Sorted by date desc.</div>
+</div>
+<div class="exec-step">
+  <span class="exec-badge exec-done">Done</span>
+  <div class="exec-body"><strong>Step 2 — vercel.json rewrite patching</strong>Same script appends <code>{source:/platform/{slug}, destination:/{file}}</code> rewrites for any ticket lacking one. Idempotent via Set of existing sources. First run added 21 new rewrites (total 71).</div>
+</div>
+<div class="exec-step">
+  <span class="exec-badge exec-done">Done</span>
+  <div class="exec-body"><strong>Step 3 — Install pre-commit hook</strong>Created <code>.git/hooks/pre-commit</code>: runs <code>node scripts/gen-qa-index.js</code> then <code>git add qa-index.json vercel.json</code>. chmod +x applied. Aborts commit on script failure.</div>
+</div>
+<div class="exec-step">
+  <span class="exec-badge exec-done">Done</span>
+  <div class="exec-body"><strong>Step 4 — Display last-sync timestamp in platform.html</strong>Added <code>&lt;span id="atSyncTime"&gt;</code> in Tickets header (right-aligned via <code>margin-left:auto</code>). <code>loadArtifacts()</code> writes <code>'Index ' + new Date(d.updated_at).toLocaleString()</code>.</div>
+</div>
+<div class="exec-step">
+  <span class="exec-badge exec-done">Done</span>
+  <div class="exec-body"><strong>Step 5 — Run + validate</strong>First run: scanned 66 HTML, detected 21 tickets, derived 21 entries, preserved 30 non-HTML/legacy entries (51 total). 9 older tickets lack lifecycle markers — entries preserved untouched (acceptable: all concluded). vercel.json valid JSON.</div>
+</div>
+<div class="exec-step">
+  <span class="exec-badge exec-done">Done</span>
+  <div class="exec-body"><strong>Step 6 — Update tourney-review SKILL.md</strong>Step 8 (qa-index update) replaced with: "run <code>node scripts/gen-qa-index.js</code> — or skip; pre-commit hook runs it automatically". Steps 9 (grades.json) + 10 (axis-status.json) remain manual.</div>
 </div>
 <!-- EXECUTING-CONTENT-END -->
 </div>
@@ -526,11 +548,34 @@ footer span{color:var(--gold);}
 <div class="wrapper">
 <!-- AUDIT-CONTENT-START -->
 <div class="section-header">
-  <div class="section-eyebrow">Section 05</div>
-  <div class="section-title">Audit</div>
+  <div class="section-eyebrow">Stage 5 — Audit</div>
+  <h2 class="section-title">Audit Results</h2>
+  <p class="section-desc">Grade: A. 2026-05-29 · claude-opus-4-7</p>
 </div>
-<div class="stage-pending">
-  <p>Awaiting execution. Run <code>/tourney-execute 5-29-26-tickets-autosync-review.html</code> to proceed.</p>
+<div class="score-grid">
+  <div class="score-cell"><div class="score-num score-green">A</div><div class="score-label">Auto-Sync</div></div>
+  <div class="score-cell"><div class="score-num score-green">A</div><div class="score-label">Pre-Commit</div></div>
+  <div class="score-cell"><div class="score-num score-green">A</div><div class="score-label">Vercel Rewrites</div></div>
+  <div class="score-cell"><div class="score-num score-gold">A−</div><div class="score-label">Legacy Coverage</div></div>
+</div>
+<div class="card">
+  <div class="card-title">What Shipped</div>
+  <ul>
+    <li><code>scripts/gen-qa-index.js</code> — single source of truth for qa-index.json generation</li>
+    <li>Pre-commit hook at <code>.git/hooks/pre-commit</code> — runs script + stages output on every commit</li>
+    <li>vercel.json rewrites auto-patched — clean URLs (/platform/{slug}) for all 21 active tickets</li>
+    <li>platform.html shows "Index {timestamp}" in Tickets header — trust signal for freshness</li>
+    <li>SKILL.md Step 8 simplified — AI agents no longer hand-edit qa-index.json</li>
+    <li>Idempotent: rerunning the script makes no changes if HTML is unchanged</li>
+  </ul>
+</div>
+<div class="card">
+  <div class="card-title">Still Open</div>
+  <ul>
+    <li>9 legacy ticket HTMLs (pre-lifecycle-marker) — entries preserved untouched but not auto-refreshed. All are concluded, so no functional impact</li>
+    <li>3 pre-existing stage-promotion dupes in qa-index (e.g. claude-review-marketing has 2 entries) — not introduced by script; could be deduped in a follow-up</li>
+    <li>grades.json + axis-status.json still hand-maintained (out of scope for this ticket)</li>
+  </ul>
 </div>
 <!-- AUDIT-CONTENT-END -->
 </div>
@@ -540,11 +585,17 @@ footer span{color:var(--gold);}
 <div class="wrapper">
 <!-- CONCLUDED-CONTENT-START -->
 <div class="section-header">
-  <div class="section-eyebrow">Section 06</div>
-  <div class="section-title">Concluded</div>
+  <div class="section-eyebrow">Stage 6 — Concluded</div>
+  <h2 class="section-title">Ticket Concluded</h2>
+  <p class="section-desc">2026-05-29 · claude-opus-4-7</p>
 </div>
-<div class="stage-pending">
-  <p>Awaiting execution. Run <code>/tourney-execute 5-29-26-tickets-autosync-review.html</code> to proceed.</p>
+<div class="card">
+  <div class="card-title">Summary</div>
+  <p>qa-index.json is now a derived artifact. <code>scripts/gen-qa-index.js</code> scans ticket HTML metadata (title, axis, summary, date, lifecycle stage) and rebuilds the index on every commit via pre-commit hook. vercel.json rewrites for clean URLs auto-patched. Platform Artifacts tab surfaces the index timestamp. No AI session can orphan a ticket again — ship the HTML, the index follows.</p>
+</div>
+<div class="card">
+  <div class="card-title">Next Ticket</div>
+  <p>Run <code>/tourney-execute 5-29-26-admin-upgrade-review.html</code> to ship tier gates + Stripe E2E, or <code>/tourney-review {axis}</code> to start a fresh review.</p>
 </div>
 <!-- CONCLUDED-CONTENT-END -->
 </div>
