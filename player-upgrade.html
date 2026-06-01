@@ -10,7 +10,7 @@
 <link rel="icon" href="/icon-192.png" type="image/png">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#1a1008">
-<title>Get Player Account — TOURney</title>
+<title>Create My Golf Account — TOURney</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Mono:wght@300;400;500&family=Barlow+Condensed:wght@300;400;600;700;800&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
 :root{--ink:#1a1008;--gold:#c09030;--gold-l:#d4aa50;--gold-p:#e8cc80;--cream:#f0e6cc;--red:#8a1e10;--border:rgba(192,144,48,0.28);--bg:#1a1008;--card:#231a0a;--muted:rgba(240,230,204,0.38);}
@@ -96,14 +96,9 @@ a{color:inherit;text-decoration:none;}
 
   <!-- SIGN-UP FORM -->
   <div id="formState">
-    <div class="eyebrow">TOURney Player Account</div>
-    <div class="headline">Get in the <em>Game.</em></div>
-    <div class="sub">One account follows you across every TOURney tournament — live scoring, leaderboard, push notifications, and your full golf history.</div>
-
-    <div class="price-badge">
-      <div class="price-val">$2</div>
-      <div class="price-unit">/ month</div>
-    </div>
+    <div class="eyebrow">My Golf — Always Free</div>
+    <div class="headline">Create your <em>My&nbsp;Golf</em> account.</div>
+    <div class="sub">One account follows you across every TOURney tournament — live scoring, leaderboard, push notifications, and your full golf history. No card. No subscription. Tournaments charge their own entry; the account itself is free, forever.</div>
 
     <div class="features">
       <div class="feature"><div class="feature-icon">✓</div>Live hole-by-hole scoring from your phone</div>
@@ -129,9 +124,9 @@ a{color:inherit;text-decoration:none;}
       </div>
       <label class="form-label" for="signupEmail">Email</label>
       <input class="form-input" type="email" id="signupEmail" placeholder="you@email.com" autocomplete="email" required>
-      <button type="submit" class="btn-join" id="joinBtn">Get Player Account — $2/mo</button>
+      <button type="submit" class="btn-join" id="joinBtn">Create My Golf Account — Free</button>
       <div id="formErr" class="form-err"></div>
-      <div class="fine-print">You'll receive payment instructions by email. Account activates on payment confirmation. Cancel anytime.</div>
+      <div class="fine-print">Free forever. No card required. Tournament organizers may charge their own entry fees.</div>
     </form>
   </div>
 
@@ -152,8 +147,6 @@ const sb = supabase.createClient(
   'sb_publishable_DnBMNLaSu61ykJ6P_fI2fw_D9DdAScn'
 );
 
-const CHECKOUT_FN = 'https://jllugkiojeoopitdvzsa.supabase.co/functions/v1/create-player-checkout';
-
 function showConfirm(title, bodyHtml) {
   document.getElementById('confirmTitle').textContent = title;
   document.getElementById('confirmBody').innerHTML = bodyHtml;
@@ -161,14 +154,8 @@ function showConfirm(title, bodyHtml) {
   document.getElementById('confirmState').style.display = 'block';
 }
 
-// Handle ?success=1 return from Stripe
 (function () {
   const sp = new URLSearchParams(location.search);
-  if (sp.get('success') === '1') {
-    const email = sp.get('email') ?? '';
-    showConfirm('You\'re in.', `Your Player Account is now active${email ? ` for <strong>${email}</strong>` : ''}. See you on the course.`);
-    return;
-  }
   const e = sp.get('email');
   if (e) document.getElementById('signupEmail').value = e;
 })();
@@ -201,44 +188,23 @@ document.getElementById('signupForm').addEventListener('submit', async (ev) => {
 
   if (!first || !last || !email) return;
   btn.disabled = true;
-  btn.textContent = 'Connecting to payment…';
+  btn.textContent = 'Creating account…';
   err.classList.remove('show');
 
-  // Never overwrite comped/active status
-  const { data: existing } = await sb.from('player_accounts').select('billing_status').eq('email', email).maybeSingle();
-  if (existing?.billing_status === 'comped' || existing?.billing_status === 'active') {
-    showConfirm('Already active.', `<strong>${first} ${last}</strong> — your Player Account is already active. Good to go.`);
-    return;
-  }
-
-  // Attempt Stripe hosted checkout
-  try {
-    const res = await fetch(CHECKOUT_FN, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email }),
-    });
-    if (res.ok) {
-      const { url } = await res.json();
-      if (url) { window.location.href = url; return; }
-    }
-  } catch { /* fall through to manual pending */ }
-
-  // Fallback: manual pending flow (Stripe not yet configured)
   const { error } = await sb.from('player_accounts').upsert(
-    { email, plan: 'player', billing_status: 'pending_payment', updated_at: new Date().toISOString() },
-    { onConflict: 'email', ignoreDuplicates: true }
+    { email, plan: 'player', billing_status: 'comped', updated_at: new Date().toISOString() },
+    { onConflict: 'email' }
   );
 
   if (error) {
     err.textContent = 'Something went wrong. Try again or contact us.';
     err.classList.add('show');
     btn.disabled = false;
-    btn.textContent = 'Get Player Account — $2/mo';
+    btn.textContent = 'Create My Golf Account — Free';
     return;
   }
 
-  showConfirm('You\'re on the list.', `We've got your info, <strong>${first} ${last}</strong>.<br>Payment instructions are on the way to <strong>${email}</strong>.<br><br>Your account activates as soon as payment is confirmed — usually within a few hours.`);
+  showConfirm('You\'re in.', `<strong>${first} ${last}</strong> — your My Golf account is live. Sign in any time at <a href="/player" style="color:var(--gold);">/player</a>.`);
 });
 </script>
 <script src="/bug-fab.js?v=6" defer></script>
