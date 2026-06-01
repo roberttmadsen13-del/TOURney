@@ -362,6 +362,13 @@ document.getElementById('logoutBtn').addEventListener('click', async () => {
 
 // â”€â”€ PORTAL LOAD â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 async function loadPortal(email, opts = {}) {
+  // Fire-and-forget: ensure player_accounts row exists (comped — My Golf accounts are free).
+  // RLS policy 'self insert player_account' lets the authenticated user insert their own row.
+  sb.from('player_accounts').upsert(
+    { email, plan: 'player', billing_status: 'comped', updated_at: new Date().toISOString() },
+    { onConflict: 'email', ignoreDuplicates: true }
+  ).then(() => {});
+
   // Player records + admin memberships in parallel
   const [playerRes, adminRes] = await Promise.all([
     sb.from('players').select('id, first_name, last_name, handicap, phone_number, tournament_id').eq('email', email),

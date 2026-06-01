@@ -220,28 +220,25 @@ document.getElementById('signupForm').addEventListener('submit', async (ev) => {
     return;
   }
 
-  // 2. Comp the player account (free, no card)
-  const { error: acctErr } = await sb.from('player_accounts').upsert(
-    { email, plan: 'player', billing_status: 'comped', updated_at: new Date().toISOString() },
-    { onConflict: 'email' }
-  );
-  if (acctErr) {
-    err.textContent = 'Account created, but billing setup failed. Contact support.';
-    err.classList.add('show');
-    btn.disabled = false;
-    btn.textContent = 'Create My Golf Account — Free';
-    return;
+  // 2. If signUp returned a session (mailer_autoconfirm), user is authenticated → comp now.
+  //    Otherwise email confirmation pending → defer comp to first /player login.
+  if (signUpData?.session) {
+    await sb.from('player_accounts').upsert(
+      { email, plan: 'player', billing_status: 'comped', updated_at: new Date().toISOString() },
+      { onConflict: 'email' }
+    );
   }
 
-  // 3. Show confirmation. If Supabase requires email confirmation, prompt; else direct to portal.
-  const needsConfirm = signUpData?.user && !signUpData.session;
-  if (needsConfirm) {
-    showConfirm('Check your email.',
-      `<strong>${first} ${last}</strong> — we sent a confirmation link to <strong>${email}</strong>. Click it, then sign in at <a href="/player" style="color:var(--gold);">/player</a>.`);
-  } else {
-    showConfirm('You\'re in.',
-      `<strong>${first} ${last}</strong> — your My Golf account is live. <a href="/player" style="color:var(--gold);">Go to My Golf →</a>`);
+  // 3. Redirect: next= param (e.g. /create) or default /player
+  const sp = new URLSearchParams(location.search);
+  const next = sp.get('next') || '/player';
+  if (signUpData?.session) {
+    window.location.href = next;
+    return;
   }
+  // Email confirm path: prompt them to check inbox, then continue to next
+  showConfirm('Check your email.',
+    `<strong>${first} ${last}</strong> — we sent a confirmation link to <strong>${email}</strong>. Click it, then <a href="${next}" style="color:var(--gold);">continue →</a>.`);
 });
 </script>
 <script src="/bug-fab.js?v=6" defer></script>

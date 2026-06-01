@@ -459,7 +459,7 @@
     if (acct && BILLING_OK.has(acct.billing_status)) {
       go(2);
     } else {
-      location.href = '/player-upgrade?email=' + encodeURIComponent(user.email);
+      location.href = '/player-upgrade?email=' + encodeURIComponent(user.email) + '&next=' + encodeURIComponent('/create');
     }
   }
 
@@ -508,6 +508,14 @@
           btn.disabled = false;
           return;
         }
+        // Auto-comp the new account — My Golf accounts are free
+        await db.from('player_accounts').upsert(
+          { email, plan: 'player', billing_status: 'comped', updated_at: new Date().toISOString() },
+          { onConflict: 'email' }
+        );
+        S.user = res.data.user;
+        go(2);
+        return;
       } else {
         res = await db.auth.signInWithPassword({ email, password: pw });
         if (res.error) throw res.error;
