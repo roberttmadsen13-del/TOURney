@@ -210,6 +210,19 @@
     .footer-logo{font-weight:700;font-size:.85rem;letter-spacing:.28em;text-transform:uppercase;color:var(--gold)}
     .footer-copy{font-family:'DM Mono',monospace;font-size:.55rem;letter-spacing:.12em;color:var(--muted)}
   </style>
+  <script>
+    // Auto-redirect signed-in users to My Golf. Bypass with ?stay=1.
+    (function(){
+      try {
+        if (new URLSearchParams(location.search).has('stay')) return;
+        const raw = localStorage.getItem('sb-jllugkiojeoopitdvzsa-auth-token');
+        if (!raw) return;
+        const s = JSON.parse(raw);
+        const exp = s && (s.expires_at || (s.currentSession && s.currentSession.expires_at));
+        if (exp && exp * 1000 > Date.now()) location.replace('/player');
+      } catch {}
+    })();
+  </script>
 </head>
 <body>
 

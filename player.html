@@ -220,22 +220,9 @@ a{color:inherit;text-decoration:none;}
     <div id="hcapContent"></div>
   </div>
 
-  <!-- DONATIONS -->
-  <div id="donateSection" style="display:none;margin-bottom:2.5rem;">
-    <div class="section-label">Support The Platform</div>
-    <p style="font-size:0.82rem;color:var(--muted);margin-bottom:1rem;">Buy the organizer a round. Donations go directly to keeping TOURney running.</p>
-    <div style="display:flex;gap:0.6rem;flex-wrap:wrap;margin-bottom:0.75rem;">
-      <button class="logout-btn" style="padding:0.4rem 0.9rem;font-size:0.75rem;" onclick="document.getElementById('donateCustom').value=5;startDonation(5)">$5</button>
-      <button class="logout-btn" style="padding:0.4rem 0.9rem;font-size:0.75rem;" onclick="document.getElementById('donateCustom').value=10;startDonation(10)">$10</button>
-      <button class="logout-btn" style="padding:0.4rem 0.9rem;font-size:0.75rem;" onclick="document.getElementById('donateCustom').value=25;startDonation(25)">$25</button>
-      <button class="logout-btn" style="padding:0.4rem 0.9rem;font-size:0.75rem;" onclick="document.getElementById('donateCustom').value=50;startDonation(50)">$50</button>
-    </div>
-    <div style="display:flex;gap:0.5rem;align-items:center;margin-bottom:0.75rem;flex-wrap:wrap;">
-      <span style="font-size:0.8rem;color:var(--muted);">Custom amount:</span>
-      <input type="number" id="donateCustom" placeholder="$" min="1" max="999" style="width:4.5rem;background:rgba(10,6,2,0.65);border:1px solid rgba(192,144,48,0.18);padding:0.4rem 0.6rem;color:var(--cream,#f0e6cc);font-size:0.85rem;outline:none;">
-      <button class="logout-btn" style="padding:0.4rem 0.9rem;font-size:0.75rem;" onclick="startDonation(parseInt(document.getElementById('donateCustom').value)||0)">Donate</button>
-    </div>
-    <div id="donateMsg" style="font-size:0.78rem;color:var(--muted);min-height:1.2rem;"></div>
+  <!-- CREATE TOURNAMENT CTA -->
+  <div style="margin-bottom:2.5rem;display:flex;justify-content:center;">
+    <a href="/create" style="display:inline-block;font-family:'Barlow Condensed',sans-serif;font-size:0.85rem;font-weight:700;letter-spacing:0.22em;text-transform:uppercase;color:var(--ink,#0a0602);background:var(--gold);padding:0.85rem 1.6rem;text-decoration:none;border:1px solid var(--gold);transition:opacity 0.15s;" onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">+ Create Tournament</a>
   </div>
 
   <!-- INVITATIONS -->
@@ -257,6 +244,24 @@ a{color:inherit;text-decoration:none;}
       </div>
     </a>
   </div>
+  <!-- DONATIONS -->
+  <div id="donateSection" style="display:none;margin-bottom:2.5rem;">
+    <div class="section-label">Support The Platform</div>
+    <p style="font-size:0.82rem;color:var(--muted);margin-bottom:1rem;">Buy the organizer a round. Donations go directly to keeping TOURney running.</p>
+    <div style="display:flex;gap:0.6rem;flex-wrap:wrap;margin-bottom:0.75rem;">
+      <button class="logout-btn" style="padding:0.4rem 0.9rem;font-size:0.75rem;" onclick="document.getElementById('donateCustom').value=5;startDonation(5)">$5</button>
+      <button class="logout-btn" style="padding:0.4rem 0.9rem;font-size:0.75rem;" onclick="document.getElementById('donateCustom').value=10;startDonation(10)">$10</button>
+      <button class="logout-btn" style="padding:0.4rem 0.9rem;font-size:0.75rem;" onclick="document.getElementById('donateCustom').value=25;startDonation(25)">$25</button>
+      <button class="logout-btn" style="padding:0.4rem 0.9rem;font-size:0.75rem;" onclick="document.getElementById('donateCustom').value=50;startDonation(50)">$50</button>
+    </div>
+    <div style="display:flex;gap:0.5rem;align-items:center;margin-bottom:0.75rem;flex-wrap:wrap;">
+      <span style="font-size:0.8rem;color:var(--muted);">Custom amount:</span>
+      <input type="number" id="donateCustom" placeholder="$" min="1" max="999" style="width:4.5rem;background:rgba(10,6,2,0.65);border:1px solid rgba(192,144,48,0.18);padding:0.4rem 0.6rem;color:var(--cream,#f0e6cc);font-size:0.85rem;outline:none;">
+      <button class="logout-btn" style="padding:0.4rem 0.9rem;font-size:0.75rem;" onclick="startDonation(parseInt(document.getElementById('donateCustom').value)||0)">Donate</button>
+    </div>
+    <div id="donateMsg" style="font-size:0.78rem;color:var(--muted);min-height:1.2rem;"></div>
+  </div>
+
   <div class="logout-row">
     <button class="logout-btn" id="logoutBtn">Sign out</button>
   </div>
