@@ -124,6 +124,8 @@ a{color:inherit;text-decoration:none;}
       </div>
       <label class="form-label" for="signupEmail">Email</label>
       <input class="form-input" type="email" id="signupEmail" placeholder="you@email.com" autocomplete="email" required>
+      <label class="form-label" for="signupPassword">Password</label>
+      <input class="form-input" type="password" id="signupPassword" placeholder="At least 8 characters" autocomplete="new-password" minlength="8" required>
       <button type="submit" class="btn-join" id="joinBtn">Create My Golf Account — Free</button>
       <div id="formErr" class="form-err"></div>
       <div class="fine-print">Free forever. No card required. Tournament organizers may charge their own entry fees.</div>
@@ -180,31 +182,66 @@ function showConfirm(title, bodyHtml) {
 
 document.getElementById('signupForm').addEventListener('submit', async (ev) => {
   ev.preventDefault();
-  const first = document.getElementById('signupFirst').value.trim();
-  const last  = document.getElementById('signupLast').value.trim();
-  const email = document.getElementById('signupEmail').value.trim().toLowerCase();
-  const btn   = document.getElementById('joinBtn');
-  const err   = document.getElementById('formErr');
+  const first    = document.getElementById('signupFirst').value.trim();
+  const last     = document.getElementById('signupLast').value.trim();
+  const email    = document.getElementById('signupEmail').value.trim().toLowerCase();
+  const password = document.getElementById('signupPassword').value;
+  const btn      = document.getElementById('joinBtn');
+  const err      = document.getElementById('formErr');
 
-  if (!first || !last || !email) return;
+  if (!first || !last || !email || !password) return;
+  if (password.length < 8) {
+    err.textContent = 'Password must be at least 8 characters.';
+    err.classList.add('show');
+    return;
+  }
   btn.disabled = true;
   btn.textContent = 'Creating account…';
   err.classList.remove('show');
 
-  const { error } = await sb.from('player_accounts').upsert(
-    { email, plan: 'player', billing_status: 'comped', updated_at: new Date().toISOString() },
-    { onConflict: 'email' }
-  );
+  // 1. Create Supabase auth user
+  const { data: signUpData, error: authErr } = await sb.auth.signUp({
+    email,
+    password,
+    options: {
+      data: { first_name: first, last_name: last },
+      emailRedirectTo: location.origin + '/player',
+    },
+  });
 
-  if (error) {
-    err.textContent = 'Something went wrong. Try again or contact us.';
+  if (authErr) {
+    const msg = /already registered/i.test(authErr.message)
+      ? 'That email is already registered. Sign in instead.'
+      : (authErr.message || 'Could not create account.');
+    err.textContent = msg;
     err.classList.add('show');
     btn.disabled = false;
     btn.textContent = 'Create My Golf Account — Free';
     return;
   }
 
-  showConfirm('You\'re in.', `<strong>${first} ${last}</strong> — your My Golf account is live. Sign in any time at <a href="/player" style="color:var(--gold);">/player</a>.`);
+  // 2. Comp the player account (free, no card)
+  const { error: acctErr } = await sb.from('player_accounts').upsert(
+    { email, plan: 'player', billing_status: 'comped', updated_at: new Date().toISOString() },
+    { onConflict: 'email' }
+  );
+  if (acctErr) {
+    err.textContent = 'Account created, but billing setup failed. Contact support.';
+    err.classList.add('show');
+    btn.disabled = false;
+    btn.textContent = 'Create My Golf Account — Free';
+    return;
+  }
+
+  // 3. Show confirmation. If Supabase requires email confirmation, prompt; else direct to portal.
+  const needsConfirm = signUpData?.user && !signUpData.session;
+  if (needsConfirm) {
+    showConfirm('Check your email.',
+      `<strong>${first} ${last}</strong> — we sent a confirmation link to <strong>${email}</strong>. Click it, then sign in at <a href="/player" style="color:var(--gold);">/player</a>.`);
+  } else {
+    showConfirm('You\'re in.',
+      `<strong>${first} ${last}</strong> — your My Golf account is live. <a href="/player" style="color:var(--gold);">Go to My Golf →</a>`);
+  }
 });
 </script>
 <script src="/bug-fab.js?v=6" defer></script>
