@@ -389,6 +389,10 @@
     {
       "source": "/platform/5-29-26-ux-review",
       "destination": "/5-29-26-ux-review.html"
+    },
+    {
+      "source": "/platform/6-1-26-formats-review",
+      "destination": "/6-1-26-formats-review.html"
     }
   ]
 }

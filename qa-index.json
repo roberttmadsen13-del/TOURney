@@ -1,9 +1,29 @@
 {
   "$schema": "https://tourney.greenskeeper.studio/qa-index-schema.json",
   "version": 1,
-  "updated_at": "2026-06-01T22:14:24.357Z",
+  "updated_at": "2026-06-01T22:18:19.993Z",
   "description": "Canonical registry of all TOURney plans, reviews, audits, and QA artifacts. The /platform Artifacts tab renders from this file. Skills (e.g. tourney-review) append new entries when they generate output.",
   "entries": [
+    {
+      "id": "review-formats-2026-06-01",
+      "category": "review",
+      "stage": "executing",
+      "title": "Format System Review · June 1, 2026",
+      "summary": "Every scoring format audited end-to-end — /create",
+      "date": "2026-06-01",
+      "updated": "2026-06-01",
+      "author": "claude-opus-4.7",
+      "url": "/platform/6-1-26-formats-review",
+      "file": "6-1-26-formats-review.html",
+      "tags": [
+        "review",
+        "feature",
+        "depth",
+        "end",
+        "formats"
+      ],
+      "status": "open"
+    },
     {
       "id": "review-admin-upgrade-2026-05-29",
       "category": "review",

@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TOURney — Format System Review · June 1, 2026</title>
+<style>
+:root{--gold:#c09030;--gold-light:#d4a840;--gold-dim:rgba(192,144,48,0.18);--bg:#0d0a05;--surface:#151009;--card:#1c140a;--border:rgba(192,144,48,0.22);--muted:#7a6a54;--text:#e8dcc8;--red:#c0392b;--green:#27ae60;--blue:#2980b9;--orange:#e67e22;--purple:#8e44ad;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:-apple-system,'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;font-size:15px;}
+nav{position:sticky;top:0;z-index:100;background:rgba(13,10,5,0.97);border-bottom:1px solid var(--border);backdrop-filter:blur(12px);}
+.nav-inner{padding:0.6rem 1.5rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap;}
+.nav-brand{color:var(--gold);font-weight:700;font-size:1rem;letter-spacing:0.05em;white-space:nowrap;}
+.nav-brand span{color:var(--muted);font-weight:400;font-size:0.8rem;margin-left:0.4rem;}
+.nav-links{display:flex;gap:0.2rem;flex-wrap:wrap;margin-left:auto;}
+.nav-links a{color:var(--muted);text-decoration:none;font-size:0.78rem;padding:0.3rem 0.55rem;border-radius:4px;transition:all 0.15s;white-space:nowrap;}
+.nav-links a:hover{color:var(--gold);background:var(--gold-dim);}
+.lifecycle-bar{display:flex;gap:3px;padding:0.55rem 1.5rem 0.65rem;background:var(--surface);border-bottom:1px solid var(--border);}
+.lc-stage{flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;}
+.lc-pill{height:5px;width:100%;border-radius:3px;background:rgba(192,144,48,0.1);transition:background 0.25s;}
+.lc-label{font-size:0.58rem;font-weight:700;letter-spacing:0.11em;text-transform:uppercase;color:rgba(122,106,84,0.45);transition:color 0.25s;}
+.lc-done .lc-pill{background:var(--gold);}
+.lc-done .lc-label{color:var(--gold);}
+.lc-active .lc-pill{background:var(--gold-light);box-shadow:0 0 8px rgba(192,144,48,0.45);}
+.lc-active .lc-label{color:var(--gold-light);}
+.hero{padding:3rem 1.5rem 2rem;text-align:center;border-bottom:1px solid var(--border);background:linear-gradient(180deg,rgba(192,144,48,0.06) 0%,transparent 100%);}
+.hero-eyebrow{display:inline-block;font-size:0.7rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold);border:1px solid var(--border);border-radius:20px;padding:0.22rem 0.8rem;margin-bottom:0.9rem;}
+.hero h1{font-size:clamp(1.5rem,3.5vw,2.3rem);font-weight:800;color:#fff;margin-bottom:0.35rem;}
+.hero h1 span{color:var(--gold);}
+.hero-sub{color:var(--muted);max-width:520px;margin:0 auto 1rem;font-size:0.9rem;}
+.hero-meta{display:flex;gap:1.1rem;justify-content:center;flex-wrap:wrap;font-size:0.74rem;color:var(--muted);}
+.hero-meta span{display:flex;align-items:center;gap:0.3rem;}
+.wrapper{max-width:1000px;margin:0 auto;padding:0 1.5rem;}
+section{padding:2.5rem 0;border-bottom:1px solid var(--border);}
+section:last-of-type{border-bottom:none;}
+.section-header{margin-bottom:1.6rem;}
+.section-eyebrow{font-size:0.67rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--gold);margin-bottom:0.3rem;}
+.section-title{font-size:1.35rem;font-weight:800;color:#fff;margin-bottom:0.3rem;}
+.section-desc{color:var(--muted);font-size:0.85rem;max-width:560px;}
+.card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:1.15rem 1.3rem;margin-bottom:0.7rem;}
+.card-title{font-size:0.85rem;font-weight:700;color:var(--gold);margin-bottom:0.45rem;}
+.card p,.card li{font-size:0.84rem;color:var(--text);margin-bottom:0.28rem;}
+.card ul,.card ol{padding-left:1.2rem;}
+.card li{margin-bottom:0.32rem;}
+.grid-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:0.7rem;}
+.grid-3{display:grid;grid-template-columns:repeat(auto-fit,minmax(245px,1fr));gap:0.7rem;}
+.stack-item{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:0.85rem 1.05rem;}
+.stack-label{font-size:0.65rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--muted);margin-bottom:0.18rem;}
+.stack-value{font-size:0.88rem;font-weight:600;color:#fff;}
+.stack-note{font-size:0.72rem;color:var(--muted);margin-top:0.18rem;}
+.pill{display:inline-block;font-size:0.66rem;font-weight:700;letter-spacing:0.06em;padding:0.15rem 0.5rem;border-radius:20px;text-transform:uppercase;}
+.pill-gold{background:rgba(192,144,48,0.18);color:var(--gold);border:1px solid rgba(192,144,48,0.3);}
+.pill-green{background:rgba(39,174,96,0.15);color:var(--green);border:1px solid rgba(39,174,96,0.3);}
+.pill-red{background:rgba(192,57,43,0.15);color:var(--red);border:1px solid rgba(192,57,43,0.3);}
+.pill-orange{background:rgba(230,126,34,0.15);color:var(--orange);border:1px solid rgba(230,126,34,0.3);}
+.pill-blue{background:rgba(41,128,185,0.15);color:var(--blue);border:1px solid rgba(41,128,185,0.3);}
+.pill-purple{background:rgba(142,68,173,0.15);color:var(--purple);border:1px solid rgba(142,68,173,0.3);}
+.page-table{width:100%;border-collapse:collapse;font-size:0.8rem;}
+.page-table th{text-align:left;padding:0.52rem 0.72rem;border-bottom:1px solid var(--border);color:var(--muted);font-size:0.67rem;text-transform:uppercase;letter-spacing:0.08em;background:var(--surface);}
+.page-table td{padding:0.58rem 0.72rem;border-bottom:1px solid rgba(192,144,48,0.08);vertical-align:top;}
+.page-table tr:last-child td{border-bottom:none;}
+.page-table tr:hover td{background:var(--gold-dim);}
+.page-table .url{font-family:monospace;font-size:0.75rem;color:var(--gold-light);}
+.page-table .file{font-family:monospace;font-size:0.72rem;color:var(--muted);}
+.table-wrap{background:var(--card);border:1px solid var(--border);border-radius:8px;overflow:hidden;overflow-x:auto;}
+.score-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(125px,1fr));gap:0.52rem;margin-bottom:1.4rem;}
+.score-cell{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:0.85rem;text-align:center;}
+.score-num{font-size:1.85rem;font-weight:900;line-height:1;margin-bottom:0.18rem;}
+.score-label{font-size:0.64rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);}
+.score-green{color:var(--green);}
+.score-gold{color:var(--gold);}
+.score-red{color:var(--red);}
+.score-blue{color:var(--blue);}
+.idea-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1.25rem;position:relative;overflow:hidden;}
+.idea-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;}
+.idea-1::before{background:var(--gold);}
+.idea-2::before{background:var(--blue);}
+.idea-3::before{background:var(--green);}
+.idea-4::before{background:var(--orange);}
+.idea-5::before{background:var(--purple);}
+.idea-number{font-size:2rem;font-weight:900;opacity:0.07;position:absolute;top:0.5rem;right:1rem;line-height:1;color:#fff;}
+.idea-tag{margin-bottom:0.42rem;}
+.idea-title{font-size:0.96rem;font-weight:700;color:#fff;margin-bottom:0.42rem;}
+.idea-body{font-size:0.82rem;color:var(--muted);line-height:1.55;margin-bottom:0.65rem;}
+.idea-plan{font-size:0.77rem;color:var(--text);}
+.idea-plan strong{color:var(--gold);}
+.runbook-steps{counter-reset:rb-step;}
+.rb-step{background:var(--card);border:1px solid var(--border);border-left:3px solid rgba(192,144,48,0.3);border-radius:0 8px 8px 0;padding:0.95rem 1.15rem 0.95rem 3.8rem;margin-bottom:0.55rem;position:relative;}
+.rb-step::before{counter-increment:rb-step;content:counter(rb-step);position:absolute;left:0.95rem;top:0.95rem;width:1.75rem;height:1.75rem;background:var(--gold-dim);color:var(--gold);border:1px solid var(--border);border-radius:50%;font-size:0.72rem;font-weight:700;display:grid;place-items:center;}
+.rb-step-title{font-size:0.87rem;font-weight:700;color:#fff;margin-bottom:0.22rem;}
+.rb-step-body{font-size:0.8rem;color:var(--muted);margin-bottom:0.35rem;}
+.rb-verify{font-size:0.76rem;color:var(--text);background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:3px;padding:0.35rem 0.6rem;margin-top:0.3rem;}
+.rb-verify strong{color:var(--gold-light);font-size:0.68rem;text-transform:uppercase;letter-spacing:0.07em;display:block;margin-bottom:0.1rem;}
+.sec-item{background:var(--card);border:1px solid var(--border);border-left:3px solid var(--border);border-radius:0 8px 8px 0;padding:0.9rem 1.15rem;margin-bottom:0.65rem;}
+.sec-item.sev-high{border-left-color:var(--red);}
+.sec-item.sev-med{border-left-color:var(--orange);}
+.sec-item.sev-low{border-left-color:var(--green);}
+.sec-item.sev-info{border-left-color:var(--blue);}
+.sec-header{display:flex;align-items:center;gap:0.52rem;margin-bottom:0.42rem;}
+.sec-title{font-size:0.87rem;font-weight:700;color:#fff;}
+.sec-body{font-size:0.8rem;color:var(--muted);margin-bottom:0.42rem;}
+.sec-fix{font-size:0.77rem;color:var(--text);background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:4px;padding:0.42rem 0.62rem;}
+.sec-fix strong{color:var(--gold-light);display:block;margin-bottom:0.12rem;font-size:0.68rem;text-transform:uppercase;letter-spacing:0.08em;}
+.stage-pending{text-align:center;padding:3rem 1.5rem;color:var(--muted);font-size:0.85rem;border:1px dashed rgba(192,144,48,0.2);border-radius:8px;}
+.stage-pending code{color:var(--gold);}
+code{font-family:'Consolas','Monaco',monospace;background:rgba(255,255,255,0.07);padding:0.09rem 0.27rem;border-radius:3px;font-size:0.81em;color:var(--gold-light);}
+.roadmap-item{display:flex;gap:1.05rem;align-items:flex-start;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:0.95rem 1.15rem;margin-bottom:0.52rem;}
+.roadmap-icon{width:1.9rem;height:1.9rem;border-radius:50%;background:var(--gold-dim);color:var(--gold);display:grid;place-items:center;font-size:0.85rem;flex-shrink:0;border:1px solid var(--border);}
+.roadmap-content{flex:1;}
+.roadmap-title{font-size:0.88rem;font-weight:700;color:#fff;margin-bottom:0.13rem;}
+.roadmap-desc{font-size:0.79rem;color:var(--muted);margin-bottom:0.32rem;}
+.roadmap-action{font-size:0.75rem;color:var(--text);}
+.roadmap-action strong{color:var(--gold-light);}
+footer{border-top:1px solid var(--border);padding:1.2rem;text-align:center;color:var(--muted);font-size:0.72rem;}
+footer span{color:var(--gold);}
+@media(max-width:600px){.nav-links{display:none;}.hero{padding:2rem 1rem 1.5rem;}section{padding:2rem 0;}.lc-label{font-size:0.5rem;}}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <div class="nav-brand">TOURney <span>by Greenskeeper Studios</span></div>
+    <div class="nav-links">
+      <a href="#review">Review</a>
+      <a href="#plan">Plan</a>
+      <a href="#runbook">Runbook</a>
+      <a href="#executing">Executing</a>
+      <a href="#audit">Audit</a>
+      <a href="#concluded">Concluded</a>
+    </div>
+  </div>
+</nav>
+
+<!-- LIFECYCLE-BAR-START -->
+<div class="lifecycle-bar">
+  <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Review</div></div>
+  <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Plan</div></div>
+  <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Runbook</div></div>
+  <div class="lc-stage"><div class="lc-pill"></div><div class="lc-label">Executing</div></div>
+  <div class="lc-stage"><div class="lc-pill"></div><div class="lc-label">Audit</div></div>
+  <div class="lc-stage"><div class="lc-pill"></div><div class="lc-label">Concluded</div></div>
+</div>
+<!-- LIFECYCLE-BAR-END -->
+
+<div class="hero">
+  <div class="hero-eyebrow">Feature Depth · End-to-End</div>
+  <h1><span>TOURney</span> — Format System Review · June 1, 2026</h1>
+  <p class="hero-sub">Every scoring format audited end-to-end — <code>/create</code> → admin → scorecard → leaderboard. Enforce per-9 vs whole-round vs whole-tourney scope so players never hit an illegal mix.</p>
+  <div class="hero-meta">
+    <span>📅 June 1, 2026</span>
+    <span>🤖 Claude Opus 4.7</span>
+    <span>🏢 Greenskeeper Studios</span>
+    <span>🔒 Internal Only</span>
+  </div>
+</div>
+
+<section id="review">
+<div class="wrapper">
+<div class="section-header">
+  <div class="section-eyebrow">§ Review</div>
+  <div class="section-title">Current Format Pipeline — End to End</div>
+  <p class="section-desc">27 formats in <code>FORMAT_META</code>. Selection forks at 4 surfaces (create, admin, scorecard, scoreboard) and 1 DB table (<code>rounds.format_front</code> / <code>rounds.format_back</code>). Audit traces a format from picker → DB → score render.</p>
+</div>
+
+<div class="score-grid">
+  <div class="score-cell"><div class="score-num score-gold">27</div><div class="score-label">Formats Defined</div></div>
+  <div class="score-cell"><div class="score-num score-red">11</div><div class="score-label">Should Be Whole-Round Locked</div></div>
+  <div class="score-cell"><div class="score-num score-red">3</div><div class="score-label">Should Be Whole-Tourney Locked</div></div>
+  <div class="score-cell"><div class="score-num score-orange">13</div><div class="score-label">Per-9 Safe</div></div>
+  <div class="score-cell"><div class="score-num score-red">C-</div><div class="score-label">Feature Depth</div></div>
+  <div class="score-cell"><div class="score-num score-red">D+</div><div class="score-label">UX (Format Picker)</div></div>
+</div>
+
+<div class="card">
+  <div class="card-title">What "Format Scope" Means</div>
+  <p>The DB stores <code>format_front</code> and <code>format_back</code> per round. Most formats are pure-9 (stroke, scramble, best ball) — mixing them per nine is fine. But three classes are structurally broken when split:</p>
+  <ul>
+    <li><strong>Whole-round formats</strong> — math spans 18 holes: <code>nassau</code> (front 9 + back 9 + 18 segments), <code>match</code> (running 1-up/2-up), <code>four_ball_match</code>, <code>wolf</code> (rotating wolf per hole), <code>bogey_par</code> (running net vs par), <code>skins</code> (carryover ties), <code>quota</code> (36-hcp target).</li>
+    <li><strong>Whole-tourney formats</strong> — aggregate across all rounds: <code>eclectic</code> (best score per hole across the tourney), <code>peoria</code> (post-round 6-hole handicap), <code>callaway</code> (post-round handicap from worst holes).</li>
+    <li><strong>Composition-only</strong> — Slayer 3v1 is a team split, not a format. Already refactored to <code>settings.team_mode</code>.</li>
+  </ul>
+</div>
+
+<div class="grid-3">
+  <div class="stack-item"><div class="stack-label">Format Catalog</div><div class="stack-value"><code>lib/formats.js</code></div><div class="stack-note">27 entries, props: value, label, desc, structures, behavior, overlay, minParty, requiresExact</div></div>
+  <div class="stack-item"><div class="stack-label">Create Flow</div><div class="stack-value"><code>create.html</code></div><div class="stack-note">Front 9 + Back 9 select per Day, lines 678-715</div></div>
+  <div class="stack-item"><div class="stack-label">Admin Format Editor</div><div class="stack-value"><code>admin.html</code></div><div class="stack-note">FORMAT_OPTIONS at 915, saveFormats at 1115-1135, FORMAT_DESCS at 1080</div></div>
+  <div class="stack-item"><div class="stack-label">Score Card Render</div><div class="stack-value"><code>scorecard.html</code></div><div class="stack-note">Reads roundFormats[day].{front,back}, branches at 1108-1111</div></div>
+  <div class="stack-item"><div class="stack-label">Score Board</div><div class="stack-value"><code>scoreboard.html</code></div><div class="stack-note">roundIsMatch only fires when fmts.front===match && fmts.back===match (line 626)</div></div>
+  <div class="stack-item"><div class="stack-label">DB</div><div class="stack-value"><code>rounds.format_front</code> + <code>format_back</code></div><div class="stack-note">migrations/007_round_model.sql, TEXT cols, no CHECK constraint</div></div>
+</div>
+
+<div class="table-wrap" style="margin-top:1rem">
+<table class="page-table">
+<thead><tr><th>Format</th><th>Real Scope</th><th>Per-9 Safe?</th><th>Where Logic Lives Today</th></tr></thead>
+<tbody>
+<tr><td>stroke</td><td class="pill pill-green" style="display:inline-block">nine</td><td>✓</td><td>scoreboard.html stroke aggregate default</td></tr>
+<tr><td>scramble</td><td class="pill pill-green" style="display:inline-block">nine</td><td>✓</td><td>scorecard team-score input, no per-hole branching</td></tr>
+<tr><td>best_ball</td><td class="pill pill-green" style="display:inline-block">nine</td><td>✓</td><td>scoreboard.html line 633</td></tr>
+<tr><td>shambles</td><td class="pill pill-green" style="display:inline-block">nine</td><td>✓</td><td>treated as scramble in scorecard</td></tr>
+<tr><td>stableford</td><td class="pill pill-green" style="display:inline-block">nine</td><td>✓</td><td>stablefordPoints() at scoreboard.html:594</td></tr>
+<tr><td>mod_stableford</td><td class="pill pill-green" style="display:inline-block">nine</td><td>✓</td><td>stablefordPoints branch at 596</td></tr>
+<tr><td>alt_shot / chapman / greensomes</td><td class="pill pill-green" style="display:inline-block">nine</td><td>✓</td><td>behavior:'scramble' in FORMAT_META</td></tr>
+<tr><td>superball / texas / florida / ambrose</td><td class="pill pill-green" style="display:inline-block">nine</td><td>✓</td><td>behavior:'scramble'</td></tr>
+<tr><td><strong>nassau</strong></td><td class="pill pill-orange" style="display:inline-block">round</td><td>✗</td><td>overlay:true flag set but UI lets mixed select; "front 9 / back 9 / 18" requires both nines</td></tr>
+<tr><td><strong>skins</strong></td><td class="pill pill-orange" style="display:inline-block">round</td><td>✗</td><td>overlay:true; carryover dies if back nine switches format</td></tr>
+<tr><td><strong>match</strong></td><td class="pill pill-orange" style="display:inline-block">round</td><td>✗</td><td>scoreboard.html:626 requires front+back both === match</td></tr>
+<tr><td><strong>four_ball_match</strong></td><td class="pill pill-orange" style="display:inline-block">round</td><td>✗</td><td>behavior:'match' — same constraint</td></tr>
+<tr><td><strong>wolf</strong></td><td class="pill pill-orange" style="display:inline-block">round</td><td>✗</td><td>scorecard renderWolfPanel rotates wolf per hole — can't split mid-round</td></tr>
+<tr><td><strong>bingo_bango_bongo</strong></td><td class="pill pill-orange" style="display:inline-block">round</td><td>✗</td><td>renderBBGPanel at scorecard:1109 — 3 pts/hole tally</td></tr>
+<tr><td><strong>quota</strong></td><td class="pill pill-orange" style="display:inline-block">round</td><td>✗</td><td>Target = 36 − hcp; per-9 makes no sense</td></tr>
+<tr><td><strong>snake</strong></td><td class="pill pill-orange" style="display:inline-block">round</td><td>✗</td><td>renderSnakePanel:1111 — last 3-putt penalty needs continuity</td></tr>
+<tr><td><strong>bogey_par</strong></td><td class="pill pill-orange" style="display:inline-block">round</td><td>✗</td><td>desc literally says "Running net vs par across 18"</td></tr>
+<tr><td><strong>vegas / waltz</strong></td><td class="pill pill-orange" style="display:inline-block">round</td><td>✗</td><td>Pair-pattern formats; switching mid-round breaks tally</td></tr>
+<tr><td><strong>eclectic</strong></td><td class="pill pill-red" style="display:inline-block">tourney</td><td>✗</td><td>"Running best-of across all rounds" — can't mix with anything</td></tr>
+<tr><td><strong>peoria</strong></td><td class="pill pill-red" style="display:inline-block">tourney</td><td>✗</td><td>Post-round handicap; only one allowed per tourney</td></tr>
+<tr><td><strong>callaway</strong></td><td class="pill pill-red" style="display:inline-block">tourney</td><td>✗</td><td>Post-round handicap, same</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="grid-2" style="margin-top:1rem">
+  <div class="card">
+    <div class="card-title">Strengths</div>
+    <ul>
+      <li>Single source of truth: <code>FORMAT_META</code> consumed by all 4 surfaces.</li>
+      <li>DB schema correct: per-9 split is a column-level decision (<code>format_front</code> / <code>format_back</code>) — easy to lock when needed.</li>
+      <li>Existing <code>overlay</code> and <code>requiresExact</code> props prove the pattern of scope-flagging formats.</li>
+      <li>scoreboard.html:626 already shows the pattern: <code>roundIsMatch = fmts.front===match && fmts.back===match</code>. Bake into all whole-round formats.</li>
+      <li>Slayer 3v1 split out cleanly into <code>settings.team_mode</code> (refactor on this same day) — proves composition can live separately from format.</li>
+    </ul>
+  </div>
+  <div class="card">
+    <div class="card-title">Gaps / Real Bugs</div>
+    <ul>
+      <li><strong>Create lets users pick illegal combos.</strong> e.g. Nassau front 9 + Stroke back 9 → Nassau math broken. <code>create.html:713-717</code> independent selects.<br><strong>Upstream:</strong> none.<br><strong>Downstream:</strong> rounds row written with broken pair → admin loads broken pair → scoreboard tries to compute nassau scores → silently wrong leaderboard.</li>
+      <li><strong>Admin re-emits the bug.</strong> <code>admin.html:1099-1108</code> renders identical independent front/back selects with no scope guard.</li>
+      <li><strong>Whole-tourney formats (eclectic/peoria/callaway) selectable per nine.</strong> No code prevents a 3-day tourney with eclectic on Day 1 front, stroke on Day 2, callaway on Day 3 back.</li>
+      <li><strong>FORMAT_META lacks a scope property.</strong> Existing <code>overlay:true</code> flags 2 formats but doesn't enforce anything; <code>requiresExact:4</code> only filters by party size.</li>
+      <li><strong>create.html fallback FMT array (lines 348-355) is stale.</strong> Missing 13 formats present in <code>FORMAT_META</code>; if <code>formats.js</code> fails to load, user sees a degraded picker.</li>
+      <li><strong>No DB constraint.</strong> <code>rounds.format_front</code> + <code>format_back</code> are free-text. Migration 007 has no CHECK; nothing prevents <code>format_front='nassau'</code>, <code>format_back='peoria'</code>.</li>
+      <li><strong>scorecard.html:1108-1111</strong> branch only checks <code>fmt</code> (single value) — assumes whole-round format. If front/back split, panel renders for front 9 only, then disappears at hole 10.</li>
+      <li><strong>Format descriptions repeat (bug shown by user 6/1/26).</strong> Once fixed (event listener moved to <code>addEventListener</code> on the new <code>fd-{key}-{side}</code> select) — verify on live.</li>
+    </ul>
+  </div>
+</div>
+
+<div class="card" style="margin-top:1rem">
+  <div class="card-title">Cross-Page Risk Map</div>
+  <p><strong>Upstream:</strong> <code>create.html</code> step 2 → <code>rounds.format_front</code> / <code>format_back</code> insert. Admin <code>saveFormats()</code> (admin.html:1115) overwrites same columns.</p>
+  <p><strong>Downstream:</strong> <code>scorecard.html</code> reads <code>rounds.format_front</code> + <code>format_back</code> (line 583, 614) and renders the format-specific panel at line 1108. <code>scoreboard.html</code> reads same columns (line 536, 550), computes <code>roundIsStableford</code> / <code>roundIsMatch</code> (line 626), then forks scoring logic. <code>home.html</code> reads format names for the landing card. <code>champions.html</code> aggregates final scores per round.</p>
+  <p><strong>Risk if scope not enforced:</strong> any illegal combo silently corrupts the leaderboard, since each surface independently coerces unknown combos to <code>behavior:'default'</code> (stroke aggregate). Player enters strokes thinking it's match play, scoreboard shows stroke totals.</p>
+</div>
+
+</div>
+</section>
+
+<section id="plan">
+<div class="wrapper">
+<div class="section-header">
+  <div class="section-eyebrow">§ Plan</div>
+  <div class="section-title">Lock Format Scope, End to End</div>
+  <p class="section-desc">Add a <code>lockScope</code> property to <code>FORMAT_META</code>. Then enforce it in every surface that reads or writes a format — create, admin, scorecard, scoreboard, DB.</p>
+</div>
+
+<div class="card">
+  <div class="card-title">Strategic Priorities (P1 → P5)</div>
+  <ol>
+    <li><strong>P1 — Add <code>lockScope</code> to FORMAT_META.</strong> Values: <code>'nine'</code> (default, mix freely), <code>'round'</code> (locks both nines), <code>'tourney'</code> (locks every round + both nines).</li>
+    <li><strong>P2 — Enforce in <code>/create</code>.</strong> If user picks a <code>round</code> format on front 9, mirror to back 9, gray out back. If picks a <code>tourney</code> format on any select, mirror to every round + both nines, gray all others.</li>
+    <li><strong>P3 — Enforce in admin.</strong> Same logic in <code>admin.html</code> format editor. Plus: warn if existing DB row has an illegal combo (migrated tourneys).</li>
+    <li><strong>P4 — Defensive read in scorecard + scoreboard.</strong> If <code>format_front !== format_back</code> for a <code>round</code>-scope format, coerce to <code>format_front</code> (single source of truth), log a console warning.</li>
+    <li><strong>P5 — DB CHECK constraint.</strong> Migration to add a CHECK that enforces scope rules so future writes can't violate.</li>
+  </ol>
+</div>
+
+<div class="grid-2">
+  <div class="idea-card idea-1">
+    <div class="idea-number">1</div>
+    <div class="idea-tag"><span class="pill pill-gold">P1 · Foundation</span></div>
+    <div class="idea-title">Tag every format with lockScope</div>
+    <div class="idea-body">Per-format property answers: "can a player split this between front 9 and back 9?" Default <code>'nine'</code> for stroke / scramble / best ball etc.; <code>'round'</code> for nassau / match / wolf / skins / quota / bbb / snake / vegas / waltz / bogey_par / four_ball_match; <code>'tourney'</code> for eclectic / peoria / callaway.</div>
+    <div class="idea-plan"><strong>Build:</strong> 1 prop addition × 27 entries in <code>lib/formats.js</code>. ~30 LOC.</div>
+  </div>
+  <div class="idea-card idea-2">
+    <div class="idea-number">2</div>
+    <div class="idea-tag"><span class="pill pill-blue">P2 · Create UX</span></div>
+    <div class="idea-title">Create flow auto-locks dependent selects</div>
+    <div class="idea-body">When user picks Nassau on Day 1 Front, Day 1 Back snaps to Nassau and disables. When picks Eclectic on any nine of any day, every other front/back select snaps + disables. Visual: locked select gets a tiny 🔒 hint + opacity 0.55. Unlock by switching the source select back to a per-9 format.</div>
+    <div class="idea-plan"><strong>Build:</strong> Hook into existing <code>renderFormat</code> + <code>updateFmtDesc</code>. ~50 LOC, no new endpoints.</div>
+  </div>
+  <div class="idea-card idea-3">
+    <div class="idea-number">3</div>
+    <div class="idea-tag"><span class="pill pill-green">P3 · Admin Edit</span></div>
+    <div class="idea-title">Admin enforces same scope</div>
+    <div class="idea-body">Admin's per-round format edit cards mirror create's logic. When admin loads a tourney with an illegal pre-existing combo (legacy data), show an orange banner "Round 2 has an invalid format split. Click to repair." that resets to <code>format_front</code> for both nines.</div>
+    <div class="idea-plan"><strong>Build:</strong> Refactor <code>renderFormatEditor</code> (admin.html:1080+). +1 repair button per affected row. ~70 LOC.</div>
+  </div>
+  <div class="idea-card idea-4">
+    <div class="idea-number">4</div>
+    <div class="idea-tag"><span class="pill pill-orange">P4 · Defensive Read</span></div>
+    <div class="idea-title">Scorecard + scoreboard coerce illegal combos</div>
+    <div class="idea-body">Any time scorecard.html or scoreboard.html reads <code>{front, back}</code>: if <code>FORMAT_META[front].lockScope !== 'nine'</code> and <code>front !== back</code>, treat as <code>front</code> for both nines and <code>console.warn('illegal format combo, coerced')</code>. Prevents corrupted-data renders.</div>
+    <div class="idea-plan"><strong>Build:</strong> Helper <code>normalizeRoundFormats(roundFormats)</code> in <code>lib/formats.js</code>. Called by both pages. ~20 LOC.</div>
+  </div>
+  <div class="idea-card idea-5">
+    <div class="idea-number">5</div>
+    <div class="idea-tag"><span class="pill pill-purple">P5 · DB Constraint</span></div>
+    <div class="idea-title">Postgres CHECK to make illegal combos impossible</div>
+    <div class="idea-body">New migration: CHECK constraint on <code>rounds</code> that asserts: if <code>format_front</code> is in the round-locked list, <code>format_back</code> must equal <code>format_front</code>. Enforces at write time so even a buggy client can't poison the table.</div>
+    <div class="idea-plan"><strong>Build:</strong> 1 SQL migration. Run on dev branch first, verify no existing rows violate, then promote. ~10 LOC SQL.</div>
+  </div>
+</div>
+
+<div class="card" style="margin-top:1rem">
+  <div class="card-title">Forward — UX Polish</div>
+  <p>Once scope is locked, format picker can show a small "scope badge" next to each option: <code>[9]</code>, <code>[18]</code>, <code>[ALL]</code>. Makes the constraint visible before the user clicks. Description text already updates correctly after today's <code>addEventListener</code> fix.</p>
+</div>
+
+<div class="roadmap-item">
+  <div class="roadmap-icon">🎯</div>
+  <div class="roadmap-content">
+    <div class="roadmap-title">Milestone — Format Soundness</div>
+    <div class="roadmap-desc">After P1-P5 ship, no possible UI flow or legacy row produces a leaderboard that silently disagrees with the scorecard. Player trust → unblocks paid-tier launch.</div>
+    <div class="roadmap-action"><strong>Owner:</strong> /tourney-execute → Engineering. <strong>ETA:</strong> 1 session.</div>
+  </div>
+</div>
+</div>
+</section>
+
+<section id="runbook">
+<div class="wrapper">
+<div class="section-header">
+  <div class="section-eyebrow">§ Runbook</div>
+  <div class="section-title">Execution Steps</div>
+  <p class="section-desc">Ordered. Each step lists upstream / downstream impact and a verification check.</p>
+</div>
+
+<div class="runbook-steps">
+
+<div class="rb-step">
+  <div class="rb-step-title">Add <code>lockScope</code> to every entry in <code>lib/formats.js</code></div>
+  <div class="rb-step-body">
+    Edit <code>lib/formats.js</code>. Append <code>lockScope:'nine'|'round'|'tourney'</code> to each of the 27 entries.<br>
+    <strong>nine:</strong> stroke, scramble, best_ball, shambles, stableford, mod_stableford, alt_shot, chapman, greensomes, superball, texas_scramble, florida_scramble, ambrose.<br>
+    <strong>round:</strong> nassau, skins, match, four_ball_match, wolf, bingo_bango_bongo, quota, snake, bogey_par, vegas, waltz.<br>
+    <strong>tourney:</strong> eclectic, peoria, callaway.<br>
+    <strong>Upstream:</strong> none. <strong>Downstream:</strong> create.html, admin.html, scorecard.html, scoreboard.html all consume.
+  </div>
+  <div class="rb-verify"><strong>Verify</strong> <code>node -e "require('./lib/formats.js'); console.log(window.FORMAT_META.every(f => f.lockScope))"</code> — but file is browser-style; just grep: <code>grep -c "lockScope" lib/formats.js</code> must equal 27.</div>
+</div>
+
+<div class="rb-step">
+  <div class="rb-step-title">Add normalizer helper to <code>lib/formats.js</code></div>
+  <div class="rb-step-body">
+    Add <code>window.normalizeRoundFormats(roundFormats, allDays)</code> that returns a new object where: if any day's format is <code>lockScope==='tourney'</code>, propagate to every day + both nines; if any day's <code>front</code> is <code>lockScope==='round'</code>, force <code>back = front</code> for that day. Log a console warning when coerced.<br>
+    <strong>Upstream:</strong> reads FORMAT_META. <strong>Downstream:</strong> called by create, admin, scorecard, scoreboard.
+  </div>
+  <div class="rb-verify"><strong>Verify</strong> Console smoke test: <code>normalizeRoundFormats({day1:{front:'nassau',back:'stroke'}})</code> returns <code>{day1:{front:'nassau',back:'nassau'}}</code>.</div>
+</div>
+
+<div class="rb-step">
+  <div class="rb-step-title">Enforce in <code>create.html</code> step 2 picker</div>
+  <div class="rb-step-body">
+    In <code>renderFormat()</code> (lines ~660-720), after each select's <code>change</code> event, call new <code>cascadeLock()</code> that: (a) when picked format <code>lockScope==='round'</code>, sets back select to same value + adds <code>disabled</code> attr + opacity 0.55 + lock icon hint; (b) when <code>lockScope==='tourney'</code>, walks every other <code>fd-day{i}-{front|back}</code> select and pins same value + disables. Switching back select to a per-9 format unlocks.<br>
+    <strong>Upstream:</strong> S.formats state. <strong>Downstream:</strong> next2() writes S.formats → DB rounds insert at create.html:891-897.
+  </div>
+  <div class="rb-verify"><strong>Verify</strong> Pick Nassau Day 1 front → Day 1 back snaps to Nassau, disabled. Pick Eclectic Day 2 back → Days 1-3, both nines all snap to Eclectic. Picking Stroke on Day 1 front when no other tourney lock active → Day 1 back stays free.</div>
+</div>
+
+<div class="rb-step">
+  <div class="rb-step-title">Sanitize on insert in <code>create.html</code></div>
+  <div class="rb-step-body">
+    Wrap the <code>rounds</code> insert payload (line 891-897) in <code>normalizeRoundFormats</code> as belt-and-suspenders. Even if UI bug regresses, DB write is clean.<br>
+    <strong>Upstream:</strong> S.formats. <strong>Downstream:</strong> rounds rows.
+  </div>
+  <div class="rb-verify"><strong>Verify</strong> Create a test tourney. Open Supabase SQL editor. Run <code>SELECT day_number, format_front, format_back FROM rounds WHERE tournament_id = '...'</code>. No row has a round-locked front with a different back.</div>
+</div>
+
+<div class="rb-step">
+  <div class="rb-step-title">Enforce in <code>admin.html</code> format editor</div>
+  <div class="rb-step-body">
+    Apply same <code>cascadeLock()</code> pattern in <code>renderFormatEditor</code> (admin.html:1080-1110). Plus: on load, scan <code>roundFormats</code> for illegal combos; if found, show an orange repair banner above the editor with "Repair to {format_front}" button that calls <code>normalizeRoundFormats</code> and triggers <code>saveFormats()</code>.<br>
+    <strong>Upstream:</strong> rounds.format_front + format_back load at admin.html:1192-1200. <strong>Downstream:</strong> saveFormats writes back at line 1132.
+  </div>
+  <div class="rb-verify"><strong>Verify</strong> Manually insert an illegal row via SQL: <code>UPDATE rounds SET format_front='nassau', format_back='stroke' WHERE tournament_id='...' AND day_number=1</code>. Reload admin. Repair banner appears. Click → row repaired.</div>
+</div>
+
+<div class="rb-step">
+  <div class="rb-step-title">Defensive read in <code>scorecard.html</code></div>
+  <div class="rb-step-body">
+    After loading <code>roundFormats</code> at scorecard.html:614, run <code>roundFormats = normalizeRoundFormats(roundFormats, daysList)</code>. Ensures format-panel branch at line 1108-1111 (<code>renderWolfPanel</code> etc.) sees a consistent <code>fmt</code> per round, no mid-round disappearance.<br>
+    <strong>Upstream:</strong> rounds DB rows. <strong>Downstream:</strong> hole-by-hole renderPanel, score input mode, mini scorecard.
+  </div>
+  <div class="rb-verify"><strong>Verify</strong> Open scorecard for a Wolf round. Navigate holes 1-18. Wolf rotation persists every hole. Console clean.</div>
+</div>
+
+<div class="rb-step">
+  <div class="rb-step-title">Defensive read in <code>scoreboard.html</code></div>
+  <div class="rb-step-body">
+    Same normalization at scoreboard.html:550 (after roundFormats hydration). Then <code>roundIsMatch</code> calc at line 626 simplifies to <code>fmts.front === 'match'</code> since back is guaranteed equal for locked-round formats.<br>
+    <strong>Upstream:</strong> rounds DB rows. <strong>Downstream:</strong> per-round score reducers (lines 623-672), leaderboard sort.
+  </div>
+  <div class="rb-verify"><strong>Verify</strong> Match-play tourney leaderboard shows 2UP/AS/DN per round. Stableford tourney shows points. No round silently renders as stroke when it should be match.</div>
+</div>
+
+<div class="rb-step">
+  <div class="rb-step-title">Refresh <code>create.html</code> fallback FMT array</div>
+  <div class="rb-step-body">
+    Sync the inline fallback FMT at <code>create.html:348-355</code> to match the 27 entries in <code>lib/formats.js</code>. Or drop the fallback entirely and let <code>formats.js</code> load block step 2 (with a loader spinner) — preferred.<br>
+    <strong>Upstream:</strong> <code>lib/formats.js</code> network load. <strong>Downstream:</strong> step 2 picker options.
+  </div>
+  <div class="rb-verify"><strong>Verify</strong> Block <code>lib/formats.js</code> in DevTools Network. Reload <code>/create</code>. Either picker shows full catalog (fallback synced) or step 2 shows a "Loading formats…" spinner (cleaner option).</div>
+</div>
+
+<div class="rb-step">
+  <div class="rb-step-title">DB CHECK constraint migration</div>
+  <div class="rb-step-body">
+    New migration <code>migrations/0XX_rounds_format_scope_check.sql</code>. CHECK constraint that disallows: <code>format_front IN ('nassau','match','wolf','skins','bbb','quota','snake','bogey_par','vegas','waltz','four_ball_match') AND format_back &lt;&gt; format_front</code>. Also: <code>format_front IN ('eclectic','peoria','callaway')</code> → must apply to all rounds (enforced via trigger or by app-only since CHECK can't span rows).<br>
+    <strong>Upstream:</strong> any insert/update on rounds. <strong>Downstream:</strong> create + admin writes; legacy rows must be repaired first.
+  </div>
+  <div class="rb-verify"><strong>Verify</strong> Pre-flight: <code>SELECT COUNT(*) FROM rounds WHERE format_front IN ('nassau',...) AND format_back &lt;&gt; format_front</code> = 0. Then apply CHECK. Attempt manual violation → "violates check constraint" error.</div>
+</div>
+
+<div class="rb-step">
+  <div class="rb-step-title">Add scope badge to format selects (UX polish)</div>
+  <div class="rb-step-body">
+    In <code>makeOpts()</code> at create.html:667-671 and FORMAT_OPTIONS at admin.html:915, prefix each option label with a small bracket: <code>[9]</code>, <code>[18]</code>, <code>[ALL]</code>. Users see the constraint before clicking.<br>
+    <strong>Upstream:</strong> FORMAT_META.lockScope. <strong>Downstream:</strong> select-option text only.
+  </div>
+  <div class="rb-verify"><strong>Verify</strong> Open <code>/create</code> step 2. Stroke shows <code>[9] Stroke Play</code>. Nassau shows <code>[18] Nassau</code>. Eclectic shows <code>[ALL] Eclectic</code>.</div>
+</div>
+
+<div class="rb-step">
+  <div class="rb-step-title">Full e2e QA pass</div>
+  <div class="rb-step-body">
+    Create test tourneys covering each scope class. Walk every surface.<br>
+    1. Per-9 mix: Day 1 Stroke front / Scramble back. Admin shows split. Scorecard renders both per hole. Scoreboard sums correctly.<br>
+    2. Round-locked: Pick Nassau anywhere. Confirm both nines lock. Admin matches. Scorecard renders Nassau across all 18. Scoreboard shows F9/B9/18 segments.<br>
+    3. Tourney-locked: Pick Eclectic Day 2. Confirm all days/nines pinned. Admin matches. Scorecard shows running best-of. Scoreboard aggregates across tourney.<br>
+    4. Console clean on all 3.
+  </div>
+  <div class="rb-verify"><strong>Verify</strong> All 3 flows pass QA with zero console errors, zero illegal DB rows, leaderboard matches scorecard math.</div>
+</div>
+
+</div>
+</div>
+</section>
+
+<section id="executing">
+<div class="wrapper">
+<!-- EXECUTING-CONTENT-START -->
+<div class="stage-pending">
+  <p>Awaiting execution. Run <code>/tourney-execute 6-1-26-formats-review.html</code> to proceed.</p>
+</div>
+<!-- EXECUTING-CONTENT-END -->
+</div>
+</section>
+
+<section id="audit">
+<div class="wrapper">
+<!-- AUDIT-CONTENT-START -->
+<div class="stage-pending">
+  <p>Awaiting execution. Run <code>/tourney-execute 6-1-26-formats-review.html</code> to proceed.</p>
+</div>
+<!-- AUDIT-CONTENT-END -->
+</div>
+</section>
+
+<section id="concluded">
+<div class="wrapper">
+<!-- CONCLUDED-CONTENT-START -->
+<div class="stage-pending">
+  <p>Awaiting execution. Run <code>/tourney-execute 6-1-26-formats-review.html</code> to proceed.</p>
+</div>
+<!-- CONCLUDED-CONTENT-END -->
+</div>
+</section>
+
+<footer>
+  Generated by <span>Claude Opus 4.7</span> · Greenskeeper Studios Internal · June 1, 2026
+  <br style="margin-top:0.3rem">
+  <a href="/platform" style="color:var(--muted);font-size:0.7rem;text-decoration:none">← Back to Platform Hub</a>
+</footer>
+
+</body>
+</html>
