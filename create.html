@@ -234,6 +234,7 @@
 
       <div class="fl" style="margin-top:1.75rem;margin-bottom:.65rem">Team Structure</div>
       <div class="days-row" id="teamCountBtns"></div>
+      <div class="days-row" id="teamModeBtns" style="display:none;margin-top:.55rem"></div>
 
       <div class="fl" style="margin-top:1.75rem;margin-bottom:.75rem">Number of Rounds</div>
       <div class="days-row" id="daysBtns"></div>
@@ -379,6 +380,7 @@
     formats: mkFormats(3),
     structure: 'team',  // 'individual' | 'team' | 'pairs'
     pairCount: 12,
+    teamMode: '2v2',    // when structure=team & teamCount=2: '2v2' | 'slayer_3v1'
   };
 
   function calcTier(players, rounds) {
@@ -608,10 +610,50 @@
         if (o.s === 'individual') S.teamCount = 1;
         else if (o.s === 'team') S.teamCount = o.n;
         else { S.pairCount = Math.floor(S.maxPlayers / 2); S.teamCount = S.pairCount; }
+        S.teamMode = (o.s === 'team' && o.n === 2) ? (S.teamMode || '2v2') : null;
+        if (S.teamMode !== 'slayer_3v1') {
+          // Clear any locked-in slayer formats when leaving slayer mode
+          for (let i = 1; i <= S.days; i++) {
+            if (S.formats[`day${i}`]?.front === 'slayer_3v1') S.formats[`day${i}`].front = 'stroke';
+            if (S.formats[`day${i}`]?.back === 'slayer_3v1') S.formats[`day${i}`].back = 'stroke';
+          }
+        }
         renderFormat();
       };
       tcRow.appendChild(b);
     });
+
+    // Sub-row: 2-Team mode (2v2 vs Slayer 3v1)
+    const modeRow = document.getElementById('teamModeBtns');
+    modeRow.innerHTML = '';
+    if (S.structure === 'team' && S.teamCount === 2) {
+      modeRow.style.display = '';
+      [
+        { v:'2v2',        label:'2 v 2' },
+        { v:'slayer_3v1', label:'Slayer 3v1' },
+      ].forEach(m => {
+        const b = document.createElement('button');
+        b.className = 'day-btn' + (S.teamMode === m.v ? ' on' : '');
+        b.textContent = m.label;
+        b.style.cssText = 'width:auto;padding:0 .75rem;min-width:2.4rem;';
+        b.onclick = () => {
+          S.teamMode = m.v;
+          if (m.v === 'slayer_3v1') {
+            S.maxPlayers = 4;
+            for (let i = 1; i <= S.days; i++) S.formats[`day${i}`] = { front:'slayer_3v1', back:'slayer_3v1' };
+          } else {
+            for (let i = 1; i <= S.days; i++) {
+              if (S.formats[`day${i}`]?.front === 'slayer_3v1') S.formats[`day${i}`].front = 'stroke';
+              if (S.formats[`day${i}`]?.back === 'slayer_3v1') S.formats[`day${i}`].back = 'stroke';
+            }
+          }
+          renderFormat();
+        };
+        modeRow.appendChild(b);
+      });
+    } else {
+      modeRow.style.display = 'none';
+    }
 
     // Auto-sync pairCount from maxPlayers when structure=pairs
     if (S.structure === 'pairs') { S.pairCount = Math.floor(S.maxPlayers / 2); S.teamCount = S.pairCount; }
@@ -620,7 +662,7 @@
 
     const FMT_DESC = Object.fromEntries(FMT.map(o => [o.value, o.desc]));
     const makeOpts = (sel) => FMT
-      .filter(o => !o.structures || o.structures.includes(S.structure))
+      .filter(o => S.teamMode === 'slayer_3v1' ? o.value === 'slayer_3v1' : (!o.structures || o.structures.includes(S.structure)))
       .filter(o => !o.requiresExact || o.requiresExact === S.maxPlayers)
       .map(o => `<option value="${o.value}"${o.value===sel?' selected':''}>${o.label}</option>`)
       .join('');
