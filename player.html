@@ -384,9 +384,6 @@ async function loadPortal(email, opts = {}) {
   const playerTidSet  = new Set(records.map(r => r.tournament_id));
   const adminOnlyTids = adminRows.map(r => r.tournament_id).filter(t => !playerTidSet.has(t));
 
-  if (!records.length && !adminOnlyTids.length)
-    throw new Error('No account found for that email. Check the spelling or contact your tournament admin.');
-
   sessionStorage.setItem(SESSION_KEY, email);
 
   const me   = records[0] || null;
