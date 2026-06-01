@@ -1,4 +1,4 @@
-const CACHE = 'tourney-v53';
+const CACHE = 'tourney-v54';
 const PRECACHE = [
   '/',
   '/tokens.css',
@@ -25,6 +25,7 @@ const PRECACHE = [
   '/nav-mobile.css',
   '/nav-mobile.js',
   '/tourney-init.js',
+  '/lib/share-invite.js',
   '/bug-fab.js',
 ];
 

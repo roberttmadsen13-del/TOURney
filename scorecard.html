@@ -614,6 +614,7 @@ async function init() {
     if (r.format_front) roundFormats[key] = { front: r.format_front, back: r.format_back || r.format_front };
     if (r.course_id) roundCourses[key] = { course_id: r.course_id, tee_name: r.tee_name };
   });
+  if (window.normalizeRoundFormats) roundFormats = window.normalizeRoundFormats(roundFormats, Object.keys(roundFormats));
   currentRound = Object.entries(roundStates).find(([,v]) => v === 'open')?.[0] || null;
 
   const parOverrides = {};

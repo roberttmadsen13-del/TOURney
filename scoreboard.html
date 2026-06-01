@@ -229,6 +229,10 @@ details[open] .explainer summary::after,.explainer details[open]>summary::after{
   <div class="nav-right">
     <div class="live-dot"><span></span>Live</div>
     <div class="nav-round" id="currentRoundLabel">—</div>
+    <button onclick="shareInvite()" class="score-btn" style="border-color:var(--gold);color:var(--gold);background:rgba(192,144,48,0.06);cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:0.35rem;">
+      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 12v7a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M16 6l-4-4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 2v14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      Share
+    </button>
     <a href="/directory" class="score-btn" style="border-color:rgba(192,144,48,0.3);color:rgba(240,230,204,0.4);">Directory</a>
     <a href="/" class="score-btn" style="border-color:rgba(192,144,48,0.3);color:rgba(240,230,204,0.4);">Home</a>
   </div>
@@ -354,6 +358,7 @@ details[open] .explainer summary::after,.explainer details[open]>summary::after{
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.105.3/dist/umd/supabase.min.js" integrity="sha384-iWpUQPQzWsFiosLgsS8o+e6E8y3Gm+EW2m/vAAo7A2H3fuc4KOKEx+5CAord2H2z" crossorigin="anonymous"></script>
 <script src="/tourney-init.js"></script>
+<script src="/lib/share-invite.js"></script>
 <script>
 const sb = window.tourney.db;
 let _tournamentName = 'TOURney';
@@ -368,6 +373,7 @@ let _teamNames = {A:'Team One',B:'Team Two',C:'Team C',D:'Team D',E:'Team E',F:'
 (async function loadIdentity() {
   const { tournament } = await window.tourney.ready;
   _tournamentName = tournament.name;
+  window.tourneyShareCtx = { slug: tournament.slug, name: tournament.name };
   const pairNameKeys = Array.from({length:24}, (_,i) => `pair_${i+1}_name`);
   const { data } = await sb.from('settings').select('key,value')
     .eq('tournament_id', tournament.id)
@@ -549,6 +555,7 @@ async function init() {
     roundStates[key] = r.status;
     if (r.format_front) roundFormats[key] = { front: r.format_front, back: r.format_back || r.format_front };
   });
+  if (window.normalizeRoundFormats) roundFormats = window.normalizeRoundFormats(roundFormats, Object.keys(roundFormats));
 
   (parRes.data || []).forEach(r => {
     const day = r.key.replace('pars_','');
