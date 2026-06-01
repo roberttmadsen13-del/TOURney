@@ -379,6 +379,7 @@
     formats: mkFormats(3),
     structure: 'team',  // 'individual' | 'team' | 'pairs'
     pairCount: 12,
+    slayer: false,      // Slayer 3v1 preset (forces 4 players, 2 teams, slayer_3v1 format)
   };
 
   function calcTier(players, rounds) {
@@ -566,23 +567,23 @@
       const b = document.createElement('button');
       b.className = 'day-btn' + (i === S.days ? ' on' : '');
       b.textContent = i;
-      b.onclick = () => { S.days = i; S.formats = mkFormats(i); renderFormat(); };
+      b.onclick = () => { S.days = i; S.formats = mkFormats(i); if (S.slayer) for (let k = 1; k <= i; k++) S.formats[`day${k}`] = { front:'slayer_3v1', back:'slayer_3v1' }; renderFormat(); };
       row.appendChild(b);
     }
 
     const pRow = document.getElementById('playersBtns');
     pRow.innerHTML = '';
-    [8,12,16,20,24,32,40,48].forEach(n => {
+    [4,8,12,16,20,24,32,40,48].forEach(n => {
       const b = document.createElement('button');
       b.className = 'day-btn' + (n === S.maxPlayers ? ' on' : '');
       b.textContent = n;
       b.style.width = 'auto';
       b.style.padding = '0 .65rem';
-      b.onclick = () => { S.maxPlayers = n; renderFormat(); };
+      b.onclick = () => { S.maxPlayers = n; if (S.slayer && n !== 4) S.slayer = false; renderFormat(); };
       pRow.appendChild(b);
     });
 
-    // Structure buttons: Individual | 2–8 Teams | Pairs
+    // Structure buttons: Individual | 2–8 Teams | Pairs | Slayer 3v1
     const tcRow = document.getElementById('teamCountBtns');
     tcRow.innerHTML = '';
     const structOpts = [
@@ -594,20 +595,32 @@
       { s:'team',       n:5,  label:'5 Teams' },
       { s:'team',       n:6,  label:'6 Teams' },
       { s:'team',       n:8,  label:'8 Teams' },
+      { s:'slayer',     n:2,  label:'Slayer 3v1' },
     ];
     structOpts.forEach(o => {
       const b = document.createElement('button');
-      const isActive = o.s === 'pairs' ? S.structure === 'pairs'
+      const isActive = o.s === 'slayer' ? S.slayer === true
+                     : S.slayer ? false
+                     : o.s === 'pairs' ? S.structure === 'pairs'
                      : o.s === 'individual' ? S.structure === 'individual'
                      : S.structure === 'team' && S.teamCount === o.n;
       b.className = 'day-btn' + (isActive ? ' on' : '');
       b.textContent = o.label;
       b.style.cssText = 'width:auto;padding:0 .75rem;min-width:2.4rem;';
       b.onclick = () => {
-        S.structure = o.s;
-        if (o.s === 'individual') S.teamCount = 1;
-        else if (o.s === 'team') S.teamCount = o.n;
-        else { S.pairCount = Math.floor(S.maxPlayers / 2); S.teamCount = S.pairCount; }
+        if (o.s === 'slayer') {
+          S.slayer = true;
+          S.structure = 'team';
+          S.teamCount = 2;
+          S.maxPlayers = 4;
+          for (let i = 1; i <= S.days; i++) S.formats[`day${i}`] = { front:'slayer_3v1', back:'slayer_3v1' };
+        } else {
+          S.slayer = false;
+          S.structure = o.s;
+          if (o.s === 'individual') S.teamCount = 1;
+          else if (o.s === 'team') S.teamCount = o.n;
+          else { S.pairCount = Math.floor(S.maxPlayers / 2); S.teamCount = S.pairCount; }
+        }
         renderFormat();
       };
       tcRow.appendChild(b);
@@ -620,7 +633,7 @@
 
     const FMT_DESC = Object.fromEntries(FMT.map(o => [o.value, o.desc]));
     const makeOpts = (sel) => FMT
-      .filter(o => !o.structures || o.structures.includes(S.structure))
+      .filter(o => S.slayer ? o.value === 'slayer_3v1' : (!o.structures || o.structures.includes(S.structure)))
       .filter(o => !o.requiresExact || o.requiresExact === S.maxPlayers)
       .map(o => `<option value="${o.value}"${o.value===sel?' selected':''}>${o.label}</option>`)
       .join('');
