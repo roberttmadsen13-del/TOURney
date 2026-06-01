@@ -61,6 +61,16 @@ a{color:inherit;text-decoration:none;}
 
 .fine-print{font-family:'DM Mono',monospace;font-size:0.44rem;letter-spacing:0.12em;color:rgba(240,230,204,0.25);margin-top:0.85rem;text-align:center;line-height:1.6;}
 
+.step-title{font-family:'Barlow Condensed',sans-serif;font-size:1.9rem;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;margin-bottom:0.2rem;color:#fff;}
+.step-sub{font-family:'DM Mono',monospace;font-size:0.65rem;color:var(--muted);letter-spacing:0.08em;margin-bottom:2rem;}
+.or{font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);text-align:center;margin:1.5rem 0 1rem;position:relative;}
+.or::before,.or::after{content:'';position:absolute;top:50%;width:42%;height:1px;background:rgba(192,144,48,0.18);}
+.or::before{left:0;}
+.or::after{right:0;}
+.auth-foot{font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);text-align:center;}
+.auth-foot a{color:var(--gold);cursor:pointer;}
+.auth-foot a:hover{text-decoration:underline;}
+
 .form-err{font-family:'DM Mono',monospace;font-size:0.48rem;letter-spacing:0.15em;text-transform:uppercase;color:#c05040;margin-top:0.5rem;display:none;}
 .form-err.show{display:block;}
 
@@ -96,40 +106,30 @@ a{color:inherit;text-decoration:none;}
 
   <!-- SIGN-UP FORM -->
   <div id="formState">
-    <div class="eyebrow">My Golf — Always Free</div>
-    <div class="headline">Create your <em>My&nbsp;Golf</em> account.</div>
-    <div class="sub">One account follows you across every TOURney tournament — live scoring, leaderboard, push notifications, and your full golf history. No card. No subscription. Tournaments charge their own entry; the account itself is free, forever.</div>
-
-    <div class="features">
-      <div class="feature"><div class="feature-icon">✓</div>Live hole-by-hole scoring from your phone</div>
-      <div class="feature"><div class="feature-icon">✓</div>Real-time leaderboard + push notifications</div>
-      <div class="feature"><div class="feature-icon">✓</div>Hole-in-one alerts with full celebration</div>
-      <div class="feature"><div class="feature-icon">✓</div>Full tournament history across all events</div>
-      <div class="feature"><div class="feature-icon">✓</div>Player directory, team rosters, trash talk feed</div>
-      <div class="feature"><div class="feature-icon">✓</div>Offline scoring — works without cell service</div>
-    </div>
-
-    <div class="divider"></div>
+    <div class="step-title" id="modeTitle">Your My Golf Account</div>
+    <div class="step-sub" id="modeSub">Sign up to track all your tournaments — free, forever.</div>
 
     <form id="signupForm" autocomplete="on">
-      <div class="form-name-row">
+      <div id="nameRow" class="form-name-row">
         <div>
           <label class="form-label" for="signupFirst">First Name</label>
-          <input class="form-input" type="text" id="signupFirst" placeholder="Rob" autocomplete="given-name" required>
+          <input class="form-input" type="text" id="signupFirst" placeholder="Rob" autocomplete="given-name">
         </div>
         <div>
           <label class="form-label" for="signupLast">Last Name</label>
-          <input class="form-input" type="text" id="signupLast" placeholder="Madsen" autocomplete="family-name" required>
+          <input class="form-input" type="text" id="signupLast" placeholder="Madsen" autocomplete="family-name">
         </div>
       </div>
       <label class="form-label" for="signupEmail">Email</label>
-      <input class="form-input" type="email" id="signupEmail" placeholder="you@email.com" autocomplete="email" required>
+      <input class="form-input" type="email" id="signupEmail" placeholder="you@example.com" autocomplete="email" required>
       <label class="form-label" for="signupPassword">Password</label>
-      <input class="form-input" type="password" id="signupPassword" placeholder="At least 8 characters" autocomplete="new-password" minlength="8" required>
-      <button type="submit" class="btn-join" id="joinBtn">Create My Golf Account — Free</button>
+      <input class="form-input" type="password" id="signupPassword" placeholder="Min. 8 characters" autocomplete="new-password" minlength="8" required>
+      <button type="submit" class="btn-join" id="joinBtn">Create Account →</button>
       <div id="formErr" class="form-err"></div>
-      <div class="fine-print">Free forever. No card required. Tournament organizers may charge their own entry fees.</div>
     </form>
+
+    <div class="or">or</div>
+    <div class="auth-foot" id="authFoot">Already have an account? <a onclick="toggleMode()">Sign in</a></div>
   </div>
 
   <!-- CONFIRMATION -->
@@ -180,6 +180,32 @@ function showConfirm(title, bodyHtml) {
   window.addEventListener('resize', function() { if (window.innerWidth > 760) close(); });
 })();
 
+let signupMode = true;
+
+function toggleMode() {
+  signupMode = !signupMode;
+  const title    = document.getElementById('modeTitle');
+  const sub      = document.getElementById('modeSub');
+  const nameRow  = document.getElementById('nameRow');
+  const btn      = document.getElementById('joinBtn');
+  const foot     = document.getElementById('authFoot');
+  const err      = document.getElementById('formErr');
+  err.classList.remove('show');
+  if (signupMode) {
+    title.textContent = 'Your My Golf Account';
+    sub.textContent   = 'Sign up to track all your tournaments — free, forever.';
+    nameRow.style.display = '';
+    btn.textContent   = 'Create Account →';
+    foot.innerHTML    = 'Already have an account? <a onclick="toggleMode()">Sign in</a>';
+  } else {
+    title.textContent = 'Welcome Back';
+    sub.textContent   = 'Sign in to your My Golf account.';
+    nameRow.style.display = 'none';
+    btn.textContent   = 'Sign In →';
+    foot.innerHTML    = 'Need an account? <a onclick="toggleMode()">Create one</a>';
+  }
+}
+
 document.getElementById('signupForm').addEventListener('submit', async (ev) => {
   ev.preventDefault();
   const first    = document.getElementById('signupFirst').value.trim();
@@ -189,56 +215,59 @@ document.getElementById('signupForm').addEventListener('submit', async (ev) => {
   const btn      = document.getElementById('joinBtn');
   const err      = document.getElementById('formErr');
 
-  if (!first || !last || !email || !password) return;
-  if (password.length < 8) {
+  if (!email || !password) return;
+  if (signupMode && (!first || !last)) {
+    err.textContent = 'First and last name required.';
+    err.classList.add('show');
+    return;
+  }
+  if (signupMode && password.length < 8) {
     err.textContent = 'Password must be at least 8 characters.';
     err.classList.add('show');
     return;
   }
   btn.disabled = true;
-  btn.textContent = 'Creating account…';
+  btn.textContent = signupMode ? 'Creating account…' : 'Signing in…';
   err.classList.remove('show');
 
-  // 1. Create Supabase auth user
-  const { data: signUpData, error: authErr } = await sb.auth.signUp({
-    email,
-    password,
-    options: {
-      data: { first_name: first, last_name: last },
-      emailRedirectTo: location.origin + '/player',
-    },
-  });
+  const sp   = new URLSearchParams(location.search);
+  const next = sp.get('next') || '/player';
 
-  if (authErr) {
-    const msg = /already registered/i.test(authErr.message)
-      ? 'That email is already registered. Sign in instead.'
-      : (authErr.message || 'Could not create account.');
-    err.textContent = msg;
+  try {
+    let res;
+    if (signupMode) {
+      res = await sb.auth.signUp({
+        email,
+        password,
+        options: { data: { first_name: first, last_name: last } },
+      });
+      if (res.error) throw res.error;
+      if (res.data?.session) {
+        await sb.from('player_accounts').upsert(
+          { email, plan: 'player', billing_status: 'comped', updated_at: new Date().toISOString() },
+          { onConflict: 'email' }
+        );
+        window.location.href = next;
+        return;
+      }
+      // Email confirmation required (mailer_autoconfirm disabled)
+      showConfirm('Check your email.',
+        `<strong>${first} ${last}</strong> — we sent a confirmation link to <strong>${email}</strong>. Click it, then <a href="${next}" style="color:var(--gold);">continue →</a>.`);
+    } else {
+      res = await sb.auth.signInWithPassword({ email, password });
+      if (res.error) throw res.error;
+      window.location.href = next;
+      return;
+    }
+  } catch (e) {
+    const m = (e.message || '').toLowerCase();
+    err.textContent = /already registered/.test(m) ? 'That email is already registered. Sign in instead.'
+                     : /invalid login/.test(m) ? 'Incorrect email or password.'
+                     : (e.message || 'Authentication failed.');
     err.classList.add('show');
     btn.disabled = false;
-    btn.textContent = 'Create My Golf Account — Free';
-    return;
+    btn.textContent = signupMode ? 'Create Account →' : 'Sign In →';
   }
-
-  // 2. If signUp returned a session (mailer_autoconfirm), user is authenticated → comp now.
-  //    Otherwise email confirmation pending → defer comp to first /player login.
-  if (signUpData?.session) {
-    await sb.from('player_accounts').upsert(
-      { email, plan: 'player', billing_status: 'comped', updated_at: new Date().toISOString() },
-      { onConflict: 'email' }
-    );
-  }
-
-  // 3. Redirect: next= param (e.g. /create) or default /player
-  const sp = new URLSearchParams(location.search);
-  const next = sp.get('next') || '/player';
-  if (signUpData?.session) {
-    window.location.href = next;
-    return;
-  }
-  // Email confirm path: prompt them to check inbox, then continue to next
-  showConfirm('Check your email.',
-    `<strong>${first} ${last}</strong> — we sent a confirmation link to <strong>${email}</strong>. Click it, then <a href="${next}" style="color:var(--gold);">continue →</a>.`);
 });
 </script>
 <script src="/bug-fab.js?v=6" defer></script>

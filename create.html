@@ -52,6 +52,8 @@
 
     /* â”€â”€â”€ Form â”€â”€â”€ */
     .field{margin-bottom:1.4rem}
+    .name-row{display:grid;grid-template-columns:1fr 1fr;gap:.75rem}
+    .name-row>div{margin-bottom:0}
     .field label,.fl{display:block;font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-bottom:.45rem}
     input[type=text],input[type=email],input[type=password],input[type=number],select,textarea{
       width:100%;background:var(--surface);border:1px solid var(--border);border-radius:4px;
@@ -203,6 +205,7 @@
       <div class="step-title">Your Account</div>
       <div class="step-sub">Sign up or sign in to create your tournament</div>
       <div id="authAlert" class="alert ae" style="display:none"></div>
+      <div class="field name-row" id="nameRow"><div><label>First Name</label><input type="text" id="aFirst" autocomplete="given-name" placeholder="Rob"></div><div><label>Last Name</label><input type="text" id="aLast" autocomplete="family-name" placeholder="Madsen"></div></div>
       <div class="field"><label>Email</label><input type="email" id="aEmail" autocomplete="email" placeholder="you@example.com"></div>
       <div class="field"><label>Password</label><input type="password" id="aPass" autocomplete="new-password" placeholder="Min. 8 characters"></div>
       <div class="nav" style="margin-top:1rem">
@@ -477,21 +480,27 @@
     signupMode = !signupMode;
     const btn = document.getElementById('btnAuth');
     const foot = document.getElementById('authFoot');
+    const nameRow = document.getElementById('nameRow');
     if (signupMode) {
       btn.textContent = 'Create Account →';
       foot.innerHTML = 'Already have an account? <a onclick="toggleMode()">Sign in</a>';
+      if (nameRow) nameRow.style.display = '';
     } else {
       btn.textContent = 'Sign In →';
       foot.innerHTML = 'Need an account? <a onclick="toggleMode()">Create one</a>';
+      if (nameRow) nameRow.style.display = 'none';
     }
   }
 
   async function doAuth() {
+    const first = document.getElementById('aFirst')?.value.trim() || '';
+    const last  = document.getElementById('aLast')?.value.trim()  || '';
     const email = document.getElementById('aEmail').value.trim();
     const pw    = document.getElementById('aPass').value;
     const alrt  = document.getElementById('authAlert');
     const btn   = document.getElementById('btnAuth');
     if (!email || !pw) { showAlert(alrt, 'Email and password required.'); return; }
+    if (signupMode && (!first || !last)) { showAlert(alrt, 'First and last name required.'); return; }
     if (signupMode && pw.length < 8) { showAlert(alrt, 'Password must be at least 8 characters.'); return; }
     btn.innerHTML = '<span class="spin"></span>Working…';
     btn.disabled = true;
@@ -499,7 +508,11 @@
     try {
       let res;
       if (signupMode) {
-        res = await db.auth.signUp({ email, password: pw });
+        res = await db.auth.signUp({
+          email,
+          password: pw,
+          options: { data: { first_name: first, last_name: last } },
+        });
         if (res.error) throw res.error;
         if (!res.data?.session) {
           showAlert(alrt, 'Check your email to confirm, then come back to sign in.', true);
