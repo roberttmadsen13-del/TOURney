@@ -18,103 +18,136 @@
 <title>My Golf — TOURney</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Mono:wght@300;400;500&family=Barlow+Condensed:wght@300;400;600;700;800&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
-:root{--ink:#1a1008;--gold:#c09030;--gold-l:#d4aa50;--gold-p:#e8cc80;--cream:#f0e6cc;--red:#8a1e10;--border:rgba(192,144,48,0.28);--bg:#1a1008;--card:#231a0a;--card2:#2d2010;--muted:rgba(240,230,204,0.38);}
+:root{
+  --ink:#0f0a05;--gold:#c09030;--gold-l:#d4a840;--gold-p:#e8cc80;
+  --cream:#f5ede0;--red:#c0392b;--green:#27ae60;
+  --border:rgba(245,237,224,0.13);--surface:rgba(245,237,224,0.05);
+  --bg:#0f0a05;--card:rgba(245,237,224,0.04);--card2:rgba(245,237,224,0.07);
+  --muted:rgba(245,237,224,0.5);
+}
 *{margin:0;padding:0;box-sizing:border-box;}
 body{background:var(--bg);color:var(--cream);font-family:'Barlow',sans-serif;font-weight:300;min-height:100vh;}
 a{color:inherit;text-decoration:none;}
 
 /* NAV */
-.nav{height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;border-bottom:1px solid rgba(192,144,48,0.18);}
-.nav-logo{font-family:'Playfair Display',serif;font-size:0.9rem;font-weight:700;display:flex;align-items:center;gap:0.5rem;color:var(--cream);}
-.nav-logo em{font-style:italic;color:var(--gold);}
-.nav-back{font-family:'DM Mono',monospace;font-size:0.48rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);}
+.nav{height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;border-bottom:1px solid var(--border);background:rgba(15,10,5,0.94);backdrop-filter:blur(8px);position:sticky;top:0;z-index:100;}
+.nav-logo{display:flex;align-items:center;gap:0.5rem;color:var(--cream);}
+.nav-logo em{font-family:'DM Mono',monospace;font-style:normal;font-size:0.52rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--gold);margin-left:0.5rem;}
+.nav-back{font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.2em;text-transform:uppercase;color:rgba(192,144,48,0.45);transition:color 0.15s;}
 .nav-back:hover{color:var(--gold);}
 
-/* LOGIN SCREEN */
-.login-wrap{min-height:calc(100vh - 56px);display:flex;align-items:center;justify-content:center;padding:2rem;}
-.login-box{width:100%;max-width:400px;}
-.login-eyebrow{font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.45em;text-transform:uppercase;color:rgba(192,144,48,0.5);margin-bottom:0.75rem;}
-.login-title{font-family:'Playfair Display',serif;font-size:2.4rem;font-weight:900;line-height:1.05;margin-bottom:0.5rem;}
-.login-title em{font-style:italic;color:var(--gold-p);}
-.login-sub{font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.25em;text-transform:uppercase;color:var(--muted);margin-bottom:2.5rem;}
-.fg{display:flex;flex-direction:column;gap:0.35rem;margin-bottom:1rem;}
-.fg label{font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.28em;text-transform:uppercase;color:var(--gold);}
-.fg input{background:var(--card);border:1px solid rgba(192,144,48,0.28);padding:0.75rem 0.9rem;color:var(--cream);font-family:'Barlow',sans-serif;font-size:1rem;outline:none;width:100%;border-radius:0;-webkit-appearance:none;}
+/* LOGIN SCREEN — matches /create panel style */
+.login-wrap{min-height:calc(100vh - 56px);display:flex;align-items:center;justify-content:center;padding:2rem 1.5rem;}
+.login-box{width:100%;max-width:420px;}
+.login-eyebrow{font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.25em;text-transform:uppercase;color:var(--muted);margin-bottom:0.5rem;}
+.login-title{font-family:'Barlow Condensed',sans-serif;font-size:1.9rem;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;line-height:1.05;margin-bottom:0.2rem;color:var(--cream);}
+.login-title em{font-family:'Playfair Display',serif;font-style:italic;font-weight:900;color:var(--gold-p);text-transform:none;letter-spacing:0;}
+.login-sub{font-family:'DM Mono',monospace;font-size:0.65rem;color:var(--muted);letter-spacing:0.08em;margin-bottom:2rem;}
+.fg{display:flex;flex-direction:column;gap:0.45rem;margin-bottom:1.4rem;}
+.fg label{font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);}
+.fg input{background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:0.7rem 1rem;color:var(--cream);font-family:'DM Mono',monospace;font-size:0.78rem;outline:none;width:100%;transition:border-color 0.15s;-webkit-appearance:none;}
 .fg input:focus{border-color:var(--gold);}
-.fg input::placeholder{color:rgba(240,230,204,0.25);}
-.btn-primary{width:100%;padding:0.9rem;background:var(--gold);color:var(--ink);border:none;font-family:'Barlow Condensed',sans-serif;font-size:0.75rem;font-weight:700;letter-spacing:0.25em;text-transform:uppercase;cursor:pointer;transition:background 0.2s;}
+.fg input::placeholder{color:rgba(245,237,224,0.25);}
+.btn-primary{width:100%;padding:0.85rem 1rem;background:var(--gold);color:var(--ink);border:none;border-radius:4px;font-family:'Barlow Condensed',sans-serif;font-size:0.85rem;font-weight:700;letter-spacing:0.22em;text-transform:uppercase;cursor:pointer;transition:background 0.2s;}
 .btn-primary:hover{background:var(--gold-l);}
-.login-err{font-family:'DM Mono',monospace;font-size:0.5rem;color:#c0503a;margin-top:0.75rem;display:none;}
+.btn-primary:disabled{opacity:0.5;cursor:not-allowed;}
+.login-err{font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.06em;color:#e74c3c;margin-top:0.75rem;display:none;}
 .login-err.show{display:block;}
+.login-or{font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);text-align:center;margin:1.5rem 0 1rem;position:relative;}
+.login-or::before,.login-or::after{content:'';position:absolute;top:50%;width:42%;height:1px;background:var(--border);}
+.login-or::before{left:0;}
+.login-or::after{right:0;}
+.login-foot{font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);text-align:center;}
+.login-foot a{color:var(--gold);cursor:pointer;}
+.login-foot a:hover{text-decoration:underline;}
+.login-link{font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);cursor:pointer;text-decoration:none;}
+.login-link:hover{color:var(--gold);}
 
 /* PORTAL */
-.portal{display:none;max-width:960px;margin:0 auto;padding:3rem 2rem;}
-@media(max-width:600px){.portal{padding:2rem 1rem;}}
+.portal{display:none;max-width:980px;margin:0 auto;padding:3rem 2rem 5rem;}
+@media(max-width:600px){.portal{padding:2rem 1.25rem 4rem;}}
 
-.portal-header{margin-bottom:2.5rem;}
-.portal-eyebrow{font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.45em;text-transform:uppercase;color:rgba(192,144,48,0.5);margin-bottom:0.5rem;}
-.portal-name{font-family:'Playfair Display',serif;font-size:2.2rem;font-weight:900;line-height:1;}
-.portal-name em{font-style:italic;color:var(--gold-p);}
-.portal-email{font-family:'DM Mono',monospace;font-size:0.48rem;letter-spacing:0.18em;color:var(--muted);margin-top:0.4rem;}
-.portal-phone{font-family:'DM Mono',monospace;font-size:0.48rem;letter-spacing:0.18em;color:var(--muted);margin-top:0.2rem;}
+.portal-header{margin-bottom:2rem;padding-bottom:1.75rem;border-bottom:1px solid var(--border);}
+.portal-eyebrow{font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:0.25em;text-transform:uppercase;color:var(--muted);margin-bottom:0.4rem;}
+.portal-name{font-family:'Barlow Condensed',sans-serif;font-size:2.2rem;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;line-height:1;color:var(--cream);}
+.portal-name em{font-family:'Playfair Display',serif;font-style:italic;font-weight:900;color:var(--gold-p);text-transform:none;letter-spacing:0;}
+.portal-email{font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.1em;color:var(--muted);margin-top:0.5rem;}
+.portal-phone{font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.1em;color:var(--muted);margin-top:0.2rem;}
 
-/* STATS STRIP */
-.stats-strip{display:flex;border:1px solid rgba(192,144,48,0.18);margin-bottom:3rem;overflow:hidden;}
-.stat-cell{flex:1;padding:1.1rem 1.4rem;border-right:1px solid rgba(192,144,48,0.18);}
-.stat-cell:last-child{border-right:none;}
-.stat-val{font-family:'Playfair Display',serif;font-size:2rem;font-weight:900;color:var(--gold);line-height:1;}
-.stat-label{font-family:'DM Mono',monospace;font-size:0.44rem;letter-spacing:0.25em;text-transform:uppercase;color:var(--muted);margin-top:0.25rem;}
-@media(max-width:480px){.stats-strip{flex-wrap:wrap;}.stat-cell{flex:1 1 50%;border-bottom:1px solid rgba(192,144,48,0.18);}}
+/* STATS STRIP — tile grid like /create cards */
+.stats-strip{display:grid;grid-template-columns:repeat(3,1fr);gap:0.6rem;margin-bottom:2.5rem;}
+.stat-cell{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:1.2rem 1.3rem;}
+.stat-val{font-family:'Playfair Display',serif;font-size:1.85rem;font-weight:900;color:var(--gold);line-height:1;}
+.stat-label{font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-top:0.35rem;}
+@media(max-width:540px){.stats-strip{grid-template-columns:1fr 1fr;}.stat-cell:first-child{grid-column:1/-1;}}
 
 /* SECTION */
-.section-label{font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.38em;text-transform:uppercase;color:rgba(192,144,48,0.5);margin-bottom:1.25rem;padding-bottom:0.75rem;border-bottom:1px solid rgba(192,144,48,0.18);}
+.section-label{font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.25em;text-transform:uppercase;color:var(--muted);margin-bottom:1.1rem;display:flex;align-items:center;gap:0.8rem;}
+.section-label::after{content:'';flex:1;height:1px;background:var(--border);}
+
+/* QUICK ACTIONS — primary + secondary CTA row */
+.quick-actions{display:grid;grid-template-columns:1fr 1fr;gap:0.7rem;margin-bottom:2.5rem;}
+@media(max-width:500px){.quick-actions{grid-template-columns:1fr;}}
+.qa-card{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:1.1rem 1.3rem;display:flex;align-items:center;gap:0.9rem;text-decoration:none;color:var(--cream);transition:all 0.18s;cursor:pointer;}
+.qa-card:hover{border-color:rgba(192,144,48,0.45);background:rgba(192,144,48,0.05);}
+.qa-card.primary{background:var(--gold);border-color:var(--gold);color:var(--ink);}
+.qa-card.primary:hover{background:var(--gold-l);}
+.qa-icon{width:36px;height:36px;border-radius:50%;background:rgba(192,144,48,0.12);border:1px solid rgba(192,144,48,0.25);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:0.9rem;color:var(--gold);}
+.qa-card.primary .qa-icon{background:rgba(15,10,5,0.18);border-color:rgba(15,10,5,0.25);color:var(--ink);}
+.qa-text{flex:1;min-width:0;}
+.qa-title{font-family:'Barlow Condensed',sans-serif;font-size:0.85rem;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;line-height:1.1;}
+.qa-sub{font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.1em;color:rgba(245,237,224,0.45);margin-top:0.25rem;}
+.qa-card.primary .qa-sub{color:rgba(15,10,5,0.55);}
 
 /* TOURNAMENT CARDS */
-.tourney-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1px;background:rgba(192,144,48,0.12);margin-bottom:3rem;}
-.tourney-card{background:var(--card);padding:1.5rem;display:flex;flex-direction:column;gap:0.85rem;cursor:pointer;transition:background 0.18s;position:relative;}
-.tourney-card:hover{background:var(--card2);}
+.tourney-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:0.6rem;margin-bottom:2.5rem;}
+.tourney-card{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:1.25rem 1.3rem;display:flex;flex-direction:column;gap:0.85rem;text-decoration:none;color:var(--cream);transition:all 0.18s;position:relative;}
+.tourney-card:hover{border-color:rgba(192,144,48,0.4);}
 .tourney-card-top{display:flex;align-items:center;gap:0.85rem;}
-.tourney-logo{width:44px;height:44px;border-radius:50%;object-fit:cover;flex-shrink:0;border:1px solid rgba(192,144,48,0.3);}
+.tourney-logo{width:44px;height:44px;border-radius:50%;object-fit:cover;flex-shrink:0;border:1px solid var(--border);}
 .tourney-logo-fallback{width:44px;height:44px;border-radius:50%;background:rgba(192,144,48,0.1);border:1px solid rgba(192,144,48,0.25);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:900;color:var(--gold);}
 .tourney-meta{flex:1;min-width:0;}
-.tourney-name{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--cream);line-height:1.2;margin-bottom:0.2rem;}
-.tourney-slug{font-family:'DM Mono',monospace;font-size:0.42rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);}
-.tourney-tier{display:inline-block;padding:0.12rem 0.55rem;border:1px solid;font-family:'DM Mono',monospace;font-size:0.4rem;letter-spacing:0.1em;text-transform:uppercase;align-self:flex-start;}
+.tourney-name{font-family:'Playfair Display',serif;font-size:1.05rem;font-weight:700;color:var(--cream);line-height:1.2;margin-bottom:0.25rem;}
+.tourney-slug{font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.1em;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.tourney-tier{display:inline-block;padding:0.15rem 0.6rem;border:1px solid;font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.15em;text-transform:uppercase;align-self:flex-start;border-radius:3px;}
 .t-scratch{color:var(--gold);border-color:var(--gold);}
-.t-eagle{color:#4a9a40;border-color:#4a9a40;}
-.t-birdie{color:#4a7aaa;border-color:#4a7aaa;}
-.t-bogey{color:#c07840;border-color:#c07840;}
-.t-pretender{color:#9a5aaa;border-color:#9a5aaa;}
-.t-hacker{color:rgba(240,230,204,0.3);border-color:rgba(240,230,204,0.18);}
-.tourney-links{display:flex;gap:0.5rem;flex-wrap:wrap;}
-.tourney-link{font-family:'DM Mono',monospace;font-size:0.42rem;letter-spacing:0.15em;text-transform:uppercase;padding:0.3rem 0.7rem;border:1px solid rgba(192,144,48,0.3);color:rgba(240,230,204,0.55);transition:all 0.15s;text-decoration:none;}
+.t-eagle{color:var(--green);border-color:var(--green);}
+.t-birdie{color:#5a9adc;border-color:#5a9adc;}
+.t-bogey{color:#e08842;border-color:#e08842;}
+.t-pretender{color:#a06aba;border-color:#a06aba;}
+.t-hacker{color:rgba(245,237,224,0.35);border-color:rgba(245,237,224,0.2);}
+.tourney-links{display:flex;gap:0.4rem;flex-wrap:wrap;}
+.tourney-link{font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.12em;text-transform:uppercase;padding:0.38rem 0.75rem;border:1px solid var(--border);color:var(--muted);transition:all 0.15s;text-decoration:none;border-radius:3px;}
 .tourney-link:hover{border-color:var(--gold);color:var(--gold);}
-.tourney-link.primary{border-color:rgba(192,144,48,0.5);color:var(--gold);}
-.active-badge{position:absolute;top:1rem;right:1rem;font-family:'DM Mono',monospace;font-size:0.38rem;letter-spacing:0.18em;text-transform:uppercase;padding:0.15rem 0.5rem;background:rgba(42,122,32,0.15);border:1px solid rgba(42,122,32,0.4);color:#4a9a40;}
+.tourney-link.primary{border-color:rgba(192,144,48,0.5);color:var(--gold);background:rgba(192,144,48,0.08);}
+.tourney-link.primary:hover{background:rgba(192,144,48,0.18);}
+.active-badge{position:absolute;top:1rem;right:1rem;font-family:'DM Mono',monospace;font-size:0.48rem;letter-spacing:0.15em;text-transform:uppercase;padding:0.2rem 0.55rem;background:rgba(39,174,96,0.12);border:1px solid rgba(39,174,96,0.35);color:var(--green);border-radius:3px;}
 
 /* INVITE CARDS */
-.invite-card{background:var(--card);padding:1.1rem 1.4rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;}
+.invite-card{background:rgba(192,144,48,0.06);border:1px solid rgba(192,144,48,0.28);border-radius:6px;padding:1.1rem 1.35rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;}
 .invite-card-info{display:flex;flex-direction:column;gap:0.3rem;}
-.invite-card-name{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--cream);}
-.invite-card-msg{font-family:'Barlow',sans-serif;font-size:0.78rem;color:var(--muted);}
+.invite-card-name{font-family:'Playfair Display',serif;font-size:1.05rem;font-weight:700;color:var(--cream);}
+.invite-card-msg{font-family:'Barlow',sans-serif;font-size:0.8rem;color:var(--muted);}
 .invite-actions{display:flex;gap:0.5rem;flex-shrink:0;}
-.invite-btn{font-family:'DM Mono',monospace;font-size:0.42rem;letter-spacing:0.15em;text-transform:uppercase;padding:0.35rem 0.85rem;border:1px solid;cursor:pointer;background:transparent;transition:all 0.15s;}
-.invite-btn.accept{color:#4a9a40;border-color:#4a9a40;}
-.invite-btn.accept:hover{background:#4a9a40;color:#fff;}
-.invite-btn.decline{color:rgba(240,230,204,0.3);border-color:rgba(240,230,204,0.15);}
+.invite-btn{font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.15em;text-transform:uppercase;padding:0.42rem 1rem;border:1px solid;cursor:pointer;background:transparent;transition:all 0.15s;border-radius:3px;}
+.invite-btn.accept{color:var(--green);border-color:var(--green);}
+.invite-btn.accept:hover{background:var(--green);color:var(--ink);}
+.invite-btn.decline{color:var(--muted);border-color:var(--border);}
 .invite-btn.decline:hover{color:var(--red);border-color:var(--red);}
 
 /* SCORE SUMMARY */
-.tourney-summary{font-family:'DM Mono',monospace;font-size:0.42rem;letter-spacing:0.12em;color:var(--muted);display:flex;gap:0.85rem;}
-.tourney-summary span{color:rgba(192,144,48,0.55);}
+.tourney-summary{font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.1em;color:var(--muted);display:flex;gap:0.85rem;}
+.tourney-summary span{color:var(--gold-p);font-weight:500;}
 
 /* EMPTY */
-.no-tourneys{text-align:center;padding:4rem 2rem;color:var(--muted);font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.2em;text-transform:uppercase;}
+.no-tourneys{text-align:center;padding:3rem 2rem;color:var(--muted);font-family:'DM Mono',monospace;font-size:0.62rem;letter-spacing:0.2em;text-transform:uppercase;background:var(--surface);border:1px dashed var(--border);border-radius:6px;}
 
-/* LOGOUT */
-.logout-row{display:flex;justify-content:flex-end;margin-top:1rem;}
-.logout-btn{font-family:'DM Mono',monospace;font-size:0.46rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);background:none;border:none;cursor:pointer;padding:0;}
-.logout-btn:hover{color:var(--gold);}
+/* INSTALL + DONATE + SIGN OUT — utility blocks */
+.utility-card{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:1.1rem 1.3rem;text-decoration:none;color:var(--cream);display:flex;align-items:center;gap:0.85rem;transition:border-color 0.15s;}
+.utility-card:hover{border-color:rgba(192,144,48,0.4);}
+.logout-row{display:flex;justify-content:center;margin-top:2.5rem;padding-top:1.5rem;border-top:1px solid var(--border);}
+.logout-btn{font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);background:none;border:1px solid var(--border);padding:0.55rem 1.3rem;border-radius:3px;cursor:pointer;transition:all 0.15s;}
+.logout-btn:hover{color:var(--gold);border-color:var(--gold);}
 
 /* PLATFORM HAMBURGER */
 .player-ham{display:none;align-items:center;justify-content:center;background:none;border:none;color:rgba(240,230,204,.7);cursor:pointer;padding:.4rem;flex-shrink:0;}
@@ -150,50 +183,48 @@ a{color:inherit;text-decoration:none;}
 <!-- LOGIN -->
 <div id="loginWrap" class="login-wrap">
   <div class="login-box">
-    <div class="login-eyebrow">TOURney</div>
-    <div class="login-title">My <em>Golf</em></div>
-    <div class="login-sub">Tournament history &amp; upcoming events</div>
+    <div class="login-eyebrow">My Golf</div>
+    <div class="login-title">Welcome <em>Back.</em></div>
+    <div class="login-sub">Sign in to your tournament history</div>
 
     <!-- SIGN IN -->
     <div id="signInMode">
       <div class="fg">
-        <label for="emailInput">Email Address</label>
-        <input type="email" id="emailInput" placeholder="your@email.com" autocomplete="email">
+        <label for="emailInput">Email</label>
+        <input type="email" id="emailInput" placeholder="you@example.com" autocomplete="email">
       </div>
       <div class="fg">
         <label for="passwordInput">Password</label>
-        <input type="password" id="passwordInput" placeholder="Enter your password" autocomplete="current-password">
+        <input type="password" id="passwordInput" placeholder="Your password" autocomplete="current-password">
       </div>
       <div class="login-err" id="signInErr"></div>
-      <button class="btn-primary" id="signInBtn" onclick="doSignIn()">Sign In</button>
+      <button class="btn-primary" id="signInBtn" onclick="doSignIn()">Sign In →</button>
       <div style="margin-top:1rem;text-align:center;">
-        <a onclick="showMode('forgot')" style="font-family:'DM Mono',monospace;font-size:0.46rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);cursor:pointer;">Forgot password?</a>
+        <a class="login-link" onclick="showMode('forgot')">Forgot password?</a>
       </div>
-      <div style="margin-top:1.5rem;padding-top:1.25rem;border-top:1px solid rgba(192,144,48,0.15);text-align:center;">
-        <div style="font-family:'DM Mono',monospace;font-size:0.44rem;letter-spacing:0.2em;text-transform:uppercase;color:rgba(240,230,204,0.35);margin-bottom:0.6rem;">No account yet?</div>
-        <a href="/player-upgrade" style="display:inline-block;font-family:'Barlow Condensed',sans-serif;font-size:0.72rem;font-weight:700;letter-spacing:0.22em;text-transform:uppercase;color:var(--gold);border:1px solid rgba(192,144,48,0.4);padding:0.55rem 1.25rem;transition:all 0.15s;" onmouseover="this.style.background='rgba(192,144,48,0.1)';this.style.borderColor='var(--gold)';" onmouseout="this.style.background='';this.style.borderColor='rgba(192,144,48,0.4)';">Create My Golf Account — Free</a>
-      </div>
+      <div class="login-or">or</div>
+      <div class="login-foot">No account yet? <a href="/player-upgrade">Create one</a></div>
     </div>
 
     <!-- FORGOT PASSWORD -->
     <div id="forgotMode" style="display:none;">
-      <div style="font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-bottom:1.25rem;">Enter your email — we'll send a reset link.</div>
+      <div class="login-sub">Enter your email — we'll send a reset link.</div>
       <div class="fg">
-        <label for="forgotEmail">Email Address</label>
-        <input type="email" id="forgotEmail" placeholder="your@email.com" autocomplete="email">
+        <label for="forgotEmail">Email</label>
+        <input type="email" id="forgotEmail" placeholder="you@example.com" autocomplete="email">
       </div>
       <div class="login-err" id="forgotErr"></div>
-      <button class="btn-primary" id="forgotBtn" onclick="doForgot()">Send Reset Link</button>
+      <button class="btn-primary" id="forgotBtn" onclick="doForgot()">Send Reset Link →</button>
       <div style="margin-top:1rem;text-align:center;">
-        <a onclick="showMode('signin')" style="font-family:'DM Mono',monospace;font-size:0.46rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);cursor:pointer;">← Back to sign in</a>
+        <a class="login-link" onclick="showMode('signin')">← Back to sign in</a>
       </div>
     </div>
 
     <!-- RESET SENT -->
     <div id="resetSentMode" style="display:none;text-align:center;padding:0.5rem 0;">
-      <div style="font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.25em;text-transform:uppercase;color:var(--gold);margin-bottom:0.75rem;">Reset link sent</div>
-      <div style="font-family:'Barlow',sans-serif;font-size:0.88rem;color:rgba(240,230,204,0.55);line-height:1.6;margin-bottom:1.25rem;">Check your inbox and follow the link to set a new password.</div>
-      <a onclick="showMode('signin')" style="font-family:'DM Mono',monospace;font-size:0.46rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);cursor:pointer;">← Back to sign in</a>
+      <div style="font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);margin-bottom:0.75rem;">Reset link sent</div>
+      <div style="font-family:'Barlow',sans-serif;font-size:0.88rem;color:var(--muted);line-height:1.6;margin-bottom:1.25rem;">Check your inbox and follow the link to set a new password.</div>
+      <a class="login-link" onclick="showMode('signin')">← Back to sign in</a>
     </div>
   </div>
 </div>
@@ -202,7 +233,7 @@ a{color:inherit;text-decoration:none;}
 <div id="portalWrap" class="portal">
 
   <div class="portal-header">
-    <div class="portal-eyebrow">Player Portal</div>
+    <div class="portal-eyebrow">My Golf · Player Dashboard</div>
     <div class="portal-name" id="portalName">—</div>
     <div class="portal-email" id="portalEmail">—</div>
     <div class="portal-phone" id="portalPhone" style="display:none"></div>
@@ -211,7 +242,20 @@ a{color:inherit;text-decoration:none;}
   <div class="stats-strip">
     <div class="stat-cell"><div class="stat-val" id="statTourneys">—</div><div class="stat-label">Tournaments</div></div>
     <div class="stat-cell"><div class="stat-val" id="statRounds">—</div><div class="stat-label">Rounds</div></div>
-    <div class="stat-cell"><div class="stat-val" id="statHios">—</div><div class="stat-label">Hole-in-Ones</div></div>
+    <div class="stat-cell"><div class="stat-val" id="statHios">—</div><div class="stat-label">Holes in One</div></div>
+  </div>
+
+  <!-- QUICK ACTIONS -->
+  <div class="section-label">Quick Actions</div>
+  <div class="quick-actions">
+    <a href="/create" class="qa-card primary">
+      <div class="qa-icon">+</div>
+      <div class="qa-text"><div class="qa-title">Create Tournament</div><div class="qa-sub">Start a new event</div></div>
+    </a>
+    <a href="https://tourney.greenskeeper.studio" class="qa-card">
+      <div class="qa-icon">⌂</div>
+      <div class="qa-text"><div class="qa-title">Browse Platform</div><div class="qa-sub">Find a tournament</div></div>
+    </a>
   </div>
 
   <!-- HANDICAP / GOLF PROFILE -->
@@ -220,50 +264,44 @@ a{color:inherit;text-decoration:none;}
     <div id="hcapContent"></div>
   </div>
 
-  <!-- CREATE TOURNAMENT CTA -->
-  <div style="margin-bottom:2.5rem;display:flex;justify-content:center;">
-    <a href="/create" style="display:inline-block;font-family:'Barlow Condensed',sans-serif;font-size:0.85rem;font-weight:700;letter-spacing:0.22em;text-transform:uppercase;color:var(--ink,#0a0602);background:var(--gold);padding:0.85rem 1.6rem;text-decoration:none;border:1px solid var(--gold);transition:opacity 0.15s;" onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">+ Create Tournament</a>
-  </div>
-
   <!-- INVITATIONS -->
   <div id="invitesSection" style="display:none;margin-bottom:2.5rem;">
-    <div class="section-label" style="color:var(--gold);">You've Been Invited</div>
-    <div id="inviteCards" style="display:flex;flex-direction:column;gap:1px;background:rgba(192,144,48,0.12);"></div>
+    <div class="section-label" style="color:var(--gold-p);">You've Been Invited</div>
+    <div id="inviteCards" style="display:flex;flex-direction:column;gap:0.6rem;"></div>
   </div>
 
   <div class="section-label">My Tournaments</div>
   <div id="tourneyGrid" class="tourney-grid"></div>
-  <div id="noTourneys" class="no-tourneys" style="display:none">No tournament history found.</div>
+  <div id="noTourneys" class="no-tourneys" style="display:none">No tournament history yet. Create or join one above.</div>
 
   <div id="installBanner" style="display:none;margin-bottom:1.5rem;">
-    <a href="/install" style="display:flex;align-items:center;gap:0.75rem;background:var(--card2);padding:1rem 1.25rem;border:1px solid var(--border);text-decoration:none;">
-      <span style="font-size:1.2rem;">&#128242;</span>
-      <div>
-        <div style="font-family:'Barlow Condensed',sans-serif;font-size:0.75rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold);">Install App</div>
-        <div style="font-size:0.72rem;color:var(--muted);margin-top:0.15rem;">Add TOURney to your home screen</div>
-      </div>
+    <a href="/install" class="utility-card">
+      <div class="qa-icon">&#128242;</div>
+      <div class="qa-text"><div class="qa-title">Install App</div><div class="qa-sub">Add TOURney to your home screen</div></div>
     </a>
   </div>
   <!-- DONATIONS -->
   <div id="donateSection" style="display:none;margin-bottom:2.5rem;">
     <div class="section-label">Support The Platform</div>
-    <p style="font-size:0.82rem;color:var(--muted);margin-bottom:1rem;">Buy the organizer a round. Donations go directly to keeping TOURney running.</p>
-    <div style="display:flex;gap:0.6rem;flex-wrap:wrap;margin-bottom:0.75rem;">
-      <button class="logout-btn" style="padding:0.4rem 0.9rem;font-size:0.75rem;" onclick="document.getElementById('donateCustom').value=5;startDonation(5)">$5</button>
-      <button class="logout-btn" style="padding:0.4rem 0.9rem;font-size:0.75rem;" onclick="document.getElementById('donateCustom').value=10;startDonation(10)">$10</button>
-      <button class="logout-btn" style="padding:0.4rem 0.9rem;font-size:0.75rem;" onclick="document.getElementById('donateCustom').value=25;startDonation(25)">$25</button>
-      <button class="logout-btn" style="padding:0.4rem 0.9rem;font-size:0.75rem;" onclick="document.getElementById('donateCustom').value=50;startDonation(50)">$50</button>
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:1.3rem 1.4rem;">
+      <p style="font-family:'Barlow',sans-serif;font-size:0.85rem;color:var(--muted);margin-bottom:1.1rem;line-height:1.5;">Buy the organizer a round. Donations go directly to keeping TOURney running.</p>
+      <div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:0.85rem;">
+        <button class="tourney-link" style="cursor:pointer;background:none;" onclick="document.getElementById('donateCustom').value=5;startDonation(5)">$5</button>
+        <button class="tourney-link" style="cursor:pointer;background:none;" onclick="document.getElementById('donateCustom').value=10;startDonation(10)">$10</button>
+        <button class="tourney-link" style="cursor:pointer;background:none;" onclick="document.getElementById('donateCustom').value=25;startDonation(25)">$25</button>
+        <button class="tourney-link" style="cursor:pointer;background:none;" onclick="document.getElementById('donateCustom').value=50;startDonation(50)">$50</button>
+      </div>
+      <div style="display:flex;gap:0.5rem;align-items:center;flex-wrap:wrap;">
+        <span style="font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);">Custom</span>
+        <input type="number" id="donateCustom" placeholder="$" min="1" max="999" style="width:5rem;background:var(--surface);border:1px solid var(--border);border-radius:3px;padding:0.4rem 0.6rem;color:var(--cream);font-family:'DM Mono',monospace;font-size:0.75rem;outline:none;">
+        <button class="tourney-link primary" style="cursor:pointer;background:rgba(192,144,48,0.08);" onclick="startDonation(parseInt(document.getElementById('donateCustom').value)||0)">Donate</button>
+      </div>
+      <div id="donateMsg" style="font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.05em;color:var(--muted);min-height:1.2rem;margin-top:0.85rem;"></div>
     </div>
-    <div style="display:flex;gap:0.5rem;align-items:center;margin-bottom:0.75rem;flex-wrap:wrap;">
-      <span style="font-size:0.8rem;color:var(--muted);">Custom amount:</span>
-      <input type="number" id="donateCustom" placeholder="$" min="1" max="999" style="width:4.5rem;background:rgba(10,6,2,0.65);border:1px solid rgba(192,144,48,0.18);padding:0.4rem 0.6rem;color:var(--cream,#f0e6cc);font-size:0.85rem;outline:none;">
-      <button class="logout-btn" style="padding:0.4rem 0.9rem;font-size:0.75rem;" onclick="startDonation(parseInt(document.getElementById('donateCustom').value)||0)">Donate</button>
-    </div>
-    <div id="donateMsg" style="font-size:0.78rem;color:var(--muted);min-height:1.2rem;"></div>
   </div>
 
   <div class="logout-row">
-    <button class="logout-btn" id="logoutBtn">Sign out</button>
+    <button class="logout-btn" id="logoutBtn">Sign Out</button>
   </div>
 </div>
 
