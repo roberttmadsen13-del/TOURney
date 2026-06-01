@@ -234,7 +234,7 @@
 
       <div class="fl" style="margin-top:1.75rem;margin-bottom:.65rem">Team Structure</div>
       <div class="days-row" id="teamCountBtns"></div>
-      <div class="days-row" id="teamModeBtns" style="display:none;margin-top:.55rem"></div>
+      <div class="days-row" id="teamModeBtns" style="display:none;margin-top:.85rem;flex-wrap:wrap"></div>
 
       <div class="fl" style="margin-top:1.75rem;margin-bottom:.75rem">Number of Rounds</div>
       <div class="days-row" id="daysBtns"></div>
@@ -609,28 +609,10 @@
     }
 
     structOpts.forEach(o => {
+      const b = document.createElement('button');
       const isActive = o.s === 'pairs' ? S.structure === 'pairs'
                      : o.s === 'individual' ? S.structure === 'individual'
                      : S.structure === 'team' && S.teamCount === o.n;
-
-      // 2 Teams button doubles as a sub-mode dropdown (2v2 / Slayer 3v1) when active
-      if (o.s === 'team' && o.n === 2 && isActive) {
-        const sel = document.createElement('select');
-        sel.className = 'day-btn on';
-        sel.style.cssText = 'width:auto;padding:0 1.6rem 0 .75rem;min-width:2.4rem;height:2.4rem;background-image:linear-gradient(45deg,transparent 50%,var(--gold) 50%),linear-gradient(135deg,var(--gold) 50%,transparent 50%);background-position:calc(100% - .8rem) 50%,calc(100% - .55rem) 50%;background-size:.3rem .3rem;background-repeat:no-repeat;cursor:pointer;';
-        sel.innerHTML = `<option value="2v2">2 Teams · 2v2</option><option value="slayer_3v1">2 Teams · Slayer 3v1</option>`;
-        sel.value = S.teamMode === 'slayer_3v1' ? 'slayer_3v1' : '2v2';
-        sel.onchange = () => {
-          S.teamMode = sel.value;
-          if (sel.value === 'slayer_3v1') applySlayerFormats();
-          else clearSlayerFormats();
-          renderFormat();
-        };
-        tcRow.appendChild(sel);
-        return;
-      }
-
-      const b = document.createElement('button');
       b.className = 'day-btn' + (isActive ? ' on' : '');
       b.textContent = o.label;
       b.style.cssText = 'width:auto;padding:0 .75rem;min-width:2.4rem;';
@@ -651,9 +633,35 @@
       tcRow.appendChild(b);
     });
 
-    // Hide legacy sub-row (now folded into 2 Teams dropdown)
+    // Sub-row: 2-Team matchup mode (2v2 vs Slayer 3v1) — shows only when 2 Teams active
     const modeRow = document.getElementById('teamModeBtns');
-    if (modeRow) { modeRow.innerHTML = ''; modeRow.style.display = 'none'; }
+    modeRow.innerHTML = '';
+    if (S.structure === 'team' && S.teamCount === 2) {
+      modeRow.style.display = '';
+      const lbl = document.createElement('div');
+      lbl.className = 'fl';
+      lbl.style.cssText = 'flex-basis:100%;margin:0 0 .35rem 0;color:var(--gold);font-size:.5rem;letter-spacing:.22em';
+      lbl.textContent = '2-Team Matchup';
+      modeRow.appendChild(lbl);
+      [
+        { v:'2v2',        label:'2 v 2' },
+        { v:'slayer_3v1', label:'Slayer 3 v 1' },
+      ].forEach(m => {
+        const b = document.createElement('button');
+        b.className = 'day-btn' + (S.teamMode === m.v ? ' on' : '');
+        b.textContent = m.label;
+        b.style.cssText = 'width:auto;padding:0 .9rem;min-width:2.4rem;';
+        b.onclick = () => {
+          S.teamMode = m.v;
+          if (m.v === 'slayer_3v1') applySlayerFormats();
+          else clearSlayerFormats();
+          renderFormat();
+        };
+        modeRow.appendChild(b);
+      });
+    } else {
+      modeRow.style.display = 'none';
+    }
 
     // Auto-sync pairCount from maxPlayers when structure=pairs
     if (S.structure === 'pairs') { S.pairCount = Math.floor(S.maxPlayers / 2); S.teamCount = S.pairCount; }
