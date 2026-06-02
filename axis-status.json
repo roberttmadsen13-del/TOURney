@@ -1,7 +1,14 @@
 {
-  "updated_at": "2026-05-29T06:00:00Z",
+  "updated_at": "2026-06-02T02:51:26.046Z",
   "description": "Living state for all TOURney platform axes. One entry per axis. Updated by every tourney-* skill. Agents read this for context (50 tokens) instead of parsing HTML artifacts.",
-  "stages": ["review", "plan", "runbook", "executing", "audit", "concluded"],
+  "stages": [
+    "review",
+    "plan",
+    "runbook",
+    "executing",
+    "audit",
+    "concluded"
+  ],
   "axes": {
     "architecture": {
       "status": "executing",

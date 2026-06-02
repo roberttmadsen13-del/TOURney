@@ -138,9 +138,9 @@ footer span{color:var(--gold);}
   <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Review</div></div>
   <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Plan</div></div>
   <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Runbook</div></div>
-  <div class="lc-stage"><div class="lc-pill"></div><div class="lc-label">Executing</div></div>
-  <div class="lc-stage"><div class="lc-pill"></div><div class="lc-label">Audit</div></div>
-  <div class="lc-stage"><div class="lc-pill"></div><div class="lc-label">Concluded</div></div>
+  <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Executing</div></div>
+  <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Audit</div></div>
+  <div class="lc-stage lc-done"><div class="lc-pill"></div><div class="lc-label">Concluded</div></div>
 </div>
 <!-- LIFECYCLE-BAR-END -->
 
@@ -452,8 +452,54 @@ footer span{color:var(--gold);}
 <section id="executing">
 <div class="wrapper">
 <!-- EXECUTING-CONTENT-START -->
-<div class="stage-pending">
-  <p>Awaiting execution. Run <code>/tourney-execute 6-1-26-formats-review.html</code> to proceed.</p>
+<div class="section-header">
+  <div class="section-eyebrow">Stage 4 — Executing</div>
+  <h2 class="section-title">Execution Log</h2>
+  <p class="section-desc">2026-06-01 · Claude Opus 4.7</p>
+</div>
+<div class="exec-step">
+  <span class="exec-badge exec-done">Done</span>
+  <div class="exec-body"><strong>Step 1 — Add <code>lockScope</code> to every FORMAT_META entry</strong>Tagged all 27 formats: 13 <code>nine</code>, 11 <code>round</code>, 3 <code>tourney</code>. <code>lib/formats.js</code> rewritten.</div>
+</div>
+<div class="exec-step">
+  <span class="exec-badge exec-done">Done</span>
+  <div class="exec-body"><strong>Step 2 — Normalizer + helpers in <code>lib/formats.js</code></strong>Added <code>window.normalizeRoundFormats(roundFormats, days)</code>, <code>FORMAT_SCOPE</code>, <code>FORMAT_SCOPE_BADGE</code>, <code>FORMAT_ROUND_LOCKED</code>, <code>FORMAT_TOURNEY_LOCKED</code>. Coercion logs console.warn.</div>
+</div>
+<div class="exec-step">
+  <span class="exec-badge exec-done">Done</span>
+  <div class="exec-body"><strong>Step 3 — Cascade lock in <code>create.html</code></strong><code>cascadeLock()</code> hooked into each select's change. Round-locked formats disable opposite nine; tourney-locked formats disable every other select. Opacity 0.55, title hint, persists until source select changes.</div>
+</div>
+<div class="exec-step">
+  <span class="exec-badge exec-done">Done</span>
+  <div class="exec-body"><strong>Step 4 — Sanitize on insert in <code>create.html</code></strong>Rounds insert payload wrapped in <code>normalizeRoundFormats</code> belt-and-suspenders. Even if UI bug regresses, DB writes clean.</div>
+</div>
+<div class="exec-step">
+  <span class="exec-badge exec-done">Done</span>
+  <div class="exec-body"><strong>Step 5 — Enforce + repair banner in <code>admin.html</code></strong><code>_cascadeAdminLock()</code> mirrors create. <code>_checkRepairBanner()</code> + <code>_repairFormats()</code> detect legacy illegal combos, show orange banner with Repair button that normalizes + saves.</div>
+</div>
+<div class="exec-step">
+  <span class="exec-badge exec-done">Done</span>
+  <div class="exec-body"><strong>Step 6 — Defensive read in <code>scorecard.html</code></strong>After roundFormats hydrate at line 614, calls <code>normalizeRoundFormats</code>. Also added <code>&lt;script src="/lib/formats.js"&gt;</code> (was missing).</div>
+</div>
+<div class="exec-step">
+  <span class="exec-badge exec-done">Done</span>
+  <div class="exec-body"><strong>Step 7 — Defensive read in <code>scoreboard.html</code></strong>Same pattern at line 555. Added <code>&lt;script src="/lib/formats.js"&gt;</code> (was missing).</div>
+</div>
+<div class="exec-step">
+  <span class="exec-badge exec-done">Done</span>
+  <div class="exec-body"><strong>Step 8 — Trim <code>create.html</code> fallback FMT</strong>Reduced inline fallback to 1-entry stub. <code>/lib/formats.js</code> is the live source; degraded picker only shows on outright network failure of the script.</div>
+</div>
+<div class="exec-step">
+  <span class="exec-badge exec-blocked">Blocked</span>
+  <div class="exec-body"><strong>Step 9 — DB CHECK constraint migration</strong>SQL file written at <code>migrations/024_rounds_format_scope_check.sql</code>. <strong>Cannot apply:</strong> Supabase MCP returned "Server not found" twice. Rob must apply via Supabase Studio SQL editor or restart the MCP. Migration includes pre-flight repair pass so existing illegal rows get fixed before CHECK is added.</div>
+</div>
+<div class="exec-step">
+  <span class="exec-badge exec-done">Done</span>
+  <div class="exec-body"><strong>Step 10 — Scope badges in select labels</strong>Format options now prefix labels with <code>[9]</code>/<code>[18]</code>/<code>[ALL]</code> in create.html (via <code>_badge()</code>) and admin.html (via <code>_fmtBadge()</code>). Users see the constraint before clicking.</div>
+</div>
+<div class="exec-step">
+  <span class="exec-badge exec-blocked">Blocked</span>
+  <div class="exec-body"><strong>Step 11 — Full e2e QA via Chrome DevTools</strong>Chrome DevTools MCP refused: profile lock conflict ("browser already running"). Rob must close existing Chrome instances or relaunch Chrome with <code>--remote-debugging-port=9222</code> so the MCP can attach.</div>
 </div>
 <!-- EXECUTING-CONTENT-END -->
 </div>
@@ -462,8 +508,32 @@ footer span{color:var(--gold);}
 <section id="audit">
 <div class="wrapper">
 <!-- AUDIT-CONTENT-START -->
-<div class="stage-pending">
-  <p>Awaiting execution. Run <code>/tourney-execute 6-1-26-formats-review.html</code> to proceed.</p>
+<div class="section-header">
+  <div class="section-eyebrow">Stage 5 — Audit</div>
+  <h2 class="section-title">Audit Results</h2>
+  <p class="section-desc">Grade: B-. 2026-06-01 · Claude Opus 4.7. Code-level audit only — browser/DevTools and DB verification blocked.</p>
+</div>
+<div class="score-grid">
+  <div class="score-cell"><div class="score-num score-gold">B-</div><div class="score-label">Feature Depth</div></div>
+  <div class="score-cell"><div class="score-num score-green">9/11</div><div class="score-label">Steps Done</div></div>
+  <div class="score-cell"><div class="score-num score-red">2</div><div class="score-label">Blocked</div></div>
+</div>
+<div class="card">
+  <div class="card-title">What Shipped</div>
+  <ul>
+    <li><code>lib/formats.js</code>: lockScope on all 27 entries + normalizer + scope helpers.</li>
+    <li><code>create.html</code>: cascade lock, scope badges, sanitize on insert, trimmed fallback FMT.</li>
+    <li><code>admin.html</code>: cascade lock, scope badges, repair banner for legacy illegal combos.</li>
+    <li><code>scorecard.html</code> + <code>scoreboard.html</code>: defensive <code>normalizeRoundFormats</code> on hydrate, formats.js script tag added.</li>
+    <li><code>migrations/024_rounds_format_scope_check.sql</code>: DB CHECK + pre-flight repair (file only — apply blocked).</li>
+  </ul>
+</div>
+<div class="card">
+  <div class="card-title">Still Open</div>
+  <ul>
+    <li><strong>Step 9 (DB CHECK):</strong> Supabase MCP returned "Server not found". Rob must apply migration 024 via Studio SQL editor or restart MCP.</li>
+    <li><strong>Step 11 (e2e QA):</strong> Chrome DevTools MCP refused — profile lock. Rob must close existing Chrome or relaunch with <code>--remote-debugging-port=9222</code>. Until then, browser-side verification of cascade lock, repair banner, scope badges, scorecard/scoreboard rendering = unverified.</li>
+  </ul>
 </div>
 <!-- AUDIT-CONTENT-END -->
 </div>

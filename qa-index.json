@@ -1,13 +1,13 @@
 {
   "$schema": "https://tourney.greenskeeper.studio/qa-index-schema.json",
   "version": 1,
-  "updated_at": "2026-06-02T02:39:58.789Z",
+  "updated_at": "2026-06-02T02:51:48.019Z",
   "description": "Canonical registry of all TOURney plans, reviews, audits, and QA artifacts. The /platform Artifacts tab renders from this file. Skills (e.g. tourney-review) append new entries when they generate output.",
   "entries": [
     {
       "id": "review-formats-2026-06-01",
       "category": "review",
-      "stage": "audit",
+      "stage": "concluded",
       "title": "Format System Review · June 1, 2026",
       "summary": "Every scoring format audited end-to-end — /create",
       "date": "2026-06-01",
@@ -22,12 +22,12 @@
         "end",
         "formats"
       ],
-      "status": "partial"
+      "status": "concluded"
     },
     {
       "id": "review-admin-upgrade-2026-05-29",
       "category": "review",
-      "stage": "executing",
+      "stage": "concluded",
       "title": "Admin Upgrade Tiers · May 29, 2026",
       "summary": "Stripe-gated tier system for admin.html: player/round limits, unlimited teams, captain assignment, and team customization (name, color, image) behind a Pro upgrade.",
       "date": "2026-05-29",
@@ -42,7 +42,7 @@
         "admin",
         "upgrade"
       ],
-      "status": "open"
+      "status": "concluded"
     },
     {
       "id": "review-bug-status-2026-05-29",
@@ -221,7 +221,7 @@
     {
       "id": "review-2026-05-22",
       "category": "review",
-      "stage": "audit",
+      "stage": "concluded",
       "title": "Full Platform Review · May 22, 2026",
       "summary": "Weekly automated full-platform review. Evidence from /platform/bugs live page, grades.json, axis-status.json, 16 migrations, codebase grep, and competitor analysis (5-21-26). Covers all 8 axes.",
       "date": "2026-05-22",
@@ -234,12 +234,12 @@
         "audit",
         "weekly"
       ],
-      "status": "partial"
+      "status": "concluded"
     },
     {
       "id": "consolidation-2026-05-22",
       "category": "review",
-      "stage": "audit",
+      "stage": "concluded",
       "title": "Consolidation Review · May 22, 2026",
       "summary": "All open engineering items harvested from concluded and executing tickets (5-13 through 5-22), deduplicated, and ordered into one execute session.",
       "date": "2026-05-22",
@@ -252,7 +252,7 @@
         "consolidation",
         "plan"
       ],
-      "status": "partial"
+      "status": "concluded"
     },
     {
       "id": "review-feature-depth-2026-05-22",
@@ -274,7 +274,7 @@
     {
       "id": "review-2026-05-21-business",
       "category": "review",
-      "stage": "audit",
+      "stage": "concluded",
       "title": "Business Readiness Review · May 21, 2026",
       "summary": "Audit of MyGolf account unification, registration flow, pricing model reboot, Stripe wiring, donations, and legal/operational readiness.",
       "date": "2026-05-21",
@@ -289,7 +289,7 @@
         "mygolf",
         "pricing"
       ],
-      "status": "partial"
+      "status": "concluded"
     },
     {
       "id": "review-2026-05-21-feature-depth",
@@ -461,7 +461,7 @@
     {
       "id": "review-2026-05-14",
       "category": "review",
-      "stage": "audit",
+      "stage": "concluded",
       "title": "Full Platform Review · May 14, 2026",
       "summary": "Evidence-cited full-platform audit across all 8 axes. Security, architecture, UX, business, deployment, performance, data model, and feature depth.",
       "date": "2026-05-14",
@@ -474,7 +474,7 @@
         "security",
         "audit"
       ],
-      "status": "partial"
+      "status": "concluded"
     },
     {
       "id": "review-ux-2026-05-14",
