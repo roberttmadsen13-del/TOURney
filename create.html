@@ -666,47 +666,66 @@
     }
     const DAY_WORDS = ['One','Two','Three','Four','Five','Six','Seven'];
 
-    // Cascade lock: enforce lockScope across selects after any change
-    function cascadeLock() {
+    // Cascade lock: enforce lockScope. The select the user just touched is authoritative.
+    // changedDay/changedSide are passed when called from a change handler; null on initial render.
+    function cascadeLock(changedDay, changedSide) {
       const days = [];
       for (let i = 1; i <= S.days; i++) days.push(`day${i}`);
-      // Read live values from DOM
+      const get = (d, side) => document.getElementById(`fd-${d}-${side}`);
       const live = {};
       days.forEach(d => {
-        live[d] = {
-          front: document.getElementById(`fd-${d}-front`)?.value || 'stroke',
-          back:  document.getElementById(`fd-${d}-back`)?.value  || 'stroke',
-        };
+        live[d] = { front: get(d,'front')?.value || 'stroke', back: get(d,'back')?.value || 'stroke' };
       });
-      const normalized = (window.normalizeRoundFormats || ((x)=>x))(live, days);
-      // Detect tourney lock
-      let tourneyLock = null;
-      for (const d of days) {
-        if (_scope(normalized[d].front) === 'tourney') { tourneyLock = normalized[d].front; break; }
+
+      // Propagate FROM the changed select (user intent wins).
+      if (changedDay && changedSide) {
+        const v = live[changedDay][changedSide];
+        const scope = _scope(v);
+        if (scope === 'tourney') {
+          days.forEach(d => { live[d] = { front: v, back: v }; });
+        } else if (scope === 'round') {
+          const other = changedSide === 'front' ? 'back' : 'front';
+          live[changedDay][other] = v;
+        } else {
+          // User picked a nine-scope on changedSide. If other side is round/tourney, free it to stroke.
+          const other = changedSide === 'front' ? 'back' : 'front';
+          if (_scope(live[changedDay][other]) !== 'nine') live[changedDay][other] = 'stroke';
+          // Also clear any tourney lock left over on other days
+          days.forEach(d => {
+            if (d === changedDay) return;
+            if (_scope(live[d].front) === 'tourney') live[d].front = 'stroke';
+            if (_scope(live[d].back)  === 'tourney') live[d].back  = 'stroke';
+          });
+        }
       }
+
+      // Find current tourney lock (after propagation)
+      let tourneyLock = null, tourneyDay = null, tourneySide = null;
+      for (const d of days) {
+        if (_scope(live[d].front) === 'tourney') { tourneyLock = live[d].front; tourneyDay = d; tourneySide = 'front'; break; }
+        if (_scope(live[d].back)  === 'tourney') { tourneyLock = live[d].back;  tourneyDay = d; tourneySide = 'back';  break; }
+      }
+      if (tourneyLock) days.forEach(d => { live[d] = { front: tourneyLock, back: tourneyLock }; });
+
+      // Write back + set disabled state
       days.forEach(d => {
         ['front','back'].forEach(side => {
-          const sel = document.getElementById(`fd-${d}-${side}`);
+          const sel = get(d, side);
           if (!sel) return;
-          const v = normalized[d][side];
-          if (sel.value !== v) sel.value = v;
-          const scope = _scope(v);
-          // round-locked: disable opposite side; tourney-locked: disable everything
+          if (sel.value !== live[d][side]) sel.value = live[d][side];
           let lock = false;
-          if (tourneyLock) {
-            // The first source select that introduced the tourney lock stays editable
-            const srcDay = days.find(x => _scope(normalized[x].front) === 'tourney' || _scope(normalized[x].back) === 'tourney');
-            const srcSide = _scope(normalized[srcDay].front) === 'tourney' ? 'front' : 'back';
-            lock = !(d === srcDay && side === srcSide);
-          } else if (scope === 'round') {
-            // Source side stays editable; mirror side locks
-            const srcSide = _scope(live[d].front) === 'round' ? 'front' : 'back';
+          if (tourneyLock) lock = !(d === tourneyDay && side === tourneySide);
+          else if (_scope(live[d][side]) === 'round') {
+            // The side that introduced the round-lock stays editable
+            const otherSide = side === 'front' ? 'back' : 'front';
+            // If both sides equal the round value (matched), the one user clicked stays free
+            const srcSide = (changedDay === d && changedSide) ? changedSide : 'front';
             lock = (side !== srcSide);
           }
           sel.disabled = lock;
           sel.style.opacity = lock ? '0.55' : '';
-          sel.title = lock ? (tourneyLock ? 'Locked: tourney-wide format' : 'Locked: must match other 9') : '';
-          updateFmtDesc(d, side, v);
+          sel.title = lock ? (tourneyLock ? 'Locked: tournament-wide format' : 'Locked: must match other 9') : '';
+          updateFmtDesc(d, side, live[d][side]);
         });
       });
     }
@@ -733,7 +752,7 @@
       cont.appendChild(div);
       ['front','back'].forEach(side => {
         const sel = document.getElementById(`fd-${key}-${side}`);
-        sel.addEventListener('change', () => { updateFmtDesc(key, side, sel.value); cascadeLock(); });
+        sel.addEventListener('change', () => { updateFmtDesc(key, side, sel.value); cascadeLock(key, side); });
       });
       updateFmtDesc(key, 'front', fmt.front);
       updateFmtDesc(key, 'back', fmt.back);

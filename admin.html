@@ -1092,35 +1092,48 @@ function _readFormatUI() {
   return out;
 }
 
-// Apply lockScope rules across all selects after any change
-function _cascadeAdminLock() {
+// Apply lockScope rules. changedDay/changedSide = user-touched select (authoritative).
+function _cascadeAdminLock(changedDay, changedSide) {
   const live = _readFormatUI();
   const days = Object.keys(live);
-  const normalized = (window.normalizeRoundFormats || ((x)=>x))(live, days);
-  let tourneyLock = null;
+  if (changedDay && changedSide) {
+    const v = live[changedDay][changedSide];
+    const scope = _fmtScope(v);
+    if (scope === 'tourney') {
+      days.forEach(d => { live[d] = { front: v, back: v }; });
+    } else if (scope === 'round') {
+      const other = changedSide === 'front' ? 'back' : 'front';
+      live[changedDay][other] = v;
+    } else {
+      const other = changedSide === 'front' ? 'back' : 'front';
+      if (_fmtScope(live[changedDay][other]) !== 'nine') live[changedDay][other] = 'stroke';
+      days.forEach(d => {
+        if (d === changedDay) return;
+        if (_fmtScope(live[d].front) === 'tourney') live[d].front = 'stroke';
+        if (_fmtScope(live[d].back)  === 'tourney') live[d].back  = 'stroke';
+      });
+    }
+  }
+  let tourneyLock = null, tourneyDay = null, tourneySide = null;
   for (const d of days) {
-    if (_fmtScope(normalized[d].front) === 'tourney') { tourneyLock = normalized[d].front; break; }
+    if (_fmtScope(live[d].front) === 'tourney') { tourneyLock = live[d].front; tourneyDay = d; tourneySide = 'front'; break; }
+    if (_fmtScope(live[d].back)  === 'tourney') { tourneyLock = live[d].back;  tourneyDay = d; tourneySide = 'back';  break; }
   }
-  let srcDay = null, srcSide = null;
-  if (tourneyLock) {
-    srcDay = days.find(x => _fmtScope(live[x].front) === 'tourney' || _fmtScope(live[x].back) === 'tourney') || days[0];
-    srcSide = _fmtScope(live[srcDay].front) === 'tourney' ? 'front' : 'back';
-  }
+  if (tourneyLock) days.forEach(d => { live[d] = { front: tourneyLock, back: tourneyLock }; });
   days.forEach(d => {
     ['front','back'].forEach(side => {
       const sel = document.getElementById(`fmt-${d}-${side}`);
       if (!sel) return;
-      const v = normalized[d][side];
-      if (sel.value !== v) sel.value = v;
+      if (sel.value !== live[d][side]) sel.value = live[d][side];
       let lock = false;
-      if (tourneyLock) lock = !(d === srcDay && side === srcSide);
-      else if (_fmtScope(v) === 'round') {
-        const rs = _fmtScope(live[d].front) === 'round' ? 'front' : 'back';
-        lock = (side !== rs);
+      if (tourneyLock) lock = !(d === tourneyDay && side === tourneySide);
+      else if (_fmtScope(live[d][side]) === 'round') {
+        const srcSide = (changedDay === d && changedSide) ? changedSide : 'front';
+        lock = (side !== srcSide);
       }
       sel.disabled = lock;
       sel.style.opacity = lock ? '0.55' : '';
-      sel.title = lock ? (tourneyLock ? 'Locked: tourney-wide format' : 'Locked: must match other 9') : '';
+      sel.title = lock ? (tourneyLock ? 'Locked: tournament-wide format' : 'Locked: must match other 9') : '';
       _setFmtDesc(d, side);
     });
   });
@@ -1185,14 +1198,14 @@ function renderFormatSection() {
       <div class="format-day-label">${d.label}</div>
       <div class="format-nine-wrap">
         <div class="format-nine-label">Front 9 (Holes 1–9)</div>
-        <select class="format-select" id="fmt-${d.key}-front" onchange="_setFmtDesc('${d.key}','front');_cascadeAdminLock();">
+        <select class="format-select" id="fmt-${d.key}-front" onchange="_setFmtDesc('${d.key}','front');_cascadeAdminLock('${d.key}','front');">
           ${FORMAT_OPTIONS.map(o => `<option value="${o.value}"${front===o.value?' selected':''}>${_fmtBadge(o.value)}${o.label}</option>`).join('')}
         </select>
         <div id="fmtd-${d.key}-front" style="font-size:0.72rem;color:var(--muted);margin-top:0.35rem;line-height:1.45;">${FORMAT_DESCS[front]||''}</div>
       </div>
       <div class="format-nine-wrap">
         <div class="format-nine-label">Back 9 (Holes 10–18)</div>
-        <select class="format-select" id="fmt-${d.key}-back" onchange="_setFmtDesc('${d.key}','back');_cascadeAdminLock();">
+        <select class="format-select" id="fmt-${d.key}-back" onchange="_setFmtDesc('${d.key}','back');_cascadeAdminLock('${d.key}','back');">
           ${FORMAT_OPTIONS.map(o => `<option value="${o.value}"${back===o.value?' selected':''}>${_fmtBadge(o.value)}${o.label}</option>`).join('')}
         </select>
         <div id="fmtd-${d.key}-back" style="font-size:0.72rem;color:var(--muted);margin-top:0.35rem;line-height:1.45;">${FORMAT_DESCS[back]||''}</div>
@@ -1207,7 +1220,7 @@ function renderFormatSection() {
       days.map((d, i) => `<option value="${d.key}"${cur===d.key?' selected':''}>${'Day ' + (DAY_WORDS[i]||i+1)}</option>`).join('');
   }
   _checkRepairBanner();
-  _cascadeAdminLock();
+  _cascadeAdminLock(null,null);
 }
 
 async function saveFormats() {
