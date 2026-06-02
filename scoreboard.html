@@ -569,7 +569,7 @@ async function init() {
   _competitiveMode = modeRes.data?.value === 'competitive';
   const _modeBadge = document.getElementById('scoringModeBadge');
   if (_modeBadge) {
-    _modeBadge.textContent = _competitiveMode ? 'Competitive · Handicap-Adjusted' : 'Casual · Gross Score';
+    _modeBadge.textContent = _competitiveMode ? 'Competitive · Real Handicaps' : 'Casual · Handicap Tiers';
     _modeBadge.style.display = 'inline-block';
   }
   const _hdrTotal = document.getElementById('hdrTotal');
