@@ -103,6 +103,28 @@
       ],
       "destination": "https://tourney.greenskeeper.studio/t/bova/",
       "permanent": true
+    },
+    {
+      "source": "/t/:path*",
+      "has": [
+        {
+          "type": "host",
+          "value": "bova.greenskeeper.studio"
+        }
+      ],
+      "destination": "https://tourney.greenskeeper.studio/t/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/:path*",
+      "has": [
+        {
+          "type": "host",
+          "value": "bova.greenskeeper.studio"
+        }
+      ],
+      "destination": "https://tourney.greenskeeper.studio/t/bova/:path*",
+      "permanent": true
     }
   ],
   "rewrites": [
