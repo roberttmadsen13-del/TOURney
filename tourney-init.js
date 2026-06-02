@@ -381,19 +381,16 @@
     return `rgba(${r},${g},${b},${alpha})`;
   }
 
-  // Exposed globally — call with 3 primary hex colors to set all 9 brand CSS vars.
-  // Used by home.html which reads colors from its own settings fetch.
-  function applyBrandColors(primary, ink, bg) {
+  // Exposed globally — applies the tournament's brand (gold + derivatives).
+  // Base palette (--ink / --bg / --card / --border / --muted / --cream) is NOT set here —
+  // the canonical dark palette (/player + /create reference) is owned by each page's local :root
+  // and tokens.css. The legacy `ink` and `bg` args are accepted for backward compatibility but
+  // intentionally ignored — tournaments can no longer override the base palette to a light theme.
+  function applyBrandColors(primary, _legacyInk, _legacyBg) {
     const root = document.documentElement;
     root.style.setProperty('--gold',   primary);
-    root.style.setProperty('--ink',    ink);
-    root.style.setProperty('--bg',     bg);
     root.style.setProperty('--gold-l', _lightenHex(primary, 0.15));
     root.style.setProperty('--gold-p', _lightenHex(primary, 0.35));
-    root.style.setProperty('--border', _hexAlpha(primary, 0.28));
-    root.style.setProperty('--muted',  _hexAlpha(ink, 0.4));
-    root.style.setProperty('--card',   _lightenHex(bg, 0.04));
-    root.style.setProperty('--cream',  _lightenHex(bg, 0.08));
   }
 
   async function injectBrandColors(tournamentId) {

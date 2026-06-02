@@ -18,9 +18,9 @@
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Mono:wght@300;400;500&family=Barlow+Condensed:wght@300;400;600;700;800&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/tokens.css">
 <style>
-:root{--ink:#f5ede0;--gold:#c09030;--gold-l:#d4a840;--gold-p:#e8cc80;--cream:#f5ede0;--red:#c0392b;--border:rgba(245,237,224,0.13);--bg:#0f0a05;--card:rgba(245,237,224,0.05);--muted:rgba(245,237,224,0.5);}
+:root{--ink:#0f0a05;--gold:#c09030;--gold-l:#d4a840;--gold-p:#e8cc80;--cream:#f5ede0;--red:#c0392b;--border:rgba(245,237,224,0.13);--bg:#0f0a05;--card:rgba(245,237,224,0.05);--muted:rgba(245,237,224,0.5);}
 *{margin:0;padding:0;box-sizing:border-box;}
-body{background:var(--bg);color:var(--ink);font-family:'Barlow',sans-serif;font-weight:300;min-height:100vh;}
+body{background:var(--bg);color:var(--cream);font-family:'Barlow',sans-serif;font-weight:300;min-height:100vh;}
 a{color:inherit;text-decoration:none;}
 
 /* NAV */
@@ -39,9 +39,9 @@ a{color:inherit;text-decoration:none;}
 .login-sub{font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.35em;text-transform:uppercase;color:var(--muted);margin-bottom:2rem;}
 .fg{display:flex;flex-direction:column;gap:0.3rem;margin-bottom:1rem;}
 .fg label{font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.28em;text-transform:uppercase;color:var(--gold);}
-.fg input{background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;outline:none;width:100%;-webkit-appearance:none;}
+.fg input{background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--cream);font-family:'Barlow',sans-serif;font-size:0.9rem;outline:none;width:100%;-webkit-appearance:none;}
 .fg input:focus{border-color:var(--gold);}
-.btn-primary{width:100%;padding:0.9rem;background:var(--gold);color:#0f0a05;border:none;font-family:'Barlow Condensed',sans-serif;font-size:0.75rem;font-weight:700;letter-spacing:0.25em;text-transform:uppercase;cursor:pointer;transition:background 0.2s;}
+.btn-primary{width:100%;padding:0.9rem;background:var(--gold);color:var(--ink);border:none;font-family:'Barlow Condensed',sans-serif;font-size:0.75rem;font-weight:700;letter-spacing:0.25em;text-transform:uppercase;cursor:pointer;transition:background 0.2s;}
 .btn-primary:hover{background:var(--gold-l);}
 .btn-primary:disabled{background:rgba(192,144,48,0.3);cursor:not-allowed;}
 .login-err{font-family:'DM Mono',monospace;font-size:0.52rem;color:var(--red);margin-top:0.5rem;display:none;line-height:1.6;}
