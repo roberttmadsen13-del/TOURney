@@ -16,9 +16,15 @@
 <meta name="theme-color" content="#0a0703">
     <script>
     (function(){
+      // Consolidate auth origin: tenant subdomains must redirect to apex so
+      // Supabase localStorage session lives on one canonical origin.
       var h=location.hostname,s='.greenskeeper.studio',p='tourney.greenskeeper.studio';
-      if(h==='bova-app.vercel.app'){location.replace('https://bova.greenskeeper.studio/t/bova/');return;}
-      if(h!==p&&h.endsWith(s)){location.replace('/t/'+h.slice(0,h.length-s.length)+'/');}
+      var RESERVED={tourney:1,linksmith:1,www:1};
+      if(h==='bova-app.vercel.app'){location.replace('https://'+p+'/t/bova/');return;}
+      if(h!==p&&h.endsWith(s)){
+        var sub=h.slice(0,h.length-s.length);
+        if(!RESERVED[sub]){location.replace('https://'+p+'/t/'+sub+'/');}
+      }
     })();
   </script>
   <meta name="viewport" content="width=device-width,initial-scale=1">
