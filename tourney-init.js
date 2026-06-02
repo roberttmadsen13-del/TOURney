@@ -5,6 +5,25 @@
 
 (function(){var s=document.createElement('script');s.src='/error-monitor.js';s.async=true;document.head.appendChild(s);})();
 
+// Consolidate auth origin: any tenant subdomain ({slug}.greenskeeper.studio) → apex /t/{slug}/...
+// localStorage is sandboxed per-origin, so subdomain hops drop the Supabase session.
+// Single canonical origin (tourney.greenskeeper.studio) keeps session intact across navigation.
+(function(){
+  var h = location.hostname;
+  var SUFFIX = '.greenskeeper.studio';
+  var APEX = 'tourney.greenskeeper.studio';
+  var RESERVED = { tourney:1, linksmith:1, www:1 };
+  if (h.endsWith(SUFFIX) && h !== APEX) {
+    var sub = h.slice(0, h.length - SUFFIX.length);
+    if (!RESERVED[sub]) {
+      var onTenantPath = /^\/t\/[^/]+/.test(location.pathname);
+      var newPath = onTenantPath ? location.pathname : '/t/' + sub + (location.pathname === '/' ? '/' : location.pathname);
+      location.replace('https://' + APEX + newPath + location.search + location.hash);
+      return;
+    }
+  }
+})();
+
 // Android PWA back button guard — push sentinel once per session so back navigates
 // to tenant home instead of exiting the app.
 (function(){
