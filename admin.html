@@ -898,6 +898,15 @@ const PLATFORM_OWNER = 'robert.t.madsen13@gmail.com';
 const DATE_LABELS = {aug21:'Aug 21-24',aug28:'Aug 28-31',sep4:'Sep 4-7',sep11:'Sep 11-14',sep18:'Sep 18-21',sep25:'Sep 25-28',oct2:'Oct 2-5',oct9:'Oct 9-12'};
 const TIER_MAP = {scratch:'t-scratch',eagle:'t-eagle',birdie:'t-birdie',bogey:'t-bogey',pretender:'t-pretender',hacker:'t-hacker'};
 const TIER_LABELS = {scratch:'Scratch',eagle:'Eagle',birdie:'Birdie',bogey:'Bogey',pretender:'Pretenders',hacker:'Dreamers'};
+const TIER_STROKES = {scratch:0, eagle:5, birdie:10, bogey:15, pretender:22, hacker:30};
+let _tournamentMode = 'competitive';
+function playerStrokes(p) {
+  if (!p || p.handicap == null) return 0;
+  const k = String(p.handicap).toLowerCase();
+  if (k in TIER_STROKES) return TIER_STROKES[k];
+  const n = parseInt(p.handicap);
+  return Number.isFinite(n) ? n : 0;
+}
 
 function formatPhone(raw) {
   if (!raw) return '';
@@ -1042,13 +1051,14 @@ async function loadTeamNames() {
   // Build pair_name keys up to 24
   const pairNameKeys = Array.from({length:24}, (_,i) => `pair_${i+1}_name`);
   const { data } = await sb.from('settings').select('key,value').eq('tournament_id', _tid)
-    .in('key', ['team_count','structure','pair_count','team_mode', ...nameKeys, ...pairNameKeys]);
+    .in('key', ['team_count','structure','pair_count','team_mode','tournament_mode', ...nameKeys, ...pairNameKeys]);
   if (!data) return;
   data.forEach(r => {
     if (r.key === 'team_count') _teamCount = parseInt(r.value) || 2;
     if (r.key === 'structure')  _structure = r.value || 'team';
     if (r.key === 'pair_count') _pairCount = parseInt(r.value) || 12;
     if (r.key === 'team_mode')  _teamMode = r.value || null;
+    if (r.key === 'tournament_mode') _tournamentMode = r.value || 'competitive';
     TEAM_LETTERS.forEach((l, i) => {
       if (r.key === `team_${l.toLowerCase()}_name` && r.value) _teamNames[i] = r.value;
     });
@@ -1732,27 +1742,39 @@ async function autoBalanceTeams() {
   if (isSlayer3v1Active()) {
     if (players.length !== 4) { showToast('Slayer 3v1 needs exactly 4 players.'); return; }
     if (_teamCount !== 2) { await saveTeamCount(2); }
-    const shuffled = [...players].sort(() => Math.random() - 0.5);
+    // Slayer = lowest-handicap (best) player. Trio = remaining three.
+    const sorted = [...players].sort((a, b) => playerStrokes(a) - playerStrokes(b));
     teamAssignments = {};
-    shuffled.slice(0, 3).forEach(p => teamAssignments[p.id] = 'A');
-    teamAssignments[shuffled[3].id] = 'B';
+    teamAssignments[sorted[0].id] = 'B';                      // Slayer (solo)
+    sorted.slice(1).forEach(p => teamAssignments[p.id] = 'A'); // Trio
     renderTeamUI();
-    showToast('Slayer 3v1: 3 vs 1 split assigned. Hit Save to confirm.');
+    showToast('Slayer 3v1: best player vs trio. Hit Save to confirm.');
     return;
   }
   const letters = TEAM_LETTERS.slice(0, _teamCount);
   const unassigned = players.filter(p => !teamAssignments[p.id] || !letters.includes(teamAssignments[p.id]));
   if (!unassigned.length) { showToast('All players already assigned.'); return; }
-  const counts = {};
-  letters.forEach(l => counts[l] = Object.values(teamAssignments).filter(t => t === l).length);
-  const shuffled = [...unassigned].sort(() => Math.random() - 0.5);
-  shuffled.forEach(p => {
-    const min = letters.reduce((a, b) => counts[a] <= counts[b] ? a : b);
-    teamAssignments[p.id] = min;
-    counts[min]++;
+  // Track size + cumulative handicap per team (seeded from already-assigned players)
+  const sizes = {}, strokes = {};
+  letters.forEach(l => { sizes[l] = 0; strokes[l] = 0; });
+  players.forEach(p => {
+    const t = teamAssignments[p.id];
+    if (t && letters.includes(t)) { sizes[t]++; strokes[t] += playerStrokes(p); }
+  });
+  // Snake-draft: highest handicap first, place onto team with lowest cumulative strokes
+  // (tiebreak: lowest size, then random). Keeps total handicap balanced across teams.
+  const ordered = [...unassigned].sort((a, b) => playerStrokes(b) - playerStrokes(a) || Math.random() - 0.5);
+  ordered.forEach(p => {
+    const pick = letters.slice().sort((a, b) =>
+      (strokes[a] - strokes[b]) || (sizes[a] - sizes[b]) || (Math.random() - 0.5)
+    )[0];
+    teamAssignments[p.id] = pick;
+    sizes[pick]++;
+    strokes[pick] += playerStrokes(p);
   });
   renderTeamUI();
-  showToast(`${shuffled.length} player${shuffled.length > 1 ? 's' : ''} auto-assigned. Hit Save to confirm.`);
+  const modeLbl = _tournamentMode === 'competitive' ? 'real handicaps' : 'handicap tiers';
+  showToast(`${ordered.length} player${ordered.length > 1 ? 's' : ''} auto-assigned, balanced by ${modeLbl}. Hit Save to confirm.`);
 }
 
 async function saveTeams() {

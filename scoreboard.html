@@ -582,7 +582,7 @@ async function init() {
     _modeBadge.style.display = 'inline-block';
   }
   const _hdrTotal = document.getElementById('hdrTotal');
-  if (_hdrTotal) _hdrTotal.textContent = 'Net Total';
+  if (_hdrTotal) _hdrTotal.textContent = 'Total';
 
   currentRound = Object.entries(roundStates).find(([,v]) => v === 'open')?.[0] || null;
 
@@ -737,11 +737,10 @@ function buildLeaderboard() {
     const totalThru = days.reduce((a, d) => a + d.thru, 0);
     const totalRel  = days.reduce((a, d) => a + d.rel, 0);
     const handicap  = _competitiveMode ? (parseInt(p.handicap) || 0) : tierStrokes(p.handicap);
-    const totalNet  = totalThru > 0 ? totalRel - handicap : totalRel;
-    return { ...p, days, totalThru, totalRel, totalNet, handicap, team: teamAssignments[p.id] };
+    return { ...p, days, totalThru, totalRel, totalNet: totalRel, handicap, team: teamAssignments[p.id] };
   }).sort((a, b) => {
-    const scoreA = a.totalNet;
-    const scoreB = b.totalNet;
+    const scoreA = a.totalRel;
+    const scoreB = b.totalRel;
     if (a.totalThru === 0 && b.totalThru === 0) return 0;
     if (a.totalThru === 0) return 1;
     if (b.totalThru === 0) return -1;
@@ -761,7 +760,7 @@ function render() {
 
   // Team totals (team mode only)
   if (_structure === 'team') {
-    const sumTeam = arr => arr.reduce((a, p) => a + p.totalNet, 0);
+    const sumTeam = arr => arr.reduce((a, p) => a + p.totalRel, 0);
     const thruTeam = arr => arr.reduce((a, p) => a + p.totalThru, 0);
     TEAM_LETTERS.slice(0, _teamCount).forEach(L => {
       const teamPlayers = lb.filter(p => p.team === L);
@@ -804,7 +803,7 @@ function render() {
       <td class="score-cell ${roundScoreClass(p.days[0])}">${formatRoundScore(p.days[0])}</td>
       <td class="score-cell ${roundScoreClass(p.days[1])}">${formatRoundScore(p.days[1])}</td>
       <td class="score-cell ${roundScoreClass(p.days[2])}">${formatRoundScore(p.days[2])}</td>
-      <td class="score-tally ${scoreClass(p.totalNet)}">${formatScore(p.totalNet, p.totalThru)}</td>
+      <td class="score-tally ${scoreClass(p.totalRel)}">${formatScore(p.totalRel, p.totalThru)}</td>
     </tr>`;
   }).join('');
   document.getElementById('leaderboardBody').innerHTML = lbRows;
@@ -827,7 +826,7 @@ function render() {
       <td class="score-cell ${roundScoreClass(p.days[0])}">${formatRoundScore(p.days[0])}</td>
       <td class="score-cell ${roundScoreClass(p.days[1])}">${formatRoundScore(p.days[1])}</td>
       <td class="score-cell ${roundScoreClass(p.days[2])}">${formatRoundScore(p.days[2])}</td>
-      <td class="score-tally ${scoreClass(p.totalNet)}">${formatScore(p.totalNet, p.totalThru)}</td>
+      <td class="score-tally ${scoreClass(p.totalRel)}">${formatScore(p.totalRel, p.totalThru)}</td>
     </tr>`;
   }).join('');
   document.getElementById('indLeaderboardBody').innerHTML = indRows;
