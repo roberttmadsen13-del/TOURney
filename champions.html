@@ -13,7 +13,7 @@
 <script src="/lib/util.js"></script>
 <link rel="icon" href="/icon-192.png" type="image/png">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#f5ede0">
+<meta name="theme-color" content="#0f0a05">
 <link rel="manifest" href="/manifest.json">
 <link rel="apple-touch-icon" href="/icon-192.png">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -22,9 +22,9 @@
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Mono:wght@300;400;500&family=Barlow+Condensed:wght@300;400;600;700;800&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/tokens.css">
 <style>
-:root{--ink:#1a1008;--gold:#c09030;--gold-l:#d4aa50;--gold-p:#e8cc80;--cream:#f0e6cc;--border:rgba(192,144,48,0.28);--bg:#f5ede0;--card:#fdf8f0;--muted:rgba(26,16,8,0.4);}
+:root{--ink:#0f0a05;--gold:#c09030;--gold-l:#d4a840;--gold-p:#e8cc80;--cream:#f5ede0;--red:#c0392b;--green:#27ae60;--border:rgba(245,237,224,0.13);--bg:#0f0a05;--card:rgba(245,237,224,0.05);--muted:rgba(245,237,224,0.5);}
 *{margin:0;padding:0;box-sizing:border-box;}
-body{background:var(--bg);color:var(--ink);font-family:'Barlow',sans-serif;font-weight:300;min-height:100vh;}
+body{background:var(--bg);color:var(--cream);font-family:'Barlow',sans-serif;font-weight:300;min-height:100vh;}
 a{color:inherit;text-decoration:none;}
 
 /* NAV */
@@ -55,7 +55,7 @@ a{color:inherit;text-decoration:none;}
 .section-header{margin-bottom:2rem;padding-bottom:1.2rem;border-bottom:1px solid var(--border);display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:0.5rem;}
 .section-header-left{}
 .section-eyebrow{font-family:'DM Mono',monospace;font-size:0.46rem;letter-spacing:0.4em;text-transform:uppercase;color:rgba(192,144,48,0.55);margin-bottom:0.35rem;}
-.section-title{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:900;color:var(--ink);}
+.section-title{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:900;color:var(--cream);}
 .section-title em{font-style:italic;color:var(--gold);}
 .section-count{font-family:'DM Mono',monospace;font-size:0.46rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);}
 
@@ -98,13 +98,13 @@ a{color:inherit;text-decoration:none;}
 }
 
 .indiv-label{font-family:'DM Mono',monospace;font-size:0.42rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--muted);margin-bottom:0.3rem;display:flex;align-items:center;gap:0.4rem;}
-.indiv-name{font-family:'Playfair Display',serif;font-size:1.45rem;font-weight:900;color:var(--ink);line-height:1.1;margin-bottom:0.25rem;}
+.indiv-name{font-family:'Playfair Display',serif;font-size:1.45rem;font-weight:900;color:var(--cream);line-height:1.1;margin-bottom:0.25rem;}
 .indiv-score{font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.18em;color:var(--gold);margin-bottom:1.3rem;}
 
 .team-divider{border:none;border-top:1px solid var(--border);margin-bottom:1rem;}
 
 .team-label{font-family:'DM Mono',monospace;font-size:0.42rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--muted);margin-bottom:0.25rem;}
-.team-name-val{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--ink);line-height:1.15;margin-bottom:0.15rem;}
+.team-name-val{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--cream);line-height:1.15;margin-bottom:0.15rem;}
 .team-score{font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.15em;color:var(--muted);}
 
 .card-notes{margin-top:1rem;font-size:0.78rem;font-style:italic;color:var(--muted);line-height:1.55;padding-top:0.8rem;border-top:1px solid rgba(192,144,48,0.1);}
@@ -117,7 +117,7 @@ a{color:inherit;text-decoration:none;}
 .empty-rule-line{width:40px;height:1px;background:rgba(192,144,48,0.25);}
 .empty-rule-diamond{width:5px;height:5px;background:rgba(192,144,48,0.4);transform:rotate(45deg);}
 
-.empty-title{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:900;color:var(--ink);margin-bottom:0.7rem;line-height:1.15;}
+.empty-title{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:900;color:var(--cream);margin-bottom:0.7rem;line-height:1.15;}
 .empty-title em{font-style:italic;color:var(--gold);}
 .empty-body{font-family:'Barlow',sans-serif;font-size:0.88rem;color:var(--muted);line-height:1.7;max-width:380px;margin:0 auto;}
 

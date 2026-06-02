@@ -13,7 +13,7 @@
 <script src="/lib/util.js"></script>
 <link rel="icon" href="/icon-192.png" type="image/png">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#f5ede0">
+<meta name="theme-color" content="#0f0a05">
 <link rel="manifest" href="/manifest.json">
 <link rel="apple-touch-icon" href="/icon-192.png">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -22,9 +22,9 @@
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Mono:wght@300;400;500&family=Barlow+Condensed:wght@300;400;600;700;800&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/tokens.css">
 <style>
-:root{--ink:#1a1008;--gold:#c09030;--gold-l:#d4aa50;--gold-p:#e8cc80;--cream:#f0e6cc;--red:#8a1e10;--border:rgba(192,144,48,0.28);--bg:#f5ede0;--card:#fdf8f0;--muted:rgba(26,16,8,0.4);}
+:root{--ink:#0f0a05;--gold:#c09030;--gold-l:#d4a840;--gold-p:#e8cc80;--cream:#f5ede0;--red:#c0392b;--green:#27ae60;--border:rgba(245,237,224,0.13);--bg:#0f0a05;--card:rgba(245,237,224,0.05);--muted:rgba(245,237,224,0.5);}
 *{margin:0;padding:0;box-sizing:border-box;}
-body{background:var(--bg);color:var(--ink);font-family:'Barlow',sans-serif;font-weight:300;min-height:100vh;}
+body{background:var(--bg);color:var(--cream);font-family:'Barlow',sans-serif;font-weight:300;min-height:100vh;}
 a{color:inherit;text-decoration:none;}
 
 .nav{position:sticky;top:0;z-index:100;height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;background:rgba(14,11,6,0.97);border-bottom:1px solid var(--border);}
@@ -43,7 +43,7 @@ a{color:inherit;text-decoration:none;}
 .login-note{font-size:0.78rem;color:var(--muted);line-height:1.6;margin-bottom:1.5rem;}
 .fg{display:flex;flex-direction:column;gap:0.3rem;margin-bottom:1rem;}
 .fg label{font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.28em;text-transform:uppercase;color:var(--gold);}
-.fg input,.fg select,.fg textarea{background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;outline:none;width:100%;-webkit-appearance:none;}
+.fg input,.fg select,.fg textarea{background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--cream);font-family:'Barlow',sans-serif;font-size:0.9rem;outline:none;width:100%;-webkit-appearance:none;}
 .fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--gold);}
 .fg textarea{min-height:60px;resize:vertical;}
 .fg select option{background:var(--bg);}
@@ -86,7 +86,7 @@ a{color:inherit;text-decoration:none;}
 .chips{display:flex;flex-wrap:wrap;gap:0.4rem;margin-bottom:1rem;}
 .chip{padding:0.3rem 0.75rem;border:1px solid rgba(192,144,48,0.3);font-family:'Barlow Condensed',sans-serif;font-size:0.7rem;font-weight:500;letter-spacing:0.08em;color:rgba(26,16,8,0.5);cursor:pointer;transition:all 0.18s;user-select:none;background:transparent;}
 .chip:hover{border-color:var(--gold);color:var(--gold);}
-.chip.on{background:var(--gold);border-color:var(--gold);color:var(--ink);font-weight:700;}
+.chip.on{background:var(--gold);border-color:var(--gold);color:var(--cream);font-weight:700;}
 
 .hat-toggle{display:flex;align-items:center;gap:0.75rem;cursor:pointer;margin-top:0.5rem;}
 .hat-check{width:20px;height:20px;border:1px solid rgba(192,144,48,0.4);background:transparent;flex-shrink:0;position:relative;transition:all 0.2s;cursor:pointer;}
@@ -316,7 +316,7 @@ async function loadProfileByEmail(email) {
         <div style="font-size:2rem;margin-bottom:1rem;">⛳</div>
         <div style="font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:700;margin-bottom:0.75rem;">Link your account</div>
         <div style="font-size:0.82rem;color:var(--muted);margin-bottom:1.25rem;line-height:1.6;">Your My Golf account (<strong style="color:var(--gold)">${esc(email)}</strong>) isn't linked to a player yet. Select your name to connect.</div>
-        <select id="claimSelect" style="width:100%;padding:0.65rem 0.85rem;background:var(--card);border:1px solid var(--border);color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;margin-bottom:1rem;">
+        <select id="claimSelect" style="width:100%;padding:0.65rem 0.85rem;background:var(--card);border:1px solid var(--border);color:var(--cream);font-family:'Barlow',sans-serif;font-size:0.9rem;margin-bottom:1rem;">
           <option value="">Select your name…</option>${opts}
         </select>
         <button onclick="claimPlayerRow('${esc(email)}')" style="width:100%;padding:0.7rem;background:var(--gold);color:var(--ink);font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:0.8rem;letter-spacing:0.12em;text-transform:uppercase;border:none;border-radius:4px;cursor:pointer;">Link My Account</button>
@@ -463,7 +463,7 @@ async function checkNotifState() {
     btn.style.cssText = 'background:transparent;border:1px solid rgba(26,16,8,0.2);color:rgba(26,16,8,0.45);';
   } else {
     btn.textContent = 'Enable Notifications';
-    btn.style.cssText = 'background:var(--gold);border:1px solid var(--gold);color:var(--ink);';
+    btn.style.cssText = 'background:var(--gold);border:1px solid var(--gold);color:var(--cream);';
   }
 }
 
