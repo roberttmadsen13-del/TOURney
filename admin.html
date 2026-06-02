@@ -11,7 +11,7 @@
 <script src="/lib/tier-config.js"></script>
 <link rel="icon" href="/icon-192.png" type="image/png">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#f5ede0">
+<meta name="theme-color" content="#0f0a05">
 <link rel="manifest" href="/manifest.json">
 <link rel="apple-touch-icon" href="/icon-192.png">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -20,9 +20,9 @@
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Mono:wght@300;400;500&family=Barlow+Condensed:wght@300;400;600;700;800&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/tokens.css">
 <style>
-:root{--ink:#1a1008;--gold:#c09030;--gold-l:#d4aa50;--gold-p:#e8cc80;--cream:#f0e6cc;--red:#8a1e10;--green:#2a7a20;--border:rgba(192,144,48,0.28);--bg:#f5ede0;--card:#fdf8f0;--muted:rgba(26,16,8,0.4);}
+:root{--ink:#0f0a05;--gold:#c09030;--gold-l:#d4a840;--gold-p:#e8cc80;--cream:#f5ede0;--red:#c0392b;--green:#27ae60;--border:rgba(245,237,224,0.13);--bg:#0f0a05;--card:rgba(245,237,224,0.05);--muted:rgba(245,237,224,0.5);}
 *{margin:0;padding:0;box-sizing:border-box;}
-body{background:var(--bg);color:var(--ink);font-family:'Barlow',sans-serif;font-weight:300;min-height:100vh;}
+body{background:var(--bg);color:var(--cream);font-family:'Barlow',sans-serif;font-weight:300;min-height:100vh;}
 a{color:inherit;text-decoration:none;}
 
 /* NAV */
@@ -59,7 +59,7 @@ a{color:inherit;text-decoration:none;}
 .login-sub{font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.35em;text-transform:uppercase;color:var(--muted);margin-bottom:2rem;}
 .fg{display:flex;flex-direction:column;gap:0.3rem;margin-bottom:1rem;}
 .fg label{font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.28em;text-transform:uppercase;color:var(--gold);}
-.fg input{background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;outline:none;width:100%;-webkit-appearance:none;}
+.fg input{background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--cream);font-family:'Barlow',sans-serif;font-size:0.9rem;outline:none;width:100%;-webkit-appearance:none;}
 .fg input:focus{border-color:var(--gold);}
 .btn-primary{width:100%;padding:0.9rem;background:var(--gold);color:var(--ink);border:none;font-family:'Barlow Condensed',sans-serif;font-size:0.75rem;font-weight:700;letter-spacing:0.25em;text-transform:uppercase;cursor:pointer;transition:background 0.2s;}
 .btn-primary:hover{background:var(--gold-l);}
@@ -114,8 +114,8 @@ thead tr{background:rgba(192,144,48,0.08);border-bottom:1px solid var(--border);
 th{padding:0.7rem 0.9rem;text-align:left;font-family:'DM Mono',monospace;font-size:0.65rem;letter-spacing:0.25em;text-transform:uppercase;color:var(--muted);font-weight:400;white-space:nowrap;}
 tbody tr{border-bottom:1px solid rgba(26,16,8,0.08);transition:background 0.15s;}
 tbody tr:hover{background:rgba(192,144,48,0.06);}
-td{padding:0.8rem 0.9rem;font-size:0.8rem;color:var(--ink);vertical-align:top;}
-td.name{font-family:'Playfair Display',serif;font-weight:700;color:var(--ink);font-size:0.9rem;}
+td{padding:0.8rem 0.9rem;font-size:0.8rem;color:var(--cream);vertical-align:top;}
+td.name{font-family:'Playfair Display',serif;font-weight:700;color:var(--cream);font-size:0.9rem;}
 td.email a{font-size:0.72rem;color:var(--muted);text-decoration:none;}
 td.email a:hover{color:var(--gold);}
 .tier-pill{display:inline-block;padding:0.1rem 0.5rem;border:1px solid;font-family:'DM Mono',monospace;font-size:0.45rem;letter-spacing:0.1em;text-transform:uppercase;}
@@ -160,7 +160,7 @@ td.email a:hover{color:var(--gold);}
 .format-day-label em{font-style:italic;color:var(--gold);}
 .format-nine-wrap{display:flex;flex-direction:column;gap:0.3rem;}
 .format-nine-label{font-family:'DM Mono',monospace;font-size:0.45rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--muted);}
-.format-select{background:var(--card);border:1px solid var(--border);padding:0.5rem 0.75rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.82rem;outline:none;width:100%;-webkit-appearance:none;cursor:pointer;border-radius:0;}
+.format-select{background:var(--card);border:1px solid var(--border);padding:0.5rem 0.75rem;color:var(--cream);font-family:'Barlow',sans-serif;font-size:0.82rem;outline:none;width:100%;-webkit-appearance:none;cursor:pointer;border-radius:0;}
 .format-select:focus{border-color:var(--gold);}
 .format-select option{background:var(--bg);}
 .save-formats-btn{margin-top:1.2rem;padding:0.75rem 2rem;background:var(--gold);color:var(--ink);border:none;font-family:'Barlow Condensed',sans-serif;font-size:0.72rem;font-weight:700;letter-spacing:0.22em;text-transform:uppercase;cursor:pointer;transition:background 0.2s;}
@@ -179,7 +179,7 @@ td.email a:hover{color:var(--gold);}
 .edit-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:500;display:flex;align-items:center;justify-content:center;}
 .edit-modal{background:var(--bg);border:1px solid var(--border);padding:2rem;max-width:420px;width:90%;max-height:85vh;overflow-y:auto;}
 .edit-modal .fg{margin-bottom:0.75rem;}
-.edit-modal .fg input,.edit-modal .fg select{background:var(--card);border:1px solid var(--border);padding:0.55rem 0.75rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.85rem;outline:none;width:100%;}
+.edit-modal .fg input,.edit-modal .fg select{background:var(--card);border:1px solid var(--border);padding:0.55rem 0.75rem;color:var(--cream);font-family:'Barlow',sans-serif;font-size:0.85rem;outline:none;width:100%;}
 .edit-modal .fg input:focus,.edit-modal .fg select:focus{border-color:var(--gold);}
 .edit-modal-title{font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:700;margin-bottom:1rem;}
 .edit-modal-title em{font-style:italic;color:var(--gold);}
@@ -190,7 +190,7 @@ td.email a:hover{color:var(--gold);}
 .par-day{border:1px solid var(--border);margin-bottom:1px;}
 .par-day-header{display:flex;align-items:center;justify-content:space-between;padding:0.85rem 1.2rem;cursor:pointer;background:rgba(192,144,48,0.03);user-select:none;}
 .par-day-header:hover{background:rgba(192,144,48,0.06);}
-.par-day-label{font-family:'Barlow Condensed',sans-serif;font-size:0.72rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--ink);}
+.par-day-label{font-family:'Barlow Condensed',sans-serif;font-size:0.72rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--cream);}
 .par-day-toggle{font-family:'DM Mono',monospace;font-size:0.55rem;color:var(--gold);}
 .par-day-body{display:none;padding:1.2rem;}
 .par-day-body.open{display:block;}
@@ -199,7 +199,7 @@ td.email a:hover{color:var(--gold);}
 .par-inputs{display:grid;grid-template-columns:repeat(9,1fr);gap:4px;}
 .par-input-wrap{display:flex;flex-direction:column;align-items:center;gap:3px;}
 .par-hole-num{font-family:'DM Mono',monospace;font-size:0.4rem;color:var(--muted);}
-.par-input{width:100%;padding:0.35rem 0;background:var(--card);border:1px solid var(--border);color:var(--ink);font-family:'DM Mono',monospace;font-size:0.7rem;text-align:center;outline:none;-webkit-appearance:none;-moz-appearance:textfield;}
+.par-input{width:100%;padding:0.35rem 0;background:var(--card);border:1px solid var(--border);color:var(--cream);font-family:'DM Mono',monospace;font-size:0.7rem;text-align:center;outline:none;-webkit-appearance:none;-moz-appearance:textfield;}
 .par-input:focus{border-color:var(--gold);}
 .par-input.err{border-color:var(--red);color:var(--red);}
 .par-subtotals{display:flex;gap:2rem;margin-top:0.75rem;padding-top:0.75rem;border-top:1px solid rgba(26,16,8,0.1);}
@@ -210,19 +210,19 @@ td.email a:hover{color:var(--gold);}
 
 /* Course search autocomplete */
 .course-search-wrap{position:relative;}
-.course-search-input{background:var(--card);border:1px solid var(--border);padding:0.55rem 0.75rem;padding-right:2.5rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.85rem;outline:none;width:100%;}
+.course-search-input{background:var(--card);border:1px solid var(--border);padding:0.55rem 0.75rem;padding-right:2.5rem;color:var(--cream);font-family:'Barlow',sans-serif;font-size:0.85rem;outline:none;width:100%;}
 .course-search-input:focus{border-color:var(--gold);}
 .course-search-input.db-filled{border-color:rgba(42,122,32,0.4);background:rgba(42,122,32,0.04);}
 .course-search-icon{position:absolute;right:0.65rem;top:50%;transform:translateY(-50%);pointer-events:none;color:var(--muted);font-size:0.7rem;}
 .tee-select-wrap{margin-top:0.25rem;}
 .tee-select-row{display:flex;align-items:center;gap:0.75rem;}
-.tee-select-input{background:var(--card);border:1px solid var(--border);padding:0.45rem 0.75rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.85rem;outline:none;cursor:pointer;min-width:220px;}
+.tee-select-input{background:var(--card);border:1px solid var(--border);padding:0.45rem 0.75rem;color:var(--cream);font-family:'Barlow',sans-serif;font-size:0.85rem;outline:none;cursor:pointer;min-width:220px;}
 .tee-select-input:focus{border-color:var(--gold);}
 .course-dropdown{position:absolute;top:100%;left:0;right:0;z-index:50;background:var(--card);border:1px solid var(--gold);border-top:none;max-height:240px;overflow-y:auto;display:none;}
 .course-dropdown.open{display:block;}
 .course-option{padding:0.55rem 0.75rem;cursor:pointer;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(192,144,48,0.1);transition:background 0.12s;}
 .course-option:hover,.course-option.active{background:rgba(192,144,48,0.1);}
-.course-option-name{font-family:'Barlow',sans-serif;font-size:0.82rem;font-weight:500;color:var(--ink);}
+.course-option-name{font-family:'Barlow',sans-serif;font-size:0.82rem;font-weight:500;color:var(--cream);}
 .course-option-loc{font-family:'DM Mono',monospace;font-size:0.42rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);white-space:nowrap;}
 .course-option:last-child{border-bottom:none;}
 .course-mode-toggle{display:flex;gap:0;margin-bottom:0.5rem;}
@@ -394,13 +394,13 @@ td.email a:hover{color:var(--gold);}
         <div style="display:grid;grid-template-columns:1fr auto;gap:0.75rem;align-items:end;">
           <div class="fg" style="margin-bottom:0;">
             <label>Email Address</label>
-            <input type="email" id="inviteEmail" placeholder="player@email.com" style="background:var(--bg);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;width:100%;">
+            <input type="email" id="inviteEmail" placeholder="player@email.com" style="background:var(--bg);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--cream);font-family:'Barlow',sans-serif;font-size:0.9rem;width:100%;">
           </div>
           <button class="action-btn" style="padding:0.55rem 1.4rem;font-size:0.6rem;letter-spacing:0.15em;background:var(--gold);color:var(--ink);border-color:var(--gold);font-weight:700;white-space:nowrap;" onclick="sendInvite()">Send Invite</button>
         </div>
         <div class="fg" style="margin-bottom:0;">
           <label>Message <span style="opacity:0.4;font-size:0.4rem;text-transform:none;letter-spacing:0;">(optional)</span></label>
-          <input type="text" id="inviteMessage" placeholder="Looking forward to having you..." style="background:var(--bg);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;width:100%;">
+          <input type="text" id="inviteMessage" placeholder="Looking forward to having you..." style="background:var(--bg);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--cream);font-family:'Barlow',sans-serif;font-size:0.9rem;width:100%;">
         </div>
         <div id="inviteMsg" style="font-family:'DM Mono',monospace;font-size:0.48rem;letter-spacing:0.18em;text-transform:uppercase;display:none;"></div>
         <div id="inviteList" style="display:flex;flex-direction:column;gap:0.5rem;"></div>
@@ -553,9 +553,9 @@ td.email a:hover{color:var(--gold);}
         <div>
           <div style="font-family:'DM Mono',monospace;font-size:0.46rem;letter-spacing:0.28em;text-transform:uppercase;color:var(--gold);margin-bottom:0.75rem;">Manual Blast</div>
           <div style="display:grid;gap:0.75rem;">
-            <div class="fg"><label>Title</label><input type="text" id="pushTitle" placeholder="Hole in One — Rob Madsen, Hole 7!" maxlength="60" style="background:var(--bg);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;width:100%;outline:none;"></div>
-            <div class="fg"><label>Body <span style="font-weight:300;letter-spacing:0;text-transform:none;font-family:'Barlow',sans-serif;font-size:0.75rem;color:var(--muted);">(optional)</span></label><input type="text" id="pushBody" placeholder="Tap to see the chaos." maxlength="120" style="background:var(--bg);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;width:100%;outline:none;"></div>
-            <div class="fg"><label>Deep Link URL <span style="font-weight:300;letter-spacing:0;text-transform:none;font-family:'Barlow',sans-serif;font-size:0.75rem;color:var(--muted);">(optional)</span></label><input type="text" id="pushUrl" placeholder="/feed" style="background:var(--bg);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;width:100%;outline:none;"></div>
+            <div class="fg"><label>Title</label><input type="text" id="pushTitle" placeholder="Hole in One — Rob Madsen, Hole 7!" maxlength="60" style="background:var(--bg);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--cream);font-family:'Barlow',sans-serif;font-size:0.9rem;width:100%;outline:none;"></div>
+            <div class="fg"><label>Body <span style="font-weight:300;letter-spacing:0;text-transform:none;font-family:'Barlow',sans-serif;font-size:0.75rem;color:var(--muted);">(optional)</span></label><input type="text" id="pushBody" placeholder="Tap to see the chaos." maxlength="120" style="background:var(--bg);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--cream);font-family:'Barlow',sans-serif;font-size:0.9rem;width:100%;outline:none;"></div>
+            <div class="fg"><label>Deep Link URL <span style="font-weight:300;letter-spacing:0;text-transform:none;font-family:'Barlow',sans-serif;font-size:0.75rem;color:var(--muted);">(optional)</span></label><input type="text" id="pushUrl" placeholder="/feed" style="background:var(--bg);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--cream);font-family:'Barlow',sans-serif;font-size:0.9rem;width:100%;outline:none;"></div>
             <div style="display:flex;align-items:center;gap:1rem;flex-wrap:wrap;">
               <button class="action-btn" style="padding:0.6rem 1.6rem;font-size:0.65rem;letter-spacing:0.2em;background:var(--gold);color:var(--ink);border-color:var(--gold);font-weight:700;" id="pushBtn" onclick="sendPushNotification()">Send to All Players</button>
               <span id="pushStatus" style="font-family:'DM Mono',monospace;font-size:0.48rem;letter-spacing:0.12em;color:var(--muted);"></span>
@@ -600,14 +600,14 @@ td.email a:hover{color:var(--gold);}
         <div class="section-count">Name, year, location — shown across the site</div>
       </div>
       <div style="display:grid;gap:1rem;background:var(--card);border:1px solid var(--border);padding:1.5rem;">
-        <div class="fg"><label>Tournament Name</label><input type="text" id="dsName" placeholder="My Tournament" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;"></div>
+        <div class="fg"><label>Tournament Name</label><input type="text" id="dsName" placeholder="My Tournament" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--cream);font-family:'Barlow',sans-serif;font-size:0.9rem;"></div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
-          <div class="fg"><label>Year</label><input type="text" id="dsYear" placeholder="2026" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;"></div>
-          <div class="fg"><label>Location</label><input type="text" id="dsLocation" placeholder="Myrtle Beach, SC" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;"></div>
+          <div class="fg"><label>Year</label><input type="text" id="dsYear" placeholder="2026" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--cream);font-family:'Barlow',sans-serif;font-size:0.9rem;"></div>
+          <div class="fg"><label>Location</label><input type="text" id="dsLocation" placeholder="Myrtle Beach, SC" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--cream);font-family:'Barlow',sans-serif;font-size:0.9rem;"></div>
         </div>
-        <div class="fg"><label>Hero Eyebrow Line</label><input type="text" id="lpTourneyName" placeholder="Inaugural Edition · Myrtle Beach, SC" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;"></div>
-        <div class="fg"><label>Hero Meta Line</label><input type="text" id="lpHeroMeta" placeholder="3 Days · 2 Teams · 54 Holes · 2026" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;"></div>
-        <div class="fg"><label>Primary CTA Button</label><input type="text" id="dsCtaPrimary" placeholder="Register Interest" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;"></div>
+        <div class="fg"><label>Hero Eyebrow Line</label><input type="text" id="lpTourneyName" placeholder="Inaugural Edition · Myrtle Beach, SC" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--cream);font-family:'Barlow',sans-serif;font-size:0.9rem;"></div>
+        <div class="fg"><label>Hero Meta Line</label><input type="text" id="lpHeroMeta" placeholder="3 Days · 2 Teams · 54 Holes · 2026" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--cream);font-family:'Barlow',sans-serif;font-size:0.9rem;"></div>
+        <div class="fg"><label>Primary CTA Button</label><input type="text" id="dsCtaPrimary" placeholder="Register Interest" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--cream);font-family:'Barlow',sans-serif;font-size:0.9rem;"></div>
         <div style="display:flex;gap:0.6rem;flex-wrap:wrap;margin-top:0.4rem;">
           <button class="action-btn" style="padding:0.55rem 1.4rem;font-size:0.6rem;letter-spacing:0.15em;background:var(--gold);color:var(--ink);border-color:var(--gold);font-weight:700;" onclick="saveIdentity()">Save Identity</button>
           <a href="/" target="_blank" class="action-btn" style="padding:0.55rem 1.4rem;font-size:0.6rem;letter-spacing:0.15em;text-decoration:none;text-align:center;">Preview Site &rarr;</a>
@@ -692,12 +692,12 @@ td.email a:hover{color:var(--gold);}
         <div class="section-count">Story text and stat numbers</div>
       </div>
       <div style="display:grid;gap:1rem;background:var(--card);border:1px solid var(--border);padding:1.5rem;">
-        <div class="fg"><label>About Text</label><textarea id="lpAboutText" rows="6" placeholder="Tell the story of your tournament..." style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;resize:vertical;"></textarea></div>
-        <div class="fg"><label>Format Note</label><textarea id="lpFormatNote" rows="3" placeholder="Every format feeds the team score. Team A vs Team B — cumulative score across all holes decides the winner." style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;resize:vertical;"></textarea></div>
+        <div class="fg"><label>About Text</label><textarea id="lpAboutText" rows="6" placeholder="Tell the story of your tournament..." style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--cream);font-family:'Barlow',sans-serif;font-size:0.9rem;resize:vertical;"></textarea></div>
+        <div class="fg"><label>Format Note</label><textarea id="lpFormatNote" rows="3" placeholder="Every format feeds the team score. Team A vs Team B — cumulative score across all holes decides the winner." style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--cream);font-family:'Barlow',sans-serif;font-size:0.9rem;resize:vertical;"></textarea></div>
         <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;">
-          <div class="fg"><label>Days Stat</label><input type="text" id="dsStatDays" placeholder="3" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;"></div>
-          <div class="fg"><label>Teams Stat</label><input type="text" id="dsStatTeams" placeholder="2" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;"></div>
-          <div class="fg"><label>Holes Stat</label><input type="text" id="dsStatHoles" placeholder="54" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;"></div>
+          <div class="fg"><label>Days Stat</label><input type="text" id="dsStatDays" placeholder="3" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--cream);font-family:'Barlow',sans-serif;font-size:0.9rem;"></div>
+          <div class="fg"><label>Teams Stat</label><input type="text" id="dsStatTeams" placeholder="2" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--cream);font-family:'Barlow',sans-serif;font-size:0.9rem;"></div>
+          <div class="fg"><label>Holes Stat</label><input type="text" id="dsStatHoles" placeholder="54" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--cream);font-family:'Barlow',sans-serif;font-size:0.9rem;"></div>
         </div>
         <button class="action-btn" style="padding:0.55rem 1.4rem;font-size:0.6rem;letter-spacing:0.15em;background:var(--gold);color:var(--ink);border-color:var(--gold);font-weight:700;margin-top:0.4rem;" onclick="saveAbout()">Save About</button>
       </div>
@@ -713,60 +713,60 @@ td.email a:hover{color:var(--gold);}
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
           <div class="fg">
             <label>Scoring Mode</label>
-            <select id="dsTourneyMode" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;width:100%;-webkit-appearance:none;">
+            <select id="dsTourneyMode" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--cream);font-family:'Barlow',sans-serif;font-size:0.9rem;width:100%;-webkit-appearance:none;">
               <option value="competitive">Competitive (Real Handicap Adjustments)</option>
               <option value="casual">Casual (Handicap Tiers)</option>
             </select>
           </div>
           <div class="fg">
             <label>Registration Status</label>
-            <select id="dsRegOpen" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;width:100%;-webkit-appearance:none;">
+            <select id="dsRegOpen" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--cream);font-family:'Barlow',sans-serif;font-size:0.9rem;width:100%;-webkit-appearance:none;">
               <option value="true">Open</option>
               <option value="false">Closed</option>
             </select>
           </div>
         </div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
-          <div class="fg"><label>Min Players (to run)</label><input type="number" id="dsMinPlayers" value="" min="1" max="200" placeholder="e.g. 12" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;"></div>
-          <div class="fg"><label>Max Players</label><input type="number" id="dsMaxPlayers" value="24" min="1" max="200" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;"></div>
+          <div class="fg"><label>Min Players (to run)</label><input type="number" id="dsMinPlayers" value="" min="1" max="200" placeholder="e.g. 12" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--cream);font-family:'Barlow',sans-serif;font-size:0.9rem;"></div>
+          <div class="fg"><label>Max Players</label><input type="number" id="dsMaxPlayers" value="24" min="1" max="200" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--cream);font-family:'Barlow',sans-serif;font-size:0.9rem;"></div>
         </div>
-        <div class="fg"><label>Info Bullet 1</label><input type="text" id="dsRegBullet1" placeholder="Covers greens fees, cart, and meals" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;"></div>
-        <div class="fg"><label>Info Bullet 2</label><input type="text" id="dsRegBullet2" placeholder="Limited field — final selection by invite" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;"></div>
-        <div class="fg"><label>Info Bullet 3</label><input type="text" id="dsRegBullet3" placeholder="Handicap tiers used for team balance" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;"></div>
+        <div class="fg"><label>Info Bullet 1</label><input type="text" id="dsRegBullet1" placeholder="Covers greens fees, cart, and meals" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--cream);font-family:'Barlow',sans-serif;font-size:0.9rem;"></div>
+        <div class="fg"><label>Info Bullet 2</label><input type="text" id="dsRegBullet2" placeholder="Limited field — final selection by invite" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--cream);font-family:'Barlow',sans-serif;font-size:0.9rem;"></div>
+        <div class="fg"><label>Info Bullet 3</label><input type="text" id="dsRegBullet3" placeholder="Handicap tiers used for team balance" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--cream);font-family:'Barlow',sans-serif;font-size:0.9rem;"></div>
         <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;padding-top:0.75rem;border-top:1px solid var(--border);">
           <div class="fg"><label>Date Picker</label>
-            <select id="dsShowDates" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;width:100%;-webkit-appearance:none;">
+            <select id="dsShowDates" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--cream);font-family:'Barlow',sans-serif;font-size:0.9rem;width:100%;-webkit-appearance:none;">
               <option value="true">Show</option><option value="false">Hide</option>
             </select>
           </div>
           <div class="fg"><label>"Why Pick Me"</label>
-            <select id="dsShowWhyMe" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;width:100%;-webkit-appearance:none;">
+            <select id="dsShowWhyMe" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--cream);font-family:'Barlow',sans-serif;font-size:0.9rem;width:100%;-webkit-appearance:none;">
               <option value="true">Show</option><option value="false">Hide</option>
             </select>
           </div>
           <div class="fg"><label>Hat Merch</label>
-            <select id="dsShowHat" onchange="const h=document.getElementById('hatStatCard');if(h)h.style.display=this.value==='true'?'':'none';" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;width:100%;-webkit-appearance:none;">
+            <select id="dsShowHat" onchange="const h=document.getElementById('hatStatCard');if(h)h.style.display=this.value==='true'?'':'none';" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--cream);font-family:'Barlow',sans-serif;font-size:0.9rem;width:100%;-webkit-appearance:none;">
               <option value="true">Show</option><option value="false">Hide</option>
             </select>
           </div>
         </div>
         <div id="dsTeamNamesGrid" style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;padding-top:0.75rem;border-top:1px solid var(--border);">
-          <div class="fg"><label>Team A Name</label><input type="text" id="dsTeamAName" placeholder="Team One" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;"></div>
-          <div class="fg"><label>Team B Name</label><input type="text" id="dsTeamBName" placeholder="Team Two" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;"></div>
-          <div class="fg ds-team-extra" style="display:none"><label>Team C Name</label><input type="text" id="dsTeamCName" placeholder="Team Three" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;"></div>
-          <div class="fg ds-team-extra" style="display:none"><label>Team D Name</label><input type="text" id="dsTeamDName" placeholder="Team Four" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;"></div>
-          <div class="fg ds-team-extra" style="display:none"><label>Team E Name</label><input type="text" id="dsTeamEName" placeholder="Team Five" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;"></div>
-          <div class="fg ds-team-extra" style="display:none"><label>Team F Name</label><input type="text" id="dsTeamFName" placeholder="Team Six" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;"></div>
-          <div class="fg ds-team-extra" style="display:none"><label>Team G Name</label><input type="text" id="dsTeamGName" placeholder="Team Seven" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;"></div>
-          <div class="fg ds-team-extra" style="display:none"><label>Team H Name</label><input type="text" id="dsTeamHName" placeholder="Team Eight" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;"></div>
-          <div class="fg"><label>Team A Captain</label><input type="text" id="dsTeamACaptain" placeholder="Captain name" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;"></div>
-          <div class="fg"><label>Team B Captain</label><input type="text" id="dsTeamBCaptain" placeholder="Captain name" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;"></div>
-          <div class="fg ds-team-extra" style="display:none"><label>Team C Captain</label><input type="text" id="dsTeamCCaptain" placeholder="Captain name" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;"></div>
-          <div class="fg ds-team-extra" style="display:none"><label>Team D Captain</label><input type="text" id="dsTeamDCaptain" placeholder="Captain name" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;"></div>
-          <div class="fg ds-team-extra" style="display:none"><label>Team E Captain</label><input type="text" id="dsTeamECaptain" placeholder="Captain name" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;"></div>
-          <div class="fg ds-team-extra" style="display:none"><label>Team F Captain</label><input type="text" id="dsTeamFCaptain" placeholder="Captain name" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;"></div>
-          <div class="fg ds-team-extra" style="display:none"><label>Team G Captain</label><input type="text" id="dsTeamGCaptain" placeholder="Captain name" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;"></div>
-          <div class="fg ds-team-extra" style="display:none"><label>Team H Captain</label><input type="text" id="dsTeamHCaptain" placeholder="Captain name" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;"></div>
+          <div class="fg"><label>Team A Name</label><input type="text" id="dsTeamAName" placeholder="Team One" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--cream);font-family:'Barlow',sans-serif;font-size:0.9rem;"></div>
+          <div class="fg"><label>Team B Name</label><input type="text" id="dsTeamBName" placeholder="Team Two" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--cream);font-family:'Barlow',sans-serif;font-size:0.9rem;"></div>
+          <div class="fg ds-team-extra" style="display:none"><label>Team C Name</label><input type="text" id="dsTeamCName" placeholder="Team Three" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--cream);font-family:'Barlow',sans-serif;font-size:0.9rem;"></div>
+          <div class="fg ds-team-extra" style="display:none"><label>Team D Name</label><input type="text" id="dsTeamDName" placeholder="Team Four" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--cream);font-family:'Barlow',sans-serif;font-size:0.9rem;"></div>
+          <div class="fg ds-team-extra" style="display:none"><label>Team E Name</label><input type="text" id="dsTeamEName" placeholder="Team Five" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--cream);font-family:'Barlow',sans-serif;font-size:0.9rem;"></div>
+          <div class="fg ds-team-extra" style="display:none"><label>Team F Name</label><input type="text" id="dsTeamFName" placeholder="Team Six" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--cream);font-family:'Barlow',sans-serif;font-size:0.9rem;"></div>
+          <div class="fg ds-team-extra" style="display:none"><label>Team G Name</label><input type="text" id="dsTeamGName" placeholder="Team Seven" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--cream);font-family:'Barlow',sans-serif;font-size:0.9rem;"></div>
+          <div class="fg ds-team-extra" style="display:none"><label>Team H Name</label><input type="text" id="dsTeamHName" placeholder="Team Eight" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--cream);font-family:'Barlow',sans-serif;font-size:0.9rem;"></div>
+          <div class="fg"><label>Team A Captain</label><input type="text" id="dsTeamACaptain" placeholder="Captain name" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--cream);font-family:'Barlow',sans-serif;font-size:0.9rem;"></div>
+          <div class="fg"><label>Team B Captain</label><input type="text" id="dsTeamBCaptain" placeholder="Captain name" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--cream);font-family:'Barlow',sans-serif;font-size:0.9rem;"></div>
+          <div class="fg ds-team-extra" style="display:none"><label>Team C Captain</label><input type="text" id="dsTeamCCaptain" placeholder="Captain name" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--cream);font-family:'Barlow',sans-serif;font-size:0.9rem;"></div>
+          <div class="fg ds-team-extra" style="display:none"><label>Team D Captain</label><input type="text" id="dsTeamDCaptain" placeholder="Captain name" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--cream);font-family:'Barlow',sans-serif;font-size:0.9rem;"></div>
+          <div class="fg ds-team-extra" style="display:none"><label>Team E Captain</label><input type="text" id="dsTeamECaptain" placeholder="Captain name" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--cream);font-family:'Barlow',sans-serif;font-size:0.9rem;"></div>
+          <div class="fg ds-team-extra" style="display:none"><label>Team F Captain</label><input type="text" id="dsTeamFCaptain" placeholder="Captain name" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--cream);font-family:'Barlow',sans-serif;font-size:0.9rem;"></div>
+          <div class="fg ds-team-extra" style="display:none"><label>Team G Captain</label><input type="text" id="dsTeamGCaptain" placeholder="Captain name" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--cream);font-family:'Barlow',sans-serif;font-size:0.9rem;"></div>
+          <div class="fg ds-team-extra" style="display:none"><label>Team H Captain</label><input type="text" id="dsTeamHCaptain" placeholder="Captain name" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--cream);font-family:'Barlow',sans-serif;font-size:0.9rem;"></div>
           <div class="fg" style="margin-top:0.4rem;"><label style="display:flex;align-items:center;gap:0.6rem;cursor:pointer;font-size:0.52rem;letter-spacing:0.22em;text-transform:uppercase;color:rgba(26,16,8,0.55);font-weight:400;"><input type="checkbox" id="dsAdminShowAsPlayer" checked style="width:16px;height:16px;accent-color:var(--gold);flex-shrink:0;">Include me as a player in the registered field</label></div>
         </div>
         <button class="action-btn" style="padding:0.55rem 1.4rem;font-size:0.6rem;letter-spacing:0.15em;background:var(--gold);color:var(--ink);border-color:var(--gold);font-weight:700;margin-top:0.4rem;" onclick="saveRegistration()">Save Registration</button>
@@ -799,15 +799,15 @@ td.email a:hover{color:var(--gold);}
         <div style="border-top:1px solid var(--border);padding-top:1.25rem;">
           <div style="font-family:'DM Mono',monospace;font-size:0.48rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);margin-bottom:0.75rem;">Add Year</div>
           <div style="display:grid;grid-template-columns:1fr 2fr 1fr;gap:0.75rem;margin-bottom:0.75rem;">
-            <div class="fg"><label>Year</label><input type="number" id="champYear" placeholder="2025" min="1900" max="2100" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;"></div>
-            <div class="fg"><label>Individual Champion</label><input type="text" id="champIndivName" placeholder="First Last" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;"></div>
-            <div class="fg"><label>Score</label><input type="text" id="champIndivScore" placeholder="-12" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;"></div>
+            <div class="fg"><label>Year</label><input type="number" id="champYear" placeholder="2025" min="1900" max="2100" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--cream);font-family:'Barlow',sans-serif;font-size:0.9rem;"></div>
+            <div class="fg"><label>Individual Champion</label><input type="text" id="champIndivName" placeholder="First Last" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--cream);font-family:'Barlow',sans-serif;font-size:0.9rem;"></div>
+            <div class="fg"><label>Score</label><input type="text" id="champIndivScore" placeholder="-12" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--cream);font-family:'Barlow',sans-serif;font-size:0.9rem;"></div>
           </div>
           <div style="display:grid;grid-template-columns:2fr 1fr;gap:0.75rem;margin-bottom:0.75rem;">
-            <div class="fg"><label>Winning Team</label><input type="text" id="champTeamName" placeholder="Winning team name" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;"></div>
-            <div class="fg"><label>Team Score</label><input type="text" id="champTeamScore" placeholder="-24" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;"></div>
+            <div class="fg"><label>Winning Team</label><input type="text" id="champTeamName" placeholder="Winning team name" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--cream);font-family:'Barlow',sans-serif;font-size:0.9rem;"></div>
+            <div class="fg"><label>Team Score</label><input type="text" id="champTeamScore" placeholder="-24" style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--cream);font-family:'Barlow',sans-serif;font-size:0.9rem;"></div>
           </div>
-          <div class="fg"><label>Notes <span style="opacity:0.5">(optional)</span></label><input type="text" id="champNotes" placeholder="Weather, format, memorable moment..." style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--ink);font-family:'Barlow',sans-serif;font-size:0.9rem;"></div>
+          <div class="fg"><label>Notes <span style="opacity:0.5">(optional)</span></label><input type="text" id="champNotes" placeholder="Weather, format, memorable moment..." style="background:var(--card);border:1px solid var(--border);padding:0.65rem 0.85rem;color:var(--cream);font-family:'Barlow',sans-serif;font-size:0.9rem;"></div>
           <button class="action-btn" style="padding:0.55rem 1.4rem;font-size:0.6rem;letter-spacing:0.15em;background:var(--gold);color:var(--ink);border-color:var(--gold);font-weight:700;margin-top:0.4rem;" onclick="addChampion()">Add to Hall</button>
         </div>
       </div>
@@ -1271,7 +1271,7 @@ async function loadInvitations() {
   list.innerHTML = data.map(inv => {
     const statusColor = inv.status === 'accepted' ? '#2a7a20' : inv.status === 'declined' ? 'var(--red)' : 'var(--muted)';
     return `<div style="display:flex;align-items:center;justify-content:space-between;padding:0.45rem 0.75rem;border:1px solid var(--border);background:var(--bg);">
-      <span style="font-family:'DM Mono',monospace;font-size:0.48rem;letter-spacing:0.08em;color:var(--ink);">${inv.email}</span>
+      <span style="font-family:'DM Mono',monospace;font-size:0.48rem;letter-spacing:0.08em;color:var(--cream);">${inv.email}</span>
       <span style="font-family:'DM Mono',monospace;font-size:0.42rem;letter-spacing:0.18em;text-transform:uppercase;color:${statusColor};">${inv.status}</span>
     </div>`;
   }).join('');
@@ -2176,7 +2176,7 @@ function editPlayer(id) {
       <div class="fg"><label>Hat</label><select id="ep-hat"><option value="false"${!p.hat?' selected':''}>No</option><option value="true"${p.hat?' selected':''}>Yes</option></select></div>
       <div class="edit-modal-btns">
         <button id="ep-save" style="background:var(--gold);color:var(--ink);border-color:var(--gold);">Save</button>
-        <button id="ep-cancel" style="background:transparent;color:var(--ink);border-color:var(--border);">Cancel</button>
+        <button id="ep-cancel" style="background:transparent;color:var(--cream);border-color:var(--border);">Cancel</button>
       </div>
     </div>
   `;
@@ -2267,7 +2267,7 @@ function renderChampions() {
     return `<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;padding:0.75rem;background:rgba(192,144,48,0.04);border:1px solid rgba(192,144,48,0.12);">
       <div style="flex:1;min-width:0;">
         <div style="font-family:'DM Mono',monospace;font-size:0.44rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--gold);margin-bottom:0.3rem;">${esc(c.year)}</div>
-        <div style="font-family:'Barlow Condensed',sans-serif;font-size:0.9rem;font-weight:600;color:var(--ink);">${esc(c.individual_name || '—')}${c.individual_score ? ' <span style="color:var(--muted);font-weight:400;">'+esc(c.individual_score)+'</span>' : ''}</div>
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:0.9rem;font-weight:600;color:var(--cream);">${esc(c.individual_name || '—')}${c.individual_score ? ' <span style="color:var(--muted);font-weight:400;">'+esc(c.individual_score)+'</span>' : ''}</div>
         <div style="font-family:'DM Mono',monospace;font-size:0.45rem;color:var(--muted);margin-top:0.2rem;">${esc(c.team_name || '')}${c.team_score ? ' · '+esc(c.team_score) : ''}</div>
         ${c.notes ? '<div style="font-size:0.75rem;color:var(--muted);font-style:italic;margin-top:0.25rem;">'+esc(c.notes)+'</div>' : ''}
       </div>
@@ -2410,7 +2410,7 @@ async function loadScoresTable() {
 function editScore(scoreId, currentVal) {
   const cell = document.getElementById(`sc-${scoreId}`);
   if (!cell) return;
-  cell.innerHTML = `<input type="number" value="${currentVal}" min="1" max="15" style="width:3.2rem;background:var(--card);border:1px solid var(--border);color:var(--ink);padding:0.2rem 0.35rem;font-size:0.78rem;text-align:center;" id="si-${scoreId}"> <button class="action-btn" style="padding:0.2rem 0.55rem;font-size:0.52rem;background:var(--gold);color:var(--ink);border-color:var(--gold);" onclick="saveScore('${scoreId}')">Save</button>`;
+  cell.innerHTML = `<input type="number" value="${currentVal}" min="1" max="15" style="width:3.2rem;background:var(--card);border:1px solid var(--border);color:var(--cream);padding:0.2rem 0.35rem;font-size:0.78rem;text-align:center;" id="si-${scoreId}"> <button class="action-btn" style="padding:0.2rem 0.55rem;font-size:0.52rem;background:var(--gold);color:var(--ink);border-color:var(--gold);" onclick="saveScore('${scoreId}')">Save</button>`;
   document.getElementById(`si-${scoreId}`)?.focus();
 }
 

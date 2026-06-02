@@ -14,7 +14,7 @@
 <script src="/lib/formats.js"></script>
 <link rel="icon" href="/icon-192.png" type="image/png">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#f5ede0">
+<meta name="theme-color" content="#0f0a05">
 <link rel="manifest" href="/manifest.json">
 <link rel="apple-touch-icon" href="/icon-192.png">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -508,7 +508,16 @@ let _teamNames = {A:'Team One',B:'Team Two',C:'Team C',D:'Team D',E:'Team E',F:'
   }
 })();
 
-const TIER_LABELS = {scratch:'Scratch',eagle:'Eagle',birdie:'Birdie',bogey:'Bogey',pretender:'Pretenders',hacker:'Dreamers'};
+const TIER_LABELS  = {scratch:'Scratch',eagle:'Eagle',birdie:'Birdie',bogey:'Bogey',pretender:'Pretenders',hacker:'Dreamers'};
+// Stroke allowance per tier (whole-tourney lump-sum, applied to totalRel)
+const TIER_STROKES = {scratch:0, eagle:5, birdie:10, bogey:15, pretender:22, hacker:30};
+function tierStrokes(v) {
+  if (v == null) return 0;
+  const key = String(v).toLowerCase();
+  if (key in TIER_STROKES) return TIER_STROKES[key];
+  const n = parseInt(v);
+  return Number.isFinite(n) ? n : 0;
+}
 const DEFAULT_PARS = {
   day1:[3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3],
   day2:[4,4,5,3,4,4,3,5,4,4,4,3,5,4,4,3,5,4],
@@ -573,7 +582,7 @@ async function init() {
     _modeBadge.style.display = 'inline-block';
   }
   const _hdrTotal = document.getElementById('hdrTotal');
-  if (_hdrTotal) _hdrTotal.textContent = _competitiveMode ? 'Net Total' : 'Total';
+  if (_hdrTotal) _hdrTotal.textContent = 'Net Total';
 
   currentRound = Object.entries(roundStates).find(([,v]) => v === 'open')?.[0] || null;
 
@@ -727,12 +736,12 @@ function buildLeaderboard() {
     const days = Object.keys(roundStates).filter(k => /^day\d+$/.test(k)).sort().map(d => calcPlayerRound(p.id, d));
     const totalThru = days.reduce((a, d) => a + d.thru, 0);
     const totalRel  = days.reduce((a, d) => a + d.rel, 0);
-    const handicap  = parseInt(p.handicap) || 0;
-    const totalNet  = _competitiveMode && totalThru > 0 ? totalRel - handicap : totalRel;
+    const handicap  = _competitiveMode ? (parseInt(p.handicap) || 0) : tierStrokes(p.handicap);
+    const totalNet  = totalThru > 0 ? totalRel - handicap : totalRel;
     return { ...p, days, totalThru, totalRel, totalNet, handicap, team: teamAssignments[p.id] };
   }).sort((a, b) => {
-    const scoreA = _competitiveMode ? a.totalNet : a.totalRel;
-    const scoreB = _competitiveMode ? b.totalNet : b.totalRel;
+    const scoreA = a.totalNet;
+    const scoreB = b.totalNet;
     if (a.totalThru === 0 && b.totalThru === 0) return 0;
     if (a.totalThru === 0) return 1;
     if (b.totalThru === 0) return -1;
@@ -752,7 +761,7 @@ function render() {
 
   // Team totals (team mode only)
   if (_structure === 'team') {
-    const sumTeam = arr => arr.reduce((a, p) => a + (_competitiveMode ? p.totalNet : p.totalRel), 0);
+    const sumTeam = arr => arr.reduce((a, p) => a + p.totalNet, 0);
     const thruTeam = arr => arr.reduce((a, p) => a + p.totalThru, 0);
     TEAM_LETTERS.slice(0, _teamCount).forEach(L => {
       const teamPlayers = lb.filter(p => p.team === L);
