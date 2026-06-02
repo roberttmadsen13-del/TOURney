@@ -8,19 +8,21 @@
  */
 
 :root {
-  /* Brand — overrideable per tournament */
+  /* Brand — overrideable per tournament. Canonical palette mirrors /player + /create. */
   --gold:        #c09030;
-  --gold-light:  #d4a840;
+  --gold-l:      #d4a840;
+  --gold-light:  #d4a840;             /* alias for legacy callers */
+  --gold-p:      #e8cc80;             /* peach gold accent — used on hover/highlight in /player */
   --gold-dim:    rgba(192, 144, 48, 0.18);
-  --ink:         #1a1008;
-  --bg:          #0d0a05;
-  --surface:     #151009;
-  --card:        #1c140a;
-  --card2:       #221a0e;
-  --border:      rgba(192, 144, 48, 0.22);
-  --muted:       #7a6a54;
-  --text:        #e8dcc8;
-  --cream:       #f0e6cc;
+  --ink:         #0f0a05;             /* canonical /player ink — deeper than legacy #1a1008 */
+  --bg:          #0f0a05;
+  --surface:     rgba(245, 237, 224, 0.05);   /* cream-tint surface — matches /player */
+  --card:        rgba(245, 237, 224, 0.05);   /* alias — /player + /create treat cards as surface */
+  --card2:       rgba(245, 237, 224, 0.07);
+  --border:      rgba(245, 237, 224, 0.13);   /* cream-tinted border — not gold — matches /player */
+  --muted:       rgba(245, 237, 224, 0.5);
+  --text:        #f5ede0;             /* cream text on dark ink */
+  --cream:       #f5ede0;
 
   /* Semantic colors — DO NOT override per tournament */
   --red:         #c0392b;

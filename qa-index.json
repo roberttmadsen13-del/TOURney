@@ -1,7 +1,7 @@
 {
   "$schema": "https://tourney.greenskeeper.studio/qa-index-schema.json",
   "version": 1,
-  "updated_at": "2026-06-02T02:51:48.019Z",
+  "updated_at": "2026-06-02T02:58:59.849Z",
   "description": "Canonical registry of all TOURney plans, reviews, audits, and QA artifacts. The /platform Artifacts tab renders from this file. Skills (e.g. tourney-review) append new entries when they generate output.",
   "entries": [
     {
@@ -108,7 +108,7 @@
       "category": "review",
       "stage": "audit",
       "title": "UX Design System · May 29, 2026",
-      "summary": "Audit of current UX inconsistency across tournament pages vs. the bug-log popup reference design. Plan and runbook to apply the dark-card / gold-accent / DM Mono design system platform-wide.",
+      "summary": "Audit of current UX inconsistency across tournament pages vs. the canonical /player",
       "date": "2026-05-29",
       "updated": "2026-06-02",
       "author": "claude-sonnet-4.6",

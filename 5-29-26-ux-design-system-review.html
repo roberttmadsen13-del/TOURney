@@ -146,7 +146,7 @@ footer span{color:var(--gold);}
 <div class="hero">
   <div class="hero-eyebrow">UX Design System</div>
   <h1><span>TOURney</span> — UX Design System · May 29, 2026</h1>
-  <p class="hero-sub">Audit of current UX inconsistency across tournament pages vs. the bug-log popup reference design. Plan and runbook to apply the dark-card / gold-accent / DM Mono design system platform-wide.</p>
+  <p class="hero-sub">Audit of current UX inconsistency across tournament pages vs. the canonical <code>/player</code> + <code>/create</code> design language (dark ink base, cream-tinted surface, gold accents, DM Mono on data, Playfair italic accents). Plan and runbook to apply that system platform-wide so every page feels like a single product.</p>
   <div class="hero-meta">
     <span>📅 May 29, 2026</span>
     <span>🤖 Claude Sonnet 4.6</span>
@@ -161,7 +161,7 @@ footer span{color:var(--gold);}
 <div class="section-header">
   <div class="section-eyebrow">§ Review</div>
   <div class="section-title">Current UX State — Two Worlds in One Product</div>
-  <div class="section-desc">TOURney currently operates with a split personality: the platform shell (platform.html) has evolved a polished dark-card design system; the tournament-facing pages (home, scorecard, scoreboard, admin) run a warm-cream light theme that diverges significantly from it.</div>
+  <div class="section-desc">TOURney has two converged reference pages — <code>player.html</code> (the MyGolf dashboard) and <code>create.html</code> (the tournament creation flow). Both run a dark ink base (<code>#0f0a05</code>), cream-tinted translucent surfaces, gold + peach-gold accents, Barlow Condensed eyebrows, Playfair Display italic accents, and DM Mono on data. Every other tournament-facing page (home, scorecard, scoreboard, admin, profile, directory, login) still ships a divergent warm-cream light theme. The goal of this ticket is to make every page feel like /player.</div>
 </div>
 
 <!-- Score Grid -->
@@ -194,16 +194,20 @@ footer span{color:var(--gold);}
 
 <!-- Reference Design Card -->
 <div class="card">
-  <div class="card-title">Reference Design — Bug Log Popup (platform.html ~L2380)</div>
-  <p>The bug log popup is the canonical specimen Rob identified. Its design language:</p>
+  <div class="card-title">Reference Design — <code>/player</code> dashboard + <code>/create</code> flow</div>
+  <p>Both pages locally re-declare the same palette inside their own <code>:root</code>. That palette is now the canonical TOURney design system. It looks like this:</p>
   <ul>
-    <li><strong>Container:</strong> <code>background:var(--card)</code> (<code>#1c140a</code> dark brown-black), <code>border:1px solid var(--border)</code> (gold at 22% opacity), <code>border-left:3px solid var(--red)|var(--green)</code> — status-coded accent stripe</li>
-    <li><strong>Typography:</strong> <code>font-family:'DM Mono',monospace</code> for metadata (date, URL, counts). <code>font-family:'Barlow Condensed',sans-serif</code> for action buttons. Body copy in <code>var(--text)</code> (<code>#e8dcc8</code>).</li>
-    <li><strong>Spacing:</strong> Compact — <code>padding:.75rem 1rem</code> per row. <code>margin-bottom:.45rem</code> between rows. Dense information, no wasted space.</li>
-    <li><strong>Pills/badges:</strong> Inline status text via gold-accent spans and <code>var(--red)</code>/<code>var(--green)</code> color coding.</li>
-    <li><strong>Palette:</strong> Dark background (<code>#0d0a05</code> body, <code>#1c140a</code> cards), gold accents (<code>#c09030</code>), muted text (<code>#7a6a54</code>), white headlines.</li>
-    <li><strong>Buttons:</strong> <code>background:none; border:1px solid rgba(200,80,60,0.3); color:var(--red)</code> — ghost style, color-semantic.</li>
+    <li><strong>Palette:</strong> <code>--ink:#0f0a05</code> body, <code>--surface:rgba(245,237,224,0.05)</code> translucent cream tint for cards, <code>--gold:#c09030</code>, <code>--gold-l:#d4a840</code> hover, <code>--gold-p:#e8cc80</code> peach-gold for highlights, <code>--cream:#f5ede0</code> primary text, <code>--muted:rgba(245,237,224,0.5)</code>.</li>
+    <li><strong>Borders:</strong> <code>1px solid rgba(245,237,224,0.13)</code> — cream-tinted at 13% opacity. NOT gold-tinted. This is the single biggest visual signature of the look.</li>
+    <li><strong>Typography:</strong> Barlow Condensed for nav + section eyebrows + CTAs. Playfair Display italic for accent words inside titles (e.g. <em>"Create</em> Account"</em>). DM Mono for all data surfaces (stat values, score cells, timestamps, slugs). Barlow regular for body copy.</li>
+    <li><strong>Cards/Surface:</strong> Translucent cream over dark ink. <code>border-radius:14px</code>. Hover lifts <code>border-color</code> to <code>--gold</code> (no shadow, no scale).</li>
+    <li><strong>Stat tiles (player dashboard):</strong> Flex row, value left-aligned in Playfair, label right-aligned in DM Mono uppercase 0.6rem with 0.16em letter-spacing.</li>
+    <li><strong>Buttons:</strong> Primary = full-width gold (<code>background:var(--gold); color:var(--ink)</code>). Secondary = ghost (<code>background:none; border:1px solid var(--border); color:var(--cream)</code>). Hover bumps border to <code>--gold</code>.</li>
+    <li><strong>Section labels:</strong> DM Mono, 0.58rem, uppercase, 0.18em letter-spacing, gold color, with a trailing 1px divider line.</li>
+    <li><strong>Sticky nav:</strong> dark backdrop with <code>backdrop-filter:blur(8px)</code> + 1px bottom border. Brand mark + nav-right pills.</li>
+    <li><strong>Empty states:</strong> Surface card with inline SVG flagstick icon, Playfair headline with italic accent word, Barlow body, gold CTA pill — pattern lives in <code>player.html .empty</code>.</li>
   </ul>
+  <p style="margin-top:0.55rem;color:var(--muted);"><strong>Source files:</strong> <code>player.html L22–26</code> (palette), <code>create.html L21–22</code> (matching palette), <code>player.html .empty / .stat-cell / .list-row</code> (canonical components).</p>
 </div>
 
 <!-- Tournament Pages State -->
@@ -214,17 +218,16 @@ footer span{color:var(--gold);}
     <div class="table-wrap">
       <table class="token-table">
         <thead>
-          <tr><th>Token</th><th>Tournament Pages (Light)</th><th>Platform / Reference (Dark)</th><th>Conflict</th></tr>
+          <tr><th>Token</th><th>Tournament Pages (Light, current)</th><th>/player + /create (Canonical)</th><th>Conflict</th></tr>
         </thead>
         <tbody>
-          <tr><td class="tok">--bg</td><td class="val-light">#f5ede0 (warm cream)</td><td class="val-dark">#0d0a05 (near-black)</td><td><span class="pill pill-red">YES</span></td></tr>
-          <tr><td class="tok">--card</td><td class="val-light">#fdf8f0 (off-white)</td><td class="val-dark">#1c140a (dark brown)</td><td><span class="pill pill-red">YES</span></td></tr>
-          <tr><td class="tok">--border</td><td class="val-light">rgba(192,144,48,0.28)</td><td class="val-dark">rgba(192,144,48,0.22)</td><td><span class="pill pill-orange">MINOR</span></td></tr>
+          <tr><td class="tok">--ink / --bg</td><td class="val-light">#f5ede0 (warm cream)</td><td class="val-dark">#0f0a05 (deep ink)</td><td><span class="pill pill-red">YES</span></td></tr>
+          <tr><td class="tok">--surface / --card</td><td class="val-light">#fdf8f0 (off-white)</td><td class="val-dark">rgba(245,237,224,0.05) (translucent cream tint)</td><td><span class="pill pill-red">YES</span></td></tr>
+          <tr><td class="tok">--border</td><td class="val-light">rgba(192,144,48,0.28) gold-tinted</td><td class="val-dark">rgba(245,237,224,0.13) cream-tinted</td><td><span class="pill pill-red">YES</span></td></tr>
           <tr><td class="tok">--gold</td><td class="val-light">#c09030</td><td class="val-dark">#c09030</td><td><span class="pill pill-green">MATCH</span></td></tr>
-          <tr><td class="tok">--muted</td><td class="val-light">rgba(26,16,8,0.4) (dark-on-light)</td><td class="val-dark">#7a6a54 (warm gray)</td><td><span class="pill pill-red">YES</span></td></tr>
-          <tr><td class="tok">--surface</td><td class="val-light">NOT DEFINED</td><td class="val-dark">#151009</td><td><span class="pill pill-red">MISSING</span></td></tr>
-          <tr><td class="tok">--text</td><td class="val-light">NOT DEFINED (uses --ink)</td><td class="val-dark">#e8dcc8</td><td><span class="pill pill-red">MISSING</span></td></tr>
-          <tr><td class="tok">--ink</td><td class="val-light">#1a1008 (dark body text)</td><td class="val-dark">NOT PRESENT</td><td><span class="pill pill-orange">DIVERGE</span></td></tr>
+          <tr><td class="tok">--gold-l / --gold-p</td><td class="val-light">NOT DEFINED</td><td class="val-dark">#d4a840 / #e8cc80 (hover + highlight)</td><td><span class="pill pill-red">MISSING</span></td></tr>
+          <tr><td class="tok">--muted</td><td class="val-light">rgba(26,16,8,0.4) dark-on-light</td><td class="val-dark">rgba(245,237,224,0.5) cream-on-dark</td><td><span class="pill pill-red">YES</span></td></tr>
+          <tr><td class="tok">--text / --cream</td><td class="val-light">NOT DEFINED</td><td class="val-dark">#f5ede0 (cream)</td><td><span class="pill pill-red">MISSING</span></td></tr>
         </tbody>
       </table>
     </div>
@@ -508,8 +511,8 @@ footer span{color:var(--gold);}
 
 <div class="section-header">
   <div class="section-eyebrow">§ Plan</div>
-  <div class="section-title">Two-Tier Design System Rollout</div>
-  <div class="section-desc">Adopt the dark brand — but split it into two surface tiers so it fits both the indoor admin and the outdoor scorecard. Foundation fixes first (per §Second Opinion), then the tier system, sunlight Course Mode, components, and motion. Rob-approved 2026-05-29.</div>
+  <div class="section-title">Make every page look like <code>/player</code> + <code>/create</code></div>
+  <div class="section-desc">Rob-approved 2026-06-01 revision: the canonical reference is the /player dashboard + /create flow, not the platform bug-log popup. Align <code>tokens.css</code> to the /player palette (deep ink, cream-tinted surfaces + borders, gold + peach-gold accents, DM Mono on data, Playfair italic accents). Strip per-page light <code>:root</code> overrides so tokens.css cascades. The earlier two-tier / Sunlight Course Mode ideas (§Plan v1, §Second Opinion) are now deferred — ship the parity pass first, revisit context-specific variants only after every page reads as one product.</div>
 </div>
 
 <div class="card">
@@ -598,8 +601,8 @@ footer span{color:var(--gold);}
 
 <div class="section-header">
   <div class="section-eyebrow">§ Runbook</div>
-  <div class="section-title">Execution Steps — Two-Tier System Rollout</div>
-  <div class="section-desc">Reordered per §Second Opinion + §Product Design Lens (Rob-approved). Foundation fixes first (tokens.css is already dark — the overrides are the blocker), then the two-tier scopes, sunlight Course Mode, components, and motion. Each step independently verifiable.</div>
+  <div class="section-title">Execution Steps — /player + /create parity pass</div>
+  <div class="section-desc">Rob-approved 2026-06-01 revision. Scope for THIS execute: align tokens.css to the /player + /create canonical palette, strip per-page light <code>:root</code> overrides so every tournament page inherits the dark ink + cream-tinted surface look, audit each page in browser. Steps tagged <span class="pill pill-orange">DEFERRED</span> below (two-tier surface-active scope, Sunlight Course Mode, motion primitives, component library extraction) are intentionally NOT shipped in this pass — revisit after the parity pass reads clean.</div>
 </div>
 
 <div class="runbook-steps">
