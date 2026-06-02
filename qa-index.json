@@ -1,7 +1,7 @@
 {
   "$schema": "https://tourney.greenskeeper.studio/qa-index-schema.json",
   "version": 1,
-  "updated_at": "2026-06-02T03:13:14.380Z",
+  "updated_at": "2026-06-02T03:15:31.262Z",
   "description": "Canonical registry of all TOURney plans, reviews, audits, and QA artifacts. The /platform Artifacts tab renders from this file. Skills (e.g. tourney-review) append new entries when they generate output.",
   "entries": [
     {
@@ -106,7 +106,7 @@
     {
       "id": "review-ux-design-system-2026-05-29",
       "category": "review",
-      "stage": "audit",
+      "stage": "concluded",
       "title": "UX Design System · May 29, 2026",
       "summary": "Audit of current UX inconsistency across tournament pages vs. the canonical /player",
       "date": "2026-05-29",
@@ -121,7 +121,7 @@
         "tokens",
         "css"
       ],
-      "status": "partial"
+      "status": "concluded"
     },
     {
       "id": "review-ux-2026-05-29",
