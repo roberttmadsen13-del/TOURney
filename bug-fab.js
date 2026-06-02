@@ -141,7 +141,7 @@
   function start() {
     ensureSupabase(() => {
       if (!window.supabase || !window.supabase.createClient) return;
-      const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, { auth: { persistSession: true } });
+      const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, { auth: { storage: window.gksAuthStorage, persistSession: true, autoRefreshToken: true } });
       db.auth.getSession().then(({ data }) => {
         const email = data?.session?.user?.email?.toLowerCase();
         if (!email || !ALLOWED.includes(email)) return;

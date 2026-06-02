@@ -54,8 +54,46 @@
   const SUPABASE_URL = 'https://jllugkiojeoopitdvzsa.supabase.co';
   const SUPABASE_KEY = 'sb_publishable_DnBMNLaSu61ykJ6P_fI2fw_D9DdAScn';
 
+  // Cookie-backed Supabase auth storage. Cookies scoped to .greenskeeper.studio so the session
+  // (1) survives iOS Safari Private Browsing tab close + in-app webview hops,
+  // (2) shares across apex and any tenant subdomain (single sign-in).
+  // localStorage is kept as a fallback so existing signed-in users aren't bounced after deploy.
+  if (!window.gksAuthStorage) {
+    const isLocal = /^(localhost|127\.|\[::1\])/.test(location.hostname);
+    const TAIL    = '; Path=/; Max-Age=2592000; Secure; SameSite=Lax' + (isLocal ? '' : '; Domain=.greenskeeper.studio');
+    const DELTAIL = '; Path=/; Max-Age=0; Secure; SameSite=Lax' + (isLocal ? '' : '; Domain=.greenskeeper.studio');
+    const readCookie = (n) => {
+      const pfx = n + '=', parts = document.cookie ? document.cookie.split('; ') : [];
+      for (const p of parts) if (p.indexOf(pfx) === 0) {
+        try { return decodeURIComponent(p.slice(pfx.length)); } catch { return p.slice(pfx.length); }
+      }
+      return null;
+    };
+    const writeCookie = (n, v) => { try { document.cookie = n + '=' + encodeURIComponent(v) + TAIL; } catch {} };
+    const delCookie   = (n)    => { try { document.cookie = n + '=' + DELTAIL; } catch {} };
+    const lsGet = (k) => { try { return localStorage.getItem(k); } catch { return null; } };
+    const lsSet = (k,v) => { try { localStorage.setItem(k,v); } catch {} };
+    const lsDel = (k)   => { try { localStorage.removeItem(k); } catch {} };
+    window.gksAuthStorage = {
+      getItem: (k) => {
+        const c = readCookie(k);
+        if (c !== null) return c;
+        const ls = lsGet(k);
+        if (ls !== null) writeCookie(k, ls); // migrate legacy localStorage-only sessions
+        return ls;
+      },
+      setItem: (k, v) => { writeCookie(k, v); lsSet(k, v); },
+      removeItem: (k) => { delCookie(k); lsDel(k); }
+    };
+  }
+
   const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
-    auth: { persistSession: true, autoRefreshToken: true }
+    auth: {
+      storage: window.gksAuthStorage,
+      persistSession: true,
+      autoRefreshToken: true,
+      detectSessionInUrl: true
+    }
   });
 
   const PLATFORM_SUFFIX = '.greenskeeper.studio';

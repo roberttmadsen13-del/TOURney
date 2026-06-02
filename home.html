@@ -692,7 +692,7 @@ html { scroll-behavior: smooth; }
 <script>
 const SUPABASE_URL = 'https://jllugkiojeoopitdvzsa.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_DnBMNLaSu61ykJ6P_fI2fw_D9DdAScn';
-const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, { auth: { storage: window.gksAuthStorage, persistSession: true, autoRefreshToken: true, detectSessionInUrl: true } });
 const esc = s => (s == null ? '' : String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'));
 
 window.addEventListener('scroll', () => { document.getElementById('mainNav').classList.toggle('scrolled', window.scrollY > 40); });
